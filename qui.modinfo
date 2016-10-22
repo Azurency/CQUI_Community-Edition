@@ -12,9 +12,11 @@
     <Components>
         <ImportFiles id="QUI_IMPORT_FILES">
             <Items>
+				<File>UI/Panels/UnitPanel.lua</File>
             </Items>
         </ImportFiles>
     </Components>
 	<Files>
+		<File>UI/Panels/UnitPanel.lua</File>
 	</Files>
 </Mod>
