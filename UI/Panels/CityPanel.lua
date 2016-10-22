@@ -328,7 +328,7 @@ function ViewMain( data:table )
 		Controls.ProductionLabel:SetText( Locale.ToUpper( Locale.Lookup("LOC_HUD_CITY_NOTHING_PRODUCED")) );
 		widthNumLabel = 0;
 	else
-		Controls.ProductionLabel:SetText( Locale.ToUpper( Locale.Lookup("LOC_HUD_CITY_TURNS_UNTIL_COMPLETED", data.CurrentTurnsLeft)) );
+		Controls.ProductionLabel:SetText( data.ProductionProgress .. " / " .. data.ProductionCost );
 		widthNumLabel = Controls.ProductionNum:GetSizeX();
 	end
 

@@ -172,7 +172,10 @@ function GetCityData( pCity:table )
 		TurnsUntilExpansion				= 0,
 		UnitStats						= nil,
 		Wonders							= {},		-- Format per entry: { Name, YieldType, YieldChange }		
-		YieldFilters					= {}	
+		YieldFilters					= {},	
+
+		ProductionProgress				= 0,	
+		ProductionCost				    = 0	
 	};
 		
 	local pCityGrowth					:table = pCity:GetGrowth();
@@ -199,6 +202,9 @@ function GetCityData( pCity:table )
 		prodTurnsLeft					= productionInfo.Turns;
 		productionInfo.Index			= 1;
 		data.ProductionQueue[1]			= productionInfo;	--Place in front
+
+		data.ProductionProgress = productionInfo.Progress;
+		data.ProductionCost = productionInfo.Cost;
 
 		-- Some buildings will not have a description.
 		if currentProductionDescription == nil then
