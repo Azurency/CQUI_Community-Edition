@@ -607,6 +607,9 @@ function OnEndTurnRightClicked()
 		print("Player's turn not active");
 		return;
 	end
+
+    UI.RequestAction(ActionTypes.ACTION_ENDTURN);
+    UI.PlaySound("Stop_Unit_Movement_Master");
 end
 
 -- ===========================================================================
