@@ -79,18 +79,18 @@
 					<Button ID="CityRangeStrikeButton" Style="CityBannerRangeAttack" Anchor="C,B" Offset="0,10" StateOffsetIncrement="0,25" ConsumeMouse="1" ToolTip="LOC_CITY_BANNER_CITY_RANGE_STRIKE"/>
 				</Image>
 
-				<Grid ID="BannerStrengthBacking"  Texture="Banner_StrengthBacking"  Size="55,15"  Anchor="C,T"  SliceTextureSize="42,15"  SliceCorner="21,7"  AnchorSide="I,O" Color="255,255,255,150">
+				<Grid ID="BannerStrengthBacking"  Texture="Banner_StrengthBacking"  Size="55,15"  Anchor="R,T"  SliceTextureSize="42,15"  SliceCorner="21,7"  AnchorSide="I,O" Color="255,255,255,150">
 					<Stack StackGrowth="Right" Anchor="C,T" Padding="0" ID="DefenseStack">
 						<Image Size="16,18" Texture="Banner_StrengthIcon" ID="DefenseIcon"/>
 						<Image Size="21,18" Texture="Banner_StrengthIcon_Shields" ID="ShieldsIcon"  Hidden="1"/>
 						<Label ID="DefenseNumber" Style="StrongSmall" String="00 [00]" KerningAdjustment="-1"/>
 						<Container Size="3,2" />
 						<Stack StackGrowth="Down" Anchor="L,C">
-							<Grid ID="CityDefenseBarBacking" Size="100,8" Texture="Banner_LifeBar" SliceTextureSize="100,6" SliceCorner="50,3">
-								<TextureBar ID="CityDefenseBar" Texture="Banner_LifeBar" Size="100,6" Direction="Right" Speed="1" Anchor="L,C" TextureOffset="0,6" Color="120,198,247,255"/>
+							<Grid ID="CityDefenseBarBacking" Size="50,8" Texture="Banner_LifeBar" SliceTextureSize="50,6" SliceCorner="50,3">
+								<TextureBar ID="CityDefenseBar" Texture="Banner_LifeBar" Size="50,6" Direction="Right" Speed="1" Anchor="L,C" TextureOffset="0,6" Color="120,198,247,255"/>
 							</Grid>
-							<Grid ID="CityHealthBarBacking" Size="100,8" Texture="Banner_LifeBar" SliceTextureSize="100,6" SliceCorner="50,3" Hidden="1">
-								<TextureBar ID="CityHealthBar"	Texture="Banner_LifeBar" Size="100,6" Direction="Right" Speed="1" Anchor="L,C" TextureOffset="0,6"/>
+							<Grid ID="CityHealthBarBacking" Size="50,8" Texture="Banner_LifeBar" SliceTextureSize="50,6" SliceCorner="50,3" Hidden="1">
+								<TextureBar ID="CityHealthBar"	Texture="Banner_LifeBar" Size="50,6" Direction="Right" Speed="1" Anchor="L,C" TextureOffset="0,6"/>
 							</Grid>
 						</Stack>
 					</Stack>
