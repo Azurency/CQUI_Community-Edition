@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd">
+  <AlphaAnim			          ID="CityPanelAlpha"       AlphaBegin="0" AlphaEnd="1" Speed="3"   Function="OutSine" Cycle="Once" Size="full,full">
+    <SlideAnim						  ID="CityPanelSlide"       Start="200,0" End="0,0"     Speed="3.5" Function="OutSine" Cycle="Once" Size="full,full">
+      <Grid									ID="WoodBacking"					Anchor="R,B" Offset="175,-5"	Size="500,162"					Texture="SelectionPanel_WoodBacking"	SliceCorner="51,50"  SliceSize="1,1" SliceTextureSize="148,156" ConsumeMouse="1">
+        <Grid								ID="PanelStackShadow"			Anchor="L,T" Offset="100,-100" Size="250,200" Style="DropShadow" />
+        <Grid								ID="MainPanel"						Anchor="R,B" Offset="46,0"		Size="parent-78,parent-2"	Texture="SelectionPanel_MainPanel"		SliceCorner="60,60" SliceTextureSize="263,160" />
+
+        <Image							ID="PortraitFrame"				Anchor="L,B" Offset="-14,36"															Texture="SelectionPanel_PortraitFrame" >
+          <Container				ID="LabelButtonRows"			Anchor="L,T"									Size="270,138">
+            <Image																		Anchor="R,B" Offset="0,-7"																Texture="SelectionPanel_Divider"	/>
+            <Grid						ID="BreakdownGrid"				Anchor="R,T" Offset="4,20"		Size="parent-100,20"				Style="CityPanelSlotGrid">
+              <Label				ID="BreakdownNum"					Anchor="L,C" Offset="33,1"		Style="CityPanelNumLarge"		String="-" />
+              <Label				ID="BreakdownLabel"				Anchor="R,C" Offset="4,1"			Style="CityPanelHeader"			String="{LOC_HUD_CITY_BUILDINGS:upper}" />
+            </Grid>
+            <Grid						ID="ReligionGrid"					Anchor="R,T" Offset="4,45"		Size="parent-100,20"				Style="CityPanelSlotGrid">
+              <Label				ID="ReligionNum"					Anchor="L,C" Offset="33,1"		Style="CityPanelNumLarge"		String="-" />
+              <Label				ID="ReligionLabel"				Anchor="R,C" Offset="4,1"			Style="CityPanelHeader"			String="{LOC_HUD_CITY_RELIGIOUS_CITIZENS:upper}" />
+            </Grid>
+            <Grid						ID="AmenitiesGrid"				Anchor="R,T" Offset="4,71"		Size="parent-100,20"				Style="CityPanelSlotGrid">
+              <Label				ID="AmenitiesNum"					Anchor="L,C" Offset="34,1"		Style="CityPanelNumLarge"		String="-" />
+              <Label				ID="AmenitiesLabel"				Anchor="R,C" Offset="4,1"			Style="CityPanelHeader"			String="{LOC_HUD_CITY_AMENITIES:upper}" />
+            </Grid>
+            <Grid						ID="HousingGrid"					Anchor="R,T" Offset="4,94"		Size="parent-100,20"				Style="CityPanelSlotGrid">
+              <Stack																							 Offset="13,1"		StackGrowth="Right"	>
+                <Label			ID="HousingNum"						Anchor="L,C" Offset="0,0"			Style="CityPanelNumLarge"		String="-" />
+                <Label																Anchor="L,C" Offset="1,0"			Style="CityPanelNumSmall"		String="/" />
+                <Label			ID="HousingMax"						Anchor="L,C" Offset="0,1"			Style="CityPanelNumSmall"		String="-" />
+              </Stack>
+              <Label				ID="HousingLabel"					Anchor="R,C" Offset="4,1"			Style="CityPanelHeader"			String="{LOC_HUD_CITY_HOUSING_CAPACITY:upper}" />
+            </Grid>
+            <Image					ID="GrowthTurnsSmall"			Anchor="L,B" Offset="82,-4"		Size="71,21"								Texture="CityPanel_MeterSmallBacking"		Hidden="1"	>
+              <TextureBar		ID="GrowthTurnsBarSmall"	Anchor="L,T" Offset="2,2"			Size="parent-4,parent-3"		Texture="CityPanel_CitizenMeterSmall"		ShadowColor="255,255,255,100" />
+              <Label				ID="GrowthNumSmall"				Anchor="C,C" Style="CityPanelNumLarge" WrapWidth="70" String="999"  />
+            </Image>
+            <Image					ID="GrowthTurns"					Anchor="L,B" Offset="82,-4"		Size="182,21"								Texture="CityPanel_MeterBacking" >
+              <TextureBar		ID="GrowthTurnsBar"				Anchor="L,T" Offset="2,2"			Size="parent-4,parent-3"		Texture="CityPanel_CitizenMeter"				ShadowColor="255,255,255,100" >
+                <Stack																Anchor="L,C" Offset="5,0"			StackGrowth="Right" StackPadding="2" >
+                  <Label		ID="GrowthNum"						Style="CityPanelNumLarge"			String="-"  />
+                  <Label		ID="GrowthLabel"					Style="CityPanelProgressText" String="n/a"  ColorSet="GrowthCS" 	/>
+                </Stack>
+              </TextureBar>
+            </Image>
+          </Container>
+
+          <Image						ID="PortraitCity"					Anchor="L,T" Offset="4,14"										Texture="SelectionPanel_Portrait">
+            <Image																								 Offset="53,6"										Texture="SelectionPanel_StatBrace" />
+            <Image					ID="CityHealthMeters"																		Size="57,107"		Texture="CityPanel_HealthShieldsBacking">
+              <Image				ID="CityWallHealthMeters"	Anchor="L,C"	Offset="1,-1"		Size="110,110"	Texture="CityPanel_Shields3_Empty">
+                <Meter			ID="WallHealthMeter"			Anchor="L,C"									Size="110,110"	Texture="SelectionPanel_Shields"	Color="120,198,247,255" />
+              </Image>
+              <Meter				ID="CityHealthMeter"			Anchor="L,C"	Offset="7,-2"		Size="95,95"		Texture="SelectionPanel_Health"		Percent=".6"/>
+            </Image>
+
+            <Image					ID="CircleBacking"  Texture="Circle80_Base"     Size="80,80" Anchor="C,C" Offset="0,-2">
+              <Image				ID="CircleLighter"  Texture="Circle80_Lighter"  Size="80,80" Anchor="C,C"/>
+              <Image				ID="CircleDarker"   Texture="Circle80_Darker"   Size="80,80" Anchor="C,C"/>
+              <Image				ID="CivIcon"				Texture="CivSymbols64"			Size="64,64" Anchor="C,C"/>
+              <Image				                    Texture="Circle80_None"     Size="80,80" Anchor="C,C"/>
+            </Image>
+          </Image>
+
+          <Button ID="BreakdownButton" Texture="SelectionPanel_Stat" Size="28,32" Offset="85,18" Disabled="1">
+            <Image Texture="Stats22" Icon="ICON_BUILDINGS" Size="22,22" Anchor="C,C" Offset="-1,-2"/>
+          </Button>
+          <Button ID="ReligionButton" Texture="SelectionPanel_Stat" Size="28,32" Offset="99,42" Disabled="1">
+            <Image ID="ReligionIcon" Texture="Stats22" Icon="ICON_RELIGION" Size="22,22" Anchor="C,C" Offset="0,-2"/>
+          </Button>
+          <Button ID="AmenitiesButton" Texture="SelectionPanel_Stat" Size="28,32" Offset="95,69" Disabled="1">
+            <Image Texture="Stats22" Icon="ICON_AMENITIES" Size="22,22" Anchor="C,C" Offset="0,-2"/>
+          </Button>
+          <Button ID="HousingButton" Texture="SelectionPanel_Stat" Size="28,32" Offset="79,90" Disabled="1">
+            <Image Texture="Stats22" Icon="ICON_HOUSING" Size="22,22" Anchor="C,C" Offset="0,-2"/>
+          </Button>
+        </Image>
+
+        <Image							ID="ProductionFrame"				Anchor="R,B" Offset="3,36"															Texture="SelectionPanel_PortraitFrame"		FlipX="1">
+          <ScrollPanel      ID="ProductionDataScroll"		AutoScrollBar="1" Vertical="1" Size="130,101"  Anchor="L,T" Offset="-155,15">
+            <Stack          ID="ProductionDataStack"		Padding="5"	>
+              <Container																Size="10,1"/>
+              <Label				ID="ProductionNowLabel"		  Align="Left" Style="BlueGlow"		FontSize="16" WrapWidth="124" String="LOC_HUD_CITY_PRODUCTION_NOTHING_PRODUCED" />
+              <Label				ID="ProductionStatString"		Align="Left"	Style="FontNormal15"		WrapWidth="190"	Color="102,122,145"		String="" LeadingOffset="2"/>
+              <Label				ID="ProductionDescriptionString"		Align="Left"	Style="FontNormal12"		WrapWidth="124"	Color="102,122,145"		String="" />
+            </Stack>
+            <ScrollBar Style="Slider_Blue" Anchor="L,C" AnchorSide="O,I">
+              <Image Texture="Controls_GradientSmall" FlipY="1" Offset="10,0" Size="180,15" Anchor="L,B" Color="15,51,87"/>
+              <Image Texture="Controls_GradientSmall" FlipY="1" Offset="10,0" Size="180,15" Anchor="L,B" Color="15,51,87"/>
+              <Image Texture="Controls_DecoMapScale" Size="190,4" StretchMode="Tile"  Color="7,36,60,255" Anchor="L,B" Offset="0,0" AnchorSide="I,O"/>
+            </ScrollBar>
+          </ScrollPanel>
+          <Image						ID="PortraitProduction"		Anchor="R,T" Offset="5,14"															Texture="CityPanel_ProductionSlot"  >
+            <Image                                    Anchor="C,C" Offset="0,-2"  Size="55,55"                Texture="Controls_SlotCircle" />
+            <Image					ID="ProductionIcon"				Anchor="C,C" Offset="0,-2"  Size="80,80"    						Texture="Buildings80" Hidden="1"/>
+          </Image>
+          <Image						ID="ProductionTurns"			Anchor="R,B" Offset="55,-24"	Size="182,21"							Texture="CityPanel_MeterBacking">
+            <TextureBar			ID="ProductionTurnsBar"		Anchor="L,T" Offset="2,2"			Size="parent-4,parent-3"	Texture="CityPanel_ProductionMeter"				ShadowColor="255,255,255,150">
+              <Stack																	Anchor="L,C" Offset="5,0"			StackGrowth="Right"	StackPadding="4">
+                <Label			ID="ProductionNum"				Style="CityPanelNumLarge"			String="-"  />
+                <Label			ID="ProductionLabel"			Style="CityPanelProgressText" String="n/a"  ColorSet="ResProductionLabelCS" 	/>
+              </Stack>
+            </TextureBar>
+          </Image>
+        </Image>
+
+        <Grid								ID="YieldsArea"						Anchor="R,T" Offset="0,-28"		Size="parent-5,27"	Texture="CityPanel_YieldBacking"	SliceCorner="6,12"	SliceSize="17,1" SliceTextureSize="29,25">
+          <Grid																				Anchor="L,B" Offset="0,-3"		Size="parent,5"				Texture="SelectionPanel_TopRim"		SliceCorner="2,3"		SliceSize="10,1" SliceTextureSize="14,5" />
+          <Stack						ID="YieldStack"						Anchor="C,C" Offset="3,0"			StackGrowth="Right" StackPadding="2" >
+            <Grid						ID="CultureGrid"					Style="CityPanelFilterGrid" >
+              <CheckBox			ID="CultureCheck"					Style="CityPanelCBCulture" String="[ICON_Culture]-" />
+              <Button				ID="CultureIgnore"				Style="CityPanelIgnoreYieldButton" />
+            </Grid>
+            <Grid						ID="FoodGrid"							Style="CityPanelFilterGrid" >
+              <CheckBox			ID="FoodCheck"						Style="CityPanelCBFood" String="[ICON_Food]-" />
+              <Button				ID="FoodIgnore"						Style="CityPanelIgnoreYieldButton" />
+            </Grid>
+            <Grid						ID="ProductionGrid"				Style="CityPanelFilterGrid" >
+              <CheckBox			ID="ProductionCheck"			Style="CityPanelCBProduction" String="[ICON_Production]-" />
+              <Button				ID="ProductionIgnore"			Style="CityPanelIgnoreYieldButton" />
+            </Grid>
+            <Grid						ID="ScienceGrid"					Style="CityPanelFilterGrid" >
+              <CheckBox			ID="ScienceCheck"					Style="CityPanelCBScience" String="[ICON_Science]-" />
+              <Button				ID="ScienceIgnore"				Style="CityPanelIgnoreYieldButton" />
+            </Grid>
+            <Grid						ID="FaithGrid"						Style="CityPanelFilterGrid" >
+              <CheckBox			ID="FaithCheck"						Style="CityPanelCBFaith" String="[ICON_Faith]-" />
+              <Button				ID="FaithIgnore"					Style="CityPanelIgnoreYieldButton" />
+            </Grid>
+            <Grid						ID="GoldGrid"							Style="CityPanelFilterGrid" >
+              <CheckBox			ID="GoldCheck"						Style="CityPanelCBGold" String="[ICON_Gold]-" />
+              <Button				ID="GoldIgnore"						Style="CityPanelIgnoreYieldButton" />
+            </Grid>
+          </Stack>
+        </Grid>
+
+        <Grid								ID="Banner"								Anchor="L,T" Offset="50,-2"		Size="380,33"								Texture="CityPanel_BannerBase"				SliceCorner="20,10" SliceSize="160,1" SliceTextureSize="199,33" Color="150,170,100,255">
+          <Grid							ID="BannerDarker"												Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerDarker"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" />
+          <Grid							ID="BannerLighter"												Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerLighter"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" />
+          <Grid																			Anchor="L,T" Offset="6,2"			Size="parent-10,parent-8"		Texture="CityPanel_BannerNone"				SliceCorner="70,10" SliceSize="1,1" SliceTextureSize="179,20" Color="255,255,255,255" />
+          <Label						ID="CityName"							Anchor="C,C" Offset="0,-2"		Style="FontFlair16"					FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="EveryWord" />
+          <Button						ID="PrevCityButton"				Anchor="L,T" Offset="4,2"			Style="ArrowButtonLeft"	 />
+          <Button						ID="NextCityButton"				Anchor="R,T" Offset="4,2" 		Style="ArrowButtonRight" />
+        </Grid>
+
+        <Stack StackGrowth="Right" Padding="3" Anchor="C,T">
+          <Grid																	Anchor="C,T" Offset="0,-68"		Size="100,41"				Texture="UnitPanel_ActionGroupSlot"  SliceCorner="5,19" SliceSize="1,1" InnerPadding="10,-16" AutoSize="H">
+            <CheckBox				ID="ToggleOverviewPanel"	Offset="0,-2"	Size="44,53"  ButtonTexture="UnitPanel_ActionButton"	ButtonSize="44,53" CheckTexture="CityPanel_ActionTogglePanel"    CheckTextureOffset="0,32"		CheckSize="32,32" CheckOffset="5,8"	UnCheckTexture="CityPanel_ActionTogglePanel"	  UnCheckSize="32,32" UnCheckOffset="5,8" UseSelectedTextures="1" ToolTip="LOC_HUD_CITY_TOGGLE_OVERVIEW" IsChecked="0"/>
+          </Grid>
+          <Grid																	Anchor="C,T" Offset="0,-68"		Size="100,41"				Texture="UnitPanel_ActionGroupSlot"  SliceCorner="5,19" SliceSize="1,1" InnerPadding="10,-16" AutoSize="H">
+            <!-- CITY PANEL ACTIONS -->
+            <Stack StackGrowth="Right" Padding="3" Offset="0,-2">
+              <CheckBox				ID="PurchaseTileCheck"			Size="44,53"  ButtonTexture="UnitPanel_ActionButton"	ButtonSize="44,53" CheckTexture="CityPanel_ActionPurchaseTile"	    CheckTextureOffset="0,32"		CheckSize="32,32" CheckOffset="10,10"	UnCheckTexture="CityPanel_ActionPurchaseTile"		  UnCheckSize="32,32" UnCheckOffset="10,10" UseSelectedTextures="1" ToolTip="LOC_HUD_CITY_PURCHASE_TILE"/>
+              <CheckBox				ID="ManageCitizensCheck"		Size="44,53"  ButtonTexture="UnitPanel_ActionButton"	ButtonSize="44,53" CheckTexture="CityPanel_ActionManageCitizens"    CheckTextureOffset="0,32"		CheckSize="32,32" CheckOffset="5,8"	UnCheckTexture="CityPanel_ActionManageCitizens"	  UnCheckSize="32,32" UnCheckOffset="5,8" UseSelectedTextures="1" ToolTip="LOC_HUD_CITY_MANAGE_CITIZENS" />
+              <CheckBox				ID="ProduceWithGoldCheck"		Size="44,53"  ButtonTexture="UnitPanel_ActionButton"	ButtonSize="44,53" CheckTexture="CityPanel_ActionGoldProduction"    CheckTextureOffset="0,32"		CheckSize="32,32" CheckOffset="5,8"	UnCheckTexture="CityPanel_ActionGoldProduction"	  UnCheckSize="32,32" UnCheckOffset="5,8" UseSelectedTextures="1" ToolTip="LOC_HUD_CITY_PURCHASE_WITH_GOLD" />
+              <CheckBox				ID="ProduceWithFaithCheck"		Size="44,53"  ButtonTexture="UnitPanel_ActionButton"	ButtonSize="44,53" CheckTexture="CityPanel_ActionFaithProduction"    CheckTextureOffset="0,32"		CheckSize="32,32" CheckOffset="5,8"	UnCheckTexture="CityPanel_ActionFaithProduction"	  UnCheckSize="32,32" UnCheckOffset="5,8" UseSelectedTextures="1" ToolTip="LOC_HUD_CITY_PURCHASE_WITH_FAITH" />
+				      <CheckBox				ID="ChangeProductionCheck"		Size="44,53"  ButtonTexture="UnitPanel_ActionButton"	ButtonSize="44,53" CheckTexture="CityPanel_ActionProduction"    CheckTextureOffset="0,32"		CheckSize="32,32" CheckOffset="5,8"	UnCheckTexture="CityPanel_ActionProduction"	  UnCheckSize="32,32" UnCheckOffset="6,9" UseSelectedTextures="1" ToolTip="LOC_HUD_CITY_CHANGE_PRODUCTION">
+					      <Tutorial  ID="TutOpenProduction" Style="TutorialContainer" Anchor="C,T" AnchorSide="O,O" Offset="0,50" TriggerBy="TutorialOpenProduction" >
+					      	<Grid Style="TutorialCalloutGrid">
+					      		<Label Style="TutorialHeaderText" String="LOC_META_3_HEAD" />
+					      		<Label Style="TutorialBodyText" String="LOC_META_3_BODY" />
+					      	</Grid>
+                  <SlideAnim Start="0,0" EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" Anchor="C,B">
+                    <Image Texture="Tutorial_ArrowV" Offset="-22,-20" Size="44,58"/>
+                  </SlideAnim>
+					      </Tutorial>
+				      </CheckBox>
+            </Stack>
+          </Grid>
+
+        </Stack>
+
+        <Button					ID="CitizensGrowthButton" Offset="28,116"  Texture="SelectionPanel_StatLarge"	Size="41,42" Disabled="1">
+          <Image Texture="CityPanel_CitizenIcon" Size="32,32" Anchor="C,C" Offset="0,-2" Color="255,255,255,150">
+            <Label				ID="PopulationNumber"				Anchor="C,C" Style="CityPanelNumLarge" WrapWidth="70" String="999" Align="Center" KerningAdjustment="-1" Offset="-1,0"/>
+          </Image>
+        </Button>
+      </Grid>
+    </SlideAnim>
+  </AlphaAnim>
+  
+
+</Context>
