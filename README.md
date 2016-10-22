@@ -14,4 +14,7 @@ https://github.com/vans163/civ6_qui/archive/1.0.0.26.zip
 
 ### Features
 
-Read the commit history for all features.
+Right click on globe ends turn immediately.  
+Housing visible from global view.
+
+Read the commit history for rest of features.
