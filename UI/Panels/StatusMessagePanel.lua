@@ -32,6 +32,7 @@ local m_kMessages :table = {};
 -- =========================================================================== 
 function OnStatusMessage( str:string, fDisplayTime:number, type:number )
 
+	do return end;
 	if (type == ReportingStatusTypes.DEFAULT or
 		type == ReportingStatusTypes.GOSSIP) then	-- A type we handle?
 
