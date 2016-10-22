@@ -12,11 +12,27 @@
     <Components>
         <ImportFiles id="QUI_IMPORT_FILES">
             <Items>
+				<File>UI/Panels/CityPanel.lua</File>
+				<File>UI/Panels/StatusMessagePanel.lua</File>
 				<File>UI/Panels/UnitPanel.lua</File>
+				<File>UI/Popups/TechCivicCompletedPopup.lua</File>
+				<File>UI/WorldView/CityBannerManager.lua</File>
+				<File>UI/WorldView/PlotInfo.lua</File>
+				<File>UI/ActionPanel.lua</File>
+				<File>UI/CitySupport.lua</File>
+				<File>UI/TopPanel.lua</File>
             </Items>
         </ImportFiles>
     </Components>
 	<Files>
+		<File>UI/Panels/CityPanel.lua</File>
+		<File>UI/Panels/StatusMessagePanel.lua</File>
 		<File>UI/Panels/UnitPanel.lua</File>
+		<File>UI/Popups/TechCivicCompletedPopup.lua</File>
+		<File>UI/WorldView/CityBannerManager.lua</File>
+		<File>UI/WorldView/PlotInfo.lua</File>
+		<File>UI/ActionPanel.lua</File>
+		<File>UI/CitySupport.lua</File>
+		<File>UI/TopPanel.lua</File>
 	</Files>
 </Mod>
