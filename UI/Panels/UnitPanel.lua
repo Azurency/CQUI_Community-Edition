@@ -2424,7 +2424,7 @@ function OnPromptToDeleteUnit()
 		local msg		:string = Locale.Lookup("LOC_HUD_UNIT_PANEL_ARE_YOU_SURE_DELETE", unitName);
 		-- Pass the unit ID through, the user can take their time in the dialog and it is possible that the selected unit will change
 		local unitID = pUnit:GetComponentID();
-		m_kPopupDialog:ShowOkCancelDialog( msg, function() OnDeleteUnit(unitID) end, nil);
+		OnDeleteUnit(unitID);
 	end
 end
 
