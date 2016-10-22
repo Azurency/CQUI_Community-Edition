@@ -142,10 +142,10 @@
         </Grid>
 
         <Stack StackGrowth="Right" Padding="3" Anchor="C,T">
-          <Grid																	Anchor="C,T" Offset="0,-68"		Size="100,41"				Texture="UnitPanel_ActionGroupSlot"  SliceCorner="5,19" SliceSize="1,1" InnerPadding="10,-16" AutoSize="H">
+          <Grid																	Anchor="C,T" Offset="-120,-68"		Size="100,41"				Texture="UnitPanel_ActionGroupSlot"  SliceCorner="5,19" SliceSize="1,1" InnerPadding="10,-16" AutoSize="H">
             <CheckBox				ID="ToggleOverviewPanel"	Offset="0,-2"	Size="44,53"  ButtonTexture="UnitPanel_ActionButton"	ButtonSize="44,53" CheckTexture="CityPanel_ActionTogglePanel"    CheckTextureOffset="0,32"		CheckSize="32,32" CheckOffset="5,8"	UnCheckTexture="CityPanel_ActionTogglePanel"	  UnCheckSize="32,32" UnCheckOffset="5,8" UseSelectedTextures="1" ToolTip="LOC_HUD_CITY_TOGGLE_OVERVIEW" IsChecked="0"/>
           </Grid>
-          <Grid																	Anchor="C,T" Offset="0,-68"		Size="100,41"				Texture="UnitPanel_ActionGroupSlot"  SliceCorner="5,19" SliceSize="1,1" InnerPadding="10,-16" AutoSize="H">
+          <Grid																	Anchor="C,T" Offset="-50,-68"		Size="100,41"				Texture="UnitPanel_ActionGroupSlot"  SliceCorner="5,19" SliceSize="1,1" InnerPadding="10,-16" AutoSize="H">
             <!-- CITY PANEL ACTIONS -->
             <Stack StackGrowth="Right" Padding="3" Offset="0,-2">
               <CheckBox				ID="PurchaseTileCheck"			Size="44,53"  ButtonTexture="UnitPanel_ActionButton"	ButtonSize="44,53" CheckTexture="CityPanel_ActionPurchaseTile"	    CheckTextureOffset="0,32"		CheckSize="32,32" CheckOffset="10,10"	UnCheckTexture="CityPanel_ActionPurchaseTile"		  UnCheckSize="32,32" UnCheckOffset="10,10" UseSelectedTextures="1" ToolTip="LOC_HUD_CITY_PURCHASE_TILE"/>
