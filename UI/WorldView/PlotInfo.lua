@@ -273,6 +273,7 @@ function ShowCitizens()
 				pInstance.CitizenButton:RegisterCallback(Mouse.eLClick, OnClickCitizen );
 				pInstance.CitizenButton:SetHide(false);
 				pInstance.CitizenButton:SetDisabled( false );
+				--pInstance.CitizenButton:SetSizeVal(48, 48);
 
 				if(tUnits[i] >= 1) then
 					pInstance.CitizenButton:SetTextureOffsetVal(0, CITIZEN_BUTTON_HEIGHT*4);
@@ -798,12 +799,12 @@ function OnLensLayerOn( layerNum:number )
 	if layerNum == LensLayers.CITIZEN_MANAGEMENT then
 		ShowCitizens();	
 		RealizeShadowMask();
-		RealizeTilt();
+		--RealizeTilt();
 		RefreshCityYieldsPlotList();
 	elseif layerNum == LensLayers.PURCHASE_PLOT then
 		ShowPurchases();	
 		RealizeShadowMask();
-		RealizeTilt();
+		--RealizeTilt();
 		RefreshCityYieldsPlotList();
 	elseif layerNum == LensLayers.CITY_YIELDS then	
 		ShowCityYields();
@@ -819,12 +820,12 @@ function OnLensLayerOff( layerNum:number )
 	if	layerNum == LensLayers.CITIZEN_MANAGEMENT then		
 		HideCitizens();
 		RealizeShadowMask();
-		RealizeTilt();
+		--RealizeTilt();
 		RefreshCityYieldsPlotList();
 	elseif	layerNum == LensLayers.PURCHASE_PLOT then	
 		HidePurchases();
 		RealizeShadowMask();
-		RealizeTilt();
+		--RealizeTilt();
 		RefreshCityYieldsPlotList();
 	elseif layerNum == LensLayers.CITY_YIELDS then
 		HideCityYields();
