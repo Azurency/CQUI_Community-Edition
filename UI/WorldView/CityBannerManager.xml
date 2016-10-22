@@ -1,0 +1,403 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Context>
+
+	<!-- Containers which all banners exist off of -->
+  <Container ID="CityBanners"/>
+  <Container ID="CityDistrictIcons"/>
+  <Container ID="StrategicViewStrikeButtons" Hidden="1"/>
+  
+	
+	
+  <!-- Local Team Banner -->
+  <Instance								Name="TeamCityBanner">
+    <WorldAnchor					ID="Anchor">
+			<Container																					Anchor="C,C"	Offset="0,-20"	Size="200,34">
+				<Button							ID="CityBannerButton"					Anchor="C,T"									Size="Parent-20,34"		NoStateChange="true">
+					<AlphaAnim																			Anchor="L,T"									Size="Parent,Parent"	AlphaStart="0" AlphaEnd=".9" Speed="2" Function="Root" Cycle="Once">
+						<Grid						ID="CityBannerBackground"			Anchor="C,T"  Offset="1,0"		Size="Parent,34"			Color="255,255,255,150" SliceTextureSize="50,34" SliceCorner="25,17" Texture="Banner_BannerBacking">
+							<Image				ID="CityProductionProgress"		Anchor="R,C"	Offset="2,0"		Size="14,32"	TextureOffset="14,0" Speed="1" Texture="Banner_ProductionMeter" >
+								<TextureBar ID="CityProductionNextTurn"		Anchor="L,C"									Size="14,32"  Direction="Up" Speed="1"	Texture="Banner_ProductionMeter"/>
+								<TextureBar ID="CityProductionMeter"			Anchor="L,C"									Size="14,32"  Direction="Up" Speed="1"	Texture="Banner_ProductionMeter"/>
+							</Image>
+							<Image																			Anchor="L,C"	Offset="2,0"		Size="14,32" Speed="1" TextureOffset="14,0" Texture="Banner_PopulationMeter" >
+								<TextureBar ID="CityPopulationNextTurn"		Anchor="R,C"									Size="14,32" Direction="Up" Speed="1"	Texture="Banner_PopulationMeter" CounterClockwise="1"/>
+								<TextureBar ID="CityPopulationMeter"			Anchor="R,C"									Size="14,32" Direction="Up" Speed="1"	Texture="Banner_PopulationMeter" CounterClockwise="1"/>
+							</Image>
+						</Grid>
+						<Grid						ID="CityBannerFill"						Anchor="C,T"									Size="Parent,Parent"	Texture="Banner_Base"			SliceTextureSize="196,34" SliceCorner="98,17"/>
+						<Grid						ID="CityBannerFill2"					Anchor="C,T"									Size="Parent,Parent"	Texture="Banner_Darker"		SliceTextureSize="196,34" SliceCorner="98,17"/>
+						<Grid						ID="CityBannerFill3"					Anchor="C,T"									Size="Parent,Parent"	Texture="Banner_Lighter"	SliceTextureSize="196,34" SliceCorner="98,17"/>
+						<Grid						ID="CityBannerFill4"					Anchor="C,T"									Size="Parent,Parent"	Texture="Banner_None"			SliceTextureSize="196,34" SliceCorner="98,17"/>
+					</AlphaAnim>
+					<AlphaAnim																			Anchor="L,T"									Size="Parent,Parent" ShowOnMouseOver="1" AlphaStart="0" AlphaEnd="1" Speed="2" Function="Root" Cycle="Once">
+						<Grid						ID="CityBannerFillOver"				Anchor="C,T"									Size="Parent,Parent"     Texture="Banner_Secondary"    SliceTextureSize="196,34" SliceCorner="98,17"/>
+					</AlphaAnim>
+					<AlphaAnim																																		Size="Parent,Parent" ShowOnMouseOut="1" AlphaStart="1" AlphaEnd="0" Speed="2" Function="Root" Cycle="Once">
+						<Grid						ID="CityBannerFillOut"				Anchor="C,T"									Size="Parent,Parent"    Texture="Banner_Secondary" SliceTextureSize="196,34" SliceCorner="98,17"/>
+					</AlphaAnim>
+				</Button>
+
+				<!-- Banner Contents  -->
+				<Stack							ID="ContentStack"								Anchor="C,T" StackGrowth="Right" Padding="5" >
+					<Container																				Anchor="L,C" Size="34,34">
+						<Label					ID="CityPopulation" 						Anchor="C,C" String="999"		Style="FontFlair28"	FontStyle="glow" KerningAdjustment="-3" />
+						<Label					ID="CityPopTurnsLeft"						Anchor="L,T" Offset="3,-6"	Style="StrongSmall2"/>
+					</Container>
+
+					<Container				ID="CityNameContainer"					Anchor="L,C"	Size="50,34">
+						<Stack					ID="CityNameStack"							Anchor="C,C"	StackGrowth="Right" Padding="2" >
+							<Label				ID="TradingPostIcon"						Anchor="R,C"	Offset="0,2"	String="[ICON_TradingPost]" Hidden="1">
+								<Label			ID="TradingPostDisabledIcon"		Anchor="C,C"	String="[ICON_Exclamation]" Hidden="1"/>
+							</Label>
+              <Label				ID="CityUnderSiegeIcon"					Anchor="L,C"	Style="FontNormal20" String="[ICON_UnderSiege]" ConsumeMouse="1" ToolTip="LOC_HUD_REPORTS_STATUS_UNDER_SEIGE"/>
+              <Label				ID="CityHousingInsufficientIcon"	  Anchor="L,C"	Style="FontNormal20" String="[ICON_HousingInsufficient]"/>
+              <Label				ID="CityAmenitiesInsufficientIcon"	Anchor="L,C"	Style="FontNormal20" String="[ICON_AmenitiesInsufficient]"/>
+							<Label				ID="CityQuestIcon"							Anchor="L,C"	Style="FontNormal20" />
+							<Label				ID="CityName"										Anchor="L,C"	Style="HeaderSmallCaps" String="BALTIMORE" />
+							<Image				ID="ReligionBannerIconContainer" Anchor="L,C"	Size="26,26"  Texture="Banner_ProductionCircle" Color="255,255,255,200" Hidden="1">
+								<Image			ID="ReligionBannerIcon"					Anchor="C,C" 	Size="22,22"  Texture="Religions22"/>
+							</Image>
+						</Stack>
+					</Container>
+
+					<Container				ID="ProductionOrSpace"					Anchor="L,C" Offset="0,1" Size="40,34" >
+						<AlphaAnim			ID="ProductionIndicator"				Anchor="C,T" AlphaStart="0" AlphaEnd="1" Speed="1" Cycle="Once" Size="parent,parent" Hidden="1" >
+							<SlideAnim																		Anchor="C,T" Function="Root" Start="-8,0" End="0,0" Speed="2.5" Cycle="Once" Size="parent,parent" >
+								<Image																			Anchor="R,C" Texture="Banner_ProductionCircle" Size="26,26" Offset="6,-2" Color="255,255,255,200">
+									<Button		ID="CityProduction"							Anchor="C,C" Texture="Production30" Size="30,30" Color="255,255,255,0">
+										<Image	ID="CityProductionIcon"					Anchor="C,C" Size="32,32" Texture="Buildings32"/>
+									</Button>
+								</Image>
+							</SlideAnim>
+						</AlphaAnim>
+						<Label					ID="CityProdTurnsLeft"					Anchor="R,T" Offset="6,-6"  Style="StrongSmall2"/>
+					</Container>
+				</Stack>
+
+				<Image ID="CityAttackContainer" Texture="CityBannerRangeAttackRim" Size="36,45" Anchor="C,B" AnchorSide="I,O" Offset="0,-6">
+					<Button ID="CityRangeStrikeButton" Style="CityBannerRangeAttack" Anchor="C,B" Offset="0,10" StateOffsetIncrement="0,25" ConsumeMouse="1" ToolTip="LOC_CITY_BANNER_CITY_RANGE_STRIKE"/>
+				</Image>
+
+				<Grid ID="BannerStrengthBacking"  Texture="Banner_StrengthBacking"  Size="55,15"  Anchor="C,T"  SliceTextureSize="42,15"  SliceCorner="21,7"  AnchorSide="I,O" Color="255,255,255,150">
+					<Stack StackGrowth="Right" Anchor="C,T" Padding="0" ID="DefenseStack">
+						<Image Size="16,18" Texture="Banner_StrengthIcon" ID="DefenseIcon"/>
+						<Image Size="21,18" Texture="Banner_StrengthIcon_Shields" ID="ShieldsIcon"  Hidden="1"/>
+						<Label ID="DefenseNumber" Style="StrongSmall" String="00 [00]" KerningAdjustment="-1"/>
+						<Container Size="3,2" />
+						<Stack StackGrowth="Down" Anchor="L,C">
+							<Grid ID="CityDefenseBarBacking" Size="100,8" Texture="Banner_LifeBar" SliceTextureSize="100,6" SliceCorner="50,3">
+								<TextureBar ID="CityDefenseBar" Texture="Banner_LifeBar" Size="100,6" Direction="Right" Speed="1" Anchor="L,C" TextureOffset="0,6" Color="120,198,247,255"/>
+							</Grid>
+							<Grid ID="CityHealthBarBacking" Size="100,8" Texture="Banner_LifeBar" SliceTextureSize="100,6" SliceCorner="50,3" Hidden="1">
+								<TextureBar ID="CityHealthBar"	Texture="Banner_LifeBar" Size="100,6" Direction="Right" Speed="1" Anchor="L,C" TextureOffset="0,6"/>
+							</Grid>
+						</Stack>
+					</Stack>
+				</Grid>
+
+				<!-- Religion Meter -->
+				<Container			ID="ReligionMeter"		Anchor="C,C" Offset="5,60" Size="120,120" Hidden="1">
+					<Image															Anchor="C,C"																Texture="Religion_MeterPressureBG"/>
+					<AlphaAnim		ID="MeterFade"				Anchor="C,C" AlphaStart="1" AlphaEnd="0" Speed="1" Cycle="Once" Stopped="true">
+						<Image			ID="MeterPressure"		Anchor="C,C" Offset="0,1"										Texture="Religion_MeterPressureCenter" Color="255,255,255,127">
+							<FlipAnim ID="LowPressureAnim"	Anchor="C,C"								Size="80,80"		Texture="Religion_PressureLowAnim"		FrameCount="71" Columns="10"/>
+							<FlipAnim ID="MedPressureAnim"	Anchor="C,C"								Size="80,80"		Texture="Religion_PressureMediumAnim" FrameCount="41" Columns="8"/>
+							<FlipAnim ID="HighPressureAnim" Anchor="C,C"								Size="80,80"		Texture="Religion_PressureHighAnim"		FrameCount="41" Columns="8"/>
+						</Image>
+						<Image			ID="ReligionIcon"			Anchor="C,C"								Size="100,100"	Texture="Religion_Generic" />
+					</AlphaAnim>
+					<Container		ID="Meters"						Anchor="C,C"								Size="110,110" />
+					<Grid					ID="StackBG"					Anchor="L,C" Offset="120,0" Size="70,1"			Texture="Religion_FollowersPanel"		SliceTextureSize="10,10"  />
+					<Stack				ID="FollowerStack"		Anchor="L,C" Offset="120,0" StackGrowth="Down" />
+					<Container		ID="ReligionChanges"	Anchor="C,C" />
+				</Container>
+
+			</Container>
+    </WorldAnchor>
+  </Instance>
+
+	
+  <!-- Other Team Banners' -->
+  <Instance								Name="OtherCityBanner">
+    <WorldAnchor					ID="Anchor" >
+			<Container																				Anchor="C,C" Offset="0,-20" Size="200,34" >
+
+				<Button							ID="CityBannerButton" Size="Parent-20,34" Anchor="C,T" NoStateChange="true">
+					<AlphaAnim				Size="Parent,Parent" AlphaStart="0" AlphaEnd=".9" Anchor="L,T" Speed="2" Function="Root" Cycle="Once">
+						<Grid						ID="CityBannerBackground" Size="Parent,34" Offset="1,0" Anchor="C,T"  Color="255,255,255,150" SliceTextureSize="50,34" SliceCorner="25,17" Texture="Banner_BannerBacking" Hidden="1">
+
+							<Image				ID="CityProductionProgress" TextureOffset="14,0" Offset="2,0" Speed="1" Anchor="R,C" Size="14,32" Texture="Banner_ProductionMeter" Hidden="1">
+								<TextureBar ID="CityProductionNextTurn"  Direction="Up" Speed="1"	Anchor="L,C" Size="14,32" Texture="Banner_ProductionMeter"/>
+								<TextureBar ID="CityProductionMeter"     Direction="Up" Speed="1"	Anchor="L,C" Size="14,32" Texture="Banner_ProductionMeter"/>
+							</Image>
+							<Image																			Offset="2,0" Speed="1" TextureOffset="14,0" Anchor="L,C" Size="14,32" Texture="Banner_PopulationMeter" >
+								<TextureBar ID="CityPopulationNextTurn"  Direction="Up" Speed="1"	Anchor="R,C" Size="14,32" Texture="Banner_PopulationMeter" CounterClockwise="1"/>
+								<TextureBar ID="CityPopulationMeter"     Direction="Up" Speed="1"	Anchor="R,C" Size="14,32" Texture="Banner_PopulationMeter" CounterClockwise="1"/>
+							</Image>
+						</Grid>
+						<Grid						ID="CityBannerFill"         Texture="Banner_Base"             Size="Parent,Parent"    Anchor="R,T"  SliceTextureSize="196,34" SliceCorner="98,17"/>
+						<Grid						ID="CityBannerFill2"        Texture="Banner_Darker"           Size="Parent,Parent"    Anchor="R,T"  SliceTextureSize="196,34" SliceCorner="98,17"/>
+						<Grid						ID="CityBannerFill3"        Texture="Banner_Lighter"          Size="Parent,Parent"    Anchor="R,T"  SliceTextureSize="196,34" SliceCorner="98,17"/>
+						<Grid						ID="CityBannerFill4"        Texture="Banner_None"             Size="Parent,Parent"    Anchor="R,T"  SliceTextureSize="196,34" SliceCorner="98,17"/>
+					</AlphaAnim>
+					<AlphaAnim																		Size="Parent,Parent" ShowOnMouseOver="1" AlphaStart="0" AlphaEnd="1" Speed="2" Function="Root" Cycle="Once">
+						<Grid						ID="CityBannerFillOver"     Texture="Banner_Secondary"  Size="Parent,Parent"    Anchor="C,T"  SliceTextureSize="196,34" SliceCorner="98,17"/>
+					</AlphaAnim>
+					<AlphaAnim																		Size="Parent,Parent" ShowOnMouseOut="1" AlphaStart="1" AlphaEnd="0" Speed="2" Function="Root" Cycle="Once">
+						<Grid						ID="CityBannerFillOut"      Texture="Banner_Secondary" Size="Parent,Parent"    Anchor="C,T"  SliceTextureSize="196,34" SliceCorner="98,17"/>
+					</AlphaAnim>
+				</Button>
+
+				<!-- Banner Contents  -->
+				<Stack							ID="ContentStack" StackGrowth="Right" Padding="5" Anchor="C,T">
+
+					<Container																		Anchor="L,C" Size="34,34">
+						<Label					ID="CityPopulation" 				Anchor="C,C" String="999" Style="FontFlair28"	FontStyle="glow" />
+						<Label					ID="CityPopTurnsLeft"				AnchorSide="O,I" Offset="3,-2" Style="StrongSmall2" KerningAdjustment="-1" Hidden="1"/>
+					</Container>
+            
+					<Container				ID="CityNameContainer"	          Anchor ="L,C" Size="50,34">
+						<Stack					ID="CityNameStack"			          StackGrowth="Right" Padding="2" Anchor="C,C" >
+							<Label				ID="TradingPostIcon"							Anchor="R,C" Offset="0,2"	String="[ICON_TradingPost]" Hidden="1">
+								<Label			ID="TradingPostDisabledIcon"			Anchor="C,C"	String="[ICON_Exclamation]" Hidden="1"/>
+							</Label>
+              <Label				ID="CityUnderSiegeIcon"	          Anchor="L,C"		Style="FontNormal20" String="[ICON_UnderSiege]" ConsumeMouse="1" ToolTip="LOC_HUD_REPORTS_STATUS_UNDER_SEIGE"/>
+							<Label				ID="CityQuestIcon"								Anchor="L,C"		Style="FontNormal20"/>
+							<Label				ID="CityName"											Anchor="L,C"		Style="HeaderSmallCaps" String="BALTIMORE" />
+							<Image				ID="ReligionBannerIconContainer"	Anchor="L,C" 		Size="26,26"  Texture="Banner_ProductionCircle" Hidden="1">
+								<Image			ID="ReligionBannerIcon"						Anchor="C,C"		Size="22,22"  Texture="Religions22"/>
+							</Image>
+						</Stack>
+					</Container>
+
+					<Container				ID="ProductionIndicator" Size="40,34"  Anchor="L,C" Offset="0,1" Hidden="1">
+						<AlphaAnim AlphaStart="0" AlphaEnd="1" Speed="1" Cycle="Once" Size="parent,parent" Anchor="C,T">
+							<SlideAnim Function="Root" Start="-8,0" End="0,0" Speed="2.5" Cycle="Once" Size="parent,parent" Anchor="C,T">
+								<Image Texture="Banner_ProductionCircle" Size="26,26" Offset="6,-2" Anchor="R,C" Color="255,255,255,180" >
+									<Button		ID="CityProduction" Texture="Production30" Size="30,30" Anchor="C,C" Color="255,255,255,0" >
+										<Image	ID="CityProductionIcon" Size="32,32" Anchor="C,C" Texture="Buildings32" Hidden="1"/>
+									</Button>
+								</Image>
+							</SlideAnim>
+						</AlphaAnim>
+						<Label					ID="CityProdTurnsLeft" Anchor="R,T" AnchorSide="O,I" Offset="3,-2" Style="StrongSmall" KerningAdjustment="-1"/>
+					</Container>
+                      
+					<Image						ID="CivIcon" Texture="CivSymbols30" Size="30,30" Anchor="L,C" />
+					<Container				ID="CivIconEndPadding" Size="1,1" />
+				</Stack>
+          
+				<Grid								ID="CityStateQuest" Texture="CityStateQuest28" SliceTextureSize="28,23" SliceCorner="14,6" Size="28,30" Hidden="1" Offset="-5,-22" />
+
+				<Image							ID="CityAttackContainer" Texture="CityBannerRangeAttackRim" Size="36,45" Anchor="C,B" AnchorSide="I,O" Offset="0,-6">
+					<Button						ID="CityRangeStrikeButton" Style="CityBannerRangeAttack" Anchor="C,B" Offset="0,10" StateOffsetIncrement="0,25" ConsumeMouse="1" ToolTip="LOC_CITY_BANNER_CITY_RANGE_STRIKE"/>
+				</Image>
+
+				<Grid								ID="BannerStrengthBacking"  Texture="Banner_StrengthBacking"  Size="55,15"  Anchor="C,T"  SliceTextureSize="42,15"  SliceCorner="21,7"  AnchorSide="I,O" Color="255,255,255,150">
+					<Stack						ID="DefenseStack" StackGrowth="Right" Anchor="C,T" Padding="0"	>
+						<Image					ID="DefenseIcon"	Size="16,18" Texture="Banner_StrengthIcon"		/>
+						<Image					ID="ShieldsIcon" Size="21,18" Texture="Banner_StrengthIcon_Shields"   Hidden="1"/>
+						<Label					ID="DefenseNumber" Style="StrongSmall" String="00 [00]" KerningAdjustment="-1"/>
+						<Container Size="3,2" />
+						<Stack StackGrowth="Down" Anchor="L,C">
+							<Grid					ID="CityDefenseBarBacking" Size="100,8" Texture="Banner_LifeBar" SliceTextureSize="100,6" SliceCorner="50,3">
+								<TextureBar ID="CityDefenseBar" Texture="Banner_LifeBar" Size="100,6" Direction="Right" Speed="1" Anchor="L,C" TextureOffset="0,6" Color="120,198,247,255"/>
+							</Grid>
+							<Grid					ID="CityHealthBarBacking" Size="100,8" Texture="Banner_LifeBar" SliceTextureSize="100,6" SliceCorner="50,3" Hidden="1">
+								<TextureBar ID="CityHealthBar"	Texture="Banner_LifeBar" Size="100,6" Direction="Right" Speed="1" Anchor="L,C" TextureOffset="0,6"/>
+							</Grid>
+						</Stack>
+					</Stack>
+				</Grid>
+
+				<!-- Religion Meter -->
+				<Container			ID="ReligionMeter"		Anchor="C,C" Offset="5,60" Size="120,120" Hidden="1">
+					<Image															Anchor="C,C" Texture="Religion_MeterPressureBG"/>
+					<AlphaAnim		ID="MeterFade"				Anchor="C,C" AlphaStart="1" AlphaEnd="0" Speed="1" Cycle="Once" Offset="0,0" Stopped="true">
+						<Image			ID="MeterPressure"		Anchor="C,C" Offset="0,1" Texture="Religion_MeterPressureCenter" Color="255,255,255,127">
+							<FlipAnim ID="LowPressureAnim"	Anchor="C,C" Texture="Religion_PressureLowAnim" Size="80,80" FrameCount="71" Columns="10"/>
+							<FlipAnim ID="MedPressureAnim"	Anchor="C,C" Texture="Religion_PressureMediumAnim" Size="80,80" FrameCount="41" Columns="8"/>
+							<FlipAnim ID="HighPressureAnim" Anchor="C,C" Texture="Religion_PressureHighAnim" Size="80,80" FrameCount="41" Columns="8"/>
+						</Image>
+						<Image			ID="ReligionIcon"			Anchor="C,C" Texture="Religion_Generic" Size="100,100"/>
+					</AlphaAnim>
+					<Container		ID="Meters"						Anchor="C,C" Size="110,110" />
+					<Grid					ID="StackBG"					Anchor="L,C" Offset="120,0" Size="70,1" SliceTextureSize="10,10" Texture="Religion_FollowersPanel" />
+					<Stack				ID="FollowerStack"		Anchor="L,C" Offset="120,0" StackGrowth="Down" />
+					<Container		ID="ReligionChanges"	Anchor="C,C" />
+				</Container>
+			
+			</Container>
+    </WorldAnchor>
+  </Instance>
+
+  <!-- Aerodrome Minibanner -->
+  <Instance					Name="AerodromeBanner">
+    <WorldAnchor		ID="Anchor">
+      <Grid ID="AerodromeBannerGrid" Anchor="C,C" Size="54,24" Texture="Banner_UnitBacking" SliceCorner="13,1" SliceSize="4,22">
+        <!-- Current and max air unit capacity -->
+        <Stack Anchor="R,C" Offset="6,0" StackGrowth="Right">
+          <Label ID="AerodromeCurrentUnitCount" Style="FontNormal14" String="1"/>
+          <Label Style="FontNormal14" String="/"/>
+          <Label ID="AerodromeMaxUnitCount" Style="FontNormal14" String="4"/>
+        </Stack>
+      </Grid>
+      
+      <PullDown ID="UnitListPopup" ConsumeMouse="0" Offset="0,0" Anchor="C,C" Size="200,20" AutoSizePopUp="0" AutoFlip="1" ScrollThreshold="96">
+        <ButtonData>
+          <Button	ID="AerodromeButton" Anchor="C,C" Size="28,28" Offset="-14,0" NoStateChange="1">
+            <!-- Aerodrome button textures -->
+            <Image ID="AerodromeUnitsButton_Base"     Anchor="C,C" Size="28,28" Texture="Banner_UnitButton_Base"/>
+            <Image ID="AerodromeUnitsButton_Darker"   Anchor="C,C" Size="28,28" Texture="Banner_UnitButton_Darker"/>
+            <Image ID="AerodromeUnitsButton_Lighter"  Anchor="C,C" Size="28,28" Texture="Banner_UnitButton_Lighter"/>
+            <Image ID="AerodromeUnitsButton_None"     Anchor="C,C" Size="28,28" Texture="Banner_UnitButton_None"/>
+            <!-- Aerodrome button icon -->
+            <Image ID="AerodromeUnitsButtonIcon" Anchor="C,C" Size="22,22" Texture="Banner_Planes"/>
+            <!-- Hover over animations -->
+            <AlphaAnim Anchor="C,C" Size="28,28" ShowOnMouseOver="1" AlphaStart="0" AlphaEnd="1" Speed="2" Function="Root" Cycle="Once">
+              <Image Size="28,28" Texture="Banner_UnitButton_Secondary"/>
+            </AlphaAnim>
+            <AlphaAnim Anchor="C,C" Size="28,28" ShowOnMouseOut="1" AlphaStart="1" AlphaEnd="0" Speed="2" Function="Root" Cycle="Once">
+              <Image Size="28,28" Texture="Banner_UnitButton_Secondary"/>
+            </AlphaAnim>
+          </Button>
+        </ButtonData>
+
+        <GridData AutoSize="1" AutoSizePadding="6,5" Anchor="C,B" Offset="0,6" AnchorSide="I,O" Texture="Controls_DropdownPanel" SliceCorner="9,9" SliceSize="4,4" SliceTextureSize="22,22"/>
+
+        <ScrollPanelData Anchor="L,T" Vertical="1" Offset="0,0" AutoScrollBar="1">
+          <ScrollBar Style="ScrollVerticalBacking" Anchor="L,T" AnchorSide="O,I" Color="28,60,90,255" Offset="1,0">
+            <Thumb Style="ScrollThumbAlt" Color="28,60,90,255" />
+          </ScrollBar> 
+        </ScrollPanelData>
+
+        <StackData StackGrowth="Down" Offset="0,0" Size="240,400" Anchor="L,T"/>
+
+        <InstanceData Name="UnitListEntry">
+          <GridButton  ID="Button" Style="UnitPanelHeader" Size="200,24" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" StateOffsetIncrement="0,24" TruncateWidth="180">
+            <Image ID="UnitTypeIcon" Anchor="L,C" Size="22,22" Offset="2,0" Texture="UnitFlagAtlas22"/>
+          </GridButton>
+        </InstanceData>
+      </PullDown>
+    </WorldAnchor>
+  </Instance>
+
+  <!-- WMD Minibanner -->
+  <Instance	Name="WMDBanner">
+    <WorldAnchor ID="Anchor">
+      <Container ID="WMDBannerContainer" Anchor="C,C" Size="88,34">
+        <!-- Banner Background -->
+        <Grid ID="Banner_Base"    Size="Parent,Parent" Texture="BannerMini_Base" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
+        <Grid ID="Banner_Darker"  Size="Parent,Parent" Texture="BannerMini_Darker" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
+        <Grid ID="Banner_Lighter" Size="Parent,Parent" Texture="BannerMini_Lighter" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
+        <Grid ID="Banner_None"    Size="Parent,Parent" Texture="BannerMini_None" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
+        
+        <!-- Nukes -->
+        <Container Anchor="L,C" Offset="25,0">
+          <Stack Offset="0,-1" Anchor="C,C" StackGrowth="Right" StackPadding="2,0">
+            <Label Style="FontNormal16" String="[Icon_Nuclear]"/>
+            <Label ID="NukeCountLabel" Offset="0,2" Style="FontNormal16" String="0"/>
+          </Stack>
+          <Image ID="NukeBombButtonBackground" Anchor="C,C" Size="36,45" Offset="0,36" Texture="CityBannerRangeAttackRim">
+            <Button ID="NukeBombButton" Anchor="C,C" Size="25,25" Texture="Banner_NukeAttackButton" StateOffsetIncrement="0,25"/>
+          </Image>
+        </Container>
+
+        <!-- Thermonuclear Devices -->
+        <Container Anchor="R,C" Offset="25,0">
+          <Stack Offset="0,-1" Anchor="C,C" StackGrowth="Right" StackPadding="2,0">
+            <Label Style="FontNormal16" String="[Icon_ThermoNuclear]"/>
+            <Label ID="ThermoNukeCountLabel" Offset="0,2" Style="FontNormal16" String="0"/>
+          </Stack>
+          <Image ID="ThermoNukeBombButtonBackground" Anchor="C,C" Size="36,45" Offset="0,36" Texture="CityBannerRangeAttackRim">
+            <Button ID="ThermoNukeBombButton" Anchor="C,C" Size="25,25" Texture="Banner_NukeAttackButton" StateOffsetIncrement="0,25"/>
+          </Image>
+        </Container>
+      </Container>
+    </WorldAnchor>
+  </Instance>
+
+  <!-- Encampment Minibanner -->
+  <Instance	Name="EncampmentBanner">
+    <WorldAnchor ID="Anchor">
+      <Container ID="EncampmentBannerContainer" Anchor="C,C" Size="106,34">
+        <!-- Banner Background -->
+        <Grid ID="Banner_Base"    Size="Parent,Parent" Texture="BannerMini_Base" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
+        <Grid ID="Banner_Darker"  Size="Parent,Parent" Texture="BannerMini_Darker" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
+        <Grid ID="Banner_Lighter" Size="Parent,Parent" Texture="BannerMini_Lighter" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
+        <Grid ID="Banner_None"    Size="Parent,Parent" Texture="BannerMini_None" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
+
+        <!-- District Font Icon -->
+        <Label Anchor="L,C" Offset="7,3" Style="FontNormal14" String="[Icon_DISTRICT_ENCAMPMENT]"/>
+        
+        <!-- Healthbars -->
+        <TextureBar ID="CityHealthBar"	Anchor="R,C" Offset="8,3"		Size="66,7"	Texture="CityBannerShieldsBar1"			Direction="Right" Speed="1" Percent="1.0" />
+        <TextureBar ID="CityDefenseBar" Anchor="R,C" Offset="8,-4"	Size="66,7"	Texture="CityBannerShieldsBar1"			Direction="Right" Speed="1" Percent="1.0" Color="120,198,247,255"/>
+
+        <!-- District strength -->
+        <Grid ID="DistrictDefenseGrid" Texture="Banner_StrengthBacking" Size="60,15" Anchor="C,T" AnchorSide="I,O" SliceTextureSize="42,15"  SliceCorner="21,7" Color="255,255,255,150">
+          <Stack Anchor="C,C" Offset="-2,1" StackGrowth="Right">
+            <Image Size="21,18" Texture="Banner_StrengthIcon_Shields"/>
+            <Label ID="DistrictDefenseStrengthLabel" Offset="0,2" Style="StrongSmall" String="17"/>
+          </Stack>
+        </Grid>
+
+        <!-- District ranged strike button -->
+        <Image			ID="CityAttackContainer" Texture="CityBannerRangeAttackRim" Size="36,45" Anchor="C,B" Offset="0,-4" AnchorSide="I,O" >
+          <Button		ID="CityRangeStrikeButton" Style="CityBannerRangeAttack" Anchor="C,B" Offset="0,10" StateOffsetIncrement="0,25" ConsumeMouse="1" ToolTip="LOC_CITY_BANNER_DISTRICT_RANGE_STRIKE"/>
+        </Image>
+      </Container>
+    </WorldAnchor>
+  </Instance>
+  
+  <Instance				Name="ReligionChange">
+    <AlphaAnim		ID="FadeAnim" AlphaStart="0" AlphaEnd="1" Speed="1" Cycle="Once" Offset="0,0" Anchor="C,C" Stopped="true" >
+      <SlideAnim	ID="SlideAnim" Function="Root" Start="-5,5" End="-5,-5" Speed="2.5" Cycle="Once" Offset="0,0" Stopped="true" >
+        <Image		ID="ReligionIcon" Size="22,22"  Anchor="C,C" Texture="Religions22" />
+        <Image		ID="ChangeIcon" Size="23,29" Offset ="22,0" Anchor="C,C" Texture="PressureUp" />
+        <Label		ID="TextLabel" Offset ="25,0" Anchor="L,C" Style="FontFlair22" Text="TextLabel" />
+      </SlideAnim>
+    </AlphaAnim>
+  </Instance>
+
+  <Instance Name="HolySiteIcon">
+    <WorldAnchor ID="Anchor" Size="22,22">
+      <Image ID="HolySiteIcon" Size="22,22" Anchor="L,T" Texture="FontIcons" />
+      <Label ID="HolySiteLabel"  Anchor="L,T" Offset ="20,0" Style="FontFlair22" Text="TextLabel" />
+    </WorldAnchor>
+  </Instance>
+
+  <Instance Name="ReligionFollowers">
+    <Image ID="ReligionIcon" Size="22,22" Anchor="C,C" Texture="Religions22" >
+			<Stack ID="FollowerStack" StackGrowth="Right">
+				<Label ID="NumFollowers" Offset ="25,0" Anchor="L,C" Style="FontFlair22" Text="NumFollowers" />
+				<Container ID="PressureContainer" Anchor="C,C" Offset="3,0" AutoSize="1"/>
+			</Stack>
+    </Image>
+  </Instance>
+
+  <Instance Name="ReligionMeterNone">
+    <Meter ID="Meter" Size="110,110" Texture="Religion_MeterPressureNone" />
+  </Instance>
+  <Instance Name="ReligionMeterLow">
+    <Meter ID="Meter" Size="110,110" Texture="Religion_MeterPressureLow" Follow="1" />
+  </Instance>
+  <Instance Name="ReligionMeterMedium">
+    <Meter ID="Meter" Size="110,110" Texture="Religion_MeterPressureMedium" Follow="1" />
+  </Instance>
+  <Instance Name="ReligionMeterHigh">
+		<Meter ID="Meter" Size="110,110" Texture="Religion_MeterPressureHigh" Follow="1" />
+  </Instance>
+	
+	<Instance Name="PressureLow">
+		<Image ID="PressureIcon" Size="10,14" Anchor="C,C" Texture="PressureLow" />
+	</Instance>
+	<Instance Name="PressureMedium">
+		<Image ID="PressureIcon" Size="10,19" Anchor="C,C" Texture="PressureMedium" />
+	</Instance>
+	<Instance Name="PressureHigh">
+		<Image ID="PressureIcon" Size="16,19" Anchor="C,C" Texture="PressureHigh" />
+	</Instance>
+
+</Context>
