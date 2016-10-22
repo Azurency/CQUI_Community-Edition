@@ -1,4 +1,4 @@
-# Civilization 6 - Quick U
+# Civilization 6 - Quick UI
 
 ### How to use
 Find your DLC folder, usually on Windows it is:  
