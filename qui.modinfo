@@ -13,6 +13,7 @@
         <ImportFiles id="QUI_IMPORT_FILES">
             <Items>
 				<File>UI/Panels/CityPanel.lua</File>
+				<File>UI/Panels/CityPanel.xml</File>
 				<File>UI/Panels/StatusMessagePanel.lua</File>
 				<File>UI/Panels/UnitPanel.lua</File>
 				<File>UI/Popups/TechCivicCompletedPopup.lua</File>
@@ -27,6 +28,7 @@
     </Components>
 	<Files>
 		<File>UI/Panels/CityPanel.lua</File>
+		<File>UI/Panels/CityPanel.xml</File>
 		<File>UI/Panels/StatusMessagePanel.lua</File>
 		<File>UI/Panels/UnitPanel.lua</File>
 		<File>UI/Popups/TechCivicCompletedPopup.lua</File>
