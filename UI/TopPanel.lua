@@ -288,7 +288,7 @@ function RefreshResources()
 		local overflowString = "";
 		local plusInstance:table;
 		for resource in GameInfo.Resources() do
-			if (resource.ResourceClassType ~= nil and resource.ResourceClassType ~= "RESOURCECLASS_BONUS" and resource.ResourceClassType ~="RESOURCECLASS_LUXURY") then
+			if (resource.ResourceClassType ~= nil and resource.ResourceClassType ~= "RESOURCECLASS_BONUS" then
 				local amount = pPlayerResources:GetResourceAmount(resource.ResourceType);
 				if (amount > 0) then
 					local resourceText = "[ICON_"..resource.ResourceType.."] ".. amount;
