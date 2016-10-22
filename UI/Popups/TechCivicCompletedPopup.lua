@@ -21,6 +21,7 @@ local m_quote_audio;
 
 -- ===========================================================================
 function ShowCompletedPopup(completedPopup:table)
+	do return end;
 	-- Show the correct popup
 	if completedPopup.tech ~= nil then
 		ShowTechCompletedPopup(completedPopup.player, completedPopup.tech, completedPopup.isCanceled);
