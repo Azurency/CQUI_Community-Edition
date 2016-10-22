@@ -747,6 +747,8 @@ function CityBanner.UpdateStats( self : CityBanner)
 			local isGrowing			:boolean= pCityGrowth:GetTurnsUntilGrowth() ~= -1;
 			local isStarving		:boolean= pCityGrowth:GetTurnsUntilStarvation() ~= -1;
 
+			local pCityCulture		:table  = pCity:GetCulture();
+
 			local turnsUntilGrowth :number = 0;	-- It is possible for zero... no growth and no starving.
 			if isGrowing then
 				turnsUntilGrowth = pCityGrowth:GetTurnsUntilGrowth();
@@ -769,7 +771,11 @@ function CityBanner.UpdateStats( self : CityBanner)
 
 			if (self.m_Player == Players[localPlayerID]) then			--Only show growth data if the player is you
 				self.m_Instance.CityPopulation:SetToolTipString(popTooltip);
-				self.m_Instance.CityPopTurnsLeft:SetText(turnsUntilGrowth);
+				local turnsUntilBorderGrowth = pCityCulture:GetTurnsUntilExpansion();
+				local housing = pCityGrowth:GetHousing();
+				local CTLS = turnsUntilGrowth.."  ["..currentPopulation.."/"..housing..
+					"]  "..turnsUntilBorderGrowth;
+				self.m_Instance.CityPopTurnsLeft:SetText(CTLS);
 			end
 
 			local food             :number = pCityGrowth:GetFood();
