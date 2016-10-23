@@ -264,10 +264,11 @@ function ShowCitizens()
 
 			table.insert(m_kLensMask[KEY_CITIZEN_MANAGEMENT], plotId);
 
-			local kPlot	:table = Map.GetPlotByIndex(plotId);	
+			local kPlot	:table = Map.GetPlotByIndex(plotId);
 			local index:number = kPlot:GetIndex();
 			local pInstance:table = GetInstanceAt( index );
-			if pInstance ~= nil then
+			
+			if pInstance ~= nil and kPlot:IsCity() == false then
 				table.insert( m_uiCitizens, pInstance );
 				pInstance.CitizenButton:SetVoid1( index );
 				pInstance.CitizenButton:RegisterCallback(Mouse.eLClick, OnClickCitizen );
