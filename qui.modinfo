@@ -16,6 +16,7 @@
 				<File>UI/Panels/CityPanel.xml</File>
 				<File>UI/Panels/StatusMessagePanel.lua</File>
 				<File>UI/Panels/UnitPanel.lua</File>
+				<File>UI/Panels/ProductionPanel.lua</File>
 				<File>UI/Popups/TechCivicCompletedPopup.lua</File>
 				<File>UI/WorldView/CityBannerManager.lua</File>
 				<File>UI/WorldView/CityBannerManager.xml</File>
@@ -31,6 +32,7 @@
 		<File>UI/Panels/CityPanel.xml</File>
 		<File>UI/Panels/StatusMessagePanel.lua</File>
 		<File>UI/Panels/UnitPanel.lua</File>
+		<File>UI/Panels/ProductionPanel.lua</File>
 		<File>UI/Popups/TechCivicCompletedPopup.lua</File>
 		<File>UI/WorldView/CityBannerManager.lua</File>
 		<File>UI/WorldView/CityBannerManager.xml</File>
