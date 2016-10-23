@@ -745,8 +745,8 @@ function OnToggleProduction()
 	if Controls.ChangeProductionCheck:IsChecked() then
 		RecenterCameraOnCity();
 		LuaEvents.CityPanel_ProductionOpen();
-		Controls.ProduceWithFaithCheck:SetCheck( false );
-		Controls.ProduceWithGoldCheck:SetCheck( false );
+		--Controls.ProduceWithFaithCheck:SetCheck( false );
+		--Controls.ProduceWithGoldCheck:SetCheck( false );
 	else
 		LuaEvents.CityPanel_ProductionClose();
 	end
