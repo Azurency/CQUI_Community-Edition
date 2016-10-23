@@ -175,7 +175,10 @@ function GetCityData( pCity:table )
 		YieldFilters					= {},	
 
 		ProductionProgress				= 0,	
-		ProductionCost				    = 0	
+		ProductionCost				    = 0,
+		CurrentFood				        = 0,
+		RequiredFood				    = 0,
+		FoodGainNextTurn                = 0
 	};
 		
 	local pCityGrowth					:table = pCity:GetGrowth();
@@ -316,6 +319,10 @@ function GetCityData( pCity:table )
 	data.TurnsUntilGrowth				= turnsUntilGrowth;
 	data.UnitStats						= GetUnitStats( pBuildQueue:GetCurrentProductionTypeHash() );	--NIL if not a unit
 	
+	data.CurrentFood = food;
+	data.RequiredFood = growthThreshold;
+	data.FoodGainNextTurn = foodSurplus * pCityGrowth:GetOverallGrowthModifier();
+
 	-- Helper to get an internally used enum based on the state of a certain yield.	
 	local pCitizens :table = pCity:GetCitizens();
 	function GetYieldState( yieldEnum:number )

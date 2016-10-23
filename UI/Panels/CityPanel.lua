@@ -289,7 +289,11 @@ function ViewMain( data:table )
 		Controls.GrowthLabel:SetText( Locale.ToUpper( Locale.Lookup("LOC_HUD_CITY_GROWTH_OCCUPIED") ) );		
 	elseif data.TurnsUntilGrowth >= 0 then
 		Controls.GrowthLabel:SetColorByName("StatGoodCS");
-		Controls.GrowthLabel:SetText( Locale.ToUpper( Locale.Lookup("LOC_HUD_CITY_TURNS_UNTIL_GROWTH",data.TurnsUntilGrowth)) );		
+		local CurFood = Round(data.CurrentFood, 1);
+		local FoodGainNextTurn = Round(data.FoodGainNextTurn, 1);
+		local RequiredFood = data.RequiredFood;
+
+		Controls.GrowthLabel:SetText( "  "..CurFood.." + "..FoodGainNextTurn.." / "..RequiredFood);		
 	else
 		Controls.GrowthLabel:SetColorByName("StatBadCS");
 		Controls.GrowthLabel:SetText( Locale.ToUpper( Locale.Lookup("LOC_HUD_CITY_TURNS_UNTIL_LOSS", math.abs(data.TurnsUntilGrowth))) );
