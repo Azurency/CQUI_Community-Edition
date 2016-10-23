@@ -845,8 +845,8 @@ function OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
 	if eNewMode == InterfaceModeTypes.SELECTION or eNewMode == InterfaceModeTypes.CITY_MANAGEMENT then
 		EnableIfNotTutorialBlocked("PurchaseTileCheck");
 		EnableIfNotTutorialBlocked("ManageCitizensCheck");
-		EnableIfNotTutorialBlocked("ProduceWithFaithCheck");
-		EnableIfNotTutorialBlocked("ProduceWithGoldCheck");
+		--EnableIfNotTutorialBlocked("ProduceWithFaithCheck");
+		--EnableIfNotTutorialBlocked("ProduceWithGoldCheck");
 		EnableIfNotTutorialBlocked("ChangeProductionCheck");
 	elseif eNewMode == InterfaceModeTypes.DISTRICT_PLACEMENT then
 		Controls.PurchaseTileCheck:SetDisabled( true );
