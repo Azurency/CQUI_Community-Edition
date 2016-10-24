@@ -791,6 +791,7 @@ function View(data)
 		Controls.RecommendedActionButton:ReprocessAnchoring();
 		Controls.RecommendedActionIcon:ReprocessAnchoring();
 
+		bestBuildAction = nil;
 		Controls.RecommendedActionFrame:SetHide( bestBuildAction == nil );
 		if ( bestBuildAction ~= nil ) then
 			Controls.RecommendedActionButton:SetHide(false);
