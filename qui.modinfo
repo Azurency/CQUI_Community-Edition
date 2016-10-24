@@ -27,6 +27,7 @@
 				<File>UI/MinimapPanel.lua</File>
 				<File>UI/MinimapPanel.xml</File>
 				<File>UI/UnitPanel.xml</File>
+				<File>UI/Civilopedia/CivilopediaSupport.lua</File>
             </Items>
         </ImportFiles>
     </Components>
@@ -46,5 +47,6 @@
 		<File>UI/MinimapPanel.lua</File>
 		<File>UI/MinimapPanel.xml</File>
 		<File>UI/UnitPanel.xml</File> 
+		<File>UI/Civilopedia/CivilopediaSupport.lua</File>
 	</Files>
 </Mod>
