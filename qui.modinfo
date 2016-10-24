@@ -24,6 +24,8 @@
 				<File>UI/ActionPanel.lua</File>
 				<File>UI/CitySupport.lua</File>
 				<File>UI/TopPanel.lua</File>
+				<File>UI/MinimapPanel.lua</File>
+				<File>UI/MinimapPanel.xml</File>
             </Items>
         </ImportFiles>
     </Components>
@@ -40,5 +42,7 @@
 		<File>UI/ActionPanel.lua</File>
 		<File>UI/CitySupport.lua</File>
 		<File>UI/TopPanel.lua</File>
+		<File>UI/MinimapPanel.lua</File>
+		<File>UI/MinimapPanel.xml</File>
 	</Files>
 </Mod>
