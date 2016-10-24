@@ -114,11 +114,11 @@
           </Image>
         </Container>
         
-        <Container		ID="XPArea"									Anchor="R,B"	Offset="10,0"		Size="224,10" >
+        <Container		ID="XPArea"									Anchor="R,B"	Offset="10,0"		Size="224,15" >
           <Box																									Offset="10,0"		Size="parent-20,parent" Color="0,0,0,255" />
-          <Bar				ID="XPBar"									Color="255,255,255,0" Offset="80,2"		Size="130,5" Direction="Right" />
+          <Bar				ID="XPBar"									Color="255,255,255,0" Offset="80,2"		Size="130,10" Direction="Right" />
           <Grid																																	Size="parent,parent"		Texture="UnitPanel_XPMeterFrame" SliceCorner="80,4" SliceSize="1,2" SliceTextureSize="98,10" />
-          <Label			ID="XPLabel"								Anchor="R,B"	Offset="150,0" Style="FontNormal8" Color="10,8,3,250" String="LOC_HUD_UNIT_PANEL_XP" />
+          <Label			ID="XPLabel"								Anchor="R,B"	Offset="150,0" Style="FontNormal12" Color="10,8,3,250" String="LOC_HUD_UNIT_PANEL_XP" />
         </Container>
 
         <Grid					ID="PromotionBanner"				Anchor="R,B"	Offset="0,0"	Size="Parent-54,43"	Texture="UnitPanel_PromotionBanner" SliceCorner="40,1" SliceTextureSize="78,43">
