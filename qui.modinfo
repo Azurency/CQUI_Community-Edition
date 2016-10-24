@@ -28,6 +28,8 @@
 				<File>UI/MinimapPanel.xml</File>
 				<File>UI/UnitPanel.xml</File>
 				<File>UI/Civilopedia/CivilopediaSupport.lua</File>
+				<File>UI/Screens/TechTree.lua</File>
+				<File>UI/Screens/CivicsTree.lua</File>
             </Items>
         </ImportFiles>
     </Components>
@@ -48,5 +50,7 @@
 		<File>UI/MinimapPanel.xml</File>
 		<File>UI/UnitPanel.xml</File> 
 		<File>UI/Civilopedia/CivilopediaSupport.lua</File>
+		<File>UI/Screens/TechTree.lua</File>
+		<File>UI/Screens/CivicsTree.lua</File>
 	</Files>
 </Mod>
