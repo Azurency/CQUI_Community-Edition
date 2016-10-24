@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Mod id="03B8BDDE-67EA-4D38-9540-26E685E3156E" version="1">
+<Mod id="03B8BDDE-DEAD-BEEF-9540-26E685E3156E" version="1">
 	<Properties>
-		<Name>Civilization 6 - Quick UI</Name>
-		<Teaser>LOC_AZTEC_MONTEZUMA_MOD_TEASER</Teaser>
+		<Name>Chao Quick UI</Name>
 		<Description>Reduce clicks and make empire management easy</Description>
-		<Authors>vans163</Authors>
+		<Authors>vans163, chaorace</Authors>
 		<ShowInBrowser>AlwaysHidden</ShowInBrowser>
 		<EnabledByDefault>1</EnabledByDefault>
 		<EnabledAtStartup>1</EnabledAtStartup>
+		<SpecialThanks>vans163 for his original qui mod</SpecialThanks>
 	</Properties>
     <Components>
-        <ImportFiles id="QUI_IMPORT_FILES">
+        <ImportFiles id="CQUI_IMPORT_FILES">
             <Items>
 				<File>UI/Panels/CityPanel.lua</File>
 				<File>UI/Panels/CityPanel.xml</File>
