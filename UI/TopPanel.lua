@@ -301,7 +301,13 @@ function RefreshResources()
 						if (amount ~= 0) then
 							local instance:table = m_kResourceIM:GetInstance();
 							instance.ResourceText:SetText(resourceText);
-							instance.ResourceText:SetToolTipString(Locale.Lookup(resource.Name).."[NEWLINE]"..Locale.Lookup("LOC_TOOLTIP_STRATEGIC_RESOURCE"));
+							
+							if (resource.ResourceClassType == "RESOURCECLASS_LUXURY") then
+								instance.ResourceText:SetToolTipString(Locale.Lookup(resource.Name).."[NEWLINE]"..Locale.Lookup("LOC_TOOLTIP_LUXURY_RESOURCE"));
+							elseif (resource.ResourceClassType == "RESOURCECLASS_STRATEGIC") then
+								instance.ResourceText:SetToolTipString(Locale.Lookup(resource.Name).."[NEWLINE]"..Locale.Lookup("LOC_TOOLTIP_STRATEGIC_RESOURCE"));
+							end
+
 							instanceWidth = instance.ResourceText:GetSizeX();
 							currSize = currSize + instanceWidth;
 						end
