@@ -29,7 +29,8 @@
 				<File>UI/UnitPanel.xml</File>
 				<File>UI/Civilopedia/CivilopediaSupport.lua</File>
 				<File>UI/Screens/TechTree.lua</File>
-				<File>UI/Screens/CivicsTree.lua</File>
+				<File>UI/Panels/CityPanelOverview.lua</File>
+				<File>UI/Panels/CityPanelOverview.xml</File>
             </Items>
         </ImportFiles>
     </Components>
@@ -52,5 +53,7 @@
 		<File>UI/Civilopedia/CivilopediaSupport.lua</File>
 		<File>UI/Screens/TechTree.lua</File>
 		<File>UI/Screens/CivicsTree.lua</File>
+		<File>UI/Panels/CityPanelOverview.lua</File>
+		<File>UI/Panels/CityPanelOverview.xml</File>
 	</Files>
 </Mod>

@@ -1003,6 +1003,12 @@ function OnCityBannerClick( playerID:number, cityID:number )
 
 	if (pPlayer:GetID() == localPlayerID) then
 		UI.SelectCity( pCity );
+		LuaEvents.CityPanel_ProductionOpen();
+		LuaEvents.CityPanel_ShowOverviewPanel(true);
+		UILens.ToggleLayerOn(LensLayers.PURCHASE_PLOT);
+		UILens.ToggleLayerOn(LensLayers.CITIZEN_MANAGEMENT);
+		UI.SetInterfaceMode(InterfaceModeTypes.CITY_MANAGEMENT);
+		UI.SetFixedTiltMode(true);
 	elseif(localPlayerID == PlayerTypes.OBSERVER 
 			or localPlayerID == PlayerTypes.NONE 
 			or pPlayer:GetDiplomacy():HasMet(localPlayerID)) then
@@ -1049,22 +1055,7 @@ end
 
 -- ===========================================================================
 function OnProductionClick( playerID, cityID )
-	local pPlayer = Players[playerID];
-	if (pPlayer == nil) then
-		return;
-	end
-	
-	local pCity = pPlayer:GetCities():FindID(cityID);
-	if (pCity == nil) then
-		return;
-	end
-	
-	UI.SelectCity( pCity );											
-	--UI.SelectCity( pCity, false );										-- Don't auto center
-	--UI.LookAtPlotScreenPosition( pCity:GetX(), pCity:GetY(), 0.40, 0.5 );	-- Just a little bit to the right since production panel is opening
-
-
-	LuaEvents.CityBannerManager_ProductionToggle();
+	OnCityBannerClick( playerID, cityID)
 end
 
 -- ===========================================================================

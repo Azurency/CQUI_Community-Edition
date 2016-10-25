@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd">
   <AlphaAnim			          ID="CityPanelAlpha"       AlphaBegin="0" AlphaEnd="1" Speed="3"   Function="OutSine" Cycle="Once" Size="full,full">
-    <SlideAnim						  ID="CityPanelSlide"       Start="200,0" End="0,0"     Speed="3.5" Function="OutSine" Cycle="Once" Size="full,full">
+    <SlideAnim						  ID="CityPanelSlide"       Start="200,0" End="-175,0"     Speed="3.5" Function="OutSine" Cycle="Once" Size="full,full">
       <Grid									ID="WoodBacking"					Anchor="R,B" Offset="175,-5"	Size="500,162"					Texture="SelectionPanel_WoodBacking"	SliceCorner="51,50"  SliceSize="1,1" SliceTextureSize="148,156" ConsumeMouse="1">
         <Grid								ID="PanelStackShadow"			Anchor="L,T" Offset="100,-100" Size="250,200" Style="DropShadow" />
         <Grid								ID="MainPanel"						Anchor="R,B" Offset="46,0"		Size="parent-78,parent-2"	Texture="SelectionPanel_MainPanel"		SliceCorner="60,60" SliceTextureSize="263,160" />
@@ -141,7 +141,7 @@
           <Button						ID="NextCityButton"				Anchor="R,T" Offset="4,2" 		Style="ArrowButtonRight" />
         </Grid>
 
-        <Stack StackGrowth="Right" Padding="3" Anchor="C,T">
+        <Stack StackGrowth="Right" Padding="3" Anchor="C,T" Hidden="1">
           <Grid																	Anchor="C,T" Offset="-120,-68"		Size="100,41"				Texture="UnitPanel_ActionGroupSlot"  SliceCorner="5,19" SliceSize="1,1" InnerPadding="10,-16" AutoSize="H">
             <CheckBox				ID="ToggleOverviewPanel"	Offset="0,-2"	Size="44,53"  ButtonTexture="UnitPanel_ActionButton"	ButtonSize="44,53" CheckTexture="CityPanel_ActionTogglePanel"    CheckTextureOffset="0,32"		CheckSize="32,32" CheckOffset="5,8"	UnCheckTexture="CityPanel_ActionTogglePanel"	  UnCheckSize="32,32" UnCheckOffset="5,8" UseSelectedTextures="1" ToolTip="LOC_HUD_CITY_TOGGLE_OVERVIEW" IsChecked="0"/>
           </Grid>

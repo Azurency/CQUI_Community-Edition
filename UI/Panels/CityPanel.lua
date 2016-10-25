@@ -830,8 +830,10 @@ end
 function OnInterfaceModeChanged( eOldMode:number, eNewMode:number )	
 	
 	if eOldMode == InterfaceModeTypes.CITY_MANAGEMENT then
-		if Controls.PurchaseTileCheck:IsChecked()   then Controls.PurchaseTileCheck:SetAndCall( false ); end
-		if Controls.ManageCitizensCheck:IsChecked() then Controls.ManageCitizensCheck:SetAndCall( false ); end
+		-- if Controls.PurchaseTileCheck:IsChecked()   then Controls.PurchaseTileCheck:SetAndCall( false ); end
+		-- if Controls.ManageCitizensCheck:IsChecked() then Controls.ManageCitizensCheck:SetAndCall( false ); end
+		UI.DeselectAllCities();
+		LuaEvents.CityPanel_ProductionClose();
 		UI.SetFixedTiltMode( false );
 	end
 	

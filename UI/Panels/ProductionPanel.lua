@@ -197,6 +197,7 @@ function BuildUnitArmy(city, unitEntry)
 	tParameters[CityOperationTypes.MILITARY_FORMATION_TYPE] = MilitaryFormationTypes.ARMY_MILITARY_FORMATION;
 	CityManager.RequestOperation(city, CityOperationTypes.BUILD, tParameters);
 	UI.PlaySound("Confirm_Production");
+	Refresh();
 end
 
 -- ===========================================================================
@@ -205,7 +206,7 @@ function BuildBuilding(city, buildingEntry)
 	local building			:table		= GameInfo.Buildings[buildingEntry.Type];
 	local bNeedsPlacement	:boolean	= building.RequiresPlacement;
 
-	UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+	
 
 	local pBuildQueue = city:GetBuildQueue();
 	if (pBuildQueue:HasBeenPlaced(buildingEntry.Hash)) then
@@ -341,14 +342,6 @@ end
 --	eNewMode, new mode the engine has just changed to
 -- ===========================================================================
 function OnInterfaceModeChanged( eOldMode:number, eNewMode:number )	
-	
-	-- If this is raised while the city panel is up; selecting to purchase a
-	-- plot or manage citizens will close it.
-	if eNewMode == InterfaceModeTypes.CITY_MANAGEMENT or eNewMode == InterfaceModeTypes.VIEW_MODAL_LENS then
-		if not ContextPtr:IsHidden() then
-			Close();
-		end
-	end
 end
 
 -- ===========================================================================
@@ -383,7 +376,6 @@ end
 -- ===========================================================================
 --	Close via click
 function OnClose()
-	Close();
 end
 
 -- ===========================================================================
@@ -394,7 +386,6 @@ function Open()
 		-- Sets up proper selection AND the associated lens so it's not stuck "on".
 		UI.PlaySound("Production_Panel_Open");
 		LuaEvents.ProductionPanel_Open()
-		UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
 		Refresh();
 		ContextPtr:SetHide(false);
 		Controls.ProductionListScroll:SetScrollValue(0);
@@ -648,7 +639,6 @@ function PopulateList(data, listMode, listIM)
 			districtListing.Button:SetDisabled(item.Disabled);
 			districtListing.Button:RegisterCallback( Mouse.eLClick, function()
 				ZoneDistrict(data.City, item);
-				Close();
 			end);
 
 			districtListing.Button:RegisterCallback( Mouse.eRClick, function()
@@ -736,7 +726,6 @@ function PopulateList(data, listMode, listIM)
 					buildingListing.Button:SetDisabled(buildingItem.Disabled);
 					buildingListing.Button:RegisterCallback( Mouse.eLClick, function()
 						BuildBuilding(data.City, buildingItem);
-						Close();
 					end);
 
 					buildingListing.Button:RegisterCallback( Mouse.eRClick, function()
@@ -809,7 +798,6 @@ function PopulateList(data, listMode, listIM)
 				wonderListing.Button:SetDisabled(item.Disabled);
 				wonderListing.Button:RegisterCallback( Mouse.eLClick, function()
 					BuildBuilding(data.City, item);
-					Close();
 				end);
 
 				wonderListing.Button:RegisterCallback( Mouse.eRClick, function()
@@ -894,7 +882,6 @@ function PopulateList(data, listMode, listIM)
 
 				buildingListing.Button:RegisterCallback( Mouse.eLClick, function()
 						PurchaseBuilding(data.City, item);
-						Close();
 					end);
 				end
 		end
@@ -1052,12 +1039,10 @@ function PopulateList(data, listMode, listIM)
 			if (listMode == LISTMODE.PRODUCTION) then
 				unitListing.TrainUnit:RegisterCallback( Mouse.eLClick, function()
 					BuildUnit(data.City, item);
-					Close();
 					end);
 			else
 				unitListing.TrainUnit:RegisterCallback( Mouse.eLClick, function()
 					PurchaseUnit(data.City, item);
-					Close();
 					end);
 			end
 
@@ -1159,12 +1144,10 @@ function PopulateList(data, listMode, listIM)
 				if (listMode == LISTMODE.PRODUCTION) then
 					unitListing.TrainCorpsButton:RegisterCallback( Mouse.eLClick, function()
 						BuildUnitCorps(data.City, item);
-						Close();
 					end);
 				else
 					unitListing.TrainCorpsButton:RegisterCallback( Mouse.eLClick, function()
 						PurchaseUnitCorps(data.City, item);
-						Close();
 					end);
 				end
 			end		
@@ -1227,12 +1210,10 @@ function PopulateList(data, listMode, listIM)
 				if (listMode == LISTMODE.PRODUCTION) then
 					unitListing.TrainArmyButton:RegisterCallback( Mouse.eLClick, function()
 						BuildUnitArmy(data.City, item);
-						Close();
 						end);
 				else
 					unitListing.TrainArmyButton:RegisterCallback( Mouse.eLClick, function()
 						PurchaseUnitArmy(data.City, item);
-						Close();
 						end);
 				end
 			end
@@ -1320,7 +1301,6 @@ function PopulateList(data, listMode, listIM)
 			projectListing.Button:SetDisabled(item.Disabled);
 			projectListing.Button:RegisterCallback( Mouse.eLClick, function()
 				AdvanceProject(data.City, item);
-				Close();
 			end);
 
 			projectListing.Button:RegisterCallback( Mouse.eRClick, function()
@@ -1804,8 +1784,6 @@ function Refresh()
 		end
 		
 		View(new_data);
-	else
-		Close();
 	end
 end
 
@@ -1897,7 +1875,6 @@ function OnCityBannerManagerProductionToggle()
 	if(ContextPtr:IsHidden()) then
 		Open();
 	else
-		Close();
 	end
 end
 
@@ -2106,6 +2083,10 @@ end
 --
 --
 
+function OnCityProductionChanged()
+	Refresh();
+end
+
 function Initialize()
 	
 	Controls.PauseCollapseList:Stop();
@@ -2144,7 +2125,7 @@ function Initialize()
 	LuaEvents.StrageticView_MapPlacement_ProductionOpen.Add( OnStrategicViewMapPlacementProductionOpen );
 	LuaEvents.Tutorial_ProductionOpen.Add( OnTutorialProductionOpen );	
 
-	--Events.CityProductionChanged.Add( OnCityProductionChanged );
+	Events.CityProductionChanged.Add( OnCityProductionChanged );
 	Events.CityProductionCompleted.Add(OnCityProductionCompleted);
 end
 Initialize();
