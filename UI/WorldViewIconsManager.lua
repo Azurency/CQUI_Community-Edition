@@ -563,6 +563,8 @@ end
 
 -- ===========================================================================
 function AddImprovementRecommendationsForCity( pCity:table )
+	do return end;
+	
 	local pCityAI:table = pCity:GetCityAI();
 	if pCityAI then
 		local recommendList:table = pCityAI:GetImprovementRecommendations();
