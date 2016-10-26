@@ -664,7 +664,10 @@ function OnInputHandler( pInputStruct:table )
 
 		end
 		if msg == MouseEvents.RButtonDown then
-			OnCollapseToggle();
+			local minix, miniy = GetMinimapMouseCoords( pInputStruct:GetX(), pInputStruct:GetY() );
+			if IsMouseInMinimap( minix, miniy ) then
+				OnCollapseToggle();
+			end
 		end
 	end
 	return false;
