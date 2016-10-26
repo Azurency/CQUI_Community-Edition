@@ -1180,6 +1180,49 @@ function CityBanner.UpdateName( self : CityBanner )
 
 			local iSpaceport = GameInfo.Districts["DISTRICT_SPACEPORT"].Index;
 
+			if self.m_Instance.CityBuiltDistrictAquaduct ~= nil then
+				self.m_Instance.CityCanBuildObelisk:SetHide(true);
+				self.m_Instance.CityCanBuildGranary:SetHide(true);
+				self.m_Instance.CityCanBuildWatermill:SetHide(true);
+
+				self.m_Instance.CityCanBuildDistrictCampus1:SetHide(true);
+				self.m_Instance.CityCanBuildDistrictCampus2:SetHide(true);
+				self.m_Instance.CityCanBuildDistrictCampus3:SetHide(true);
+
+				self.m_Instance.CityCanBuildDistrictTheatre1:SetHide(true);
+				self.m_Instance.CityCanBuildDistrictTheatre21:SetHide(true);
+				self.m_Instance.CityCanBuildDistrictTheatre22:SetHide(true);
+				self.m_Instance.CityCanBuildDistrictTheatre3:SetHide(true);
+
+				self.m_Instance.CityCanBuildDistrictIndustrial1:SetHide(true);
+				self.m_Instance.CityCanBuildDistrictIndustrial2:SetHide(true);
+				self.m_Instance.CityCanBuildDistrictIndustrial3:SetHide(true);
+
+				self.m_Instance.CityCanBuildDistrictCommercial1:SetHide(true);
+				self.m_Instance.CityCanBuildDistrictCommercial2:SetHide(true);
+				self.m_Instance.CityCanBuildDistrictCommercial3:SetHide(true);
+
+				self.m_Instance.CityBuiltDistrictAquaduct:SetHide(true);
+				self.m_Instance.CityBuiltDistrictBath:SetHide(true);
+
+				self.m_Instance.CityBuiltDistrictNeighborhood:SetHide(true);
+				self.m_Instance.CityBuiltDistrictMbanza:SetHide(true);
+
+				self.m_Instance.CityBuiltDistrictCampus:SetHide(true);
+				self.m_Instance.CityBuiltDistrictCommercial:SetHide(true);
+				self.m_Instance.CityBuiltDistrictEncampment:SetHide(true);
+
+				self.m_Instance.CityBuiltDistrictTheatre:SetHide(true);
+				self.m_Instance.CityBuiltDistrictAcropolis:SetHide(true);
+
+				self.m_Instance.CityBuiltDistrictIndustrial:SetHide(true);
+				self.m_Instance.CityBuiltDistrictHansa:SetHide(true);
+				self.m_Instance.CityBuiltDistrictHarbor:SetHide(true);
+				self.m_Instance.CityBuiltDistrictRoyalNavy:SetHide(true);
+
+				self.m_Instance.CityBuiltDistrictSpaceport:SetHide(true);
+			end
+
 			local pCityDistricts:table	= pCity:GetDistricts();
 			if g_smartbanner and self.m_Instance.CityBuiltDistrictAquaduct ~= nil then
 				local buildQueue = pCity:GetBuildQueue();
