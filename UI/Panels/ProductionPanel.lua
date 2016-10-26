@@ -2057,32 +2057,6 @@ function CreateCorrectTabs()
 	m_tabs.AddAnimDeco(tabAnimControl, tabArrowControl);
 end
 
---
---Fix me out of here
---
-function BuildUnit2(city, unitHash)
-	local tParameters = {}; 
-	tParameters[CityOperationTypes.PARAM_UNIT_TYPE] = unitHash;
-	tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
-	CityManager.RequestOperation(city, CityOperationTypes.BUILD, tParameters);
-    UI.PlaySound("Confirm_Production");
-end
---Horseman 1462612590
-function OnCityProductionCompleted( playerID:number, cityID:number)
-	if (playerID == Game.GetLocalPlayer()) then
-		local pPlayer = Players[ playerID ];
-		if (pPlayer ~= nil) then
-			local pCity = pPlayer:GetCities():FindID(cityID);
-			if (pCity ~= nil) then
-				BuildUnit2(pCity, 1462612590);
-			end
-		end
-	end
-end
---
---
---
-
 function OnCityProductionChanged()
 	Refresh();
 end
@@ -2126,7 +2100,6 @@ function Initialize()
 	LuaEvents.Tutorial_ProductionOpen.Add( OnTutorialProductionOpen );	
 
 	Events.CityProductionChanged.Add( OnCityProductionChanged );
-	Events.CityProductionCompleted.Add(OnCityProductionCompleted);
 end
 Initialize();
 
