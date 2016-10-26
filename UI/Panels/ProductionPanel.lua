@@ -563,11 +563,11 @@ function PopulateList(data, listMode, listIM)
 			local districtListing = districtList["districtListIM"]:GetInstance();
 			ResetInstanceVisibility(districtListing);
 			-- Check to see if this district item is one of the items that is recommended:
-			for _,hash in ipairs( m_recommendedItems) do
-				if(item.Hash == hash.BuildItemHash) then
-					districtListing.RecommendedIcon:SetHide(false);
-				end
-			end
+			--for _,hash in ipairs( m_recommendedItems) do
+			--	if(item.Hash == hash.BuildItemHash) then
+			--		districtListing.RecommendedIcon:SetHide(false);
+			--	end
+			--end
 
 			local nameStr = Locale.Lookup("{1_Name}", item.Name);
 			if (item.Repair) then
@@ -676,11 +676,11 @@ function PopulateList(data, listMode, listIM)
 					local buildingListing = districtList[uniqueIMName]:GetInstance();	
 					ResetInstanceVisibility(buildingListing);	
 					-- Check to see if this is one of the recommended items
-					for _,hash in ipairs( m_recommendedItems) do
-						if(buildingItem.Hash == hash.BuildItemHash) then
-							buildingListing.RecommendedIcon:SetHide(false);
-						end
-					end
+					--for _,hash in ipairs( m_recommendedItems) do
+					--	if(buildingItem.Hash == hash.BuildItemHash) then
+					--		buildingListing.RecommendedIcon:SetHide(false);
+					--	end
+					--end
 					buildingListing.Root:SetSizeX(305);
 					buildingListing.Button:SetSizeX(305);
 					local districtBuildingAreaControl = districtList[uniqueDrawerName];
@@ -754,11 +754,11 @@ function PopulateList(data, listMode, listIM)
 			if(item.IsWonder) then
 				local wonderListing = wonderList["wonderListIM"]:GetInstance();
 				ResetInstanceVisibility(wonderListing);
-				for _,hash in ipairs( m_recommendedItems) do
-					if(item.Hash == hash.BuildItemHash) then
-						wonderListing.RecommendedIcon:SetHide(false);
-					end
-				end
+				--for _,hash in ipairs( m_recommendedItems) do
+				--	if(item.Hash == hash.BuildItemHash) then
+				--		wonderListing.RecommendedIcon:SetHide(false);
+				--	end
+				--end
 				local nameStr = Locale.Lookup("{1_Name}", item.Name);
 				if (item.Repair) then
 					nameStr = nameStr .. "[NEWLINE]" .. Locale.Lookup("LOC_PRODUCTION_ITEM_REPAIR");
@@ -853,11 +853,11 @@ function PopulateList(data, listMode, listIM)
 				if item.CantAfford then
 					costStr = "[COLOR:Red]" .. costStr .. "[ENDCOLOR]";
 				end
-				for _,hash in ipairs( m_recommendedItems) do
-					if(item.Hash == hash.BuildItemHash) then
-						buildingListing.RecommendedIcon:SetHide(false);
-					end
-				end
+				--for _,hash in ipairs( m_recommendedItems) do
+				--	if(item.Hash == hash.BuildItemHash) then
+				--		buildingListing.RecommendedIcon:SetHide(false);
+				--	end
+				--end
 				buildingListing.LabelText:SetText(nameStr);
 				buildingListing.CostText:SetText(costStr);
 				buildingListing.Button:SetToolTipString(item.ToolTip);
@@ -947,11 +947,11 @@ function PopulateList(data, listMode, listIM)
 			end
 			ResetInstanceVisibility(unitListing);
 			-- Check to see if this item is recommended
-			for _,hash in ipairs( m_recommendedItems) do
-				if(item.Hash == hash.BuildItemHash) then
-					unitListing.RecommendedIcon:SetHide(false);
-				end
-			end
+			--for _,hash in ipairs( m_recommendedItems) do
+			--	if(item.Hash == hash.BuildItemHash) then
+			--		unitListing.RecommendedIcon:SetHide(false);
+			--	end
+			--end
 
 			local costStr = "";
 			local costStrTT = "";
@@ -1087,11 +1087,11 @@ function PopulateList(data, listMode, listIM)
 
 			if item.Corps then	
 				-- Check to see if this item is recommended
-				for _,hash in ipairs( m_recommendedItems) do
-					if(item.Hash == hash.BuildItemHash) then
-						unitListing.CorpsRecommendedIcon:SetHide(false);
-					end
-				end
+				--for _,hash in ipairs( m_recommendedItems) do
+				--	if(item.Hash == hash.BuildItemHash) then
+				--		unitListing.CorpsRecommendedIcon:SetHide(false);
+				--	end
+				--end
 				unitListing.CorpsButtonContainer:SetHide(false);
 				-- Production meter progress for corps unit
 				if (listMode == LISTMODE.PRODUCTION) then
@@ -1154,11 +1154,11 @@ function PopulateList(data, listMode, listIM)
 			end		
 			if item.Army then
 				-- Check to see if this item is recommended
-				for _,hash in ipairs( m_recommendedItems) do
-					if(item.Hash == hash.BuildItemHash) then
-						unitListing.ArmyRecommendedIcon:SetHide(false);
-					end
-				end
+				--for _,hash in ipairs( m_recommendedItems) do
+				--	if(item.Hash == hash.BuildItemHash) then
+				--		unitListing.ArmyRecommendedIcon:SetHide(false);
+				--	end
+				--end
 				unitListing.ArmyButtonContainer:SetHide(false);
 
 				if (listMode == LISTMODE.PRODUCTION) then
@@ -1260,11 +1260,11 @@ function PopulateList(data, listMode, listIM)
 			local projectListing = projectList.projectListIM:GetInstance();
 			ResetInstanceVisibility(projectListing);
 			-- Check to see if this item is recommended
-			for _,hash in ipairs( m_recommendedItems) do
-				if(item.Hash == hash.BuildItemHash) then
-					projectListing.RecommendedIcon:SetHide(false);
-				end
-			end
+			--for _,hash in ipairs( m_recommendedItems) do
+			--	if(item.Hash == hash.BuildItemHash) then
+			--		projectListing.RecommendedIcon:SetHide(false);
+			--	end
+			--end
 
 			-- Production meter progress for project
 			if(item.Progress > 0) then
