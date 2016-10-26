@@ -1185,6 +1185,8 @@ function CityBanner.UpdateName( self : CityBanner )
 				self.m_Instance.CityCanBuildGranary:SetHide(true);
 				self.m_Instance.CityCanBuildWatermill:SetHide(true);
 
+				self.m_Instance.CityUnlockedCitizen:SetHide(true);
+
 				self.m_Instance.CityCanBuildDistrictCampus1:SetHide(true);
 				self.m_Instance.CityCanBuildDistrictCampus2:SetHide(true);
 				self.m_Instance.CityCanBuildDistrictCampus3:SetHide(true);
@@ -1225,6 +1227,27 @@ function CityBanner.UpdateName( self : CityBanner )
 
 			local pCityDistricts:table	= pCity:GetDistricts();
 			if g_smartbanner and self.m_Instance.CityBuiltDistrictAquaduct ~= nil then
+				--Unlocked citizen check
+				local tParameters :table = {};
+				tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
+
+				local tResults	:table = CityManager.GetCommandTargets( pCity, CityCommandTypes.MANAGE, tParameters );
+				if tResults ~= nil then
+					local tPlots		:table = tResults[CityCommandResults.PLOTS];
+					local tUnits		:table = tResults[CityCommandResults.CITIZENS];
+					local tMaxUnits		:table = tResults[CityCommandResults.MAX_CITIZENS];
+					local tLockedUnits	:table = tResults[CityCommandResults.LOCKED_CITIZENS];
+					if tPlots ~= nil and (table.count(tPlots) > 0) then
+						for i,plotId in pairs(tPlots) do			
+							local kPlot	:table = Map.GetPlotByIndex(plotId);
+							if(tMaxUnits[i] >= 1 and tUnits[i] >= 1 and tLockedUnits[i] <= 0) then
+								self.m_Instance.CityUnlockedCitizen:SetHide(false);
+							end
+						end		 
+					end
+				end
+				-- End Unlocked Citizen Check
+
 				local buildQueue = pCity:GetBuildQueue();
 				local hMonument = GameInfo.Buildings["BUILDING_MONUMENT"].Hash;
 				local hGranary = GameInfo.Buildings["BUILDING_GRANARY"].Hash;
@@ -2736,6 +2759,12 @@ end
 -- ===========================================================================
 --	Game Engine EVENT
 -- ===========================================================================
+function OnCityWorkerChanged(ownerPlayerID:number, cityID:number)
+	if (Game.GetLocalPlayer() == ownerPlayerID) then
+		RefreshBanner( ownerPlayerID, cityID )
+	end
+end
+
 function OnPlayerTurnActivated(player, isFirstTimeThisTurn)
 	-- PlayerTurnActivated is post DoTurn processing for the beginning of the turn.
 	if (isFirstTimeThisTurn and Game.GetLocalPlayer() == player) then
@@ -2969,6 +2998,7 @@ function Initialize()
 	Events.GovernmentPolicyChanged.Add(         OnPolicyChanged );
 	Events.GovernmentPolicyObsoleted.Add(       OnPolicyChanged );
 	Events.CitySiegeStatusChanged.Add(			OnSiegeStatusChanged);
+	Events.CityWorkerChanged.Add(		        OnCityWorkerChanged );
 
 	LuaEvents.GameDebug_Return.Add(OnGameDebugReturn);	
 end

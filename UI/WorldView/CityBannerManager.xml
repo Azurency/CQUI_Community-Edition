@@ -59,6 +59,8 @@
               <Label ID="CityCanBuildWatermill" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" W "/>
               <Label ID="CityCanBuildSewer" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" S "/>
 
+              <Label ID="CityUnlockedCitizen" Hidden="1" Anchor="L,C" String="[ICON_FOOD]"/>
+
               <Label ID="CityBuiltDistrictAquaduct" Hidden="1" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_AQUEDUCT]"/>
               <Label ID="CityBuiltDistrictBath" Hidden="1" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_BATH]"/>
 
