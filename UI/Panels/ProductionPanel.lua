@@ -2065,7 +2065,7 @@ end
 --
 --Fix me out of here
 --
-local g_cowboy = true;
+local g_cowboy = false;
 local g_badcowboy = false;
 function OnToggleCowboy() g_cowboy = not g_cowboy; end
 function OnToggleBadCowboy() g_badcowboy = not g_badcowboy; end
