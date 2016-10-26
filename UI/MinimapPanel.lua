@@ -661,6 +661,9 @@ function OnInputHandler( pInputStruct:table )
 			return isMouseInMinimap; -- Only consume event if it's inside the minimap.
 
 		end
+		if msg == MouseEvents.RButtonDown then
+			OnCollapseToggle();
+		end
 	end
 	return false;
 end
