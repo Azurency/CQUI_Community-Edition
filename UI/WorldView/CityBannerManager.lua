@@ -149,6 +149,13 @@ local ZOFFSET_3DVIEW				:number = 36;
 local SIZEOFPOPANDPROD				:number = 80;	--The amount to add to the city banner to account for the size of the production icon and population number
 local SIZEOFPOPANDPRODMETERS		:number = 15;	--The amount to add to the city banner backing width to allow for the production and population meters to appear
 
+-- ===========================================================================
+--	QUI
+-- ===========================================================================
+
+local g_smartbanner = true;
+function OnToggleSmartBanner() g_smartbanner = not g_smartbanner; Reload(); end
+LuaEvents.QUI_Option_ToggleSmartBanner.Add( OnToggleSmartBanner );
 
 -- ===========================================================================
 --	FUNCTIONS
@@ -1174,7 +1181,7 @@ function CityBanner.UpdateName( self : CityBanner )
 			local iSpaceport = GameInfo.Districts["DISTRICT_SPACEPORT"].Index;
 
 			local pCityDistricts:table	= pCity:GetDistricts();
-			if true and self.m_Instance.CityBuiltDistrictAquaduct ~= nil then
+			if g_smartbanner and self.m_Instance.CityBuiltDistrictAquaduct ~= nil then
 				local buildQueue = pCity:GetBuildQueue();
 				local hMonument = GameInfo.Buildings["BUILDING_MONUMENT"].Hash;
 				local hGranary = GameInfo.Buildings["BUILDING_GRANARY"].Hash;

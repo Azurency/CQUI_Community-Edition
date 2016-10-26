@@ -13,6 +13,13 @@ local FONT_MULTIPLIER	= 11;	-- The amount to multiply times the string length to
 local m_OpenPediaId;
 local m_viewReportsX :number = 0;	-- With of view report button
 
+-- ===========================================================================
+--	QUI
+-- ===========================================================================
+
+local g_showluxury = true;
+function OnToggleShowLuxury() g_showluxury = not g_showluxury; RefreshResources(); print("called"); end
+LuaEvents.QUI_Option_ToggleShowLuxury.Add( OnToggleShowLuxury );
 
 -- ===========================================================================
 --	Game Engine Event
@@ -288,7 +295,13 @@ function RefreshResources()
 		local overflowString = "";
 		local plusInstance:table;
 		for resource in GameInfo.Resources() do
-			if (resource.ResourceClassType ~= nil and resource.ResourceClassType ~= "RESOURCECLASS_BONUS") then
+			local showLux = "RESOURCECLASS_LUXURY";
+			if (g_showluxury) then showLux = nil; end
+
+			if (resource.ResourceClassType ~= nil 
+				and resource.ResourceClassType ~= "RESOURCECLASS_BONUS" 
+				and resource.ResourceClassType ~= showLux
+			) then
 				local amount = pPlayerResources:GetResourceAmount(resource.ResourceType);
 				if (amount > 0) then
 					local resourceText = "[ICON_"..resource.ResourceType.."] ".. amount;

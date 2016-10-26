@@ -2062,6 +2062,133 @@ function OnCityProductionChanged()
 	Refresh();
 end
 
+--
+--Fix me out of here
+--
+local g_cowboy = true;
+local g_badcowboy = false;
+function OnToggleCowboy() g_cowboy = not g_cowboy; end
+function OnToggleBadCowboy() g_badcowboy = not g_badcowboy; end
+
+function FormCorps2( pInputStruct )
+    local plotID = UI.GetCursorPlotID();
+	if (Map.IsPlot(plotID)) then
+		local plot = Map.GetPlotByIndex(plotID);
+		local unitList	= Units.GetUnitsInPlotLayerID(  plot:GetX(), plot:GetY(), MapLayers.ANY );
+		local pSelectedUnit = UI.GetHeadSelectedUnit();
+
+		local tParameters :table = {};
+		for i, pUnit in ipairs(unitList) do
+			tParameters[UnitCommandTypes.PARAM_UNIT_PLAYER] = pUnit:GetOwner();
+			tParameters[UnitCommandTypes.PARAM_UNIT_ID] = pUnit:GetID();
+			if (UnitManager.CanStartCommand( pSelectedUnit, UnitCommandTypes.FORM_CORPS, tParameters)) then
+				UnitManager.RequestCommand( pSelectedUnit, UnitCommandTypes.FORM_CORPS, tParameters);
+			end
+		end
+	end						
+	return true;
+end
+
+--local localPlayer	= Players[Game.GetLocalPlayer()];
+--if (localPlayer ~= nil) then
+--	local playerTechs	= localPlayer:GetTechs();
+--	local techType = GameInfo.Technologies[resourceTechType];
+--	if (techType ~= nil and not playerTechs:HasTech(techType.Index)) then
+--		table.insert(toolTipItems,"[COLOR:Civ6Red](".. Locale.Lookup("LOC_TOOLTIP_REQUIRES") .. " " .. Locale.Lookup(techType.Name) .. ")[ENDCOLOR]");
+--	end
+--end
+
+function AutoFormCorps(pCity, unitHash)
+end
+
+function BuildUnit2(pCity, unitHash)
+	local tParameters = {}; 
+	tParameters[CityOperationTypes.PARAM_UNIT_TYPE] = unitHash;
+	tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
+	CityManager.RequestOperation(pCity, CityOperationTypes.BUILD, tParameters);
+end
+
+function TryFormCorp(pSelectedUnit, unitList)
+	for i, pUnit in ipairs(unitList) do
+		tParameters[UnitCommandTypes.PARAM_UNIT_PLAYER] = pUnit:GetOwner();
+		tParameters[UnitCommandTypes.PARAM_UNIT_ID] = pUnit:GetID();
+		if (UnitManager.CanStartCommand( pSelectedUnit, UnitCommandTypes.FORM_CORPS, tParameters)) then
+			UnitManager.RequestCommand( pSelectedUnit, UnitCommandTypes.FORM_CORPS, tParameters);
+			return true;
+		end
+	end
+	return false;
+end
+
+function ReverseTable(t)
+    local reversedTable = {}
+    local itemCount = #t
+    for k, v in ipairs(t) do
+        reversedTable[itemCount + 1 - k] = v
+    end
+    return reversedTable
+end
+
+function OnCityProductionCompleted( playerID:number, cityID:number)
+	if (playerID ~= Game.GetLocalPlayer()) then return end;
+
+	local pPlayer = Players[ playerID ];
+	if (pPlayer == nil) then return end;
+	
+	local pCity = pPlayer:GetCities():FindID(cityID);
+	if (pCity == nil) then return end;
+
+	--unit_type 33
+	if (g_cowboy) then
+		BuildUnit2(pCity, 1462612590);
+	end
+
+	if (g_badcowboy) then
+		--CityManager.GetCity(player, id);
+		local unitList	= Units.GetUnitsInPlotLayerID( pCity:GetX(), pCity:GetY(), MapLayers.ANY );
+		--local rUnitList = ReverseTable(unitList);
+		for i, pUnit in ipairs(unitList) do
+			if (pUnit ~= nil and pUnit:GetUnitType() == 33) then
+				UnitManager.RequestCommand( pUnit, UnitCommandTypes.DELETE );
+			end
+		end
+	end
+	--if unitList[0] == nil then return end;
+	--local pSelectedUnit:table = unitList[0];
+
+	--print(pSelectedUnit);
+	--print("first ttrying form corp "..pSelectedUnit);
+	--while(TryFormCorp(pSelectedUnit, unitList)) do
+	--	print("trying form corp "..pSelectedUnit);
+	--	local unitList	= Units.GetUnitsInPlotLayerID(  pCity:GetX(), pCity:GetY(), MapLayers.ANY );
+	--	if unitList[0] == nil then return end;
+	--	pSelectedUnit = unitList[0];
+	--end
+
+	--for i, pUnit in ipairs(unitList) do
+	--	for i2, pUnit2 in ipairs(unitList) do
+	--		tParameters[UnitCommandTypes.PARAM_UNIT_PLAYER] = pUnit:GetOwner();
+	--		tParameters[UnitCommandTypes.PARAM_UNIT_ID] = pUnit:GetID();
+	--		if (UnitManager.CanStartCommand( pUnit2, UnitCommandTypes.FORM_CORPS, tParameters)) then
+	--			UnitManager.RequestCommand( pUnit2, UnitCommandTypes.FORM_CORPS, tParameters);
+	--		end
+	--	end
+	--end
+	--for key,value in pairs(pCity) do
+	--    print("found member " .. key);
+	--end
+
+	--Horseman 1462612590
+	--AutoFormCorps(pCity, 1462612590);
+end
+--
+--
+--
+--print(GameInfo.Technologies[0]);
+--for key,value in pairs(GameInfo.Technologies) do
+--    print("found member " .. key);
+--end
+
 function Initialize()
 	
 	Controls.PauseCollapseList:Stop();
@@ -2100,7 +2227,11 @@ function Initialize()
 	LuaEvents.StrageticView_MapPlacement_ProductionOpen.Add( OnStrategicViewMapPlacementProductionOpen );
 	LuaEvents.Tutorial_ProductionOpen.Add( OnTutorialProductionOpen );	
 
-	Events.CityProductionChanged.Add( OnCityProductionChanged );
+	--Events.CityProductionChanged.Add( OnCityProductionChanged );
+	Events.CityProductionCompleted.Add(OnCityProductionCompleted);
+
+	LuaEvents.QUI_Option_ToggleCowboy.Add( OnToggleCowboy );
+	LuaEvents.QUI_Option_ToggleBadCowboy.Add( OnToggleBadCowboy );
 end
 Initialize();
 
