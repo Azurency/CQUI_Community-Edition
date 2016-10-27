@@ -34,7 +34,7 @@
 				<File>UI/Screens/GovernmentScreen.xml</File>
 				<File>UI/Popups/GreatPeoplePopup.lua</File>
 				<File>UI/Popups/GreatPeoplePopup.xml</File>
-				<File>UI/WorldViewIconsManager.xml</File>
+				<File>UI/WorldViewIconsManager.lua</File>
             </Items>
         </ImportFiles>
     </Components>
@@ -63,6 +63,6 @@
 		<File>UI/Screens/GovernmentScreen.xml</File>
 		<File>UI/Popups/GreatPeoplePopup.lua</File>
 		<File>UI/Popups/GreatPeoplePopup.xml</File>
-		<File>UI/WorldViewIconsManager.xml</File>
+		<File>UI/WorldViewIconsManager.lua</File>
 	</Files>
 </Mod>
