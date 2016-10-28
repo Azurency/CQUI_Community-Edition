@@ -832,27 +832,19 @@ function OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
 		if eNewMode ~= InterfaceModeTypes.DISTRICT_PLACEMENT then
 			UI.DeselectAllCities();
 		end
+		UILens.ToggleLayerOff(LensLayers.PURCHASE_PLOT);
+		UILens.ToggleLayerOff(LensLayers.CITIZEN_MANAGEMENT);
 		LuaEvents.CityPanel_ProductionClose();
 		UI.SetFixedTiltMode( false );
+		EnableIfNotTutorialBlocked("PurchaseTileCheck");
+		EnableIfNotTutorialBlocked("ManageCitizensCheck");
+		EnableIfNotTutorialBlocked("ChangeProductionCheck");
 	end
 	
 	if eNewMode == InterfaceModeTypes.CITY_RANGE_ATTACK or eNewMode == InterfaceModeTypes.DISTRICT_RANGE_ATTACK then
 		if ContextPtr:IsHidden()==false then
 			Close();
 		end
-	elseif eOldMode == InterfaceModeTypes.CITY_RANGE_ATTACK or eOldMode == InterfaceModeTypes.DISTRICT_RANGE_ATTACK then
-		-- If we leave CITY_RANGE_ATTACK with a city selected then show the city panel again
-		if UI.GetHeadSelectedCity() then
-			ContextPtr:SetHide(false);
-		end
-	end
-
-	if eNewMode == InterfaceModeTypes.SELECTION or eNewMode == InterfaceModeTypes.CITY_MANAGEMENT then
-		EnableIfNotTutorialBlocked("PurchaseTileCheck");
-		EnableIfNotTutorialBlocked("ManageCitizensCheck");
-		--EnableIfNotTutorialBlocked("ProduceWithFaithCheck");
-		--EnableIfNotTutorialBlocked("ProduceWithGoldCheck");
-		EnableIfNotTutorialBlocked("ChangeProductionCheck");
 	end
 
 	if not ContextPtr:IsHidden() then
