@@ -130,6 +130,7 @@ function OnExpand(instance:table)
 	Controls.PurchaseList:ReprocessAnchoring();
 	Controls.ProductionListScroll:CalculateInternalSize();
 	Controls.PurchaseListScroll:CalculateInternalSize();
+	UI.SetInterfaceMode(InterfaceModeTypes.CITY_MANAGEMENT);
 end
 
 -- ===========================================================================
