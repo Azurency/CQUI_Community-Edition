@@ -1003,6 +1003,7 @@ function OnCityBannerClick( playerID:number, cityID:number )
 
 	if (pPlayer:GetID() == localPlayerID) then
 		UI.SelectCity( pCity );
+		ContextPtr:LookUpControl("/InGame/CityPanel"):SetHide(false)
 		LuaEvents.CityPanel_ProductionOpen();
 		LuaEvents.CityPanel_ShowOverviewPanel(true);
 		UILens.ToggleLayerOn(LensLayers.PURCHASE_PLOT);
