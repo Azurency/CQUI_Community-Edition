@@ -3,10 +3,8 @@
 	<Properties>
 		<Name>Chao Quick UI</Name>
 		<Description>Reduce clicks and make empire management easy</Description>
+		<Teaser>Reduce clicks and make empire management easy</Teaser>
 		<Authors>vans163, chaorace</Authors>
-		<ShowInBrowser>AlwaysHidden</ShowInBrowser>
-		<EnabledByDefault>1</EnabledByDefault>
-		<EnabledAtStartup>1</EnabledAtStartup>
 		<SpecialThanks>vans163 for his original qui mod</SpecialThanks>
 	</Properties>
     <Components>
