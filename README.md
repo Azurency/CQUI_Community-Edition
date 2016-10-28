@@ -53,6 +53,6 @@ Making the yields in the top panel clickable
 Right clicking ANY item in production view opens Civilopedia (currently doesn't work for disabled buildings/units)
 
 ### THANKS:
-[Vans163](https://github.com/vans163) for his QUI mod and the active commits he makes that I love to merge <3
-The lovely folks over at Civfanatics for their guides, knowledge, tools, and resources
-The even lovelier folks over at /r/civ for their input and testing
+* [Vans163](https://github.com/vans163) for his QUI mod and the active commits he makes that I love to merge <3
+* The lovely folks over at Civfanatics for their guides, knowledge, tools, and resources
+* The even lovelier folks over at /r/civ for their input and testing
