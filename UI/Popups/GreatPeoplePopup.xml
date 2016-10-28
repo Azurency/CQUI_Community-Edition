@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd">
+
+	<Container Style="FullScreenVignetteConsumer" />
+
+	<Container							ID="PopupContainer"						Anchor="C,C"									Size="full,768">
+
+		<ScrollPanel					ID="PeopleScroller"													Offset="0,0"		Size="parent,parent"	Vertical="0" AutoScrollBar="1">
+			<Image							ID="WoodPaneling"																						Size="full,768"				Texture="Wood_Pattern" StretchMode="Tile"/>
+			<Stack							ID="PeopleStack"														Offset="0,78"		StackGrowth="Right"		StackPadding="0" />
+			<ScrollBar																				Anchor="L,B"	Offset="0,10"		Size="parent-10,8"		Style="ScrollHorizontalBackingAlt">
+				<Thumb																																															Style="ScrollThumbHAlt" />
+			</ScrollBar>
+
+			<Tutorial ID="GPAbilityPointer" Style="TutorialContainer" Anchor="L,C" Offset="410,70" TriggerBy="TutorialGPAbilityPointer">
+				<SlideAnim Start="110,-40" EndOffset="30,0" Cycle="Bounce" Function="OutQuad" >
+					<Image Texture="Tutorial_ArrowH" Size="58,44" />
+				</SlideAnim>
+			</Tutorial>
+
+			<Tutorial ID="GPCostPointer" Style="TutorialContainer" Anchor="L,C" Offset="410,270" TriggerBy="TutorialGPCostPointer">
+				<SlideAnim Start="110,-40" EndOffset="30,0" Cycle="Bounce" Function="OutQuad" >
+					<Image Texture="Tutorial_ArrowH" Size="58,44" />
+				</SlideAnim>
+			</Tutorial>	
+		</ScrollPanel>
+
+		<Box									ID="RecruitedArea"																					Size="parent,parent"							Color="11,27,40,255">
+			<Label																						Anchor="C,T"	Offset="0,95"		Style="FontBoldFlair18"						Color="188,180,167,255" SmallCaps="24" SmallCapsType="EveryWord" String="{LOC_GREAT_PEOPLE_RECRUITMENT_HISTORY:upper}" />
+			<Line																							Start="10,130" End="parent-10,130"	Width="2"										Color="48,60,68,255" />
+			<Container																											Offset="10,131" Size="parent-20,28" >
+				<Label																					Anchor="L,T"	Offset="12,16"	Style="GreatPeopleChartHeader"		String="LOC_GREAT_PEOPLE_EARN_DATE" />
+				<Label																					Anchor="L,T"	Offset="165,16"	Style="GreatPeopleChartHeader"		String="LOC_GREAT_PEOPLE_GREAT_PERSON" />
+				<Label																					Anchor="L,T"	Offset="345,16"	Style="GreatPeopleChartHeader"		String="LOC_GREAT_PEOPLE_RECRUITED_BY" />
+				<Label																					Anchor="C,T"	Offset="20,16"	Style="GreatPeopleChartHeader"		String="LOC_GREAT_PEOPLE_ABILITIES" />
+			</Container>
+			<Line																							Start="10,180" End="parent-10,180"	Width="2"				Color="48,60,68,255" />
+			<ScrollPanel				ID="RecruitedScroller"											Offset="10,181"	Size="parent-5,parent-182"	Vertical="1" AutoScrollBar="1">
+				<Stack						ID="RecruitedStack"																					StackGrowth="Down"		StackPadding="4" />
+				<ScrollBar																			Anchor="R,T"	Offset="10,0"		Size="8,parent-300"		Style="ScrollVerticalBackingAlt">
+					<Thumb																																														Style="ScrollThumbHAlt" />
+				</ScrollBar>
+			</ScrollPanel>
+		</Box>		
+		
+		<!-- Tabs -->
+		<Container																					Anchor="C,T"	Offset="0,30"		Size="400,61" >
+			<Image																						Anchor="C,C"									Size="439,27"					Texture="Controls_TabLedge2_Fill" StretchMode="Tile" />
+			<Grid																							Anchor="C,T"									Size="580,61"					Texture="Controls_TabLedge2"  SliceCorner="194,18" SliceSize="52,26" SliceTextureSize="438,61">
+				<Container				ID="TabContainer"														Offset="50,13"	Size="parent-80,34">
+					<GridButton			ID="ButtonGreatPeople"																			Size="170,34"					Style="TabButton"					FontSize="14"	TextOffset="0,2" String="LOC_GREAT_PEOPLE_TAB_GREAT_PEOPLE" >
+						<AlphaAnim		ID="SelectGreatPeople"											Offset="-2,0"		Size="parent,parent"	Speed="2"									AlphaBegin="0" AlphaEnd="1" Cycle="Once" Function="Root" Hidden="1" >
+							<GridButton																															Size="parent,parent"	Style="TabButtonSelected" ConsumeMouseButton="0" ConsumeMouseOver="1" />
+						</AlphaAnim>
+					</GridButton>
+					<GridButton			ID="ButtonPreviouslyRecruited"															Size="170,34"					Style="TabButton"					FontSize="14"	TextOffset="0,2" String="LOC_GREAT_PEOPLE_TAB_PREVIOUSLY_RECRUITED" >
+						<AlphaAnim		ID="SelectPreviouslyRecruited"							Offset="-2,0"		Size="parent,parent"	Speed="2"									AlphaBegin="0" AlphaEnd="1" Cycle="Once" Function="Root" Hidden="1" >
+							<GridButton																															Size="parent,parent"	Style="TabButtonSelected" ConsumeMouseButton="0" ConsumeMouseOver="1" />
+						</AlphaAnim>
+					</GridButton>
+				</Container>
+			</Grid>
+		</Container>
+		
+		<!-- Place the modal screen controls in a separate container; this uses a custom background inside of the scroll panel. -->
+		<Container						ID="ModalFrame" Style="ModalScreenWide" />
+	</Container>
+
+
+	<!-- ==================================================================	-->
+	<!--	Instances																													-->
+	<!-- ==================================================================	-->
+	<Instance						Name="PanelInstance">
+		<Container				ID="Content"																					Size="200,670" >
+			<Grid						ID="BiographyActiveBG"								Offset="23,33"	Size="255,632" Texture="GreatPeople_Overlay" SliceCorner="13,13" SliceSize="1,1" SliceTextureSize="25,25" Hidden="1"/>
+			<Label					ID="ClassName"					Anchor="C,T"	Offset="0,9"		Color="60,60,30,255" GradientColor="230,230,150,255"	Style="FontFlair18" SmallCaps="24" SmallCapsType="EveryWord" String="$ClassName$"/>
+			<Label					ID="IndividualName"			Anchor="C,C"	Offset="0,-275"	Align="C,C" WrapWidth="210"	Style="GreatPeopleLargeText"	String="$IndividualName$"/>
+			<Line						ID="TitleLine"					Start="50,77"						End="240,77"	Width="0"				Color="199,187,157,90"/>
+			<Label					ID="EraName"						Anchor="C,T"	Offset="0,90"		Style="GreatPeopleLargeText"	String="$EraName$"/>
+			<Container			ID="MainInfo"						Anchor="C,T"									Size="parent,654">
+				<Image ID="ClassImage" Anchor="C,T" Offset="0,120" Size="90,90"		Texture="GreatPeopleClass90" />
+				<Image				ID="Portrait"  					Anchor="C,T"	Offset="0,120"	Size="160,160"	Texture="GreatPeople160" Hidden="1"/>
+				<Image				ID="CircleFlare"				Anchor="C,T"	Offset="0,20"		Texture="GreatPeople_SlotOn" Hidden="1"/>
+        <ScrollPanel	ID="EffectStackScroller"							Offset="0,260" Size="280,300" Vertical="1" AutoScrollBar="1" >
+				  <Stack			ID="EffectStack"											Offset="0,0" StackPadding="4"/>
+          <ScrollBar													Anchor="R,T" AnchorSide="I,I"  Offset="76,0"	Style="ScrollVerticalBarAlt" Size="8,parent-10"/>
+        </ScrollPanel>
+				<Box						ID="RecruitProgressBox"	Anchor="C,B"	Offset="-1,30"	Size="218,186"						Color="0,0,0,100">					
+					<Label															Anchor="C,T"	Offset="0,14"		Style="FontFlair14"				Color="157,150,138,255" SmallCaps="20" SmallCapsType="EveryWord" String="LOC_GREAT_PEOPLE_RECRUIT_PROGRESS" />			
+					<ScrollPanel	ID="RecruitScroll"									Offset="0,30"		Size="parent,86" Vertical="1" >
+						<Stack			ID="RecruitStack"										Offset="30,0"		StackPadding="2" />
+						<ScrollBar												Anchor="R,C"	Offset="10,0"		AnchorSide="I,I"						Style="ScrollVerticalBarAlt" />
+					</ScrollPanel>
+					<Label			ID="RecruitInfo"				Anchor="C,B"	Offset="0,40"		Style="GreatPeopleText" String="LOC_GREAT_PEOPLE_OR_RECRUIT_WITH_PATRONAGE" />
+					<GridButton ID="GoldButton"					Anchor="C,B"	Offset="-50,2"	Size="80,32"							SliceCorner="12,12" SliceSize="1,1" SliceTextureSize="24,24" Texture="Controls_ButtonControl_Brown" TextColor="126,123,120" Style="FontNormal18" StateOffsetIncrement="0,24"						String="999" />
+					<GridButton ID="FaithButton"				Anchor="C,B"	Offset="50,2"		Size="80,32"							SliceCorner="12,12" SliceSize="1,1" SliceTextureSize="24,24" Texture="Controls_ButtonControl_Brown" TextColor="126,123,120" Style="FontNormal18" StateOffsetIncrement="0,24"						String="999" />					
+					<GridButton ID="RecruitButton"			Anchor="C,B"	Offset="0,34"		Size="190,26"							Style="ButtonConfirmSmall"			Hidden="1" String="LOC_GREAT_PEOPLE_RECRUIT" />
+					<GridButton ID="RejectButton"				Anchor="C,B"	Offset="0,6"		Size="190,24"							Style="ButtonLightweightSmall"	Hidden="1" String="LOC_GREAT_PEOPLE_PASS" />
+					<Grid																							Offset="2,2"		Size="parent-4,parent-4"	SliceCorner="19,24" SliceSize="1,1" SliceTextureSize="39,49" Texture="Controls_Deco" Color="210,190,140,90" />			
+				</Box>
+			</Container>			
+			<GridButton			ID="BiographyBackButton"	Anchor="C,B"	Offset="0,14"		Size="parent-60,28" SliceCorner="12,12" SliceSize="1,1" SliceTextureSize="24,24" Texture="Controls_ButtonControl_Tan" TextColor="20,20,20" Style="FontNormal16" String="LOC_GREAT_PEOPLE_BIOGRAPHY" StateOffsetIncrement="0,24" />
+			<Label					ID="ClaimedLabel"					Anchor="C,C"	Offset="0,-120" Align="Center" WrapWidth="200" Style="FontFlair16" FontStyle="Shadow" ColorSet="GreatPeopleCS" String="LOC_GREAT_PEOPLE_ALL_POSSIBLE_CHOSEN" />
+						
+			<Container				ID="BiographyArea"										Offset="35,305"	Size="215,310" >
+				<Line																		Start="15,0"	End="205,0"	Width="2"				Color="199,187,157,90"  />
+				<ScrollPanel		ID="BiographyScroll"									Offset="10,10"		Size="parent,parent-10"			Vertical="1">
+					<Label ID="BiographyText" Offset="10,0" WrapWidth="190" Style="GreatPeopleText" FontStyle="Shadow" ColorSet="GreatPeopleCS" String="$Text$" />
+					<ScrollBar														Anchor="L,C"	Offset="1,0"		AnchorSide="O,I"					Style="ScrollVerticalBarAlt" />
+				</ScrollPanel>
+			</Container>			
+		</Container>
+	</Instance>
+
+	<Instance						Name="PastRecruitmentInstance">
+		<Grid							ID="Content"																						Size="parent-20,68" 	Color="GreatPeopleRowUnOwned"	Style="SubContainer2">
+			<Label					ID="EarnDate"							Anchor="L,T"	Offset="0,16"													Color="GreatPeopleRow"				Style="FontNormal14"	String="$EarnDate$" WrapWidth="64" />
+			<Line																			Start="90,2" End="90,41" Width="2" Color="42,57,72,255" />
+			<Label					ID="ClassName"						Anchor="L,T"	Offset="100,7"	WrapWidth="250"				Color="GreatPeopleRow"				Style="FontBoldFlair18"		SmallCaps="22" SmallCapsType="Every" String="$ClassName$" />
+			<Label					ID="GreatPersonInfo"			Anchor="L,T"	Offset="100,25"	WrapWidth="250"				Color="GreatPeopleRow"				Style="FontNormal14"			String="$GreatPersonInfo" />
+			<Line																			Start="340,2" End="340,41"		Width="2" Color="42,57,72,255" />
+			<Image					ID="RecruitedImage"				Anchor="L,T"	Offset="350,0"	Size="55,55"					Texture="Leaders55">
+				<Image				ID="YouIndicator"					Anchor="C,C"									Size="55,53" Texture="Diplomacy_YouIndicatorSmall" Hidden="1" />
+			</Image>
+			<Line																			Start="415,2" End="415,41" Width="2" Color="42,57,72,255" />
+			<Stack					ID="EffectStack"											Offset="420,0" StackGrowth="Right" />
+		</Grid>
+	</Instance>
+
+	<Instance						Name="PastEffectInstance">
+		<Container				ID="Top"																							Size="260,54" >
+			<Image					ID="EffectTypeIcon"																		Size="54,54" Texture="Controls_SlotCircle2" Color="90,90,100,130">
+				<Image ID="ActiveAbilityIcon" Size="38,38" Anchor="C,C" Texture="UnitActions38" Hidden="1"/>
+				<Image ID="PassiveAbilityIcon" Size="38,38" Anchor="C,C" Texture="GreatPeoplePassiveBonus" Hidden="1"/>
+			</Image>
+			<Label					ID="Text"								Anchor="L,T"	Offset="58,4"		WrapWidth="200" Style="GreatPeopleText" Color="255,0,0,255" String="$Text$" LeadingOffset="3" />
+		</Container>
+	</Instance>
+
+
+	<Instance						Name="EffectInstance">
+		<Container				ID="Top"								AutoSize="V"									Size="214,50" >
+			<Image					ID="EffectTypeIcon"																		Size="54,54" Texture="Controls_SlotCircle2" >
+				<Image ID="ActiveAbilityIcon" Size="38,38" Anchor="C,C" Texture="UnitActions38" Hidden="1"/>
+				<Image ID="PassiveAbilityIcon" Size="38,38" Anchor="C,C" Texture="GreatPeoplePassiveBonus" Hidden="1"/>
+			</Image>
+			<Label					ID="Text"								Anchor="L,T"	Offset="58,0"		WrapWidth="130" Style="GreatPeopleText" String="$Text$" />
+		</Container>
+	</Instance>
+
+	<Instance						Name="RecruitInstance">
+		<Container				ID="Top"								AutoSize="V"									Size="160,50" >
+			<Image					ID="WinnerIcon"												Offset="-15,0"									Texture="Controls_Winner12" Hidden="1" />
+			<Label					ID="Country"						Anchor="L,T"	Offset="0,0"		WrapWidth="160" Style="GreatPeopleSmallText" Color="220,220,200,255" String="$Text$" />
+			<Label					ID="Amount"							Anchor="R,T"	Offset="0,0"		WrapWidth="160" Style="GreatPeopleSmallText" Color="220,220,200,255" String="X/Y" />
+			<Bar						ID="ProgressBar"											Offset="0,14"		Size="parent,6" FGColor="220,220,200,255" BGColor="0,0,0,255" Percent="0.5" />
+		</Container>
+	</Instance>
+</Context>
