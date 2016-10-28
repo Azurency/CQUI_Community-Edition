@@ -839,6 +839,13 @@ function OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
 		EnableIfNotTutorialBlocked("PurchaseTileCheck");
 		EnableIfNotTutorialBlocked("ManageCitizensCheck");
 		EnableIfNotTutorialBlocked("ChangeProductionCheck");
+	elseif eNewMode == InterfaceModeTypes.CITY_MANAGEMENT then
+		ContextPtr:SetHide(false);
+		LuaEvents.CityPanel_ProductionOpen();
+		LuaEvents.CityPanel_ShowOverviewPanel(true);
+		UILens.ToggleLayerOn(LensLayers.PURCHASE_PLOT);
+		UILens.ToggleLayerOn(LensLayers.CITIZEN_MANAGEMENT);
+		UI.SetFixedTiltMode(true);
 	end
 	
 	if eNewMode == InterfaceModeTypes.CITY_RANGE_ATTACK or eNewMode == InterfaceModeTypes.DISTRICT_RANGE_ATTACK then
