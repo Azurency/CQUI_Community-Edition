@@ -829,7 +829,7 @@ end
 -- ===========================================================================
 function OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
 	if eOldMode == InterfaceModeTypes.CITY_MANAGEMENT then
-		if eNewMode ~= InterfaceModeTypes.DISTRICT_PLACEMENT then
+		if eNewMode ~= InterfaceModeTypes.DISTRICT_PLACEMENT and eNewMode ~= InterfaceModeTypes.BUILDING_PLACEMENT then
 			UI.DeselectAllCities();
 		end
 		UILens.ToggleLayerOff(LensLayers.PURCHASE_PLOT);

@@ -452,6 +452,10 @@ function OnDistrictAddedToMap( playerID: number, districtID : number, cityID :nu
 	end
 end
 
+function OnBuildingAddedToMap( plotX:number, plotY:number, buildingType:number, misc1, misc2, misc3 )
+	UI.DeselectAllCities();
+end
+
 -- ===========================================================================
 function OnDistrictRemovedFromMap( playerID: number, districtID : number, cityID :number, districtX : number, districtY : number, districtType:number )
 
@@ -886,6 +890,7 @@ function Initialize()
 	Events.MapYieldsChanged.Add(        OnMapYieldsChanged );
 	Events.DistrictAddedToMap.Add(      OnDistrictAddedToMap );
 	Events.DistrictRemovedFromMap.Add(  OnDistrictRemovedFromMap );
+	Events.BuildingAddedToMap.Add(		OnBuildingAddedToMap );
 
 	LuaEvents.StrategicView_MapPlacement_AddDistrictPlacementShadowHexes.Add( OnAddDistrictPlacementShadowHexes );
 	LuaEvents.StrategicView_MapPlacement_ClearDistrictPlacementShadowHexes.Add( OnClearDistrictPlacementShadowHexes );
