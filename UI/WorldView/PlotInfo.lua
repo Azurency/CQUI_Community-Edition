@@ -448,6 +448,7 @@ function OnDistrictAddedToMap( playerID: number, districtID : number, cityID :nu
 	if districtType ~= CITY_CENTER_DISTRICT_INDEX then
 		OnPlotYieldChanged(districtX, districtY);
 		OnMapYieldsChanged();
+		UI.DeselectAllCities();
 	end
 end
 

@@ -827,12 +827,11 @@ end
 --	eOldMode, mode the engine was formally in
 --	eNewMode, new mode the engine has just changed to
 -- ===========================================================================
-function OnInterfaceModeChanged( eOldMode:number, eNewMode:number )	
-	
+function OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
 	if eOldMode == InterfaceModeTypes.CITY_MANAGEMENT then
-		-- if Controls.PurchaseTileCheck:IsChecked()   then Controls.PurchaseTileCheck:SetAndCall( false ); end
-		-- if Controls.ManageCitizensCheck:IsChecked() then Controls.ManageCitizensCheck:SetAndCall( false ); end
-		UI.DeselectAllCities();
+		if eNewMode ~= InterfaceModeTypes.DISTRICT_PLACEMENT then
+			UI.DeselectAllCities();
+		end
 		LuaEvents.CityPanel_ProductionClose();
 		UI.SetFixedTiltMode( false );
 	end
@@ -854,12 +853,6 @@ function OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
 		--EnableIfNotTutorialBlocked("ProduceWithFaithCheck");
 		--EnableIfNotTutorialBlocked("ProduceWithGoldCheck");
 		EnableIfNotTutorialBlocked("ChangeProductionCheck");
-	elseif eNewMode == InterfaceModeTypes.DISTRICT_PLACEMENT then
-		Controls.PurchaseTileCheck:SetDisabled( true );
-		Controls.ManageCitizensCheck:SetDisabled( true );
-		Controls.ChangeProductionCheck:SetDisabled( true );
-		Controls.ProduceWithFaithCheck:SetDisabled( true );
-		Controls.ProduceWithGoldCheck:SetDisabled( true );
 	end
 
 	if not ContextPtr:IsHidden() then
