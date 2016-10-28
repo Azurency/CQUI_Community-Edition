@@ -29,6 +29,8 @@
 				<File>UI/Screens/TechTree.lua</File>
 				<File>UI/Panels/CityPanelOverview.lua</File>
 				<File>UI/Panels/CityPanelOverview.xml</File>
+				<File>UI/Screens/GovernmentScreen.lua</File>
+				<File>UI/Screens/GovernmentScreen.xml</File>
             </Items>
         </ImportFiles>
     </Components>
@@ -53,5 +55,7 @@
 		<File>UI/Screens/CivicsTree.lua</File>
 		<File>UI/Panels/CityPanelOverview.lua</File>
 		<File>UI/Panels/CityPanelOverview.xml</File>
+		<File>UI/Screens/GovernmentScreen.lua</File>
+		<File>UI/Screens/GovernmentScreen.xml</File>
 	</Files>
 </Mod>
