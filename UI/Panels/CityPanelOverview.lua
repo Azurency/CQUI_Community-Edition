@@ -747,6 +747,7 @@ function OnClose()
 end
 
 function OnCloseButtonClicked()
+	UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
 end
 
 function View(data)
