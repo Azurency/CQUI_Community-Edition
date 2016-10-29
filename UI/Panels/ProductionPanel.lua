@@ -2228,7 +2228,7 @@ function Initialize()
 	LuaEvents.StrageticView_MapPlacement_ProductionOpen.Add( OnStrategicViewMapPlacementProductionOpen );
 	LuaEvents.Tutorial_ProductionOpen.Add( OnTutorialProductionOpen );	
 
-	--Events.CityProductionChanged.Add( OnCityProductionChanged );
+	Events.CityProductionChanged.Add( OnCityProductionChanged );
 	Events.CityProductionCompleted.Add(OnCityProductionCompleted);
 
 	LuaEvents.QUI_Option_ToggleCowboy.Add( OnToggleCowboy );
