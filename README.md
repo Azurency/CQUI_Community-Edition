@@ -54,5 +54,6 @@ Right clicking ANY item in production view opens Civilopedia (currently doesn't 
 
 ### THANKS:
 * [Vans163](https://github.com/vans163) for his QUI mod and the active commits he makes that I love to merge <3
+* [zgavin](https://github.com/zgavin) for his UI bugfixes in PRs #1/#2
 * The lovely folks over at Civfanatics for their guides, knowledge, tools, and resources
 * The even lovelier folks over at /r/civ for their input and testing
