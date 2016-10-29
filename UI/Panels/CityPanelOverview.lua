@@ -785,8 +785,6 @@ end
 function KeyHandler( key:number )
     if key == Keys.VK_ESCAPE then
 		if ( m_isShowingPanel ) then
-			LuaEvents.CityPanelOverview_CloseButton();
-			Close();
 			UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
 			return true;
 		else
