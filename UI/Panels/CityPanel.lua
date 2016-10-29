@@ -552,6 +552,7 @@ function OnCitySelectionChanged( ownerPlayerID:number, cityID:number, i:number, 
 			Refresh();
 		else
 			Close();
+			UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
 			-- Tell the CityPanelOverview a city was deselected
 			LuaEvents.CityPanel_LiveCityDataChanged( nil, false ); 
 		end
