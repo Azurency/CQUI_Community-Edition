@@ -382,9 +382,75 @@ function GetPercentGrowthColor( percent:number )
 	return "StatNormalCSGlow";
 end
 
+function GetAmenetiesColor( count:number )
+	if count > 0 then return "StatGoodCSGlow" end
+	if count < 0 then return "StatBadCSGlow" end
+	return "StatNormalCSGlow";
+end
+
 -- ===========================================================================
 function ViewPanelAmenities( data:table )	
 	Controls.AmenitiesAdvisorBubble:SetHide( false );
+
+	-- new ameneties section
+	Controls.AmenityStack:SetHide( true );
+
+	Controls.AmenetiesStatusIconContainerLuxuries:SetTextureOffsetVal(0, 100);
+	Controls.AmenetiesStatusYieldLuxuries:SetText( Locale.ToNumber(data.AmenitiesFromLuxuries) );
+	Controls.AmenetiesStatusYieldLuxuries:SetColorByName( GetAmenetiesColor(data.AmenitiesFromLuxuries) );
+	Controls.AmenetiesStatusYieldLuxuries:SetFontSize(24);
+	Controls.AmenetiesStatusIconLuxuries:SetColor(0x3fffffff);
+	Controls.AmenetiesStatusLabelLuxuries:SetColor(0xffffffff);
+
+	Controls.AmenetiesStatusIconContainerCivics:SetTextureOffsetVal(0, 100);
+	Controls.AmenetiesStatusYieldCivics:SetText( Locale.ToNumber(data.AmenitiesFromCivics) );
+	Controls.AmenetiesStatusYieldCivics:SetColorByName( GetAmenetiesColor(data.AmenitiesFromCivics) );
+	Controls.AmenetiesStatusYieldCivics:SetFontSize(24);
+	Controls.AmenetiesStatusIconCivics:SetColor(0x3fffffff);
+	Controls.AmenetiesStatusLabelCivics:SetColor(0xffffffff);
+
+	Controls.AmenetiesStatusIconContainerEntertainment:SetTextureOffsetVal(0, 100);
+	Controls.AmenetiesStatusYieldEntertainment:SetText( Locale.ToNumber(data.AmenitiesFromEntertainment) );
+	Controls.AmenetiesStatusYieldEntertainment:SetColorByName( GetAmenetiesColor(data.AmenitiesFromEntertainment) );
+	Controls.AmenetiesStatusYieldEntertainment:SetFontSize(24);
+	Controls.AmenetiesStatusIconEntertainment:SetColor(0x3fffffff);
+	Controls.AmenetiesStatusLabelEntertainment:SetColor(0xffffffff);
+
+	Controls.AmenetiesStatusIconContainerGreatPeople:SetTextureOffsetVal(0, 100);
+	Controls.AmenetiesStatusYieldGreatPeople:SetText( Locale.ToNumber(data.AmenitiesFromGreatPeople) );
+	Controls.AmenetiesStatusYieldGreatPeople:SetColorByName( GetAmenetiesColor(data.AmenitiesFromGreatPeople) );
+	Controls.AmenetiesStatusYieldGreatPeople:SetFontSize(24);
+	Controls.AmenetiesStatusIconGreatPeople:SetColor(0x3fffffff);
+	Controls.AmenetiesStatusLabelGreatPeople:SetColor(0xffffffff);
+
+	Controls.AmenetiesStatusIconContainerReligion:SetTextureOffsetVal(0, 100);
+	Controls.AmenetiesStatusYieldReligion:SetText( Locale.ToNumber(data.AmenitiesFromReligion) );
+	Controls.AmenetiesStatusYieldReligion:SetColorByName( GetAmenetiesColor(data.AmenitiesFromReligion) );
+	Controls.AmenetiesStatusYieldReligion:SetFontSize(24);
+	Controls.AmenetiesStatusIconReligion:SetColor(0x3fffffff);
+	Controls.AmenetiesStatusLabelReligion:SetColor(0xffffffff);
+
+	Controls.AmenetiesStatusIconContainerNationalParks:SetTextureOffsetVal(0, 100);
+	Controls.AmenetiesStatusYieldNationalParks:SetText( Locale.ToNumber(data.AmenitiesFromNationalParks) );
+	Controls.AmenetiesStatusYieldNationalParks:SetColorByName( GetAmenetiesColor(data.AmenitiesFromNationalParks) );
+	Controls.AmenetiesStatusYieldNationalParks:SetFontSize(24);
+	Controls.AmenetiesStatusIconNationalParks:SetColor(0x3fffffff);
+	Controls.AmenetiesStatusLabelNationalParks:SetColor(0xffffffff);
+
+	Controls.AmenetiesStatusIconContainerWarWeariness:SetTextureOffsetVal(0, 100);
+	Controls.AmenetiesStatusYieldWarWeariness:SetText( Locale.ToNumber(data.AmenitiesLostFromWarWeariness) );
+	Controls.AmenetiesStatusYieldWarWeariness:SetColorByName( GetAmenetiesColor(-data.AmenitiesLostFromWarWeariness) );
+	Controls.AmenetiesStatusYieldWarWeariness:SetFontSize(24);
+	Controls.AmenetiesStatusIconWarWeariness:SetColor(0x3fffffff);
+	Controls.AmenetiesStatusLabelWarWeariness:SetColor(0xffffffff);
+
+	Controls.AmenetiesStatusIconContainerBankruptcy:SetTextureOffsetVal(0, 100);
+	Controls.AmenetiesStatusYieldBankruptcy:SetText( Locale.ToNumber(data.AmenitiesLostFromBankruptcy) );
+	Controls.AmenetiesStatusYieldBankruptcy:SetColorByName( GetAmenetiesColor(-data.AmenitiesLostFromBankruptcy) );
+	Controls.AmenetiesStatusYieldBankruptcy:SetFontSize(24);
+	Controls.AmenetiesStatusIconBankruptcy:SetColor(0x3fffffff);
+	Controls.AmenetiesStatusLabelBankruptcy:SetColor(0xffffffff);
+	-- end new ameneties section
 	
 	local colorName:string = GetHappinessColor(data.Happiness);
 	Controls.AmenitiesConstructedLabel:SetText( Locale.Lookup( "LOC_HUD_CITY_AMENITY", data.AmenitiesNum) );
