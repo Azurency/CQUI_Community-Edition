@@ -21,7 +21,7 @@ local bGridOn					:boolean= true;
 local m_ContinentsCreated		:boolean=false;
 local m_MiniMap_xmloffsety		:number	= 0;
 local m_ContinentsCache			:table = {};
-local m_kFlyoutControlIds		:table = { "MapOptions", "Lens", "MapPinList"};	-- Name of controls that are the backing for "flyout" menus.
+local m_kFlyoutControlIds		:table = { "MapOptions", "Lens", "MapPinList", "CQUIOptions"};	-- Name of controls that are the backing for "flyout" menus.
 
 local m_shouldCloseLensMenu           :boolean = true;    -- Controls when the Lens menu should be closed.
 
@@ -120,6 +120,12 @@ function ToggleMapOptionsList()
 	Controls.MapOptionsPanel:SetHide( not Controls.MapOptionsPanel:IsHidden() );
 	RealizeFlyouts(Controls.MapOptionsPanel);
 	Controls.MapOptionsButton:SetSelected( not Controls.MapOptionsPanel:IsHidden() );
+end
+
+function ToggleCQUIOptionsList()	
+	Controls.CQUIOptionsPanel:SetHide( not Controls.CQUIOptionsPanel:IsHidden() );
+	RealizeFlyouts(Controls.CQUIOptionsPanel);
+	Controls.CQUIOptionsButton:SetSelected( not Controls.CQUIOptionsPanel:IsHidden() );
 end
 
 -- ===========================================================================
@@ -706,6 +712,7 @@ function Initialize()
 
 	Controls.LensPanel:ChangeParent(Controls.LensButton);
 	Controls.MapOptionsPanel:ChangeParent(Controls.MapOptionsButton);
+	Controls.CQUIOptionsPanel:ChangeParent(Controls.CQUIOptionsButton);
 	Controls.ToggleResourcesButton:SetCheck( UserConfiguration.ShowMapResources() );
 	Controls.ToggleYieldsButton:SetCheck( UserConfiguration.ShowMapYield() );
 
@@ -720,6 +727,8 @@ function Initialize()
 	Controls.LensButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 	Controls.MapOptionsButton:RegisterCallback( Mouse.eLClick, ToggleMapOptionsList );
 	Controls.MapOptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+	Controls.CQUIOptionsButton:RegisterCallback( Mouse.eLClick, ToggleCQUIOptionsList );
+	Controls.CQUIOptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 	Controls.MapPinListButton:RegisterCallback( Mouse.eLClick, ToggleMapPinMode );
 	Controls.MapPinListButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 	Controls.OwnerLensButton:RegisterCallback( Mouse.eLClick, ToggleOwnerLens );

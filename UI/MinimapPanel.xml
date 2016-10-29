@@ -19,13 +19,22 @@
 		<Image Texture="Controls_ButtonExtendSmall" TextureOffset="0,60" Size="20,20" Anchor="L,B" Offset="22,10"/>
 	</Grid>
 
-	<Grid						ID="MapOptionsPanel"	Anchor="L,T" AnchorSide="I,O"     Size="220,219" 	Offset="-10,-5" Texture="Tracker_OptionsBacking.dds" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" Hidden="1">
+	<Grid						ID="MapOptionsPanel"	Anchor="L,T" AnchorSide="I,O"     Size="220,119" 	Offset="-10,-5" Texture="Tracker_OptionsBacking.dds" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" Hidden="1">
 		<Label															Anchor="C,T" String="{LOC_HUD_MAP_OPTIONS:upper}" Offset="-6,10" Style="FontFlair16" Color0="106,93,69,255" Color1="0,0,0,150" Color2="146,133,109,255" FontStyle="Glow" SmallCaps="20" SmallCapsLeading="0" SmallCapsType="EveryWord" KerningAdjustment="0"/>
 		<ScrollPanel	ID="MapOptionsList"							   Offset="10,30" Size="parent,parent" Style="ScrollPanelWithLeftBar"         HideScrollBar="1" >
 			<Stack			ID="MapOptionsStack"	Anchor="R,C"											 StackGrowth="Bottom" Offset="25,-30" StackPadding="1" >
 				<CheckBox	ID="ToggleGridButton"				IsChecked="1" 	Offset="10,4"	TextOffset="-5,0" String="LOC_HUD_MAP_SHOW_GRID" ToolTip="LOC_HUD_MAP_TOGGLE_GRID" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds"	ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds"	CheckSize="17,17" CheckTextureOffset="0,17"  Anchor="R,T"/>
 				<CheckBox	ID="ToggleResourcesButton"	IsChecked="1" 	Offset="10,4"	TextOffset="-5,0" String="LOC_HUD_MAP_SHOW_RESOURCES" ToolTip="LOC_HUD_TOGGLE_RESOURCE_ICONS" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds"	ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds"	CheckSize="17,17" CheckTextureOffset="0,17"  Anchor="R,T"/>
 				<CheckBox	ID="ToggleYieldsButton"			IsChecked="0" 	Offset="10,4"	TextOffset="-5,0" String="LOC_HUD_MAP_SHOW_YIELDS" ToolTip="LOC_HUD_TOGGLE_YIELD_ICONS" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds"	ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds"	CheckSize="17,17" CheckTextureOffset="0,17"  Anchor="R,T"/>
+			</Stack>
+		</ScrollPanel>
+		<Image Texture="Controls_ButtonExtendSmall" TextureOffset="0,60" Size="20,20" Anchor="L,B" Offset="20,10"/>
+	</Grid>
+	
+	<Grid						ID="CQUIOptionsPanel"	Anchor="L,T" AnchorSide="I,O"     Size="220,219" 	Offset="-10,-5" Texture="Tracker_OptionsBacking.dds" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" Hidden="1">
+		<Label															Anchor="C,T" String="CQUI Options" Offset="-6,10" Style="FontFlair16" Color0="106,93,69,255" Color1="0,0,0,150" Color2="146,133,109,255" FontStyle="Glow" SmallCaps="20" SmallCapsLeading="0" SmallCapsType="EveryWord" KerningAdjustment="0"/>
+		<ScrollPanel	ID="CQUIOptionsList"							   Offset="10,30" Size="parent,parent" Style="ScrollPanelWithLeftBar"         HideScrollBar="1" >
+			<Stack			ID="CQUIOptionsStack"	Anchor="R,C"											 StackGrowth="Bottom" Offset="25,-30" StackPadding="1" >
 				<CheckBox	ID="QUI_ToggleLuxury"			IsChecked="1" 	Offset="10,4"	TextOffset="-5,0" String="QUI: Show Luxury" ToolTip="Shows Luxury Resource in Top Panel" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds"	ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds"	CheckSize="17,17" CheckTextureOffset="0,17"  Anchor="R,T"/>
 				<CheckBox	ID="QUI_ToggleSmartBanner"			IsChecked="1" 	Offset="10,4"	TextOffset="-5,0" String="QUI: Smart Banner" ToolTip="Shows more information on city banners" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds"	ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds"	CheckSize="17,17" CheckTextureOffset="0,17"  Anchor="R,T"/>
 				<CheckBox	ID="QUI_ToggleCowboy"			IsChecked="0" 	Offset="10,4"	TextOffset="-5,0" String="QUI: Cowboy" ToolTip="Automatically trains horsemen" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds"	ButtonSize="0,0" CheckTexture="Controls_Checkbox.dds"	CheckSize="17,17" CheckTextureOffset="0,17"  Anchor="R,T" Hidden="1"/>
@@ -50,6 +59,9 @@
 						<Image                       Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip" Color="255,255,255,200" Offset="0,-2"/>
 						<CheckBox ID="MapOptionsButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="LOC_HUD_MAP_OPTIONS" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
 							<Image Texture="Minimap_MapOptions" Size="22,22" Anchor="C,C"/>
+						</CheckBox>
+						<CheckBox ID="CQUIOptionsButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="CQUI Mod Options" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
+							<Image Texture="Stats30" Icon="ICON_RESOURCE_TOBACCO" Size="35,35" Anchor="C,C"/>
 						</CheckBox>
 						<Image                       Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip" Color="255,255,255,200" Offset="0,-2"/>
 						<CheckBox ID="MapPinListButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="LOC_HUD_MAP_TOGGLE_MAP_PIN_LIST" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
