@@ -35,6 +35,8 @@
 				<File>UI/Popups/GreatPeoplePopup.lua</File>
 				<File>UI/Popups/GreatPeoplePopup.xml</File>
 				<File>UI/WorldViewIconsManager.lua</File>
+				<File>UI/ToolTips/PlotToolTip.lua</File>
+				<File>UI/ToolTips/PlotToolTip.xml</File>
             </Items>
         </ImportFiles>
     </Components>
@@ -64,5 +66,7 @@
 		<File>UI/Popups/GreatPeoplePopup.lua</File>
 		<File>UI/Popups/GreatPeoplePopup.xml</File>
 		<File>UI/WorldViewIconsManager.lua</File>
+		<File>UI/ToolTips/PlotToolTip.lua</File>
+		<File>UI/ToolTips/PlotToolTip.xml</File>
 	</Files>
 </Mod>
