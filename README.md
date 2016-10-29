@@ -41,7 +41,7 @@ Extract the "cqui" folder to the DLC folder
 ### KNOWN ISSUES:
 
 * Attacking with cities takes two clicks on the strike button. (This is actually a bug in Civ VI)
-* The two X buttons in the Civ-V style cityview don't do anything. This will change later, but for now right click to exit the Cityview properly. Sames goes for pressing Esc: it doesn't work quite properly yet.
+* Large UI mode breaks GP view and 
 * None other thus-far!
 
 ### TODO:
@@ -51,7 +51,15 @@ Extract the "cqui" folder to the DLC folder
 * Tweaking the minimap further (making it smaller or adding a smallmode?)
 * Making the yields in the top panel clickable
 * Right clicking ANY item in production view opens Civilopedia (currently doesn't work for disabled buildings/units)
-
+* Hotkeys for things like: Fortify until Heal, Cycle units, etc.
+* Change right clicking minimap to toggling the minimap size between small (original size) and large (current)
+* Right clicking most UI elements to dismiss them, similar to how ESC behaves (diplo dialog, pop-ups, etc.)
+* Condensing the City Details screen and removing tutorial elements from it
+* Unit dots, fog of war colors, and other minimap options? (not sure how easy this one will be)
+* Adding tooltips to the smart banner letter icons
+* Adding settings for existing features (future features too!):
+  1. Adding toggle for tech/civiv popup and narration (one toggle for each)
+  2. Minimap tweaks
 ### THANKS:
 * [Vans163](https://github.com/vans163) for his QUI mod and the active commits he makes that I love to merge <3
 * [zgavin](https://github.com/zgavin) for his UI bugfixes in PRs #1/#2
