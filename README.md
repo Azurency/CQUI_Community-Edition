@@ -40,17 +40,17 @@ Extract the "cqui" folder to the DLC folder
 
 ### KNOWN ISSUES:
 
-Attacking with cities takes two clicks on the strike button. (This is actually a bug in Civ VI)
-The two X buttons in the Civ-V style cityview don't do anything. This will change later, but for now right click to exit the Cityview properly. Sames goes for pressing Esc: it doesn't work quite properly yet.
-None other thus-far!
+* Attacking with cities takes two clicks on the strike button. (This is actually a bug in Civ VI)
+* The two X buttons in the Civ-V style cityview don't do anything. This will change later, but for now right click to exit the Cityview properly. Sames goes for pressing Esc: it doesn't work quite properly yet.
+* None other thus-far!
 
 ### TODO:
 
-Show district adjacency bonuses in cityview or potentially globally
-Buttons for cycling cities in cityview
-Tweaking the minimap further (making it smaller or adding a smallmode?)
-Making the yields in the top panel clickable
-Right clicking ANY item in production view opens Civilopedia (currently doesn't work for disabled buildings/units)
+* Show district adjacency bonuses in cityview or potentially globally
+* Buttons for cycling cities in cityview
+* Tweaking the minimap further (making it smaller or adding a smallmode?)
+* Making the yields in the top panel clickable
+* Right clicking ANY item in production view opens Civilopedia (currently doesn't work for disabled buildings/units)
 
 ### THANKS:
 * [Vans163](https://github.com/vans163) for his QUI mod and the active commits he makes that I love to merge <3
