@@ -377,6 +377,7 @@ end
 -- ===========================================================================
 --	Close via click
 function OnClose()
+	UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
 end
 
 -- ===========================================================================
