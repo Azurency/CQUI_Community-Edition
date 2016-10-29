@@ -64,7 +64,8 @@ Extract the "cqui" folder to the DLC folder
 ### THANKS:
 * [Vans163](https://github.com/vans163) for his QUI mod and the active commits he makes that I love to merge <3
 * [zgavin](https://github.com/zgavin) for his UI bugfixes in PRs #1 and #2
-* [olegbl](https://github.com/olegbl) for his Amenities overview overhaul in PR #4
+* [olegbl](https://github.com/olegbl) for his Amenities overview overhaul in PR #4 and multiple UI bugfixes (PRs #9 and #12)
   1. Additional kudos to /u/mateusarc from the Civilization subreddit for his original concept art
+* /u/dli511 @ Reddit for his bug report relating to purchasing buildings
 * The lovely folks over at Civfanatics for their guides, knowledge, tools, and resources
 * The even lovelier folks over at /r/civ for their input and testing
