@@ -41,7 +41,7 @@ Extract the "cqui" folder to the DLC folder
 ### KNOWN ISSUES:
 
 * Attacking with cities takes two clicks on the strike button. (This is actually a bug in Civ VI)
-* Large UI mode breaks GP view and 
+* Minimap is too large in large UI mode and GP view is broken 
 * None other thus-far!
 
 ### TODO:
@@ -60,6 +60,7 @@ Extract the "cqui" folder to the DLC folder
 * Adding settings for existing features (future features too!):
   1. Adding toggle for tech/civiv popup and narration (one toggle for each)
   2. Minimap tweaks
+  
 ### THANKS:
 * [Vans163](https://github.com/vans163) for his QUI mod and the active commits he makes that I love to merge <3
 * [zgavin](https://github.com/zgavin) for his UI bugfixes in PRs #1/#2
