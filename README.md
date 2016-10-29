@@ -40,15 +40,21 @@
 * Production/Worker recommendations removed
 
 # How to use
-Download the latest release from
+* Download the latest release from
 https://github.com/chaorace/cqui/releases/
 
-Find your DLC folder, usually on Windows it is:  
+* Find your DLC folder, usually on Windows it is:
 ```
 C:\Program Files (x86)\Steam\steamapps\common\Sid Meier's Civilization VI\DLC
 ```
 
-Extract the "cqui" folder to the DLC folder
+* Extract the "cqui" folder to the DLC folder
+
+* In-Game: Enable the mod in the "Additional Content" menu
+
+* Start a new game (existing games cannot have new mods added to them!)
+
+* NOTE: Until this mod is in a less experimental state, the mod will not remember its "enabled" status after restarting the game. This means that every time you plan to start a new game using CQUI, you'll need to explicitly enable it in the "Additional Content" menu first. Once you've created the game using the mod, it will always load when you start the save, regardless of its current status in the "Additional Content Menu" 
 
 ### KNOWN ISSUES / INCOMING FEATURES:
 
