@@ -787,6 +787,7 @@ function KeyHandler( key:number )
 		if ( m_isShowingPanel ) then
 			LuaEvents.CityPanelOverview_CloseButton();
 			Close();
+			UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
 			return true;
 		else
 			return false;
