@@ -404,7 +404,8 @@ end
 
 -- ===========================================================================
 function ViewPanelAmenities( data:table )	
-	Controls.AmenitiesAdvisorBubble:SetHide( false );
+	-- Only show the advisor bubbles during the tutorial
+	Controls.AmenitiesAdvisorBubble:SetHide( IsTutorialRunning() == false );
 
 	-- new ameneties section
 	Controls.AmenityStack:SetHide( true );
@@ -558,6 +559,8 @@ end
 
 -- ===========================================================================
 function ViewPanelHousing( data:table )	
+	-- Only show the advisor bubbles during the tutorial
+	Controls.HousingAdvisorBubble:SetHide( IsTutorialRunning() == false );
 	local colorName:string = GetPercentGrowthColor( data.HousingMultiplier ) ;
 	Controls.HousingTotalNum:SetText( data.Housing );	
 	Controls.HousingTotalNum:SetColorByName( colorName );

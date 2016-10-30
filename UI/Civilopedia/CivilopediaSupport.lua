@@ -48,6 +48,8 @@ PageLayouts = {};
 _PageContentLayout = nil;	-- Possible values are nil, "full" or "two-column".
 
 local _SearchQuery = nil;
+local _LastSection = nil;
+local _LastPage = nil;
 
 -------------------------------------------------------------------------------
 --
@@ -734,6 +736,8 @@ function NavigateTo(SectionId, PageId)
 		for i, page in ipairs(pages) do
 			local id = page.PageId;
 			if(id == PageId) then
+				-- Save the currently opened page in order to restore it later
+				SaveCurrentPage();
 				RefreshPageContent(page);
 			end
 		end	 
@@ -745,10 +749,15 @@ end
 --
 -------------------------------------------------------------------------------
 function OnClose()
+	SaveCurrentPage();
 	UIManager:DequeuePopup(ContextPtr);
 	UI.PlaySound("Civilopedia_Close");
 end
 
+function SaveCurrentPage()
+	-- Store the currently opened page and section
+	_LastSection, _LastPage = GetCurrentPage();
+end
 
 -------------------------------------------------------------------------------
 --
@@ -773,6 +782,9 @@ function OnOpenCivilopedia(sectionId_or_search, pageId)
 		end
 	elseif(sectionId_or_search and pageId) then
 		NavigateTo(sectionId_or_search, pageId);
+	elseif(pageId == nil and sectionId_or_search == nil and _LastPage) then
+		-- Opened without any query, restore the previously opened page and section instead
+		NavigateTo(_LastSection, _LastPage);
 	else
 		local sections = GetSections();
 		local pages = GetPages(sections[1].SectionId);

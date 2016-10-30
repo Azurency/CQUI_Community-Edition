@@ -67,7 +67,7 @@ Please see the [issue tracker](https://github.com/chaorace/cqui/issues) for an u
 * [zgavin](https://github.com/zgavin) for UI bugfixes in PRs #1 and #2
 * [olegbl](https://github.com/olegbl) for the Amenities overview overhaul in PR #4 and multiple UI bugfixes (PRs #9 and #12)
   1. Additional kudos to /u/mateusarc from the Civilization subreddit for his original concept art
-* [Rosty](https://github.com/Rosty) for the map pin additions in PR #21
+* [jacks0nX](https://github.com/jacks0nX) for the map pin additions in PR #21
 * /u/dli511 @ Reddit for his bug report relating to purchasing buildings
 * The lovely folks over at Civfanatics for their guides, knowledge, tools, and resources
 * The even lovelier folks over at /r/civ for their input and testing
