@@ -10,63 +10,73 @@
     <Components>
         <ImportFiles id="CQUI_IMPORT_FILES">
             <Items>
+				<File>UI/ActionPanel.lua</File>
+				<File>UI/CitySupport.lua</File>
+				<File>UI/MapPinManager.lua</File>
+				<File>UI/MinimapPanel.lua</File>
+				<File>UI/MinimapPanel.xml</File>
+				<File>UI/TopPanel.lua</File>
+				<File>UI/UnitPanel.xml</File>
+				<File>UI/WorldViewIconsManager.lua</File>
+				<File>UI/Civilopedia/CivilopediaSupport.lua</File>
 				<File>UI/Panels/CityPanel.lua</File>
 				<File>UI/Panels/CityPanel.xml</File>
+				<File>UI/Panels/CityPanelOverview.lua</File>
+				<File>UI/Panels/CityPanelOverview.xml</File>
+				<File>UI/Panels/ProductionPanel.lua</File>
 				<File>UI/Panels/StatusMessagePanel.lua</File>
 				<File>UI/Panels/UnitPanel.lua</File>
-				<File>UI/Panels/ProductionPanel.lua</File>
+				<File>UI/Popups/GreatPeoplePopup.lua</File>
+				<File>UI/Popups/GreatPeoplePopup.xml</File>
+				<File>UI/Popups/MapPinListPanel.lua</File>
+				<File>UI/Popups/MapPinListPanel.xml</File>
+				<File>UI/Popups/MapPinPopup.lua</File>
+				<File>UI/Popups/MapPinPopup.xml</File>
 				<File>UI/Popups/TechCivicCompletedPopup.lua</File>
+				<File>UI/Screens/TechTree.lua</File>
+				<File>UI/Screens/CivicsTree.lua</File>
+				<File>UI/Screens/GovernmentScreen.lua</File>
+				<File>UI/Screens/GovernmentScreen.xml</File>
+				<File>UI/ToolTips/PlotToolTip.lua</File>
+				<File>UI/ToolTips/PlotToolTip.xml</File>
 				<File>UI/WorldView/CityBannerManager.lua</File>
 				<File>UI/WorldView/CityBannerManager.xml</File>
 				<File>UI/WorldView/PlotInfo.lua</File>
-				<File>UI/ActionPanel.lua</File>
-				<File>UI/CitySupport.lua</File>
-				<File>UI/TopPanel.lua</File>
-				<File>UI/MinimapPanel.lua</File>
-				<File>UI/MinimapPanel.xml</File>
-				<File>UI/UnitPanel.xml</File>
-				<File>UI/Civilopedia/CivilopediaSupport.lua</File>
-				<File>UI/Screens/TechTree.lua</File>
-				<File>UI/Screens/CivicsTree.lua</File>
-				<File>UI/Panels/CityPanelOverview.lua</File>
-				<File>UI/Panels/CityPanelOverview.xml</File>
-				<File>UI/Screens/GovernmentScreen.lua</File>
-				<File>UI/Screens/GovernmentScreen.xml</File>
-				<File>UI/Popups/GreatPeoplePopup.lua</File>
-				<File>UI/Popups/GreatPeoplePopup.xml</File>
-				<File>UI/WorldViewIconsManager.lua</File>
-				<File>UI/ToolTips/PlotToolTip.lua</File>
-				<File>UI/ToolTips/PlotToolTip.xml</File>
             </Items>
         </ImportFiles>
     </Components>
 	<Files>
+		<File>UI/ActionPanel.lua</File>
+		<File>UI/CitySupport.lua</File>
+		<File>UI/MapPinManager.lua</File>
+		<File>UI/MinimapPanel.lua</File>
+		<File>UI/MinimapPanel.xml</File>
+		<File>UI/TopPanel.lua</File>
+		<File>UI/UnitPanel.xml</File> 
+		<File>UI/WorldViewIconsManager.lua</File>
+		<File>UI/Civilopedia/CivilopediaSupport.lua</File>
 		<File>UI/Panels/CityPanel.lua</File>
 		<File>UI/Panels/CityPanel.xml</File>
+		<File>UI/Panels/CityPanelOverview.lua</File>
+		<File>UI/Panels/CityPanelOverview.xml</File>
 		<File>UI/Panels/StatusMessagePanel.lua</File>
 		<File>UI/Panels/UnitPanel.lua</File>
 		<File>UI/Panels/ProductionPanel.lua</File>
+		<File>UI/Popups/GreatPeoplePopup.lua</File>
+		<File>UI/Popups/GreatPeoplePopup.xml</File>
+		<File>UI/Popups/MapPinListPanel.lua</File>
+		<File>UI/Popups/MapPinListPanel.xml</File>
+		<File>UI/Popups/MapPinPopup.lua</File>
+		<File>UI/Popups/MapPinPopup.xml</File>
 		<File>UI/Popups/TechCivicCompletedPopup.lua</File>
+		<File>UI/Screens/CivicsTree.lua</File>
+		<File>UI/Screens/GovernmentScreen.lua</File>
+		<File>UI/Screens/GovernmentScreen.xml</File>
+		<File>UI/Screens/TechTree.lua</File>
+		<File>UI/ToolTips/PlotToolTip.lua</File>
+		<File>UI/ToolTips/PlotToolTip.xml</File>
 		<File>UI/WorldView/CityBannerManager.lua</File>
 		<File>UI/WorldView/CityBannerManager.xml</File>
 		<File>UI/WorldView/PlotInfo.lua</File>
-		<File>UI/ActionPanel.lua</File>
-		<File>UI/CitySupport.lua</File>
-		<File>UI/TopPanel.lua</File>
-		<File>UI/MinimapPanel.lua</File>
-		<File>UI/MinimapPanel.xml</File>
-		<File>UI/UnitPanel.xml</File> 
-		<File>UI/Civilopedia/CivilopediaSupport.lua</File>
-		<File>UI/Screens/TechTree.lua</File>
-		<File>UI/Screens/CivicsTree.lua</File>
-		<File>UI/Panels/CityPanelOverview.lua</File>
-		<File>UI/Panels/CityPanelOverview.xml</File>
-		<File>UI/Screens/GovernmentScreen.lua</File>
-		<File>UI/Screens/GovernmentScreen.xml</File>
-		<File>UI/Popups/GreatPeoplePopup.lua</File>
-		<File>UI/Popups/GreatPeoplePopup.xml</File>
-		<File>UI/WorldViewIconsManager.lua</File>
-		<File>UI/ToolTips/PlotToolTip.lua</File>
-		<File>UI/ToolTips/PlotToolTip.xml</File>
 	</Files>
 </Mod>
