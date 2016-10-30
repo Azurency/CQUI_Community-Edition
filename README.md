@@ -1,8 +1,6 @@
 
 [![](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/Civ6-CQUI/Help)
-[![Github All Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)](https://github.com/chaorace/cqui)
-[![GitHub contributors](https://img.shields.io/github/contributors/cdnjs/cdnjs.svg)](https://github.com/chaorace/cqui)
-[![Twitter Follow](https://img.shields.io/twitter/follow/espadrine.svg?style=social&label=Follow)](https://twitter.com/realchaorace)
+[![Twitter URL](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/realchaorace)
 
 # Civilization 6 - Chao's Quick UI
 
