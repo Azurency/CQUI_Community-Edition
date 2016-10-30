@@ -12,6 +12,8 @@
 ![](https://cloud.githubusercontent.com/assets/516977/19832411/0476c516-9dd8-11e6-8567-f0ba4305e415.png)
 * "My Government" tab removed from Government panel
 ![](http://i.imgur.com/168ThOx.jpg)
+* Map Pinning system enhanced: new pins, long pinlists are now scrollable, right click in pinlist to quickly delete pins, enter key now bound to finalizing a pin in pin creation menu.
+![](http://i.imgur.com/IThYZcg.png)
 * Tech/Civic Tree and Civilopedia now autofocus the searchbar on open
 ![](http://i.imgur.com/tPzNnv4.png)
 * Minimap is now 2x larger
@@ -62,9 +64,10 @@ Please see the [issue tracker](https://github.com/chaorace/cqui/issues) for an u
 
 # THANKS:
 * [Vans163](https://github.com/vans163) for his QUI mod and the active commits he makes that I love to merge <3
-* [zgavin](https://github.com/zgavin) for his UI bugfixes in PRs #1 and #2
-* [olegbl](https://github.com/olegbl) for his Amenities overview overhaul in PR #4 and multiple UI bugfixes (PRs #9 and #12)
+* [zgavin](https://github.com/zgavin) for UI bugfixes in PRs #1 and #2
+* [olegbl](https://github.com/olegbl) for the Amenities overview overhaul in PR #4 and multiple UI bugfixes (PRs #9 and #12)
   1. Additional kudos to /u/mateusarc from the Civilization subreddit for his original concept art
+* [Rosty](https://github.com/Rosty) for the map pin additions in PR #21
 * /u/dli511 @ Reddit for his bug report relating to purchasing buildings
 * The lovely folks over at Civfanatics for their guides, knowledge, tools, and resources
 * The even lovelier folks over at /r/civ for their input and testing
