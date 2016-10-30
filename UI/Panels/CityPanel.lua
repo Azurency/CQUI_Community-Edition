@@ -8,7 +8,7 @@ include( "Civ6Common" );				-- GetYieldString()
 include( "Colors" );
 include( "InstanceManager" );
 include( "SupportFunctions" );			-- Round(), Clamp(), DarkenLightenColor()
-include( "ToolTipHelper" );	
+include( "ToolTipHelper" );
 
 -- ===========================================================================
 --	DEBUG
@@ -60,6 +60,117 @@ local m_primaryColor				:number = 0xcafef00d;
 local m_secondaryColor				:number = 0xf00d1ace;
 local m_kTutorialDisabledControls	:table	= nil;
 
+-- ====================CQUI Cityview==========================================
+
+local CQUI_cityview = false;
+local CQUI_usingStrikeButton = false;
+
+function CQUI_CityviewEnableManager()
+	if(not CQUI_cityview) then
+		LuaEvents.CQUI_ProductionPanel_CityviewEnable();
+		LuaEvents.CQUI_CityPanel_CityviewEnable();
+		LuaEvents.CQUI_CityPanelOverview_CityviewEnable();
+		CQUI_cityview = true;
+	end
+end
+
+function CQUI_CityviewDisableManager()
+	if(CQUI_cityview) then
+		LuaEvents.CQUI_ProductionPanel_CityviewDisable();
+		LuaEvents.CQUI_CityPanel_CityviewDisable();
+		LuaEvents.CQUI_CityPanelOverview_CityviewDisable();
+		CQUI_cityview = false;
+	end
+end
+
+function CQUI_OnCityviewEnabled()
+	ContextPtr:SetHide(false);
+	Controls.CityPanelAlpha:SetToBeginning();
+	Controls.CityPanelAlpha:Play();
+	Controls.CityPanelSlide:SetToBeginning();
+	Controls.CityPanelSlide:Play();
+	Refresh();
+	UILens.ToggleLayerOn(LensLayers.PURCHASE_PLOT);
+	UILens.ToggleLayerOn(LensLayers.CITIZEN_MANAGEMENT);
+	UI.SetFixedTiltMode(true);
+	UI.SetInterfaceMode(InterfaceModeTypes.CITY_MANAGEMENT);
+end
+
+function CQUI_OnCityviewDisabled()
+	Close();
+	UI.DeselectAllCities();
+	UILens.ToggleLayerOff(LensLayers.PURCHASE_PLOT);
+	UILens.ToggleLayerOff(LensLayers.CITIZEN_MANAGEMENT);
+	UI.SetFixedTiltMode(false);
+	UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+end
+
+function CQUI_WonderMode()
+	Close();
+	UILens.ToggleLayerOff(LensLayers.PURCHASE_PLOT);
+	UILens.ToggleLayerOff(LensLayers.CITIZEN_MANAGEMENT);
+	UI.SetFixedTiltMode(false);
+end
+
+LuaEvents.CQUI_CityPanel_CityviewEnable.Add( CQUI_OnCityviewEnabled);
+LuaEvents.CQUI_CityPanel_CityviewDisable.Add( CQUI_OnCityviewDisabled);
+LuaEvents.CQUI_CityviewDisable.Add( CQUI_CityviewDisableManager);
+LuaEvents.CQUI_CityviewEnable.Add( CQUI_CityviewEnableManager);
+LuaEvents.CQUI_Strike_Enter.Add (function() CQUI_usingStrikeButton = true; end)
+LuaEvents.CQUI_Strike_Exit.Add (function() CQUI_usingStrikeButton = false; end)
+
+function CQUI_OnInterfaceModeChanged( eOldMode:number, eNewMode:number )	
+	if(eOldMode == InterfaceModeTypes.CITY_MANAGEMENT or eOldMode == InterfaceModeTypes.DISTRICT_PLACEMENT or eOldMode == InterfaceModeTypes.BUILDING_PLACEMENT) then
+		if(eNewMode == InterfaceModeTypes.DISTRICT_PLACEMENT or eNewMode == InterfaceModeTypes.BUILDING_PLACEMENT) then 
+			CQUI_WonderMode();
+		else
+			LuaEvents.CQUI_CityviewDisable();
+		end
+	elseif(eOldMode == InterfaceModeTypes.CITY_RANGE_ATTACK) then 
+		UI.DeselectAllCities()
+	end
+end
+
+function CQUI_OnCitySelectionChanged( ownerPlayerID:number, cityID:number, i:number, j:number, k:number, isSelected:boolean, isEditable:boolean)
+	if (ownerPlayerID == Game.GetLocalPlayer()) then
+		if (isSelected) then
+			-- Determine if should switch to cityview mode
+			local shouldSwitchToCityview:boolean = true;
+			if UI.GetInterfaceMode() == InterfaceModeTypes.ICBM_STRIKE then
+				-- During ICBM_STRIKE only switch to cityview if we're selecting a city
+				-- which doesn't own the active missile silo
+				local siloPlotX:number = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_X0);
+				local siloPlotY:number = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_Y0);
+				local siloPlot:table = Map.GetPlot(siloPlotX, siloPlotY);
+				if siloPlot then
+					local owningCity = Cities.GetPlotPurchaseCity(siloPlot);
+					if owningCity:GetID() == cityID then
+						shouldSwitchToCityview = false;
+					end
+				end
+			end
+			if (CQUI_usingStrikeButton) then
+				shouldSwitchToCityview = false;
+			end
+			if shouldSwitchToCityview then
+				LuaEvents.CQUI_CityviewEnable();
+				Refresh();
+			end
+		end
+	end
+end
+	
+function CQUI_OnNextCity()
+	local kCity:table = UI.GetHeadSelectedCity();
+	UI.SelectNextCity(kCity);
+	UI.PlaySound("UI_Click_Sweetener_Metal_Button_Small");
+end
+
+function CQUI_OnPreviousCity()
+	local kCity:table = UI.GetHeadSelectedCity();
+	UI.SelectPrevCity(kCity);
+	UI.PlaySound("UI_Click_Sweetener_Metal_Button_Small");
+end
 
 -- ===========================================================================
 --
@@ -518,47 +629,6 @@ function OnToggleOverviewPanel()
 	end
 end
 
-function OnCitySelectionChanged( ownerPlayerID:number, cityID:number, i:number, j:number, k:number, isSelected:boolean, isEditable:boolean)
-	if ownerPlayerID == Game.GetLocalPlayer() then
-		if (isSelected) then
-			-- Determine if we should switch to the SELECTION interface mode
-			local shouldSwitchToSelection:boolean = true;
-			if UI.GetInterfaceMode() == InterfaceModeTypes.CITY_MANAGEMENT then
-				shouldSwitchToSelection = false;
-			end
-			if UI.GetInterfaceMode() == InterfaceModeTypes.ICBM_STRIKE then
-				-- During ICBM_STRIKE only switch to SELECTION if we're selecting a city
-				-- which doesn't own the active missile silo
-				local siloPlotX:number = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_X0);
-				local siloPlotY:number = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_Y0);
-				local siloPlot:table = Map.GetPlot(siloPlotX, siloPlotY);
-				if siloPlot then
-					local owningCity = Cities.GetPlotPurchaseCity(siloPlot);
-					if owningCity:GetID() == cityID then
-						shouldSwitchToSelection = false;
-					end
-				end
-			end
-			if shouldSwitchToSelection then
-				UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-			end
-
-			OnToggleOverviewPanel();
-			ContextPtr:SetHide(false);
-			Controls.CityPanelAlpha:SetToBeginning();
-			Controls.CityPanelAlpha:Play();
-			Controls.CityPanelSlide:SetToBeginning();
-			Controls.CityPanelSlide:Play();
-			Refresh();
-		else
-			Close();
-			UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-			-- Tell the CityPanelOverview a city was deselected
-			LuaEvents.CityPanel_LiveCityDataChanged( nil, false ); 
-		end
-	end
-end
-
 -- ===========================================================================
 --	GAME Event
 -- ===========================================================================
@@ -701,24 +771,6 @@ function OnResetYieldToNormal( yieldType:number, yieldName:string )
 end
 
 -- ===========================================================================
---	Cycle to the next city
--- ===========================================================================
-function OnNextCity()
-	local kCity:table = UI.GetHeadSelectedCity();
-	UI.SelectNextCity(kCity);
-	UI.PlaySound("UI_Click_Sweetener_Metal_Button_Small");
-end
-
--- ===========================================================================
---	Cycle to the previous city
--- ===========================================================================
-function OnPreviousCity()
-	local kCity:table = UI.GetHeadSelectedCity();
-	UI.SelectPrevCity(kCity);
-	UI.PlaySound("UI_Click_Sweetener_Metal_Button_Small");
-end
-
--- ===========================================================================
 --	Recenter camera on city
 -- ===========================================================================
 function RecenterCameraOnCity()
@@ -788,18 +840,6 @@ end
 --	current state in deciding what is populate in a lens layer.
 -- ===========================================================================
 function OnToggleManageCitizens()
-	if Controls.ManageCitizensCheck:IsChecked() then			
-		if not Controls.PurchaseTileCheck:IsChecked() then
-			UI.SetInterfaceMode(InterfaceModeTypes.CITY_MANAGEMENT);	-- Enter mode
-		end
-		RecenterCameraOnCity();
-		UILens.ToggleLayerOn( LensLayers.CITIZEN_MANAGEMENT );
-	else		
-		if not Controls.PurchaseTileCheck:IsChecked() then
-			UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);			-- Exit mode
-		end
-		UILens.ToggleLayerOff( LensLayers.CITIZEN_MANAGEMENT );
-	end
 end
 
 -- ===========================================================================
@@ -822,44 +862,6 @@ function EnableIfNotTutorialBlocked( controlName:string )
 	end
 	Controls[ controlName ]:SetDisabled( isDisabled );
 end
-
--- ===========================================================================
---	GAME Event
---	eOldMode, mode the engine was formally in
---	eNewMode, new mode the engine has just changed to
--- ===========================================================================
-function OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
-	if eOldMode == InterfaceModeTypes.CITY_MANAGEMENT then
-		if eNewMode ~= InterfaceModeTypes.DISTRICT_PLACEMENT and eNewMode ~= InterfaceModeTypes.BUILDING_PLACEMENT then
-			UI.DeselectAllCities();
-		end
-		UILens.ToggleLayerOff(LensLayers.PURCHASE_PLOT);
-		UILens.ToggleLayerOff(LensLayers.CITIZEN_MANAGEMENT);
-		LuaEvents.CityPanel_ProductionClose();
-		UI.SetFixedTiltMode( false );
-		EnableIfNotTutorialBlocked("PurchaseTileCheck");
-		EnableIfNotTutorialBlocked("ManageCitizensCheck");
-		EnableIfNotTutorialBlocked("ChangeProductionCheck");
-	elseif eNewMode == InterfaceModeTypes.CITY_MANAGEMENT then
-		ContextPtr:SetHide(false);
-		LuaEvents.CityPanel_ProductionOpen();
-		LuaEvents.CityPanel_ShowOverviewPanel(true);
-		UILens.ToggleLayerOn(LensLayers.PURCHASE_PLOT);
-		UILens.ToggleLayerOn(LensLayers.CITIZEN_MANAGEMENT);
-		UI.SetFixedTiltMode(true);
-	end
-	
-	if eNewMode == InterfaceModeTypes.CITY_RANGE_ATTACK or eNewMode == InterfaceModeTypes.DISTRICT_RANGE_ATTACK then
-		if ContextPtr:IsHidden()==false then
-			Close();
-		end
-	end
-
-	if not ContextPtr:IsHidden() then
-		ViewMain( m_kData );
-	end
-end
-
 
 -- ===========================================================================
 --	Engine EVENT
@@ -970,8 +972,8 @@ function Initialize()
 	Controls.GoldIgnore:RegisterCallback(		Mouse.eLClick,	function() OnResetYieldToNormal( YieldTypes.GOLD,		"Gold"); end);
 	Controls.ProductionIgnore:RegisterCallback(	Mouse.eLClick,	function() OnResetYieldToNormal( YieldTypes.PRODUCTION,	"Production"); end);
 	Controls.ScienceIgnore:RegisterCallback(	Mouse.eLClick,	function() OnResetYieldToNormal( YieldTypes.SCIENCE,	"Science"); end);	
-	Controls.NextCityButton:RegisterCallback(	Mouse.eLClick,	OnNextCity); 
-	Controls.PrevCityButton:RegisterCallback(	Mouse.eLClick,	OnPreviousCity); 
+	Controls.NextCityButton:RegisterCallback(	Mouse.eLClick,	CQUI_OnNextCity); 
+	Controls.PrevCityButton:RegisterCallback(	Mouse.eLClick,	CQUI_OnPreviousCity); 
 	
 
 	Controls.PurchaseTileCheck:RegisterCheckHandler(	OnTogglePurchaseTile );
@@ -989,7 +991,7 @@ function Initialize()
 
 	-- Game Core Events
 	Events.CityAddedToMap.Add(			OnCityAddedToMap );
-	Events.CitySelectionChanged.Add(	OnCitySelectionChanged );
+	Events.CitySelectionChanged.Add(	CQUI_OnCitySelectionChanged );
 	Events.CityFocusChanged.Add(		OnCityFocusChange );
 	Events.CityProductionCompleted.Add(	OnCityProductionCompleted );
 	Events.CityProductionUpdated.Add(	OnCityProductionUpdated );	
@@ -998,7 +1000,7 @@ function Initialize()
 	Events.DistrictDamageChanged.Add(	OnCityProductionChanged );
 	Events.LocalPlayerTurnBegin.Add(	OnLocalPlayerTurnBegin );
 	Events.ImprovementChanged.Add(		OnCityProductionChanged );
-	Events.InterfaceModeChanged.Add(	OnInterfaceModeChanged );
+	Events.InterfaceModeChanged.Add(	CQUI_OnInterfaceModeChanged );
 	Events.LocalPlayerChanged.Add(		OnLocalPlayerChanged );
 	Events.UnitSelectionChanged.Add(	OnUnitSelectionChanged );
 

@@ -71,6 +71,20 @@ local ms_eventID = 0;
 local m_tabs;
 local m_isShowingPanel		:boolean = false;
 
+-- ====================CQUI Cityview==========================================
+	
+	function CQUI_OnCityviewEnabled()
+		OnShowOverviewPanel(true)
+	end
+	
+	function CQUI_OnCityviewDisabled()
+		OnShowOverviewPanel(false);
+	end
+	
+	LuaEvents.CQUI_CityPanelOverview_CityviewEnable.Add( CQUI_OnCityviewEnabled);
+	LuaEvents.CQUI_CityPanelOverview_CityviewDisable.Add( CQUI_OnCityviewDisabled);
+
+-- ===========================================================================
 
 function UpdateYieldData( data:table )
 	data.CulturePerTurn				= Round( m_pCity:GetYield( YieldTypes.CULTURE ), 1);
@@ -813,7 +827,7 @@ function OnClose()
 end
 
 function OnCloseButtonClicked()
-	UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+	LuaEvents.CQUI_CityPanel_CityviewDisable();
 end
 
 function View(data)

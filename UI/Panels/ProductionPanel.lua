@@ -68,6 +68,20 @@ local m_recommendedItems:table;
 
 --local prodAlreadyStarting :boolean = false;
 
+-- ====================CQUI Cityview==========================================
+	
+	function CQUI_OnCityviewEnabled()
+		Open();
+	end
+	
+	function CQUI_OnCityviewDisabled()
+		Close();
+	end
+	
+	LuaEvents.CQUI_ProductionPanel_CityviewEnable.Add( CQUI_OnCityviewEnabled);
+	LuaEvents.CQUI_ProductionPanel_CityviewDisable.Add( CQUI_OnCityviewDisabled);
+	Events.CityMadePurchase.Add( function() Refresh(); end)
+
 -- ===========================================================================
 function toint(n)
     local s = tostring(n)
@@ -377,7 +391,7 @@ end
 -- ===========================================================================
 --	Close via click
 function OnClose()
-	UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+	LuaEvents.CQUI_CityPanel_CityviewDisable();
 end
 
 -- ===========================================================================

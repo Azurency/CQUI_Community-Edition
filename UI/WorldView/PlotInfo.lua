@@ -453,7 +453,6 @@ function OnDistrictAddedToMap( playerID: number, districtID : number, cityID :nu
 end
 
 function OnBuildingAddedToMap( plotX:number, plotY:number, buildingType:number, misc1, misc2, misc3 )
-	UI.DeselectAllCities();
 end
 
 -- ===========================================================================

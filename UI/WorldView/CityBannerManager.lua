@@ -249,6 +249,8 @@ function CityBanner.Initialize( self : CityBanner, playerID: number, cityID : nu
 		if (bannerStyle == BANNERSTYLE_LOCAL_TEAM) then
 			if (playerID == Game.GetLocalPlayer()) then
 				self.m_Instance.CityRangeStrikeButton:RegisterCallback( Mouse.eLClick, OnCityRangeStrikeButtonClick );
+				self.m_Instance.CityRangeStrikeButton:RegisterCallback( Mouse.eMouseEnter, function() LuaEvents.CQUI_Strike_Enter(); end );
+				self.m_Instance.CityRangeStrikeButton:RegisterCallback( Mouse.eMouseExit, function() LuaEvents.CQUI_Strike_Exit(); end );
 				self.m_Instance.CityRangeStrikeButton:SetVoid1(playerID);
 				self.m_Instance.CityRangeStrikeButton:SetVoid2(cityID);
 				self.m_Instance.CityProduction:RegisterCallback( Mouse.eLClick, OnProductionClick );
@@ -1951,8 +1953,8 @@ function OnCityRangeStrikeButtonClick( playerID, cityID )
 		return;
 	end;
 	
-	UI.SelectCity( pCity );
 	UI.SetInterfaceMode(InterfaceModeTypes.CITY_RANGE_ATTACK);
+	UI.SelectCity( pCity );
 end
 
 -- ===========================================================================
