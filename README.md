@@ -1,6 +1,6 @@
 # Civilization 6 - Chao's Quick UI
 
-[https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg](https://gitter.im/Civ6-CQUI/Help)
+[![](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/Civ6-CQUI/Help)
 
 # Features:
 
