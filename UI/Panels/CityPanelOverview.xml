@@ -129,12 +129,12 @@
                       <Image ID="AmenetiesStatusIconContainerLuxuries" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
                         <Image ID="AmenetiesStatusIconLuxuries" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_IMPROVEMENT_BEACH_RESORT" />
                         <Label ID="AmenetiesStatusYieldLuxuries" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelLuxuries" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="Luxury[NEWLINE]Resources" />
+                        <Label ID="AmenetiesStatusLabelLuxuries" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_PEDIA_RESOURCES_PAGEGROUP_LUXURY_NAME" />
                       </Image>
                       <Image ID="AmenetiesStatusIconContainerCivics" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
                         <Image ID="AmenetiesStatusIconCivics" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_NOTIFICATION_CONSIDER_GOVERNMENT_CHANGE" />
                         <Label ID="AmenetiesStatusYieldCivics" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelCivics" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="Civics" />
+                        <Label ID="AmenetiesStatusLabelCivics" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CIVIC_NAME" />
                       </Image>
                       <Image ID="AmenetiesStatusIconContainerEntertainment" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
                         <Image ID="AmenetiesStatusIconEntertainment" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_PROJECT_CARNIVAL" />
@@ -152,7 +152,7 @@
                       <Image ID="AmenetiesStatusIconContainerReligion" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
                         <Image ID="AmenetiesStatusIconReligion" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_UNITOPERATION_FOUND_RELIGION" />
                         <Label ID="AmenetiesStatusYieldReligion" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelReligion" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="Religion" />
+                        <Label ID="AmenetiesStatusLabelReligion" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_UI_RELIGION_TITLE" />
                       </Image>
                       <Image ID="AmenetiesStatusIconContainerNationalParks" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
                         <Image ID="AmenetiesStatusIconNationalParks" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_UNITOPERATION_DESIGNATE_PARK" />
@@ -167,7 +167,7 @@
                       <Image ID="AmenetiesStatusIconContainerBankruptcy" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
                         <Image ID="AmenetiesStatusIconBankruptcy" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_NOTIFICATION_TREASURY_BANKRUPT" />
                         <Label ID="AmenetiesStatusYieldBankruptcy" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelBankruptcy" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="Bankruptcy" />
+                        <Label ID="AmenetiesStatusLabelBankruptcy" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_PEDIA_CONCEPTS_PAGE_GOLD_4_CHAPTER_CONTENT_TITLE" />
                       </Image>
                     </Stack>
                   </Stack>
