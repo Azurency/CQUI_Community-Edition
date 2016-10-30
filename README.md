@@ -88,11 +88,13 @@ C:\Program Files (x86)\Steam\steamapps\common\Sid Meier's Civilization VI\DLC
 
 * Start a new game (existing games cannot have new mods added to them!)
 
+* Visit https://github.com/chaorace/cqu occasionally or follow https://twitter.com/realchaorace to be the first to know about new releases and feature additions!
+
 * NOTE: Until this mod is in a less experimental state, the mod will not remember its "enabled" status after restarting the game. This means that every time you plan to start a new game using CQUI, you'll need to explicitly enable it in the "Additional Content" menu first. Once you've created the game using the mod, it will always load when you start the save, regardless of its current status in the "Additional Content Menu" 
 
-### KNOWN ISSUES / INCOMING FEATURES:
+### KNOWN ISSUES / SUPPORT:
 
-Please see the [issue tracker](https://github.com/chaorace/cqui/issues) for an up to date list
+Please see the [issue tracker](https://github.com/chaorace/cqui/issues) for an up to date list, you can also find help and report bugs at our [Gitter](https://gitter.im/Civ6-CQUI/Help)
 
 # THANKS:
 * @Vans163 for his QUI mod and the active commits he makes that I love to merge <3
