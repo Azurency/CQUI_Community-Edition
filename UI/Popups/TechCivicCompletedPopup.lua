@@ -20,8 +20,14 @@ local m_quote_audio;
 -- ===========================================================================
 
 -- ===========================================================================
+local CQUI_popup = false;
+local CQUI_voiceover = true;
+function OnTogglePopup() CQUI_popup = not CQUI_popup; end
+function OnToggleVoiceover() CQUI_voiceover = not CQUI_voiceover; end
+LuaEvents.CQUI_Option_ToggleTechPopup.Add( OnTogglePopup );
+LuaEvents.CQUI_Option_ToggleTechVoiceover.Add( OnToggleVoiceover );
+
 function ShowCompletedPopup(completedPopup:table)
-	do return end;
 	-- Show the correct popup
 	if completedPopup.tech ~= nil then
 		ShowTechCompletedPopup(completedPopup.player, completedPopup.tech, completedPopup.isCanceled);
@@ -36,6 +42,9 @@ function ShowCompletedPopup(completedPopup:table)
 	m_isWaitingToShowPopup = true;
 
 	RefreshSize();
+	if(not CQUI_popup) then
+		Close();
+	end
 end
 
 -- ===========================================================================
@@ -325,7 +334,7 @@ end
 function OnShow( )
     UI.PlaySound("Pause_Advisor_Speech");
     UI.PlaySound("Resume_TechCivic_Speech");
-    if(m_quote_audio and #m_quote_audio > 0) then
+    if(m_quote_audio and #m_quote_audio > 0 and CQUI_voiceover) then
         UI.PlaySound(m_quote_audio);
     end
 end

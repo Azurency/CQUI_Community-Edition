@@ -746,6 +746,9 @@ function Initialize()
 	Controls.QUI_ToggleSmartBanner:RegisterCallback( Mouse.eLClick, function() LuaEvents.QUI_Option_ToggleSmartBanner(); end);
 	-- Controls.QUI_ToggleCowboy:RegisterCallback( Mouse.eLClick, function() LuaEvents.QUI_Option_ToggleCowboy(); end);
 	-- Controls.QUI_ToggleBadCowboy:RegisterCallback( Mouse.eLClick, function() LuaEvents.QUI_Option_ToggleBadCowboy(); end);
+	
+	Controls.CQUI_ToggleTechPopup:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_Option_ToggleTechPopup(); end);
+	Controls.CQUI_ToggleTechVoiceover:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_Option_ToggleTechVoiceover(); end);
 
     -- Make sure the StrategicSwitcherButton has the correct image when the game starts in StrategicView
     if UI.GetWorldRenderView() == WorldRenderView.VIEW_2D then
