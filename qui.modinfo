@@ -5,7 +5,7 @@
 		<Description>Reduce clicks and make empire management easy</Description>
 		<Teaser>Reduce clicks and make empire management easy</Teaser>
 		<Authors>vans163, chaorace, zgavin, olegbl, jacks0n</Authors>
-		<SpecialThanks>vans163 for his original qui mod</SpecialThanks>
+		<SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod</SpecialThanks>
 	</Properties>
     <Components>
         <ImportFiles id="CQUI_IMPORT_FILES">
@@ -44,6 +44,21 @@
 				<File>UI/WorldView/PlotInfo.lua</File>
             </Items>
         </ImportFiles>
+		<ImportFiles id="BETTER_TRADE_SCREEN_IMPORT_FILES">
+			<Items>
+				<File>BTS/TradeOverview.xml</File>
+				<File>BTS/TradeOverview.lua</File>
+				<File>BTS/Choosers/TradeRouteChooser.xml</File>
+				<File>BTS/Choosers/TradeRouteChooser.lua</File>
+				<File>BTS/Choosers/TradeOriginChooser.xml</File>
+				<File>BTS/Choosers/TradeOriginChooser.lua</File>
+			</Items>
+		</ImportFiles>
+		<LocalizedText id="BETTER_TRADE_TEXT">
+			<Items>
+				<File>BTS/BetterTradeScreen_Text.xml</File>
+			</Items>
+		</LocalizedText>
     </Components>
 	<Files>
 		<File>UI/ActionPanel.lua</File>
@@ -78,5 +93,21 @@
 		<File>UI/WorldView/CityBannerManager.lua</File>
 		<File>UI/WorldView/CityBannerManager.xml</File>
 		<File>UI/WorldView/PlotInfo.lua</File>
+		<File>BTS/TradeOverview.xml</File>
+		<File>BTS/TradeOverview.lua</File>
+		<File>BTS/Choosers/TradeRouteChooser.xml</File>
+		<File>BTS/Choosers/TradeRouteChooser.lua</File>
+		<File>BTS/Choosers/TradeOriginChooser.xml</File>
+		<File>BTS/Choosers/TradeOriginChooser.lua</File>
+        <File>BTS/BetterTradeScreen_Text.xml</File>
 	</Files>
+	<Settings>
+		<Custom id="BETTER_TRADE_SCREEN_SETTINGS">
+			<Items>
+				<Component>BETTER_TRADE_SCREEN_IMPORT_FILES</Component>
+				<Component>BETTER_TRADE_TEXT</Component>
+				<Component>BETTER_TRADE_DATABASE</Component>
+			</Items>
+		</Custom>
+	</Settings>
 </Mod>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd">
+  
+  <SlideAnim Style="ChooserAnim">
+    <Stack ID="RouteOriginChooser" StackGrowth="Bottom">
+      <!-- Header Container -->
+      <Container ID="RouteOriginChooserHeader" Size="parent,150">
+        <Label ID="RouteOriginChooserHeaderText" Size="parent,25" Offset="-6,6" Anchor="C,T" Style="FontFlair16" Color="0,59,77,255" String="Transfer trader to..."/>
+        <Grid Size="parent+5,parent-25" Anchor="C,B" Offset="1,0" Texture="DestinationChooser_CurrentSlot" SliceStart="0,0" SliceCorner="30,30" SliceSize="250,90" SliceTextureSize="308,207" >
+        </Grid>
+        <Button ID="CloseButton" Anchor="R,T" Offset="-11,-1" Style="CloseButtonSmall"/>
+
+        <!-- City Banner -->
+        <Grid               ID="BannerBase"           Anchor="C,T" Offset="0,40"    Size="270,33"               Texture="CityPanel_BannerBase"        SliceCorner="20,10" SliceSize="160,1" SliceTextureSize="199,33" Color="150,170,100,255">
+          <Image ID="OriginCivIcon" Anchor="L,C" Size="22,22" Offset="10,-4" Icon="ICON_CIVILIZATION_UNKNOWN" IconSize="30"/>
+          <Grid             ID="BannerDarker"         Anchor="L,T" Offset="4,2"     Size="parent-8,parent-10"   Texture="CityPanel_BannerDarker"      SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="0,0,0,100" />
+          <Grid             ID="BannerLighter"        Anchor="L,T" Offset="4,2"     Size="parent-8,parent-10"   Texture="CityPanel_BannerLighter"     SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="255,255,255,255" />
+          <Grid                                       Anchor="L,T" Offset="6,2"     Size="parent-10,parent-8"   Texture="CityPanel_BannerNone"        SliceCorner="70,10" SliceSize="1,1" SliceTextureSize="179,20" Color="255,0,0,255" />
+          <Label            ID="CityName"             Anchor="L,C" Offset="40,-2"   Style="FontFlair16"         FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="EveryWord" TruncateWidth="220" />
+        </Grid>
+
+        <!-- Status Message -->
+        <Container Size="parent, parent" Offset="0,13">
+          <Label ID="StatusMessage" Size="300,50" Anchor="C,C" Style="FontNormal16" Color="0,0,0,150"/>
+        </Container>
+
+        <!-- Confirm Button -->
+        <GridButton ID="ChangeOriginCityButton" Size="parent-35,26" Offset="1,14" Anchor="C,B" String="Confirm" Style="FontFlair14" FontStyle="Shadows" EffectColor="0,0,0,255" TextOffset="0,2" SmallCaps="20" SmallCapsType="EveryWord">
+          <GridData Texture="Controls_ConfirmSmall" StateOffsetIncrement="0,26" SliceCorner="26,13" SliceSize="2,2" SliceTextureSize="51,26"/>
+        </GridButton>
+      </Container>
+      
+      <!-- Body Container -->
+      <Grid ID="RouteOriginChooserBody" Texture="Controls_ContainerBlue" SliceStart="0,0" SliceCorner="3,3" SliceSize="9,9" SliceTextureSize="16,16" Anchor="C,T" Offset="0,0" Size="parent,parent-150" AutoSize="1">
+        <ScrollPanel    ID="CityScrollPanel"  Offset="18,10" Size="parent-22,parent-35" Vertical="1" AutoScrollBar="0">
+          <ScrollBar    Anchor="L,T" Size="11,parent-125" AnchorSide="O,I" Offset="4,0" Style="ScrollVerticalBar" />
+          <Stack        ID="CityStack" StackGrowth="Bottom" StackPadding="2" />
+        </ScrollPanel>
+      </Grid>
+    </Stack>
+  </SlideAnim>
+
+  <!-- Instances -->
+  <Instance Name="CityInstance">
+    <GridButton ID="CityButton" Size="parent,30" Style="FontFlair18" SmallCaps="22" SmallCapsType="EveryWord" TextAnchor="L,C" TextOffset="30,0">
+      <GridData Style="ButtonLightWeightGrid"/>
+    </GridButton>
+  </Instance>
+</Context>

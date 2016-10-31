@@ -73,6 +73,22 @@
 * Civic/Tech popups/voiceover are skipped immediately
 * Production/Worker recommendations removed
 
+### Better Trade Screen Features:
+
+* Overhauled trade menus
+
+![](http://i.imgur.com/0IMseO1.png)![](http://i.imgur.com/pfNwcnT.png)
+
+* New yield/destination filtering options
+
+![](http://i.imgur.com/8DXfZx3.png)
+
+* Remembers the last used tab
+* Available Routes shows all possible routes, even if the trade unit is not present in the origin city
+* Clicking on a route where a free trade unit is not present in the origin city takes you to a free trade unit and opens the change city tab
+* City States with Trade Quest have an icon showing they have that quest
+* Tourism and Visibility bonus is now on each trade route
+
 # How to use
 * Download the latest release from
 https://github.com/chaorace/cqui/releases/
@@ -88,7 +104,7 @@ C:\Program Files (x86)\Steam\steamapps\common\Sid Meier's Civilization VI\DLC
 
 * Start a new game (existing games cannot have new mods added to them!)
 
-* Visit https://github.com/chaorace/cqu occasionally or follow https://twitter.com/realchaorace to be the first to know about new releases and feature additions!
+* Visit https://github.com/chaorace/cqui occasionally or follow https://twitter.com/realchaorace to be the first to know about new releases and feature additions!
 
 * NOTE: Until this mod is in a less experimental state, the mod will not remember its "enabled" status after restarting the game. This means that every time you plan to start a new game using CQUI, you'll need to explicitly enable it in the "Additional Content" menu first. Once you've created the game using the mod, it will always load when you start the save, regardless of its current status in the "Additional Content Menu" 
 
@@ -98,6 +114,7 @@ Please see the [issue tracker](https://github.com/chaorace/cqui/issues) for an u
 
 # THANKS:
 * @Vans163 for his QUI mod and the active commits he makes that I love to merge <3
+* astog from the CivFanatics modding community for his [Better Trade Routes mod](http://forums.civfanatics.com/threads/better-trade-screen.602636/)
 * @zgavin for UI bugfixes in PRs #1 and #2
 * @olegbl for the Amenities overview overhaul in PR #4 and multiple UI bugfixes (PRs #9 and #12)
   1. Additional kudos to /u/mateusarc from the Civilization subreddit for his original concept art

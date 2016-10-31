@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Context>
+  <SlideAnim Style="RundownAnimBG">
+    <!-- Title Area -->
+    <Grid Anchor="C,T" Size="parent-6,140" Offset="0,50" Texture="Controls_TitleBarDark" SliceCorner="21,17" SliceTextureSize="42,34">
+      <!-- ==================================================================	-->
+      <!--	Tab Container																												-->
+      <!-- ==================================================================	-->
+      <Container ID="TabHeader" Anchor="C,T" Offset="0,-10"	Size="540,61">
+        <Grid Anchor="L,T" Size="parent,61" Texture="Controls_TabLedge2"  SliceCorner="194,18" SliceSize="52,26" SliceTextureSize="438,61">
+          <!-- My Routes Button	-->
+          <GridButton	ID="MyRoutesButton" Size="150,34" Offset="30,13" Style="TabButton">
+            <Label ID="MyRoutesTabLabel" Anchor="C,C" Offset="0,1" Style="TabFont" String="LOC_TRADE_OVERVIEW_MY_ROUTES"/>
+            <Image ID="MyRoutesSelectedArrow" Anchor="C,T" Offset="0,0" Texture="Controls_TabSelectArrow.dds"></Image>
+            <Label ID="MyRoutesTabSelectedLabel" Anchor="C,C" Offset="0,1" Style="TabSelectedFont" String="LOC_TRADE_OVERVIEW_MY_ROUTES" Hidden="1"/>
+          </GridButton>
+
+          <!-- Routes to Cities Button	-->
+          <GridButton	ID="RoutesToCitiesButton" Size="166,34" Offset="188,13" Style="TabButton">
+            <Label ID="RoutesToCitiesTabLabel" Anchor="C,C" Offset="0,1" Style="TabFont" String="LOC_TRADE_OVERVIEW_ROUTES_TO_MY_CITIES"/>
+            <Image ID="RoutesToCitiesSelectedArrow" Anchor="C,T" Offset="0,0" Texture="Controls_TabSelectArrow.dds"/>
+            <Label ID="RoutesToCitiesTabSelectedLabel" Anchor="C,C" Offset="0,1" Style="TabSelectedFont" String="LOC_TRADE_OVERVIEW_ROUTES_TO_MY_CITIES" Hidden="1"/>
+          </GridButton>
+
+          <!-- Available Routes Button	-->
+          <GridButton	ID="AvailableRoutesButton" Size="150,34" Offset="360,13" Style="TabButton">
+            <Label ID="AvailableRoutesTabLabel" Anchor="C,C" Offset="0,1" Style="TabFont" String="LOC_TRADE_OVERVIEW_AVAILABLE_ROUTES"/>
+            <Image ID="AvailableRoutesSelectedArrow" Anchor="C,T" Offset="0,0" Texture="Controls_TabSelectArrow.dds"/>
+            <Label ID="AvailableRoutesTabSelectedLabel" Anchor="C,C" Offset="0,1" Style="TabSelectedFont" String="LOC_TRADE_OVERVIEW_AVAILABLE_ROUTES" Hidden="1"/>
+          </GridButton>
+        </Grid>
+      </Container>
+
+      <!-- ==================================================================	-->
+      <!--	Header																									-->
+      <!-- ==================================================================	-->
+      <Grid	ID="HeaderFrame" Anchor="C,T" Offset="0,40" Size="parent-20,42" Texture="Controls_DecoFrame" SliceCorner="19,18" SliceSize="1,1" SliceTextureSize="40,38" Color="31,44,53,255">
+        <Stack ID="HeaderStack" Anchor="C,C" Offset="0,0" StackGrowth="Right" StackPadding="6">
+          <Label ID="HeaderLabel" Style="TradeOverviewHeader"/>
+          <Label ID="ActiveRoutesLabel" Style="TradeOverviewActiveRoutes"/>
+        </Stack>
+      </Grid>
+
+      <!-- ==================================================================	-->
+      <!--	Sub Header - Contains Column Names, Filter Pulldown, Sort Bar     -->
+      <!-- ==================================================================	-->
+      
+      <!-- Filter Pulldown -->
+      <PullDown ID="OverviewDestinationFilterPulldown" ConsumeMouse="0" Anchor="C,B" Offset="0,5" Size="parent-200,26" AutoSizePopUp="1" AutoFlip="1" ScrollThreshold="400">
+        <ButtonData>
+          <GridButton ID="OverviewFilterButton" TextAnchor="R,C" TextOffset="15,1" Style="FontNormal14" FontStyle="Shadow" EffectColor="0,0,0,255" Offset="0,-25" Size="50,-20" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" />
+        </ButtonData>
+
+        <GridData InnerPadding="15,15" Offset="0,0" Anchor="L,T" Style="Drawer"/>
+
+        <ScrollPanelData Anchor="L,C"  Vertical="1" Size="11,14"  Offset="0,0" AutoScrollBar="1">
+          <ScrollBar Style="ScrollVerticalBacking" Anchor="L,T" AnchorSide="I,I" Color="28,60,90,255" Offset="-2,2">
+            <Thumb Style="ScrollThumbAlt" Color="28,60,90,255" />
+          </ScrollBar>
+        </ScrollPanelData>
+
+        <StackData StackGrowth="Bottom" Offset="0,0" Size="200,400" Anchor="L,T" />
+
+        <InstanceData Name="OverviewFilterEntry">
+          <GridButton Anchor="L,T" ID="Button" Size="265,26" Offset="1,0" Style="FontNormal14" FontStyle="Shadow" EffectColor="0,0,0,255" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" StateOffsetIncrement="0,24"/>
+        </InstanceData>
+
+        <!-- Show Route Text -->
+        <Label String="Filter by: " Anchor="L,T" Offset="30,-19" Style="FontNormal14" FontStyle="Shadow" EffectColor="0,0,0,255"/>
+        <Image ID="OverviewFilterPulldownOpenedArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,T" Offset="7,-20"/>
+        <Image ID="OverviewFilterPulldownClosedArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,T" Offset="7,-25"/>
+      </PullDown>
+
+      <Container Anchor="C,T" Size="parent-40, 35" Offset="0,88">
+        <Grid Style="ColumnHeader" Anchor="C,B" Size="parent+15, 22" Offset="0,-11">
+          <Label String="Sort by:" Anchor="L,C" Style="FontNormal11" Offset="15,-1"/>
+        </Grid>
+        <!-- Sort Yield Stack -->
+        <Stack Size="50,50" Anchor="L,B" StackGrowth="Right" Offset="55,-9" StackPadding="2">
+          <GridButton ID="FoodSortButton" Size="48,parent-17" Color="255,255,255,220" Style="PanelButtonLightweight">
+            <Label ID="FoodSortLabel" Anchor="C,C" Offset="15,1" Style="FontNormal12" String="[Icon_Food]"/>
+            <Image ID="FoodDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-10,0"/>
+            <Image ID="FoodAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-10,-4"/>
+          </GridButton>
+
+          <GridButton ID="ProductionSortButton" Size="48,parent-17" Color="255,255,255,220" Style="PanelButtonLightweight">
+            <Label ID="ProductionSortLabel" Anchor="C,C" Offset="15,1" Style="FontNormal12" String="[Icon_Production]"/>
+            <Image ID="ProductionDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-10,0"/>
+            <Image ID="ProductionAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-10,-4"/>
+          </GridButton>
+
+          <GridButton ID="GoldSortButton" Size="48,parent-17" Color="255,255,255,220" Style="PanelButtonLightweight">
+            <Label ID="GoldSortLabel" Anchor="C,C" Offset="15,1" Style="FontNormal12" String="[Icon_Gold]"/>
+            <Image ID="GoldDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-10,0"/>
+            <Image ID="GoldAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-10,-4"/>
+          </GridButton>
+
+          <GridButton ID="ScienceSortButton" Size="48,parent-17" Color="255,255,255,220" Style="PanelButtonLightweight">
+            <Label ID="ScienceSortLabel" Anchor="C,C" Offset="15,1" Style="FontNormal12" String="[Icon_Science]"/>
+            <Image ID="ScienceDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-10,0"/>
+            <Image ID="ScienceAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-10,-4"/>
+          </GridButton>
+
+          <GridButton ID="CultureSortButton" Size="48,parent-17" Color="255,255,255,220" Style="PanelButtonLightweight">
+            <Label ID="CultureSortLabel" Anchor="C,C" Offset="15,1" Style="FontNormal12" String="[Icon_Culture]"/>
+            <Image ID="CultureDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-10,0"/>
+            <Image ID="CultureAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-10,-4"/>
+          </GridButton>
+
+          <GridButton ID="FaithSortButton" Size="48,parent-17" Color="255,255,255,220" Style="PanelButtonLightweight">
+            <Label ID="FaithSortLabel" Anchor="C,C" Offset="15,0" Style="FontNormal12" String="[Icon_Faith]"/>
+            <Image ID="FaithDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-10,0"/>
+            <Image ID="FaithAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-10,-4"/>
+          </GridButton>
+
+          <GridButton ID="TurnsToCompleteSortButton" Size="48,parent-17" Color="255,255,255,220" Style="PanelButtonLightweight" Offset="61,0">
+            <Label ID="TurnsToCompleteSortLabel" Anchor="C,C" Offset="15,0" Style="FontNormal12" String="[Icon_Turn]"/>
+            <Image ID="TurnsToCompleteDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-10,0"/>
+            <Image ID="TurnsToCompleteAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-10,-4"/>
+          </GridButton>
+
+        </Stack>
+        <!-- <Box Size="300,1" Anchor="L,B" Offset="56,4" Color="50,53,54,150"/> -->
+      </Container>
+
+      <!-- ==================================================================	-->
+      <!--	Close Button																										-->
+      <!-- ==================================================================	-->
+      <Button ID="CloseButton" Anchor="R,T" Offset="5,40" Style="CloseButtonSmall" />
+    </Grid>
+
+    <!-- ==================================================================	-->
+    <!--	Body Area																						              -->
+    <!-- ==================================================================	-->
+    <Container Anchor="C,B" Size="parent, parent-195" Offset="0,5">
+      <ScrollPanel ID="BodyScrollPanel" Size="495,parent" Vertical="1">
+        <ScrollBar Anchor="R,C" AnchorSide="O,I"  Offset="0,0" Style="ScrollVerticalBar"/>
+
+        <!-- Stack -->
+        <Stack ID="BodyStack" StackGrowth="Down"/>
+      </ScrollPanel>
+    </Container>
+    
+  </SlideAnim>
+
+  <!-- ==================================================================	-->
+  <!--	Instances																													-->
+  <!-- ==================================================================	-->
+
+  <!-- Section Header -->
+  <Instance	Name="HeaderInstance">
+    <Container ID="Top" Size="485,34" Offset="10,4">
+      <Grid ID="HeaderGrid" Texture="TradeOverview_Subheader" SliceCorner="12,11" SliceSize="2,2" Color="67,70,72,255" Size="parent,parent">
+        <Grid  ID="BannerDarker"  Texture="Controls_ListButton" Anchor="C,C" Offset="-1,-1" Size="parent-10,parent-10"  Color="0,0,0,100" />
+
+        <Label ID="HeaderLabel" Anchor="L,C" Offset="36,0" Style="FontFlair16" SmallCaps="20" SmallCapsType="EveryWord" Color="Beige"/>       
+        
+        <!-- Visibility Bonus -->
+        <Grid ID="VisibilityBonusGrid" Anchor="R,C" Size="55,22" Offset="65,-2" Texture="Controls_SubContainerFill" SliceCorner="10,10" SliceSize="2,2" Color="25,33,35,0">
+          <Button ID="VisibilityBonusIcon" Anchor="L,T" Size="22,22" Offset="0,0" Texture="Diplomacy_VisibilityIcons" StateOffsetIncrement="22,0" Disabled="1"/>
+        </Grid>
+
+        <!-- Tourism Bonus -->
+        <Grid ID="TourismBonusGrid" Anchor="R,C" Size="95,22" Offset="-14,0" Texture="Controls_SubContainerFill" SliceCorner="10,10" SliceSize="2,2" Color="25,33,35,0">
+          <Image ID="TourismBonusIcon" Anchor="L,C" Size="24,24" Offset="-5,0" Texture="Tourism_VisitingSmallGrey"/>
+          <Label ID="TourismBonusPercentage" Anchor="R,C" Size="70,26" Offset="32,-1" Style="FontNormal14" String="LOC_TRADE_OVERVIEW_TOURISM_BONUS" Color="Beige"/>
+        </Grid>
+      </Grid>
+    </Container>
+  </Instance>
+  
+  <!-- Route Entry -->
+  <Instance	Name="RouteInstance">
+    <Container ID="Top" Size="485,78" Offset="10,2">
+      <GridButton ID="GridButton" Size="parent,parent" Color="255,255,255,150">
+          <GridData Texture="Controls_ListButton" SliceCorner="209,29"  SliceTextureSize="417,51" StateOffsetIncrement="0,51"/>
+
+          <!-- Vertical Divider Background -->
+          <Stack Size="50,50"  Anchor="L,B" StackGrowth="Right" Offset="68,4">
+            <Box Size="1,parent-34" Anchor="L,B" Color="50,53,54,150"/>
+            <Image Size="48,parent-34" Anchor="L,B" Texture="Espionage_ColumnShading"/>
+            <Box Size="1,parent-34" Anchor="L,B" Color="50,53,54,150"/>
+
+            <Box Size="1,parent-34" Anchor="L,B" Color="50,53,54,150"/>
+            <Image Size="48,parent-34" Anchor="L,B" Texture="Espionage_ColumnShading"/>
+            <Box Size="1,parent-34" Anchor="L,B" Color="50,53,54,150"/>
+
+            <Box Size="1,parent-34" Anchor="L,B" Color="50,53,54,150"/>
+            <Image Size="48,parent-34" Anchor="L,B" Texture="Espionage_ColumnShading"/>
+            <Box Size="1,parent-34" Anchor="L,B" Color="50,53,54,150"/>
+
+            <Box Size="1,parent-34" Anchor="L,B" Color="50,53,54,150"/>
+            <Image Size="48,parent-34" Anchor="L,B" Texture="Espionage_ColumnShading"/>
+            <Box Size="1,parent-34" Anchor="L,B" Color="50,53,54,150"/>
+
+            <Box Size="1,parent-34" Anchor="L,B" Color="50,53,54,150"/>
+            <Image Size="48,parent-34" Anchor="L,B" Texture="Espionage_ColumnShading"/>
+            <Box Size="1,parent-34" Anchor="L,B" Color="50,53,54,150"/>
+
+            <Box Size="1,parent-34" Anchor="L,B" Color="50,53,54,150"/>
+            <Image Size="48,parent-34" Anchor="L,B" Texture="Espionage_ColumnShading"/>
+            <Box Size="1,parent-34" Anchor="L,B" Color="50,53,54,150"/>
+
+            <Box Size="1,parent-34" Anchor="L,B" Color="50,53,54,150"/>
+            <Image Size="48,parent-34" Anchor="L,B" Texture="Espionage_ColumnShading"/>
+            <Box Size="1,parent-34" Anchor="L,B" Color="50,53,54,150"/>
+          </Stack>
+          
+          <!-- Route Status Font Icon -->
+          <Label ID="RouteStatusFontIcon" Anchor="L,T" Offset="10,8" String="[Icon_TradeRouteLarge]" Hidden="1"/>
+          
+          <!-- Route Label -->
+          <Label ID="RouteLabel" Anchor="L,T" Offset="20,8" Style="FontFlair16" SmallCaps="20" SmallCapsType="EveryWord" Color="Beige"/>
+          <!-- Trading Post Indicator -->
+          <Grid ID="TradingPostIndicator" Anchor="R,T" Offset="77,7" Color="25,33,35,0">
+            <Label Style="FontNormal16" String="[Icon_TradingPost]"/> 
+          </Grid>
+          
+          <!-- Visibility Bonus -->
+          <Grid ID="VisibilityBonusGrid" Size="20,20" Anchor="R,T" Offset="77,5" Color="25,33,35,0">
+            <Button ID="VisibilityBonusIcon" Anchor="L,T" Size="22,22" Offset="0,0" Texture="Diplomacy_VisibilityIcons" StateOffsetIncrement="22,0" Disabled="1"/>
+          </Grid>
+
+          <!-- Tourism Bonus -->
+          <Grid ID="TourismBonusGrid" Anchor="R,T" Size="66,20" Offset="100,5" Color="25,33,35,0">
+            <Image ID="TourismBonusIcon" Anchor="C,C" Size="24,23" Offset="18,1" Texture="Tourism_VisitingSmallGrey"/>
+            <Label ID="TourismBonusPercentage" Anchor="C,C" Align="R,C" Size="40,24" Offset="-18,0" Style="FontNormal14" String="LOC_TRADE_OVERVIEW_TOURISM_BONUS" Color="Beige"/>
+          </Grid>
+          <!-- City State Quest Icon -->
+          <Label ID="CityStateQuestIcon" Anchor="R,B" Offset="40,28" Style="FontNormal16" FontStyle="Shadow" String="[ICON_CityStateQuest]" Color="255,0,0,255" EffectColor="255,0,0,255" GradientColor="255,0,0,255" />
+
+          <!-- Route Distance -->
+          <Stack ID="RouteDistanceStack" Anchor="R,T" Offset="12,4" StackGrowth="Right" StackPadding="2">
+            <Image Size="22,22" Offset="0,0" Icon="ICON_MOVES" IconSize="22" Texture="Stats22" TextureOffset="66,0" ToolTip="LOC_TRADE_OVERVIEW_TOOLTIP_TOTAL_ROUTE_TURNS"/>
+            <Label ID="RouteDistance" Offset="0,4" Style="FontNormal16" String="00" ToolTip="LOC_TRADE_OVERVIEW_TOOLTIP_TOTAL_ROUTE_TURNS"/>
+          </Stack>
+
+          <!-- Route Duration -->
+          <Label Anchor="R,T" Offset="26,7" Style="FontNormal16" String="[Icon_Turn]" Hidden="1"/>
+          <Label Anchor="R,T" Offset="10,8" Style="FontNormal16" String="00" Hidden="1"/>
+
+          <!-- Divider Box -->
+          <Box Size="477,2" Offset="4,28" Color="50,53,54,255"/>
+          
+          <!-- Origin Civ Icon -->
+          <Image ID="OriginCivIconBacking" Anchor="L,B" Size="30,30" Offset="8,12" Texture="CircleBacking30" Color="100,100,100,255">
+            <Image ID="OriginCivIcon" Anchor="C,C" Size="30,30" Offset="0,0" Icon="ICON_CIVILIZATION_UNKNOWN" IconSize="30"/>
+          </Image>
+
+          <!-- Origin Civ Arrow -->
+          <Image ID="OriginCivArrow" Anchor="L,B" Size="20,19" Offset="46,25" FlipX="1" Texture="TradeOverview_Benefactor"/>
+
+           <!-- Destination Civ Icon -->
+           <Image ID="DestinationCivIconBacking" Anchor="R,B" Size="30,30" Offset="8,12" Texture="CircleBacking30" Color="100,100,100,255">
+             <Image ID="DestinationCivIcon" Anchor="C,C" Size="30,30" Offset="0,0" Icon="ICON_CIVILIZATION_UNKNOWN" IconSize="30"/>
+           </Image>
+
+          <!-- Destination Civ Arrow -->
+          <Image ID="DestinationCivArrow" Anchor="R,B" Size="20,19" Offset="45,3" Texture="TradeOverview_Benefactor"/>
+            
+          <!-- Resource Stack -->
+          <Stack ID="ResourceStack" StackGrowth="Up" Anchor="C,B" Offset="0,7" StackPadding="0">
+            <Stack ID="DestinationResourceStack" Size="50,50" Offset="2,-2" StackGrowth="Right" StackPadding="2"/>
+            <Label ID="DestinationNoBenefitsLabel" Offset="0,4" Anchor="C,C" Style="FontNormal14" String="LOC_ROUTECHOOSER_NO_BENEFITS_FROM_ROUTE"/>
+
+            <!-- Divider Box -->
+            <Box Size="350,2" Anchor="C,C" Color="50,53,54,255"/>
+
+            <Stack ID="OriginResourceStack" Size="50,50" Offset="2,-2" StackGrowth="Right" StackPadding="2"/>
+            <Label ID="OriginNoBenefitsLabel" Offset="0,4" Anchor="C,B" Style="FontNormal14" String="LOC_ROUTECHOOSER_NO_BENEFITS_FROM_ROUTE"/>
+          </Stack>
+      </GridButton>
+    </Container>
+  </Instance>
+
+  <!-- Simple Button -->
+  <Instance	Name="SimpleButtonInstance">
+    <Container ID="Top" Size="485,78" Offset="10,2">
+      <GridButton ID="GridButton" Size="parent,parent" Color="255,255,255,150" Style="FontNormal18">
+        <GridData Texture="Controls_ListButton" SliceCorner="209,29"  SliceTextureSize="417,51" StateOffsetIncrement="0,51"/>
+      </GridButton>
+    </Container>
+  </Instance>
+
+  <!-- Resource Instance -->
+  <Instance Name="ResourceInstance">
+    <Container ID="Top" Size="48,20">
+      <Label ID="ResourceIconLabel" Anchor="C,C" Offset="11,0" Style="FontNormal14" String="[Icon_Food]"/>
+      <Label ID="ResourceValueLabel" Anchor="C,C" Offset="-12,0" Style="FontNormal14" FontStyle="Shadow" String="+15"/>
+    </Container>
+  </Instance>
+
+</Context>
