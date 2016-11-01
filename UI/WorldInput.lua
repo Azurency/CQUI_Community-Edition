@@ -126,6 +126,9 @@ local m_kTutorialUnitHexRestrictions	:table = nil;		-- Any restrictions on where
 local m_isPlotFlaggedRestricted			:boolean = false;	-- In a previous operation to determine a move path, was a plot flagged restrticted/bad? (likely due to the tutorial system)
 local m_kTutorialUnitMoveRestrictions	:table = nil;		-- Restrictions for moving (anywhere) of a selected unit type.
 
+--CQUI MEMBERS
+local CQUI_cityview = false;
+
 
 -- ===========================================================================
 --	FUNCTIONS
@@ -3339,6 +3342,10 @@ function Initialize()
 	ContextPtr:SetAppRegainedFocusHandler( OnAppRegainedFocusHandler );
 	ContextPtr:SetAppLostFocusHandler( OnAppLostFocusHandler );
 	ContextPtr:SetShutdown( OnShutdown );
+	
+	-- CQUI Events
+	LuaEvents.CQUI_WorldInput_CityviewEnabled.Add( function() CQUI_cityview = true; end );
+	LuaEvents.CQUI_WorldInput_CityviewDisabled.Add( function() CQUI_cityview = false; end );
 	
 	Controls.DebugStuff:SetHide(not m_isDebuging);
 	-- Popup setup

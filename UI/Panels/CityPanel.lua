@@ -70,6 +70,7 @@ function CQUI_CityviewEnableManager()
 		LuaEvents.CQUI_ProductionPanel_CityviewEnable();
 		LuaEvents.CQUI_CityPanel_CityviewEnable();
 		LuaEvents.CQUI_CityPanelOverview_CityviewEnable();
+		LuaEvents.CQUI_WorldInput_CityviewEnable();
 		CQUI_cityview = true;
 	end
 end
