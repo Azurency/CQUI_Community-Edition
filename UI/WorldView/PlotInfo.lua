@@ -269,12 +269,15 @@ function ShowCitizens()
 			local pInstance:table = GetInstanceAt( index );
 			
 			if pInstance ~= nil and kPlot:IsCity() == false then
+			local isCityCenterPlot = kPlot:GetDistrictType() == CITY_CENTER_DISTRICT_INDEX;
 				table.insert( m_uiCitizens, pInstance );
 				pInstance.CitizenButton:SetVoid1( index );
 				pInstance.CitizenButton:RegisterCallback(Mouse.eLClick, OnClickCitizen );
-				pInstance.CitizenButton:SetHide(false);
-				pInstance.CitizenButton:SetDisabled( false );
+				--pInstance.CitizenButton:SetHide(false);
+				--pInstance.CitizenButton:SetDisabled( false );
 				--pInstance.CitizenButton:SetSizeVal(48, 48);
+				pInstance.CitizenButton:SetHide(isCityCenterPlot);			
+				pInstance.CitizenButton:SetDisabled(isCityCenterPlot);
 
 				if(tUnits[i] >= 1) then
 					pInstance.CitizenButton:SetTextureOffsetVal(0, CITIZEN_BUTTON_HEIGHT*4);
