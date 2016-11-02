@@ -80,6 +80,7 @@ function CQUI_CityviewDisableManager()
 		LuaEvents.CQUI_ProductionPanel_CityviewDisable();
 		LuaEvents.CQUI_CityPanel_CityviewDisable();
 		LuaEvents.CQUI_CityPanelOverview_CityviewDisable();
+		LuaEvents.CQUI_WorldInput_CityviewDisable();
 		CQUI_cityview = false;
 	end
 end
