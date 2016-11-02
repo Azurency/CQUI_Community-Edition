@@ -6,6 +6,7 @@ include("InstanceManager");
 include("AdjacencyBonusSupport");
 include("SupportFunctions");
 include("Civ6Common"); -- AutoSizeGridButton
+include("CitySupport");
 
 -- ===========================================================================
 --	CONSTANTS
@@ -143,6 +144,10 @@ function ShowPurchases()
 		return;
 	end
 
+	local pCityCulture					:table 	= pSelectedCity:GetCulture();
+	local pNextPlotID						:number = pCityCulture:GetNextPlot();
+	local TurnsUntilExpansion		:number = pCityCulture:GetTurnsUntilExpansion();
+
 	local tParameters :table = {};
 	tParameters[CityCommandTypes.PARAM_PLOT_PURCHASE] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_PLOT_PURCHASE);
 
@@ -196,6 +201,11 @@ function ShowPurchases()
 						else
 							pInstance.PurchaseButton:RegisterMouseEnterCallback( function() OnSpinningCoinAnimMouseEnter(pInstance.PurchaseAnim); end );
 							pInstance.PurchaseButton:SetToolTipString("");
+						end
+						if (index == pNextPlotID ) then
+							pInstance.NextPlotLabel:SetString("[ICON_Turn]" .. Locale.Lookup("LOC_HUD_CITY_IN_TURNS" , TurnsUntilExpansion ) .. "   ");
+							pInstance.NextPlotLabel:SetToolTipString( " " .. Locale.Lookup( "LOC_HUD_CITY_BORDER_EXPANSION" , TurnsUntilExpansion ).."[ICON_Turn]");
+							pInstance.NextPlotButton:SetHide( false );
 						end
 						pInstance.PurchaseButton:SetHide( false );
 						table.insert( m_uiPurchase, pInstance );
@@ -512,7 +522,7 @@ end
 function HidePurchases()	
 	for _,pInstance in ipairs(m_uiPurchase) do
 		pInstance.PurchaseButton:SetHide( true );
-		
+		pInstance.NextPlotButton:SetHide( true );
 		-- NOTE: This plot can't be returned to the instnace manager 
 		-- (ReleaseInstance) unless the local cached version in (m_uiWorldMap) 
 		-- is removed too; which is only safe if NOTHING else utilizing this 

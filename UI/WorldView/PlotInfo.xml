@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Context Layer="WorldAnchor" >
+
+	<Container				ID="PlotInfoContainer" />
+
+	<Instance					Name="InfoInstance">
+		<WorldAnchor		ID="Anchor"																						Size="2,2" >
+			<GridButton				ID="PurchaseButton" Anchor="C,T"	Offset="0,-40" Size="51,30" Hidden="1" Style="PurchaseTileButton">
+				<FlipAnim		ID="PurchaseAnim" Size="32,32" Columns="8"	FrameCount="40" Speed="25" Texture="CityPanel_PurchaseTileAnim" Cycle="Once" Stopped="1" Anchor="L,C" Offset="0,0"/>
+			<Label			ID="Amount" Anchor="R,C"	Offset="4,0" Style="CityPanelNumLarge" Align="Right"/>
+			</GridButton>
+      <GridButton				ID="SwapTileOwnerButton" Anchor="C,T"	Offset="0,-40" Size="61,30" Hidden="1" Style="PurchaseTileButton">
+        <Label			ID="SwapLabel" String="LOC_PLOTINFO_SWAP_TILE_OWNER" ToolTip="LOC_PLOTINFO_SWAP_TILE_OWNER_TOOLTIP" Anchor="C,C"	Offset="0,0" Style="CityPanelText" Align="Center"/>
+      </GridButton>
+      <GridButton				ID="NextPlotButton" Anchor="C,T"	Offset="0,55" Size="95,30" Hidden="1" Style="PurchaseTileButton" ToolTip="The city will expand to this tile upon the next cultural borders growth">
+        <Label			ID="NextPlotLabel" String="Next Tile" ToolTip="The city will expand to this tile upon the next cultural borders growth" Anchor="C,C"	Offset="0,0" Style="CityPanelCBCulture" Align="Left"/>
+      </GridButton>
+      <Button				ID="CitizenButton"	Anchor="C,T"	Offset="0,-50"	Size="64,64"			Texture="CityPanel_ManageCitizenButton.dds"	Hidden="1"	NoStateChange="1">
+        <Image			ID="LockedIcon"			Anchor="R,B"	Offset="-5,-5"	Size="32,32"			Texture="Padlock"	Hidden="1"/>
+        <Label			ID="CurrentAmount"	Anchor="R,C"	Offset="20,-10"	AnchorSide="O,I"	Style="CityPanelNumLarge" />
+        <Label			ID="LabelOf"				Anchor="R,C"	Offset="20,5"		AnchorSide="O,I"	Style="CityPanelNumLarge"	Text="Of" />
+        <Label			ID="TotalAmount"		Anchor="R,C"	Offset="20,20"	AnchorSide="O,I"	Style="CityPanelNumLarge" />
+      </Button>
+		</WorldAnchor>
+	</Instance>
+
+	<Instance					Name="DebugPixelInstance">
+		<Box						ID="Pixel" Size="100,100" Color="100,100,100,100" />
+	</Instance>
+
+</Context>
