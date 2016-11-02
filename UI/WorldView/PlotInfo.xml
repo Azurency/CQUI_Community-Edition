@@ -12,7 +12,7 @@
       <GridButton				ID="SwapTileOwnerButton" Anchor="C,T"	Offset="0,-40" Size="61,30" Hidden="1" Style="PurchaseTileButton">
         <Label			ID="SwapLabel" String="LOC_PLOTINFO_SWAP_TILE_OWNER" ToolTip="LOC_PLOTINFO_SWAP_TILE_OWNER_TOOLTIP" Anchor="C,C"	Offset="0,0" Style="CityPanelText" Align="Center"/>
       </GridButton>
-      <GridButton				ID="NextPlotButton" Anchor="C,T"	Offset="0,55" Size="95,30" Hidden="1" Style="PurchaseTileButton" ToolTip="The city will expand to this tile upon the next cultural borders growth">
+      <GridButton				ID="NextPlotButton" Anchor="C,T"	Offset="0,-10" Size="95,30" Hidden="1" Style="PurchaseTileButton" ToolTip="The city will expand to this tile upon the next cultural borders growth">
         <Label			ID="NextPlotLabel" String="Next Tile" ToolTip="The city will expand to this tile upon the next cultural borders growth" Anchor="C,C"	Offset="0,0" Style="CityPanelCBCulture" Align="Left"/>
       </GridButton>
       <Button				ID="CitizenButton"	Anchor="C,T"	Offset="0,-50"	Size="64,64"			Texture="CityPanel_ManageCitizenButton.dds"	Hidden="1"	NoStateChange="1">
