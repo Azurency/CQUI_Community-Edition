@@ -10,7 +10,7 @@
 
 * Civ V Style Cityview
 
-![](http://i.imgur.com/wIH9FxN.jpg)
+![](http://i.imgur.com/c9mtii6.jpg)
 
 * Great Person panel renovated (no more scrolling!)
 
@@ -32,16 +32,18 @@
 * Civilopedia remembers the last visited page
 * Civic/Tech popups can be disabled. Optionally, the voiceover can still be kept even without the popup.
 
-* Minimap is now 2x larger
+* Minimap can be toggled between 2x-Mode and original by rightclicking
 
 ![](http://i.imgur.com/AyY8HeP.jpg)
 
 * Dedicated mod settings menu
 
-![](http://i.imgur.com/rGxHwhJ.png)
+![](http://i.imgur.com/0WFq7EL.png)
 
 * [Minimap expando is easier to click. Minimap now also rolls up when right clicked](https://gfycat.com/ElementaryRectangularGalago)
 * Unit actions like sell/delete are no longer hidden behind an expando
+
+* Civ V keybinds implemented. Two modes: Classic, a faithful recreation of the Civ V binding scheme. Enhanced,  Civ V binding scheme with WASD assigned to camera control, Q/E assigned to city/unit cycling, and Shift assigned to shifting focus between city and unit selection modes.
 
 ![](http://i.imgur.com/x1xZtyY.png)
 
@@ -57,7 +59,7 @@
 
 ![](http://i.imgur.com/8CUJSB6.png)
 
-* "Smart Banner" Toggleable option to display a green icon indicating non-locked citizens, district icons indicating built districts, and lettered icons representing unbuilt buildings
+* "Smart Banner" Toggleable option to display a green icon indicating non-locked citizens and district icons indicating built districts.
 
 ![](http://i.imgur.com/FEdJQ61.png)
 
@@ -70,14 +72,13 @@
 ![](http://i.imgur.com/utZzpqJ.png)
 
 * [Right clicking the action panel (bottom right button) instantly ends turn](https://gfycat.com/PeacefulSpanishAfricanwildcat) even when things like production/research/unit moves have not been decided
-* Civic/Tech popups/voiceover are skipped immediately
 * Production/Worker recommendations removed
 
 ### Better Trade Screen Features:
 
 * Overhauled trade menus
 
-![](http://i.imgur.com/0IMseO1.png)![](http://i.imgur.com/pfNwcnT.png)
+![](http://i.imgur.com/0IMseO1.png)![](http://i.imgur.com/F7ZRUi7.png)
 
 * New yield/destination filtering options
 
@@ -99,9 +100,19 @@
 * Download the latest release from
 https://github.com/chaorace/cqui/releases/
 
-* Find your DLC folder, usually on Windows it is:
+* Find your DLC folder:
+
+  Windows:
 ```
 C:\Program Files (x86)\Steam\steamapps\common\Sid Meier's Civilization VI\DLC
+```
+  OSX:
+```
+Library/Application Support/Steam/steamapps/common/Civilization VI
+```
+  ... and then right click, "Show Package Contents", then navigate to...
+```
+Contents/Assets/DLC
 ```
 
 * Extract the "cqui" folder to the DLC folder
@@ -125,7 +136,9 @@ Please see the [issue tracker](https://github.com/chaorace/cqui/issues) for an u
 * @zgavin for UI bugfixes in PRs #1 and #2
 * @olegbl for the Amenities overview overhaul in PR #4 and multiple UI bugfixes (PRs #9 and #12)
   1. Additional kudos to /u/mateusarc from the Civilization subreddit for his original concept art
-* @jacks0nX for the map pin additions in PR #21 and UI/Civilopedia improvements in #24
-* /u/dli511 @ Reddit for his bug report relating to purchasing buildings
+* @jacks0nX for localization in #20 the map pin additions in PR #21 and UI/Civilopedia improvements in #24 and #32
+* /u/dli511 @ Reddit for their bug report relating to purchasing buildings
+* /u/Nitrium @ Reddit for their bug report relating to broken Gossip notifications
+* /u/Hitesh0630 @ Reddit for their bug report relating to production queue not refreshing on changing citizen assignment
 * The lovely folks over at Civfanatics for their guides, knowledge, tools, and resources
 * The even lovelier folks over at /r/civ for their input and testing
