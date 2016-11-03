@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Mod id="03B8BDDE-DEAD-BEEF-9540-26E685E3156E" version="0.51">
+<Mod id="03B8BDDE-DEAD-BEEF-9540-26E685E3156E" version="0.6">
 	<Properties>
 		<Name>Chao Quick UI</Name>
 		<Description>Reduce clicks and make empire management easy</Description>
