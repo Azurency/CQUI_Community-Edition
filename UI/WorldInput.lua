@@ -975,8 +975,8 @@ function DefaultKeyDownHandler( uiKey:number )
 					LuaEvents.CQUI_CityviewDisable();
 					UI.SelectNextReadyUnit();
 				else
-					LuaEvents.CQUI_CityviewEnable();
 					LuaEvents.CQUI_GoNextCity();
+					LuaEvents.CQUI_CityviewEnable();
 				end
 			end
 		else --Classic binds that would overlap with the enhanced binds
