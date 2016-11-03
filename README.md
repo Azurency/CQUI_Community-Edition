@@ -89,6 +89,12 @@
 * City States with Trade Quest have an icon showing they have that quest
 * Tourism and Visibility bonus is now on each trade route
 
+### Next City Plot Features:
+
+* Shows target and timing of next cultural border growth
+
+![](http://i.imgur.com/PUwoxz3.png)
+
 # How to use
 * Download the latest release from
 https://github.com/chaorace/cqui/releases/
@@ -115,6 +121,7 @@ Please see the [issue tracker](https://github.com/chaorace/cqui/issues) for an u
 # THANKS:
 * @Vans163 for his QUI mod and the active commits he makes that I love to merge <3
 * astog from the CivFanatics modding community for his [Better Trade Routes mod](http://forums.civfanatics.com/threads/better-trade-screen.602636/)
+* Ace from the CivFanatics modding community for his [Next City Plot mod](http://forums.civfanatics.com/resources/next-city-plot-by-ace.25437/)
 * @zgavin for UI bugfixes in PRs #1 and #2
 * @olegbl for the Amenities overview overhaul in PR #4 and multiple UI bugfixes (PRs #9 and #12)
   1. Additional kudos to /u/mateusarc from the Civilization subreddit for his original concept art
