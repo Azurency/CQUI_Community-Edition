@@ -128,7 +128,7 @@ local m_kTutorialUnitMoveRestrictions	:table = nil;		-- Restrictions for moving 
 
 --CQUI MEMBERS
 local CQUI_cityview = false;
-
+local CQUI_hotkeyMode = 1; -- 0: V-Style with enhancements 1: V-Style 2: No changes
 
 -- ===========================================================================
 --	FUNCTIONS
@@ -916,15 +916,141 @@ end
 
 -- ===========================================================================
 -- ===========================================================================
+function CQUI_BuildImprovement (unit, improvementHash: number)
+	local tParameters = {};
+	tParameters[UnitOperationTypes.PARAM_X] = unit:GetX();
+	tParameters[UnitOperationTypes.PARAM_Y] = unit:GetY();
+	tParameters[UnitOperationTypes.PARAM_IMPROVEMENT_TYPE] = improvementHash;
+
+	UnitManager.RequestOperation( unit, UnitOperationTypes.BUILD_IMPROVEMENT, tParameters );
+end
+
 function DefaultKeyDownHandler( uiKey:number )
 	local keyPanChanged :boolean = false;
-    if uiKey == Keys.VK_ALT then
+	
+	if uiKey == Keys.VK_ALT then
 		if m_isALTDown == false then
 			m_isALTDown = true;
 			EndDragMap();
 			ReadyForDragMap();
 		end
     end
+	
+	--CQUI Keybinds
+	if CQUI_hotkeyMode ~= 0 then
+		if CQUI_hotkeyMode == 2 then
+			if( uiKey == Keys.W ) then
+				keyPanChanged = true;
+				m_isUPpressed = true;
+			end
+			if( uiKey == Keys.D ) then
+				keyPanChanged = true;
+				m_isRIGHTpressed = true;
+			end
+			if( uiKey == Keys.S ) then
+				keyPanChanged = true;
+				m_isDOWNpressed = true;
+			end
+			if( uiKey == Keys.A ) then
+				keyPanChanged = true;
+				m_isLEFTpressed = true;
+			end
+			if( uiKey == Keys.E ) then
+				if(CQUI_cityview) then
+					LuaEvents.CQUI_GoNextCity();
+				else
+					UI.SelectNextReadyUnit();
+				end
+			end
+			if( uiKey == Keys.Q ) then
+				if(CQUI_cityview) then
+					LuaEvents.CQUI_GoPrevCity();
+				else
+					UI.SelectPrevReadyUnit();
+				end
+			end
+			
+			if( uiKey == Keys.VK_SHIFT ) then
+				if(CQUI_cityview) then
+					LuaEvents.CQUI_CityviewDisable();
+					UI.SelectNextReadyUnit();
+				else
+					LuaEvents.CQUI_CityviewEnable();
+					LuaEvents.CQUI_GoNextCity();
+				end
+			end
+		else --Classic binds that would overlap with the enhanced binds
+			if( uiKey == Keys.Q ) then
+				CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), -80493497); --Quarry
+			end
+			if( uiKey == Keys.S ) then
+				UnitManager.RequestCommand(UI.GetHeadSelectedUnit(), UnitOperationTypes.AIR_ATTACK);
+			end
+		end
+		-- Fortify until healed hotkey
+		if( uiKey == Keys.H ) then
+			UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), 2126026491); -- OH MY GOD IT WAS SO HARD TO FIND THAT ID. WHAT WAS FIRAXIS THINKING
+		end
+		-- Focus Capital hotkey
+		if( uiKey == Keys.VK_HOME ) then
+			UI.SelectCity(Players[Game.GetLocalPlayer()]:GetCities():GetCapitalCity());
+		end
+		if( uiKey == Keys.VK_BACK ) then
+			UnitManager.RequestCommand(UI.GetHeadSelectedUnit(), UnitCommandTypes.CANCEL);
+		end
+		if( uiKey == Keys.I ) then
+			CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 168372657); --Farm
+		end
+		if( uiKey == Keys.P ) then
+			CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 154488225); --Pasture
+			CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 1523996587); --Plantation
+		end
+		if( uiKey == Keys.N ) then
+			CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 1001859687); --Mine
+			UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), UnitOperationTypes.WMD_STRIKE);
+		end
+		if( uiKey == Keys.H ) then
+			CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), -1819558972); --Camp
+		end
+		if( uiKey == Keys.H ) then
+			CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 2048582848); --Lumber Mill
+		end
+		if( uiKey == Keys.R ) then
+			CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 115772143); --Road
+			UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), UnitOperationTypes.REBASE);
+		end
+		if( uiKey == Keys.F ) then
+			CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 578093457); --Fishing Boats
+			CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 1694280827); --Fort
+			UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), -41338758); --Sleep
+		end
+		if( uiKey == Keys.O ) then
+			CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), -1355513600); --Oil Well
+			CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), -396628467); --Offshore Platform
+		end
+		if( uiKey == Keys.Y ) then
+			LuaEvents.CQUI_Option_ToggleYields();
+		end
+		if( uiKey == Keys.VK_OEM_PERIOD ) then
+			UI.SelectNextReadyUnit();
+		end
+		if( uiKey == Keys.VK_OEM_COMMA ) then
+			UI.SelectPrevReadyUnit();
+		end
+		if( m_isALTDown ) then --Overridden classic binds get an alt-version as well as the normal alt-shortcuts
+			if( uiKey == Keys.C ) then
+				UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), UnitOperationTypes.HARVEST_RESOURCE);
+				UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), UnitOperationTypes.REMOVE_FEATURE);
+			end
+			if( uiKey == Keys.Q ) then
+				CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), -80493497); --Quarry
+			end
+			if( uiKey == Keys.S ) then
+				UnitManager.RequestCommand(UI.GetHeadSelectedUnit(), UnitOperationTypes.AIR_ATTACK);
+			end
+		end
+	end
+
     if( uiKey == Keys.VK_UP ) then
 		keyPanChanged = true;
 		m_isUPpressed = true;
@@ -950,8 +1076,28 @@ end
 -- ===========================================================================
 -- ===========================================================================
 function DefaultKeyUpHandler( uiKey:number )
-	
 	local keyPanChanged	:boolean = false;
+
+	--CQUI Keybinds
+	if CQUI_hotkeyMode == 2 then
+		if( uiKey == Keys.W ) then
+			m_isUPpressed = false;
+			keyPanChanged = true;
+		end
+		if( uiKey == Keys.D ) then
+			m_isRIGHTpressed = false;
+			keyPanChanged = true;
+		end
+		if( uiKey == Keys.S ) then
+			m_isDOWNpressed = false;
+			keyPanChanged = true;
+		end
+		if( uiKey == Keys.A ) then
+			m_isLEFTpressed = false;
+			keyPanChanged = true;
+		end
+	end
+	
     if uiKey == Keys.VK_ALT then
 		if m_isALTDown == true then
 			m_isALTDown = false;
@@ -1087,6 +1233,7 @@ end
 function OnInterfaceModeEnter_CityManagement( eNewMode:number )
 	UIManager:SetUICursor(CursorTypes.RANGE_ATTACK);	
 	UILens.SetActive("CityManagement");
+	UILens.SetLayerHexesColoredArea( LensLayers.CITY_MANAGEMENT, Game.GetLocalPlayer(), UI.GetHeadSelectedCity():GetCulture():GetNextPlot(), UI.GetColorValue("COLOR_DISGUSTING_APPEAL") );
 end
 
 -- ===========================================================================
@@ -3344,8 +3491,9 @@ function Initialize()
 	ContextPtr:SetShutdown( OnShutdown );
 	
 	-- CQUI Events
-	LuaEvents.CQUI_WorldInput_CityviewEnabled.Add( function() CQUI_cityview = true; end );
-	LuaEvents.CQUI_WorldInput_CityviewDisabled.Add( function() CQUI_cityview = false; end );
+	LuaEvents.CQUI_WorldInput_CityviewEnable.Add( function() CQUI_cityview = true; end );
+	LuaEvents.CQUI_WorldInput_CityviewDisable.Add( function() CQUI_cityview = false; end );
+	LuaEvents.CQUI_Option_ToggleBindings.Add( function(mode: number) CQUI_hotkeyMode = mode; end );
 	
 	Controls.DebugStuff:SetHide(not m_isDebuging);
 	-- Popup setup

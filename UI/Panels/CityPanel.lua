@@ -1012,6 +1012,8 @@ function Initialize()
 	LuaEvents.ProductionPanel_Close.Add( OnProductionPanelClose );
 	LuaEvents.Tutorial_CityPanelOpen.Add( OnTutorialOpen );
 	LuaEvents.Tutorial_ContextDisableItems.Add( OnTutorial_ContextDisableItems );
+	LuaEvents.CQUI_GoNextCity.Add( CQUI_OnNextCity );
+	LuaEvents.CQUI_GoPrevCity.Add( CQUI_OnPreviousCity );
 
 	-- Truncate possible static text overflows
 	TruncateStringWithTooltip(Controls.BreakdownLabel,	MAX_BEFORE_TRUNC_STATIC_LABELS,	Controls.BreakdownLabel:GetText());

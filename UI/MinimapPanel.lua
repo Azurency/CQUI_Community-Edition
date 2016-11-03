@@ -49,6 +49,20 @@ local m_wasMouseInMinimap		:boolean = false; -- Was the mouse over the minimap t
 --	FUNCTIONS
 -- ===========================================================================
 
+-- CQUI Options Panel logic
+function CQUI_OnToggleBindings(mode: number)
+	Controls.CQUI_ToggleBindings0:SetCheck(false);
+	Controls.CQUI_ToggleBindings1:SetCheck(false);
+	Controls.CQUI_ToggleBindings2:SetCheck(false);
+	if(mode == 0) then
+		Controls.CQUI_ToggleBindings0:SetCheck(true);
+	elseif(mode == 1) then
+		Controls.CQUI_ToggleBindings1:SetCheck(true);
+	elseif(mode == 2) then
+		Controls.CQUI_ToggleBindings2:SetCheck(true);
+	end
+end
+
 -- ===========================================================================
 function GetContinentsCache()
 	if m_ContinentsCache == nil then
@@ -166,8 +180,10 @@ function ToggleYieldIcons()
 	UserConfiguration.ShowMapYield( showMapYield );
 	if showMapYield then
 		LuaEvents.MinimapPanel_ShowYieldIcons();
+		Controls.ToggleYieldsButton:SetCheck(true);
 	else
 		LuaEvents.MinimapPanel_HideYieldIcons();
+		Controls.ToggleYieldsButton:SetCheck(false);
 	end
 end
 
@@ -749,6 +765,9 @@ function Initialize()
 	
 	Controls.CQUI_ToggleTechPopup:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_Option_ToggleTechPopup(); end);
 	Controls.CQUI_ToggleTechVoiceover:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_Option_ToggleTechVoiceover(); end);
+	Controls.CQUI_ToggleBindings2:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_Option_ToggleBindings(2); end);
+	Controls.CQUI_ToggleBindings1:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_Option_ToggleBindings(1); end);
+	Controls.CQUI_ToggleBindings0:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_Option_ToggleBindings(0); end);
 
     -- Make sure the StrategicSwitcherButton has the correct image when the game starts in StrategicView
     if UI.GetWorldRenderView() == WorldRenderView.VIEW_2D then
@@ -764,5 +783,9 @@ function Initialize()
 	LuaEvents.NotificationPanel_ShowContinentLens.Add(OnToggleContinentLensExternal);
 	LuaEvents.Tutorial_DisableMapDrag.Add( OnTutorial_DisableMapDrag );
     LuaEvents.Tutorial_SwitchToWorldView.Add( OnTutorial_SwitchToWorldView );
+	
+	-- CQUI Handlers
+	LuaEvents.CQUI_Option_ToggleBindings.Add( CQUI_OnToggleBindings );
+	LuaEvents.CQUI_Option_ToggleYields.Add( ToggleYieldIcons );
 end
 Initialize();
