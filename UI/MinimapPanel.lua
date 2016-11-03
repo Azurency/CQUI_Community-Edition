@@ -45,6 +45,7 @@ local m_isMouseDragging			:boolean = false; -- Was LMB clicked inside the minima
 local m_hasMouseDragged			:boolean = false; -- Has there been any movements since m_isMouseDragging became true?
 local m_wasMouseInMinimap		:boolean = false; -- Was the mouse over the minimap the last time we checked?
 
+local CQUI_bigMinimap = true;
 -- ===========================================================================
 --	FUNCTIONS
 -- ===========================================================================
@@ -60,6 +61,20 @@ function CQUI_OnToggleBindings(mode: number)
 		Controls.CQUI_ToggleBindings1:SetCheck(true);
 	elseif(mode == 2) then
 		Controls.CQUI_ToggleBindings2:SetCheck(true);
+	end
+end
+
+--CQUI Minimap size toggling logic
+function CQUI_ToggleMinimapSize()
+	CQUI_bigMinimap = not CQUI_bigMinimap;
+	if(CQUI_bigMinimap) then
+		Controls.MinimapImage:SetSizeVal(512, 256);
+		Controls.MinimapBacking:SetSizeVal(555,340);
+		Controls.MinimapBacking:SetOffsetVal(-17,-125);
+	else
+		Controls.MinimapImage:SetSizeVal(256, 128);
+		Controls.MinimapBacking:SetSizeVal(282,201);
+		Controls.MinimapBacking:SetOffsetVal(-5,7);
 	end
 end
 
@@ -688,7 +703,7 @@ function OnInputHandler( pInputStruct:table )
 		if msg == MouseEvents.RButtonDown then
 			local minix, miniy = GetMinimapMouseCoords( pInputStruct:GetX(), pInputStruct:GetY() );
 			if IsMouseInMinimap( minix, miniy ) then
-				OnCollapseToggle();
+				CQUI_ToggleMinimapSize();
 			end
 		end
 	end
