@@ -137,6 +137,7 @@ Please see the [issue tracker](https://github.com/chaorace/cqui/issues) for an u
 * @olegbl for the Amenities overview overhaul in PR #4 and multiple UI bugfixes (PRs #9 and #12)
   1. Additional kudos to /u/mateusarc from the Civilization subreddit for his original concept art
 * @jacks0nX for localization in #20 the map pin additions in PR #21 and UI/Civilopedia improvements in #24 and #32
+* @perseghini for providing the fix for issue #33
 * /u/dli511 @ Reddit for their bug report relating to purchasing buildings
 * /u/Nitrium @ Reddit for their bug report relating to broken Gossip notifications
 * /u/Hitesh0630 @ Reddit for their bug report relating to production queue not refreshing on changing citizen assignment
