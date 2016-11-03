@@ -31,19 +31,14 @@
 * Tech/Civic Tree and Civilopedia now autofocus the searchbar
 * Civilopedia remembers the last visited page
 * Civic/Tech popups can be disabled. Optionally, the voiceover can still be kept even without the popup.
-
-* Minimap can be toggled between 2x-Mode and original by rightclicking
-
-![](http://i.imgur.com/AyY8HeP.jpg)
-
+* [Minimap can be toggled between 2x-Mode and original by rightclicking](https://gfycat.com/DefinitiveDependableAfricanharrierhawk)
 * Dedicated mod settings menu
 
 ![](http://i.imgur.com/0WFq7EL.png)
 
-* [Minimap expando is easier to click. Minimap now also rolls up when right clicked](https://gfycat.com/ElementaryRectangularGalago)
-* Unit actions like sell/delete are no longer hidden behind an expando
-
 * Civ V keybinds implemented. Two modes: Classic, a faithful recreation of the Civ V binding scheme. Enhanced,  Civ V binding scheme with WASD assigned to camera control, Q/E assigned to city/unit cycling, and Shift assigned to shifting focus between city and unit selection modes.
+
+* Unit actions like sell/delete are no longer hidden behind an expando
 
 ![](http://i.imgur.com/x1xZtyY.png)
 
@@ -61,7 +56,7 @@
 
 * "Smart Banner" Toggleable option to display a green icon indicating non-locked citizens and district icons indicating built districts.
 
-![](http://i.imgur.com/FEdJQ61.png)
+![](http://i.imgur.com/XLVP92n.png)
 
 * Luxury resources are displayed in the top bar alongside strategic resources
 
