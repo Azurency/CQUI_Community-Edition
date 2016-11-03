@@ -54,11 +54,6 @@
               <Label				ID="CityHousingInsufficientIcon"	  Anchor="L,C"	Style="FontNormal20" String="[ICON_HousingInsufficient]"/>
               <Label				ID="CityAmenitiesInsufficientIcon"	Anchor="L,C"	Style="FontNormal20" String="[ICON_AmenitiesInsufficient]"/>
 
-              <Label ID="CityCanBuildObelisk" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" O "/>
-              <Label ID="CityCanBuildGranary" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" G "/>
-              <Label ID="CityCanBuildWatermill" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" W "/>
-              <Label ID="CityCanBuildSewer" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" S "/>
-
               <Label ID="CityUnlockedCitizen" Hidden="1" Anchor="L,C" String="[ICON_FOOD]"/>
 
               <Label ID="CityBuiltDistrictAquaduct" Hidden="1" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_AQUEDUCT]"/>
@@ -68,28 +63,15 @@
               <Label ID="CityBuiltDistrictMbanza" Hidden="1" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_MBANZA]"/>
 
               <Label ID="CityBuiltDistrictCampus" Hidden="1" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_CAMPUS]"/>
-              <Label ID="CityCanBuildDistrictCampus1" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" L "/>
-              <Label ID="CityCanBuildDistrictCampus2" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" U "/>
-              <Label ID="CityCanBuildDistrictCampus3" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" R "/>
 
               <Label ID="CityBuiltDistrictTheatre" Hidden="1" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_THEATER]"/>
               <Label ID="CityBuiltDistrictAcropolis" Hidden="1" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_ACROPOLIS]"/>
-              <Label ID="CityCanBuildDistrictTheatre1" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" A "/>
-              <Label ID="CityCanBuildDistrictTheatre21" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" T "/>
-              <Label ID="CityCanBuildDistrictTheatre22" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" R "/>
-              <Label ID="CityCanBuildDistrictTheatre3" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" B "/>
 
 
               <Label ID="CityBuiltDistrictIndustrial" Hidden="1" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_INDUSTRIAL_ZONE]"/>
               <Label ID="CityBuiltDistrictHansa" Hidden="1" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_HANSA]"/>
-              <Label ID="CityCanBuildDistrictIndustrial1" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" W "/>
-              <Label ID="CityCanBuildDistrictIndustrial2" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" F "/>
-              <Label ID="CityCanBuildDistrictIndustrial3" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" P "/>
 
               <Label ID="CityBuiltDistrictCommercial" Hidden="1" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_COMMERCIAL_HUB]"/>
-              <Label ID="CityCanBuildDistrictCommercial1" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" M "/>
-              <Label ID="CityCanBuildDistrictCommercial2" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" B "/>
-              <Label ID="CityCanBuildDistrictCommercial3" Hidden="1" Anchor="L,C" Style="FontNormal20" String=" S "/>
 
               <Label ID="CityBuiltDistrictEncampment" Hidden="1" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_ENCAMPMENT]"/>
 
