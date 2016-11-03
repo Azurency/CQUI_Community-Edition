@@ -2241,7 +2241,8 @@ function Initialize()
 	LuaEvents.NotificationPanel_ChooseProduction.Add( OnNotificationPanelChooseProduction );
 	LuaEvents.StrageticView_MapPlacement_ProductionOpen.Add( OnStrategicViewMapPlacementProductionOpen );
 	LuaEvents.Tutorial_ProductionOpen.Add( OnTutorialProductionOpen );	
-
+	
+	Events.CityWorkerChanged.Add(Refresh);
 	Events.CityProductionChanged.Add( OnCityProductionChanged );
 	Events.CityProductionCompleted.Add(OnCityProductionCompleted);
 
