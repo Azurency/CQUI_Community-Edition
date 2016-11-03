@@ -79,14 +79,12 @@
               <Label ID="CityBuiltDistrictRoyalNavy" Hidden="1" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_ROYAL_NAVY_DOCKYARD]"/>
 
               <Label ID="CityBuiltDistrictSpaceport" Hidden="1" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_SPACEPORT]"/>
-
-              <!-- These are broken for some reason -->
-              <!--<Label ID="CityBuiltDistrictEntertainment" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_ENTERTAINMENT_COMPLEX]"/>
-              <Label ID="CityBuiltDistrictHoly" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_HOLY_SITE]"/>
-              <Label ID="CityBuiltDistrictAerodrome" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_AERODROME]"/>
-              <Label ID="CityBuiltDistrictStreetCarnival" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_STREET_CARNIVAL]"/>
-              <Label ID="CityBuiltDistrictLavra" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_LAVRA]"/>
-         	  -->
+              
+			  <Image ID="CityBuiltDistrictEntertainment" Hidden="1" Icon="ICON_DISTRICT_ENTERTAINMENT_COMPLEX" Size="20,20" Anchor="L,C"/>
+			  <Image ID="CityBuiltDistrictHoly" Hidden="1" Icon="ICON_DISTRICT_HOLY_SITE" Size="20,20" Anchor="L,C"/>
+			  <Image ID="CityBuiltDistrictAerodrome" Hidden="1" Icon="ICON_DISTRICT_AERODROME" Size="20,20" Anchor="L,C"/>
+			  <Image ID="CityBuiltDistrictStreetCarnival" Hidden="1" Icon="ICON_DISTRICT_STREET_CARNIVAL" Size="20,20" Anchor="L,C"/>
+			  <Image ID="CityBuiltDistrictLavra" Hidden="1" Icon="ICON_DISTRICT_LAVRA" Size="20,20" Anchor="L,C"/>
 
 							<Label				ID="CityQuestIcon"							Anchor="L,C"	Style="FontNormal20" />
 							<Label				ID="CityName"										Anchor="L,C"	Style="HeaderSmallCaps" String="BALTIMORE" />
