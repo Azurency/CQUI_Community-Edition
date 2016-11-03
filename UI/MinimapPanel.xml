@@ -45,7 +45,7 @@
 				<Stack Anchor="R,T" Offset="20,5" StackGrowth="Bottom" StackPadding="1">
 					<Container Size="200,30" AutoSize="1" Anchor="R,T">
 						<CheckBox	ID="CQUI_ToggleBindings2" Anchor="R,T"	Style="WorldTrackerCheckBox" TextOffset="-5" String="Enhanced" WrapWidth="180" Align="Right"
-							ToolTip="Civ V Binds with the following changes:[NEWLINE]  WASD camera control[NEWLINE]  Q/E unit/city cycling[NEWLINE]  Shift toggles city/unit selection[NEWLINE]  Quarry/Airstrike are moved to alt-key + Q/S[NEWLINE]  NOTE: UNBIND W IN SETTINGS OR WASD WON'T WORK!"
+							ToolTip="Civ V Binds with the following changes:[NEWLINE]  WASD camera control[NEWLINE]  Q/E unit/city cycling[NEWLINE]  Shift toggles city/unit selection[NEWLINE]  Quarry/Airstrike are moved to alt-key + Q/S[NEWLINE]  NOTE:UNBIND W/E IN SETTINGS OR THINGS WON'T WORK!"
 						/>
 					</Container>
 					<Container Size="200,30" AutoSize="1" Anchor="R,T">
