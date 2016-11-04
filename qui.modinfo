@@ -15,6 +15,7 @@
 				<File>UI/MapPinManager.lua</File>
 				<File>UI/MinimapPanel.lua</File>
 				<File>UI/MinimapPanel.xml</File>
+				<File>UI/ProductionPanel.xml</File>
 				<File>UI/TopPanel.lua</File>
 				<File>UI/UnitPanel.xml</File>
 				<File>UI/WorldInput.lua</File>
@@ -68,6 +69,7 @@
 		<File>UI/MapPinManager.lua</File>
 		<File>UI/MinimapPanel.lua</File>
 		<File>UI/MinimapPanel.xml</File>
+		<File>UI/ProductionPanel.xml</File>
 		<File>UI/TopPanel.lua</File>
 		<File>UI/UnitPanel.xml</File> 
 		<File>UI/WorldInput.lua</File>
