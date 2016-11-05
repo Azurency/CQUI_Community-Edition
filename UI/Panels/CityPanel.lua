@@ -64,25 +64,24 @@ local m_kTutorialDisabledControls	:table	= nil;
 
 local CQUI_cityview = false;
 local CQUI_usingStrikeButton = false;
+local CQUI_wonderMode = false;
 
 function CQUI_CityviewEnableManager()
-	if(not CQUI_cityview) then
-		LuaEvents.CQUI_ProductionPanel_CityviewEnable();
-		LuaEvents.CQUI_CityPanel_CityviewEnable();
-		LuaEvents.CQUI_CityPanelOverview_CityviewEnable();
-		LuaEvents.CQUI_WorldInput_CityviewEnable();
-		CQUI_cityview = true;
-	end
+	CQUI_cityview = true;
+	CQUI_wonderMode = false;
+	LuaEvents.CQUI_ProductionPanel_CityviewEnable();
+	LuaEvents.CQUI_CityPanel_CityviewEnable();
+	LuaEvents.CQUI_CityPanelOverview_CityviewEnable();
+	LuaEvents.CQUI_WorldInput_CityviewEnable();
 end
 
 function CQUI_CityviewDisableManager()
-	if(CQUI_cityview) then
-		LuaEvents.CQUI_ProductionPanel_CityviewDisable();
-		LuaEvents.CQUI_CityPanel_CityviewDisable();
-		LuaEvents.CQUI_CityPanelOverview_CityviewDisable();
-		LuaEvents.CQUI_WorldInput_CityviewDisable();
-		CQUI_cityview = false;
-	end
+	CQUI_cityview = false;
+	CQUI_wonderMode = false;
+	LuaEvents.CQUI_ProductionPanel_CityviewDisable();
+	LuaEvents.CQUI_CityPanel_CityviewDisable();
+	LuaEvents.CQUI_CityPanelOverview_CityviewDisable();
+	LuaEvents.CQUI_WorldInput_CityviewDisable();
 end
 
 function CQUI_OnCityviewEnabled()
@@ -107,11 +106,12 @@ function CQUI_OnCityviewDisabled()
 	UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
 end
 
-function CQUI_WonderMode()
+function CQUI_WonderModeEnabled()
+	CQUI_cityview = false;
+	CQUI_wonderMode = true;
 	Close();
 	UILens.ToggleLayerOff(LensLayers.PURCHASE_PLOT);
 	UILens.ToggleLayerOff(LensLayers.CITIZEN_MANAGEMENT);
-	UI.SetFixedTiltMode(false);
 end
 
 LuaEvents.CQUI_CityPanel_CityviewEnable.Add( CQUI_OnCityviewEnabled);
@@ -124,9 +124,15 @@ LuaEvents.CQUI_Strike_Exit.Add (function() CQUI_usingStrikeButton = false; end)
 function CQUI_OnInterfaceModeChanged( eOldMode:number, eNewMode:number )	
 	if(eOldMode == InterfaceModeTypes.CITY_MANAGEMENT or eOldMode == InterfaceModeTypes.DISTRICT_PLACEMENT or eOldMode == InterfaceModeTypes.BUILDING_PLACEMENT) then
 		if(eNewMode == InterfaceModeTypes.DISTRICT_PLACEMENT or eNewMode == InterfaceModeTypes.BUILDING_PLACEMENT) then 
-			CQUI_WonderMode();
+			CQUI_WonderModeEnabled();
+		elseif(eNewMode ~= InterfaceModeTypes.CITY_MANAGEMENT) then
+			if(CQUI_wonderMode) then
+				LuaEvents.CQUI_CityviewEnable();
+			else
+				LuaEvents.CQUI_CityviewDisable();
+			end
 		else
-			LuaEvents.CQUI_CityviewDisable();
+			LuaEvents.CQUI_CityviewEnable();
 		end
 	elseif(eOldMode == InterfaceModeTypes.CITY_RANGE_ATTACK) then 
 		UI.DeselectAllCities()
