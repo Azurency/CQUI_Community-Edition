@@ -955,6 +955,54 @@ function DefaultKeyDownHandler( uiKey:number )
 				keyPanChanged = true;
 				m_isLEFTpressed = true;
 			end
+		end
+	end
+    if( uiKey == Keys.VK_UP ) then
+		keyPanChanged = true;
+		m_isUPpressed = true;
+    end
+	if( uiKey == Keys.VK_RIGHT ) then
+		keyPanChanged = true;
+		m_isRIGHTpressed = true;
+    end
+	if( uiKey == Keys.VK_DOWN ) then
+		keyPanChanged = true;
+		m_isDOWNpressed = true;
+    end
+	if( uiKey == Keys.VK_LEFT ) then
+		keyPanChanged = true;
+		m_isLEFTpressed = true;
+    end
+	if( keyPanChanged == true ) then
+		ProcessPan(m_edgePanX,m_edgePanY);
+	end
+	return false;
+end
+
+-- ===========================================================================
+-- ===========================================================================
+function DefaultKeyUpHandler( uiKey:number )
+	local keyPanChanged	:boolean = false;
+
+	--CQUI Keybinds
+	if CQUI_hotkeyMode ~= 0 then
+		if CQUI_hotkeyMode == 2 then
+			if( uiKey == Keys.W ) then
+				m_isUPpressed = false;
+				keyPanChanged = true;
+			end
+			if( uiKey == Keys.D ) then
+				m_isRIGHTpressed = false;
+				keyPanChanged = true;
+			end
+			if( uiKey == Keys.S ) then
+				m_isDOWNpressed = false;
+				keyPanChanged = true;
+			end
+			if( uiKey == Keys.A ) then
+				m_isLEFTpressed = false;
+				keyPanChanged = true;
+			end
 			if( uiKey == Keys.E ) then
 				if(CQUI_cityview) then
 					LuaEvents.CQUI_GoNextCity();
@@ -969,7 +1017,6 @@ function DefaultKeyDownHandler( uiKey:number )
 					UI.SelectPrevReadyUnit();
 				end
 			end
-			
 			if( uiKey == Keys.VK_SHIFT ) then
 				if(CQUI_cityview) then
 					LuaEvents.CQUI_CityviewDisable();
@@ -1047,53 +1094,6 @@ function DefaultKeyDownHandler( uiKey:number )
 			if( uiKey == Keys.S ) then
 				UnitManager.RequestCommand(UI.GetHeadSelectedUnit(), UnitOperationTypes.AIR_ATTACK);
 			end
-		end
-	end
-
-    if( uiKey == Keys.VK_UP ) then
-		keyPanChanged = true;
-		m_isUPpressed = true;
-    end
-	if( uiKey == Keys.VK_RIGHT ) then
-		keyPanChanged = true;
-		m_isRIGHTpressed = true;
-    end
-	if( uiKey == Keys.VK_DOWN ) then
-		keyPanChanged = true;
-		m_isDOWNpressed = true;
-    end
-	if( uiKey == Keys.VK_LEFT ) then
-		keyPanChanged = true;
-		m_isLEFTpressed = true;
-    end
-	if( keyPanChanged == true ) then
-		ProcessPan(m_edgePanX,m_edgePanY);
-	end
-	return false;
-end
-
--- ===========================================================================
--- ===========================================================================
-function DefaultKeyUpHandler( uiKey:number )
-	local keyPanChanged	:boolean = false;
-
-	--CQUI Keybinds
-	if CQUI_hotkeyMode == 2 then
-		if( uiKey == Keys.W ) then
-			m_isUPpressed = false;
-			keyPanChanged = true;
-		end
-		if( uiKey == Keys.D ) then
-			m_isRIGHTpressed = false;
-			keyPanChanged = true;
-		end
-		if( uiKey == Keys.S ) then
-			m_isDOWNpressed = false;
-			keyPanChanged = true;
-		end
-		if( uiKey == Keys.A ) then
-			m_isLEFTpressed = false;
-			keyPanChanged = true;
 		end
 	end
 	
