@@ -288,11 +288,16 @@ function ShowCitizens()
 				--pInstance.CitizenButton:SetSizeVal(48, 48);
 				pInstance.CitizenButton:SetHide(isCityCenterPlot);			
 				pInstance.CitizenButton:SetDisabled(isCityCenterPlot);
-
+        
+        --CQUI Citizen buttons tweaks
 				if(tUnits[i] >= 1) then
 					pInstance.CitizenButton:SetTextureOffsetVal(0, CITIZEN_BUTTON_HEIGHT*4);
+					pInstance.CitizenButton:SetSizeVal(80,80);
+          pInstance.CitizenButton:SetAlpha(.35);
 				else
 					pInstance.CitizenButton:SetTextureOffsetVal(0, 0);
+          pInstance.CitizenButton:SetSizeVal(64,64);
+          pInstance.CitizenButton:SetAlpha(.5);
 				end
 
 				if(tMaxUnits[i] > 1) then
@@ -504,6 +509,7 @@ function HideCitizens()
 
 	for _,kInstance in ipairs(m_uiCitizens) do
 		kInstance.CitizenButton:SetHide( true );
+    kInstance.LockedIcon:SetHide( true );
 	end
 	m_uiCitizens = {};
 
