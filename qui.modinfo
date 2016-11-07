@@ -5,7 +5,7 @@
 		<Description>Reduce clicks and make empire management easy</Description>
 		<Teaser>Reduce clicks and make empire management easy</Teaser>
 		<Authors>vans163, chaorace, zgavin, olegbl, jacks0n</Authors>
-		<SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod. Ace for his Next City Plot mod.</SpecialThanks>
+		<SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod.</SpecialThanks>
 	</Properties>
     <Components>
         <ImportFiles id="CQUI_IMPORT_FILES">

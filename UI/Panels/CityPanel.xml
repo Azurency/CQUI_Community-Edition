@@ -37,8 +37,9 @@
               <TextureBar		ID="GrowthTurnsBar"				Anchor="L,T" Offset="2,2"			Size="parent-4,parent-3"		Texture="CityPanel_CitizenMeter"				ShadowColor="255,255,255,100" >
                 <Stack																Anchor="L,C" Offset="5,0"			StackGrowth="Right" StackPadding="2" >
                   <Label		ID="GrowthNum"						Style="CityPanelNumLarge"			String="-"  />
-                  <Label		ID="GrowthLabel"					Style="CityPanelProgressText" String="n/a"  ColorSet="GrowthCS" 	/>
+                  <Label Style="CityPanelNumLarge" String="[ICON_Turn]" Offset="0,-2"/>
                 </Stack>
+                <Label		ID="GrowthLabel"					Style="CityPanelProgressText" String="n/a" Anchor="R,C" Offset="5,0" ColorSet="GrowthCS" 	/>
               </TextureBar>
             </Image>
           </Container>
@@ -93,11 +94,12 @@
             <Image					ID="ProductionIcon"				Anchor="C,C" Offset="0,-2"  Size="80,80"    						Texture="Buildings80" Hidden="1"/>
           </Image>
           <Image						ID="ProductionTurns"			Anchor="R,B" Offset="55,-24"	Size="182,21"							Texture="CityPanel_MeterBacking">
-            <TextureBar			ID="ProductionTurnsBar"		Anchor="L,T" Offset="2,2"			Size="parent-4,parent-3"	Texture="CityPanel_ProductionMeter"				ShadowColor="255,255,255,150">
+            <TextureBar			ID="CurrentProductionProgress"		Anchor="L,T" Offset="2,2"			Size="parent-4,parent-3"	Texture="CityPanel_ProductionMeter"				ShadowColor="255,255,255,150">
               <Stack																	Anchor="L,C" Offset="5,0"			StackGrowth="Right"	StackPadding="4">
-                <Label			ID="ProductionNum"				Style="CityPanelNumLarge"			String="-"  />
-                <Label			ID="ProductionLabel"			Style="CityPanelProgressText" String="n/a"  ColorSet="ResProductionLabelCS" 	/>
+                <Label			ID="CurrentProductionCost"				Style="CityPanelNumLarge"			String="-"  />
+                <Label Style="CityPanelNumLarge" String="[ICON_Turn]" Offset="-4,-2"/>
               </Stack>
+              <Label			ID="ProductionLabel"			Style="CityPanelProgressText" String="n/a"  ColorSet="ResProductionLabelCS" Anchor="R,C" Offset="5,0"	Hidden="1"/>
             </TextureBar>
           </Image>
         </Image>
