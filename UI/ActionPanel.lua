@@ -565,7 +565,7 @@ function OnEndTurnBlockingChanged( ePrevEndTurnBlockingType:number, eNewEndTurnB
 			CheckAutoEndTurn( blockingType );
 		
 			-- If they have auto-unit-cycling off, then don't change the selection.
-			if (not UserConfiguration.IsAutoUnitCycle()) then
+			if (not UserConfiguration.IsAutoUnitCycle() or UI.GetHeadSelectedCity() ~= nil) then
 				return;
 			end
 			
