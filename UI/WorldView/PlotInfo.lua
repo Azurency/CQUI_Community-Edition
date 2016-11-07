@@ -204,7 +204,7 @@ function ShowPurchases()
 						end
 						if (index == pNextPlotID ) then
 							pInstance.NextPlotLabel:SetString("[ICON_Turn]" .. Locale.Lookup("LOC_HUD_CITY_IN_TURNS" , TurnsUntilExpansion ) .. "   ");
-							pInstance.NextPlotLabel:SetToolTipString( " " .. Locale.Lookup( "LOC_HUD_CITY_BORDER_EXPANSION" , TurnsUntilExpansion ).."[ICON_Turn]");
+							pInstance.NextPlotLabel:SetToolTipString( " " .. Round(pCityCulture:GetCurrentCulture(), 1) .. "/" .. pCityCulture:GetNextPlotCultureCost() .. " (+" .. Round(pCityCulture:GetCultureYield(), 1) .. "[ICON_CULTURE]) " .. Locale.Lookup( "LOC_HUD_CITY_BORDER_EXPANSION" , TurnsUntilExpansion ).."[ICON_Turn]");
 							pInstance.NextPlotButton:SetHide( false );
 						end
 						pInstance.PurchaseButton:SetHide( false );
