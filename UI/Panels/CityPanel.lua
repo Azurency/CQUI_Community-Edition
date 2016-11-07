@@ -362,7 +362,7 @@ function ViewMain( data:table )
 				local religionName	:string = Game.GetReligion():GetName(religion.ID);
 				local iconName		:string = "ICON_" .. religion.ReligionType;
 				if religion == data.Religions[DATA_DOMINANT_RELIGION] then
-					local religionIconName		:string = "ICON_" .. religion.ReligionType;
+          Controls.ReligionIcon:SetIcon("ICON_" .. religion.ReligionType);
 					ReligionTooltip = ReligionTooltip.."[NEWLINE][NEWLINE]"..religionName..": "..religion.Followers.." Followers";
 				else
 					if ( religion.ID > -1 and religion.Followers > 0) then 
@@ -510,11 +510,6 @@ function ViewMain( data:table )
 		Controls.LabelButtonRows:SetSizeX( SIZE_MAIN_ROW_LEFT_WIDE );
 	end
 	Controls.LabelButtonRows:ReprocessAnchoring();
-	
-	-- Custom religion icon:
-	if data.Religions[DATA_DOMINANT_RELIGION] ~= nil then
-		Controls.ReligionIcon:SetIcon(religionIconName);
-	end
 	Controls.BreakdownNum:SetText( data.DistrictsNum.."/"..data.DistrictsPossibleNum );
 	Controls.BreakdownLabel:SetText("DISTRICTS");
 	Controls.BreakdownGrid:SetToolTipString(DistrictTooltip);
