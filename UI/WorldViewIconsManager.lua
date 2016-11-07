@@ -183,6 +183,18 @@ function SetResourceIcon( pInstance:table, pPlot, type, state)
 			end
 			table.insert(toolTipItems, resourceString)
 			pInstance.ResourceIcon:SetToolTipString(table.concat(toolTipItems, "[NEWLINE]"));
+			
+			--CQUI: Resource icon becomes transparent after being improved
+			local CQUI_plotWasImproved;
+		      	local CQUI_ICON_LOW_OPACITY	:number = 0x77ffffff;
+		      	if (pPlot:GetImprovementType() == -1) then
+				CQUI_plotWasImproved = false;
+		      	else
+				CQUI_plotWasImproved = true;
+		      	end
+		      	if CQUI_plotWasImproved then
+				pInstance.ResourceIcon:SetColor(CQUI_ICON_LOW_OPACITY);
+		      	end
 		end
 	end
 end
@@ -659,6 +671,7 @@ function Initialize()
 	Events.ResourceVisibilityChanged.Add(OnResourceVisibilityChanged);
 	Events.ResourceAddedToMap.Add(OnResourceChanged);
 	Events.ResourceRemovedFromMap.Add(OnResourceRemovedFromMap);
+	Events.ImprovementAddedToMap.Add( OnResourceChanged );
 	Events.PlotVisibilityChanged.Add(OnPlotVisibilityChanged);
 	Events.PlotMarkerChanged.Add(OnPlotMarkersChanged);
 	Events.UnitSelectionChanged.Add( OnUnitSelectionChanged );
