@@ -1019,7 +1019,7 @@ function DefaultKeyUpHandler( uiKey:number )
 			end
 			if( uiKey == Keys.VK_SHIFT and ContextPtr:LookUpControl("/InGame/TechTree"):IsHidden() and ContextPtr:LookUpControl("/InGame/CivicsTree"):IsHidden()) then
 				if(CQUI_cityview) then
-					LuaEvents.CQUI_CityviewDisable();
+					UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
 					UI.SelectNextReadyUnit();
 				else
 					UI.SelectNextCity();
