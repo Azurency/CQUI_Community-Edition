@@ -22,8 +22,19 @@
 				  <!-- Spacer -->
 				  <Container Size="20,10"/>
 				  
-                  <!-- Icons -->
-                  <Stack ID="IconOptionStack" Anchor="C,T" StackGrowth="Right" Padding="5" WrapWidth="320" WrapGrowth="Down"/>
+                  <!-- Default -->
+				  <Label String="LOC_DEFAULT_BUTTON" Style="CityPanelSubPanelTitle" Anchor="C,C" />
+                  <Stack ID="IconOptionStackDefault" Anchor="C,T" StackGrowth="Right" Padding="5" WrapWidth="320" WrapGrowth="Down"/>
+				  <Container Size="20,10"/>
+				  
+				  <!-- Districts -->
+				  <Label String="LOC_HUD_DISTRICTS" Style="CityPanelSubPanelTitle" Anchor="C,C" />
+				  <Stack ID="IconOptionStackDistricts" Anchor="C,T" StackGrowth="Right" Padding="5" WrapWidth="320" WrapGrowth="Down"/>
+				  <Container Size="20,10"/>
+				  
+				  <!-- Wonders -->
+				  <Label String="LOC_HUD_CITY_WONDERS" Style="CityPanelSubPanelTitle" Anchor="C,C" />
+				  <Stack ID="IconOptionStackWonders" Anchor="C,T" StackGrowth="Right" Padding="5" WrapWidth="320" WrapGrowth="Down"/>
 				  <Container Size="20,10"/>
 				  
                   <!-- Visible to.. -->

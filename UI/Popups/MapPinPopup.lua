@@ -4,6 +4,7 @@
 -- Popup used for creating and editting map pins.
 ----------------------------------------------------------------  
 include( "PlayerTargetLogic" );
+include ("ToolTipHelper");
 
 
 ----------------------------------------------------------------  
@@ -22,8 +23,8 @@ local g_desiredIconName :string = "";
 local g_playerTarget = { targetType = ChatTargetTypes.CHATTARGET_PLAYER, targetID = Game.GetLocalPlayer() };
 
 -- When we aren't quite so crunched on time, it would be good to add the map pins table to the database
-local g_iconPulldownOptions = 
-{	
+local defaultIcons =
+{
 	{ name = "ICON_MAP_PIN_STRENGTH"},
 	{ name = "ICON_MAP_PIN_RANGED"},
 	{ name = "ICON_MAP_PIN_BOMBARD"},
@@ -37,18 +38,10 @@ local g_iconPulldownOptions =
 	{ name = "ICON_MAP_PIN_TRIANGLE"},
 	{ name = "ICON_MAP_PIN_SUN"},
 	{ name = "ICON_MAP_PIN_SQUARE"},
-	{ name = "ICON_MAP_PIN_DIAMOND"},
-	{ name = "ICON_DISTRICT_HOLY_SITE"},
-	{ name = "ICON_DISTRICT_CAMPUS"},
-	{ name = "ICON_DISTRICT_THEATER"},
-	{ name = "ICON_DISTRICT_INDUSTRIAL_ZONE"},
-	{ name = "ICON_DISTRICT_AQUEDUCT"},
-	{ name = "ICON_DISTRICT_HARBOR"},
-	{ name = "ICON_DISTRICT_COMMERCIAL_HUB"},
-	{ name = "ICON_DISTRICT_ENTERTAINMENT_COMPLEX"},
-	{ name = "ICON_DISTRICT_ENCAMPMENT"},
-	{ name = "ICON_DISTRICT_NEIGHBORHOOD"}
+	{ name = "ICON_MAP_PIN_DIAMOND"}
 };
+
+local g_iconPulldownOptions = {};
 
 -------------------------------------------------------------------------------
 -- 
@@ -112,27 +105,61 @@ end
 -- ===========================================================================
 function PopulateIconOptions()
 	g_iconOptionEntries = {};
-	Controls.IconOptionStack:DestroyAllChildren();
-
+	Controls.IconOptionStackDefault:DestroyAllChildren();
+	Controls.IconOptionStackDistricts:DestroyAllChildren();
+	Controls.IconOptionStackWonders:DestroyAllChildren();
+	
 	local controlTable = {};
 	local newIconEntry = {};
-	for i, pair in ipairs(g_iconPulldownOptions) do
-		controlTable = {};
-		newIconEntry = {};
-		ContextPtr:BuildInstanceForControl( "IconOptionInstance", controlTable, Controls.IconOptionStack );
-		SetMapPinIcon(controlTable.Icon, pair.name);
-	    controlTable.IconOptionButton:RegisterCallback(Mouse.eLClick, OnIconOption);
-		controlTable.IconOptionButton:SetVoids(i, -1);
+	
+	local customName = "";
+	local customTooltip = "";
+	local playerId = Game.GetLocalPlayer();
+	local count = 1;
+	
+	local defaultStack = Controls.IconOptionStackDefault;
+	local districtStack = Controls.IconOptionStackDistricts;
+	local wonderStack = Controls.IconOptionStackWonders;
+	
+	-- Add defaults
+	for i, item in ipairs(defaultIcons) do
+		CreateIconEntry(defaultStack, item.name, nil, count);
+		count = count + 1;
+	end
 
-		newIconEntry.IconName = pair.name;
-		newIconEntry.Instance = controlTable;
-		g_iconOptionEntries[i] = newIconEntry;
-
-		UpdateIconOptionColor(i);
+	-- Add districts
+	for item in GameInfo.Districts() do
+		local replaces = GameInfo.DistrictReplaces[item.DistrictType]; 
+		if (not replaces) then
+		print(item.DistrictType);
+			customName = "ICON_" .. item.DistrictType;
+			customTooltip = ToolTipHelper.GetToolTip(item.DistrictType, playerId);
+			
+			-- Invalid item in the GameInfo, for whatever reason
+			if (item.DistrictType ~= "DISTRICT_WONDER") then
+				CreateIconEntry(districtStack, customName, customTooltip, count);
+				count = count + 1;
+			end
+		end
 	end
 	
-	Controls.IconOptionStack:CalculateSize();
-	Controls.IconOptionStack:ReprocessAnchoring();
+	-- Add wonders
+	for item in GameInfo.Buildings() do	
+		local isWonder:boolean = item.MaxWorldInstances ~= -1; 
+		if (isWonder == true) then
+			customName = "ICON_" .. item.BuildingType;
+			customTooltip = ToolTipHelper.GetToolTip(item.BuildingType, playerId);
+			CreateIconEntry(wonderStack, customName, customTooltip, count);  
+			count = count + 1;
+		end
+	end 
+	
+	Controls.IconOptionStackDefault:CalculateSize();
+	Controls.IconOptionStackDefault:ReprocessAnchoring();
+	Controls.IconOptionStackDistricts:CalculateSize();
+	Controls.IconOptionStackDistricts:ReprocessAnchoring();
+	Controls.IconOptionStackWonders:CalculateSize();
+	Controls.IconOptionStackWonders:ReprocessAnchoring();
 	Controls.OptionsStack:CalculateSize();
 	Controls.OptionsStack:ReprocessAnchoring();
 	Controls.WindowContentsStack:CalculateSize();
@@ -140,6 +167,27 @@ function PopulateIconOptions()
 	Controls.WindowStack:CalculateSize();
 	Controls.WindowStack:ReprocessAnchoring();
 	Controls.WindowContainer:ReprocessAnchoring();
+end
+
+function CreateIconEntry(stack, name, tooltip, index)
+	local controlTable = {};
+	local newIconEntry = {};
+	ContextPtr:BuildInstanceForControl( "IconOptionInstance", controlTable, stack );
+	SetMapPinIcon(controlTable.Icon, name);
+	controlTable.IconOptionButton:RegisterCallback(Mouse.eLClick, OnIconOption);
+	controlTable.IconOptionButton:SetVoids(index, -1);
+	
+	if (tooltip ~= nil) then
+		controlTable.IconOptionButton:SetToolTipString(tooltip); 
+	end 
+	
+	table.insert(g_iconPulldownOptions, {name = name, tooltip = tooltip});
+
+	newIconEntry.IconName = name;
+	newIconEntry.Instance = controlTable;
+	g_iconOptionEntries[index] = newIconEntry;
+
+	UpdateIconOptionColor(index);
 end
 
 -- ===========================================================================
@@ -185,8 +233,12 @@ function RequestMapPin(hexX :number, hexY :number)
 		UpdateIconOptionColors();
 		ShowHideSendToChatButton();
 
-		Controls.IconOptionStack:CalculateSize();
-		Controls.IconOptionStack:ReprocessAnchoring();
+		Controls.IconOptionStackDefault:CalculateSize();
+		Controls.IconOptionStackDefault:ReprocessAnchoring();
+		Controls.IconOptionStackDistricts:CalculateSize();
+		Controls.IconOptionStackDistricts:ReprocessAnchoring();
+		Controls.IconOptionStackWonders:CalculateSize();
+		Controls.IconOptionStackWonders:ReprocessAnchoring();
 		Controls.OptionsStack:CalculateSize();
 		Controls.OptionsStack:ReprocessAnchoring();
 		Controls.WindowContentsStack:CalculateSize();
@@ -335,7 +387,6 @@ function Initialize()
 	-- When player info is changed, this pulldown needs to know so it can update itself if it becomes invalid.
 	Events.PlayerInfoChanged.Add(OnMapPinPlayerInfoChanged);
 	Events.LocalPlayerChanged.Add(OnLocalPlayerChanged);
-		
 end
 Initialize();
 
