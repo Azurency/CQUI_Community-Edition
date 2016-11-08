@@ -34,11 +34,15 @@
 * [Minimap can be toggled between 2x-Mode and original by rightclicking](https://gfycat.com/DefinitiveDependableAfricanharrierhawk)
 * Dedicated mod settings menu
 
+![](http://i.imgur.com/0WFq7EL.png)
+
 * Growth/Production progress is enumerated in the city panel
 
 ![](http://i.imgur.com/3kYsEIf.png)
 
-![](http://i.imgur.com/0WFq7EL.png)
+* Improved resource icons are dimmed to emphasize unutilized resources
+
+![](http://i.imgur.com/m32xtQr.png)
 
 * Civ V keybinds implemented. Two modes: Classic, a faithful recreation of the Civ V binding scheme. Enhanced,  Civ V binding scheme with WASD assigned to camera control, Q/E assigned to city/unit cycling, and Shift assigned to shifting focus between city and unit selection modes.
 
@@ -100,6 +104,10 @@
 
 ![](http://i.imgur.com/PUwoxz3.png)
 
+## Video (Outdated)
+
+[Version v0.5](https://youtu.be/VY1-1DxWmm8) (Credit ZeusMoltar9)
+
 # How to use
 * Download the latest release from
 https://github.com/chaorace/cqui/releases/
@@ -134,7 +142,7 @@ Contents/Assets/DLC
 Please see the [issue tracker](https://github.com/chaorace/cqui/issues) for an up to date list, you can also find help and report bugs at our [Gitter](https://gitter.im/Civ6-CQUI/Help)
 
 # THANKS:
-* @Vans163 for his QUI mod and the active commits he makes that I love to merge <3
+* @Vans163 for his original QUI mod :heart:
 * astog from the CivFanatics modding community for his [Better Trade Routes mod](http://forums.civfanatics.com/threads/better-trade-screen.602636/)
 * Ace from the CivFanatics modding community for his [Next City Plot mod](http://forums.civfanatics.com/resources/next-city-plot-by-ace.25437/)
 * Divine Yuri from the CivFanatics modding community for his [Custom City Panel mod](http://forums.civfanatics.com/resources/divine-yuris-custom-city-panel.25430/)
@@ -142,6 +150,7 @@ Please see the [issue tracker](https://github.com/chaorace/cqui/issues) for an u
 * @olegbl for the Amenities overview overhaul in PR #4 and multiple UI bugfixes (PRs #9 and #12)
   1. Additional kudos to /u/mateusarc from the Civilization subreddit for his original concept art
 * @jacks0nX for localization in #20 the map pin additions in PR #21 and UI/Civilopedia improvements in #24 and #32
+* @OfekA for providing the improved resource dimming feature in #54
 * @perseghini for providing the fix for issue #33
 * /u/dli511 @ Reddit for their bug report relating to purchasing buildings
 * /u/Nitrium @ Reddit for their bug report relating to broken Gossip notifications
