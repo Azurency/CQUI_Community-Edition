@@ -49,10 +49,10 @@ function Refresh()
 	local playerCities:table = localPlayer:GetCities();
 	for _, city in playerCities:Members() do
 		if city ~= m_originCity and CanTeleportToCity(city) then
-			print( "Adding city: " .. Locale.Lookup(city:GetName()) )
+			-- print( "Adding city: " .. Locale.Lookup(city:GetName()) )
 			AddCity(city);
 		else
-			print( "Cannot teleport to " .. Locale.Lookup(city:GetName()))
+			-- print( "Cannot teleport to " .. Locale.Lookup(city:GetName()))
 		end
 	end
 
@@ -116,7 +116,7 @@ function OnChangeOriginCityButton()
 		if ( m_newOriginCity:GetID() ~= m_originCity:GetID() ) then
 			TeleportToCity(m_newOriginCity);
 		else
-			print (" cant teleport to the same city")
+			-- print (" cant teleport to the same city")
 		end
 	else
 		print("cities are nil")
@@ -169,10 +169,8 @@ function OnChangeOriginCityFromOverview( city:table )
 
 		-- Is the screen already open?
 		if (m_AnimSupport:IsVisible()) then
-			print("Refreshing")
 			Refresh();
 		else
-			print("Opening")
 			Open();
 		end
 	end	
@@ -208,7 +206,7 @@ end
 function OnCitySelectionChanged(owner, ID, i, j, k, bSelected, bEditable)
 	-- Close if we select a city
 	if m_AnimSupport:IsVisible() and owner == Game.GetLocalPlayer() and owner ~= -1 then
-		Close();
+		OnClose();
 	end
 end
 
@@ -216,14 +214,14 @@ end
 function OnUnitSelectionChanged( playerID : number, unitID : number, hexI : number, hexJ : number, hexK : number, bSelected : boolean, bEditable : boolean)
 	-- Close if we select a unit
 	if m_AnimSupport:IsVisible() and owner == Game.GetLocalPlayer() and owner ~= -1 then
-		Close();
+		OnClose();
 	end
 end
 
 ------------------------------------------------------------------------------------------------
 function OnLocalPlayerTurnEnd()
 	if(GameConfiguration.IsHotseat()) then
-		Close();
+		OnClose();
 	end
 end
 

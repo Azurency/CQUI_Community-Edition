@@ -17,9 +17,10 @@
 
               <Label						ID="TradingPostIcon"	Anchor="L,C" Offset="14,-4"	Style="FontNormal16" FontStyle="Shadow" String="[ICON_TradingPost]" Color="255,0,0,255" EffectColor="255,0,0,255" GradientColor="255,0,0,255" />
               <Label						ID="CityStateQuestIcon"	Anchor="L,C" Offset="-2,-12"	Style="FontNormal16" FontStyle="Shadow" String="[ICON_CityStateQuest]" Color="255,0,0,255" EffectColor="255,0,0,255" GradientColor="255,0,0,255" />
-              <Image						ID="DistenceToCityIcon"		Anchor="R,C" Offset="30,-4"	 Size="22,22" Icon="ICON_MOVES"	IconSize="22" Texture="Stats22.dds"/>
-              <Label						ID="DistenceToCity"		    Anchor="R,C" Offset="16,-4"	Style="FontFlair16"	FontStyle="Stroke" EffectColor="0,0,0,25" />
-              <Label Hidden="1"	ID="RouteTurns"				Anchor="R,C" Offset="14,-2"	Style="FontFlair16"	FontStyle="Stroke" EffectColor="0,0,0,25" String="[ICON_Turn]??" />
+              <Stack StackGrowth="Left"  Offset="14,-4" Anchor="R,C">
+                <Label          ID="TurnsToComplete"        Anchor="R,C" Style="FontFlair16" String="??" FontStyle="Stroke" EffectColor="0,0,0,25" />
+                <Label ID="TurnsToCompleteIcon"  String="[ICON_Turn]" Offset="0,-1" Anchor="R,C" Style="FontFlair16" FontStyle="Stroke" EffectColor="0,0,0,25" />
+              </Stack>
             </Grid>
 
             <!-- Resource Information -->
@@ -60,52 +61,59 @@
         <Grid Size="316,parent-245" Offset="-2,188" Texture="Controls_ContainerBlue" SliceStart="0,0" SliceCorner="3,3" SliceSize="9,9" SliceTextureSize="16,16">
           
           <!-- Sort Yield Stack -->
-          <Stack Size="50,50"  Anchor="L,T" StackGrowth="Right" Offset="27,3" StackPadding="2">
+          <Stack Anchor="L,T" StackGrowth="Right" Offset="21,31" StackPadding="2">
             <GridButton ID="FoodSortButton" Size="38,18" Color="255,255,255,255" Style="PanelButtonLightweight">
               <Label ID="FoodSortLabel" Anchor="C,C" Offset="10,1" Style="FontNormal12" String="[Icon_Food]"/>
-              <Image ID="FoodDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-7,0"/>
-              <Image ID="FoodAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-7,-4"/>
+              <Label ID="FoodSortOrder" Hidden="1" Anchor="C,C" Offset="-1,7" String="9" Style="FontNormal12"/>
+              <Image ID="FoodDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-8,0"/>
+              <Image ID="FoodAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-8,-5"/>
             </GridButton>
 
             <GridButton ID="ProductionSortButton" Size="38,18" Color="255,255,255,255" Style="PanelButtonLightweight">
               <Label ID="ProductionSortLabel" Anchor="C,C" Offset="10,1" Style="FontNormal12" String="[Icon_Production]"/>
-              <Image ID="ProductionDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-7,0"/>
-              <Image ID="ProductionAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-7,-4"/>
+              <Label ID="ProductionSortOrder" Hidden="1" Anchor="C,C" Offset="-1,7" String="9" Style="FontNormal12"/>
+              <Image ID="ProductionDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-8,0"/>
+              <Image ID="ProductionAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-8,-5"/>
             </GridButton>
 
             <GridButton ID="GoldSortButton" Size="38,18" Color="255,255,255,255" Style="PanelButtonLightweight">
               <Label ID="GoldSortLabel" Anchor="C,C" Offset="10,1" Style="FontNormal12" String="[Icon_Gold]"/>
-              <Image ID="GoldDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-7,0"/>
-              <Image ID="GoldAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-7,-4"/>
+              <Label ID="GoldSortOrder" Hidden="1" Anchor="C,C" Offset="-1,7" String="9" Style="FontNormal12"/>
+              <Image ID="GoldDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-8,0"/>
+              <Image ID="GoldAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-8,-5"/>
             </GridButton>
 
             <GridButton ID="ScienceSortButton" Size="38,18" Color="255,255,255,255" Style="PanelButtonLightweight">
               <Label ID="ScienceSortLabel" Anchor="C,C" Offset="10,1" Style="FontNormal12" String="[Icon_Science]"/>
-              <Image ID="ScienceDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-7,0"/>
-              <Image ID="ScienceAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-7,-4"/>
+              <Label ID="ScienceSortOrder" Hidden="1" Anchor="C,C" Offset="-1,7" String="9" Style="FontNormal12"/>
+              <Image ID="ScienceDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-8,0"/>
+              <Image ID="ScienceAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-8,-5"/>
             </GridButton>
 
             <GridButton ID="CultureSortButton" Size="38,18" Color="255,255,255,255" Style="PanelButtonLightweight">
               <Label ID="CultureSortLabel" Anchor="C,C" Offset="10,1" Style="FontNormal12" String="[Icon_Culture]"/>
-              <Image ID="CultureDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-7,0"/>
-              <Image ID="CultureAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-7,-4"/>
+              <Label ID="CultureSortOrder" Hidden="1" Anchor="C,C" Offset="-1,7" String="9" Style="FontNormal12"/>
+              <Image ID="CultureDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-8,0"/>
+              <Image ID="CultureAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-8,-5"/>
             </GridButton>
 
             <GridButton ID="FaithSortButton" Size="38,18" Color="255,255,255,255" Style="PanelButtonLightweight">
-              <Label ID="FaithSortLabel" Anchor="C,C" Offset="10,0" Style="FontNormal12" String="[Icon_Faith]"/>
-              <Image ID="FaithDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-7,0"/>
-              <Image ID="FaithAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-7,-4"/>
+              <Label ID="FaithSortLabel" Anchor="C,C" Offset="10,1" Style="FontNormal12" String="[Icon_Faith]"/>
+              <Label ID="FaithSortOrder" Hidden="1" Anchor="C,C" Offset="-1,7" String="9" Style="FontNormal12"/>
+              <Image ID="FaithDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-8,0"/>
+              <Image ID="FaithAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-8,-5"/>
             </GridButton>
 
             <GridButton ID="TurnsToCompleteSortButton" Size="38,18" Color="255,255,255,255" Style="PanelButtonLightweight">
               <Label ID="TurnsToCompleteSortLabel" Anchor="C,C" Offset="10,0" Style="FontNormal12" String="[Icon_Turn]"/>
-              <Image ID="TurnsToCompleteDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-7,0"/>
-              <Image ID="TurnsToCompleteAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-7,-4"/>
+              <Label ID="TurnsToCompleteSortOrder" Hidden="1" Anchor="C,C" Offset="-1,7" String="9" Style="FontNormal12"/>
+              <Image ID="TurnsToCompleteDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="C,C" Offset="-8,0"/>
+              <Image ID="TurnsToCompleteAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="C,C" Offset="-8,-5"/>
             </GridButton>
           </Stack>
 
           <!-- Filter Pulldown -->
-          <PullDown ID="DestinationFilterPulldown" ConsumeMouse="0" Offset="1,47" Anchor="C,T" Size="300,26" AutoSizePopUp="1" AutoFlip="1" ScrollThreshold="400">
+          <PullDown ID="DestinationFilterPulldown" ConsumeMouse="0" Offset="1,28" Anchor="C,T" Size="300,26" AutoSizePopUp="1" AutoFlip="1" ScrollThreshold="400">
             <ButtonData>
               <GridButton   ID="FilterButton" TextAnchor="R,C" TextOffset="15,0" Style="FontNormal12" FontStyle="Shadow" EffectColor="0,0,0,255" Offset="0,-25" Size="50,-20" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" />
             </ButtonData>
@@ -196,9 +204,11 @@
           
           <Label						ID="TradingPostIcon"	Anchor="L,C" Offset="10,-4"	Style="FontNormal16" FontStyle="Shadow" String="[ICON_TradingPost]" Color="255,0,0,255" EffectColor="255,0,0,255" GradientColor="255,0,0,255" />
           <Label						ID="CityStateQuestIcon"	Anchor="L,C" Offset="-2,-12"	Style="FontNormal16" FontStyle="Shadow" String="[ICON_CityStateQuest]" Color="255,0,0,255" EffectColor="255,0,0,255" GradientColor="255,0,0,255" />
-          <Image						ID="DistenceToCityIcon"		Anchor="R,C" Offset="30,-4"	 Size="22,22" Icon="ICON_MOVES"	IconSize="22" Texture="Stats22.dds" TextureOffset="66,0"/>
-          <Label						ID="DistenceToCity"		    Anchor="L,C" Offset="252,-4"	Style="FontFlair16"	FontStyle="Stroke" EffectColor="0,0,0,25" />
-          <Label Hidden="1"	ID="RouteTurns"				Anchor="R,C" Offset="14,-2"	Style="FontFlair16"	FontStyle="Stroke" EffectColor="0,0,0,25" String="[ICON_Turn]??" />
+
+          <Stack StackGrowth="Left" Anchor="R,C" Offset="12,-4" StackPadding="0">
+            <Label ID="TurnsToComplete" Anchor="C,C" Offset="0,0" Style="FontFlair14" FontStyle="Stroke" EffectColor="0,0,0,25" String="??" />
+            <Label ID="TurnsToCompleteIcon"  String="[ICON_Turn]" Anchor="C,C" Offset="0,-1"  Style="FontFlair16" FontStyle="Stroke" EffectColor="0,0,0,25" />
+          </Stack>
         </Grid>
 
         <!-- Resource Info -->
