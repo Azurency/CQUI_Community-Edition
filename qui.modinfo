@@ -30,6 +30,7 @@
 				<File>UI/Panels/NotificationPanel.lua</File>
 				<File>UI/Panels/ProductionPanel.lua</File>
 				<File>UI/Panels/StatusMessagePanel.lua</File>
+        <File>UI/Panels/StatusMessagePanel.xml</File>
 				<File>UI/Panels/UnitPanel.lua</File>
 				<File>UI/Popups/GreatPeoplePopup.lua</File>
 				<File>UI/Popups/GreatPeoplePopup.xml</File>
@@ -95,6 +96,7 @@
 		<File>UI/Panels/NotificationPanel.lua</File>
 		<File>UI/Panels/ProductionPanel.lua</File>
 		<File>UI/Panels/StatusMessagePanel.lua</File>
+    <File>UI/Panels/StatusMessagePanel.xml</File>
 		<File>UI/Panels/UnitPanel.lua</File>
 		<File>UI/Popups/GreatPeoplePopup.lua</File>
 		<File>UI/Popups/GreatPeoplePopup.xml</File>

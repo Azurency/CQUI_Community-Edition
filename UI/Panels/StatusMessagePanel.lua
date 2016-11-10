@@ -14,8 +14,8 @@ local STATUS_MESSAGE_CIVIC      :number = 3;    -- Number to distinguish civic m
 local STATUS_MESSAGE_TECHS      :number = 4;    -- Number to distinguish tech messages
 
 -- Figure out eventually what colors are used by the actual civic and tech trees
-local CIVIC_COLOR                       = "COLOR_RESEARCH_STORED"; 
-local TECHS_COLOR                       = "COLOR_CULTURE_STORED";   
+local CIVIC_COLOR                       = 0xDFFF33CC; 
+local TECHS_COLOR                       = 0xDFFF6600;   
 
 
 -- =========================================================================== 
@@ -68,11 +68,9 @@ function OnStatusMessage( str:string, fDisplayTime:number, type:number )
 
         -- CQUI Figuring out how to change the color of the status message
         if cqui_messageType == STATUS_MESSAGE_CIVIC then
-            --pInstance.Container:SetColorByName(CIVIC_COLOR);
-            --ContextPtr:SetColorByName(CIVIC_COLOR);
+            pInstance.StatusGrid:SetColor(CIVIC_COLOR);
         elseif cqui_messageType == STATUS_MESSAGE_TECHS then
-            --pInstance.Container:SetColorByName(TECHS_COLOR);
-            --ContextPtr:SetColorByName(TECHS_COLOR);
+            pInstance.StatusGrid:SetColor(TECHS_COLOR);
         end
 
 		pInstance.StatusLabel:SetText( str );		
