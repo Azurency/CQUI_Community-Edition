@@ -9,6 +9,14 @@ include( "InstanceManager" );
 -- =========================================================================== 
 local DEFAULT_TIME_TO_DISPLAY	:number = 10;	-- Seconds to display the message
 
+-- CQUI CONSTANTS Trying to make the different messages have unique colors
+local STATUS_MESSAGE_CIVIC      :number = 3;    -- Number to distinguish civic messages
+local STATUS_MESSAGE_TECHS      :number = 4;    -- Number to distinguish tech messages
+
+-- Figure out eventually what colors are used by the actual civic and tech trees
+local CIVIC_COLOR                       = "COLOR_RESEARCH_STORED"; 
+local TECHS_COLOR                       = "COLOR_CULTURE_STORED";   
+
 
 -- =========================================================================== 
 --	VARIABLES
@@ -20,6 +28,8 @@ local m_gossipIM				:table = InstanceManager:new( "GossipMessageInstance", "Root
 local PlayerConnectedChatStr	:string = Locale.Lookup( "LOC_MP_PLAYER_CONNECTED_CHAT" );
 local PlayerDisconnectedChatStr :string	= Locale.Lookup( "LOC_MP_PLAYER_DISCONNECTED_CHAT" );
 local PlayerKickedChatStr		:string	= Locale.Lookup( "LOC_MP_PLAYER_KICKED_CHAT" );
+
+local cqui_messageType          :number = 0;
 
 local m_kMessages :table = {};
 
@@ -55,6 +65,16 @@ function OnStatusMessage( str:string, fDisplayTime:number, type:number )
 		table.insert( kTypeEntry.MessageInstances, pInstance );
 
 		local timeToDisplay:number = (fDisplayTime > 0) and fDisplayTime or DEFAULT_TIME_TO_DISPLAY;
+
+        -- CQUI Figuring out how to change the color of the status message
+        if cqui_messageType == STATUS_MESSAGE_CIVIC then
+            --pInstance.Container:SetColorByName(CIVIC_COLOR);
+            --ContextPtr:SetColorByName(CIVIC_COLOR);
+        elseif cqui_messageType == STATUS_MESSAGE_TECHS then
+            --pInstance.Container:SetColorByName(TECHS_COLOR);
+            --ContextPtr:SetColorByName(TECHS_COLOR);
+        end
+
 		pInstance.StatusLabel:SetText( str );		
 		pInstance.Anim:SetEndPauseTime( timeToDisplay );
 		pInstance.Anim:RegisterEndCallback( function() OnEndAnim(kTypeEntry,pInstance) end );
@@ -116,11 +136,28 @@ function Test()
 		end, true);
 end
 
+function CQUI_OnStatusMessage(str:string, fDisplayTime:number, thisType:number)
+
+    if thisType == STATUS_MESSAGE_CIVIC then
+        cqui_messageType = STATUS_MESSAGE_CIVIC;
+    elseif thisType == STATUS_MESSAGE_TECHS then
+        cqui_messageType = STATUS_MESSAGE_TECHS;
+    else
+        cqui_messageType = 0;
+    end
+    
+    OnStatusMessage(str, fDisplayTime, ReportingStatusTypes.DEFAULT);
+
+end
+
 -- ===========================================================================
 function Initialize()
 	Events.StatusMessage.Add( OnStatusMessage );
 	Events.MultiplayerPlayerConnected.Add( OnMultplayerPlayerConnected );
 	Events.MultiplayerPrePlayerDisconnected.Add( OnMultiplayerPrePlayerDisconnected );
+
+    -- CQUI
+    LuaEvents.CQUI_AddStatusMessage.Add( CQUI_OnStatusMessage );
 	--Test();
 end
 Initialize();

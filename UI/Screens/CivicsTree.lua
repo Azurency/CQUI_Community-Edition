@@ -104,6 +104,9 @@ local VERTICAL_CENTER				:number = (SIZE_NODE_Y) / 2;
 local MAX_BEFORE_TRUNC_GOV_TITLE	:number = 165;
 local MAX_BEFORE_TRUNC_TO_BOOST		:number = 385;
 
+-- CQUI CONSTANTS
+local STATUS_MESSAGE_CIVIC          :number = 3;    -- Number to distinguish civic messages
+
 STATUS_ART[ITEM_STATUS.BLOCKED]		= { Name="BLOCKED",		TextColor0=0xff202726, TextColor1=0x00000000, FillTexture="CivicsTree_GearButtonTile_Disabled.dds",BGU=0,BGV=(SIZE_NODE_Y*3),	HideIcon=true,  IsButton=false,	BoltOn=false,	IconBacking=PIC_METER_BACK };
 STATUS_ART[ITEM_STATUS.READY]		= { Name="READY",		TextColor0=0xaaffffff, TextColor1=0x88000000, FillTexture=nil,									BGU=0,BGV=0,					HideIcon=true,  IsButton=true,	BoltOn=false,	IconBacking=PIC_METER_BACK  };
 STATUS_ART[ITEM_STATUS.CURRENT]		= { Name="CURRENT",		TextColor0=0xaaffffff, TextColor1=0x88000000, FillTexture=nil,									BGU=0,BGV=(SIZE_NODE_Y*4),		HideIcon=false,  IsButton=false,	BoltOn=true,	IconBacking=PIC_METER_BACK };
@@ -154,6 +157,9 @@ local m_kGovernments		:table = {};
 local m_kPolicyCatalogData	:table;
 
 local m_shiftDown			:boolean = false;
+
+-- CQUI variables
+local cqui_halfwayNotified  :table = {};
 
 
 -- ===========================================================================
@@ -1110,6 +1116,38 @@ function OnLocalPlayerTurnBegin()
 		    m_ePlayer = ePlayer;
 		    m_kCurrentData = GetLivePlayerData( ePlayer, -1 );
 	    end
+
+        --------------------------------------------------------------------------
+        -- CQUI Check for Civic Progress
+
+        -- Get the current tech
+        local kPlayer		    :table	= Players[ePlayer];
+	    local playerCivics	    :table	= kPlayer:GetCulture();
+	    local currentCivicID	:number = playerCivics:GetProgressingCivic();
+        local isCurrentBoosted  :boolean = playerCivics:HasBoostBeenTriggered(currentCivicsID);
+
+        -- Make sure there is a civic selected before continuing with checks
+        if currentCivicID ~= -1 then
+            local civicName = GameInfo.Civics[currentCivicID].Name;
+
+            local currentCost	        = playerCivics:GetCultureCost(currentCivicID);
+	        local currentProgress	    = playerCivics:GetCulturalProgress(currentCivicID);
+            local currentYield          = playerCivics:GetCultureYield();
+            local percentageToBeDone    = (currentProgress + currentYield) / currentCost;
+            local percentageNextTurn    = (currentProgress + currentYield*2) / currentCost;
+        
+            -- Is the current civic completed? -> Could be moved to the "OnCivicComplete" function
+            -- Else is it greater than 50% and has yet to be displayed?
+            if percentageToBeDone >= 1 then
+                LuaEvents.CQUI_AddStatusMessage("The Civic, " .. Locale.ToUpper( civicName ) .. ", is completed.", 10, STATUS_MESSAGE_CIVIC);
+            elseif percentageNextTurn >= .50 and isCurrentBoosted == false and cqui_halfwayNotified[currentCivicID] ~= true then
+                LuaEvents.CQUI_AddStatusMessage("The current Civic, " .. Locale.ToUpper( civicName ) .. ", is one turn from 50%.", 10, STATUS_MESSAGE_CIVIC);
+                cqui_halfwayNotified[currentCivicID] = true;
+            end
+        end
+
+        --------------------------------------------------------------------------
+
     end
 end
 
@@ -1822,6 +1860,7 @@ function OnBuildingChanged( plotX:number, plotY:number, buildingIndex:number, pl
 	end
 end
 
+
 -- ===========================================================================
 --	Load all static information as well as display information for the
 --	current local player.
@@ -1877,5 +1916,6 @@ function Initialize()
 	Events.LocalPlayerTurnEnd.Add( OnLocalPlayerTurnEnd );
 	Events.LocalPlayerChanged.Add(AllocateUI);
 	Events.SystemUpdateUI.Add( OnUpdateUI );
+
 end
 Initialize();

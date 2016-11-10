@@ -1528,6 +1528,12 @@ function OnUnitKilledInCombat( targetUnit )
 	end
 end
 
+function CQUI_AddNotification(description:string, summary:string)
+    local handler = GetHandler( NotificationTypes.DEFAULT );	
+	table.insert(m_kDebugNotification);
+	handler.Add( summary, table.count(m_kDebugNotificaiton));	
+end
+
 -- ===========================================================================
 --	Setup
 -- ===========================================================================
@@ -1556,5 +1562,8 @@ function Initialize()
 	Events.LoadGameViewStateDone.Add( OnLoadGameViewStateDone );
 
 	LuaEvents.ActionPanel_ActivateNotification.Add( OnLuaActivateNotification );
+
+    -- CQUI
+    LuaEvents.CQUI_AddNotification.Add( CQUI_AddNotification );
 end
 Initialize();
