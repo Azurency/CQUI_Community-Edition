@@ -10,6 +10,8 @@
     <Components>
         <ImportFiles id="CQUI_IMPORT_FILES">
             <Items>
+				<File>CQUI/CQUI_SettingsElement.lua</File>
+				<File>CQUI/CQUI_SettingsElement.xml</File>
 				<File>UI/ActionPanel.lua</File>
 				<File>UI/CitySupport.lua</File>
 				<File>UI/MapPinManager.lua</File>
@@ -48,6 +50,12 @@
 				<File>UI/WorldView/PlotInfo.xml</File>
             </Items>
         </ImportFiles>
+		<LocalizedText id="CQUI_TEXT">
+			<Items>
+				<File>CQUI/CQUI_Text_General.xml</File>
+				<File>CQUI/CQUI_Text_Settings.xml</File>
+			</Items>
+		</LocalizedText>
 		<ImportFiles id="BETTER_TRADE_SCREEN_IMPORT_FILES">
 			<Items>
 				<File>BTS/TradeOverview.xml</File>
@@ -65,6 +73,10 @@
 		</LocalizedText>
     </Components>
 	<Files>
+		<File>CQUI/CQUI_SettingsElement.lua</File>
+		<File>CQUI/CQUI_SettingsElement.xml</File>
+		<File>CQUI/CQUI_Text_General.xml</File>
+		<File>CQUI/CQUI_Text_Settings.xml</File>
 		<File>UI/ActionPanel.lua</File>
 		<File>UI/CitySupport.lua</File>
 		<File>UI/MapPinManager.lua</File>

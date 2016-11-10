@@ -130,6 +130,11 @@ local m_kTutorialUnitMoveRestrictions	:table = nil;		-- Restrictions for moving 
 local CQUI_cityview = false;
 local CQUI_hotkeyMode = 1; -- 0: V-Style with enhancements 1: V-Style 2: No changes
 
+function CQUI_OnSettingsUpdate()
+	CQUI_hotkeyMode = GameConfiguration.GetValue("CQUI_BindingsMode");
+end
+
+LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
 -- ===========================================================================
 --	FUNCTIONS
 -- ===========================================================================
@@ -3492,7 +3497,6 @@ function Initialize()
 	-- CQUI Events
 	LuaEvents.CQUI_WorldInput_CityviewEnable.Add( function() CQUI_cityview = true; end );
 	LuaEvents.CQUI_WorldInput_CityviewDisable.Add( function() CQUI_cityview = false; end );
-	LuaEvents.CQUI_Option_ToggleBindings.Add( function(mode: number) CQUI_hotkeyMode = mode; end );
 	
 	Controls.DebugStuff:SetHide(not m_isDebuging);
 	-- Popup setup

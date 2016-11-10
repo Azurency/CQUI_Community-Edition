@@ -18,8 +18,11 @@ local m_viewReportsX :number = 0;	-- With of view report button
 -- ===========================================================================
 
 local g_showluxury = true;
-function OnToggleShowLuxury() g_showluxury = not g_showluxury; RefreshResources(); print("called"); end
-LuaEvents.QUI_Option_ToggleShowLuxury.Add( OnToggleShowLuxury );
+function CQUI_OnSettingsUpdate()
+	g_showluxury = GameConfiguration.GetValue("CQUI_ShowLuxuries");
+	RefreshResources();
+end
+LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
 
 -- ===========================================================================
 --	Game Engine Event
@@ -517,5 +520,6 @@ function Initialize()
 	Events.VisualStateRestored.Add(			OnTurnBegin );
 	Events.WMDCountChanged.Add(				OnWMDUpdate );	
 	OnTurnBegin();
+	LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 end
 Initialize();

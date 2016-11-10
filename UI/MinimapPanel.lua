@@ -21,7 +21,7 @@ local bGridOn					:boolean= true;
 local m_ContinentsCreated		:boolean=false;
 local m_MiniMap_xmloffsety		:number	= 0;
 local m_ContinentsCache			:table = {};
-local m_kFlyoutControlIds		:table = { "MapOptions", "Lens", "MapPinList", "CQUIOptions"};	-- Name of controls that are the backing for "flyout" menus.
+local m_kFlyoutControlIds		:table = { "MapOptions", "Lens", "MapPinList"};	-- Name of controls that are the backing for "flyout" menus.
 
 local m_shouldCloseLensMenu           :boolean = true;    -- Controls when the Lens menu should be closed.
 
@@ -151,10 +151,8 @@ function ToggleMapOptionsList()
 	Controls.MapOptionsButton:SetSelected( not Controls.MapOptionsPanel:IsHidden() );
 end
 
-function ToggleCQUIOptionsList()	
-	Controls.CQUIOptionsPanel:SetHide( not Controls.CQUIOptionsPanel:IsHidden() );
-	RealizeFlyouts(Controls.CQUIOptionsPanel);
-	Controls.CQUIOptionsButton:SetSelected( not Controls.CQUIOptionsPanel:IsHidden() );
+function ToggleCQUIOptionsList()
+	Controls.CQUI_SettingsElement:SetHide( not Controls.CQUI_SettingsElement:IsHidden() );
 end
 
 -- ===========================================================================
@@ -743,7 +741,6 @@ function Initialize()
 
 	Controls.LensPanel:ChangeParent(Controls.LensButton);
 	Controls.MapOptionsPanel:ChangeParent(Controls.MapOptionsButton);
-	Controls.CQUIOptionsPanel:ChangeParent(Controls.CQUIOptionsButton);
 	Controls.ToggleResourcesButton:SetCheck( UserConfiguration.ShowMapResources() );
 	Controls.ToggleYieldsButton:SetCheck( UserConfiguration.ShowMapYield() );
 
@@ -772,17 +769,6 @@ function Initialize()
 	Controls.ToggleResourcesButton:RegisterCallback( Mouse.eLClick, ToggleResourceIcons );
 	Controls.ToggleYieldsButton:RegisterCallback( Mouse.eLClick, ToggleYieldIcons );
 	Controls.WaterLensButton:RegisterCallback( Mouse.eLClick, ToggleWaterLens );
-	
-	Controls.QUI_ToggleLuxury:RegisterCallback( Mouse.eLClick, function() LuaEvents.QUI_Option_ToggleShowLuxury(); end);
-	Controls.QUI_ToggleSmartBanner:RegisterCallback( Mouse.eLClick, function() LuaEvents.QUI_Option_ToggleSmartBanner(); end);
-	-- Controls.QUI_ToggleCowboy:RegisterCallback( Mouse.eLClick, function() LuaEvents.QUI_Option_ToggleCowboy(); end);
-	-- Controls.QUI_ToggleBadCowboy:RegisterCallback( Mouse.eLClick, function() LuaEvents.QUI_Option_ToggleBadCowboy(); end);
-	
-	Controls.CQUI_ToggleTechPopup:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_Option_ToggleTechPopup(); end);
-	Controls.CQUI_ToggleTechVoiceover:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_Option_ToggleTechVoiceover(); end);
-	Controls.CQUI_ToggleBindings2:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_Option_ToggleBindings(2); end);
-	Controls.CQUI_ToggleBindings1:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_Option_ToggleBindings(1); end);
-	Controls.CQUI_ToggleBindings0:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_Option_ToggleBindings(0); end);
 
     -- Make sure the StrategicSwitcherButton has the correct image when the game starts in StrategicView
     if UI.GetWorldRenderView() == WorldRenderView.VIEW_2D then

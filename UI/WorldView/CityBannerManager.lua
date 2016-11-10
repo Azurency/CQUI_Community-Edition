@@ -154,8 +154,11 @@ local SIZEOFPOPANDPRODMETERS		:number = 15;	--The amount to add to the city bann
 -- ===========================================================================
 
 local g_smartbanner = true;
-function OnToggleSmartBanner() g_smartbanner = not g_smartbanner; Reload(); end
-LuaEvents.QUI_Option_ToggleSmartBanner.Add( OnToggleSmartBanner );
+function CQUI_OnSettingsUpdate()
+	g_smartbanner = GameConfiguration.GetValue("CQUI_Smartbanner")
+	Reload();
+end
+LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
 
 -- ===========================================================================
 --	FUNCTIONS
@@ -2902,6 +2905,7 @@ function Initialize()
 	Events.CityWorkerChanged.Add(		        OnCityWorkerChanged );
 
 	LuaEvents.GameDebug_Return.Add(OnGameDebugReturn);	
+	LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 end
 Initialize();
 
