@@ -149,8 +149,12 @@ Please see the [issue tracker](https://github.com/chaorace/cqui/issues) for an u
 * @zgavin for UI bugfixes in PRs #1 and #2
 * @olegbl for the Amenities overview overhaul in PR #4 and multiple UI bugfixes (PRs #9 and #12)
   1. Additional kudos to /u/mateusarc from the Civilization subreddit for his original concept art
-* @jacks0nX for localization in #20 the map pin additions in PR #21 and UI/Civilopedia improvements in #24 and #32
+* @jacks0nX for:
+  *localization in #20
+  *map pin enhancements in PR #21 and #55
+  *UI/Civilopedia improvements in #24 and #32
 * @OfekA for providing the improved resource dimming feature in #54
+* @Proustldee for bringing the BTS mod version up to current in #61
 * @perseghini for providing the fix for issue #33
 * /u/dli511 @ Reddit for their bug report relating to purchasing buildings
 * /u/Nitrium @ Reddit for their bug report relating to broken Gossip notifications
