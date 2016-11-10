@@ -154,6 +154,7 @@ Please see the [issue tracker](https://github.com/chaorace/cqui/issues) for an u
   *map pin enhancements in PR #21 and #55
   *UI/Civilopedia improvements in #24 and #32
 * @OfekA for providing the improved resource dimming feature in #54
+* @RatchetJ for providing the civic/tech notifications at 50%/100% completion in #66
 * @Proustldee for bringing the BTS mod version up to current in #61
 * @perseghini for providing the fix for issue #33
 * /u/dli511 @ Reddit for their bug report relating to purchasing buildings
