@@ -150,7 +150,9 @@ local m_shiftDown			:boolean = false;
 local m_ToggleTechTreeId;
 
 -- CQUI variables
-local cqui_halfwayNotified  :table = {};
+local CQUI_halfwayNotified  :table = {};
+local CQUI_chinaHalfway = 0.4;
+local CQUI_halfway = 0.5;
 
 -- ===========================================================================
 -- Return string respresenation of a prereq table
@@ -1041,14 +1043,20 @@ function OnLocalPlayerTurnBegin()
             local currentYield          = playerTechs:GetScienceYield();
             local percentageToBeDone    = (currentProgress + currentYield) / currentCost;
             local percentageNextTurn    = (currentProgress + currentYield*2) / currentCost;
+			local halfway:number;
+			if(PlayerConfigurations[Game.GetLocalPlayer()]:GetCivilizationTypeName() == "CIVILIZATION_CHINA") then
+				halfway = CQUI_chinaHalfway;
+			else
+				halfway = CQUI_halfway;
+			end
         
             -- Is the current tech completed? -> Could be moved to the "OnResearchComplete" function
             -- Else is it greater than 50% and has yet to be displayed?
             if percentageToBeDone >= 1 then
-                LuaEvents.CQUI_AddStatusMessage("The Technology, " .. Locale.ToUpper( techName ) .. ", is completed.", 10, STATUS_MESSAGE_TECHS);
-            elseif percentageNextTurn >= .50 and isCurrentBoosted == false and cqui_halfwayNotified[currentTechID] ~= true then
-                LuaEvents.CQUI_AddStatusMessage("The current Technology, " .. Locale.ToUpper( techName ) .. ", is one turn from 50%.", 10, STATUS_MESSAGE_TECHS);
-                cqui_halfwayNotified[currentTechID] = true;
+                LuaEvents.CQUI_AddStatusMessage("The Technology, " .. Locale.Lookup( techName ) .. ", is completed.", 10, STATUS_MESSAGE_TECHS);
+            elseif percentageNextTurn >= halfway and isCurrentBoosted == false and CQUI_halfwayNotified[currentTechID] ~= true then
+                LuaEvents.CQUI_AddStatusMessage("The current Technology, " .. Locale.Lookup( techName ) .. ", is one turn away from maximum Eureka potential.", 10, STATUS_MESSAGE_TECHS);
+                CQUI_halfwayNotified[currentTechID] = true;
             end
         end
 

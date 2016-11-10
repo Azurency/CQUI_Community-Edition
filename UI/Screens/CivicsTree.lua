@@ -159,7 +159,9 @@ local m_kPolicyCatalogData	:table;
 local m_shiftDown			:boolean = false;
 
 -- CQUI variables
-local cqui_halfwayNotified  :table = {};
+local CQUI_halfwayNotified  :table = {};
+local CQUI_chinaHalfway = 0.4;
+local CQUI_halfway = 0.5;
 
 
 -- ===========================================================================
@@ -1135,14 +1137,20 @@ function OnLocalPlayerTurnBegin()
             local currentYield          = playerCivics:GetCultureYield();
             local percentageToBeDone    = (currentProgress + currentYield) / currentCost;
             local percentageNextTurn    = (currentProgress + currentYield*2) / currentCost;
+			local halfway:number;
+			if(PlayerConfigurations[Game.GetLocalPlayer()]:GetCivilizationTypeName() == "CIVILIZATION_CHINA") then
+				halfway = CQUI_chinaHalfway;
+			else
+				halfway = CQUI_halfway;
+			end
         
             -- Is the current civic completed? -> Could be moved to the "OnCivicComplete" function
             -- Else is it greater than 50% and has yet to be displayed?
             if percentageToBeDone >= 1 then
-                LuaEvents.CQUI_AddStatusMessage("The Civic, " .. Locale.ToUpper( civicName ) .. ", is completed.", 10, STATUS_MESSAGE_CIVIC);
-            elseif percentageNextTurn >= .50 and isCurrentBoosted == false and cqui_halfwayNotified[currentCivicID] ~= true then
-                LuaEvents.CQUI_AddStatusMessage("The current Civic, " .. Locale.ToUpper( civicName ) .. ", is one turn from 50%.", 10, STATUS_MESSAGE_CIVIC);
-                cqui_halfwayNotified[currentCivicID] = true;
+                LuaEvents.CQUI_AddStatusMessage("The Civic, " .. Locale.Lookup( civicName ) .. ", is completed.", 10, STATUS_MESSAGE_CIVIC);
+            elseif percentageNextTurn >= halfway and isCurrentBoosted == false and CQUI_halfwayNotified[currentCivicID] ~= true then
+                LuaEvents.CQUI_AddStatusMessage("The current Civic, " .. Locale.Lookup( civicName ) .. ", is one turn away from maximum Inspiration potential.", 10, STATUS_MESSAGE_CIVIC);
+                CQUI_halfwayNotified[currentCivicID] = true;
             end
         end
 
