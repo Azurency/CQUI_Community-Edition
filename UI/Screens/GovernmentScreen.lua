@@ -2424,7 +2424,8 @@ end
 function militaryFilter(policy)		return policy.SlotType == "SLOT_MILITARY";	end
 function economicFilter(policy)		return policy.SlotType == "SLOT_ECONOMIC";	end
 function diplomaticFilter(policy)	return policy.SlotType == "SLOT_DIPLOMATIC"; end
-function wildcardFilter(policy)		return policy.SlotType == "SLOT_WILDCARD" or policy.SlotType == "SLOT_GREAT_PERSON" end
+function wildcardFilter(policy)		return policy.SlotType == "SLOT_WILDCARD"; end
+function greatPeopleFilter(policy)	return policy.SlotType == "SLOT_GREAT_PERSON"; end
 
 function PopulatePolicyFilterData()
 	m_kPolicyFilters = {};
@@ -2432,6 +2433,7 @@ function PopulatePolicyFilterData()
 	table.insert( m_kPolicyFilters, { Func=militaryFilter,		Description="LOC_GOVT_FILTER_MILITARY"	} );
 	table.insert( m_kPolicyFilters, { Func=economicFilter,		Description="LOC_GOVT_FILTER_ECONOMIC"	} );
 	table.insert( m_kPolicyFilters, { Func=diplomaticFilter,	Description="LOC_GOVT_FILTER_DIPLOMATIC"	} );
+	table.insert( m_kPolicyFilters, { Func=greatPeopleFilter,	Description="LOC_GOVT_FILTER_GREAT_PERSON"	} );
 	table.insert( m_kPolicyFilters, { Func=wildcardFilter,		Description="LOC_GOVT_FILTER_GREAT_PERSON"	} );
 
 	for i,filter in ipairs(m_kPolicyFilters) do		
@@ -2587,11 +2589,13 @@ function Initialize()
 	Controls.MilitaryFilterButton:SetToolTipString(		Locale.Lookup("LOC_GOVT_FILTER_W_DOTS").. "[NEWLINE]" .. Locale.Lookup("LOC_GOVT_FILTER_MILITARY") );
 	Controls.EconomicFilterButton:SetToolTipString(		Locale.Lookup("LOC_GOVT_FILTER_W_DOTS").. "[NEWLINE]" .. Locale.Lookup("LOC_GOVT_FILTER_ECONOMIC") );
 	Controls.DiplomacyFilterButton:SetToolTipString(	Locale.Lookup("LOC_GOVT_FILTER_W_DOTS").. "[NEWLINE]" .. Locale.Lookup("LOC_GOVT_FILTER_DIPLOMATIC") );
+	Controls.GreatPeopleFilterButton:SetToolTipString(	Locale.Lookup("LOC_GOVT_FILTER_W_DOTS").. "[NEWLINE]" .. Locale.Lookup("LOC_CATEGORY_GREAT_PEOPLE_NAME") );
 	Controls.WildcardFilterButton:SetToolTipString(		Locale.Lookup("LOC_GOVT_FILTER_W_DOTS").. "[NEWLINE]" .. Locale.Lookup("LOC_GOVT_FILTER_NONE") );
 	
 	AutoSizeGridButton(Controls.MilitaryFilterButton,120,24,4,"H");
 	AutoSizeGridButton(Controls.EconomicFilterButton,120,24,4,"H");
 	AutoSizeGridButton(Controls.DiplomacyFilterButton,120,24,4,"H");
+	AutoSizeGridButton(Controls.GreatPeopleFilterButton,180,24,4,"H");
 	AutoSizeGridButton(Controls.WildcardFilterButton,120,24,4,"H");
 
 
@@ -2599,6 +2603,8 @@ function Initialize()
 	Controls.EconomicFilterButton:RegisterCallback(		Mouse.eLClick,	function() OnPolicyFilterClicked( {Func=economicFilter,			Description="LOC_GOVT_FILTER_ECONOMIC"} ); end );
 	Controls.DiplomacyFilterButton:RegisterCallback(	Mouse.eLClick,	function() OnPolicyFilterClicked( {Func=diplomaticFilter,			Description="LOC_GOVT_FILTER_DIPLOMATIC"} ); end );
 	Controls.WildcardFilterButton:RegisterCallback(		Mouse.eLClick,	function() OnPolicyFilterClicked( {Func=nil,					Description="LOC_GOVT_FILTER_NONE"} ); end );
+	Controls.GreatPeopleFilterButton:RegisterCallback(	Mouse.eLClick,	function() OnPolicyFilterClicked( {Func=greatPeopleFilter,		Description="LOC_CATEGORY_GREAT_PEOPLE_NAME"} ); end );
+
 
     Controls.ButtonMyGovernment:RegisterCallback(	Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
     Controls.ButtonPolicies:RegisterCallback(		Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);

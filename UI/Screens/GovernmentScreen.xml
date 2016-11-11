@@ -223,6 +223,9 @@
               <GridButton ID="DiplomacyFilterButton" Style="ButtonControlTan" String="LOC_GOVT_FILTER_DIPLOMATIC" Size="120,24">
                 <Image			ID="DiplomacyIconRight" Anchor="L,C"	Offset="0,0"														Texture="Governments_DiplomacyCard_Small" Hidden="1"/>
               </GridButton>
+			  <GridButton ID="GreatPeopleFilterButton" Style="ButtonControlTan" String="LOC_CATEGORY_GREAT_PEOPLE_NAME" Size="180,24">
+				<Image			ID="DiplomacyIconRight" Anchor="L,C"	Offset="0,0"														Texture="Governments_DiplomacyCard_Small" Hidden="1"/>
+			</GridButton>
               <GridButton ID="WildcardFilterButton" Style="ButtonControlTan" String="LOC_GOVT_FILTER_NONE" Size="120,24">
                 <Image			ID="WildcardIconRight" Anchor="L,C"	Offset="0,0"														Texture="Governments_WildcardCard_Small" Hidden="1"/>
               </GridButton>
