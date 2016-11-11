@@ -1041,6 +1041,7 @@ function DefaultKeyUpHandler( uiKey:number )
 		-- Fortify until healed hotkey
 		if( uiKey == Keys.H ) then
 			UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), 2126026491); -- OH MY GOD IT WAS SO HARD TO FIND THAT ID. WHAT WAS FIRAXIS THINKING
+			return;
 		end
 		-- Focus Capital hotkey
 		if( uiKey == Keys.VK_HOME ) then
