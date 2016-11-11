@@ -210,8 +210,8 @@
   <!-- =========================== Instances ========================== -->
   <Instance					Name="NestedList">
     <Stack					ID="Top" StackGrowth="Down" >
-      <GridButton		ID="Header" Style="ButtonExpand" String="Districts" Size="325,41"/>
-      <GridButton		ID="HeaderOn" Style="ButtonExpandSelected" String="Districts" Size="325,41" Hidden="1"/>
+      <GridButton		ID="Header" Style="ButtonExpand" String="Districts" Size="325,32"/>
+      <GridButton		ID="HeaderOn" Style="ButtonExpandSelected" String="Districts" Size="325,32" Hidden="1"/>
       <SlideAnim		ID="ListSlide" Speed="3.5" Begin="0,-10" End="0,0" Cycle="Once" Size="400,0" AutoSize="V">
         <AlphaAnim  ID="ListAlpha" Speed="4" AlphaBegin="0" AlphaEnd="1" Cycle="Once" AutoSize="V">
           <Stack		ID="List" StackGrowth="Down"  Offset="5,0" Padding="2"/>
@@ -222,11 +222,14 @@
   </Instance>
 
   <Instance						Name="BuildingListInstance">
-    <Container            ID="Root" Size="320,48" AutoSize="V">
-      <Container          ID="ButtonContainer"  Size="parent,48" Anchor="R,B">
-        <GridButton				ID="Button"						Size="parent,48"							Style="ProductionButtonNest" Anchor="R,B">
-          <Container														Size="48,48">
-            <Image				ID="Icon"			        Size="38,38" Texture="Wonders38" Anchor="C,C" ConsumeMouse="0"/>
+    <Container            ID="Root" Size="320,32" AutoSize="V">
+      <Container          ID="ButtonContainer"  Size="parent,32" Anchor="R,B">
+        <GridButton				ID="Button"						Size="parent,32"							Style="ProductionButtonNest" Anchor="R,B">
+		  <Container			ID="Disabled"					Size="parent,32" Hidden="1"  ConsumeMouse="1">
+            <GridButton													Size="parent,parent"							Style="ProductionButtonNest" Color="200,200,200,150" Disabled="1"/>
+          </Container>
+          <Container Size="48,32">
+            <Image				ID="Icon"			        Size="32,32" Texture="Wonders32" Anchor="C,C" ConsumeMouse="0"/>
           </Container>
           <Container														Size="parent-65,parent-15" Anchor="R,C" Offset="10,0">
             <Label				ID="LabelText"				WrapWidth="160" String="?Industrial Zone" Style="WhiteSemiBold14"  Anchor="L,C"/>
@@ -244,9 +247,6 @@
               <Label				ID="CostText"					String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="5,0"/>
             </Container>
           </Stack>
-          <Container			ID="Disabled"					Size="parent,parent" Hidden="1"  ConsumeMouse="1">
-            <GridButton													Size="parent,parent"							Style="ProductionButtonNest" Color="200,200,200,150" Disabled="1"/>
-          </Container>
         </GridButton>
       </Container>
     </Container>
@@ -254,19 +254,22 @@
 
   <Instance						Name="DistrictListInstance">
     <Container				ID="Root"																						Size="320,48" AutoSize="V">
-      <Grid						ID="BuildingDrawer"					  						Offset="0,45"	Size="parent,20"	Texture="ProductionPanel_ExtendSlot" SliceCorner="14,6" SliceTextureSize="28,16" AutoSize="V" AutoSizePadding="0,3" Hidden="1">
+      <Grid						ID="BuildingDrawer"					  						Offset="0,32"	Size="parent,20"	Texture="ProductionPanel_ExtendSlot" SliceCorner="14,6" SliceTextureSize="28,16" AutoSize="V" AutoSizePadding="0,3" Hidden="1">
         <Stack				ID="BuildingStack"			Anchor="C,T"	Offset="0,3"/>
       </Grid>
-      <Container      ID="ButtonContainer" Size="parent, 48">
-        <GridButton			ID="Button"																					Size="parent,48"					Style="ProductionButton"  Anchor="R,B">
-          <Container		ID="CompletedArea"																	Size="320,48"	Hidden="1">
-            <Image    Size="parent-20,48" Texture="ProductionPanel_ChooserButtonTile" StretchMode="Tile" Anchor="C,T"/>
-            <Grid			Size="parent,48"	Texture="ProductionPanel_ChooserButton" SliceStart="0,192" SliceTextureSize="102,48" SliceCorner="51,25"/>
+      <Container      ID="ButtonContainer" Size="parent, 32">
+        <GridButton			ID="Button" Size="parent,32" Style="ProductionButton"  Anchor="R,B">
+		  <Container		ID="Disabled" Size="parent,parent"	Hidden="1"  ConsumeMouse="1">
+            <GridButton Size="parent,parent"	Style="ProductionButton" Color="200,200,200,150" Disabled="1"/>
           </Container>
-          <Container																												Size="48,48">
-            <Image			ID="Icon"								Anchor="C,C"								Size="32,32"					Texture="Districts32" ConsumeMouse="0"/>
+          <Container		ID="CompletedArea"																	Size="320,38"	Hidden="1">
+			<Grid			Size="parent,32"	Texture="ProductionPanel_ChooserButton" SliceStart="0,192" SliceTextureSize="102,32" SliceCorner="51,25"/>
+            <Image    Size="parent-18,32" Texture="ProductionPanel_ChooserButtonTile" StretchMode="Tile" Anchor="C,T"/>
           </Container>
-          <Container														Anchor="R,C"	Offset="10,0"	Size="255,33" >
+          <Container																												Size="38,38">
+            <Image ID="Icon" Anchor="C,C" Size="24,24" Offset="0,-2" ConsumeMouse="0"/>
+          </Container>
+          <Container														Anchor="R,C"	Offset="10,0"	Size="255,38" >
             <Label			ID="LabelText"					Anchor="L,C"																			Style="WhiteSemiBold14"	String="Industrial Zone" WrapWidth="260" />
           </Container>
           <Stack Anchor="R,C" StackGrowth="Down" Padding="-6">
@@ -282,9 +285,6 @@
               <Label				ID="CostText"					String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="5,0"/>
             </Container>
           </Stack>
-          <Container		ID="Disabled"																				Size="320,48"	Hidden="1"  ConsumeMouse="1">
-            <GridButton																											Size="parent,48"	Style="ProductionButton" Color="200,200,200,150" Disabled="1"/>
-          </Container>
         </GridButton>
       </Container>
     </Container>
@@ -292,14 +292,13 @@
 
   <Instance						Name="CivilianListInstance">
     <Container				ID="Root"				Size="320,56" AutoSize="V">
-      <Container      ID="ButtonContainer" Size="320, 56">
-        <GridButton			ID="TrainUnit"								Size="320,56"							Style="ProductionButton" Anchor="R,B">
-          <Container															Size="64,64" Anchor="L,C">
-            <Image ID="FlagBaseOutline" Size="64,64" TextureOffset="0,0"			Texture="UnitFlagCivilian"/>
-            <Image ID="FlagBase"				Size="64,64" TextureOffset="192,0"		Texture="UnitFlagCivilian"/>
-            <Image ID="FlagBaseLighten" Size="64,64" TextureOffset="192,64"		Texture="UnitFlagCivilian"/>
-            <Image ID="FlagBaseDarken"	Size="64,64" TextureOffset="192,128"	Texture="UnitFlagCivilian"/>
-            <Image				ID="Icon"			        Size="32,32" Texture="Units32" Anchor="C,C" ConsumeMouse="0"/>
+      <Container      ID="ButtonContainer" Size="parent, 32">
+        <GridButton			ID="TrainUnit"								Size="320,32"							Style="ProductionButton" Anchor="R,B">
+          <Container			ID="Disabled" 					Size="parent,parent" Hidden="1"  ConsumeMouse="1">
+            <GridButton														Size="parent,parent" Style="ProductionButton" Color="200,200,200,150" Disabled="1"/>
+          </Container>
+		  <Container															Size="64,32" Anchor="L,C">
+            <Image ID="Icon" Size="32,32" Texture="Units32" Anchor="C,C" ConsumeMouse="0"/>
           </Container>
           <Container															Size="parent-65,parent-15" Anchor="L,C" Offset="60,0">
             <Label				ID="LabelText"					WrapWidth="120" String="Industrial Zone" Style="WhiteSemiBold14"  Anchor="L,C"/>
@@ -317,9 +316,6 @@
               <Label				ID="CostText"					String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="5,0"/>
             </Container>
           </Stack>
-          <Container			ID="Disabled" 					Size="parent,parent" Hidden="1"  ConsumeMouse="1">
-            <GridButton														Size="parent,parent" Style="ProductionButton" Color="200,200,200,150" Disabled="1"/>
-          </Container>
         </GridButton>
       </Container>
     </Container>
@@ -327,7 +323,7 @@
 
 
   <Instance						Name="UnitListInstance">
-    <Container				ID="Root"				Size="320,55" AutoSize="V">
+    <Container				ID="Root"				Size="320,56" AutoSize="V">
       <!--Corps and Army Buttons-->
       <Grid						      ID="ArmyCorpsDrawer" Offset="0,56"	Size="parent,20"			Texture="ProductionPanel_ExtendSlot" SliceCorner="14,6" SliceTextureSize="28,16" AutoSize="V" AutoSizePadding="0,3" Hidden="1">
         <Stack				      ID="ArmyCorpsStack"			Anchor="C,T"	Offset="0,3">
@@ -399,14 +395,13 @@
         </Stack>
       </Grid>
 
-      <Container      ID="ButtonContainer" Size="parent, 56">
-        <GridButton			ID="TrainUnit"	Size="320,56"							Style="ProductionButton"  Anchor="R,B">
-          <Container										Size="64,64" Anchor="L,C" Offset="0,-2">
-            <Image ID="FlagBaseOutline" Size="64,64" TextureOffset="0,0"			Texture="UnitFlagBase"/>
-            <Image ID="FlagBase"				Size="64,64" TextureOffset="192,0"		Texture="UnitFlagBase"/>
-            <Image ID="FlagBaseLighten" Size="64,64" TextureOffset="192,64"		Texture="UnitFlagBase"/>
-            <Image ID="FlagBaseDarken"	Size="64,64" TextureOffset="192,128"	Texture="UnitFlagBase"/>
-            <Image ID="Icon"			      Size="32,32" Texture="Units32" Anchor="C,C" ConsumeMouse="0"/>
+      <Container      ID="ButtonContainer" Size="parent, 32">
+        <GridButton			ID="TrainUnit"	Size="320,32"							Style="ProductionButton"  Anchor="R,B">
+		  <Container			ID="Disabled"						Size="parent,parent" Hidden="1"  ConsumeMouse="1">
+            <GridButton														Size="parent,parent" Style="ProductionButton" Color="200,200,200,150" Disabled="1"/>
+          </Container>
+          <Container										Size="64,32" Anchor="L,C" Offset="0,-2">
+            <Image ID="Icon" Offset="0, 2" Size="32,32" Texture="Units32" Anchor="C,C" ConsumeMouse="0"/>
           </Container>
           <Stack StackGrowth="Left" Anchor="R,C" Offset="0,0">
             <Container ID="CorpsArmyDropdownArea" Size="30,55" Hidden="1">
@@ -430,10 +425,6 @@
             </Stack>
           </Stack>
           <Label				ID="LabelText"					 WrapWidth="120" String="Industrial Zone" Style="WhiteSemiBold14" Anchor="L,C" Offset="65,0"/>
-          <Container			ID="Disabled"						Size="parent,parent" Hidden="1"  ConsumeMouse="1">
-            <GridButton														Size="parent,parent" Style="ProductionButton" Color="200,200,200,150" Disabled="1"/>
-          </Container>
-          
         </GridButton>
       </Container>
     </Container>
@@ -441,9 +432,12 @@
 
   <Instance				Name="ProjectListInstance">
     <Container      ID="Root" AutoSize="1">
-      <Container      ID="ButtonContainer" Size="parent, 48">
-        <GridButton ID="Button"            Size="320,48"							Style="ProductionButton" >
-          <Container Size="40,48">
+      <Container      ID="ButtonContainer" Size="parent, 32">
+        <GridButton ID="Button"            Size="320,32"							Style="ProductionButton" >
+		  <Container Size="parent,parent" Hidden="1" ID="Disabled" ConsumeMouse="1">
+            <GridButton Size="parent,parent"							Style="ProductionButton" Color="200,200,200,150" Disabled="1"/>
+          </Container>
+          <Container Size="40,32">
             <Image				ID="Icon"			        Size="32,32" Texture="Projects32" Anchor="C,C" ConsumeMouse="0"/>
           </Container>
           <Container Size="parent-65,parent-15" Anchor="R,C" Offset="10,0">
@@ -462,9 +456,6 @@
               <Label				ID="CostText"					String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="5,0"/>
             </Container>
           </Stack>
-          <Container Size="parent,parent" Hidden="1" ID="Disabled" ConsumeMouse="1">
-            <GridButton Size="parent,parent"							Style="ProductionButton" Color="200,200,200,150" Disabled="1"/>
-          </Container>
         </GridButton>
       </Container>
     </Container>
