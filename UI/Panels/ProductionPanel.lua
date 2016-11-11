@@ -503,56 +503,8 @@ function PopulateList(data, listMode, listIM)
 	local unitList;
 	Controls.PauseCollapseList:Stop();
 	local selectedCity	= UI.GetHeadSelectedCity();
-
-	if(listMode == LISTMODE.PRODUCTION) then
-		m_maxProductionSize = 0;
-		-- Populate Current Item
-		local buildQueue	= selectedCity:GetBuildQueue();
-		local productionHash = 0;
-		local completedStr = "";
-		local currentProductionHash = buildQueue:GetCurrentProductionTypeHash();
-		local previousProductionHash = buildQueue:GetPreviousProductionTypeHash();
-		local screenX, screenY:number = UIManager:GetScreenSizeVal()
 	
-		if( currentProductionHash == 0 and previousProductionHash == 0 ) then
-			Controls.CurrentProductionArea:SetHide(true);
-			Controls.ProductionListScroll:SetSizeY(screenY-120);
-			Controls.ProductionListScroll:CalculateSize();
-			Controls.ProductionListScroll:SetOffsetY(10);
-			completedStr = "";
-		else
-			Controls.CurrentProductionArea:SetHide(false);	
-			Controls.ProductionListScroll:SetSizeY(screenY-175);
-			Controls.ProductionListScroll:CalculateSize();
-			Controls.ProductionListScroll:SetOffsetY(65);
-			if( currentProductionHash == 0 ) then
-				productionHash = previousProductionHash;
-				Controls.CompletedArea:SetHide(false);
-				completedStr = Locale.ToUpper(Locale.Lookup("LOC_TECH_KEY_COMPLETED"));
-			else
-				Controls.CompletedArea:SetHide(true);
-				productionHash = currentProductionHash;
-				completedStr = ""
-			end
-		end
-
-		local currentProductionInfo				:table = GetProductionInfoOfCity( data.City, productionHash );
-	
-		if (currentProductionInfo.Icon ~= nil) then
-			Controls.CurrentProductionName:SetText(Locale.ToUpper(Locale.Lookup(currentProductionInfo.Name)).." "..completedStr);
-			Controls.CurrentProductionProgress:SetPercent(currentProductionInfo.PercentComplete);
-			Controls.CurrentProductionProgress:SetShadowPercent(currentProductionInfo.PercentCompleteNextTurn);
-			Controls.CurrentProductionIcon:SetIcon(currentProductionInfo.Icon);
-			if(currentProductionInfo.Description ~= nil) then
-				Controls.CurrentProductionIcon:SetToolTipString(Locale.Lookup(currentProductionInfo.Description));
-			else
-				Controls.CurrentProductionIcon:SetToolTipString();
-			end
-			Controls.CurrentProductionCost:SetText("[ICON_Turn]".. currentProductionInfo.Turns);
-			Controls.CurrentProductionProgressString:SetText("[ICON_ProductionLarge]"..currentProductionInfo.Progress.."/"..currentProductionInfo.Cost);
-		end
-		
-		-- Populate Units ------------------------
+	-- Populate Units ------------------------
 	unitList = listIM:GetInstance();
 	unitList.Header:SetText(Locale.ToUpper(Locale.Lookup("LOC_TECH_FILTER_UNITS")));
 	unitList.HeaderOn:SetText(Locale.ToUpper(Locale.Lookup("LOC_TECH_FILTER_UNITS")));
@@ -872,6 +824,54 @@ function PopulateList(data, listMode, listIM)
 	else
 		prodUnitList = uL;
 	end
+
+	if(listMode == LISTMODE.PRODUCTION) then
+		m_maxProductionSize = 0;
+		-- Populate Current Item
+		local buildQueue	= selectedCity:GetBuildQueue();
+		local productionHash = 0;
+		local completedStr = "";
+		local currentProductionHash = buildQueue:GetCurrentProductionTypeHash();
+		local previousProductionHash = buildQueue:GetPreviousProductionTypeHash();
+		local screenX, screenY:number = UIManager:GetScreenSizeVal()
+	
+		if( currentProductionHash == 0 and previousProductionHash == 0 ) then
+			Controls.CurrentProductionArea:SetHide(true);
+			Controls.ProductionListScroll:SetSizeY(screenY-120);
+			Controls.ProductionListScroll:CalculateSize();
+			Controls.ProductionListScroll:SetOffsetY(10);
+			completedStr = "";
+		else
+			Controls.CurrentProductionArea:SetHide(false);	
+			Controls.ProductionListScroll:SetSizeY(screenY-175);
+			Controls.ProductionListScroll:CalculateSize();
+			Controls.ProductionListScroll:SetOffsetY(65);
+			if( currentProductionHash == 0 ) then
+				productionHash = previousProductionHash;
+				Controls.CompletedArea:SetHide(false);
+				completedStr = Locale.ToUpper(Locale.Lookup("LOC_TECH_KEY_COMPLETED"));
+			else
+				Controls.CompletedArea:SetHide(true);
+				productionHash = currentProductionHash;
+				completedStr = ""
+			end
+		end
+
+		local currentProductionInfo				:table = GetProductionInfoOfCity( data.City, productionHash );
+	
+		if (currentProductionInfo.Icon ~= nil) then
+			Controls.CurrentProductionName:SetText(Locale.ToUpper(Locale.Lookup(currentProductionInfo.Name)).." "..completedStr);
+			Controls.CurrentProductionProgress:SetPercent(currentProductionInfo.PercentComplete);
+			Controls.CurrentProductionProgress:SetShadowPercent(currentProductionInfo.PercentCompleteNextTurn);
+			Controls.CurrentProductionIcon:SetIcon(currentProductionInfo.Icon);
+			if(currentProductionInfo.Description ~= nil) then
+				Controls.CurrentProductionIcon:SetToolTipString(Locale.Lookup(currentProductionInfo.Description));
+			else
+				Controls.CurrentProductionIcon:SetToolTipString();
+			end
+			Controls.CurrentProductionCost:SetText("[ICON_Turn]".. currentProductionInfo.Turns);
+			Controls.CurrentProductionProgressString:SetText("[ICON_ProductionLarge]"..currentProductionInfo.Progress.."/"..currentProductionInfo.Cost);
+		end
 
 		-- Populate Districts ------------------------ CANNOT purchase districts
 		districtList = listIM:GetInstance();
