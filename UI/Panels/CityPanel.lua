@@ -180,6 +180,34 @@ function CQUI_OnPreviousCity()
   UI.PlaySound("UI_Click_Sweetener_Metal_Button_Small");
 end
 
+function CQUI_OnLoadScreenClose()
+  CQUI_RecenterCameraGameStart();
+end
+
+-- ===========================================================================
+--  Recenter camera at start of game
+-- ===========================================================================
+function CQUI_RecenterCameraGameStart()
+  local startX, startY;
+  local ePlayer :number = Game.GetLocalPlayer();
+  local kPlayer         = Players[ePlayer];
+  local cities = kPlayer:GetCities();
+  
+  -- If there is a city, center on the capital
+  -- Else, center on a unit
+  if cities:GetCount() > 0 then
+      capital = cities:GetCapitalCity();
+      startX = capital:GetX();
+      startY = capital:GetY();
+  else
+      local units = kPlayer:GetUnits();
+      local firstUnit = units:FindID(0);
+      startX = firstUnit:GetX();
+      startY = firstUnit:GetY();
+  end
+  UI.LookAtPlot( startX, startY );
+end
+
 -- ===========================================================================
 --
 -- ===========================================================================
@@ -1106,6 +1134,7 @@ end
 -- ===========================================================================
 function Initialize()
 
+<<<<<<< HEAD
   LuaEvents.CityPanel_OpenOverview();
 
   m_isInitializing = true;
@@ -1164,6 +1193,7 @@ function Initialize()
   Events.InterfaceModeChanged.Add(  CQUI_OnInterfaceModeChanged );
   Events.LocalPlayerChanged.Add(    OnLocalPlayerChanged );
   Events.UnitSelectionChanged.Add(  OnUnitSelectionChanged );
+  Events.LoadScreenClose.Add( CQUI_OnLoadScreenClose );
 
   -- LUA Events
   LuaEvents.CityPanelOverview_CloseButton.Add( OnCloseOverviewPanel );
