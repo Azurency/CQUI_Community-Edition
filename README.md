@@ -150,6 +150,10 @@ Contents/Assets/DLC
 
 Please see the [issue tracker](https://github.com/chaorace/cqui/issues) for an up to date list, you can also find help and report bugs at our [Gitter](https://gitter.im/Civ6-CQUI/Help)
 
+### How to contribute
+
+Those looking to contribute to CQUI should visit [the CQUI repo](https://github.com/chaorace/cqui). Those new to using Github should visit the [contributor guide](https://github.com/chaorace/cqui/wiki/How-to-contribute-to-CQUI). ALL new contributors should visit the [style guidelines](https://github.com/chaorace/cqui/wiki/Style-Guideline). All good work is accepted, so long as it falls under the scope of the project and adheres to the styleguide. Contributors are always credited for their work! Those looking for a goal to get started on may want to visit the [issue tracker](https://github.com/chaorace/cqui/issues) for the current list of bugs and feature requests, it's growing every day!
+
 # THANKS:
 * @Vans163 for his original QUI mod :heart:
 * astog from the CivFanatics modding community for his [Better Trade Routes mod](http://forums.civfanatics.com/threads/better-trade-screen.602636/)
@@ -162,9 +166,12 @@ Please see the [issue tracker](https://github.com/chaorace/cqui/issues) for an u
   *localization in #20
   *map pin enhancements in PR #21 and #55
   *UI/Civilopedia improvements in #24 and #32
+  *adding a GP filter to the policy card display in 063d3a668a06b49c9b2394e03cd5deb66b848210
 * @OfekA for providing the improved resource dimming feature in #54
 * @RatchetJ for providing the civic/tech notifications at 50%/100% completion in #66 and 1148edc7ada9a649c15611ef78dbdc690c8adf30
-* @kblease for fortify until healed hotkey bugfix in #73
+* @kblease for:
+  *fortify until healed hotkey bugfix in #73
+  *unit purchasing fix in #80
 * @Proustldee for bringing the BTS mod version up to current in #61
 * @perseghini for providing the fix for issue #33
 * /u/dli511 @ Reddit for their bug report relating to purchasing buildings
