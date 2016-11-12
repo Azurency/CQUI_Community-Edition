@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd" Style="FontNormal20">
   <!-- Left Panel -->
   <SlideAnim ID="RouteChooserSlideAnim" Anchor="L,T" Begin="-350,0" End="0,0" Cycle="Once" Speed="1" Function="OutQuint">
@@ -9,14 +9,14 @@
         <Grid Size="316,190" Texture="DestinationChooser_CurrentSlot" SliceStart="0,0" SliceCorner="30,30" SliceSize="250,90" SliceTextureSize="308,207" >
           <Container ID="CurrentSelectionContainer" Size="parent, parent" Offset="0,0">
             <!-- Selected City -->
-            <Grid								ID="BannerBase"						Anchor="C,T" Offset="0,12"		Size="270,33"								Texture="CityPanel_BannerBase"				SliceCorner="20,10" SliceSize="160,1" SliceTextureSize="199,33" Color="150,170,100,255">
-              <Grid							ID="BannerDarker"					Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerDarker"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="0,0,0,100" />
-              <Grid							ID="BannerLighter"				Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerLighter"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="255,255,255,255" />
-              <Grid																				Anchor="L,T" Offset="6,2"			Size="parent-10,parent-8"		Texture="CityPanel_BannerNone"				SliceCorner="70,10" SliceSize="1,1" SliceTextureSize="179,20" Color="255,0,0,255" />
-              <Label						ID="CityName"							Anchor="L,C" Offset="40,-2"		Style="FontFlair16"					FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="EveryWord" TruncateWidth="220" />
+            <Grid               ID="BannerBase"           Anchor="C,T" Offset="0,12"    Size="270,33"               Texture="CityPanel_BannerBase"        SliceCorner="20,10" SliceSize="160,1" SliceTextureSize="199,33" Color="150,170,100,255">
+              <Grid             ID="BannerDarker"         Anchor="L,T" Offset="4,2"     Size="parent-8,parent-10"   Texture="CityPanel_BannerDarker"      SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="0,0,0,100" />
+              <Grid             ID="BannerLighter"        Anchor="L,T" Offset="4,2"     Size="parent-8,parent-10"   Texture="CityPanel_BannerLighter"     SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="255,255,255,255" />
+              <Grid                                       Anchor="L,T" Offset="6,2"     Size="parent-10,parent-8"   Texture="CityPanel_BannerNone"        SliceCorner="70,10" SliceSize="1,1" SliceTextureSize="179,20" Color="255,0,0,255" />
+              <Label            ID="CityName"             Anchor="L,C" Offset="40,-2"   Style="FontFlair16"         FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="EveryWord" TruncateWidth="220" />
 
-              <Label						ID="TradingPostIcon"	Anchor="L,C" Offset="14,-4"	Style="FontNormal16" FontStyle="Shadow" String="[ICON_TradingPost]" Color="255,0,0,255" EffectColor="255,0,0,255" GradientColor="255,0,0,255" />
-              <Label						ID="CityStateQuestIcon"	Anchor="L,C" Offset="-2,-12"	Style="FontNormal16" FontStyle="Shadow" String="[ICON_CityStateQuest]" Color="255,0,0,255" EffectColor="255,0,0,255" GradientColor="255,0,0,255" />
+              <Label            ID="TradingPostIcon"  Anchor="L,C" Offset="14,-4" Style="FontNormal16" FontStyle="Shadow" String="[ICON_TradingPost]" Color="255,0,0,255" EffectColor="255,0,0,255" GradientColor="255,0,0,255" />
+              <Label            ID="CityStateQuestIcon" Anchor="L,C" Offset="-2,-12"  Style="FontNormal16" FontStyle="Shadow" String="[ICON_CityStateQuest]" Color="255,0,0,255" EffectColor="255,0,0,255" GradientColor="255,0,0,255" />
               <Stack StackGrowth="Left"  Offset="14,-4" Anchor="R,C">
                 <Label          ID="TurnsToComplete"        Anchor="R,C" Style="FontFlair16" String="??" FontStyle="Stroke" EffectColor="0,0,0,25" />
                 <Label ID="TurnsToCompleteIcon"  String="[ICON_Turn]" Offset="0,-1" Anchor="R,C" Style="FontFlair16" FontStyle="Stroke" EffectColor="0,0,0,25" />
@@ -24,7 +24,7 @@
             </Grid>
 
             <!-- Resource Information -->
-            <Grid	ID="DestinationResources" Size="290,35" Anchor="C,T"	Offset="0,58"		Texture="Controls_ItemContainerDestination" SliceCorner="6,2" SliceSize="2,31" SliceTextureSize="24,35" >
+            <Grid ID="DestinationResources" Size="290,35" Anchor="C,T"  Offset="0,58"   Texture="Controls_ItemContainerDestination" SliceCorner="6,2" SliceSize="2,31" SliceTextureSize="24,35" >
               <!-- Column Background -->
               <Box Size="40,parent" Offset="40,0" Color="0,0,0,22"/>
               <Box Size="40,parent" Offset="120,0" Color="0,0,0,22"/>
@@ -35,7 +35,7 @@
               <Label ID="DestinationReceivesNoBenefitsLabel" Anchor="C,C" Offset="-4,0" Style="FontNormal16" FontStyle="Shadow" EffectColor="Black" String="LOC_ROUTECHOOSER_NO_BENEFITS_FROM_ROUTE" Hidden="1"/>
             </Grid>
           
-            <Grid	ID="OriginResources" Size="290,35" Anchor="C,T"	Offset="0,111"		Texture="Controls_ItemContainerOrigin" SliceCorner="14,2" SliceSize="3,31" SliceTextureSize="24,35" >
+            <Grid ID="OriginResources" Size="290,35" Anchor="C,T" Offset="0,111"    Texture="Controls_ItemContainerOrigin" SliceCorner="14,2" SliceSize="3,31" SliceTextureSize="24,35" >
               <!-- Column Background -->
               <Box Size="40,parent" Offset="40,0" Color="0,0,0,22"/>
               <Box Size="40,parent" Offset="120,0" Color="0,0,0,22"/>
@@ -159,36 +159,36 @@
         <Button ID="Header_CloseButton" Size="32,32" Offset="10,-2" Anchor="R,T" Texture="Controls_CloseButtonAlt"/>
       </Grid>
 
-		<Tutorial  ID="TutTradePanel" Style="TutorialContainer" AnchorSide="O,I" Offset="-280,190" TriggerBy="TutorialTradePanel" >
-			<SlideAnim Anchor="C,T" Start="30,0" EndOffset="40,0" Cycle="Bounce" Function="OutQuad" >
-				<Image Texture="Tutorial_ArrowH" Offset="0,0" Size="58,44" FlipX="1"/>
-			</SlideAnim>
-		</Tutorial>
+    <Tutorial  ID="TutTradePanel" Style="TutorialContainer" AnchorSide="O,I" Offset="-280,190" TriggerBy="TutorialTradePanel" >
+      <SlideAnim Anchor="C,T" Start="30,0" EndOffset="40,0" Cycle="Bounce" Function="OutQuad" >
+        <Image Texture="Tutorial_ArrowH" Offset="0,0" Size="58,44" FlipX="1"/>
+      </SlideAnim>
+    </Tutorial>
 
-		<Tutorial  ID="TutTradeRoute" Style="TutorialContainer" AnchorSide="O,I" Offset="-280,250" TriggerBy="TutorialTradeRoute" >
-			<Grid Style="TutorialCalloutGrid" Offset="220,0">
-				<Label Style="TutorialBodyText" String="LOC_META_145b_BODY" />
-			</Grid>
-			<SlideAnim Anchor="C,T" Start="30,0" EndOffset="40,0" Cycle="Bounce" Function="OutQuad" >
-				<Image Texture="Tutorial_ArrowH" Offset="0,0" Size="58,44" FlipX="1"/>
-			</SlideAnim>
-		</Tutorial>
+    <Tutorial  ID="TutTradeRoute" Style="TutorialContainer" AnchorSide="O,I" Offset="-280,250" TriggerBy="TutorialTradeRoute" >
+      <Grid Style="TutorialCalloutGrid" Offset="220,0">
+        <Label Style="TutorialBodyText" String="LOC_META_145b_BODY" />
+      </Grid>
+      <SlideAnim Anchor="C,T" Start="30,0" EndOffset="40,0" Cycle="Bounce" Function="OutQuad" >
+        <Image Texture="Tutorial_ArrowH" Offset="0,0" Size="58,44" FlipX="1"/>
+      </SlideAnim>
+    </Tutorial>
 
-		<Tutorial  ID="TutBeginRoute" Style="TutorialContainer" AnchorSide="O,I" Offset="-260,154" TriggerBy="TutorialBeginRoute" >
-			<Grid Style="TutorialCalloutGrid" Offset="220,0">
-				<Label Style="TutorialBodyText" String="LOC_META_145c_BODY" />
-			</Grid>
-			<SlideAnim Anchor="C,T" Start="30,0" EndOffset="40,0" Cycle="Bounce" Function="OutQuad" >
-				<Image Texture="Tutorial_ArrowH" Offset="0,0" Size="58,44" FlipX="1"/>
-			</SlideAnim>
-		</Tutorial>
-		
+    <Tutorial  ID="TutBeginRoute" Style="TutorialContainer" AnchorSide="O,I" Offset="-260,154" TriggerBy="TutorialBeginRoute" >
+      <Grid Style="TutorialCalloutGrid" Offset="220,0">
+        <Label Style="TutorialBodyText" String="LOC_META_145c_BODY" />
+      </Grid>
+      <SlideAnim Anchor="C,T" Start="30,0" EndOffset="40,0" Cycle="Bounce" Function="OutQuad" >
+        <Image Texture="Tutorial_ArrowH" Offset="0,0" Size="58,44" FlipX="1"/>
+      </SlideAnim>
+    </Tutorial>
+    
     </Container>
   </SlideAnim>
 
   <!-- Instances -->
-  <Instance				Name="RouteChoiceInstance">
-    <Container ID="Top"	Size="290,78" Offset="10,2">
+  <Instance       Name="RouteChoiceInstance">
+    <Container ID="Top" Size="290,78" Offset="10,2">
       <GridButton ID="Button" Size="parent,parent" Anchor="C,T"> 
         <GridData Texture="DestinationChooser_Button" StateOffsetIncrement="0,76" SliceCorner="14,14" SliceSize="19,44" SliceTextureSize="48,76"/>
 
@@ -196,14 +196,14 @@
         <Grid ID="SelectorBrace" Size="parent+4,parent+4" Anchor="C,C" Texture="Controls_SelectorBrace" SliceCorner="29,29" SliceSize="2,2" SliceTextureSize="62,62"/>
         
         <!-- City Banner -->
-        <Grid								ID="BannerBase"								Anchor="C,T" Offset="-1,4"		Size="280,33"								Texture="CityPanel_BannerBase"				SliceCorner="20,10" SliceSize="160,1" SliceTextureSize="199,33" Color="150,170,100,255">
-          <Grid							ID="BannerDarker"													Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerDarker"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="0,0,0,100" />
-          <Grid							ID="BannerLighter"													Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerLighter"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="255,255,255,255" />
-          <Grid																				Anchor="L,T" Offset="6,2"			Size="parent-10,parent-8"		Texture="CityPanel_BannerNone"				SliceCorner="70,10" SliceSize="1,1" SliceTextureSize="179,20" Color="255,0,0,255" />
-          <Label						ID="CityName"							Anchor="L,C" Offset="34,-2"		Style="FontFlair16"					FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="EveryWord" TruncateWidth="225"/>
+        <Grid               ID="BannerBase"               Anchor="C,T" Offset="-1,4"    Size="280,33"               Texture="CityPanel_BannerBase"        SliceCorner="20,10" SliceSize="160,1" SliceTextureSize="199,33" Color="150,170,100,255">
+          <Grid             ID="BannerDarker"                         Anchor="L,T" Offset="4,2"     Size="parent-8,parent-10"   Texture="CityPanel_BannerDarker"      SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="0,0,0,100" />
+          <Grid             ID="BannerLighter"                          Anchor="L,T" Offset="4,2"     Size="parent-8,parent-10"   Texture="CityPanel_BannerLighter"     SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="255,255,255,255" />
+          <Grid                                       Anchor="L,T" Offset="6,2"     Size="parent-10,parent-8"   Texture="CityPanel_BannerNone"        SliceCorner="70,10" SliceSize="1,1" SliceTextureSize="179,20" Color="255,0,0,255" />
+          <Label            ID="CityName"             Anchor="L,C" Offset="34,-2"   Style="FontFlair16"         FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="EveryWord" TruncateWidth="225"/>
           
-          <Label						ID="TradingPostIcon"	Anchor="L,C" Offset="10,-4"	Style="FontNormal16" FontStyle="Shadow" String="[ICON_TradingPost]" Color="255,0,0,255" EffectColor="255,0,0,255" GradientColor="255,0,0,255" />
-          <Label						ID="CityStateQuestIcon"	Anchor="L,C" Offset="-2,-12"	Style="FontNormal16" FontStyle="Shadow" String="[ICON_CityStateQuest]" Color="255,0,0,255" EffectColor="255,0,0,255" GradientColor="255,0,0,255" />
+          <Label            ID="TradingPostIcon"  Anchor="L,C" Offset="10,-4" Style="FontNormal16" FontStyle="Shadow" String="[ICON_TradingPost]" Color="255,0,0,255" EffectColor="255,0,0,255" GradientColor="255,0,0,255" />
+          <Label            ID="CityStateQuestIcon" Anchor="L,C" Offset="-2,-12"  Style="FontNormal16" FontStyle="Shadow" String="[ICON_CityStateQuest]" Color="255,0,0,255" EffectColor="255,0,0,255" GradientColor="255,0,0,255" />
 
           <Stack StackGrowth="Left" Anchor="R,C" Offset="12,-4" StackPadding="0">
             <Label ID="TurnsToComplete" Anchor="C,C" Offset="0,0" Style="FontFlair14" FontStyle="Stroke" EffectColor="0,0,0,25" String="??" />
@@ -212,7 +212,7 @@
         </Grid>
 
         <!-- Resource Info -->
-        <Grid	Size="280,35" Anchor="C,B" Offset="-1,7" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16" >
+        <Grid Size="280,35" Anchor="C,B" Offset="-1,7" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16" >
           <!-- Column Background -->
           <Box Size="40,parent" Offset="40,0" Color="0,0,0,22"/>
           <Box Size="40,parent" Offset="120,0" Color="0,0,0,22"/>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <GameData>
   <LocalizedText>
     <Row Tag="LOC_TRADE_ROUTE_OVERVIEW_FILTER_TEXT" Language="en_US">
@@ -6,43 +6,43 @@
     </Row>
 
     <Row Tag="LOC_TRADE_NO_BENEFIT_TEXT" Language="en_US">
-    	<Text>gains no benefits from this Route.</Text>
+      <Text>gains no benefits from this Route.</Text>
     </Row>
 
     <Row Tag="LOC_TRADE_SORT_BY_TEXT" Language="en_US">
-    	<Text>Sort by:</Text>
+      <Text>Sort by:</Text>
     </Row>
 
     <Row Tag="LOC_TRADE_SORT_BY_HELP_TOOLTIP" Language="en_US">
-    	<Text>Sort Trade Routes in ascending or descending order.</Text>
+      <Text>Sort Trade Routes in ascending or descending order.</Text>
     </Row>
 
     <Row Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="en_US">
-    	<Text>Sort by Food.</Text>
+      <Text>Sort by Food.</Text>
     </Row>
 
     <Row Tag="LOC_TRADE_SORT_BY_PRODUCTION_TOOLTIP" Language="en_US">
-    	<Text>Sort by Production.</Text>
+      <Text>Sort by Production.</Text>
     </Row>
 
     <Row Tag="LOC_TRADE_SORT_BY_GOLD_TOOLTIP" Language="en_US">
-    	<Text>Sort by Gold.</Text>
+      <Text>Sort by Gold.</Text>
     </Row>
 
     <Row Tag="LOC_TRADE_SORT_BY_SCIENCE_TOOLTIP" Language="en_US">
-    	<Text>Sort by Science.</Text>
+      <Text>Sort by Science.</Text>
     </Row>
 
     <Row Tag="LOC_TRADE_SORT_BY_CULTURE_TOOLTIP" Language="en_US">
-    	<Text>Sort by Culture.</Text>
+      <Text>Sort by Culture.</Text>
     </Row>
 
     <Row Tag="LOC_TRADE_SORT_BY_FAITH_TOOLTIP" Language="en_US">
-    	<Text>Sort by Faith.</Text>
+      <Text>Sort by Faith.</Text>
     </Row>
 
     <Row Tag="LOC_TRADE_SORT_BY_TURNS_REMAINING_TOOLTIP" Language="en_US">
-    	<Text>Sort by Turns remaing to complete Trade Route.</Text>
+      <Text>Sort by Turns remaing to complete Trade Route.</Text>
     </Row>
 
     <Row Tag="LOC_TRADE_ORIGIN_CHOOSER_HEADER_LABEL_TEXT" Language="en_US">

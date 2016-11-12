@@ -6,46 +6,46 @@
   <AlphaAnim            ID="UnitPanelAlpha"       AlphaBegin="0" AlphaEnd="1" Speed="3"   Function="OutSine" Cycle="Once" Size="full,full">
     <SlideAnim          ID="UnitPanelSlide"       Start="200,0" End="0,0"     Speed="3.5" Function="OutSine" Cycle="Once" Size="full,full">
       
-      <Grid							ID="BuildActionsPanel"				Anchor="R,B" Offset="501,0"	Size="51,180" Texture="UnitPanel_SpecialActionsFrame" SliceCorner="14,14"  >
-        <Button					ID="RecommendedActionButton"	Anchor="C,T" Offset="1,-23" Size="44,53" Texture="UnitPanel_ActionButton"		>
-          <Image				ID="RecommendedActionIcon"		Anchor="C,C" Offset="-1,-1" Size="38,38"		/>
-          <Image				ID="RecommendedActionFrame"		Anchor="C,T" Offset="0,-1"	Texture="UnitPanel_RecommendedActionFrame" />
+      <Grid             ID="BuildActionsPanel"        Anchor="R,B" Offset="501,0" Size="51,180" Texture="UnitPanel_SpecialActionsFrame" SliceCorner="14,14"  >
+        <Button         ID="RecommendedActionButton"  Anchor="C,T" Offset="1,-23" Size="44,53" Texture="UnitPanel_ActionButton"   >
+          <Image        ID="RecommendedActionIcon"    Anchor="C,C" Offset="-1,-1" Size="38,38"    />
+          <Image        ID="RecommendedActionFrame"   Anchor="C,T" Offset="0,-1"  Texture="UnitPanel_RecommendedActionFrame" />
         </Button>
-        <Stack					ID="BuildActionsStack"				Anchor="R,T" Offset="11,26" StackGrowth="Left" Padding="6" />
+        <Stack          ID="BuildActionsStack"        Anchor="R,T" Offset="11,26" StackGrowth="Left" Padding="6" />
       </Grid>
-      <Container				ID="UnitPanelBaseContainer" Anchor="R,B" Offset="172,0" Size="310,160" ConsumeMouseOver="1" >
-        <Grid						ID="MainPanelBacking"				Anchor="R,B" Texture="SelectionPanel_WoodBacking" SliceTextureSize="150,154" SliceCorner="85,47" Size="Parent-10,Parent-6">
-          <Grid																			AnchorSide="I,O" Texture="SelectionPanel_TopRim" SliceTextureSize="14,5" SliceCorner="7,2" Size="parent,5"/>
+      <Container        ID="UnitPanelBaseContainer" Anchor="R,B" Offset="172,0" Size="310,160" ConsumeMouseOver="1" >
+        <Grid           ID="MainPanelBacking"       Anchor="R,B" Texture="SelectionPanel_WoodBacking" SliceTextureSize="150,154" SliceCorner="85,47" Size="Parent-10,Parent-6">
+          <Grid                                     AnchorSide="I,O" Texture="SelectionPanel_TopRim" SliceTextureSize="14,5" SliceCorner="7,2" Size="parent,5"/>
         </Grid>
 
-        <Container			ID="CombatPreviewBanners" Anchor="L,B" Offset="-86,-10" Size="169,194"	AnchorSide="O,I"													Hidden="1">
-          <Image				ID="BannerDefeat"																				Size="169,194"	Texture="CombatPreview_BannerDefeat.dds"  Hidden="1"/>
-          <Image				ID="BannerStalemate"																		Size="169,194"	Texture="CombatPreview_BannerEven.dds"		Hidden="1"/>
-          <Image				ID="BannerVictory"																			Size="169,194"	Texture="CombatPreview_BannerVictory.dds" Hidden="1"/>
-          <Grid																		Anchor="C,T" Offset="0,38"		Size="169,22"		Texture="CombatPreview_VsFrame.dds"  SliceCorner="8,8" SliceSize="6,6">
-            <Label			ID="VersusText"						Anchor="C,C" Offset="0,2"			Style="UnitPanelHeader" String="{LOC_HUD_UNIT_PANEL_VS:upper}"/>
+        <Container      ID="CombatPreviewBanners" Anchor="L,B" Offset="-86,-10" Size="169,194"  AnchorSide="O,I"                          Hidden="1">
+          <Image        ID="BannerDefeat"                                       Size="169,194"  Texture="CombatPreview_BannerDefeat.dds"  Hidden="1"/>
+          <Image        ID="BannerStalemate"                                    Size="169,194"  Texture="CombatPreview_BannerEven.dds"    Hidden="1"/>
+          <Image        ID="BannerVictory"                                      Size="169,194"  Texture="CombatPreview_BannerVictory.dds" Hidden="1"/>
+          <Grid                                   Anchor="C,T" Offset="0,38"    Size="169,22"   Texture="CombatPreview_VsFrame.dds"  SliceCorner="8,8" SliceSize="6,6">
+            <Label      ID="VersusText"           Anchor="C,C" Offset="0,2"     Style="UnitPanelHeader" String="{LOC_HUD_UNIT_PANEL_VS:upper}"/>
           </Grid>
-           <Label				ID="CombatAssessmentText"	Anchor="C,C" Offset="-6,-76"	Align="Center" WrapWidth="120" Style="UnitPanelHeader" />
+           <Label       ID="CombatAssessmentText" Anchor="C,C" Offset="-6,-76"  Align="Center" WrapWidth="120" Style="UnitPanelHeader" />
         </Container>
 
-		    <Stack	ID="PrimaryArtStack"	Anchor="R,T"	Offset="6,-2"	AnchorSide="I,O"	StackGrowth="Right" Padding="2" />
+        <Stack  ID="PrimaryArtStack"  Anchor="R,T"  Offset="6,-2" AnchorSide="I,O"  StackGrowth="Right" Padding="2" />
         <!-- ACTIONS PANEL -->
         <Stack ID="ActionsStack" Anchor="R,T" Offset="2,-4" AnchorSide="I,O" StackGrowth="Left" StackPadding="2">
           <Stack ID="StandardActionsStack" Anchor="C,B" StackGrowth="Right" Padding="2" ConsumeMouse="1" />
-		  <Stack ID="SecondaryActionsStack"	Anchor="R,T" StackGrowth="Right" Padding="2"/>
+      <Stack ID="SecondaryActionsStack" Anchor="R,T" StackGrowth="Right" Padding="2"/>
           <Grid ID="ExpandSecondaryActionGrid" Hidden="1">
               <Button ID="ExpandSecondaryActionsButton" Hidden="1"/>
           </Grid>
         </Stack>
         
-        <Grid						ID="MainPanel"						Anchor="R,B"  Offset="0,-2"    	Texture="SelectionPanel_MainPanel"  Size="Parent-48,Parent"  SliceCorner="60,60" SliceTextureSize="263,160" />
+        <Grid           ID="MainPanel"            Anchor="R,B"  Offset="0,-2"     Texture="SelectionPanel_MainPanel"  Size="Parent-48,Parent"  SliceCorner="60,60" SliceTextureSize="263,160" />
 
-        <Button ID="SelectionPanelUnitPortrait"	Texture="SelectionPanel_Portrait"  Anchor="L,B" Size="107,107" Offset="-2,25" ConsumeMouse="1" NoStateChange="1">
-          <!--<Render					ID="PortraitFrame"				Anchor="L,B"  Offset="0,25"	Size="107,107"	Renderer="UnitPreview" Texture="SelectionPanel_Portrait_Center"  MaskTexture="SelectionPanel_Portrait_Mask"/>-->
+        <Button ID="SelectionPanelUnitPortrait" Texture="SelectionPanel_Portrait"  Anchor="L,B" Size="107,107" Offset="-2,25" ConsumeMouse="1" NoStateChange="1">
+          <!--<Render         ID="PortraitFrame"        Anchor="L,B"  Offset="0,25" Size="107,107"  Renderer="UnitPreview" Texture="SelectionPanel_Portrait_Center"  MaskTexture="SelectionPanel_Portrait_Mask"/>-->
         </Button>
-        <Container																Anchor="R,T"	Offset="30,13"		Size="Parent-110,32" >
-          <Button				ID="PreviousUnitButton"		Anchor="C,T"	Offset="-100,-10"	Size="18,23" Texture="Controls_ArrowButtonLeft"	Hidden="1" />
-          <Button				ID="NextUnitButton"				Anchor="C,T"	Offset="100,-10"	Size="18,23" Texture="Controls_ArrowButtonRight"	Hidden="1" />
+        <Container                                Anchor="R,T"  Offset="30,13"    Size="Parent-110,32" >
+          <Button       ID="PreviousUnitButton"   Anchor="C,T"  Offset="-100,-10" Size="18,23" Texture="Controls_ArrowButtonLeft" Hidden="1" />
+          <Button       ID="NextUnitButton"       Anchor="C,T"  Offset="100,-10"  Size="18,23" Texture="Controls_ArrowButtonRight"  Hidden="1" />
         </Container>
 
         <!-- UNIT SELECTION PULLDOWN -->
@@ -73,7 +73,7 @@
         </PullDown>
 
         <!--STATS-->
-        <Container Anchor="L,B"	Offset="0,28"		Size="Parent,Parent" >
+        <Container Anchor="L,B" Offset="0,28"   Size="Parent,Parent" >
           <Container ID="SubjectStatContainer" Anchor="L,T" Offset="86,56" Size="Parent-105,120">
             <Stack ID="SubjectStatStack" Anchor="R,T" StackGrowth="Down"/>
           </Container> 
@@ -82,24 +82,24 @@
         <!--Health Meters-->
         <Container Anchor="L,B" Offset="0,133">
           <Image Texture="SelectionPanel_LifeBarBacking" Size="107,107" Offset="-3,0"/>
-          <Image	                                  Size="103,103" Texture="UnitPanel_HitMeter.dds" Color="0,0,0,255" />
+          <Image                                    Size="103,103" Texture="UnitPanel_HitMeter.dds" Color="0,0,0,255" />
           <AlphaAnim AlphaBegin="1.0" AlphaEnd="0.7" Speed="1.5" Cycle="Bounce">
-            <Meter			ID="UnitHealthMeterShadow"	Size="103,103" Texture="UnitPanel_HitMeter.dds"/>
+            <Meter      ID="UnitHealthMeterShadow"  Size="103,103" Texture="UnitPanel_HitMeter.dds"/>
           </AlphaAnim>
-          <Meter				ID="UnitHealthMeter"	      Size="103,103" Texture="UnitPanel_HitMeter.dds"/>
+          <Meter        ID="UnitHealthMeter"        Size="103,103" Texture="UnitPanel_HitMeter.dds"/>
         </Container>
 
-        <Image        ID="CityHealthMeters"				Texture="CityPanel_HealthShieldsBacking"  Anchor="L,B"  Offset="-3,25"              Size="57,107" Hidden="1">
+        <Image        ID="CityHealthMeters"       Texture="CityPanel_HealthShieldsBacking"  Anchor="L,B"  Offset="-3,25"              Size="57,107" Hidden="1">
           <Image      ID="CityWallHealthMeters"   Texture="CityPanel_Shields3_Empty"        Anchor="L,C"  Size="110,110"  Offset="1,-1" Hidden="0">
             <AlphaAnim AlphaBegin="1.0" AlphaEnd="0.7" Speed="1.5" Cycle="Bounce" Size="110,110" Anchor="L,C">
-              <Meter			ID="WallHealthMeterShadow"				Texture="SelectionPanel_Shields"        Anchor="L,C"  Size="110,110"  Color="120,198,247,150"/>
+              <Meter      ID="WallHealthMeterShadow"        Texture="SelectionPanel_Shields"        Anchor="L,C"  Size="110,110"  Color="120,198,247,150"/>
             </AlphaAnim>
-            <Meter			ID="WallHealthMeter"				Texture="SelectionPanel_Shields"        Anchor="L,C"  Size="110,110"  Color="120,198,247,255"/>
+            <Meter      ID="WallHealthMeter"        Texture="SelectionPanel_Shields"        Anchor="L,C"  Size="110,110"  Color="120,198,247,255"/>
           </Image>
           <AlphaAnim AlphaBegin="1.0" AlphaEnd="0.7" Speed="1.5" Cycle="Bounce" Size="95,95" Offset="7,-2" Anchor="L,C">
-            <Meter			ID="CityHealthMeterShadow"				Texture="SelectionPanel_Health"      Anchor="L,C" Size="95,95"/>
+            <Meter      ID="CityHealthMeterShadow"        Texture="SelectionPanel_Health"      Anchor="L,C" Size="95,95"/>
           </AlphaAnim>
-          <Meter			ID="CityHealthMeter"				Texture="SelectionPanel_Health"   Offset="7,-2"    Anchor="L,C" Size="95,95"/>
+          <Meter      ID="CityHealthMeter"        Texture="SelectionPanel_Health"   Offset="7,-2"    Anchor="L,C" Size="95,95"/>
         </Image>
 
         <!--Unit Icon-->
@@ -114,27 +114,27 @@
           </Image>
         </Container>
         
-        <Container		ID="XPArea"									Anchor="R,B"	Offset="10,0"		Size="224,15" >
-          <Box																									Offset="10,0"		Size="parent-20,parent" Color="0,0,0,255" />
-          <Bar				ID="XPBar"									Color="255,255,255,0" Offset="80,2"		Size="130,10" Direction="Right" />
-          <Grid																																	Size="parent,parent"		Texture="UnitPanel_XPMeterFrame" SliceCorner="80,4" SliceSize="1,2" SliceTextureSize="98,10" />
-          <Label			ID="XPLabel"								Anchor="R,B"	Offset="150,0" Style="FontNormal12" Color="10,8,3,250" String="LOC_HUD_UNIT_PANEL_XP" />
+        <Container    ID="XPArea"                 Anchor="R,B"  Offset="10,0"   Size="224,15" >
+          <Box                                                  Offset="10,0"   Size="parent-20,parent" Color="0,0,0,255" />
+          <Bar        ID="XPBar"                  Color="255,255,255,0" Offset="80,2"   Size="130,10" Direction="Right" />
+          <Grid                                                                 Size="parent,parent"    Texture="UnitPanel_XPMeterFrame" SliceCorner="80,4" SliceSize="1,2" SliceTextureSize="98,10" />
+          <Label      ID="XPLabel"                Anchor="R,B"  Offset="150,0" Style="FontNormal12" Color="10,8,3,250" String="LOC_HUD_UNIT_PANEL_XP" />
         </Container>
 
-        <Grid					ID="PromotionBanner"				Anchor="R,B"	Offset="0,0"	Size="Parent-54,43"	Texture="UnitPanel_PromotionBanner" SliceCorner="40,1" SliceTextureSize="78,43">
-          <Stack			ID="EarnedPromotionsStack"	Anchor="L,T"	Offset="34,6"		StackGrowth="right" StackPadding="2" />
+        <Grid         ID="PromotionBanner"        Anchor="R,B"  Offset="0,0"  Size="Parent-54,43" Texture="UnitPanel_PromotionBanner" SliceCorner="40,1" SliceTextureSize="78,43">
+          <Stack      ID="EarnedPromotionsStack"  Anchor="L,T"  Offset="34,6"   StackGrowth="right" StackPadding="2" />
         </Grid>
 
         <!-- Selected Unit Combat Stat -->
-        <Image				ID="CombatPreview_CombatStat" Anchor="L,B" Offset="50,120" Texture="CombatPreview_CombatStat" Hidden="1">
-          <Image			ID="CombatPreview_CombatStatType" Anchor="C,C" Size="22,22"/>
-          <Label			ID="CombatPreview_CombatStatStrength" Anchor="R,C" AnchorSide="O,I" Offset="6,0" Style="UnitPanelBigValue" />
+        <Image        ID="CombatPreview_CombatStat" Anchor="L,B" Offset="50,120" Texture="CombatPreview_CombatStat" Hidden="1">
+          <Image      ID="CombatPreview_CombatStatType" Anchor="C,C" Size="22,22"/>
+          <Label      ID="CombatPreview_CombatStatStrength" Anchor="R,C" AnchorSide="O,I" Offset="6,0" Style="UnitPanelBigValue" />
         </Image>
 
         <!-- Selected Unit Combat Preview -->
-        <Container		ID="CombatBreakdownPanel" Anchor="R,B" Size="Parent-176,Parent-50" Offset="10,10" Hidden="1" >
-          <AlphaAnim	ID="SubjectModifierStackAnim" Anchor="L,T" Size="150,140" Offset="5,-5" AlphaBegin="1" AlphaEnd="0" Speed="2" Cycle="Once" Stopped="true" Pause="3">
-            <Stack		ID="SubjectModifierStack" StackGrowth="Down"/>
+        <Container    ID="CombatBreakdownPanel" Anchor="R,B" Size="Parent-176,Parent-50" Offset="10,10" Hidden="1" >
+          <AlphaAnim  ID="SubjectModifierStackAnim" Anchor="L,T" Size="150,140" Offset="5,-5" AlphaBegin="1" AlphaEnd="0" Speed="2" Cycle="Once" Stopped="true" Pause="3">
+            <Stack    ID="SubjectModifierStack" StackGrowth="Down"/>
           </AlphaAnim>
           <Image Texture="CombatPreview_BonusDivider" Anchor="L,T" AnchorSide="O,I" Offset="5,-10" FlipX="true">
             <Image Texture="CombatPreview_Ornament" Anchor="L,T" AnchorSide="O,I" Offset="14,-18" />
@@ -147,11 +147,11 @@
 
         <!-- Great Person Passive Information -->
         <Container Anchor="L,B" Offset="100,14" Size="parent-120,38">
-          <Grid ID="GreatPersonPassiveGrid"	Anchor="R,C" Offset="0,0"	Size="parent,26" Style="CityPanelSlotGrid" ToolTip="HAHA">
+          <Grid ID="GreatPersonPassiveGrid" Anchor="R,C" Offset="0,0" Size="parent,26" Style="CityPanelSlotGrid" ToolTip="HAHA">
             <Image Size="38,38" Offset="4,0" Anchor="L,C" Texture="GreatPeoplePassiveBonus"/>
             <Label Offset="6,0" Anchor="R,C" Style="CityPanelHeader" String="LOC_HUD_UNIT_PANEL_GREAT_PERSON_PASSIVE_ABILITY"/>
           </Grid>
-		    </Container>
+        </Container>
 
         <!-- Settlement Water Guide -->
         <Container ID="SettlementWaterContainer" Anchor="C,B" Offset="40,26" Size="180,36">
@@ -186,11 +186,11 @@
         <!---->
         <!--ENEMY UNIT PANEL / COMBAT PREVIEW-->
         <!---->
-        <Container ID="EnemyUnitPanel" Anchor="L,B"	Offset="0,0" AnchorSide="O,I" Size="306,155" Hidden="1" >
+        <Container ID="EnemyUnitPanel" Anchor="L,B" Offset="0,0" AnchorSide="O,I" Size="306,155" Hidden="1" >
           <Grid Anchor="R,B" Size="Parent,Parent" Texture="CombatPreview_FrameBG.dds" SliceCorner="80,0" SliceTextureSize="301,155">
-            <Grid  ID="EnemyUnitPanelExtension" Anchor="L,B"	Offset="0,89"	  Size ="Parent-64,67"  Texture="CombatPreview_FrameExtend.dds" SliceCorner="45,53" SliceTextureSize="238,63" >
-              <Container									Anchor="R,T"	Offset="15,10"	Size="Parent-40,32" >
-                <Label			ID="TargetUnitName"	Anchor="C,T"	Offset="0,0"		Style="UnitPanelHeader" TruncateWidth="210" String="WARRIOR" />
+            <Grid  ID="EnemyUnitPanelExtension" Anchor="L,B"  Offset="0,89"   Size ="Parent-64,67"  Texture="CombatPreview_FrameExtend.dds" SliceCorner="45,53" SliceTextureSize="238,63" >
+              <Container                  Anchor="R,T"  Offset="15,10"  Size="Parent-40,32" >
+                <Label      ID="TargetUnitName" Anchor="C,T"  Offset="0,0"    Style="UnitPanelHeader" TruncateWidth="210" String="WARRIOR" />
               </Container>
             </Grid>
           </Grid>
@@ -209,14 +209,14 @@
                 <!-- Interceptor Health Meters -->
                 <Container Anchor="C,C" Offset="0,-1" AutoSize="1">
                   <AlphaAnim AlphaBegin="1.0" AlphaEnd="0.4" Speed="1.5" Cycle="Bounce">
-                    <Meter	ID="InterceptorHealthMeterShadow"	Size="42,42" Texture="CombatPreview_HitMeterSmall" CounterClockwise="true"/>
+                    <Meter  ID="InterceptorHealthMeterShadow" Size="42,42" Texture="CombatPreview_HitMeterSmall" CounterClockwise="true"/>
                   </AlphaAnim>
                   <Meter ID="InterceptorHealthMeter" Size="42,42" Texture="CombatPreview_HitMeterSmall" CounterClockwise="true"/>
                 </Container>
               </Image>
 
               <!-- Interceptor Modifier Stack -->
-              <AlphaAnim	ID="InterceptorModifierStackAnim" Anchor="L,T" Size="150,105" Offset="5,76" AlphaBegin="1" AlphaEnd="0" Speed="2" Cycle="Once" Stopped="true" Pause="3">
+              <AlphaAnim  ID="InterceptorModifierStackAnim" Anchor="L,T" Size="150,105" Offset="5,76" AlphaBegin="1" AlphaEnd="0" Speed="2" Cycle="Once" Stopped="true" Pause="3">
                 <Stack ID="InterceptorModifierStack" Anchor="C,T" Offset="0,0" StackGrowth="Down" />
               </AlphaAnim>
             </Grid>
@@ -233,34 +233,34 @@
               </Image>
 
               <!-- AA Modifier Stack -->
-              <AlphaAnim	ID="AntiAirModifierStackAnim" Anchor="L,T" Size="150,105" Offset="5,76" AlphaBegin="1" AlphaEnd="0" Speed="2" Cycle="Once" Stopped="true" Pause="3">
+              <AlphaAnim  ID="AntiAirModifierStackAnim" Anchor="L,T" Size="150,105" Offset="5,76" AlphaBegin="1" AlphaEnd="0" Speed="2" Cycle="Once" Stopped="true" Pause="3">
                 <Stack ID="AntiAirModifierStack" Anchor="C,T" Offset="0,0" StackGrowth="Down" />
               </AlphaAnim>
             </Grid>
           </Stack>
 
-          <Grid     Anchor="R,B"	Offset="6,0"	Size ="Parent-6,138" Texture="CombatPreview_FrameMask.dds"  SliceCorner="150,0" SliceTextureSize="296,138"/>
+          <Grid     Anchor="R,B"  Offset="6,0"  Size ="Parent-6,138" Texture="CombatPreview_FrameMask.dds"  SliceCorner="150,0" SliceTextureSize="296,138"/>
 
           <!--Target Health Meters -->
           <Container ID="TargetUnitHealthMeters" Offset="197,18">
             <Image Texture="SelectionPanel_LifeBarBacking" Size="107,107" Offset="0,0" FlipX="1"/>
             <AlphaAnim AlphaBegin="1.0" AlphaEnd="0.7" Speed="1.5" Cycle="Bounce" Size="102,102">
-              <Meter						ID="TargetHealthMeterShadow"			Size="102,102" Texture="UnitPanel_HitMeterFlipped.dds" CounterClockwise="true" />
+              <Meter            ID="TargetHealthMeterShadow"      Size="102,102" Texture="UnitPanel_HitMeterFlipped.dds" CounterClockwise="true" />
             </AlphaAnim>
-            <Meter							ID="TargetHealthMeter"						Size="102,102" Texture="UnitPanel_HitMeterFlipped.dds" CounterClockwise="true" />
+            <Meter              ID="TargetHealthMeter"            Size="102,102" Texture="UnitPanel_HitMeterFlipped.dds" CounterClockwise="true" />
           </Container>
 
-          <Image          ID="TargetCityHealthMeters"				Texture="SelectionPanel_LifeBarBacking"   Anchor="R,B"  Offset="4,30"   FlipX="1" Size="107,107" Hidden="1">
+          <Image          ID="TargetCityHealthMeters"       Texture="SelectionPanel_LifeBarBacking"   Anchor="R,B"  Offset="4,30"   FlipX="1" Size="107,107" Hidden="1">
             <Image        ID="TargetCityWallsHealthMeters"  Texture="CityPanel_Shields3_Empty"        Anchor="R,C"  Size="110,110"  FlipX="1" Offset="0,0">
               <AlphaAnim AlphaBegin="1.0" AlphaEnd="0.7" Speed="1.5" Cycle="Bounce" Anchor="R,C"  Size="110,110">
-                <Meter			ID="TargetWallHealthMeterShadow"	Texture="SelectionPanel_ShieldsFlipped"  Anchor="R,C"  Size="110,110"  CounterClockwise="true" Color="120,198,247,150"/>
+                <Meter      ID="TargetWallHealthMeterShadow"  Texture="SelectionPanel_ShieldsFlipped"  Anchor="R,C"  Size="110,110"  CounterClockwise="true" Color="120,198,247,150"/>
               </AlphaAnim>
-              <Meter			ID="TargetWallHealthMeter"				Texture="SelectionPanel_ShieldsFlipped"  Anchor="R,C"  Size="110,110"  CounterClockwise="true" Color="120,198,247,255"/>
+              <Meter      ID="TargetWallHealthMeter"        Texture="SelectionPanel_ShieldsFlipped"  Anchor="R,C"  Size="110,110"  CounterClockwise="true" Color="120,198,247,255"/>
             </Image>
             <AlphaAnim AlphaBegin="1.0" AlphaEnd="0.7" Speed="1.5" Cycle="Bounce" Anchor="R,C"  Size="95,95">
-              <Meter			  ID="TargetCityHealthMeterShadow"	Texture="SelectionPanel_HealthFlipped"   Anchor="R,C"  Size="95,95"  CounterClockwise="true"  Offset="7,-2"/>
+              <Meter        ID="TargetCityHealthMeterShadow"  Texture="SelectionPanel_HealthFlipped"   Anchor="R,C"  Size="95,95"  CounterClockwise="true"  Offset="7,-2"/>
             </AlphaAnim>
-            <Meter			  ID="TargetCityHealthMeter"				Texture="SelectionPanel_HealthFlipped"   Anchor="L,C"  Size="95,95"  CounterClockwise="true"  Offset="7,-2"/>
+            <Meter        ID="TargetCityHealthMeter"        Texture="SelectionPanel_HealthFlipped"   Anchor="L,C"  Size="95,95"  CounterClockwise="true"  Offset="7,-2"/>
             
           </Image>
 
@@ -283,9 +283,9 @@
             <Stack ID="TargetStatStack" Anchor="L,T" StackGrowth="Down"/>
           </Container>
 
-          <Container					ID="TargetCombatBreakdownPanel" Anchor="L,B" Size="Parent-172,Parent-15" Offset="10,10" >
-            <AlphaAnim				ID="TargetModifierStackAnim" Anchor="L,T" Size="150,140" Offset="5,-5" AlphaBegin="1" AlphaEnd="0" Speed="2" Cycle="Once" Stopped="true" Pause="3">
-              <Stack					ID="TargetModifierStack" StackGrowth="Down" />
+          <Container          ID="TargetCombatBreakdownPanel" Anchor="L,B" Size="Parent-172,Parent-15" Offset="10,10" >
+            <AlphaAnim        ID="TargetModifierStackAnim" Anchor="L,T" Size="150,140" Offset="5,-5" AlphaBegin="1" AlphaEnd="0" Speed="2" Cycle="Once" Stopped="true" Pause="3">
+              <Stack          ID="TargetModifierStack" StackGrowth="Down" />
             </AlphaAnim>
             <Image Texture="CombatPreview_BonusDivider" Anchor="R,T" AnchorSide="O,I" Offset="0,-10" >
               <Image Texture="CombatPreview_Ornament" Anchor="R,T" AnchorSide="O,I" Offset="9,-20" FlipX="true" />
@@ -293,8 +293,8 @@
             </Image>
           </Container>
 
-          <Grid					ID="TargetPromotionBanner"				Anchor="R,B"	Offset="56,0"	Size="Parent-54,43"	Texture="UnitPanel_PromotionBanner" SliceCorner="40,1" SliceTextureSize="78,43" Hidden="1">
-            <Stack			ID="TargetEarnedPromotionsStack"	Anchor="R,T"	Offset="34,6"		StackGrowth="Left" StackPadding="2" />
+          <Grid         ID="TargetPromotionBanner"        Anchor="R,B"  Offset="56,0" Size="Parent-54,43" Texture="UnitPanel_PromotionBanner" SliceCorner="40,1" SliceTextureSize="78,43" Hidden="1">
+            <Stack      ID="TargetEarnedPromotionsStack"  Anchor="R,T"  Offset="34,6"   StackGrowth="Left" StackPadding="2" />
           </Grid>
 
           <Image Anchor="R,B" Offset="56,122" Texture="CombatPreview_CombatStatFoe" >
@@ -306,36 +306,36 @@
         <!---->
         <!--UNIT PROMOTION CHOOSER-->
         <!---->
-        <Grid						ID="PromotionPanel"				Anchor="R,T" 	AnchorSide="I,O"	Offset="0,-3" Size="300,287" Style="WindowFrameHUD"  Hidden="1" ConsumeMouse="1">
-          <Label				ID="PromotionPanelHeader" Anchor="C,T"	Offset="0,5"			Style="FontNormal16" String="LOC_HUD_UNIT_CHOOSE_PROMOTION_TEXT" />
-          <ScrollPanel	ID="PromotionScrollPanel" Anchor="C,T"	Offset="0,24" 		Size="Parent-10, Parent-30" Vertical="1">
-            <Stack			ID="PromotionList" StackGrowth="Bottom" StackPadding="1" />
-            <ScrollBar														Anchor="R,T"	Offset="-12,0" AnchorSide="I,I"	Style="Slider_Blue" Length="parent" />
+        <Grid           ID="PromotionPanel"       Anchor="R,T"  AnchorSide="I,O"  Offset="0,-3" Size="300,287" Style="WindowFrameHUD"  Hidden="1" ConsumeMouse="1">
+          <Label        ID="PromotionPanelHeader" Anchor="C,T"  Offset="0,5"      Style="FontNormal16" String="LOC_HUD_UNIT_CHOOSE_PROMOTION_TEXT" />
+          <ScrollPanel  ID="PromotionScrollPanel" Anchor="C,T"  Offset="0,24"     Size="Parent-10, Parent-30" Vertical="1">
+            <Stack      ID="PromotionList" StackGrowth="Bottom" StackPadding="1" />
+            <ScrollBar                            Anchor="R,T"  Offset="-12,0" AnchorSide="I,I" Style="Slider_Blue" Length="parent" />
           </ScrollPanel>
-          <Button				ID="PromotionCancelButton"					Anchor="R,T" Style="CloseButtonSmall" Offset="-11,-9"/>
+          <Button       ID="PromotionCancelButton"          Anchor="R,T" Style="CloseButtonSmall" Offset="-11,-9"/>
         </Grid>
         
         <!---->
         <!--VETERAN CUSTOM NAME UI-->
         <!---->
-        <Grid	ID="VeteranNamePanel"	Anchor="R,T" 	AnchorSide="I,O"	Offset="0,-3" Size="300,200" Style="WindowFrameHUD"  Hidden="1" ConsumeMouse="1">
-          <Image	Anchor="L,T"	Offset="0,0"	Texture="Controls_Deco3" Size="27,18" Color="255,255,255,64"/>
-          <Image	Anchor="R,T"	Offset="0,0"	Texture="Controls_Deco3" Size="27,18" Color="255,255,255,64"/>
-          <Image	Anchor="L,B"	Offset="0,0"	Texture="Controls_Deco3" Size="27,18" Color="255,255,255,64"/>
-          <Image	Anchor="R,B"	Offset="0,0"	Texture="Controls_Deco3" Size="27,18" Color="255,255,255,64"/>
+        <Grid ID="VeteranNamePanel" Anchor="R,T"  AnchorSide="I,O"  Offset="0,-3" Size="300,200" Style="WindowFrameHUD"  Hidden="1" ConsumeMouse="1">
+          <Image  Anchor="L,T"  Offset="0,0"  Texture="Controls_Deco3" Size="27,18" Color="255,255,255,64"/>
+          <Image  Anchor="R,T"  Offset="0,0"  Texture="Controls_Deco3" Size="27,18" Color="255,255,255,64"/>
+          <Image  Anchor="L,B"  Offset="0,0"  Texture="Controls_Deco3" Size="27,18" Color="255,255,255,64"/>
+          <Image  Anchor="R,B"  Offset="0,0"  Texture="Controls_Deco3" Size="27,18" Color="255,255,255,64"/>
           <Stack Anchor="C,T" Offset="0,10" StackGrowth="Down" StackPadding="6">
             <Label Anchor="C,T" Offset="0,0" Style="FontFlair16" String="LOC_UNITNAME_CHOOSE_NAME"/>
-            <GridButton Size="280,32"	Texture="Controls_ButtonControl_Brown" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" StateOffsetIncrement="0,24">
+            <GridButton Size="280,32" Texture="Controls_ButtonControl_Brown" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" StateOffsetIncrement="0,24">
               <EditBox ID="VeteranNameField" Style="FontNormal16" EditMode="1" Size="parent-20,24" Anchor="C,C" Align="Center" MaxLength="48"/>
             </GridButton>
             <Stack Anchor="C,C" Offset="0,-2" StackGrowth="Right" StackPadding="0">
-              <GridButton     ID="RandomPrefixButton"	              Size="50,38"	Style="CityStateSubMenuButton" ToolTip="LOC_UNITNAME_RANDOM_FIRST"/>
-              <GridButton     ID="RandomNameButton"                 Size="160,38"	Style="CityStateSubMenuButton" String="LOC_UNITNAME_RANDOMIZE_BUTTON_TEXT" />
-              <GridButton     ID="RandomSuffixButton"	              Size="50,38"	Style="CityStateSubMenuButton" ToolTip="LOC_UNITNAME_RANDOM_SECOND"/>
+              <GridButton     ID="RandomPrefixButton"               Size="50,38"  Style="CityStateSubMenuButton" ToolTip="LOC_UNITNAME_RANDOM_FIRST"/>
+              <GridButton     ID="RandomNameButton"                 Size="160,38" Style="CityStateSubMenuButton" String="LOC_UNITNAME_RANDOMIZE_BUTTON_TEXT" />
+              <GridButton     ID="RandomSuffixButton"               Size="50,38"  Style="CityStateSubMenuButton" ToolTip="LOC_UNITNAME_RANDOM_SECOND"/>
             </Stack>
             <GridButton ID="ConfirmVeteranName" Anchor="C,C" Offset="0,25" Size="200,42" Style="Grid9MainButton" String="LOC_UNITNAME_CONFIRM"/>
           </Stack>
-          <Button	ID="VeteranNamingCancelButton"	Anchor="R,T" Offset="-10,-10" Style="CloseButtonSmall"  />
+          <Button ID="VeteranNamingCancelButton"  Anchor="R,T" Offset="-10,-10" Style="CloseButtonSmall"  />
         </Grid>
 
         <!---->
@@ -401,20 +401,20 @@
           </SlideAnim>
         </Tutorial>
 
-				<Tutorial  ID="TutTradeRouteAction" Style="TutorialContainer" Anchor="C,T" AnchorSide="O,O" Offset="-40,90" TriggerBy="TutorialTradeRouteAction">
-					<Grid Style="TutorialCalloutGrid">
-						<Label Style="TutorialHeaderText" String="LOC_META_142b_HEAD" />
-						<Label Style="TutorialBodyText" String="LOC_META_142b_BODY" />
-					</Grid>
-					<SlideAnim Start="0,0" EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" Anchor="C,B">
-						<Image Texture="Tutorial_ArrowV" Offset="-22,-25" Size="44,58"/>
-					</SlideAnim>
-				</Tutorial>
+        <Tutorial  ID="TutTradeRouteAction" Style="TutorialContainer" Anchor="C,T" AnchorSide="O,O" Offset="-40,90" TriggerBy="TutorialTradeRouteAction">
+          <Grid Style="TutorialCalloutGrid">
+            <Label Style="TutorialHeaderText" String="LOC_META_142b_HEAD" />
+            <Label Style="TutorialBodyText" String="LOC_META_142b_BODY" />
+          </Grid>
+          <SlideAnim Start="0,0" EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" Anchor="C,B">
+            <Image Texture="Tutorial_ArrowV" Offset="-22,-25" Size="44,58"/>
+          </SlideAnim>
+        </Tutorial>
 
         <!-- TRADE UNIT INFORMATION-->
         <Container ID="TradeUnitContainer" Anchor="R,B" Size="Parent-104,Parent-116" Offset="10,8">
           <Label ID="TradeUnitStatusLabel" Anchor="C,T" Offset="0,0" Style="FontNormal16" Hidden="1"/>
-          <Grid ID="TradeYieldGrid"	Size="Parent-6,Parent-4" Offset="1,0" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16" >
+          <Grid ID="TradeYieldGrid" Size="Parent-6,Parent-4" Offset="1,0" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16" >
             <!-- Column Background -->
             <Box Size="46,parent" Offset="46,0" Color="0,0,0,22"/>
             <Box Size="46,parent" Offset="138,0" Color="0,0,0,22"/>
@@ -427,10 +427,10 @@
         <Label ID="EspionageIdleLabel" Anchor="C,C" Offset="40,16" Style="FontNormal14" String="LOC_UNITPANEL_ESPIONAGE_AWAITING_ASSIGNMENT"/>
         <Container ID="EspionageUnitContainer" Anchor="R,B" Size="180,90" Offset="18,16">
           
-		  <Label Offset="0,-16" Style="FontNormal12" String="LOC_UNITPANEL_ESPIONAGE_LOCATED_IN"/>
+      <Label Offset="0,-16" Style="FontNormal12" String="LOC_UNITPANEL_ESPIONAGE_LOCATED_IN"/>
             <!-- City Banner -->
-            <Grid	ID="EspionageCityBanner"	Anchor="L,T" Offset="-10,0"	Size="parent+10,28"	Texture="Controls_CityBannerSmall" SliceCorner="14,9" SliceSize="5,4" SliceTextureSize="33,28" Color="150,170,100,255">
-              <Label ID="EspionageCityName" Anchor="L,C" Offset="14,-1"		Style="FontFlair14"					FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="FirstWord" TruncateWidth="180"/>
+            <Grid ID="EspionageCityBanner"  Anchor="L,T" Offset="-10,0" Size="parent+10,28" Texture="Controls_CityBannerSmall" SliceCorner="14,9" SliceSize="5,4" SliceTextureSize="33,28" Color="150,170,100,255">
+              <Label ID="EspionageCityName" Anchor="L,C" Offset="14,-1"   Style="FontFlair14"         FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="FirstWord" TruncateWidth="180"/>
               <Image ID="EspionageLocationPip"  Texture="Controls_LocationPip" Anchor="R,T" Offset="8,2"/>
             </Grid>
 
@@ -451,123 +451,123 @@
   </AlphaAnim>
   
   <!-- ==================================================================== -->
-  <!--	INSTANCES																														-->
+  <!--  INSTANCES                                                           -->
   <!-- ==================================================================== -->
 
   <!-- Unit stat instance -->
-	<Instance Name="StatInstance">
-    <Grid	ID="StatGrid"	Anchor="R,T" Offset="0,0"	Size="parent,26" Style="CityPanelSlotGrid">
-      <CheckBox	ID="StatCheckBox" Anchor="L,T" Offset="-5,-1"	ButtonTexture="SelectionPanel_Stat"	ButtonSize="28,32" CheckTexture="Stats22"	CheckTextureOffset="0,0" CheckSize="22,22" CheckOffset="3,3"	UnCheckTexture="Stats22"	UnCheckTextureOffset="0,0"	UnCheckSize="22,22" UnCheckOffset="3,3" UseSelectedTextures="1" CheckColor="0,0,0,255" Disabled="True"/>
+  <Instance Name="StatInstance">
+    <Grid ID="StatGrid" Anchor="R,T" Offset="0,0" Size="parent,26" Style="CityPanelSlotGrid">
+      <CheckBox ID="StatCheckBox" Anchor="L,T" Offset="-5,-1" ButtonTexture="SelectionPanel_Stat" ButtonSize="28,32" CheckTexture="Stats22" CheckTextureOffset="0,0" CheckSize="22,22" CheckOffset="3,3"  UnCheckTexture="Stats22"  UnCheckTextureOffset="0,0"  UnCheckSize="22,22" UnCheckOffset="3,3" UseSelectedTextures="1" CheckColor="0,0,0,255" Disabled="True"/>
 
       <Stack ID="StatValueStack" Offset="26,1" StackGrowth="Right">
-        <Label ID="StatValueLabel" Anchor="L,C" Offset="0,0"	Style="UnitPanelSmallValue"	String="-"/>
-        <Label ID="StatValueSlash" Anchor="L,C" Offset="0,0"	Style="UnitPanelSmallValue"	String="/"/>
-        <Label ID="StatMaxValueLabel" Anchor="L,C" Offset="0,0"	Style="UnitPanelSmallValue"	String="-"/>
+        <Label ID="StatValueLabel" Anchor="L,C" Offset="0,0"  Style="UnitPanelSmallValue" String="-"/>
+        <Label ID="StatValueSlash" Anchor="L,C" Offset="0,0"  Style="UnitPanelSmallValue" String="/"/>
+        <Label ID="StatMaxValueLabel" Anchor="L,C" Offset="0,0" Style="UnitPanelSmallValue" String="-"/>
       </Stack>
 
-      <Label ID="StatNameLabel"	Anchor="R,C" Offset="5,0"	Style="CityPanelHeader"	String="STAT NAME"/>
+      <Label ID="StatNameLabel" Anchor="R,C" Offset="5,0" Style="CityPanelHeader" String="STAT NAME"/>
     </Grid>
   </Instance>
 
   <!-- Target unit stat instance -->
   <Instance Name="TargetStatInstance">
-    <Grid	ID="StatGrid"	Anchor="L,T" Offset="0,0"	Size="parent,26" Style="CityPanelSlotGrid">
-      <CheckBox	ID="StatCheckBox" Anchor="R,T" Offset="-5,-1"	ButtonTexture="SelectionPanel_Stat"	ButtonSize="28,32" CheckTexture="Stats22"	CheckTextureOffset="0,0" CheckSize="22,22" CheckOffset="3,3"	UnCheckTexture="Stats22"	UnCheckTextureOffset="0,0"	UnCheckSize="22,22" UnCheckOffset="3,3" UseSelectedTextures="1" CheckColor="0,0,0,255"/>
+    <Grid ID="StatGrid" Anchor="L,T" Offset="0,0" Size="parent,26" Style="CityPanelSlotGrid">
+      <CheckBox ID="StatCheckBox" Anchor="R,T" Offset="-5,-1" ButtonTexture="SelectionPanel_Stat" ButtonSize="28,32" CheckTexture="Stats22" CheckTextureOffset="0,0" CheckSize="22,22" CheckOffset="3,3"  UnCheckTexture="Stats22"  UnCheckTextureOffset="0,0"  UnCheckSize="22,22" UnCheckOffset="3,3" UseSelectedTextures="1" CheckColor="0,0,0,255"/>
 
-      <Label ID="StatValueLabel" Anchor="R,C" Offset="26,0"	Style="UnitPanelSmallValue"	String="99"/>
+      <Label ID="StatValueLabel" Anchor="R,C" Offset="26,0" Style="UnitPanelSmallValue" String="99"/>
     </Grid>
   </Instance>
 
   <!-- Combat modifier -->
-	<Instance				Name="ModifierInstance">
-		<Container		ID="ModifierContainer"			    Size="130,26" AutoSize="Vertical" AutoSizePadding="0,2">
-			<Image			ID="ModifierIcon"			Anchor="L,T"	Icon="ICON_STRENGTH" IconSize="16" Size="16,16" />
-			<Label			ID="ModifierText"			Anchor="L,T"  Offset="20,0" WrapWidth="110"	Style="FontNormal12" FontStyle="Shadow" EffectColor="Black"/>
-		</Container>
-	</Instance>
-	
-  <!-- Confirmation popup -->
-  <Instance						Name="PopupButtonInstance">
-    <GridButton			  ID="Button"									                          Size="160,42"		Style="MainButton" />
+  <Instance       Name="ModifierInstance">
+    <Container    ID="ModifierContainer"          Size="130,26" AutoSize="Vertical" AutoSizePadding="0,2">
+      <Image      ID="ModifierIcon"     Anchor="L,T"  Icon="ICON_STRENGTH" IconSize="16" Size="16,16" />
+      <Label      ID="ModifierText"     Anchor="L,T"  Offset="20,0" WrapWidth="110" Style="FontNormal12" FontStyle="Shadow" EffectColor="Black"/>
+    </Container>
   </Instance>
   
-	<!-- Action definition -->
-	<Instance Name="UnitActionInstance" >
-		<Button		ID="UnitActionButton" Anchor="L,T" Size="44,53" Texture="UnitPanel_ActionButton">
-			<Image	ID="UnitActionIcon"		Anchor="C,C" Offset="0,-2" Size="38,38"  Texture="UnitActions"/>
-		</Button>
-	</Instance>
-	
-  <!-- Build definition -->
-	<Instance Name="BuildActionInstance" >
-		<Button		ID="UnitActionButton" Anchor="L,T" Offset="-4,-4" Size="44,53" Texture="Controls_IconButton.dds">
-			<Image	ID="UnitActionIcon"		Anchor="C,C" Offset="-1,-1" Size="38,38" Texture="UnitActions"/>
-		</Button>
-	</Instance>
-
-	<!-- Grouping for actions -->
-	<Instance				Name="GroupArtInstance" >
-		<Grid					ID="Top"										Texture="UnitPanel_ActionGroupSlot"  SliceCorner="5,19" SliceSize="1,1" Size="50,41">
-			<Image										Anchor="C,B"	Texture="UnitPanel_ActionGroupGlow" />
-		</Grid>
-	</Instance>
-	
-	<!-- Stat Instance -->
-	<Instance				Name="BigStatInstance">
-		<Container		ID="Top"																		Size="200,26" >
-			<Container																							Size="28,22"	>
-				<Label		ID="Value"		Anchor="C,T"																String="-1?"			Style="UnitPanelBigValue" />
-			</Container>
-			<Label			ID="Text"									Offset="36,10"									String="?Details" Style="UnitPanelBigLabel" />
-		</Container>
-	</Instance>
-
-	<!-- Ratio Stat Instance (e.g., 2/3 moves) -->
-	<Instance				Name="BigRatioStatInstance">
-		<Container		ID="Top"																		Size="200,26" >
-			<Stack			ID="Ratio"		StackGrowth="Right">
-				<Label		ID="Value"		Anchor="C,T"																String="-1?"			Style="UnitPanelBigValue" />
-				<Label		ID="FullVal"	Anchor="C,T"	Offset="0,11"									String="-1?"			Style="UnitPanelBigValue" FontSize="18" />
-			</Stack>		
-			<Label			ID="Text"										Offset="36,10"								String="?Details" Style="UnitPanelBigLabel" />
-		</Container>
-	</Instance>
-
-	<!-- A column of 3 build actions Instance -->
-	<Instance				Name="BuildActionsColumnInstance">
-		<Container		ID="Top"																		Size="38,140" >
-			<Image			ID="Row1"			Anchor="L,T" Offset="0,15"								Texture="UnitPanel_SpecialActionSlot" />
-			<Image			ID="Row2"			Anchor="L,T" Offset="0,60"								Texture="UnitPanel_SpecialActionSlot" />
-			<Image			ID="Row3"			Anchor="L,T" Offset="0,105"								Texture="UnitPanel_SpecialActionSlot" />
-		</Container>
-	</Instance>
-
-	<!-- Promotion Instances (dots or badges on the banner) -->
-	<Instance				Name="EarnedPromotionInstance">
-      <Image			ID="Top"			Size="32,32" Texture="PromotionsSmall"  TextureOffset="32,0" />
-	</Instance>
+  <!-- Confirmation popup -->
+  <Instance           Name="PopupButtonInstance">
+    <GridButton       ID="Button"                                           Size="160,42"   Style="MainButton" />
+  </Instance>
   
-	<Instance				Name="EmptyPromotionInstance">
-    <Image				ID="Top"			Size="32,32" Texture="PromotionsSmall"	TextureOffset="0,0" Offset="0,2" />
-	</Instance>
+  <!-- Action definition -->
+  <Instance Name="UnitActionInstance" >
+    <Button   ID="UnitActionButton" Anchor="L,T" Size="44,53" Texture="UnitPanel_ActionButton">
+      <Image  ID="UnitActionIcon"   Anchor="C,C" Offset="0,-2" Size="38,38"  Texture="UnitActions"/>
+    </Button>
+  </Instance>
+  
+  <!-- Build definition -->
+  <Instance Name="BuildActionInstance" >
+    <Button   ID="UnitActionButton" Anchor="L,T" Offset="-4,-4" Size="44,53" Texture="Controls_IconButton.dds">
+      <Image  ID="UnitActionIcon"   Anchor="C,C" Offset="-1,-1" Size="38,38" Texture="UnitActions"/>
+    </Button>
+  </Instance>
+
+  <!-- Grouping for actions -->
+  <Instance       Name="GroupArtInstance" >
+    <Grid         ID="Top"                    Texture="UnitPanel_ActionGroupSlot"  SliceCorner="5,19" SliceSize="1,1" Size="50,41">
+      <Image                    Anchor="C,B"  Texture="UnitPanel_ActionGroupGlow" />
+    </Grid>
+  </Instance>
+  
+  <!-- Stat Instance -->
+  <Instance       Name="BigStatInstance">
+    <Container    ID="Top"                                    Size="200,26" >
+      <Container                                              Size="28,22"  >
+        <Label    ID="Value"    Anchor="C,T"                                String="-1?"      Style="UnitPanelBigValue" />
+      </Container>
+      <Label      ID="Text"                 Offset="36,10"                  String="?Details" Style="UnitPanelBigLabel" />
+    </Container>
+  </Instance>
+
+  <!-- Ratio Stat Instance (e.g., 2/3 moves) -->
+  <Instance       Name="BigRatioStatInstance">
+    <Container    ID="Top"                                    Size="200,26" >
+      <Stack      ID="Ratio"    StackGrowth="Right">
+        <Label    ID="Value"    Anchor="C,T"                                String="-1?"      Style="UnitPanelBigValue" />
+        <Label    ID="FullVal"  Anchor="C,T"  Offset="0,11"                 String="-1?"      Style="UnitPanelBigValue" FontSize="18" />
+      </Stack>    
+      <Label      ID="Text"                   Offset="36,10"                String="?Details" Style="UnitPanelBigLabel" />
+    </Container>
+  </Instance>
+
+  <!-- A column of 3 build actions Instance -->
+  <Instance       Name="BuildActionsColumnInstance">
+    <Container    ID="Top"                                    Size="38,140" >
+      <Image      ID="Row1"     Anchor="L,T" Offset="0,15"                Texture="UnitPanel_SpecialActionSlot" />
+      <Image      ID="Row2"     Anchor="L,T" Offset="0,60"                Texture="UnitPanel_SpecialActionSlot" />
+      <Image      ID="Row3"     Anchor="L,T" Offset="0,105"               Texture="UnitPanel_SpecialActionSlot" />
+    </Container>
+  </Instance>
+
+  <!-- Promotion Instances (dots or badges on the banner) -->
+  <Instance       Name="EarnedPromotionInstance">
+      <Image      ID="Top"      Size="32,32" Texture="PromotionsSmall"  TextureOffset="32,0" />
+  </Instance>
+  
+  <Instance       Name="EmptyPromotionInstance">
+    <Image        ID="Top"      Size="32,32" Texture="PromotionsSmall"  TextureOffset="0,0" Offset="0,2" />
+  </Instance>
 
   <!-- Promotion Selection Instance -->
-  <Instance				Name="PromotionSelectionInstance">
-    <Container		ID="PromotionSelection"															Size="280,80" >
+  <Instance       Name="PromotionSelectionInstance">
+    <Container    ID="PromotionSelection"                             Size="280,80" >
       <GridButton   ID="PromotionSlot" Style="FontFlair16" Offset="-4,0" Size="Parent,Parent" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" StateOffsetIncrement="0,24" SmallCaps="18" SmallCapsType="EveryWord">
-        <Box			ID="PromotionListIcon"		Anchor="L,C" Offset="8,-20" Size="32,32"	Color="128,128,128,0" >
+        <Box      ID="PromotionListIcon"    Anchor="L,C" Offset="8,-20" Size="32,32"  Color="128,128,128,0" >
           <Image  Texture="PromotionsSmall" Size="32,32" TextureOffset="32,0"/>
-          <Label	ID="PromotionTier"				Anchor="C,C"	Offset="0,-1"												Style="FontFlair18" FontStyle="Glow" EffectColor="0,0,0,255"/>
+          <Label  ID="PromotionTier"        Anchor="C,C"  Offset="0,-1"                       Style="FontFlair18" FontStyle="Glow" EffectColor="0,0,0,255"/>
         </Box>
-        <Label		ID="PromotionName"				             Offset="44,5"							Style="FontFlair16"	 WrapWidth="240" String="Promotion Name"/>
-        <Label		ID="PromotionDescription"							 Offset="44,26"							Style="FontNormalMedium14" WrapWidth="230" String="Promotion Description" />
+        <Label    ID="PromotionName"                     Offset="44,5"              Style="FontFlair16"  WrapWidth="240" String="Promotion Name"/>
+        <Label    ID="PromotionDescription"              Offset="44,26"             Style="FontNormalMedium14" WrapWidth="230" String="Promotion Description" />
       </GridButton>
     </Container>
   </Instance>
   
-	<Instance Name="DetailInstance">
-		<Label			ID="DetailInstanceLabel" String="?Details" Style="FontFlair12" />
-	</Instance>
+  <Instance Name="DetailInstance">
+    <Label      ID="DetailInstanceLabel" String="?Details" Style="FontFlair12" />
+  </Instance>
 
   <!-- Trade Unit Resource Instance -->
   <Instance Name="TradeResourceyInstance">

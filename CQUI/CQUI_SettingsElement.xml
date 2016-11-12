@@ -1,79 +1,79 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <!--Custom localized text is broken after reloading right now, so even though cutom localizations are ready, they're commented out-->
 
 <Context Name="CQUI_SettingsElement">
-	<Box ID="MainGrid" Style="ShellBGBox">
+  <Box ID="MainGrid" Style="ShellBGBox">
     <Container ID="MainWindow" Style="ShellWindowContainer">
       <Container ID="Header" Style="ShellHeaderContainer">
         <Grid Style="ShellHeaderButtonGrid">
         </Grid>
-		<Label ID="WindowTitle" Style="ShellHeader" Anchor="C,C"/>
+    <Label ID="WindowTitle" Style="ShellHeader" Anchor="C,C"/>
       </Container>
       <Grid ID="Content" Style="SubContainer4" Size="parent-10,670" Anchor="C,T" Color="7,28,50" Offset="0,55">
         <Grid Style="SubContainerFill" Size="210,parent-6" Offset="3,3" Color="6,36,57,150">
           <Grid Style="SubContainer3" Size="parent-6,parent-6" Anchor="C,C" Color="13,70,82,255">
             <Stack ID="TabStack" StackGrowth="Down" Anchor="C,T" Padding="10">
               <!--<GridButton ID="GeneralTab" Style="ShellTabSmall" String="{LOC_CQUI_GENERAL:upper}" Size="200,32"/>
-			  <GridButton ID="PopupsTab" Style="ShellTabSmall" String="{LOC_CQUI_POPUPS:upper}" Size="200,32"/>
-			  <GridButton ID="BindingsTab" Style="ShellTabSmall" String="{LOC_CQUI_BINDINGS:upper}" Size="200,32"/>
-			  <GridButton ID="HiddenTab" Style="ShellTabSmall" String="{LOC_CQUI_HIDDEN:upper}" Size="200,32" Hidden="1"/>-->
-			  <GridButton ID="GeneralTab" Style="ShellTabSmall" String="GENERAL" Size="200,32"/>
-			  <GridButton ID="PopupsTab" Style="ShellTabSmall" String="POPUPS" Size="200,32"/>
-			  <GridButton ID="BindingsTab" Style="ShellTabSmall" String="BINDINGS" Size="200,32"/>
-			  <GridButton ID="HiddenTab" Style="ShellTabSmall" String="HIDDEN" Size="200,32" Hidden="1"/>
+              <GridButton ID="PopupsTab" Style="ShellTabSmall" String="{LOC_CQUI_POPUPS:upper}" Size="200,32"/>
+              <GridButton ID="BindingsTab" Style="ShellTabSmall" String="{LOC_CQUI_BINDINGS:upper}" Size="200,32"/>
+              <GridButton ID="HiddenTab" Style="ShellTabSmall" String="{LOC_CQUI_HIDDEN:upper}" Size="200,32" Hidden="1"/>-->
+              <GridButton ID="GeneralTab" Style="ShellTabSmall" String="GENERAL" Size="200,32"/>
+              <GridButton ID="PopupsTab" Style="ShellTabSmall" String="POPUPS" Size="200,32"/>
+              <GridButton ID="BindingsTab" Style="ShellTabSmall" String="BINDINGS" Size="200,32"/>
+              <GridButton ID="HiddenTab" Style="ShellTabSmall" String="HIDDEN" Size="200,32" Hidden="1"/>
             </Stack>
           </Grid>
         </Grid>
         <Container Anchor="R,T" Size="parent-215,parent-6">
-			<Container ID="GeneralOptions" Size="parent,parent" Hidden="1">
-				<Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
-					<Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-						<!--<GridButton ID="ShowLuxuryCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_SHOWLUXURY" />-->
-						<GridButton ID="ShowLuxuryCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Show luxuries in top panel" />
-					</Stack>
-					<Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-						<!--<GridButton ID="SmartbannerCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_SMARTBANNER" />-->
-						<GridButton ID="SmartbannerCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Enable Smartbanner" />
-					</Stack>
-				</Stack>
-			</Container>
-			<Container ID="PopupsOptions" Size="parent,parent" Hidden="1">
-				<Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
-					<Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-						<!--<GridButton ID="TechVisualCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_POPUPS_TECHVISUAL" />-->
-						<GridButton ID="TechVisualCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Show tech/civic popup visual" />
-					</Stack>
-					<Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-						<!--<GridButton ID="TechAudioCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_POPUPS_TECHAUDIO" />-->
-						<GridButton ID="TechAudioCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Play tech/civic popup audio" />
-					</Stack>
-				</Stack>
-			</Container>
-			<Container ID="BindingsOptions" Size="parent,parent" Hidden="1">
-				<Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
-					<Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-						<PullDown ID="BindingsPullDown" Style="PullDownBlue" ScrollThreshold="400" Size="300,24" Offset="0,0" SpaceForScroll="0"/>
-						<!--<Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_BINDINGS_DROPDOWN"/>-->
-						<Label Anchor="L,C" Style="ShellOptionText" String="Binding Modes"/>
-					</Stack>
-				</Stack>
-			</Container> 
-			<Container ID="HiddenOptions" Size="parent,parent" Hidden="1">
-				<Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
-					<Stack Anchor="R,T" StackGrowth="Down" Padding="5">
-						<Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-							<GridButton ID="CowboyCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_HIDDEN_COWBOY" />
-						</Stack>
-						<Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-							<GridButton ID="BadCowboyCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_HIDDEN_BADCOWBOY" />
-						</Stack>
-					</Stack>
-				</Stack>
-			</Container> 
-			<!--<Label Anchor="c,b" Style="FontFlair16" String="LOC_CQUI_SETTINGS_REMINDER"/>-->
-			<Label Anchor="c,b" Style="FontFlair16" String="Remember: CQUI settings are attached to individual saves!"/>
-		</Container>
+      <Container ID="GeneralOptions" Size="parent,parent" Hidden="1">
+        <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <!--<GridButton ID="ShowLuxuryCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_SHOWLUXURY" />-->
+            <GridButton ID="ShowLuxuryCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Show luxuries in top panel" />
+          </Stack>
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <!--<GridButton ID="SmartbannerCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_SMARTBANNER" />-->
+            <GridButton ID="SmartbannerCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Enable Smartbanner" />
+          </Stack>
+        </Stack>
+      </Container>
+      <Container ID="PopupsOptions" Size="parent,parent" Hidden="1">
+        <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <!--<GridButton ID="TechVisualCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_POPUPS_TECHVISUAL" />-->
+            <GridButton ID="TechVisualCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Show tech/civic popup visual" />
+          </Stack>
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <!--<GridButton ID="TechAudioCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_POPUPS_TECHAUDIO" />-->
+            <GridButton ID="TechAudioCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Play tech/civic popup audio" />
+          </Stack>
+        </Stack>
+      </Container>
+      <Container ID="BindingsOptions" Size="parent,parent" Hidden="1">
+        <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <PullDown ID="BindingsPullDown" Style="PullDownBlue" ScrollThreshold="400" Size="300,24" Offset="0,0" SpaceForScroll="0"/>
+            <!--<Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_BINDINGS_DROPDOWN"/>-->
+            <Label Anchor="L,C" Style="ShellOptionText" String="Binding Modes"/>
+          </Stack>
+        </Stack>
+      </Container> 
+      <Container ID="HiddenOptions" Size="parent,parent" Hidden="1">
+        <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
+          <Stack Anchor="R,T" StackGrowth="Down" Padding="5">
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="CowboyCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_HIDDEN_COWBOY" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="BadCowboyCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_HIDDEN_BADCOWBOY" />
+            </Stack>
+          </Stack>
+        </Stack>
+      </Container> 
+      <!--<Label Anchor="c,b" Style="FontFlair16" String="LOC_CQUI_SETTINGS_REMINDER"/>-->
+      <Label Anchor="c,b" Style="FontFlair16" String="Remember: CQUI settings are attached to individual saves!"/>
+    </Container>
       </Grid>
     </Container>
   </Box>

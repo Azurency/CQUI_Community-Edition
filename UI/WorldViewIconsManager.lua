@@ -1,21 +1,21 @@
--- ===========================================================================
---	World Icon Manager
---	Handles showing world icons (e.g., resources) on the map.
---	May be moved to PlotInfo.lua
+﻿-- ===========================================================================
+-- World Icon Manager
+-- Handles showing world icons (e.g., resources) on the map.
+-- May be moved to PlotInfo.lua
 -- ===========================================================================
 
 include( "InstanceManager" );
 include( "SupportFunctions" );
 
-local KEY_CURRENT_ICON_INFO		:string = "currentIcon";
-local KEY_PREVIOUS_ICON_INFO	:string = "prevIcon";
-local KEY_PLOT_INDEX			:string = "plotIndex";
+local KEY_CURRENT_ICON_INFO :string = "currentIcon";
+local KEY_PREVIOUS_ICON_INFO :string = "prevIcon";
+local KEY_PLOT_INDEX :string = "plotIndex";
 
-local g_InstanceManager			:table = InstanceManager:new( "IconSetInstance",	"Anchor", Controls.IconContainer );
-local g_MapIcons				:table = {};
-local m_kUntouchedPlots			:table = {};	-- Used to prevent multiple calls to mess with animation start for a plot change
-local m_isShowResources			:boolean = UserConfiguration.ShowMapResources();
-local m_isShowRecommendations	:boolean = true;
+local g_InstanceManager :table = InstanceManager:new( "IconSetInstance", "Anchor", Controls.IconContainer );
+local g_MapIcons :table = {};
+local m_kUntouchedPlots :table = {}; -- Used to prevent multiple calls to mess with animation start for a plot change
+local m_isShowResources :boolean = UserConfiguration.ShowMapResources();
+local m_isShowRecommendations :boolean = true;
 
 local m_techsThatUnlockResources : table = {};
 local m_civicsThatUnlockResources : table = {};
@@ -23,677 +23,673 @@ local m_techsThatUnlockImprovements : table = {};
 
 -- Stores a list of plot indexes currently showing improvement recommendations
 -- Used to efficiently clear improvement recommendations
-local m_RecommendedImprovementPlots	:table = {};
+local m_RecommendedImprovementPlots :table = {};
 
 -- Stores a list of plot indexes currently showing settlement recommendations
 -- Used to efficiently clear settlement recommendations
-local m_RecommendedSettlementPlots	:table = {};
+local m_RecommendedSettlementPlots :table = {};
 
 -- ===========================================================================
 function GetStartingPlotPlayer( pPlot )
-	local x = pPlot:GetX();
-	local y = pPlot:GetY();
+  local x = pPlot:GetX();
+  local y = pPlot:GetY();
 
-	for i = 0, GameDefines.MAX_PLAYERS-1 do
-		local playerConfig = PlayerConfigurations[i];
-		if (playerConfig:IsInUse()) then
-			local location = playerConfig:GetStartingPosition();
-			if (location.x == x and location.y == y) then
-				return i;
-			end
-		end
-	end
+  for i = 0, GameDefines.MAX_PLAYERS-1 do
+    local playerConfig = PlayerConfigurations[i];
+    if (playerConfig:IsInUse()) then
+      local location = playerConfig:GetStartingPosition();
+      if (location.x == x and location.y == y) then
+        return i;
+      end
+    end
+  end
 
-	return -1;
+  return -1;
 end
 
 -- ===========================================================================
---	Animation Callback
---	The new icon state is done fading in, set the texture it on the 
---	non-animating control and clear out the animating control.
+-- Animation Callback
+-- The new icon state is done fading in, set the texture it on the
+-- non-animating control and clear out the animating control.
 -- ===========================================================================
 function OnEndFade( pInstance:table )
-	local pCurrentIconInfo = pInstance[KEY_CURRENT_ICON_INFO];
-	if (pCurrentIconInfo ~= nil) then
-		local textureOffsetX:number = pCurrentIconInfo.textureOffsetX;
-		local textureOffsetY:number = pCurrentIconInfo.textureOffsetY;
-		local textureSheet:string	= pCurrentIconInfo.textureSheet;
-		pInstance.ResourceIcon:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
-		pInstance.ResourceIcon:SetHide( not m_isShowResources );
-		--pInstance.NextResourceIcon:UnloadTexture();
-		pInstance.NextResourceIcon:SetHide( true );
-		m_kUntouchedPlots[pInstance[KEY_PLOT_INDEX]] = nil;
-	end
+  local pCurrentIconInfo = pInstance[KEY_CURRENT_ICON_INFO];
+  if (pCurrentIconInfo ~= nil) then
+    local textureOffsetX:number = pCurrentIconInfo.textureOffsetX;
+    local textureOffsetY:number = pCurrentIconInfo.textureOffsetY;
+    local textureSheet:string = pCurrentIconInfo.textureSheet;
+    pInstance.ResourceIcon:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
+    pInstance.ResourceIcon:SetHide( not m_isShowResources );
+    --pInstance.NextResourceIcon:UnloadTexture();
+    pInstance.NextResourceIcon:SetHide( true );
+    m_kUntouchedPlots[pInstance[KEY_PLOT_INDEX]] = nil;
+  end
 end
 
 -------------------------------------------------------------------------------
 function SetResourceIcon( pInstance:table, pPlot, type, state)
-	local resourceInfo = GameInfo.Resources[type];
-	if (pPlot and resourceInfo ~= nil) then
-		local resourceType:string = resourceInfo.ResourceType;
-		local featureType :string;
-		local terrainType :string;
+  local resourceInfo = GameInfo.Resources[type];
+  if (pPlot and resourceInfo ~= nil) then
+    local resourceType:string = resourceInfo.ResourceType;
+    local featureType :string;
+    local terrainType :string;
 
-		local feature = GameInfo.Features[pPlot:GetFeatureType()];
-		if(feature) then
-			featureType = feature.FeatureType;
-		end
+    local feature = GameInfo.Features[pPlot:GetFeatureType()];
+    if(feature) then
+      featureType = feature.FeatureType;
+    end
 
-		local terrain = GameInfo.Terrains[pPlot:GetTerrainType()];
-		if(terrain) then
-			terrainType = terrain.TerrainType;
-		end
+    local terrain = GameInfo.Terrains[pPlot:GetTerrainType()];
+    if(terrain) then
+      terrainType = terrain.TerrainType;
+    end
 
-		local iconName = "ICON_" .. resourceType;
-		if (state == RevealedState.REVEALED) then
-			iconName = iconName .. "_FOW";
-		end
-		local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(iconName);
-		if (textureSheet ~= nil) then						
-			pInstance[KEY_PREVIOUS_ICON_INFO] = DeepCopy( pInstance[KEY_CURRENT_ICON_INFO] );
-			if pInstance[KEY_PREVIOUS_ICON_INFO] ~= nil then
-				pInstance.ResourceIcon:SetTexture( pInstance[KEY_PREVIOUS_ICON_INFO].textureOffsetX, pInstance[KEY_PREVIOUS_ICON_INFO].textureOffsetY, pInstance[KEY_PREVIOUS_ICON_INFO].textureSheet );
-				pInstance.ResourceIcon:SetHide( not m_isShowResources );
-			else
-				pInstance.ResourceIcon:SetHide( true );
-			end			
-			pInstance.NextResourceIcon:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
-			pInstance.NextResourceIcon:SetHide( false );
-			pInstance[KEY_CURRENT_ICON_INFO] = {
-				textureOffsetX = textureOffsetX, 
-				textureOffsetY = textureOffsetY,
-				textureSheet  = textureSheet
-			}
-			pInstance.AlphaAnim:SetHide(false);
-			pInstance.AlphaAnim:SetToBeginning();
-			pInstance.AlphaAnim:Play();
-			
-			-- Add some tooltip information about the resource
-			local toolTipItems:table = {};
-			table.insert(toolTipItems, Locale.Lookup(resourceInfo.Name));
-			if (resourceInfo.ResourceClassType == "RESOURCECLASS_BONUS") then
-				table.insert(toolTipItems, Locale.Lookup("LOC_TOOLTIP_BONUS_RESOURCE"));
-			elseif (resourceInfo.ResourceClassType == "RESOURCECLASS_LUXURY") then
-				table.insert(toolTipItems, Locale.Lookup("LOC_TOOLTIP_LUXURY_RESOURCE"));
-			elseif (resourceInfo.ResourceClassType == "RESOURCECLASS_STRATEGIC") then
-				table.insert(toolTipItems, Locale.Lookup("LOC_TOOLTIP_STRATEGIC_RESOURCE"));
-			elseif (resourceInfo.ResourceClassType == "RESOURCECLASS_ARTIFACT") then
-				table.insert(toolTipItems, Locale.Lookup("LOC_TOOLTIP_ARTIFACT_RESOURCE"));
-				table.insert(toolTipItems, Locale.Lookup("LOC_TOOLTIP_ARTIFACT_RESOURCE_DETAILS"));
-			end
-			local resourceTechType;
+    local iconName = "ICON_" .. resourceType;
+    if (state == RevealedState.REVEALED) then
+      iconName = iconName .. "_FOW";
+    end
+    local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(iconName);
+    if (textureSheet ~= nil) then
+      pInstance[KEY_PREVIOUS_ICON_INFO] = DeepCopy( pInstance[KEY_CURRENT_ICON_INFO] );
+      if pInstance[KEY_PREVIOUS_ICON_INFO] ~= nil then
+        pInstance.ResourceIcon:SetTexture( pInstance[KEY_PREVIOUS_ICON_INFO].textureOffsetX, pInstance[KEY_PREVIOUS_ICON_INFO].textureOffsetY, pInstance[KEY_PREVIOUS_ICON_INFO].textureSheet );
+        pInstance.ResourceIcon:SetHide( not m_isShowResources );
+      else
+        pInstance.ResourceIcon:SetHide( true );
+      end
+      pInstance.NextResourceIcon:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
+      pInstance.NextResourceIcon:SetHide( false );
+      pInstance[KEY_CURRENT_ICON_INFO] = {
+        textureOffsetX = textureOffsetX,
+        textureOffsetY = textureOffsetY,
+        textureSheet = textureSheet
+      }
+      pInstance.AlphaAnim:SetHide(false);
+      pInstance.AlphaAnim:SetToBeginning();
+      pInstance.AlphaAnim:Play();
 
-			local tValidImprovements:table = {}
-			for row in GameInfo.Improvement_ValidResources() do
-				if (row.ResourceType == resourceType) then
-					table.insert(tValidImprovements, row.ImprovementType);
-				end
-			end
+      -- Add some tooltip information about the resource
+      local toolTipItems:table = {};
+      table.insert(toolTipItems, Locale.Lookup(resourceInfo.Name));
+      if (resourceInfo.ResourceClassType == "RESOURCECLASS_BONUS") then
+        table.insert(toolTipItems, Locale.Lookup("LOC_TOOLTIP_BONUS_RESOURCE"));
+      elseif (resourceInfo.ResourceClassType == "RESOURCECLASS_LUXURY") then
+        table.insert(toolTipItems, Locale.Lookup("LOC_TOOLTIP_LUXURY_RESOURCE"));
+      elseif (resourceInfo.ResourceClassType == "RESOURCECLASS_STRATEGIC") then
+        table.insert(toolTipItems, Locale.Lookup("LOC_TOOLTIP_STRATEGIC_RESOURCE"));
+      elseif (resourceInfo.ResourceClassType == "RESOURCECLASS_ARTIFACT") then
+        table.insert(toolTipItems, Locale.Lookup("LOC_TOOLTIP_ARTIFACT_RESOURCE"));
+        table.insert(toolTipItems, Locale.Lookup("LOC_TOOLTIP_ARTIFACT_RESOURCE_DETAILS"));
+      end
+      local resourceTechType;
 
-			local resourceTechType;
-			if (table.count(tValidImprovements) > 0) then
-				if (table.count(tValidImprovements) > 1) then
-					for i, improvement in ipairs(tValidImprovements) do
-						local improvementType = improvement;
+      local tValidImprovements:table = {}
+      for row in GameInfo.Improvement_ValidResources() do
+        if (row.ResourceType == resourceType) then
+          table.insert(tValidImprovements, row.ImprovementType);
+        end
+      end
 
-						local has_feature = false;
-						local valid_feature = false;
-						for inner_row in GameInfo.Improvement_ValidFeatures() do
-							if(inner_row.ImprovementType == improvementType) then
-								has_feature = true;
-								if(inner_row.FeatureType == featureType) then
-									valid_feature = true;
-								end
-							end
-						end
-						valid_feature = not has_feature or valid_feature;
+      local resourceTechType;
+      if (table.count(tValidImprovements) > 0) then
+        if (table.count(tValidImprovements) > 1) then
+          for i, improvement in ipairs(tValidImprovements) do
+            local improvementType = improvement;
 
-						local has_terrain = false;
-						local valid_terrain = false;
-						for inner_row in GameInfo.Improvement_ValidTerrains() do
-							if(inner_row.ImprovementType == improvementType) then
-								has_terrain = true;
-								if(inner_row.TerrainType == terrainType) then
-									valid_terrain = true;
-								end
-							end
-						end
-						valid_terrain = not has_terrain or valid_terrain;
+            local has_feature = false;
+            local valid_feature = false;
+            for inner_row in GameInfo.Improvement_ValidFeatures() do
+              if(inner_row.ImprovementType == improvementType) then
+                has_feature = true;
+                if(inner_row.FeatureType == featureType) then
+                  valid_feature = true;
+                end
+              end
+            end
+            valid_feature = not has_feature or valid_feature;
 
-						if(valid_feature and valid_terrain) then
-							resourceTechType = GameInfo.Improvements[improvementType].PrereqTech;
-							break;
-						end
-					end
-				else
-					local improvementType = tValidImprovements[1];
-					resourceTechType = GameInfo.Improvements[improvementType].PrereqTech;
-				end
-			end
+            local has_terrain = false;
+            local valid_terrain = false;
+            for inner_row in GameInfo.Improvement_ValidTerrains() do
+              if(inner_row.ImprovementType == improvementType) then
+                has_terrain = true;
+                if(inner_row.TerrainType == terrainType) then
+                  valid_terrain = true;
+                end
+              end
+            end
+            valid_terrain = not has_terrain or valid_terrain;
 
-			if (resourceTechType ~= nil) then
-				local localPlayer	= Players[Game.GetLocalPlayer()];
-				if (localPlayer ~= nil) then
-					local playerTechs	= localPlayer:GetTechs();
-					local techType = GameInfo.Technologies[resourceTechType];
-					if (techType ~= nil and not playerTechs:HasTech(techType.Index)) then
-						table.insert(toolTipItems,"[COLOR:Civ6Red](".. Locale.Lookup("LOC_TOOLTIP_REQUIRES") .. " " .. Locale.Lookup(techType.Name) .. ")[ENDCOLOR]");
-					end
-				end
-			end
-			table.insert(toolTipItems, resourceString)
-			pInstance.ResourceIcon:SetToolTipString(table.concat(toolTipItems, "[NEWLINE]"));
-			
-			--CQUI: Resource icon becomes transparent after being improved
-			local CQUI_plotWasImproved;
-		      	local CQUI_ICON_LOW_OPACITY	:number = 0x77ffffff;
-		      	if (pPlot:GetImprovementType() == -1) then
-				CQUI_plotWasImproved = false;
-		      	else
-				CQUI_plotWasImproved = true;
-		      	end
-		      	if CQUI_plotWasImproved then
-				pInstance.ResourceIcon:SetColor(CQUI_ICON_LOW_OPACITY);
-		      	end
-		end
-	end
+            if(valid_feature and valid_terrain) then
+              resourceTechType = GameInfo.Improvements[improvementType].PrereqTech;
+              break;
+            end
+          end
+        else
+          local improvementType = tValidImprovements[1];
+          resourceTechType = GameInfo.Improvements[improvementType].PrereqTech;
+        end
+      end
+
+      if (resourceTechType ~= nil) then
+        local localPlayer = Players[Game.GetLocalPlayer()];
+        if (localPlayer ~= nil) then
+          local playerTechs = localPlayer:GetTechs();
+          local techType = GameInfo.Technologies[resourceTechType];
+          if (techType ~= nil and not playerTechs:HasTech(techType.Index)) then
+            table.insert(toolTipItems,"[COLOR:Civ6Red](".. Locale.Lookup("LOC_TOOLTIP_REQUIRES") .. " " .. Locale.Lookup(techType.Name) .. ")[ENDCOLOR]");
+          end
+        end
+      end
+      table.insert(toolTipItems, resourceString)
+      pInstance.ResourceIcon:SetToolTipString(table.concat(toolTipItems, "[NEWLINE]"));
+
+      --CQUI: Resource icon becomes transparent after being improved
+      local CQUI_plotWasImproved;
+      local CQUI_ICON_LOW_OPACITY :number = 0x77ffffff;
+      if (pPlot:GetImprovementType() == -1) then
+        CQUI_plotWasImproved = false;
+      else
+        CQUI_plotWasImproved = true;
+      end
+      if CQUI_plotWasImproved then
+        pInstance.ResourceIcon:SetColor(CQUI_ICON_LOW_OPACITY);
+      end
+    end
+  end
 end
 
 -------------------------------------------------------------------------------
 function UnloadResourceIconAt(plotIndex)
-	local pInstance = g_MapIcons[plotIndex];
-	if (pInstance ~= nil) then
-		pInstance.NextResourceIcon:UnloadTexture();
-		pInstance.NextResourceIcon:SetHide( true );
-		pInstance.AlphaAnim:SetHide( true );
-		pInstance.ResourceIcon:UnloadTexture();
-		pInstance.ResourceIcon:SetHide( true );
-	end
+  local pInstance = g_MapIcons[plotIndex];
+  if (pInstance ~= nil) then
+    pInstance.NextResourceIcon:UnloadTexture();
+    pInstance.NextResourceIcon:SetHide( true );
+    pInstance.AlphaAnim:SetHide( true );
+    pInstance.ResourceIcon:UnloadTexture();
+    pInstance.ResourceIcon:SetHide( true );
+  end
 end
 
 -------------------------------------------------------------------------------
 function UnloadRecommendationIconAt(plotIndex)
-	local pInstance = g_MapIcons[plotIndex];
-	if (pInstance ~= nil) then
-		pInstance.RecommendationIconTexture:UnloadTexture();
-		pInstance.RecommendationIcon:SetHide( true );
-	end
+  local pInstance = g_MapIcons[plotIndex];
+  if (pInstance ~= nil) then
+    pInstance.RecommendationIconTexture:UnloadTexture();
+    pInstance.RecommendationIcon:SetHide( true );
+  end
 end
 
 -------------------------------------------------------------------------------
 function GetInstanceAt(plotIndex)
-	local pInstance = g_MapIcons[plotIndex];
-	if (pInstance == nil) then
-		pInstance = g_InstanceManager:GetInstance();
-		g_MapIcons[plotIndex] = pInstance;
-		local worldX, worldY = UI.GridToWorld( plotIndex );
-		pInstance.Anchor:SetWorldPositionVal( worldX, worldY-10.0, 0.0 );
-		-- Do not unload the texture on the ResourceIcon itself, it may remove the only instance to be animated in.
-		pInstance.ResourceIcon:SetHide( true );
-		-- Do not show/start the AlphaAnim, it should not run if there is only the recommendation icon in the hex
-		pInstance.AlphaAnim:SetHide( true );
-		pInstance.RecommendationIconTexture:UnloadTexture();
-		pInstance.RecommendationIcon:SetHide( true );
-		pInstance.AlphaAnim:RegisterEndCallback( function() OnEndFade(pInstance); end );
-		pInstance[KEY_PLOT_INDEX] = plotIndex;
-	end
-	return pInstance;
+  local pInstance = g_MapIcons[plotIndex];
+  if (pInstance == nil) then
+    pInstance = g_InstanceManager:GetInstance();
+    g_MapIcons[plotIndex] = pInstance;
+    local worldX, worldY = UI.GridToWorld( plotIndex );
+    pInstance.Anchor:SetWorldPositionVal( worldX, worldY-10.0, 0.0 );
+    -- Do not unload the texture on the ResourceIcon itself, it may remove the only instance to be animated in.
+    pInstance.ResourceIcon:SetHide( true );
+    -- Do not show/start the AlphaAnim, it should not run if there is only the recommendation icon in the hex
+    pInstance.AlphaAnim:SetHide( true );
+    pInstance.RecommendationIconTexture:UnloadTexture();
+    pInstance.RecommendationIcon:SetHide( true );
+    pInstance.AlphaAnim:RegisterEndCallback( function() OnEndFade(pInstance); end );
+    pInstance[KEY_PLOT_INDEX] = plotIndex;
+  end
+  return pInstance;
 end
 
 -------------------------------------------------------------------------------
 function GetInstanceAllocatedAt(plotIndex)
-	return g_MapIcons[plotIndex];
+  return g_MapIcons[plotIndex];
 end
 
 -------------------------------------------------------------------------------
 function ReleaseInstanceAt(plotIndex)
-	local pInstance = g_MapIcons[plotIndex];
-	if (pInstance ~= nil) then
-		pInstance.ResourceIcon:UnloadTexture();
-		pInstance.RecommendationIconTexture:UnloadTexture();
-		g_InstanceManager:ReleaseInstance( pInstance );
-		g_MapIcons[plotIndex] = nil;
-	end
+  local pInstance = g_MapIcons[plotIndex];
+  if (pInstance ~= nil) then
+    pInstance.ResourceIcon:UnloadTexture();
+    pInstance.RecommendationIconTexture:UnloadTexture();
+    g_InstanceManager:ReleaseInstance( pInstance );
+    g_MapIcons[plotIndex] = nil;
+  end
 end
 
 -------------------------------------------------------------------------------
 function GetNonEmptyAt(plotIndex, state)
 
-	local eObserverID = Game.GetLocalObserver();
-	local pLocalPlayerVis = PlayerVisibilityManager.GetPlayerVisibility(eObserverID);
-	if (pLocalPlayerVis ~= nil) then
-		local pInstance = nil;
+  local eObserverID = Game.GetLocalObserver();
+  local pLocalPlayerVis = PlayerVisibilityManager.GetPlayerVisibility(eObserverID);
+  if (pLocalPlayerVis ~= nil) then
+    local pInstance = nil;
 
-		local pPlot = Map.GetPlotByIndex(plotIndex);
-		-- Have a Resource?
-		local eResource = pLocalPlayerVis:GetLayerValue(VisibilityLayerTypes.RESOURCES, plotIndex);
-		local bHideResource = ( pPlot ~= nil and ( pPlot:GetDistrictType() > 0 or pPlot:IsCity() ) );
-		if (eResource ~= nil and eResource ~= -1 and not bHideResource ) then
-			pInstance = GetInstanceAt(plotIndex);
-			SetResourceIcon(pInstance, pPlot, eResource, state);
-		else
-			UnloadResourceIconAt(plotIndex);
-		end
+    local pPlot = Map.GetPlotByIndex(plotIndex);
+    -- Have a Resource?
+    local eResource = pLocalPlayerVis:GetLayerValue(VisibilityLayerTypes.RESOURCES, plotIndex);
+    local bHideResource = ( pPlot ~= nil and ( pPlot:GetDistrictType() > 0 or pPlot:IsCity() ) );
+    if (eResource ~= nil and eResource ~= -1 and not bHideResource ) then
+      pInstance = GetInstanceAt(plotIndex);
+      SetResourceIcon(pInstance, pPlot, eResource, state);
+    else
+      UnloadResourceIconAt(plotIndex);
+    end
 
-		if (pPlot) then
-			-- Starting plot?
-			if pPlot:IsStartingPlot() and WorldBuilder.IsActive() then
-				pInstance = GetInstanceAt(plotIndex);
-				pInstance.RecommendationIconTexture:SetTexture( IconManager:FindIconAtlas("ICON_UNITOPERATION_FOUND_CITY", 43) );	
-				local iPlayer = GetStartingPlotPlayer( pPlot );
-				if (iPlayer >= 0) then
-					pInstance.RecommendationIconText:SetText( tostring(iPlayer) );	
-					pInstance.RecommendationIconText:SetHide( false );
-				else
-					pInstance.RecommendationIconText:SetHide( true );
-				end
-			else
-				UnloadRecommendationIconAt(plotIndex);
-			end
-		end
-		return pInstance;
-	end
+    if (pPlot) then
+      -- Starting plot?
+      if pPlot:IsStartingPlot() and WorldBuilder.IsActive() then
+        pInstance = GetInstanceAt(plotIndex);
+        pInstance.RecommendationIconTexture:SetTexture( IconManager:FindIconAtlas("ICON_UNITOPERATION_FOUND_CITY", 43) );
+        local iPlayer = GetStartingPlotPlayer( pPlot );
+        if (iPlayer >= 0) then
+          pInstance.RecommendationIconText:SetText( tostring(iPlayer) );
+          pInstance.RecommendationIconText:SetHide( false );
+        else
+          pInstance.RecommendationIconText:SetHide( true );
+        end
+      else
+        UnloadRecommendationIconAt(plotIndex);
+      end
+    end
+    return pInstance;
+  end
 end
 
 -------------------------------------------------------------------------------
 function RemoveAll(plotIndex)
-	ReleaseInstanceAt(plotIndex);
+  ReleaseInstanceAt(plotIndex);
 end
-	
+
 -------------------------------------------------------------------------------
 function ChangeToMidFog(plotIndex)
-	local pIconSet = GetNonEmptyAt(plotIndex, RevealedState.REVEALED);
+  local pIconSet = GetNonEmptyAt(plotIndex, RevealedState.REVEALED);
 
-	if (pIconSet ~= nil) then
-		pIconSet.NextResourceIcon:SetHide( (not m_isShowResources) or (not pIconSet.ResourceIcon:HasTexture()) );
-		pIconSet.RecommendationIcon:SetHide( (not m_isShowRecommendations) or (not pIconSet.RecommendationIconTexture:HasTexture()) );
-		pIconSet.IconStack:CalculateSize();
-		pIconSet.IconStack:ReprocessAnchoring();
-	end
+  if (pIconSet ~= nil) then
+    pIconSet.NextResourceIcon:SetHide( (not m_isShowResources) or (not pIconSet.ResourceIcon:HasTexture()) );
+    pIconSet.RecommendationIcon:SetHide( (not m_isShowRecommendations) or (not pIconSet.RecommendationIconTexture:HasTexture()) );
+    pIconSet.IconStack:CalculateSize();
+    pIconSet.IconStack:ReprocessAnchoring();
+  end
 end
 
 -------------------------------------------------------------------------------
 function ChangeToVisible(plotIndex)
-	
-	local pIconSet = GetNonEmptyAt(plotIndex, RevealedState.VISIBLE);
 
-	if (pIconSet ~= nil) then
-		pIconSet.NextResourceIcon:SetHide( (not m_isShowResources) or (not pIconSet.ResourceIcon:HasTexture()) );
-		pIconSet.RecommendationIcon:SetHide( (not m_isShowRecommendations) or (not pIconSet.RecommendationIconTexture:HasTexture()) );
-		pIconSet.IconStack:CalculateSize();
-		pIconSet.IconStack:ReprocessAnchoring();
-	end
+  local pIconSet = GetNonEmptyAt(plotIndex, RevealedState.VISIBLE);
+
+  if (pIconSet ~= nil) then
+    pIconSet.NextResourceIcon:SetHide( (not m_isShowResources) or (not pIconSet.ResourceIcon:HasTexture()) );
+    pIconSet.RecommendationIcon:SetHide( (not m_isShowRecommendations) or (not pIconSet.RecommendationIconTexture:HasTexture()) );
+    pIconSet.IconStack:CalculateSize();
+    pIconSet.IconStack:ReprocessAnchoring();
+  end
 end
 
 -------------------------------------------------------------------------------
 function Rebuild()
 
-	local eObserverID = Game.GetLocalObserver();
-	local pLocalPlayerVis = PlayerVisibilityManager.GetPlayerVisibility(eObserverID);
+  local eObserverID = Game.GetLocalObserver();
+  local pLocalPlayerVis = PlayerVisibilityManager.GetPlayerVisibility(eObserverID);
 
-	if (pLocalPlayerVis ~= nil) then
-		local iCount = Map.GetPlotCount();
-		for plotIndex = 0, iCount-1, 1 do
+  if (pLocalPlayerVis ~= nil) then
+    local iCount = Map.GetPlotCount();
+    for plotIndex = 0, iCount-1, 1 do
 
-			local visibilityType = pLocalPlayerVis:GetState(plotIndex);
-			if (visibilityType == RevealedState.HIDDEN) then
-				RemoveAll(plotIndex);
-			else		
-				if (visibilityType == RevealedState.REVEALED) then
-					ChangeToMidFog(plotIndex);
-				else
-					if (visibilityType == RevealedState.VISIBLE) then
-						ChangeToVisible(plotIndex);
-					end
-				end
-			end
-		end
-	end
+      local visibilityType = pLocalPlayerVis:GetState(plotIndex);
+      if (visibilityType == RevealedState.HIDDEN) then
+        RemoveAll(plotIndex);
+      else
+        if (visibilityType == RevealedState.REVEALED) then
+          ChangeToMidFog(plotIndex);
+        else
+          if (visibilityType == RevealedState.VISIBLE) then
+            ChangeToVisible(plotIndex);
+          end
+        end
+      end
+    end
+  end
 end
 
 function OnResearchCompleted( player:number, tech:number, isCanceled:boolean)
-	if player == Game.GetLocalPlayer() then
-		for i, techType in ipairs(m_techsThatUnlockResources) do
-			if (techType == GameInfo.Technologies[tech].TechnologyType) then
-				Rebuild();
-			end
-		end
+  if player == Game.GetLocalPlayer() then
+    for i, techType in ipairs(m_techsThatUnlockResources) do
+      if (techType == GameInfo.Technologies[tech].TechnologyType) then
+        Rebuild();
+      end
+    end
 
-		for i, techType in ipairs(m_techsThatUnlockImprovements) do
-			if (techType == GameInfo.Technologies[tech].TechnologyType) then
-				Rebuild();
-				break;
-			end
-		end
-	end
+    for i, techType in ipairs(m_techsThatUnlockImprovements) do
+      if (techType == GameInfo.Technologies[tech].TechnologyType) then
+        Rebuild();
+        break;
+      end
+    end
+  end
 end
 
 function OnCivicCompleted( player:number, civic:number, isCanceled:boolean)
-	if player == Game.GetLocalPlayer() then
-		for i, civicType in ipairs(m_civicsThatUnlockResources) do
-			if (civicType == GameInfo.Civics[civic].CivicType) then
-				Rebuild();
-			end
-		end
-	end
+  if player == Game.GetLocalPlayer() then
+    for i, civicType in ipairs(m_civicsThatUnlockResources) do
+      if (civicType == GameInfo.Civics[civic].CivicType) then
+        Rebuild();
+      end
+    end
+  end
 end
 
 -------------------------------------------------------------------------------
 function OnResourceVisibilityChanged(x, y, resourceType, visibilityType)
 
-	-- Don't use the 'untouched' version because events this can break depending on the order the events come in.
-	local plotIndex:number = GetPlotIndex(x, y);
-	if plotIndex == -1 then
-		return;
-	end
+  -- Don't use the 'untouched' version because events this can break depending on the order the events come in.
+  local plotIndex:number = GetPlotIndex(x, y);
+  if plotIndex == -1 then
+    return;
+  end
 
-	if (visibilityType == RevealedState.HIDDEN) then
-		UnloadResourceIconAt(plotIndex);
-	else		
-		if (visibilityType == RevealedState.REVEALED) then
-			ChangeToMidFog(plotIndex);
-		else
-			if (visibilityType == RevealedState.VISIBLE) then
-				ChangeToVisible(plotIndex);
-			end
-		end
-	end
+  if (visibilityType == RevealedState.HIDDEN) then
+    UnloadResourceIconAt(plotIndex);
+  else
+    if (visibilityType == RevealedState.REVEALED) then
+      ChangeToMidFog(plotIndex);
+    else
+      if (visibilityType == RevealedState.VISIBLE) then
+        ChangeToVisible(plotIndex);
+      end
+    end
+  end
 end
 
 function OnResourceRemovedFromMap(x, y, resourceType )
-	OnResourceVisibilityChanged(x, y, resourceType, RevealedState.HIDDEN );
+  OnResourceVisibilityChanged(x, y, resourceType, RevealedState.HIDDEN );
 end
 
 -------------------------------------------------------------------------------
 function OnResourceChanged(x, y, resourceType)
 
-	local eObserverID = Game.GetLocalObserver();
-	local pLocalPlayerVis = PlayerVisibilityManager.GetPlayerVisibility(eObserverID);
-	if (pLocalPlayerVis ~= nil) then
+  local eObserverID = Game.GetLocalObserver();
+  local pLocalPlayerVis = PlayerVisibilityManager.GetPlayerVisibility(eObserverID);
+  if (pLocalPlayerVis ~= nil) then
 
-		local visibilityType	= pLocalPlayerVis:GetState(x, y);
+    local visibilityType = pLocalPlayerVis:GetState(x, y);
 
-		-- Don't use the 'untouched' version because events this can break depending on the order the events come in.
-		local plotIndex:number = GetPlotIndex(x, y);
-		if plotIndex == -1 then
-			return;
-		end
+    -- Don't use the 'untouched' version because events this can break depending on the order the events come in.
+    local plotIndex:number = GetPlotIndex(x, y);
+    if plotIndex == -1 then
+      return;
+    end
 
-		if (visibilityType == RevealedState.HIDDEN) then
-			UnloadResourceIconAt(plotIndex);
-		else		
-			if (visibilityType == RevealedState.REVEALED) then
-				ChangeToMidFog(plotIndex);
-			else
-				if (visibilityType == RevealedState.VISIBLE) then
-					ChangeToVisible(plotIndex);
-				end
-			end
-		end
+    if (visibilityType == RevealedState.HIDDEN) then
+      UnloadResourceIconAt(plotIndex);
+    else
+      if (visibilityType == RevealedState.REVEALED) then
+        ChangeToMidFog(plotIndex);
+      else
+        if (visibilityType == RevealedState.VISIBLE) then
+          ChangeToVisible(plotIndex);
+        end
+      end
+    end
 
-	end
+  end
 end
 
 -------------------------------------------------------------------------------
 function OnPlotVisibilityChanged(x, y, visibilityType)
 
-	-- Don't use the 'untouched' version because events this can break depending on the order the events come in.
-	local plotIndex:number = GetPlotIndex(x, y);
-	if plotIndex == -1 then
-		return;
-	end
+  -- Don't use the 'untouched' version because events this can break depending on the order the events come in.
+  local plotIndex:number = GetPlotIndex(x, y);
+  if plotIndex == -1 then
+    return;
+  end
 
-	if (visibilityType == RevealedState.HIDDEN) then
-		RemoveAll(plotIndex);
-	else		
-		if (visibilityType == RevealedState.REVEALED) then
-			ChangeToMidFog(plotIndex);
-		else
-			if (visibilityType == RevealedState.VISIBLE) then
-				ChangeToVisible(plotIndex);
-			end
-		end
-	end
+  if (visibilityType == RevealedState.HIDDEN) then
+    RemoveAll(plotIndex);
+  else
+    if (visibilityType == RevealedState.REVEALED) then
+      ChangeToMidFog(plotIndex);
+    else
+      if (visibilityType == RevealedState.VISIBLE) then
+        ChangeToVisible(plotIndex);
+      end
+    end
+  end
 end
 
 -- ===========================================================================
 function OnPlotMarkersChanged(x, y)
 
-	-- The marker for a plot has changed.
-	local eObserverID = Game.GetLocalObserver();
-	local pLocalPlayerVis = PlayerVisibilityManager.GetPlayerVisibility(eObserverID);
-	if (pLocalPlayerVis ~= nil) then
-		
-		local visibilityType	= pLocalPlayerVis:GetState(x, y);
-		local plotIndex	:number	= GetUntouchPlotIndex(x, y);
-		if plotIndex == -1 then
-			return;
-		end
+  -- The marker for a plot has changed.
+  local eObserverID = Game.GetLocalObserver();
+  local pLocalPlayerVis = PlayerVisibilityManager.GetPlayerVisibility(eObserverID);
+  if (pLocalPlayerVis ~= nil) then
 
-		if (visibilityType == RevealedState.REVEALED) then
-			ChangeToMidFog(plotIndex);
-		else
-			if (visibilityType == RevealedState.VISIBLE) then
-				ChangeToVisible(plotIndex);
-			end
-		end
-	end
+    local visibilityType = pLocalPlayerVis:GetState(x, y);
+    local plotIndex :number = GetUntouchPlotIndex(x, y);
+    if plotIndex == -1 then
+      return;
+    end
+
+    if (visibilityType == RevealedState.REVEALED) then
+      ChangeToMidFog(plotIndex);
+    else
+      if (visibilityType == RevealedState.VISIBLE) then
+        ChangeToVisible(plotIndex);
+      end
+    end
+  end
 end
 
-
 -- ===========================================================================
---	Returns the plot # for a given set of coordinates or returns -1 if
---	it has already been handed out this turn.
+-- Returns the plot # for a given set of coordinates or returns -1 if
+-- it has already been handed out this turn.
 -- ===========================================================================
 function GetUntouchPlotIndex(x,y)
-	local plotIndex	:number = Map.GetPlotIndex(x, y);
-	if WorldBuilder.IsActive() then
-		return plotIndex;
-	else
-		local gameTurn	:number	= Game.GetCurrentGameTurn();
-		if m_kUntouchedPlots[plotIndex] == nil or m_kUntouchedPlots[plotIndex] ~= gameTurn then
-			m_kUntouchedPlots[plotIndex] = gameTurn;
-			return plotIndex;
-		end
+  local plotIndex :number = Map.GetPlotIndex(x, y);
+  if WorldBuilder.IsActive() then
+    return plotIndex;
+  else
+    local gameTurn :number = Game.GetCurrentGameTurn();
+    if m_kUntouchedPlots[plotIndex] == nil or m_kUntouchedPlots[plotIndex] ~= gameTurn then
+      m_kUntouchedPlots[plotIndex] = gameTurn;
+      return plotIndex;
+    end
 
-		return -1;
-	end
+    return -1;
+  end
 end
 
 -- ===========================================================================
 -- Returns the plot # for a given set of coordinates.
 -- ===========================================================================
 function GetPlotIndex(x,y)
-	local plotIndex	:number = Map.GetPlotIndex(x, y);
-	return plotIndex;
+  local plotIndex :number = Map.GetPlotIndex(x, y);
+  return plotIndex;
 end
-
-
 
 ----------------------------------------------------------------
 function OnLocalPlayerChanged( eLocalPlayer:number , ePrevLocalPlayer:number )
-	for key, pIconSet in pairs(g_MapIcons) do
-		if (pIconSet ~= nil) then
-			g_InstanceManager:ReleaseInstance( pIconSet );
-			g_MapIcons[key] = nil;
-		end
-	end
-	m_kUntouchedPlots = {};
+  for key, pIconSet in pairs(g_MapIcons) do
+    if (pIconSet ~= nil) then
+      g_InstanceManager:ReleaseInstance( pIconSet );
+      g_MapIcons[key] = nil;
+    end
+  end
+  m_kUntouchedPlots = {};
 end
-
 
 ----------------------------------------------------------------
 function OnUserOptionChanged(eOptionSet, hOptionKey, iNewOptionValue)
 
-	local bChangedValue = UserConfiguration.ShowMapResources();
-	if (bChangedValue ~= m_isShowResources) then
-		m_isShowResources = bChangedValue;
+  local bChangedValue = UserConfiguration.ShowMapResources();
+  if (bChangedValue ~= m_isShowResources) then
+    m_isShowResources = bChangedValue;
 
-		for _, pIconSet in pairs(g_MapIcons) do
-			pIconSet.ResourceIcon:SetHide( (not m_isShowResources) or (not pIconSet.ResourceIcon:HasTexture()) );
-			pIconSet.IconStack:CalculateSize();
-			pIconSet.IconStack:ReprocessAnchoring();
-		end
-	end
+    for _, pIconSet in pairs(g_MapIcons) do
+      pIconSet.ResourceIcon:SetHide( (not m_isShowResources) or (not pIconSet.ResourceIcon:HasTexture()) );
+      pIconSet.IconStack:CalculateSize();
+      pIconSet.IconStack:ReprocessAnchoring();
+    end
+  end
 end
 ----------------------------------------------------------------
 -- Handle the UI shutting down.
 function OnShutdown()
-	g_MapIcons = {};
-	g_InstanceManager:DestroyInstances();
+  g_MapIcons = {};
+  g_InstanceManager:DestroyInstances();
 end
 
 -- ===========================================================================
 function OnContextInitialize(bHotload : boolean)
-	-- The context just loaded, is it a hotload?
-	if (bHotload == true) then		
-		Rebuild();
-	end
+  -- The context just loaded, is it a hotload?
+  if (bHotload == true) then
+    Rebuild();
+  end
 end
 
 -- ===========================================================================
 function OnBeginWonderReveal()
-	ContextPtr:SetHide( true );
+  ContextPtr:SetHide( true );
 end
 
 -- ===========================================================================
 function OnEndWonderReveal()
-	ContextPtr:SetHide( false );
+  ContextPtr:SetHide( false );
 end
 
 -- ===========================================================================
 function ClearImprovementRecommendations()
-	-- Hide previous recommendations
-	for i,plotIndex in ipairs(m_RecommendedImprovementPlots) do
-		local pRecommendedPlotInstance = GetInstanceAt(plotIndex);
-		pRecommendedPlotInstance.ImprovementRecommendationBackground:SetHide(true);
-	end
+  -- Hide previous recommendations
+  for i,plotIndex in ipairs(m_RecommendedImprovementPlots) do
+    local pRecommendedPlotInstance = GetInstanceAt(plotIndex);
+    pRecommendedPlotInstance.ImprovementRecommendationBackground:SetHide(true);
+  end
 
-	-- Clear table
-	m_RecommendedImprovementPlots = {};
+  -- Clear table
+  m_RecommendedImprovementPlots = {};
 end
 
 -- ===========================================================================
 function AddImprovementRecommendationsForCity( pCity:table )
-	do return end;
-	
-	local pCityAI:table = pCity:GetCityAI();
-	if pCityAI then
-		local recommendList:table = pCityAI:GetImprovementRecommendations();
-		for key,value in pairs(recommendList) do
-			local pRecommendedPlotInstance = GetInstanceAt(value.ImprovementLocation);
+  do return end;
 
-			-- Get improvement info
-			local pImprovementInfo:table = GameInfo.Improvements[value.ImprovementHash];
+  local pCityAI:table = pCity:GetCityAI();
+  if pCityAI then
+    local recommendList:table = pCityAI:GetImprovementRecommendations();
+    for key,value in pairs(recommendList) do
+      local pRecommendedPlotInstance = GetInstanceAt(value.ImprovementLocation);
 
-			-- Update icon
-			local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(pImprovementInfo.Icon, 38);
-			pRecommendedPlotInstance.ImprovementRecommendationIcon:SetTexture(textureOffsetX, textureOffsetY, textureSheet);
+      -- Get improvement info
+      local pImprovementInfo:table = GameInfo.Improvements[value.ImprovementHash];
 
-			-- Update tooltip
-			pRecommendedPlotInstance.ImprovementRecommendationIcon:SetToolTipString(Locale.Lookup("LOC_TOOLTIP_IMPROVEMENT_RECOMMENDATION", pImprovementInfo.Name));
+      -- Update icon
+      local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(pImprovementInfo.Icon, 38);
+      pRecommendedPlotInstance.ImprovementRecommendationIcon:SetTexture(textureOffsetX, textureOffsetY, textureSheet);
 
-			-- Show recommendation and add to list for clean up later
-			pRecommendedPlotInstance.ImprovementRecommendationBackground:SetHide(false);
-			table.insert(m_RecommendedImprovementPlots, value.ImprovementLocation);
-		end
-	end
+      -- Update tooltip
+      pRecommendedPlotInstance.ImprovementRecommendationIcon:SetToolTipString(Locale.Lookup("LOC_TOOLTIP_IMPROVEMENT_RECOMMENDATION", pImprovementInfo.Name));
+
+      -- Show recommendation and add to list for clean up later
+      pRecommendedPlotInstance.ImprovementRecommendationBackground:SetHide(false);
+      table.insert(m_RecommendedImprovementPlots, value.ImprovementLocation);
+    end
+  end
 end
 
 -- ===========================================================================
 function ClearSettlementRecommendations()
-	-- Hide previous recommendations
-	for i,plotIndex in ipairs(m_RecommendedSettlementPlots) do
-		local pRecommendedPlotInstance = GetInstanceAt(plotIndex);
-		pRecommendedPlotInstance.ImprovementRecommendationBackground:SetHide(true);
-	end
+  -- Hide previous recommendations
+  for i,plotIndex in ipairs(m_RecommendedSettlementPlots) do
+    local pRecommendedPlotInstance = GetInstanceAt(plotIndex);
+    pRecommendedPlotInstance.ImprovementRecommendationBackground:SetHide(true);
+  end
 
-	-- Clear table
-	m_RecommendedSettlementPlots = {};
+  -- Clear table
+  m_RecommendedSettlementPlots = {};
 end
 
 -- ===========================================================================
 function AddSettlementRecommendations()
-	local pLocalPlayer:table = Players[Game.GetLocalPlayer()];
-	if pLocalPlayer then
-		local pGrandAI:table = pLocalPlayer:GetGrandStrategicAI();
-		if pGrandAI then
-			local pSettlementRecommendations:table = pGrandAI:GetSettlementRecommendations();
-			for key,value in pairs(pSettlementRecommendations) do
-				local pRecommendedPlotInstance = GetInstanceAt(value.SettlingLocation);
+  local pLocalPlayer:table = Players[Game.GetLocalPlayer()];
+  if pLocalPlayer then
+    local pGrandAI:table = pLocalPlayer:GetGrandStrategicAI();
+    if pGrandAI then
+      local pSettlementRecommendations:table = pGrandAI:GetSettlementRecommendations();
+      for key,value in pairs(pSettlementRecommendations) do
+        local pRecommendedPlotInstance = GetInstanceAt(value.SettlingLocation);
 
-				-- Update icon
-				local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas("ICON_UNITOPERATION_FOUND_CITY", 38);
-				pRecommendedPlotInstance.ImprovementRecommendationIcon:SetTexture(textureOffsetX, textureOffsetY, textureSheet);
+        -- Update icon
+        local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas("ICON_UNITOPERATION_FOUND_CITY", 38);
+        pRecommendedPlotInstance.ImprovementRecommendationIcon:SetTexture(textureOffsetX, textureOffsetY, textureSheet);
 
-				-- Update tooltip
-				pRecommendedPlotInstance.ImprovementRecommendationIcon:SetToolTipString(Locale.Lookup("LOC_TOOLTIP_SETTLEMENT_RECOMMENDATION"));				
+        -- Update tooltip
+        pRecommendedPlotInstance.ImprovementRecommendationIcon:SetToolTipString(Locale.Lookup("LOC_TOOLTIP_SETTLEMENT_RECOMMENDATION"));
 
-				-- Show recommendation and add to list for clean up later
-				pRecommendedPlotInstance.ImprovementRecommendationBackground:SetHide(false);
-				table.insert(m_RecommendedSettlementPlots, value.SettlingLocation);
-			end
-		end
-	end
+        -- Show recommendation and add to list for clean up later
+        pRecommendedPlotInstance.ImprovementRecommendationBackground:SetHide(false);
+        table.insert(m_RecommendedSettlementPlots, value.SettlingLocation);
+      end
+    end
+  end
 end
 
 -- ===========================================================================
 function OnUnitSelectionChanged(player, unitId, locationX, locationY, locationZ, isSelected, isEditable)
-	ClearImprovementRecommendations();
-	ClearSettlementRecommendations();
+  ClearImprovementRecommendations();
+  ClearSettlementRecommendations();
 
-	-- Are we a builder?
-	local pSelectedUnit:table = UI.GetHeadSelectedUnit();
-	if pSelectedUnit then 
-		if pSelectedUnit:GetBuildCharges() > 0 and GameInfo.Units[pSelectedUnit:GetUnitType()].UnitType == "UNIT_BUILDER" then
-			-- If we're within a city then look for any recommended improvements
-			local pPlot = Map.GetPlotIndex(pSelectedUnit:GetX(), pSelectedUnit:GetY());
-			local pCity:table = Cities.GetPlotPurchaseCity(pPlot);
-			if pCity and pCity:GetOwner() == player then
-				AddImprovementRecommendationsForCity(pCity);
-			end
-		elseif GameInfo.Units[pSelectedUnit:GetUnitType()].FoundCity then
-			-- Add settlement recommendations if we're a settler
-			AddSettlementRecommendations();
-		end
-	end
+  -- Are we a builder?
+  local pSelectedUnit:table = UI.GetHeadSelectedUnit();
+  if pSelectedUnit then
+    if pSelectedUnit:GetBuildCharges() > 0 and GameInfo.Units[pSelectedUnit:GetUnitType()].UnitType == "UNIT_BUILDER" then
+      -- If we're within a city then look for any recommended improvements
+      local pPlot = Map.GetPlotIndex(pSelectedUnit:GetX(), pSelectedUnit:GetY());
+      local pCity:table = Cities.GetPlotPurchaseCity(pPlot);
+      if pCity and pCity:GetOwner() == player then
+        AddImprovementRecommendationsForCity(pCity);
+      end
+    elseif GameInfo.Units[pSelectedUnit:GetUnitType()].FoundCity then
+      -- Add settlement recommendations if we're a settler
+      AddSettlementRecommendations();
+    end
+  end
 end
 
 -- ===========================================================================
-function Initialize()	
+function Initialize()
 
-	ContextPtr:SetInitHandler(OnContextInitialize);
-	ContextPtr:SetShutdown( OnShutdown );
-	
-	Events.BeginWonderReveal.Add( OnBeginWonderReveal );
-	Events.EndWonderReveal.Add( OnEndWonderReveal );
-	Events.LocalPlayerChanged.Add(OnLocalPlayerChanged);
-	Events.ResourceVisibilityChanged.Add(OnResourceVisibilityChanged);
-	Events.ResourceAddedToMap.Add(OnResourceChanged);
-	Events.ResourceRemovedFromMap.Add(OnResourceRemovedFromMap);
-	Events.ImprovementAddedToMap.Add( OnResourceChanged );
-	Events.PlotVisibilityChanged.Add(OnPlotVisibilityChanged);
-	Events.PlotMarkerChanged.Add(OnPlotMarkersChanged);
-	Events.UnitSelectionChanged.Add( OnUnitSelectionChanged );
-	Events.UserOptionChanged.Add(OnUserOptionChanged);
-	Events.ResearchCompleted.Add(OnResearchCompleted);
-	Events.CivicCompleted.Add(OnCivicCompleted);
+  ContextPtr:SetInitHandler(OnContextInitialize);
+  ContextPtr:SetShutdown( OnShutdown );
 
-	for row in GameInfo.Resources() do
-		if row.PrereqTech ~= nil then
-			table.insert(m_techsThatUnlockResources, row.PrereqTech);
-		end
-		if row.PrereqCivic~= nil then
-			table.insert(m_civicsThatUnlockResources, row.PrereqCivic);
-		end
-	end
+  Events.BeginWonderReveal.Add( OnBeginWonderReveal );
+  Events.EndWonderReveal.Add( OnEndWonderReveal );
+  Events.LocalPlayerChanged.Add(OnLocalPlayerChanged);
+  Events.ResourceVisibilityChanged.Add(OnResourceVisibilityChanged);
+  Events.ResourceAddedToMap.Add(OnResourceChanged);
+  Events.ResourceRemovedFromMap.Add(OnResourceRemovedFromMap);
+  Events.ImprovementAddedToMap.Add( OnResourceChanged );
+  Events.PlotVisibilityChanged.Add(OnPlotVisibilityChanged);
+  Events.PlotMarkerChanged.Add(OnPlotMarkersChanged);
+  Events.UnitSelectionChanged.Add( OnUnitSelectionChanged );
+  Events.UserOptionChanged.Add(OnUserOptionChanged);
+  Events.ResearchCompleted.Add(OnResearchCompleted);
+  Events.CivicCompleted.Add(OnCivicCompleted);
 
-	for row in GameInfo.Improvements() do
-		if (row.PrereqTech ~= nil) then
-			table.insert(m_techsThatUnlockImprovements, row.PrereqTech);
-		end
-	end
-	
+  for row in GameInfo.Resources() do
+    if row.PrereqTech ~= nil then
+      table.insert(m_techsThatUnlockResources, row.PrereqTech);
+    end
+    if row.PrereqCivic~= nil then
+      table.insert(m_civicsThatUnlockResources, row.PrereqCivic);
+    end
+  end
+
+  for row in GameInfo.Improvements() do
+    if (row.PrereqTech ~= nil) then
+      table.insert(m_techsThatUnlockImprovements, row.PrereqTech);
+    end
+  end
+
 end
 Initialize();
 

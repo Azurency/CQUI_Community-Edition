@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd"
-				 ColorSet="Beige_Black" FontStyle="Shadow">
+         ColorSet="Beige_Black" FontStyle="Shadow">
 
 
   <Box Color="0,0,0,150" Size="Full,Full" ConsumeMouse="1">
@@ -14,60 +14,53 @@
                 <Label  ID="TitleText"   Style="WindowHeader"        Anchor="C,C" String="{LOC_MAP_PIN_POPUP_TITLE:upper}" />
               </Container>
               <Container AutoSize="1" Anchor="C,T">
-                <Stack		ID="WindowContentsStack"  Anchor="L,T" StackGrowth="Bottom" Padding="0">
+                <Stack    ID="WindowContentsStack"  Anchor="L,T" StackGrowth="Bottom" Padding="0">
                   <!-- Name -->
                   <Grid Style="EditTextButton" Anchor="C,T" Size="315,26">
                     <EditBox ID="PinName" Style="EditTextArea" Size="270,22" Anchor="R,C" Offset="4,0" MaxLength="20" EditMode="0" KeepFocus="1"/>
                   </Grid>
-				  <!-- Spacer -->
-				  <Container Size="20,10"/>
-				  
+                  <!-- Spacer -->
+                  <Container Size="20,10"/>          
                   <!-- Default -->
-				  <Label String="LOC_DEFAULT_BUTTON" Style="CityPanelSubPanelTitle" Anchor="C,C" />
-                  <Stack ID="IconOptionStackDefault" Anchor="C,T" StackGrowth="Right" Padding="5" WrapWidth="320" WrapGrowth="Down"/>
-				  <Container Size="20,10"/>
-				  
-				  <!-- Districts -->
-				  <Label String="LOC_HUD_DISTRICTS" Style="CityPanelSubPanelTitle" Anchor="C,C" />
-				  <Stack ID="IconOptionStackDistricts" Anchor="C,T" StackGrowth="Right" Padding="5" WrapWidth="320" WrapGrowth="Down"/>
-				  <Container Size="20,10"/>
-				  
-				  <!-- Wonders -->
-				  <Label String="LOC_HUD_CITY_WONDERS" Style="CityPanelSubPanelTitle" Anchor="C,C" />
-				  <Stack ID="IconOptionStackWonders" Anchor="C,T" StackGrowth="Right" Padding="5" WrapWidth="320" WrapGrowth="Down"/>
-				  <Container Size="20,10"/>
-				  
+                  <Label String="LOC_DEFAULT_BUTTON" Style="CityPanelSubPanelTitle" Anchor="C,C" />
+                          <Stack ID="IconOptionStackDefault" Anchor="C,T" StackGrowth="Right" Padding="5" WrapWidth="320" WrapGrowth="Down"/>
+                  <Container Size="20,10"/>          
+                  <!-- Districts -->
+                  <Label String="LOC_HUD_DISTRICTS" Style="CityPanelSubPanelTitle" Anchor="C,C" />
+                  <Stack ID="IconOptionStackDistricts" Anchor="C,T" StackGrowth="Right" Padding="5" WrapWidth="320" WrapGrowth="Down"/>
+                  <Container Size="20,10"/>          
+                  <!-- Wonders -->
+                  <Label String="LOC_HUD_CITY_WONDERS" Style="CityPanelSubPanelTitle" Anchor="C,C" />
+                  <Stack ID="IconOptionStackWonders" Anchor="C,T" StackGrowth="Right" Padding="5" WrapWidth="320" WrapGrowth="Down"/>
+                  <Container Size="20,10"/>          
                   <!-- Visible to.. -->
-					<Container ID="VisibilityContainer" Anchor="C,T" Size="1,46" Hidden="1">
-						<PullDown ID="VisibilityPull" Anchor="C,T" Size="166,26" Style="MainPullDown"/>
-					</Container>
-									
+                  <Container ID="VisibilityContainer" Anchor="C,T" Size="1,46" Hidden="1">
+                    <PullDown ID="VisibilityPull" Anchor="C,T" Size="166,26" Style="MainPullDown"/>
+                  </Container>
                   <!-- Buttons -->
                   <Container Size="20,20"/>
                   <Stack        ID="OptionsStack" StackGrowth="Right" Padding="10" Anchor="C,T"  WrapWidth="320">
-                    <GridButton ID="DeleteButton"		  Anchor="L,T" Size="150,41"		Style="ButtonRed" FontStyle="Shadow" String="LOC_DELETE_BUTTON" />
-                    <GridButton ID="OkButton"			    Anchor="L,T" Size="150,41"		Style="MainButton" FontStyle="Shadow" String="LOC_OK_BUTTON" />
-                    <GridButton ID="SendToChatButton"	Anchor="L,T" Size="150,41"		Style="MainButton" FontStyle="Shadow" String="LOC_MAP_PIN_SEND_TO_CHAT" ToolTip="LOC_MAP_PIN_SEND_TO_CHAT_TT"/>
+                    <GridButton ID="DeleteButton"     Anchor="L,T" Size="150,41"    Style="ButtonRed" FontStyle="Shadow" String="LOC_DELETE_BUTTON" />
+                    <GridButton ID="OkButton"         Anchor="L,T" Size="150,41"    Style="MainButton" FontStyle="Shadow" String="LOC_OK_BUTTON" />
+                    <GridButton ID="SendToChatButton" Anchor="L,T" Size="150,41"    Style="MainButton" FontStyle="Shadow" String="LOC_MAP_PIN_SEND_TO_CHAT" ToolTip="LOC_MAP_PIN_SEND_TO_CHAT_TT"/>
                   </Stack>
                 </Stack>
               </Container>
             </Stack>
-
           </Grid>
         </Grid>
-
       </SlideAnim>
     </AlphaAnim>
   </Box>
  
 
  
-	<Instance Name="IconOptionInstance">	
-		<Container ID="IconOptionRoot" Anchor="L,T" Size="40,40">
-			<GridButton ID="IconOptionButton" Anchor="C,C" Size="parent,parent" Style="ButtonControl">
-				<Image ID="Icon"  Texture="MapPins24" Size="24,24" Anchor="C,C" Color="254,254,230"/>
-			</GridButton>
-		</Container>
-	</Instance>
+  <Instance Name="IconOptionInstance">  
+    <Container ID="IconOptionRoot" Anchor="L,T" Size="40,40">
+      <GridButton ID="IconOptionButton" Anchor="C,C" Size="parent,parent" Style="ButtonControl">
+        <Image ID="Icon"  Texture="MapPins24" Size="24,24" Anchor="C,C" Color="254,254,230"/>
+      </GridButton>
+    </Container>
+  </Instance>
 
 </Context>

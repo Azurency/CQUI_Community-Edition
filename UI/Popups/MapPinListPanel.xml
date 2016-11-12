@@ -1,48 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Context Style="FontNormal16">
-	<!-- Map Pin List Panel -->
-	<Grid	Anchor="L,B" ID="MapPinPanel" Size="320,119" Texture="Tracker_OptionsBacking" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" MinSize="121,119" AutoSize="V" AutoSizePadding="0,15">
-		
+  <!-- Map Pin List Panel -->
+  <Grid Anchor="L,B" ID="MapPinPanel" Size="320,119" Texture="Tracker_OptionsBacking" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" MinSize="121,119" AutoSize="V" AutoSizePadding="0,15">
+    
     <Label Anchor="C,T" String="{LOC_HUD_MAP_PIN_LIST:upper}" Offset="0,12" Style="FontFlair16" Color0="106,93,69,255" Color1="0,0,0,150" Color2="146,133,109,255" FontStyle="Glow" SmallCaps="20" SmallCapsLeading="0" SmallCapsType="EveryWord" KerningAdjustment="0"/>
 
     <Stack  Anchor="C,T" StackGrowth="Bottom" StackPadding="5" Offset="-6,0">
       <Container Size="30,30"/>
-      <GridButton	ID="AddPinButton"	Anchor="C,T" Size="280,24" String="LOC_HUD_MAP_PLACE_MAP_PIN" ToolTip="LOC_HUD_MAP_PLACE_MAP_PIN_TT" Style="ButtonControl"/>
-	  <ScrollPanel Anchor="C,T" ID="MapPinLogPanel" Offset="0,0" Size="260,130" Style="ScrollPanelWithLeftBar" HideScrollBar="0" >
-		<Stack Anchor="C,T"	ID="MapPinEntryStack" StackGrowth="Bottom" Offset="0,0" StackPadding="1" />
-	  </ScrollPanel>
+      <GridButton ID="AddPinButton" Anchor="C,T" Size="280,24" String="LOC_HUD_MAP_PLACE_MAP_PIN" ToolTip="LOC_HUD_MAP_PLACE_MAP_PIN_TT" Style="ButtonControl"/>
+    <ScrollPanel Anchor="C,T" ID="MapPinLogPanel" Offset="0,0" Size="260,130" Style="ScrollPanelWithLeftBar" HideScrollBar="0" >
+    <Stack Anchor="C,T" ID="MapPinEntryStack" StackGrowth="Bottom" Offset="0,0" StackPadding="1" />
+    </ScrollPanel>
     </Stack>
 
-		<Image Texture="Controls_ButtonExtendSmall" TextureOffset="0,60" Size="20,20" Anchor="L,B" Offset="20,10"/>
-	</Grid>
-	
+    <Image Texture="Controls_ButtonExtendSmall" TextureOffset="0,60" Size="20,20" Anchor="L,B" Offset="20,10"/>
+  </Grid>
+  
   <!-- ==================================================================== -->
-  <!--	INSTANCES																														-->
+  <!--  INSTANCES                                                           -->
   <!-- ==================================================================== -->
   <!--
   
       <Stack Anchor="C,T" Offset="0,32" StackGrowth="Bottom">
       <ScrollPanel Anchor="C,T" ID="MapPinLogPanel" Offset="0,0" Size="260,130" Style="ScrollPanelWithLeftBar" HideScrollBar="0" >
-        <Stack Anchor="C,T"	ID="MapPinEntryStack"										 StackGrowth="Bottom" Offset="0,0" StackPadding="1" />
+        <Stack Anchor="C,T" ID="MapPinEntryStack"                    StackGrowth="Bottom" Offset="0,0" StackPadding="1" />
       </ScrollPanel>
 
     </Stack>
   
-        <Container	Size="200,30" AutoSize="V">
-        <CheckBox	ID="ChatCheck"				Anchor="R,T"	Style="WorldTrackerCheckBox" TextOffset="-5" String="LOC_HIDE_CHAT_PANEL" WrapWidth="180" Align="Right"/>
+        <Container  Size="200,30" AutoSize="V">
+        <CheckBox ID="ChatCheck"        Anchor="R,T"  Style="WorldTrackerCheckBox" TextOffset="-5" String="LOC_HIDE_CHAT_PANEL" WrapWidth="180" Align="Right"/>
       </Container>
       -->
-	<Instance			Name="MapPinListEntry">
-		<Container ID="Root" Size="280,32">
-		  <GridButton ID="MapPinListButton" Anchor="L,C"  Size="parent-26,32" ConsumeAllMouse="1" Style="ButtonControlBrown">
-			<Image ID="IconImage"  Texture="MapPins24" Size="24,24" Anchor="L,C" Color="254,254,230" Offset="12,0" />
-			<Label	ID="MapPinName"	Anchor="L,C" Offset="44,0" String="" WrapWidth="parent-24" Style="FontNormal14" TruncateWidth="210" FontStyle="Glow" Color0="154,137,108,255" Color1="21,18,12,100" />
-		  </GridButton>
-		  <GridButton ID="EditMapPin" Style="ButtonControlBrown" Size="24,24" Anchor="R,C">
-			<Image Texture="Controls_TypeIn" Size="18,18" Anchor="C,C"/>
-		  </GridButton>
-		</Container>
-	</Instance>
+  <Instance     Name="MapPinListEntry">
+    <Container ID="Root" Size="280,32">
+      <GridButton ID="MapPinListButton" Anchor="L,C"  Size="parent-26,32" ConsumeAllMouse="1" Style="ButtonControlBrown">
+      <Image ID="IconImage"  Texture="MapPins24" Size="24,24" Anchor="L,C" Color="254,254,230" Offset="12,0" />
+      <Label  ID="MapPinName" Anchor="L,C" Offset="44,0" String="" WrapWidth="parent-24" Style="FontNormal14" TruncateWidth="210" FontStyle="Glow" Color0="154,137,108,255" Color1="21,18,12,100" />
+      </GridButton>
+      <GridButton ID="EditMapPin" Style="ButtonControlBrown" Size="24,24" Anchor="R,C">
+      <Image Texture="Controls_TypeIn" Size="18,18" Anchor="C,C"/>
+      </GridButton>
+    </Container>
+  </Instance>
   
 </Context>

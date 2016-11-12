@@ -1,84 +1,84 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Context  ColorSet="BodyTextCool" FontStyle="Shadow">
   
-  <SlideAnim	  ID="OverviewSlide"	Anchor="L,T"									Size="300,full"				Start="-330,27" End="0,27" Cycle="Once" Speed="3.5" Function="OutSine" Stopped="1" >
-    <Box  				ID="OverviewBackground"	Anchor="L,T"	                Size="parent,parent+5" ConsumeMouse="1" Color="8,34,56,255">
+  <SlideAnim    ID="OverviewSlide"  Anchor="L,T"                  Size="300,full"       Start="-330,27" End="0,27" Cycle="Once" Speed="3.5" Function="OutSine" Stopped="1" >
+    <Box          ID="OverviewBackground" Anchor="L,T"                  Size="parent,parent+5" ConsumeMouse="1" Color="8,34,56,255">
       <Image ID="PanelDropShadow" Texture="Controls_GradientSmall" Size="22,parent" AnchorSide="O,I" Anchor="R,T" Color="0,0,0,190" Rotate="270" Offset="-1,0"/>
       <Image Texture="Controls_Gradient" Size="parent, 120" Anchor="C,B" Color="13,57,92,255"/>
       <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" Offset="0,30" Anchor="C,B" Color="72,103,130,255"/>
       <Image Texture="Controls_Compass" Size="193, 122" Anchor="C,B" Offset="0,35" Color="62,93,120,150"/>
       <ScrollPanel        ID="PanelScrollPanel"       Anchor="R,B"                  Size="parent,parent-125" AutoScrollBar="1" Vertical="1" Offset="0,35">
-        <Stack						ID="PanelStack"							Anchor="R,T" Offset="0,0"		  Size="parent,0"				StackGrowth="Down" Hidden="0" >
+        <Stack            ID="PanelStack"             Anchor="R,T" Offset="0,0"     Size="parent,0"       StackGrowth="Down" Hidden="0" >
           <Container Size="parent,20"/>
-          <Grid						ID="PanelCitizensGrowth"				Anchor="L,T"									Size="parent,0"				Style="CityPanelStatPanelGrid">
-            <Grid																			Anchor="L,T"									Size="parent,24"		Style="DivHeader">
+          <Grid           ID="PanelCitizensGrowth"        Anchor="L,T"                  Size="parent,0"       Style="CityPanelStatPanelGrid">
+            <Grid                                     Anchor="L,T"                  Size="parent,24"    Style="DivHeader">
               <Container Size="parent,24">
                 <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" FlipY="1" Anchor="C,T" Color="72,103,130,255"/>
               </Container>
-              <Label																	Anchor="C,C" Offset="5,0"													Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_CITIZEN_GROWTH" />
+              <Label                                  Anchor="C,C" Offset="5,0"                         Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_CITIZEN_GROWTH" />
             </Grid>
-            <Grid																											 Offset="5,35"		Size="parent-10,55" Style="CityPanelSubPanelContainer" >
-              <Image			ID="CitizenGrowthStatus2"										 Offset="5,3"			Size="50,50"				Texture="CityPanel_StatusIcon">
-                <Image		ID="CitizenGrowthStatusIcon2"		Anchor="C,C" Offset="-2,-3"   Size="45,45"				  Texture="Stats45" Icon="ICON_CITIZEN"/>
+            <Grid                                                      Offset="5,35"    Size="parent-10,55" Style="CityPanelSubPanelContainer" >
+              <Image      ID="CitizenGrowthStatus2"                    Offset="5,3"     Size="50,50"        Texture="CityPanel_StatusIcon">
+                <Image    ID="CitizenGrowthStatusIcon2"   Anchor="C,C" Offset="-2,-3"   Size="45,45"          Texture="Stats45" Icon="ICON_CITIZEN"/>
               </Image>
-              <Stack																			StackGrowth="Right"						StackPadding="4">
-                <Label																		Anchor="L,T" Offset="60,10"		WrapWidth="parent"	Style="CityPanelBannerText"		String="{LOC_HUD_CITY_CITIZENS:upper}" SmallCaps="22" />
-                <Label		ID="CitizensStarving"						Anchor="L,B" Offset="0,2"													Style="CityPanelTextSmall"		String="[Color:StatBadCS]{LOC_HUD_CITY_STARVING:upper}[endcolor]"  />
+              <Stack                                      StackGrowth="Right"           StackPadding="4">
+                <Label                                    Anchor="L,T" Offset="60,10"   WrapWidth="parent"  Style="CityPanelBannerText"   String="{LOC_HUD_CITY_CITIZENS:upper}" SmallCaps="22" />
+                <Label    ID="CitizensStarving"           Anchor="L,B" Offset="0,2"                         Style="CityPanelTextSmall"    String="[Color:StatBadCS]{LOC_HUD_CITY_STARVING:upper}[endcolor]"  />
               </Stack>
-              <Label			ID="TurnsUntilBornLost"											 Offset="60,25"		WrapWidth="170"			Style="CityPanelTextSmall"		String="$turnsuntilborn$" />
+              <Label      ID="TurnsUntilBornLost"                      Offset="60,25"   WrapWidth="170"     Style="CityPanelTextSmall"    String="$turnsuntilborn$" />
             </Grid>
-            <Stack																										 Offset="0,90"		Size="parent,0"			StackGrowth="Bottom" InnerPadding="10,10" StackPadding="-5">
-              <Grid																				Anchor="L,T"									Size="parent,0"			AutoSize="Vertical"	Style="CityPanelSubPanelContainer" InnerPadding="0,10" InnerOffset="0,5">
-                <Grid																																												Style="CityPanelLineItem">
-                  <Label																																										Style="CityPanelTextSmall" 		String="LOC_HUD_CITY_FOOD_PER_TURN" />
-                  <Label	ID="FoodPerTurnNum"							Anchor="R,C"																			Style="CityPanelTextSmall"			String="-" />
+            <Stack                                                     Offset="0,90"    Size="parent,0"     StackGrowth="Bottom" InnerPadding="10,10" StackPadding="-5">
+              <Grid                                       Anchor="L,T"                  Size="parent,0"     AutoSize="Vertical" Style="CityPanelSubPanelContainer" InnerPadding="0,10" InnerOffset="0,5">
+                <Grid                                                                                       Style="CityPanelLineItem">
+                  <Label                                                                                    Style="CityPanelTextSmall"    String="LOC_HUD_CITY_FOOD_PER_TURN" />
+                  <Label  ID="FoodPerTurnNum"             Anchor="R,C"                                      Style="CityPanelTextSmall"      String="-" />
                 </Grid>
-                <Grid																									 Offset="0,20"												Style="CityPanelLineItem">
-                  <Label																	Anchor="L,C"																			Style="CityPanelTextSmall"		String="LOC_HUD_CITY_FOOD_CONSUMPTION" />
-                  <Label	ID="FoodConsumption"						Anchor="R,C"																			Style="CityPanelTextSmall"			String="-" />
-                </Grid>
-              </Grid>
-              <Grid																										 Offset="0,0"			Size="parent,8"			Style="Divider3Grid"	/>
-              <Grid																				Anchor="L,T" Offset="0,-2"		Size="parent,0"			AutoSize="Vertical"	Style="CityPanelSubPanelContainer" InnerPadding="0,10" InnerOffset="0,5">
-                <Grid																																												Style="CityPanelLineItem">
-                  <Label																																										Style="CityPanelTextSmall" 		String="LOC_HUD_CITY_GROWTH_FOOD_PER_TURN" />
-                  <Label	ID="NetFoodPerTurn"							Anchor="R,C"																			Style="CityPanelTextSmall"			String="-" />
-                </Grid>
-                <Grid																									 Offset="0,20"												Style="CityPanelLineItem">
-                  <Label																																										Style="CityPanelTextSmall" 		String="LOC_HUD_CITY_HAPPINESS_GROWTH_BONUS" />
-                  <Label	ID="HappinessBonus"					Anchor="R,C"																			    Style="CityPanelTextSmall"			String="-" />
-                </Grid>
-                <Grid																									 Offset="0,40"												Style="CityPanelLineItem">
-                  <Label																																										Style="CityPanelTextSmall" 		String="LOC_HUD_CITY_OTHER_GROWTH_BONUSES" />
-                  <Label	ID="OtherGrowthBonuses"					Anchor="R,C"																			Style="CityPanelTextSmall"			String="-" />
+                <Grid                                                  Offset="0,20"                        Style="CityPanelLineItem">
+                  <Label                                  Anchor="L,C"                                      Style="CityPanelTextSmall"    String="LOC_HUD_CITY_FOOD_CONSUMPTION" />
+                  <Label  ID="FoodConsumption"            Anchor="R,C"                                      Style="CityPanelTextSmall"      String="-" />
                 </Grid>
               </Grid>
-              <Grid																										 Offset="0,0"			Size="parent,8"			Style="Divider3Grid"	/>
-              <Grid																				Anchor="L,T" Offset="0,-2"		Size="parent,0"			AutoSize="Vertical"	Style="CityPanelSubPanelContainer" InnerPadding="0,10" InnerOffset="0,5">
-                <Grid																									 Offset="0,0"													Style="CityPanelLineItem">
-                  <Label																																										Style="CityPanelTextSmall" 		String="LOC_HUD_CITY_MODIFIED_GROWTH_FOOD_PER_TURN" />
-                  <Label	ID="ModifiedGrowthFoodPerTurn"	Anchor="R,C"																			Style="CityPanelTextSmall"			String="-" />
+              <Grid                                                    Offset="0,0"     Size="parent,8"     Style="Divider3Grid"  />
+              <Grid                                       Anchor="L,T" Offset="0,-2"    Size="parent,0"     AutoSize="Vertical" Style="CityPanelSubPanelContainer" InnerPadding="0,10" InnerOffset="0,5">
+                <Grid                                                                                       Style="CityPanelLineItem">
+                  <Label                                                                                    Style="CityPanelTextSmall"    String="LOC_HUD_CITY_GROWTH_FOOD_PER_TURN" />
+                  <Label  ID="NetFoodPerTurn"             Anchor="R,C"                                      Style="CityPanelTextSmall"      String="-" />
                 </Grid>
-                <Grid																									 Offset="0,20"												Style="CityPanelLineItem">
-                  <Label																																										Style="CityPanelTextSmall" 		String="LOC_HUD_CITY_HOUSING_MULTIPLIER" />
-                  <Label	ID="HousingMultiplier"					Anchor="R,C"																			Style="CityPanelTextSmall"			String="-" />
+                <Grid                                                  Offset="0,20"                        Style="CityPanelLineItem">
+                  <Label                                                                                    Style="CityPanelTextSmall"    String="LOC_HUD_CITY_HAPPINESS_GROWTH_BONUS" />
+                  <Label  ID="HappinessBonus"         Anchor="R,C"                                          Style="CityPanelTextSmall"      String="-" />
                 </Grid>
-                <Grid																									 Offset="0,40"												Style="CityPanelLineItem">
-                  <Label																																										Style="CityPanelTextSmall" 		String="LOC_HUD_CITY_OCCUPATION_MULTIPLIER" />
-                  <Label	ID="OccupationMultiplier"				Anchor="R,C"																			Style="CityPanelTextSmall"			String="-" />
+                <Grid                                                  Offset="0,40"                        Style="CityPanelLineItem">
+                  <Label                                                                                    Style="CityPanelTextSmall"    String="LOC_HUD_CITY_OTHER_GROWTH_BONUSES" />
+                  <Label  ID="OtherGrowthBonuses"         Anchor="R,C"                                      Style="CityPanelTextSmall"      String="-" />
                 </Grid>
               </Grid>
-              <Grid																																			Size="parent,8"			Style="Divider3Grid" />
-              <Grid																				Anchor="L,T"									Size="parent,0"			AutoSize="Vertical"	Style="CityPanelSubPanelContainer">
-                <Label	ID="FoodSurplusDeficitLabel"			Anchor="L,C"																			Style="CityPanelTextSmall" 		String="LOC_HUD_CITY_TOTAL_FOOD_SURPLUS" />
-                <Label	ID="TotalFoodSurplus"							Anchor="R,C"																			Style="CityPanelNumLarge"			String="-" FontStyle="Glow"/>
+              <Grid                                                    Offset="0,0"     Size="parent,8"     Style="Divider3Grid"  />
+              <Grid                                       Anchor="L,T" Offset="0,-2"    Size="parent,0"     AutoSize="Vertical" Style="CityPanelSubPanelContainer" InnerPadding="0,10" InnerOffset="0,5">
+                <Grid                                                  Offset="0,0"                         Style="CityPanelLineItem">
+                  <Label                                                                                    Style="CityPanelTextSmall"    String="LOC_HUD_CITY_MODIFIED_GROWTH_FOOD_PER_TURN" />
+                  <Label  ID="ModifiedGrowthFoodPerTurn"  Anchor="R,C"                                      Style="CityPanelTextSmall"      String="-" />
+                </Grid>
+                <Grid                                                  Offset="0,20"                        Style="CityPanelLineItem">
+                  <Label                                                                                    Style="CityPanelTextSmall"    String="LOC_HUD_CITY_HOUSING_MULTIPLIER" />
+                  <Label  ID="HousingMultiplier"          Anchor="R,C"                                      Style="CityPanelTextSmall"      String="-" />
+                </Grid>
+                <Grid                                                  Offset="0,40"                        Style="CityPanelLineItem">
+                  <Label                                                                                    Style="CityPanelTextSmall"    String="LOC_HUD_CITY_OCCUPATION_MULTIPLIER" />
+                  <Label  ID="OccupationMultiplier"       Anchor="R,C"                                      Style="CityPanelTextSmall"      String="-" />
+                </Grid>
+              </Grid>
+              <Grid                                                                     Size="parent,8"     Style="Divider3Grid" />
+              <Grid                                       Anchor="L,T"                  Size="parent,0"     AutoSize="Vertical" Style="CityPanelSubPanelContainer">
+                <Label  ID="FoodSurplusDeficitLabel"      Anchor="L,C"                                      Style="CityPanelTextSmall"    String="LOC_HUD_CITY_TOTAL_FOOD_SURPLUS" />
+                <Label  ID="TotalFoodSurplus"             Anchor="R,C"                                      Style="CityPanelNumLarge"     String="-" FontStyle="Glow"/>
               </Grid>
               <Container  Size="1,8" />
-              <Grid																				Anchor="L,B" Offset="-5,0"	    Size="parent+10,31"			Texture="CityPanel_StatPanelHeader"		SliceCorner="3,15" SliceTextureSize="28,31" AutoSize="V" MinSize="parent,31" InnerPadding="15,15" AutoSizePadding="0,2">
-                <Image				ID="GrowthLongTurns"			Offset="0,1" Anchor="R,C"	Size="182,21"								Texture="CityPanel_MeterBacking" >
-                  <Label				ID="GrowthLongLabel"			Anchor="L,C" AnchorSide="O,I"	Style="CityPanelText"				String="{LOC_HUD_CITY_GROWTH_IN:upper}" WrapWidth="100" Offset="2,0"/>
-                  <TextureBar	ID="GrowthLongTurnsBar"		Anchor="L,T"	Size="parent-4,parent-3"		Texture="CityPanel_CitizenMeter"				ShadowColor="255,255,255,100">
-                    <Label				ID="GrowthLongNum"																			Style="CityPanelNumLarge"		String="-" WrapWidth="parent" Offset="4,0"/>
+              <Grid                                       Anchor="L,B" Offset="-5,0"      Size="parent+10,31"     Texture="CityPanel_StatPanelHeader"   SliceCorner="3,15" SliceTextureSize="28,31" AutoSize="V" MinSize="parent,31" InnerPadding="15,15" AutoSizePadding="0,2">
+                <Image        ID="GrowthLongTurns"      Offset="0,1" Anchor="R,C" Size="182,21"               Texture="CityPanel_MeterBacking" >
+                  <Label        ID="GrowthLongLabel"      Anchor="L,C" AnchorSide="O,I" Style="CityPanelText"       String="{LOC_HUD_CITY_GROWTH_IN:upper}" WrapWidth="100" Offset="2,0"/>
+                  <TextureBar ID="GrowthLongTurnsBar"   Anchor="L,T"  Size="parent-4,parent-3"    Texture="CityPanel_CitizenMeter"        ShadowColor="255,255,255,100">
+                    <Label        ID="GrowthLongNum"                                      Style="CityPanelNumLarge"   String="-" WrapWidth="parent" Offset="4,0"/>
                   </TextureBar>
                 </Image>    
               </Grid>
@@ -86,44 +86,44 @@
             </Stack>
           </Grid>
 
-          <Grid						ID="PanelAmenities"							Anchor="L,T" Offset="0,0"			Size="parent,0"				Style="CityPanelStatPanelGrid" ConsumeAllMouse="1">
-            <Grid																			Anchor="L,T"									Size="parent,24"		Style="DivHeader">
+          <Grid           ID="PanelAmenities"             Anchor="L,T" Offset="0,0"     Size="parent,0"       Style="CityPanelStatPanelGrid" ConsumeAllMouse="1">
+            <Grid                                     Anchor="L,T"                  Size="parent,24"    Style="DivHeader">
               <Container Size="parent,24">
                 <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" FlipY="1" Anchor="C,T" Color="72,103,130,255"/>
               </Container>
-              <Label																	Anchor="C,C" Offset="5,0"													Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_AMENITIES" />
+              <Label                                  Anchor="C,C" Offset="5,0"                         Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_AMENITIES" />
             </Grid>
 
-            <Stack																										 Offset="0,24"		Size="parent,0"			StackGrowth="Bottom" InnerPadding="10,5" AutoSize="Vertical" StackPadding="5" >
-              <Container																																Size="parent,0"			AutoSize="Vertical">
-                <Grid																			Anchor="R,T" Offset="0,10"		Size="155,48"				Style="CityPanelSubPanelContainer">
-                  <Label																	Anchor="L,C" Offset="4,-8"												Style="CityPanelText" String="LOC_HUD_CITY_STATUS" />
-                  <Label		ID="Mood"											Anchor="L,C" Offset="4,8"		WrapWidth="parent"	Style="CityPanelText" String="LOC_HUD_CITY_STATUS_HAPPY" FontStyle="Glow"/>
+            <Stack                                                     Offset="0,24"    Size="parent,0"     StackGrowth="Bottom" InnerPadding="10,5" AutoSize="Vertical" StackPadding="5" >
+              <Container                                                                Size="parent,0"     AutoSize="Vertical">
+                <Grid                                     Anchor="R,T" Offset="0,10"    Size="155,48"       Style="CityPanelSubPanelContainer">
+                  <Label                                  Anchor="L,C" Offset="4,-8"                        Style="CityPanelText" String="LOC_HUD_CITY_STATUS" />
+                  <Label    ID="Mood"                     Anchor="L,C" Offset="4,8"   WrapWidth="parent"  Style="CityPanelText" String="LOC_HUD_CITY_STATUS_HAPPY" FontStyle="Glow"/>
                 </Grid>
-                <Grid																									 Offset="0,10"		Size="105,48"				Style="CityPanelSubPanelContainer" AutoSize="V">
+                <Grid                                                  Offset="0,10"    Size="105,48"       Style="CityPanelSubPanelContainer" AutoSize="V">
                   <Stack StackGrowth="Down" Anchor="C,C">
                     <Stack StackGrowth="Right" Padding="3">
-                      <Label	ID="AmenitiesConstructedNum"		Anchor="L,C"											Style="CityPanelSubPanelTitle" String="-" />
-                      <Label	ID="AmenitiesConstructedLabel"	Anchor="L,C"											Style="CityPanelTextSmall" String=""  WrapWidth="100"/>
+                      <Label  ID="AmenitiesConstructedNum"    Anchor="L,C"                      Style="CityPanelSubPanelTitle" String="-" />
+                      <Label  ID="AmenitiesConstructedLabel"  Anchor="L,C"                      Style="CityPanelTextSmall" String=""  WrapWidth="100"/>
                     </Stack>
-                    <Label																	Anchor="L,C" Offset="28,0"					              Style="CityPanelTextSmall" String="LOC_HUD_CITY_OF" FontSize="12"/>
+                    <Label                                  Anchor="L,C" Offset="28,0"                        Style="CityPanelTextSmall" String="LOC_HUD_CITY_OF" FontSize="12"/>
                     <Stack StackGrowth="Right" Padding="3">
-                      <Label	ID="AmenitiesRequiredNum"				Anchor="L,C"							Style="CityPanelSubPanelTitle" String="-" />
-                      <Label																	Anchor="L,C"						Style="CityPanelTextSmall" String="LOC_HUD_CITY_REQUIRED" WrapWidth="100"/>
+                      <Label  ID="AmenitiesRequiredNum"       Anchor="L,C"              Style="CityPanelSubPanelTitle" String="-" />
+                      <Label                                  Anchor="L,C"            Style="CityPanelTextSmall" String="LOC_HUD_CITY_REQUIRED" WrapWidth="100"/>
                     </Stack>
                   </Stack>
                   <Image  Anchor="R,C" AnchorSide="O,I" Offset="-5,0" Texture="Controls_ThereforeArrow" Size="27,41"/>
                 </Grid>
               </Container>
-              <Grid																				Anchor="L,T" Offset="0,0"			Size="parent,48"		Style="CityPanelSubPanelContainer">
-                <Image			ID="CitizenGrowthStatus"																		Size="50,50"				Texture="CityPanel_StatusIcon">
-                  <Image		ID="CitizenGrowthStatusIcon"  Anchor="C,C" Offset="-2,-3"   Size="45,45"				Texture="Stats45"  Icon="ICON_CITIZEN" />
+              <Grid                                       Anchor="L,T" Offset="0,0"     Size="parent,48"    Style="CityPanelSubPanelContainer">
+                <Image      ID="CitizenGrowthStatus"                                    Size="50,50"        Texture="CityPanel_StatusIcon">
+                  <Image    ID="CitizenGrowthStatusIcon"  Anchor="C,C" Offset="-2,-3"   Size="45,45"        Texture="Stats45"  Icon="ICON_CITIZEN" />
                 </Image>
-                <Label			ID="CitizenGrowth"						Anchor="L,C" Offset="48,0"		WrapWidth="235"			Style="CityPanelTextSmall" String="$CitizenGrowth$" LeadingOffset="4" />
+                <Label      ID="CitizenGrowth"            Anchor="L,C" Offset="48,0"    WrapWidth="235"     Style="CityPanelTextSmall" String="$CitizenGrowth$" LeadingOffset="4" />
               </Grid>
-              <Grid																				Anchor="L,T" Offset="0,0"			Size="parent,0"				AutoSize="Vertical"	Style="CityPanelSubPanelContainer" InnerPadding="0,10" InnerOffset="0,5">
-                <Stack																																	StackGrowth="Bottom" StackPadding="0">
-                  <Stack		ID="AmenityStack"																						StackGrowth="Bottom" StackPadding="4" />
+              <Grid                                       Anchor="L,T" Offset="0,0"     Size="parent,0"       AutoSize="Vertical" Style="CityPanelSubPanelContainer" InnerPadding="0,10" InnerOffset="0,5">
+                <Stack                                                                  StackGrowth="Bottom" StackPadding="0">
+                  <Stack    ID="AmenityStack"                                           StackGrowth="Bottom" StackPadding="4" />
                   <Stack StackGrowth="Down" Anchor="C,C">
                     <Stack StackGrowth="Right" Padding="16">
                       <Image ID="AmenetiesStatusIconContainerLuxuries" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
@@ -172,15 +172,15 @@
                     </Stack>
                   </Stack>
                   <Container Size="1,8" />
-                  <Container																Size="parent,0" AutoSize="Vertical">
-                    <Label																	Anchor="L,B" Offset="4,0" Style="CityPanelTextSmall" String="LOC_HUD_CITY_TOTAL_AMENITIES" />
-                    <Label			ID="AmenityTotalNum"				Anchor="R,B" Offset="5,-2" Style="CityPanelNumLarge" String="-" FontStyle="Glow"/>
+                  <Container                                Size="parent,0" AutoSize="Vertical">
+                    <Label                                  Anchor="L,B" Offset="4,0" Style="CityPanelTextSmall" String="LOC_HUD_CITY_TOTAL_AMENITIES" />
+                    <Label      ID="AmenityTotalNum"        Anchor="R,B" Offset="5,-2" Style="CityPanelNumLarge" String="-" FontStyle="Glow"/>
                   </Container>
                 </Stack>
               </Grid>
-              <Container ID="AmenitiesAdvisorBubble" Size="parent,0" 	AutoSize="V">
+              <Container ID="AmenitiesAdvisorBubble" Size="parent,0"  AutoSize="V">
                 <Image Anchor="R,T" Size="64,64" Texture="Advisors64"/>
-                <Grid Offset="3,0" Size="parent-64,0"	AutoSize="V" Style="AdvisorWordBubble" Color="255,255,255,50" InnerPadding="5,15">
+                <Grid Offset="3,0" Size="parent-64,0" AutoSize="V" Style="AdvisorWordBubble" Color="255,255,255,50" InnerPadding="5,15">
                   <Label ID="AmenityAdvice" Anchor="C,C" Offset="-20,0" WrapWidth="parent-40" Style="CityPanelTextSmall"  String="LOC_HUD_CITY_ADVISOR_TRY_IMPROVING" />
                 </Grid>
               </Container>
@@ -188,48 +188,48 @@
             </Stack>
           </Grid>
 
-          <Grid						ID="PanelHousing"								Anchor="L,T"									Size="parent,0"				Style="CityPanelStatPanelGrid" ConsumeAllMouse="1">
-            <Grid																			Anchor="L,T"									Size="parent,24"		Style="DivHeader">
+          <Grid           ID="PanelHousing"               Anchor="L,T"                  Size="parent,0"       Style="CityPanelStatPanelGrid" ConsumeAllMouse="1">
+            <Grid                                     Anchor="L,T"                  Size="parent,24"    Style="DivHeader">
               <Container Size="parent,24">
                 <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" FlipY="1" Anchor="C,T" Color="72,103,130,255"/>
               </Container>
-              <Label																	Anchor="C,C" Offset="5,0"													Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_HOUSING" />
+              <Label                                  Anchor="C,C" Offset="5,0"                         Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_HOUSING" />
             </Grid>
-            <Stack																										 Offset="0,24"		Size="parent,0"			StackGrowth="Bottom" InnerPadding="10,5" AutoSize="Vertical" StackPadding="5" >
-              <Container																																Size="parent,0"			AutoSize="Vertical">
-                <Grid																			Anchor="R,T" Offset="0,10"		Size="155,48"				Style="CityPanelSubPanelContainer" AutoSize="V">
-                  <Image		ID="HousingStatus"																					Size="50,50"				Texture="CityPanel_StatusIcon">
-                    <Image    ID="HousingStatusIcon"			Anchor="C,C"	 Offset="-2,-5"		Size="32,32"			Texture="Stats32" Icon="ICON_HOUSING"/>
+            <Stack                                                     Offset="0,24"    Size="parent,0"     StackGrowth="Bottom" InnerPadding="10,5" AutoSize="Vertical" StackPadding="5" >
+              <Container                                                                Size="parent,0"     AutoSize="Vertical">
+                <Grid                                     Anchor="R,T" Offset="0,10"    Size="155,48"       Style="CityPanelSubPanelContainer" AutoSize="V">
+                  <Image    ID="HousingStatus"                                          Size="50,50"        Texture="CityPanel_StatusIcon">
+                    <Image    ID="HousingStatusIcon"      Anchor="C,C"   Offset="-2,-5"   Size="32,32"      Texture="Stats32" Icon="ICON_HOUSING"/>
                   </Image>
-                  <Label		ID="HousingPopulationStatus"	Anchor="L,C" Offset="50,0"		WrapWidth="parent-50"			Style="CityPanelTextSmall" String="LOC_HUD_CITY_POPULATION_GROWTH_NORMAL" FontStyle="Glow"/>
+                  <Label    ID="HousingPopulationStatus"  Anchor="L,C" Offset="50,0"    WrapWidth="parent-50"     Style="CityPanelTextSmall" String="LOC_HUD_CITY_POPULATION_GROWTH_NORMAL" FontStyle="Glow"/>
                 </Grid>
-                <Grid																									 Offset="0,10"		Size="105,48"				Style="CityPanelSubPanelContainer" AutoSize="V">
+                <Grid                                                  Offset="0,10"    Size="105,48"       Style="CityPanelSubPanelContainer" AutoSize="V">
                   <Stack StackGrowth="Down" Anchor="C,C">
                     <Stack StackGrowth="Right" Padding="3">
-                      <Label	ID="HousingTotalNum"		Anchor="L,C"											Style="CityPanelSubPanelTitle" String="-" />
-                      <Label	Anchor="L,C"											Style="CityPanelTextSmall" String="LOC_HUD_CITY_HOUSING"  WrapWidth="100"/>
+                      <Label  ID="HousingTotalNum"    Anchor="L,C"                      Style="CityPanelSubPanelTitle" String="-" />
+                      <Label  Anchor="L,C"                      Style="CityPanelTextSmall" String="LOC_HUD_CITY_HOUSING"  WrapWidth="100"/>
                     </Stack>
-                    <Label																	Anchor="L,C" Offset="28,0"					              Style="CityPanelTextSmall" String="LOC_HUD_CITY_FOR" FontSize="12"/>
+                    <Label                                  Anchor="L,C" Offset="28,0"                        Style="CityPanelTextSmall" String="LOC_HUD_CITY_FOR" FontSize="12"/>
                     <Stack StackGrowth="Right" Padding="3">
-                      <Label	ID="CitizensNum"				Anchor="L,C"							Style="CityPanelSubPanelTitle" String="-" />
-                      <Label	ID="CitizensName"																Anchor="L,C"						Style="CityPanelTextSmall" String="LOC_HUD_CITY_CITIZENS" WrapWidth="100"/>
+                      <Label  ID="CitizensNum"        Anchor="L,C"              Style="CityPanelSubPanelTitle" String="-" />
+                      <Label  ID="CitizensName"                               Anchor="L,C"            Style="CityPanelTextSmall" String="LOC_HUD_CITY_CITIZENS" WrapWidth="100"/>
                     </Stack>
                   </Stack>
                   <Image  Anchor="R,C" AnchorSide="O,I" Offset="-5,0" Texture="Controls_ThereforeArrow" Size="27,41"/>
                 </Grid>
               </Container>
-              <Grid																				Anchor="L,T" Offset="0,0"			Size="parent,0"				AutoSize="Vertical"	Style="CityPanelSubPanelContainer" InnerPadding="0,10" InnerOffset="0,5">
-                <Stack																																	StackGrowth="Bottom" StackPadding="0">
-                  <Stack			ID="HousingStack"																					StackGrowth="Bottom" StackPadding="4" />
-                  <Container															Size="parent,0" AutoSize="Vertical">
-                    <Label																Anchor="L,B" Offset="4,0" Style="CityPanelTextSmall" String="LOC_HUD_CITY_TOTAL_HOUSING" />
-                    <Label		ID="HousingTotalNum2"				Anchor="R,B" Offset="5,-2" Style="CityPanelNumLarge" String="0" FontStyle="Glow"/>
+              <Grid                                       Anchor="L,T" Offset="0,0"     Size="parent,0"       AutoSize="Vertical" Style="CityPanelSubPanelContainer" InnerPadding="0,10" InnerOffset="0,5">
+                <Stack                                                                  StackGrowth="Bottom" StackPadding="0">
+                  <Stack      ID="HousingStack"                                         StackGrowth="Bottom" StackPadding="4" />
+                  <Container                              Size="parent,0" AutoSize="Vertical">
+                    <Label                                Anchor="L,B" Offset="4,0" Style="CityPanelTextSmall" String="LOC_HUD_CITY_TOTAL_HOUSING" />
+                    <Label    ID="HousingTotalNum2"       Anchor="R,B" Offset="5,-2" Style="CityPanelNumLarge" String="0" FontStyle="Glow"/>
                   </Container>
                 </Stack>
               </Grid>
-              <Container ID="HousingAdvisorBubble" Size="parent,0" 	AutoSize="V">
+              <Container ID="HousingAdvisorBubble" Size="parent,0"  AutoSize="V">
                 <Image Anchor="R,T" Size="64,64" Texture="Advisors64"/>
-                <Grid Offset="3,0" Size="parent-64,0"	AutoSize="V" Style="AdvisorWordBubble" Color="255,255,255,50" InnerPadding="5,15">
+                <Grid Offset="3,0" Size="parent-64,0" AutoSize="V" Style="AdvisorWordBubble" Color="255,255,255,50" InnerPadding="5,15">
                   <Label ID="HousingAdvice" Anchor="C,C" Offset="-20,0" WrapWidth="parent-40" Style="CityPanelTextSmall"  String="LOC_HUD_CITY_ADVISOR_TRY_IMPROVING" />
                 </Grid>
               </Container>
@@ -237,153 +237,153 @@
             </Stack>
           </Grid>
 
-          <Grid						ID="PanelBreakdown"					Anchor="L,T" Offset="0,0"			Size="parent,0"				Style="CityPanelStatPanelGrid" ConsumeAllMouse="1">
-            <Stack				ID="BreakdownStack"											 Offset="0,0"		Size="parent,0"			AutoSize="Vertical"	InnerPadding="16,0" StackPadding="1">
-              <Grid																			Anchor="L,T"									Size="parent,24"		  Style="DivHeader">
+          <Grid           ID="PanelBreakdown"         Anchor="L,T" Offset="0,0"     Size="parent,0"       Style="CityPanelStatPanelGrid" ConsumeAllMouse="1">
+            <Stack        ID="BreakdownStack"                      Offset="0,0"   Size="parent,0"     AutoSize="Vertical" InnerPadding="16,0" StackPadding="1">
+              <Grid                                     Anchor="L,T"                  Size="parent,24"      Style="DivHeader">
                 <Container Size="parent,24">
                   <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" FlipY="1" Anchor="C,T" Color="72,103,130,255"/>
                 </Container>
-                <Label																	Anchor="C,C"              												  Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_CITY_BREAKDOWN" Align="Center" WrapWidth="parent"/>
+                <Label                                  Anchor="C,C"                                        Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_CITY_BREAKDOWN" Align="Center" WrapWidth="parent"/>
               </Grid>
 
-              <Grid																									 Anchor="C,C"	Size="250,48"				Style="CityPanelSubPanelContainer" AutoSize="V">
+              <Grid                                                  Anchor="C,C" Size="250,48"       Style="CityPanelSubPanelContainer" AutoSize="V">
                 <Stack StackGrowth="Down" Anchor="C,C">
                   <Stack StackGrowth="Right" Padding="3">
-                    <Label	ID="DistrictsNum"		Anchor="L,C"											Style="CityPanelSubPanelTitle" String="-" WrapWidth="200" />
-                    <Label	ID="DistrictsConstructed" Anchor="L,C"											Style="CityPanelText"/>
+                    <Label  ID="DistrictsNum"   Anchor="L,C"                      Style="CityPanelSubPanelTitle" String="-" WrapWidth="200" />
+                    <Label  ID="DistrictsConstructed" Anchor="L,C"                      Style="CityPanelText"/>
                   </Stack>
-                  <Label																	Anchor="L,C" Offset="28,0"					              Style="CityPanelText" String="LOC_HUD_CITY_OF" FontSize="12"/>
+                  <Label                                  Anchor="L,C" Offset="28,0"                        Style="CityPanelText" String="LOC_HUD_CITY_OF" FontSize="12"/>
                   <Stack StackGrowth="Right" Padding="3">
-                    <Label	ID="DistrictsPossibleNum"				Anchor="L,C"							Style="CityPanelSubPanelTitle" String="-" />
-                    <Label																	Anchor="L,C"						Style="CityPanelText" String="LOC_HUD_CITY_POSSIBLE" WrapWidth="200"/>
+                    <Label  ID="DistrictsPossibleNum"       Anchor="L,C"              Style="CityPanelSubPanelTitle" String="-" />
+                    <Label                                  Anchor="L,C"            Style="CityPanelText" String="LOC_HUD_CITY_POSSIBLE" WrapWidth="200"/>
                   </Stack>
                 </Stack>
               </Grid>
               <Container Size="5,5"/>
 
-              <Grid																		Anchor="L,T"									Size="parent,24"		Style="DivHeader">
+              <Grid                                   Anchor="L,T"                  Size="parent,24"    Style="DivHeader">
                 <Container Size="parent,24">
                   <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" FlipY="1" Anchor="C,T" Color="72,103,130,255"/>
                 </Container>
-                <Label																Anchor="C,C"												              Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_BUILDINGS_AND_DISTRICTS" />
+                <Label                                Anchor="C,C"                                      Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_BUILDINGS_AND_DISTRICTS" />
               </Grid>
-              <Container		ID="BuildingDistrictArea"	Anchor="L,T"									Size="parent,0"	AutoSize="Vertical">
-                <Stack			ID="BuildingAndDistrictsStack" StackGrowth="Bottom" Padding="3" />
+              <Container    ID="BuildingDistrictArea" Anchor="L,T"                  Size="parent,0" AutoSize="Vertical">
+                <Stack      ID="BuildingAndDistrictsStack" StackGrowth="Bottom" Padding="3" />
               </Container>
               <Container Size="5,5"/>
               
-              <Grid																		Anchor="L,T"								  Size="parent,24"		Style="DivHeader">
+              <Grid                                   Anchor="L,T"                  Size="parent,24"    Style="DivHeader">
                 <Container Size="parent,24">
                   <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" FlipY="1" Anchor="C,T" Color="72,103,130,255"/>
                 </Container>
-                <Label																Anchor="C,C"                											Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_WONDERS" />
+                <Label                                Anchor="C,C"                                      Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_WONDERS" />
               </Grid>
-              <Container		ID="NoWondersArea" Size="parent,0" AutoSize="Vertical" InnerPadding="0,10" Hidden="1">
-                <Grid														Anchor="C,T"							Size="parent-10,0"	AutoSize="Vertical" InnerPadding="40,30" Texture="Controls_DecoFrame"	SliceCorner="20,19" SliceSize="1,1" SliceTextureSize="40,38" Color="255,255,255,50">
-                  <Label	Style="CityPanelText" Anchor="C,C" WrapWidth="parent"	String="LOC_HUD_CITY_NO_WONDERS" />
+              <Container    ID="NoWondersArea" Size="parent,0" AutoSize="Vertical" InnerPadding="0,10" Hidden="1">
+                <Grid                           Anchor="C,T"              Size="parent-10,0"  AutoSize="Vertical" InnerPadding="40,30" Texture="Controls_DecoFrame" SliceCorner="20,19" SliceSize="1,1" SliceTextureSize="40,38" Color="255,255,255,50">
+                  <Label  Style="CityPanelText" Anchor="C,C" WrapWidth="parent" String="LOC_HUD_CITY_NO_WONDERS" />
                 </Grid>
               </Container>
-              <Container		ID="WondersArea"	Anchor="L,T"									Size="parent,0"	AutoSize="Vertical">
-                <Stack			ID="WondersStack" StackGrowth="Bottom" />
+              <Container    ID="WondersArea"  Anchor="L,T"                  Size="parent,0" AutoSize="Vertical">
+                <Stack      ID="WondersStack" StackGrowth="Bottom" />
               </Container>
               <Container Size="5,5"/>
               
-              <Grid																		Anchor="L,T"									Size="parent,24"		Style="DivHeader">
+              <Grid                                   Anchor="L,T"                  Size="parent,24"    Style="DivHeader">
                 <Container Size="parent,24">
                   <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" FlipY="1" Anchor="C,T" Color="72,103,130,255"/>
                 </Container>
-                <Label																Anchor="C,C" Offset="10,0"												Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_TRADING_POSTS" />
+                <Label                                Anchor="C,C" Offset="10,0"                        Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_TRADING_POSTS" />
               </Grid>
-              <Container		ID="NoTradingPostsArea" Size="parent,0" AutoSize="Vertical" InnerPadding="0,10" Hidden="1">
-                <Grid																	Anchor="C,T"				Size="parent-10,0"	AutoSize="Vertical" InnerPadding="40,30" Texture="Controls_DecoFrame"	SliceCorner="20,19" SliceSize="1,1" SliceTextureSize="40,38" Color="255,255,255,50">
-                  <Label	Style="CityPanelText" WrapWidth="parent"	Anchor="C,C" String="LOC_HUD_CITY_NO_TRADE_ROUTES_EXIST" />
+              <Container    ID="NoTradingPostsArea" Size="parent,0" AutoSize="Vertical" InnerPadding="0,10" Hidden="1">
+                <Grid                                 Anchor="C,T"        Size="parent-10,0"  AutoSize="Vertical" InnerPadding="40,30" Texture="Controls_DecoFrame" SliceCorner="20,19" SliceSize="1,1" SliceTextureSize="40,38" Color="255,255,255,50">
+                  <Label  Style="CityPanelText" WrapWidth="parent"  Anchor="C,C" String="LOC_HUD_CITY_NO_TRADE_ROUTES_EXIST" />
                 </Grid>
               </Container>
-              <Container		ID="TradingPostsArea"	Anchor="L,T"									Size="parent,0"	AutoSize="Vertical">
-                <Stack			ID="TradingPostsStack" StackGrowth="Bottom" />
+              <Container    ID="TradingPostsArea" Anchor="L,T"                  Size="parent,0" AutoSize="Vertical">
+                <Stack      ID="TradingPostsStack" StackGrowth="Bottom" />
               </Container>
               <Container Size="5,10"/>
             </Stack>
           </Grid>
 
-          <Grid						ID="PanelReligion"					Anchor="L,T" Offset="0,0"			Size="parent,0"				Style="CityPanelStatPanelGrid" ConsumeAllMouse="1">
-            <Grid																			Anchor="L,T"									Size="parent,24"		Style="DivHeader">
+          <Grid           ID="PanelReligion"          Anchor="L,T" Offset="0,0"     Size="parent,0"       Style="CityPanelStatPanelGrid" ConsumeAllMouse="1">
+            <Grid                                     Anchor="L,T"                  Size="parent,24"    Style="DivHeader">
               <Container Size="parent,24">
                 <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" FlipY="1" Anchor="C,T" Color="72,103,130,255"/>
               </Container>
-              <Label																	Anchor="C,C" Offset="5,0"													Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_RELIGION" />
+              <Label                                  Anchor="C,C" Offset="5,0"                         Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_RELIGION" />
             </Grid>
            
-            <Container		ID="NoReligionArea" Size="parent,0" AutoSize="Vertical" InnerPadding="0,10">
-              <Grid																				Offset="5,30"		Size="parent-10,0"	AutoSize="Vertical" InnerPadding="40,30" Texture="Controls_DecoFrame"	SliceCorner="20,19" SliceSize="1,1" SliceTextureSize="40,38" Color="255,255,255,50">
-                <Label	Style="CityPanelText" WrapWidth="parent"	String="LOC_HUD_CITY_RELIGION_NO_CITIZENS" />
+            <Container    ID="NoReligionArea" Size="parent,0" AutoSize="Vertical" InnerPadding="0,10">
+              <Grid                                       Offset="5,30"   Size="parent-10,0"  AutoSize="Vertical" InnerPadding="40,30" Texture="Controls_DecoFrame" SliceCorner="20,19" SliceSize="1,1" SliceTextureSize="40,38" Color="255,255,255,50">
+                <Label  Style="CityPanelText" WrapWidth="parent"  String="LOC_HUD_CITY_RELIGION_NO_CITIZENS" />
               </Grid>
             </Container>
-            <Stack					ID="StackReligion"										 Offset="0,40"		Size="parent,0"			AutoSize="Vertical" InnerOffset="5,0" InnerPadding="10,20" StackPadding="4">
-              <Grid					ID="PantheonArea"																				Size="parent,0"			AutoSize="Vertical" Style="SubContainer2" Color="255,255,255,50" ToolTip="LOC_HUD_CITY_PANTHEONBELIEF_EXPLANATION">
-                <Label																Anchor="C,T" Offset="0,0"			Style="CityPanelHeader"  String="{LOC_HUD_CITY_YOUR_PANTHEON_BELIEF:upper}"/>
-                <GridButton	ID="PantheonBelief"										 Offset="0,22"		Size="parent,24"		Style="CityPanelSubPanelButton" String="Religion: [ICON_Faith]+0" Disabled="True" />
+            <Stack          ID="StackReligion"                     Offset="0,40"    Size="parent,0"     AutoSize="Vertical" InnerOffset="5,0" InnerPadding="10,20" StackPadding="4">
+              <Grid         ID="PantheonArea"                                       Size="parent,0"     AutoSize="Vertical" Style="SubContainer2" Color="255,255,255,50" ToolTip="LOC_HUD_CITY_PANTHEONBELIEF_EXPLANATION">
+                <Label                                Anchor="C,T" Offset="0,0"     Style="CityPanelHeader"  String="{LOC_HUD_CITY_YOUR_PANTHEON_BELIEF:upper}"/>
+                <GridButton ID="PantheonBelief"                    Offset="0,22"    Size="parent,24"    Style="CityPanelSubPanelButton" String="Religion: [ICON_Faith]+0" Disabled="True" />
               </Grid>
-              <Grid					ID="DominantReligionGrid"																											Size="parent,0"			AutoSize="Vertical" Style="SubContainer2" Color="255,255,255,50" InnerPadding="8,4">
-                <Label																Anchor="C,T" Offset="0,0"			Style="CityPanelHeader" String="{LOC_HUD_CITY_DOMINANT_RELIGION:upper}" />
-                <Grid																							 Offset="0,16"		Size="parent,24"		Style="CityPanelSubPanelContainer">
-                  <Stack															StackGrowth="Right">
-                    <Image	ID="DominantReligionSymbol"				Anchor="L,T" Offset="0,0"	Size="22,22"	Hidden="1" />
-                    <Label	ID="DominantReligionName"					Anchor="L,T" Offset="2,7"									Style="CityPanelText"			String="Other Religion Instance" />
-                  </Stack>																															 >
+              <Grid         ID="DominantReligionGrid"                                                     Size="parent,0"     AutoSize="Vertical" Style="SubContainer2" Color="255,255,255,50" InnerPadding="8,4">
+                <Label                                Anchor="C,T" Offset="0,0"     Style="CityPanelHeader" String="{LOC_HUD_CITY_DOMINANT_RELIGION:upper}" />
+                <Grid                                              Offset="0,16"    Size="parent,24"    Style="CityPanelSubPanelContainer">
+                  <Stack                              StackGrowth="Right">
+                    <Image  ID="DominantReligionSymbol"       Anchor="L,T" Offset="0,0" Size="22,22"  Hidden="1" />
+                    <Label  ID="DominantReligionName"         Anchor="L,T" Offset="2,7"                 Style="CityPanelText"     String="Other Religion Instance" />
+                  </Stack>                                                               >
                 </Grid>
-                <Grid																	Anchor="R,T" Offset="0,42"		Size="parent-24,0" AutoSize="Vertical"	Style="CityPanelSubPanelContainer">
-                  <Stack	ID="ReligionBeliefsStack"								 Offset="0,0" />
+                <Grid                                 Anchor="R,T" Offset="0,42"    Size="parent-24,0" AutoSize="Vertical"  Style="CityPanelSubPanelContainer">
+                  <Stack  ID="ReligionBeliefsStack"                Offset="0,0" />
                 </Grid>
               </Grid>
-              <Stack			ID="OtherReligions"											Offset="0,0" StackPadding="4" />
+              <Stack      ID="OtherReligions"                     Offset="0,0" StackPadding="4" />
               <Container  Size="1,1" />
             </Stack>
           </Grid>
 
-          <Grid									ID="PanelQueue"						Anchor="L,T"									Size="parent,0"			  Style="CityPanelStatPanelGrid">
-            <Grid																			Anchor="L,T"									Size="parent,24"		Style="DivHeader">
+          <Grid                 ID="PanelQueue"           Anchor="L,T"                  Size="parent,0"       Style="CityPanelStatPanelGrid">
+            <Grid                                     Anchor="L,T"                  Size="parent,24"    Style="DivHeader">
               <Container Size="parent,24">
                 <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" FlipY="1" Anchor="C,T" Color="72,103,130,255"/>
               </Container>
-              <Label																	Anchor="C,C" Offset="5,0"													Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_PRODUCTION_QUEUE" />
+              <Label                                  Anchor="C,C" Offset="5,0"                         Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_PRODUCTION_QUEUE" />
             </Grid>
-            <Stack																										 Offset="0,32" StackGrowth="Down">
-              <Stack						ID="ProductionQueueStack"							 Offset="10,0"		Size="parent-20,0" StackGrowth="Down" StackPadding="4"/>
-              <Grid																																			Size="parent,8"			Style="Divider3Grid" />
-              <GridButton				ID="AddToQueueButton"									 Offset="10,0"		Size="parent-20,40" Style="ButtonLightWeightGrid" String="LOC_HUD_CITY_ADD_TO_QUEUE" />
-              <Grid																										 									Size="parent,8"			Style="Divider3Grid" />
+            <Stack                                                     Offset="0,32" StackGrowth="Down">
+              <Stack            ID="ProductionQueueStack"              Offset="10,0"    Size="parent-20,0" StackGrowth="Down" StackPadding="4"/>
+              <Grid                                                                     Size="parent,8"     Style="Divider3Grid" />
+              <GridButton       ID="AddToQueueButton"                  Offset="10,0"    Size="parent-20,40" Style="ButtonLightWeightGrid" String="LOC_HUD_CITY_ADD_TO_QUEUE" />
+              <Grid                                                                     Size="parent,8"     Style="Divider3Grid" />
             </Stack>
           </Grid>
 
-          <Grid									ID="PanelProductionNow"		Anchor="L,T"									Size="parent,130"			Style="CityPanelStatPanelGrid" AutoSize="0">
-            <Grid																			Anchor="L,T"									Size="parent,24"		Style="DivHeader">
+          <Grid                 ID="PanelProductionNow"   Anchor="L,T"                  Size="parent,130"     Style="CityPanelStatPanelGrid" AutoSize="0">
+            <Grid                                     Anchor="L,T"                  Size="parent,24"    Style="DivHeader">
               <Container Size="parent,24">
                 <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" FlipY="1" Anchor="C,T" Color="72,103,130,255"/>
               </Container>
-              <Label																	Anchor="C,C" Offset="5,0"													Style="CityPanelSubPanelTitle" String="-" />
+              <Label                                  Anchor="C,C" Offset="5,0"                         Style="CityPanelSubPanelTitle" String="-" />
             </Grid>
-            <Grid																												 Offset="5,35"		Size="parent-10,67" Style="CityPanelSubPanelContainer" >
-              <Stack																				StackGrowth="Bottom" Size="parent,0">
-                <Stack					ID="UnitStatsStack"					Anchor="C,T" StackGrowth="Right" StackPadding="8">
-                  <Image				ID="IconStrength"						Size="22,22" Icon="ICON_STRENGTH"					IconSize="22" />
-                  <Label				ID="LabelStrength"					Anchor="L,C" Offset="-6,0" Style="CityPanelText" String="A" />
-                  <Image				ID="IconRangedStrength"			Size="22,22" Icon="ICON_RANGED_STRENGTH"	IconSize="22" />
-                  <Label				ID="LabelRangedStrength"		Anchor="L,C" Offset="-6,0" Style="CityPanelText" String="A" />
-                  <Image				ID="IconBombardStrength"		Size="22,22" Icon="ICON_BOMBARD"	IconSize="22" />
-                  <Label				ID="LabelBombardStrength"		Anchor="L,C" Offset="-6,0" Style="CityPanelText" String="A" />
-                  <Image				ID="IconRange"							Size="22,22" Icon="ICON_RANGE"						IconSize="22" />
-                  <Label				ID="LabelRange"							Anchor="L,C" Offset="-6,0" Style="CityPanelText" String="A" />
+            <Grid                                                        Offset="5,35"    Size="parent-10,67" Style="CityPanelSubPanelContainer" >
+              <Stack                                        StackGrowth="Bottom" Size="parent,0">
+                <Stack          ID="UnitStatsStack"         Anchor="C,T" StackGrowth="Right" StackPadding="8">
+                  <Image        ID="IconStrength"           Size="22,22" Icon="ICON_STRENGTH"         IconSize="22" />
+                  <Label        ID="LabelStrength"          Anchor="L,C" Offset="-6,0" Style="CityPanelText" String="A" />
+                  <Image        ID="IconRangedStrength"     Size="22,22" Icon="ICON_RANGED_STRENGTH"  IconSize="22" />
+                  <Label        ID="LabelRangedStrength"    Anchor="L,C" Offset="-6,0" Style="CityPanelText" String="A" />
+                  <Image        ID="IconBombardStrength"    Size="22,22" Icon="ICON_BOMBARD"  IconSize="22" />
+                  <Label        ID="LabelBombardStrength"   Anchor="L,C" Offset="-6,0" Style="CityPanelText" String="A" />
+                  <Image        ID="IconRange"              Size="22,22" Icon="ICON_RANGE"            IconSize="22" />
+                  <Label        ID="LabelRange"             Anchor="L,C" Offset="-6,0" Style="CityPanelText" String="A" />
                 </Stack>
-                <Label					ID="ProductionDescription"	Anchor="L,C" Offset="2,0"		WrapWidth="225" Style="CityPanelTextSmall" String="$Description$" />
+                <Label          ID="ProductionDescription"  Anchor="L,C" Offset="2,0"   WrapWidth="225" Style="CityPanelTextSmall" String="$Description$" />
               </Stack>
             </Grid>
-            <Grid																									Anchor="L,B" Offset="0,-3"	Size="336,31"								Texture="CityPanel_StatPanelHeader"		SliceCorner="3,15" SliceSize="22,1" SliceTextureSize="28,31">
-              <Stack																							Anchor="L,C" Offset="4,2"		StackGrowth="Right"					StackPadding="5">
-                <Label					ID="ProductionNowLabelLong"				Anchor="L,C" Offset="0,0"			Style="CityPanelText"				ColorSet="ResProductionLabelCS" String="{LOC_HUD_CITY_COMPLETED_IN:upper}" />
-                <Label					ID="ProductionNowNumLong"																				Style="CityPanelNumLarge"		String="-"  />
-                <Image					ID="ProductionNowTurnsLong"				Anchor="L,B" Offset="0,2"			Size="182,21"								Texture="CityPanel_MeterBacking" >
-                  <TextureBar		ID="ProductionNowTurnsBarLong"		Anchor="L,T" Offset="2,2"			Size="parent-4,parent-3"		Texture="CityPanel_ProductionMeter"				ShadowColor="255,255,255,150" />
+            <Grid                                                 Anchor="L,B" Offset="0,-3"  Size="336,31"               Texture="CityPanel_StatPanelHeader"   SliceCorner="3,15" SliceSize="22,1" SliceTextureSize="28,31">
+              <Stack                                              Anchor="L,C" Offset="4,2"   StackGrowth="Right"         StackPadding="5">
+                <Label          ID="ProductionNowLabelLong"       Anchor="L,C" Offset="0,0"     Style="CityPanelText"       ColorSet="ResProductionLabelCS" String="{LOC_HUD_CITY_COMPLETED_IN:upper}" />
+                <Label          ID="ProductionNowNumLong"                                       Style="CityPanelNumLarge"   String="-"  />
+                <Image          ID="ProductionNowTurnsLong"       Anchor="L,B" Offset="0,2"     Size="182,21"               Texture="CityPanel_MeterBacking" >
+                  <TextureBar   ID="ProductionNowTurnsBarLong"    Anchor="L,T" Offset="2,2"     Size="parent-4,parent-3"    Texture="CityPanel_ProductionMeter"       ShadowColor="255,255,255,150" />
                 </Image>
               </Stack>
             </Grid>
@@ -396,13 +396,13 @@
       <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent-12,20" Color="8,34,56,255" Offset="0,90"/>
      
     </Box>
-    <Grid				  ID="OverviewHeader"			Style="HeaderBannerLeft" Size="320,59" Anchor="L,T"	Offset="0,0">
+    <Grid         ID="OverviewHeader"     Style="HeaderBannerLeft" Size="320,59" Anchor="L,T" Offset="0,0">
       <Container Size="parent-20,parent-27" Anchor="L,T">
-        <Label			ID="OverviewTitle"			Style="BannerHeaderText" Anchor="C,C" String="{LOC_HUD_CITY_DETAILS:upper}"/>
+        <Label      ID="OverviewTitle"      Style="BannerHeaderText" Anchor="C,C" String="{LOC_HUD_CITY_DETAILS:upper}"/>
       </Container>
       
-      <Grid Size="parent-20,parent-27" Anchor="L,B"	Style="Subheader">
-        <Label			ID="OverviewSubheader" Anchor="C,C" String="{LOC_HUD_CITY_DETAILS:upper}" Style="HeaderSmallCaps"/>
+      <Grid Size="parent-20,parent-27" Anchor="L,B" Style="Subheader">
+        <Label      ID="OverviewSubheader" Anchor="C,C" String="{LOC_HUD_CITY_DETAILS:upper}" Style="HeaderSmallCaps"/>
       </Grid>
       
       <Image Texture="Controls_TabLedgeFill" Size="parent-100,23" StretchMode="Tile" AnchorSide="I,O" Anchor="C,B" Offset="0,0"/>
@@ -425,96 +425,96 @@
           </Button>-->
         </Container>
         <Container Anchor="C,B" Offset="0,4" Size="parent,36">
-          <SlideAnim				ID="TabAnim" Begin="0,0" End="0,0" Cycle="Once" Speed="3.5" Function="OutQuint" Size="67,68">
-            <Image					ID="TabArrow" Texture="LaunchBar_HookSelectArrow_Medium2" Size="67,68"/>
+          <SlideAnim        ID="TabAnim" Begin="0,0" End="0,0" Cycle="Once" Speed="3.5" Function="OutQuint" Size="67,68">
+            <Image          ID="TabArrow" Texture="LaunchBar_HookSelectArrow_Medium2" Size="67,68"/>
           </SlideAnim>
         </Container>
       </Grid>
     </Grid>
-    <Image Texture="Controls_Glow2" Size="50,50" Color="0,0,0,255" Anchor="R,T"	Offset="-15,-10" >
+    <Image Texture="Controls_Glow2" Size="50,50" Color="0,0,0,255" Anchor="R,T" Offset="-15,-10" >
       <Button ID="Close" Style="CloseButtonAlt" Anchor="C,C"/>
     </Image>
   </SlideAnim>
   
-  <!-- ====================================================================	-->
-  <!--	INSTANCES																														-->
-  <!-- ====================================================================	-->
+  <!-- ==================================================================== -->
+  <!--  INSTANCES                                                           -->
+  <!-- ==================================================================== -->
 
-  <Instance			Name="AmenityInstance">
-    <Grid				ID="Top"																							Size="parent,16"		Texture="CityPanel_StatPanelLineItem" SliceCorner="7,7" SliceSize="1,1" SliceTextureSize="16,16" AutoSize="V" MinSize="16,16">
-      <Label		ID="Amenity"							Anchor="L,C" Offset="5,0"												Style="CityPanelTextSmall" String="$Amenity$" WrapWidth="parent-50" />
-      <Label		ID="AmenityYield"					Anchor="R,C" Offset="5,0"												Style="CityPanelNumLarge"		String="0" />
+  <Instance     Name="AmenityInstance">
+    <Grid       ID="Top"                                              Size="parent,16"    Texture="CityPanel_StatPanelLineItem" SliceCorner="7,7" SliceSize="1,1" SliceTextureSize="16,16" AutoSize="V" MinSize="16,16">
+      <Label    ID="Amenity"              Anchor="L,C" Offset="5,0"                       Style="CityPanelTextSmall" String="$Amenity$" WrapWidth="parent-50" />
+      <Label    ID="AmenityYield"         Anchor="R,C" Offset="5,0"                       Style="CityPanelNumLarge"   String="0" />
     </Grid>
   </Instance>
 
-  <Instance			Name="HousingInstance">
-    <Grid				ID="Top"																							Size="parent,16"	Texture="CityPanel_StatPanelLineItem" SliceCorner="7,7" SliceSize="1,1" SliceTextureSize="16,16" AutoSize="V" MinSize="16,16">
-      <Label		ID="HousingName"					Anchor="L,C" Offset="5,0"											Style="CityPanelTextSmall"	String="$HousingName$"  WrapWidth="parent-50"/>
-      <Label		ID="HousingYield"					Anchor="R,C" Offset="5,0"											Style="CityPanelNumLarge"		String="0" />
+  <Instance     Name="HousingInstance">
+    <Grid       ID="Top"                                              Size="parent,16"  Texture="CityPanel_StatPanelLineItem" SliceCorner="7,7" SliceSize="1,1" SliceTextureSize="16,16" AutoSize="V" MinSize="16,16">
+      <Label    ID="HousingName"          Anchor="L,C" Offset="5,0"                     Style="CityPanelTextSmall"  String="$HousingName$"  WrapWidth="parent-50"/>
+      <Label    ID="HousingYield"         Anchor="R,C" Offset="5,0"                     Style="CityPanelNumLarge"   String="0" />
     </Grid>
   </Instance>
 
-  <Instance			Name="BuildingInstance">
-    <Grid				ID="Top"															 Offset="15,0" Size="parent-15,24"	Style="CityPanelSubPanelContainer" AutoSize="V" AutoSizePadding="0,0" MinSize="24,24">
+  <Instance     Name="BuildingInstance">
+    <Grid       ID="Top"                               Offset="15,0" Size="parent-15,24"  Style="CityPanelSubPanelContainer" AutoSize="V" AutoSizePadding="0,0" MinSize="24,24">
       <Container Size="24,24">
         <Image    ID="Icon"               Offset="-2,-4" Texture="Buildings32" Size="32,32"/>
       </Container>
-      <Label		ID="BuildingName"					Anchor="L,C" Offset="30,0" Style="CityPanelText" String="$BuildingName$" WrapWidth="120"/>
-      <Label		ID="BuildingYield"				Anchor="R,C" Offset="2,2"												Style="CityPanelText" String="$BuildingYield$" WrapWidth="parent-130"/>
+      <Label    ID="BuildingName"         Anchor="L,C" Offset="30,0" Style="CityPanelText" String="$BuildingName$" WrapWidth="120"/>
+      <Label    ID="BuildingYield"        Anchor="R,C" Offset="2,2"                       Style="CityPanelText" String="$BuildingYield$" WrapWidth="parent-130"/>
     </Grid>
   </Instance>
 
-  <Instance			Name="DistrictInstance">
-    <Grid				ID="Top"																						Size="parent,24"	Style="CityPanelSubPanelContainer" AutoSize="V" AutoSizePadding="0,2" MinSize="24,24">
+  <Instance     Name="DistrictInstance">
+    <Grid       ID="Top"                                            Size="parent,24"  Style="CityPanelSubPanelContainer" AutoSize="V" AutoSizePadding="0,2" MinSize="24,24">
       <Image    ID="Icon"                 Anchor="L,T" Offset="-2,0" Texture="Districts32" Size="32,32">
-        <Label		ID="DistrictName"					Anchor="R,C" Style="CityPanelText" String="$DistrictName$" WrapWidth="120" AnchorSide="O,I"/>
+        <Label    ID="DistrictName"         Anchor="R,C" Style="CityPanelText" String="$DistrictName$" WrapWidth="120" AnchorSide="O,I"/>
       </Image>
-      <Label		ID="DistrictYield"				Anchor="R,T" Offset="4,5"										Style="CityPanelText" String="$DistrictYield$" WrapWidth="parent-160"/>
+      <Label    ID="DistrictYield"        Anchor="R,T" Offset="4,5"                   Style="CityPanelText" String="$DistrictYield$" WrapWidth="parent-160"/>
       <Stack    ID="BuildingStack" Offset="0,36" Padding="3"/>
     </Grid>
   </Instance>
 
-  <Instance			Name="OtherReligionInstance">
-    <Grid				ID="Top"																							Size="parent,24"	Style="CityPanelSubPanelContainer" >
-      <Stack															StackGrowth="Right">
-        <Image	ID="ReligionSymbol"				Anchor="L,T" Offset="0,0"	Size="22,22"	 />
-        <Label	ID="ReligionName"					Anchor="L,T" Offset="4,5"										Style="CityPanelText"			String="$Other Religion Instance$" />
+  <Instance     Name="OtherReligionInstance">
+    <Grid       ID="Top"                                              Size="parent,24"  Style="CityPanelSubPanelContainer" >
+      <Stack                              StackGrowth="Right">
+        <Image  ID="ReligionSymbol"       Anchor="L,T" Offset="0,0" Size="22,22"   />
+        <Label  ID="ReligionName"         Anchor="L,T" Offset="4,5"                   Style="CityPanelText"     String="$Other Religion Instance$" />
       </Stack>
     </Grid>
   </Instance>
 
-  <Instance			Name="ProductionInstance">
-    <Grid				ID="Top"																							Size="parent,32"	Style="CityPanelSubPanelContainer">
-      <Stack																					 Offset="0,2" StackGrowth="Right">
-        <Button	ID="LeftButton"						Anchor="L,T" Offset="0,2"											Style="ArrowButtonLeft"	 />
-        <Label	ID="Index"								Anchor="R,C" Offset="5,2"											Style="CityPanelNumLarge"								String="0." />
-        <Button	ID="RightButton"					Anchor="L,T" Offset="5,2" 										Style="ArrowButtonRight" />
+  <Instance     Name="ProductionInstance">
+    <Grid       ID="Top"                                              Size="parent,32"  Style="CityPanelSubPanelContainer">
+      <Stack                                           Offset="0,2" StackGrowth="Right">
+        <Button ID="LeftButton"           Anchor="L,T" Offset="0,2"                     Style="ArrowButtonLeft"  />
+        <Label  ID="Index"                Anchor="R,C" Offset="5,2"                     Style="CityPanelNumLarge"               String="0." />
+        <Button ID="RightButton"          Anchor="L,T" Offset="5,2"                     Style="ArrowButtonRight" />
       </Stack>
-      <Image		ID="Icon"															 Offset="65,-2" Size="38,38"      Texture="Units38" />
-      <Label		ID="Name"															 Offset="105,0"										Style="CityPanelTextSmall"						String="$name$"	 Color="255,255,255,255" />
-      <Label		ID="Turns"														 Offset="105,15" 									Style="CityPanelTextSmall"						String="$turns$" />
-      <Button		ID="Close"								Anchor="R,C" Offset="0,0" Size="21,21"				Texture="Controls_CloseButtonAltSmall"		StateOffsetIncrement="0,21" />
+      <Image    ID="Icon"                              Offset="65,-2" Size="38,38"      Texture="Units38" />
+      <Label    ID="Name"                              Offset="105,0"                   Style="CityPanelTextSmall"            String="$name$"  Color="255,255,255,255" />
+      <Label    ID="Turns"                             Offset="105,15"                  Style="CityPanelTextSmall"            String="$turns$" />
+      <Button   ID="Close"                Anchor="R,C" Offset="0,0" Size="21,21"        Texture="Controls_CloseButtonAltSmall"    StateOffsetIncrement="0,21" />
     </Grid>
   </Instance>
 
-  <Instance			Name="ReligionBeliefsInstance">
-    <GridButton	ID="Top"															 Offset="0,0"	Size="parent,24"	Style="CityPanelSubPanelButton" String="Religion: [ICON_Faith]+0" />
+  <Instance     Name="ReligionBeliefsInstance">
+    <GridButton ID="Top"                               Offset="0,0" Size="parent,24"  Style="CityPanelSubPanelButton" String="Religion: [ICON_Faith]+0" />
   </Instance>
 
-  <Instance			Name="TradingPostInstance">
-    <Grid				ID="Top"																						Size="parent,28"	Style="CityPanelSubPanelContainer" InnerPadding="2,4">
-      <Image		ID="LeaderPortrait"				Anchor="L,C" Offset="0,0"	Size="32,32"			Hidden="1"/>
-      <Label		ID="TradingPostName"			Anchor="L,C" Offset="34,2"									Style="CityPanelText" String="$TradingPostName$" />
+  <Instance     Name="TradingPostInstance">
+    <Grid       ID="Top"                                            Size="parent,28"  Style="CityPanelSubPanelContainer" InnerPadding="2,4">
+      <Image    ID="LeaderPortrait"       Anchor="L,C" Offset="0,0" Size="32,32"      Hidden="1"/>
+      <Label    ID="TradingPostName"      Anchor="L,C" Offset="34,2"                  Style="CityPanelText" String="$TradingPostName$" />
     </Grid>
   </Instance>
 
-  <Instance			Name="WonderInstance">
-    <Grid				ID="Top"								Size="parent,24"	Style="CityPanelSubPanelContainer" AutoSize="V" AutoSizePadding="0,0" MinSize="24,24">
+  <Instance     Name="WonderInstance">
+    <Grid       ID="Top"                Size="parent,24"  Style="CityPanelSubPanelContainer" AutoSize="V" AutoSizePadding="0,0" MinSize="24,24">
       <Container Size="24,24">
         <Image    ID="Icon"               Offset="-2,-4" Texture="Buildings32" Size="32,32"/>
       </Container>
-      <Label		ID="WonderName"					Anchor="L,C" Offset="30,0" Style="CityPanelText" String="$WonderName$" WrapWidth="120"/>
-      <Label		ID="WonderYield"				Anchor="R,C" Offset="2,2"												Style="CityPanelText" String="$WonderYield$" WrapWidth="parent-130"/>
+      <Label    ID="WonderName"         Anchor="L,C" Offset="30,0" Style="CityPanelText" String="$WonderName$" WrapWidth="120"/>
+      <Label    ID="WonderYield"        Anchor="R,C" Offset="2,2"                       Style="CityPanelText" String="$WonderYield$" WrapWidth="parent-130"/>
     </Grid>
   </Instance>
 

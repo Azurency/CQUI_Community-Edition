@@ -1,61 +1,61 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <GameData>
   <LocalizedText>
-	<Row Tag="LOC_CQUI_BINDINGS" Language="en_US">
+  <Row Tag="LOC_CQUI_BINDINGS" Language="en_US">
       <Text>Bindings</Text>
     </Row>
-	<Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="en_US">
+  <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="en_US">
       <Text>Bindings Mode</Text>
     </Row>
-	<Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="en_US">
+  <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="en_US">
       <Text>Standard: Unchanged[NEWLINE]Classic: Civ V binds[NEWLINE]Enhanced: Civ V Binds with the following changes[NEWLINE]  WASD camera control[NEWLINE]  Q/E unit/city cycling[NEWLINE]  Shift toggles city/unit selection[NEWLINE]  Quarry/Airstrike are moved to alt-key + Q/S[NEWLINE]  NOTE:UNBIND W/E IN SETTINGS OR THINGS WON'T WORK!</Text>
     </Row>
-	<Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="en_US">
+  <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="en_US">
       <Text>Classic</Text>
     </Row>
-	<Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="en_US">
+  <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="en_US">
       <Text>Enhanced</Text>
     </Row>
-	<Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="en_US">
+  <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="en_US">
       <Text>Standard</Text>
     </Row>
-	<Row Tag="LOC_CQUI_GENERAL" Language="en_US">
+  <Row Tag="LOC_CQUI_GENERAL" Language="en_US">
       <Text>General</Text>
     </Row>
-	<Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="en_US">
+  <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="en_US">
       <Text>Show luxuries in top panel</Text>
     </Row>
-	<Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="en_US">
+  <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="en_US">
       <Text>Enable Smartbanners</Text>
     </Row>
-	<Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="en_US">
+  <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="en_US">
       <Text>Displays new icons in the city banner. A food icon is displayed whenever there are unlocked citizens being automatically assigned by the AI city governor. District icons indicate built districts</Text>
     </Row>
-	<Row Tag="LOC_CQUI_HIDDEN" Language="en_US">
+  <Row Tag="LOC_CQUI_HIDDEN" Language="en_US">
       <Text>Hidden</Text>
     </Row>
-	<Row Tag="LOC_CQUI_HIDDEN_COWBOY" Language="en_US">
+  <Row Tag="LOC_CQUI_HIDDEN_COWBOY" Language="en_US">
       <Text>Toggle Horseman Autoproduce</Text>
     </Row>
-	<Row Tag="LOC_CQUI_HIDDEN_BADCOWBOY" Language="en_US">
+  <Row Tag="LOC_CQUI_HIDDEN_BADCOWBOY" Language="en_US">
       <Text>Toggle Horseman Autosell</Text>
     </Row>
-	<Row Tag="LOC_CQUI_POPUPS" Language="en_US">
+  <Row Tag="LOC_CQUI_POPUPS" Language="en_US">
       <Text>Popups</Text>
     </Row>
-	<Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="en_US">
+  <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="en_US">
       <Text>Tech/Civic Popup Visual</Text>
     </Row>
-	<Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="en_US">
+  <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="en_US">
       <Text>Toggles the popup that appears whenever a new tech or civic is achieved</Text>
     </Row>
-	<Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="en_US">
+  <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="en_US">
       <Text>Tech/Civic Popup Audio</Text>
     </Row>
-	<Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="en_US">
+  <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="en_US">
       <Text>Toggles the popup audio that plays whenever a new tech or civic is achieved. Is fully indepenedent of the visual component and can play even when there is no visible popup</Text>
     </Row>
-	<Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="en_US">
+  <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="en_US">
       <Text>Remember: CQUI settings are attached to individual saves!</Text>
     </Row>
   </LocalizedText>
