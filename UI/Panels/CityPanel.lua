@@ -1133,8 +1133,6 @@ end
 --  CTOR
 -- ===========================================================================
 function Initialize()
-
-<<<<<<< HEAD
   LuaEvents.CityPanel_OpenOverview();
 
   m_isInitializing = true;
