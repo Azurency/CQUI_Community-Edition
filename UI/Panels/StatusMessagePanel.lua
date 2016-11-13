@@ -10,12 +10,13 @@ include( "InstanceManager" );
 local DEFAULT_TIME_TO_DISPLAY :number = 10; -- Seconds to display the message
 
 -- CQUI CONSTANTS Trying to make the different messages have unique colors
-local STATUS_MESSAGE_CIVIC      :number = 3;    -- Number to distinguish civic messages
-local STATUS_MESSAGE_TECHS      :number = 4;    -- Number to distinguish tech messages
+local CQUI_STATUS_MESSAGE_CIVIC      :number = 3;    -- Number to distinguish civic messages
+local CQUI_STATUS_MESSAGE_TECHS      :number = 4;    -- Number to distinguish tech messages
 
 -- Figure out eventually what colors are used by the actual civic and tech trees
-local CIVIC_COLOR                       = 0xDFFF33CC; 
-local TECHS_COLOR                       = 0xDFFF6600;   
+local CQUI_CIVIC_COLOR                       = 0xDFFF33CC; 
+local CQUI_TECHS_COLOR                       = 0xDFFF6600;   
+local CQUI_BASIC_COLOR                       = 0xFFFFFFFF;
 
 
 -- =========================================================================== 
@@ -29,7 +30,7 @@ local PlayerConnectedChatStr  :string = Locale.Lookup( "LOC_MP_PLAYER_CONNECTED_
 local PlayerDisconnectedChatStr :string = Locale.Lookup( "LOC_MP_PLAYER_DISCONNECTED_CHAT" );
 local PlayerKickedChatStr   :string = Locale.Lookup( "LOC_MP_PLAYER_KICKED_CHAT" );
 
-local cqui_messageType          :number = 0;
+local CQUI_messageType          :number = 0;
 
 local m_kMessages :table = {};
 
@@ -67,10 +68,12 @@ function OnStatusMessage( str:string, fDisplayTime:number, type:number )
     local timeToDisplay:number = (fDisplayTime > 0) and fDisplayTime or DEFAULT_TIME_TO_DISPLAY;
 
         -- CQUI Figuring out how to change the color of the status message
-        if cqui_messageType == STATUS_MESSAGE_CIVIC then
-            pInstance.StatusGrid:SetColor(CIVIC_COLOR);
-        elseif cqui_messageType == STATUS_MESSAGE_TECHS then
-            pInstance.StatusGrid:SetColor(TECHS_COLOR);
+        if CQUI_messageType == CQUI_STATUS_MESSAGE_CIVIC then
+            pInstance.StatusGrid:SetColor(CQUI_CIVIC_COLOR);
+        elseif CQUI_messageType == CQUI_STATUS_MESSAGE_TECHS then
+            pInstance.StatusGrid:SetColor(CQUI_TECHS_COLOR);
+        elseif type == ReportingStatusTypes.DEFAULT then
+          pInstance.StatusGrid:SetColor(CQUI_BASIC_COLOR);
         end
 
     pInstance.StatusLabel:SetText( str );   
@@ -136,16 +139,16 @@ end
 
 function CQUI_OnStatusMessage(str:string, fDisplayTime:number, thisType:number)
 
-    if thisType == STATUS_MESSAGE_CIVIC then
-        cqui_messageType = STATUS_MESSAGE_CIVIC;
-    elseif thisType == STATUS_MESSAGE_TECHS then
-        cqui_messageType = STATUS_MESSAGE_TECHS;
+    if thisType == CQUI_STATUS_MESSAGE_CIVIC then
+        CQUI_messageType = CQUI_STATUS_MESSAGE_CIVIC;
+    elseif thisType == CQUI_STATUS_MESSAGE_TECHS then
+        CQUI_messageType = CQUI_STATUS_MESSAGE_TECHS;
     else
-        cqui_messageType = 0;
+        CQUI_messageType = 0;
     end
     
     OnStatusMessage(str, fDisplayTime, ReportingStatusTypes.DEFAULT);
-
+    CQUI_messageType = 0;
 end
 
 -- ===========================================================================
