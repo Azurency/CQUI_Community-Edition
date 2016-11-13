@@ -795,8 +795,20 @@ function AggregateLensHexes(keys:table)
       end
     end
   end
+  return CQUI_RemoveDuplicates(results);
+end
 
-  return results;
+--Takes a table with duplicates and returns a new table without duplicates. Credit to vogomatix at stask exchange for the code
+function CQUI_RemoveDuplicates(i:table)
+  local hash = {};
+  local o = {};
+  for _,v in ipairs(i) do
+     if (not hash[v]) then
+         o[#o+1] = v;
+         hash[v] = true;
+     end
+  end
+  return o;
 end
 
 -- ===========================================================================
