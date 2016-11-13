@@ -5,7 +5,7 @@
         <Description>Reduce clicks and make empire management easy</Description>
         <Teaser>Reduce clicks and make empire management easy</Teaser>
         <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease</Authors>
-        <SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod. Greg Miller for hi</SpecialThanks>
+        <SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod. Greg Miller for his Unit Report Screen mod.</SpecialThanks>
     </Properties>
     <Components>
         <ImportFiles id="CQUI_IMPORT_FILES">
@@ -72,6 +72,13 @@
                 <File>BTS/BetterTradeScreen_Text.xml</File>
             </Items>
         </LocalizedText>
+        <ImportFiles id="UNITREPORT_IMPORT_FILES">
+            <Items>
+                <File>URS/ReportScreen.lua</File>
+                <File>URS/ReportScreen.xml</File>
+                <File>URS/UnitPromotionPopup.lua</File>
+            </Items>
+        </ImportFiles>
     </Components>
     <Files>
         <File>CQUI/CQUI_SettingsElement.lua</File>
@@ -122,6 +129,9 @@
         <File>BTS/Choosers/TradeOriginChooser.xml</File>
         <File>BTS/Choosers/TradeOriginChooser.lua</File>
         <File>BTS/BetterTradeScreen_Text.xml</File>
+        <File>URS/ReportScreen.lua</File>
+        <File>URS/ReportScreen.xml</File>
+        <File>URS/UnitPromotionPopup.lua</File>
     </Files>
     <Settings>
         <Custom id="BETTER_TRADE_SCREEN_SETTINGS">
