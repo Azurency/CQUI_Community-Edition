@@ -187,13 +187,18 @@ function SetResourceIcon( pInstance:table, pPlot, type, state)
       --CQUI: Resource icon becomes transparent after being improved
       local CQUI_plotWasImproved;
       local CQUI_ICON_LOW_OPACITY :number = 0x77ffffff;
-      if (pPlot:GetImprovementType() == -1) then
+      local CQUI_optimalTileImprovement = resourceInfo.ImprovementCollection[1].ImprovementType; --Represents the tile improvement that utilizes the resource most effectively
+      local CQUI_tileImprovement = GameInfo.Improvements[pPlot:GetImprovementType()]; --Can be nil if there is no tile improvement
+      if (CQUI_tileImprovement ~= nil) then CQUI_tileImprovement = CQUI_tileImprovement.ImprovementType; end --If the tile improvement isn't nil, find the ImprovementType value
+      if (CQUI_tileImprovement ~= CQUI_optimalTileImprovement) then
         CQUI_plotWasImproved = false;
       else
         CQUI_plotWasImproved = true;
       end
       if CQUI_plotWasImproved then
         pInstance.ResourceIcon:SetColor(CQUI_ICON_LOW_OPACITY);
+      else
+        pInstance.ResourceIcon:SetColor(nil);
       end
     end
   end
