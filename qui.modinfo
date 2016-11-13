@@ -1,135 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Mod id="03B8BDDE-DEAD-BEEF-9540-26E685E3156E" version="0.6">
-	<Properties>
-		<Name>Chao Quick UI</Name>
-		<Description>Reduce clicks and make empire management easy</Description>
-		<Teaser>Reduce clicks and make empire management easy</Teaser>
-		<Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease</Authors>
-		<SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod.</SpecialThanks>
-	</Properties>
+    <Properties>
+        <Name>Chao Quick UI</Name>
+        <Description>Reduce clicks and make empire management easy</Description>
+        <Teaser>Reduce clicks and make empire management easy</Teaser>
+        <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease</Authors>
+        <SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod. Greg Miller for hi</SpecialThanks>
+    </Properties>
     <Components>
         <ImportFiles id="CQUI_IMPORT_FILES">
             <Items>
-				<File>CQUI/CQUI_SettingsElement.lua</File>
-				<File>CQUI/CQUI_SettingsElement.xml</File>
-				<File>UI/ActionPanel.lua</File>
-				<File>UI/CitySupport.lua</File>
-				<File>UI/MapPinManager.lua</File>
-				<File>UI/MinimapPanel.lua</File>
-				<File>UI/MinimapPanel.xml</File>
-				<File>UI/ProductionPanel.xml</File>
-				<File>UI/TopPanel.lua</File>
-				<File>UI/UnitPanel.xml</File>
-				<File>UI/WorldInput.lua</File>
-				<File>UI/WorldViewIconsManager.lua</File>
-				<File>UI/Civilopedia/CivilopediaSupport.lua</File>
-				<File>UI/Panels/CityPanel.lua</File>
-				<File>UI/Panels/CityPanel.xml</File>
-				<File>UI/Panels/CityPanelOverview.lua</File>
-				<File>UI/Panels/CityPanelOverview.xml</File>
-				<File>UI/Panels/NotificationPanel.lua</File>
-				<File>UI/Panels/ProductionPanel.lua</File>
-				<File>UI/Panels/StatusMessagePanel.lua</File>
-        <File>UI/Panels/StatusMessagePanel.xml</File>
-				<File>UI/Panels/UnitPanel.lua</File>
-				<File>UI/Popups/GreatPeoplePopup.lua</File>
-				<File>UI/Popups/GreatPeoplePopup.xml</File>
-				<File>UI/Popups/MapPinListPanel.lua</File>
-				<File>UI/Popups/MapPinListPanel.xml</File>
-				<File>UI/Popups/MapPinPopup.lua</File>
-				<File>UI/Popups/MapPinPopup.xml</File>
-				<File>UI/Popups/TechCivicCompletedPopup.lua</File>
-				<File>UI/Screens/TechTree.lua</File>
-				<File>UI/Screens/CivicsTree.lua</File>
-				<File>UI/Screens/GovernmentScreen.lua</File>
-				<File>UI/Screens/GovernmentScreen.xml</File>
-				<File>UI/ToolTips/PlotToolTip.lua</File>
-				<File>UI/ToolTips/PlotToolTip.xml</File>
-				<File>UI/WorldView/CityBannerManager.lua</File>
-				<File>UI/WorldView/CityBannerManager.xml</File>
-				<File>UI/WorldView/PlotInfo.lua</File>
-				<File>UI/WorldView/PlotInfo.xml</File>
+                <File>CQUI/CQUI_SettingsElement.lua</File>
+                <File>CQUI/CQUI_SettingsElement.xml</File>
+                <File>UI/ActionPanel.lua</File>
+                <File>UI/CitySupport.lua</File>
+                <File>UI/MapPinManager.lua</File>
+                <File>UI/MinimapPanel.lua</File>
+                <File>UI/MinimapPanel.xml</File>
+                <File>UI/ProductionPanel.xml</File>
+                <File>UI/TopPanel.lua</File>
+                <File>UI/UnitPanel.xml</File>
+                <File>UI/WorldInput.lua</File>
+                <File>UI/WorldViewIconsManager.lua</File>
+                <File>UI/Civilopedia/CivilopediaSupport.lua</File>
+                <File>UI/Panels/CityPanel.lua</File>
+                <File>UI/Panels/CityPanel.xml</File>
+                <File>UI/Panels/CityPanelOverview.lua</File>
+                <File>UI/Panels/CityPanelOverview.xml</File>
+                <File>UI/Panels/NotificationPanel.lua</File>
+                <File>UI/Panels/ProductionPanel.lua</File>
+                <File>UI/Panels/StatusMessagePanel.lua</File>
+                <File>UI/Panels/StatusMessagePanel.xml</File>
+                <File>UI/Panels/UnitPanel.lua</File>
+                <File>UI/Popups/GreatPeoplePopup.lua</File>
+                <File>UI/Popups/GreatPeoplePopup.xml</File>
+                <File>UI/Popups/MapPinListPanel.lua</File>
+                <File>UI/Popups/MapPinListPanel.xml</File>
+                <File>UI/Popups/MapPinPopup.lua</File>
+                <File>UI/Popups/MapPinPopup.xml</File>
+                <File>UI/Popups/TechCivicCompletedPopup.lua</File>
+                <File>UI/Screens/TechTree.lua</File>
+                <File>UI/Screens/CivicsTree.lua</File>
+                <File>UI/Screens/GovernmentScreen.lua</File>
+                <File>UI/Screens/GovernmentScreen.xml</File>
+                <File>UI/ToolTips/PlotToolTip.lua</File>
+                <File>UI/ToolTips/PlotToolTip.xml</File>
+                <File>UI/WorldView/CityBannerManager.lua</File>
+                <File>UI/WorldView/CityBannerManager.xml</File>
+                <File>UI/WorldView/PlotInfo.lua</File>
+                <File>UI/WorldView/PlotInfo.xml</File>
             </Items>
         </ImportFiles>
-		<LocalizedText id="CQUI_TEXT">
-			<Items>
-				<File>CQUI/CQUI_Text_General.xml</File>
-				<File>CQUI/CQUI_Text_Settings.xml</File>
-			</Items>
-		</LocalizedText>
-		<ImportFiles id="BETTER_TRADE_SCREEN_IMPORT_FILES">
-			<Items>
-				<File>BTS/TradeOverview.xml</File>
-				<File>BTS/TradeOverview.lua</File>
-				<File>BTS/Choosers/TradeRouteChooser.xml</File>
-				<File>BTS/Choosers/TradeRouteChooser.lua</File>
-				<File>BTS/Choosers/TradeOriginChooser.xml</File>
-				<File>BTS/Choosers/TradeOriginChooser.lua</File>
-			</Items>
-		</ImportFiles>
-		<LocalizedText id="BETTER_TRADE_TEXT">
-			<Items>
-				<File>BTS/BetterTradeScreen_Text.xml</File>
-			</Items>
-		</LocalizedText>
+        <LocalizedText id="CQUI_TEXT">
+            <Items>
+                <File>CQUI/CQUI_Text_General.xml</File>
+                <File>CQUI/CQUI_Text_Settings.xml</File>
+            </Items>
+        </LocalizedText>
+        <ImportFiles id="BETTER_TRADE_SCREEN_IMPORT_FILES">
+            <Items>
+                <File>BTS/TradeOverview.xml</File>
+                <File>BTS/TradeOverview.lua</File>
+                <File>BTS/Choosers/TradeRouteChooser.xml</File>
+                <File>BTS/Choosers/TradeRouteChooser.lua</File>
+                <File>BTS/Choosers/TradeOriginChooser.xml</File>
+                <File>BTS/Choosers/TradeOriginChooser.lua</File>
+            </Items>
+        </ImportFiles>
+        <LocalizedText id="BETTER_TRADE_TEXT">
+            <Items>
+                <File>BTS/BetterTradeScreen_Text.xml</File>
+            </Items>
+        </LocalizedText>
     </Components>
-	<Files>
-		<File>CQUI/CQUI_SettingsElement.lua</File>
-		<File>CQUI/CQUI_SettingsElement.xml</File>
-		<File>CQUI/CQUI_Text_General.xml</File>
-		<File>CQUI/CQUI_Text_Settings.xml</File>
-		<File>UI/ActionPanel.lua</File>
-		<File>UI/CitySupport.lua</File>
-		<File>UI/MapPinManager.lua</File>
-		<File>UI/MinimapPanel.lua</File>
-		<File>UI/MinimapPanel.xml</File>
-		<File>UI/ProductionPanel.xml</File>
-		<File>UI/TopPanel.lua</File>
-		<File>UI/UnitPanel.xml</File> 
-		<File>UI/WorldInput.lua</File>
-		<File>UI/WorldViewIconsManager.lua</File>
-		<File>UI/Civilopedia/CivilopediaSupport.lua</File>
-		<File>UI/Panels/CityPanel.lua</File>
-		<File>UI/Panels/CityPanel.xml</File>
-		<File>UI/Panels/CityPanelOverview.lua</File>
-		<File>UI/Panels/CityPanelOverview.xml</File>
-		<File>UI/Panels/NotificationPanel.lua</File>
-		<File>UI/Panels/ProductionPanel.lua</File>
-		<File>UI/Panels/StatusMessagePanel.lua</File>
-    <File>UI/Panels/StatusMessagePanel.xml</File>
-		<File>UI/Panels/UnitPanel.lua</File>
-		<File>UI/Popups/GreatPeoplePopup.lua</File>
-		<File>UI/Popups/GreatPeoplePopup.xml</File>
-		<File>UI/Popups/MapPinListPanel.lua</File>
-		<File>UI/Popups/MapPinListPanel.xml</File>
-		<File>UI/Popups/MapPinPopup.lua</File>
-		<File>UI/Popups/MapPinPopup.xml</File>
-		<File>UI/Popups/TechCivicCompletedPopup.lua</File>
-		<File>UI/Screens/CivicsTree.lua</File>
-		<File>UI/Screens/GovernmentScreen.lua</File>
-		<File>UI/Screens/GovernmentScreen.xml</File>
-		<File>UI/Screens/TechTree.lua</File>
-		<File>UI/ToolTips/PlotToolTip.lua</File>
-		<File>UI/ToolTips/PlotToolTip.xml</File>
-		<File>UI/WorldView/CityBannerManager.lua</File>
-		<File>UI/WorldView/CityBannerManager.xml</File>
-		<File>UI/WorldView/PlotInfo.lua</File>
-		<File>UI/WorldView/PlotInfo.xml</File>
-		<File>BTS/TradeOverview.xml</File>
-		<File>BTS/TradeOverview.lua</File>
-		<File>BTS/Choosers/TradeRouteChooser.xml</File>
-		<File>BTS/Choosers/TradeRouteChooser.lua</File>
-		<File>BTS/Choosers/TradeOriginChooser.xml</File>
-		<File>BTS/Choosers/TradeOriginChooser.lua</File>
+    <Files>
+        <File>CQUI/CQUI_SettingsElement.lua</File>
+        <File>CQUI/CQUI_SettingsElement.xml</File>
+        <File>CQUI/CQUI_Text_General.xml</File>
+        <File>CQUI/CQUI_Text_Settings.xml</File>
+        <File>UI/ActionPanel.lua</File>
+        <File>UI/CitySupport.lua</File>
+        <File>UI/MapPinManager.lua</File>
+        <File>UI/MinimapPanel.lua</File>
+        <File>UI/MinimapPanel.xml</File>
+        <File>UI/ProductionPanel.xml</File>
+        <File>UI/TopPanel.lua</File>
+        <File>UI/UnitPanel.xml</File> 
+        <File>UI/WorldInput.lua</File>
+        <File>UI/WorldViewIconsManager.lua</File>
+        <File>UI/Civilopedia/CivilopediaSupport.lua</File>
+        <File>UI/Panels/CityPanel.lua</File>
+        <File>UI/Panels/CityPanel.xml</File>
+        <File>UI/Panels/CityPanelOverview.lua</File>
+        <File>UI/Panels/CityPanelOverview.xml</File>
+        <File>UI/Panels/NotificationPanel.lua</File>
+        <File>UI/Panels/ProductionPanel.lua</File>
+        <File>UI/Panels/StatusMessagePanel.lua</File>
+        <File>UI/Panels/StatusMessagePanel.xml</File>
+        <File>UI/Panels/UnitPanel.lua</File>
+        <File>UI/Popups/GreatPeoplePopup.lua</File>
+        <File>UI/Popups/GreatPeoplePopup.xml</File>
+        <File>UI/Popups/MapPinListPanel.lua</File>
+        <File>UI/Popups/MapPinListPanel.xml</File>
+        <File>UI/Popups/MapPinPopup.lua</File>
+        <File>UI/Popups/MapPinPopup.xml</File>
+        <File>UI/Popups/TechCivicCompletedPopup.lua</File>
+        <File>UI/Screens/CivicsTree.lua</File>
+        <File>UI/Screens/GovernmentScreen.lua</File>
+        <File>UI/Screens/GovernmentScreen.xml</File>
+        <File>UI/Screens/TechTree.lua</File>
+        <File>UI/ToolTips/PlotToolTip.lua</File>
+        <File>UI/ToolTips/PlotToolTip.xml</File>
+        <File>UI/WorldView/CityBannerManager.lua</File>
+        <File>UI/WorldView/CityBannerManager.xml</File>
+        <File>UI/WorldView/PlotInfo.lua</File>
+        <File>UI/WorldView/PlotInfo.xml</File>
+        <File>BTS/TradeOverview.xml</File>
+        <File>BTS/TradeOverview.lua</File>
+        <File>BTS/Choosers/TradeRouteChooser.xml</File>
+        <File>BTS/Choosers/TradeRouteChooser.lua</File>
+        <File>BTS/Choosers/TradeOriginChooser.xml</File>
+        <File>BTS/Choosers/TradeOriginChooser.lua</File>
         <File>BTS/BetterTradeScreen_Text.xml</File>
-	</Files>
-	<Settings>
-		<Custom id="BETTER_TRADE_SCREEN_SETTINGS">
-			<Items>
-				<Component>BETTER_TRADE_SCREEN_IMPORT_FILES</Component>
-				<Component>BETTER_TRADE_TEXT</Component>
-				<Component>BETTER_TRADE_DATABASE</Component>
-			</Items>
-		</Custom>
-	</Settings>
+    </Files>
+    <Settings>
+        <Custom id="BETTER_TRADE_SCREEN_SETTINGS">
+            <Items>
+                <Component>BETTER_TRADE_SCREEN_IMPORT_FILES</Component>
+                <Component>BETTER_TRADE_TEXT</Component>
+                <Component>BETTER_TRADE_DATABASE</Component>
+            </Items>
+        </Custom>
+    </Settings>
 </Mod>
