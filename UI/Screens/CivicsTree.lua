@@ -160,9 +160,6 @@ local m_shiftDown     :boolean = false;
 
 -- CQUI variables
 local CQUI_halfwayNotified  :table = {};
-local CQUI_chinaHalfway = 0.4;
-local CQUI_halfway = 0.5;
-
 
 -- ===========================================================================
 -- Return string respresenation of a prereq table
@@ -1131,18 +1128,25 @@ function OnLocalPlayerTurnBegin()
     -- Make sure there is a civic selected before continuing with checks
     if currentCivicID ~= -1 then
       local civicName = GameInfo.Civics[currentCivicID].Name;
+      local civicType = GameInfo.Civics[currentCivicID].Type;
 
       local currentCost         = playerCivics:GetCultureCost(currentCivicID);
       local currentProgress     = playerCivics:GetCulturalProgress(currentCivicID);
       local currentYield          = playerCivics:GetCultureYield();
       local percentageToBeDone    = (currentProgress + currentYield) / currentCost;
       local percentageNextTurn    = (currentProgress + currentYield*2) / currentCost;
-      local halfway:number;
+      local CQUI_halfway:number = .5;
 
+      -- Finds boost amount, always 50 in base game, China's +10% modifier is not applied here
+      for row in GameInfo.Boosts() do
+        if(row.CivicType == civicType) then
+          CQUI_halfway = (100 - row.Boost) / 100;
+          break;
+        end
+      end
+      --If playing as china, apply boost modifier. Not sure where I can query this value...
       if(PlayerConfigurations[Game.GetLocalPlayer()]:GetCivilizationTypeName() == "CIVILIZATION_CHINA") then
-        halfway = CQUI_chinaHalfway;
-      else
-        halfway = CQUI_halfway;
+        CQUI_halfway = CQUI_halfway - .1;
       end
         
       -- Is the current civic completed? -> Could be moved to the "OnCivicComplete" function
@@ -1151,7 +1155,7 @@ function OnLocalPlayerTurnBegin()
           LuaEvents.CQUI_AddStatusMessage("The Civic, " .. Locale.Lookup( civicName ) .. ", is completed.", 10, CQUI_STATUS_MESSAGE_CIVIC);
       elseif isCurrentBoosted then
         CQUI_halfwayNotified[civicName] = true;
-      elseif percentageNextTurn >= halfway and CQUI_halfwayNotified[civicName] ~= true then
+      elseif percentageNextTurn >= CQUI_halfway and CQUI_halfwayNotified[civicName] ~= true then
           LuaEvents.CQUI_AddStatusMessage("The current Civic, " .. Locale.Lookup( civicName ) .. ", is one turn away from maximum Inspiration potential.", 10, CQUI_STATUS_MESSAGE_CIVIC);
           CQUI_halfwayNotified[civicName] = true;
       end

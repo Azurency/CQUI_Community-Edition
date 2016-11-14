@@ -151,8 +151,6 @@ local m_ToggleTechTreeId;
 
 -- CQUI variables
 local CQUI_halfwayNotified  :table = {};
-local CQUI_chinaHalfway = 0.4;
-local CQUI_halfway = 0.5;
 
 -- ===========================================================================
 -- Return string respresenation of a prereq table
@@ -1030,8 +1028,8 @@ function OnLocalPlayerTurnBegin()
 
         -- Get the current tech
         local kPlayer   :table  = Players[ePlayer];
-      local playerTechs :table  = kPlayer:GetTechs();
-      local currentTechID :number = playerTechs:GetResearchingTech();
+        local playerTechs :table  = kPlayer:GetTechs();
+        local currentTechID :number = playerTechs:GetResearchingTech();
         local isCurrentBoosted :boolean = playerTechs:HasBoostBeenTriggered(currentTechID);
         
         -- Make sure there is a technology selected before continuing with checks
@@ -1043,12 +1041,18 @@ function OnLocalPlayerTurnBegin()
           local currentYield          = playerTechs:GetScienceYield();
           local percentageToBeDone    = (currentProgress + currentYield) / currentCost;
           local percentageNextTurn    = (currentProgress + currentYield*2) / currentCost;
-          local halfway:number;
+          local CQUI_halfway:number = 0.5;
 
+          -- Finds boost amount, always 50 in base game, China's +10% modifier is not applied here
+          for row in GameInfo.Boosts() do
+            if(row.CivicType == civicType) then
+              CQUI_halfway = (100 - row.Boost) / 100;
+              break;
+            end
+          end
+          --If playing as china, apply boost modifier. Not sure where I can query this value...
           if(PlayerConfigurations[Game.GetLocalPlayer()]:GetCivilizationTypeName() == "CIVILIZATION_CHINA") then
-            halfway = CQUI_chinaHalfway;
-          else
-            halfway = CQUI_halfway;
+            CQUI_halfway = CQUI_halfway - .1;
           end
         
           -- Is the current tech completed? -> Could be moved to the "OnResearchComplete" function
@@ -1057,7 +1061,7 @@ function OnLocalPlayerTurnBegin()
               LuaEvents.CQUI_AddStatusMessage("The Technology, " .. Locale.Lookup( techName ) .. ", is completed.", 10, CQUI_STATUS_MESSAGE_TECHS);
           elseif isCurrentBoosted then
             CQUI_halfwayNotified[techName] = true;
-          elseif percentageNextTurn >= halfway and isCurrentBoosted == false and CQUI_halfwayNotified[techName] ~= true then
+          elseif percentageNextTurn >= CQUI_halfway and isCurrentBoosted == false and CQUI_halfwayNotified[techName] ~= true then
               LuaEvents.CQUI_AddStatusMessage("The current Technology, " .. Locale.Lookup( techName ) .. ", is one turn away from maximum Eureka potential.", 10, CQUI_STATUS_MESSAGE_TECHS);
               CQUI_halfwayNotified[techName] = true;
           end
