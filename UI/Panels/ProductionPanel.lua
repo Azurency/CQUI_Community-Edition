@@ -599,7 +599,7 @@ function PopulateList(data, listIM)
         unitListing.Disabled:SetHide(true);
         unitListing.TrainUnit:SetColor(0xffffffff);
       end
-      unitListing.TrainUnit:SetDisabled(item.Disabled);
+      unitListing.TrainUnit:SetDisabled(item.Disabled or item.MustPurchase);
   end
   -- end iteration through units
   unitList.List:CalculateSize();
@@ -1421,7 +1421,7 @@ function Refresh()
         new_data.CurrentProduction = row.Name;
       end
       -- Can it be built normally?
-      if row.Hash ~= currentProductionHash and not row.MustPurchase and buildQueue:CanProduce( row.Hash, true ) then
+      if row.Hash ~= currentProductionHash and buildQueue:CanProduce( row.Hash, true ) then
         local isCanProduceExclusion, results   = buildQueue:CanProduce( row.Hash, false, true );
         local isDisabled        :boolean = not isCanProduceExclusion;
         local sAllReasons        :string = ComposeFailureReasonStrings( isDisabled, results );
@@ -1441,6 +1441,7 @@ function Refresh()
           Disabled    = isDisabled, 
           Civilian    = row.FormationClass == "FORMATION_CLASS_CIVILIAN",
           Cost      = nProductionCost, 
+          MustPurchase = row.MustPurchase,
           Progress    = nProductionProgress, 
           Corps     = false,
           CorpsCost   = 0,
