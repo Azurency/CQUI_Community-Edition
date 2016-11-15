@@ -1035,6 +1035,7 @@ function OnLocalPlayerTurnBegin()
         -- Make sure there is a technology selected before continuing with checks
         if currentTechID ~= -1 then
           local techName = GameInfo.Technologies[currentTechID].Name;
+          local techType = GameInfo.Technologies[currentTechID].Type;
 
           local currentCost         = playerTechs:GetResearchCost(currentTechID);
           local currentProgress     = playerTechs:GetResearchProgress(currentTechID);
@@ -1045,7 +1046,7 @@ function OnLocalPlayerTurnBegin()
 
           -- Finds boost amount, always 50 in base game, China's +10% modifier is not applied here
           for row in GameInfo.Boosts() do
-            if(row.CivicType == civicType) then
+            if(row.ResearchType == techType) then
               CQUI_halfway = (100 - row.Boost) / 100;
               break;
             end
@@ -1055,11 +1056,8 @@ function OnLocalPlayerTurnBegin()
             CQUI_halfway = CQUI_halfway - .1;
           end
         
-          -- Is the current tech completed? -> Could be moved to the "OnResearchComplete" function
-          -- Else is it greater than 50% and has yet to be displayed?
-          if percentageToBeDone >= 1 then
-              LuaEvents.CQUI_AddStatusMessage("The Technology, " .. Locale.Lookup( techName ) .. ", is completed.", 10, CQUI_STATUS_MESSAGE_TECHS);
-          elseif isCurrentBoosted then
+          -- Is it greater than 50% and has yet to be displayed?
+          if isCurrentBoosted then
             CQUI_halfwayNotified[techName] = true;
           elseif percentageNextTurn >= CQUI_halfway and isCurrentBoosted == false and CQUI_halfwayNotified[techName] ~= true then
               LuaEvents.CQUI_AddStatusMessage("The current Technology, " .. Locale.Lookup( techName ) .. ", is one turn away from maximum Eureka potential.", 10, CQUI_STATUS_MESSAGE_TECHS);
@@ -1108,6 +1106,25 @@ function OnResearchComplete( ePlayer:number, eTech:number)
     if not ContextPtr:IsHidden() then
       View( m_kCurrentData );
     end
+
+
+    --------------------------------------------------------------------------
+        -- CQUI Completion Notification
+
+        -- Get the current tech
+        local kPlayer   :table      = Players[ePlayer];
+        local currentTechID :number = eTech;
+        
+        -- Make sure there is a technology selected before continuing with checks
+        if currentTechID ~= -1 then
+          local techName = GameInfo.Technologies[currentTechID].Name;
+
+          LuaEvents.CQUI_AddStatusMessage("The Technology, " .. Locale.Lookup( techName ) .. ", is completed.", 10, CQUI_STATUS_MESSAGE_TECHS);
+
+        end -- end of techID check
+
+        --------------------------------------------------------------------------
+
   end
 end
 
