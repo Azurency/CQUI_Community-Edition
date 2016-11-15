@@ -1148,12 +1148,9 @@ function OnLocalPlayerTurnBegin()
       if(PlayerConfigurations[Game.GetLocalPlayer()]:GetCivilizationTypeName() == "CIVILIZATION_CHINA") then
         CQUI_halfway = CQUI_halfway - .1;
       end
-        
-      -- Is the current civic completed? -> Could be moved to the "OnCivicComplete" function
-      -- Else is it greater than 50% and has yet to be displayed?
-      if percentageToBeDone >= 1 then
-          LuaEvents.CQUI_AddStatusMessage("The Civic, " .. Locale.Lookup( civicName ) .. ", is completed.", 10, CQUI_STATUS_MESSAGE_CIVIC);
-      elseif isCurrentBoosted then
+
+      -- Is it greater than 50% and has yet to be displayed?
+      if isCurrentBoosted then
         CQUI_halfwayNotified[civicName] = true;
       elseif percentageNextTurn >= CQUI_halfway and CQUI_halfwayNotified[civicName] ~= true then
           LuaEvents.CQUI_AddStatusMessage("The current Civic, " .. Locale.Lookup( civicName ) .. ", is one turn away from maximum Inspiration potential.", 10, CQUI_STATUS_MESSAGE_CIVIC);
@@ -1201,6 +1198,24 @@ function OnCivicComplete( ePlayer:number, eTech:number)
     if not ContextPtr:IsHidden() then
       View( m_kCurrentData );
     end
+
+    --------------------------------------------------------------------------
+    -- CQUI Civic Complete
+
+    -- Get the current tech
+    local kPlayer       :table  = Players[ePlayer];
+    local currentCivicID  :number = eTech;
+
+    -- Make sure there is a civic selected before continuing with checks
+    if currentCivicID ~= -1 then
+      local civicName = GameInfo.Civics[currentCivicID].Name;
+
+      LuaEvents.CQUI_AddStatusMessage("The Civic, " .. Locale.Lookup( civicName ) .. ", is completed.", 10, CQUI_STATUS_MESSAGE_CIVIC);
+
+    end -- end of if currentCivivID ~= -1
+
+    --------------------------------------------------------------------------
+
   end
 end
 
