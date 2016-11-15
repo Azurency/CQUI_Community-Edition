@@ -54,7 +54,7 @@
               <Label        ID="CityHousingInsufficientIcon"    Anchor="L,C"  Style="FontNormal20" String="[ICON_HousingInsufficient]"/>
               <Label        ID="CityAmenitiesInsufficientIcon"  Anchor="L,C"  Style="FontNormal20" String="[ICON_AmenitiesInsufficient]"/>
 
-              <Label ID="CityUnlockedCitizen" Hidden="1" Anchor="L,C" String="[ICON_FOOD]"/>
+              <Label ID="CityUnlockedCitizen" Hidden="1" Anchor="L,C" String="[ICON_EXCLAMATION]"/>
 
               <Label ID="CityBuiltDistrictAquaduct" Hidden="1" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_AQUEDUCT]"/>
               <Label ID="CityBuiltDistrictBath" Hidden="1" Anchor="L,C" Style="FontNormal20" String="[ICON_DISTRICT_BATH]"/>
