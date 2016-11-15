@@ -452,6 +452,8 @@ function PopulateList(data, listIM)
   Controls.PauseCollapseList:Stop();
   local selectedCity  = UI.GetHeadSelectedCity();
   local CQUI_ProdTable = {}; --Keeps track of each producable item. Key is the item hash, Value is a table with three keys (time/gold/faith) representing the respective costs
+  local CQUI_PlayerGold = Players[Game.GetLocalPlayer()]:GetTreasury():GetGoldBalance();
+  local CQUI_PlayerFaith = Players[Game.GetLocalPlayer()]:GetReligion():GetFaithBalance();
   
   -- Populate Units ------------------------
   unitList = listIM:GetInstance();
@@ -562,6 +564,7 @@ function PopulateList(data, listIM)
       if CQUI_ProdTable[item.Hash]["gold"] ~= nil then
         unitListing.PurchaseButton:SetText(CQUI_ProdTable[item.Hash]["gold"] .. "[ICON_GOLD]");
         unitListing.PurchaseButton:SetHide(false);
+        unitListing.PurchaseButton:SetDisabled(CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["gold"]);
       else
         unitListing.PurchaseButton:SetHide(true);
       end
@@ -571,6 +574,7 @@ function PopulateList(data, listIM)
       if CQUI_ProdTable[item.Hash]["faith"] ~= nil then
         unitListing.FaithPurchaseButton:SetText(CQUI_ProdTable[item.Hash]["faith"] .. "[ICON_FAITH]");
         unitListing.FaithPurchaseButton:SetHide(false);
+        unitListing.FaithPurchaseButton:SetDisabled(CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["faith"]);
       else
         unitListing.FaithPurchaseButton:SetHide(true);
       end
@@ -863,6 +867,7 @@ function PopulateList(data, listIM)
           if CQUI_ProdTable[buildingItem.Hash]["gold"] ~= nil then
             buildingListing.PurchaseButton:SetText(CQUI_ProdTable[buildingItem.Hash]["gold"] .. "[ICON_GOLD]");
             buildingListing.PurchaseButton:SetHide(false);
+            buildingListing.PurchaseButton:SetDisabled(CQUI_PlayerGold < CQUI_ProdTable[buildingItem.Hash]["gold"]);
           else
             buildingListing.PurchaseButton:SetHide(true);
           end
@@ -872,6 +877,7 @@ function PopulateList(data, listIM)
           if CQUI_ProdTable[buildingItem.Hash]["faith"] ~= nil then
             buildingListing.FaithPurchaseButton:SetText(CQUI_ProdTable[buildingItem.Hash]["faith"] .. "[ICON_FAITH]");
             buildingListing.FaithPurchaseButton:SetHide(false);
+            buildingListing.FaithPurchaseButton:SetDisabled(CQUI_PlayerFaith < CQUI_ProdTable[buildingItem.Hash]["faith"]);
           else
             buildingListing.FaithPurchaseButton:SetHide(true);
           end
