@@ -1,56 +1,125 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <GameData>
-  <LocalizedText>
-    <Row Tag="LOC_TRADE_ROUTE_OVERVIEW_FILTER_TEXT" Language="en_US">
-      <Text>Filter by: </Text>
+  <BaseGameText>
+
+    <!-- Common Text -->
+    <Row Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP">
+        <Text>Sort by [ICON_Food]Food.</Text>
     </Row>
 
-    <Row Tag="LOC_TRADE_NO_BENEFIT_TEXT" Language="en_US">
-      <Text>gains no benefits from this Route.</Text>
+    <Row Tag="LOC_TRADE_SORT_BY_PRODUCTION_TOOLTIP">
+        <Text>Sort by [ICON_Production]Production.</Text>
     </Row>
 
-    <Row Tag="LOC_TRADE_SORT_BY_TEXT" Language="en_US">
-      <Text>Sort by:</Text>
+    <Row Tag="LOC_TRADE_SORT_BY_GOLD_TOOLTIP">
+        <Text>Sort by [ICON_Gold]Gold.</Text>
     </Row>
 
-    <Row Tag="LOC_TRADE_SORT_BY_HELP_TOOLTIP" Language="en_US">
-      <Text>Sort Trade Routes in ascending or descending order.</Text>
+    <Row Tag="LOC_TRADE_SORT_BY_SCIENCE_TOOLTIP">
+        <Text>Sort by [ICON_Science]Science.</Text>
     </Row>
 
-    <Row Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="en_US">
-      <Text>Sort by Food.</Text>
+    <Row Tag="LOC_TRADE_SORT_BY_CULTURE_TOOLTIP">
+        <Text>Sort by [ICON_Culture]Culture.</Text>
     </Row>
 
-    <Row Tag="LOC_TRADE_SORT_BY_PRODUCTION_TOOLTIP" Language="en_US">
-      <Text>Sort by Production.</Text>
+    <Row Tag="LOC_TRADE_SORT_BY_FAITH_TOOLTIP">
+        <Text>Sort by [ICON_Faith]Faith.</Text>
     </Row>
 
-    <Row Tag="LOC_TRADE_SORT_BY_GOLD_TOOLTIP" Language="en_US">
-      <Text>Sort by Gold.</Text>
+    <Row Tag="LOC_TRADE_SORT_BY_TURNS_REMAINING_TOOLTIP">
+        <Text>Sort by [ICON_Turn]Turns to complete route.</Text>
     </Row>
 
-    <Row Tag="LOC_TRADE_SORT_BY_SCIENCE_TOOLTIP" Language="en_US">
-      <Text>Sort by Science.</Text>
+    <Row Tag="LOC_TRADE_FILTER_INTERNATIONAL_ROUTES_TEXT">
+        <Text>International Routes</Text>
     </Row>
 
-    <Row Tag="LOC_TRADE_SORT_BY_CULTURE_TOOLTIP" Language="en_US">
-      <Text>Sort by Culture.</Text>
+    <Row Tag="LOC_TRADE_FILTER_CS_WITH_QUEST_TOOLTIP">
+        <Text>City-States with Trade Quest</Text>
     </Row>
 
-    <Row Tag="LOC_TRADE_SORT_BY_FAITH_TOOLTIP" Language="en_US">
-      <Text>Sort by Faith.</Text>
+    <!-- Trade Overview -->
+    <Row Tag="LOC_TRADE_NO_BENEFIT_TEXT">
+    	<Text>gains no benefits from this Route.</Text>
     </Row>
 
-    <Row Tag="LOC_TRADE_SORT_BY_TURNS_REMAINING_TOOLTIP" Language="en_US">
-      <Text>Sort by Turns remaing to complete Trade Route.</Text>
+    <Row Tag="LOC_TRADE_SORT_BY_TEXT">
+    	<Text>Sort by:</Text>
     </Row>
 
-    <Row Tag="LOC_TRADE_ORIGIN_CHOOSER_HEADER_LABEL_TEXT" Language="en_US">
-        <Text>Transfer trader to...</Text>
+    <Row Tag="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT">
+        <Text>Expand All:</Text>
     </Row>
 
-    <Row Tag="LOC_ORIGIN_CHOOSER_CHANGE_DESTINATION_BUTTON" Language="en_US">
-        <Text>Confirm</Text>
+    <Row Tag="LOC_TRADE_COLLAPSE_ALL_BUTTON_TEXT">
+        <Text>Collapse All:</Text>
     </Row>
-  </LocalizedText>
+
+    <Row Tag="LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP">
+        <Text>Total amount of[ICON_Turn]to complete this trade route</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_TURNS_REMAINING_ALT_HELP_TOOLTIP">
+        <Text>This route will take {1_TurnsRemaining}[Icon_Turn] to complete.</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_TURNS_REMAINING_ALT2_HELP_TOOLTIP">
+        <Text>This route will take less than {1_TurnsRemaining}[Icon_Turn] to complete.</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER">
+        <Text>----------------------------</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_TURNS_REMAINING_ROUTE_LENGTH_TOOLTIP">
+        <Text>Trade Route[ICON_Movement]: {1_TripsToDestination}</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_TURNS_REMAINING_TRIPS_COUNT_TOOLTIP">
+        <Text>Trips to destination: {1_TripsToDestination}</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_TOOLTIP">
+        <Text>Route will complete in [ICON_Turn]{1_TurnWhenCompleted}</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_ALT_TOOLTIP">
+        <Text>If started, route will complete in [ICON_Turn]{1_TurnWhenCompleted}</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_CANCEL_AUTOMATION_TOOLTIP">
+        <Text>Cancel this trade route's automation. The trader will be available, once this route completes.</Text>
+    </Row>
+
+    <!-- Make Trade Route -->
+    <Row Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_LABEL">
+        <Text>Repeat Route:</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_TOOLTIP">
+        <Text>Enable, to have this trader repeat its route. By default, the route repeated is the last one the trader made.</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_LABEL">
+        <Text>From Top Sort Entry:</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_TOOLTIP">
+        <Text>The route repeated is the top route from the currently sort settings. The route gets picked when trader completes his last one.</Text>
+    </Row>
+
+    <!-- Trade Origin Chooser -->
+    <Row Tag="LOC_ORIGIN_CHOOSER_HEADER_BACKGROUND_TEXT">
+        <Text>Choose a city</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_ORIGIN_CHOOSER_HEADER_LABEL_TEXT">
+        <Text>TRANSFER TRADER TO...</Text>
+    </Row>
+
+    <Row Tag="LOC_ORIGIN_CHOOSER_CHANGE_DESTINATION_BUTTON">
+        <Text>CONFIRM</Text>
+    </Row>
+  </BaseGameText>
 </GameData>

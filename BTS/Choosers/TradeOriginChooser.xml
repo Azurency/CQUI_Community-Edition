@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd">
-  
+
   <SlideAnim Style="ChooserAnim">
     <Stack ID="RouteOriginChooser" StackGrowth="Bottom">
       <!-- Header Container -->
       <Container ID="RouteOriginChooserHeader" Size="parent,150">
-        <Label ID="RouteOriginChooserHeaderText" Size="parent,25" Offset="-6,10" Anchor="C,T" Style="FontFlair14" SmallCaps="20" SmallCapsType="EveryWord" Color="0,59,77,255" String="TRANSFER TRADER TO..."/>
+        <Label ID="RouteOriginChooserHeaderText" Size="parent,25" Offset="-6,10" Anchor="C,T" Style="FontFlair14" SmallCaps="20" SmallCapsType="EveryWord" Color="0,59,77,255" String="LOC_TRADE_ORIGIN_CHOOSER_HEADER_LABEL_TEXT"/>
         <Grid Size="parent+5,parent-25" Anchor="C,B" Offset="1,0" Texture="DestinationChooser_CurrentSlot" SliceStart="0,0" SliceCorner="30,30" SliceSize="250,90" SliceTextureSize="308,207" >
         </Grid>
         <Button ID="CloseButton" Anchor="R,T" Offset="-11,-1" Style="CloseButtonSmall"/>
@@ -25,11 +25,11 @@
         </Container>
 
         <!-- Confirm Button -->
-        <GridButton ID="ChangeOriginCityButton" Size="parent-35,26" Offset="1,14" Anchor="C,B" String="CONFIRM" Style="FontFlair14" FontStyle="Shadows" EffectColor="0,0,0,255" TextOffset="0,2" SmallCaps="20" SmallCapsType="EveryWord">
+        <GridButton ID="ChangeOriginCityButton" Size="parent-35,26" Offset="1,14" Anchor="C,B" String="LOC_ORIGIN_CHOOSER_CHANGE_DESTINATION_BUTTON" Style="FontFlair14" FontStyle="Shadows" EffectColor="0,0,0,255" TextOffset="0,2" SmallCaps="20" SmallCapsType="EveryWord">
           <GridData Texture="Controls_ConfirmSmall" StateOffsetIncrement="0,26" SliceCorner="26,13" SliceSize="2,2" SliceTextureSize="51,26"/>
         </GridButton>
       </Container>
-      
+
       <!-- Body Container -->
       <Grid ID="RouteOriginChooserBody" Texture="Controls_ContainerBlue" SliceStart="0,0" SliceCorner="3,3" SliceSize="9,9" SliceTextureSize="16,16" Anchor="C,T" Offset="0,0" Size="parent,parent-150" AutoSize="1">
         <ScrollPanel    ID="CityScrollPanel"  Offset="18,10" Size="parent-22,parent-35" Vertical="1" AutoScrollBar="0">
