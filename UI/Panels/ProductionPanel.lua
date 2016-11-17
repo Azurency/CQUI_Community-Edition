@@ -38,6 +38,9 @@ local DEFAULT_BUTTON_HEIGHT = 48;
 --  Members
 -- ===========================================================================
 
+local CQUI_previousProductionHash :table = {};
+local CQUI_currentProductionHash :table = {};
+
 local m_listIM      = InstanceManager:new( "NestedList",  "Top", Controls.ProductionList );
 
 local m_productionTab;  -- Additional tracking of the tab control data so that we can select between graphical tabs and label tabs
@@ -624,7 +627,12 @@ function PopulateList(data, listIM)
     local completedStr = "";
     local currentProductionHash = buildQueue:GetCurrentProductionTypeHash();
     local previousProductionHash = buildQueue:GetPreviousProductionTypeHash();
-    local screenX, screenY:number = UIManager:GetScreenSizeVal()
+
+    if CQUI_previousProductionHash[selectedCity:GetID()] ~= nil then
+      previousProductionHash = CQUI_previousProductionHash[selectedCity:GetID()];
+    end
+    
+    local screenX, screenY:number = UIManager:GetScreenSizeVal();
   
     if( currentProductionHash == 0 and previousProductionHash == 0 ) then
       Controls.CurrentProductionArea:SetHide(true);
@@ -1310,6 +1318,8 @@ function Refresh()
     };
     
     local currentProductionHash = buildQueue:GetCurrentProductionTypeHash();
+    CQUI_currentProductionHash[cityID] = currentProductionHash;
+    GameConfiguration.SetValue("CQUI_currentProductionHash" .. cityID, CQUI_currentProductionHash[cityID]);
 
     for row in GameInfo.Districts() do
       if row.Hash == currentProductionHash then
@@ -1889,6 +1899,8 @@ function OnCityProductionCompleted( playerID:number, cityID:number)
 
   --Horseman 1462612590
   --AutoFormCorps(pCity, 1462612590);
+  CQUI_previousProductionHash[cityID] = CQUI_currentProductionHash[cityID];
+  GameConfiguration.SetValue("CQUI_previousProductionHash" .. cityID, CQUI_previousProductionHash[cityID]);
 end
 --
 --
@@ -1942,6 +1954,27 @@ function Initialize()
 
   LuaEvents.QUI_Option_ToggleCowboy.Add( OnToggleCowboy );
   LuaEvents.QUI_Option_ToggleBadCowboy.Add( OnToggleBadCowboy );
+
+  -- CQUI Loading Previous Turn items
+  -- ===================================================================
+  local ePlayer :number = Game.GetLocalPlayer();
+  local kPlayer         = Players[ePlayer];
+  local cities          = kPlayer:GetCities();
+  local cityCount       = cities:GetCount();
+
+  if GameConfiguration.IsSavedGame() then
+
+    for i=0,cityCount-1 do
+      CQUI_currentProductionHash[i] = GameConfiguration.GetValue("CQUI_currentProductionHash" .. i);
+    end
+
+    for i=0,cityCount-1 do
+      CQUI_previousProductionHash[i] = GameConfiguration.GetValue("CQUI_previousProductionHash" .. i);
+    end
+
+  end
+  -- ===================================================================
+  
 end
 Initialize();
 
