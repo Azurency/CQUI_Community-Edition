@@ -149,7 +149,7 @@ function BuildUnit(city, unitEntry)
   tParameters[CityOperationTypes.PARAM_UNIT_TYPE] = unitEntry.Hash;
   tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
   CityManager.RequestOperation(city, CityOperationTypes.BUILD, tParameters);
-    UI.PlaySound("Confirm_Production");
+  UI.PlaySound("Confirm_Production");
 end
 
 -- ===========================================================================
@@ -259,31 +259,39 @@ function PurchaseUnit(city, unitEntry, purchaseType)
 end
 
 -- ===========================================================================
-function PurchaseUnitCorps(city, unitEntry)
+function PurchaseUnitCorps(city, unitEntry, purchaseType)
   local tParameters = {};
   tParameters[CityCommandTypes.PARAM_UNIT_TYPE] = unitEntry.Hash;
   tParameters[CityCommandTypes.PARAM_MILITARY_FORMATION_TYPE] = MilitaryFormationTypes.CORPS_MILITARY_FORMATION;
-  if (unitEntry.Yield == "YIELD_GOLD") then
-    tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_GOLD"].Index;
+  if (purchaseType == nil) then
+    if (unitEntry.Yield == "YIELD_GOLD") then
+      tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_GOLD"].Index;
+    else
+      tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_FAITH"].Index;  
+    end
   else
-    tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_FAITH"].Index;  
+    tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = purchaseType;
   end
   CityManager.RequestCommand(city, CityCommandTypes.PURCHASE, tParameters);
-    UI.PlaySound("Purchase_With_Gold");
+  UI.PlaySound("Purchase_With_Gold");
 end
 
 -- ===========================================================================
-function PurchaseUnitArmy(city, unitEntry)
+function PurchaseUnitArmy(city, unitEntry, purchaseType)
   local tParameters = {};
   tParameters[CityCommandTypes.PARAM_UNIT_TYPE] = unitEntry.Hash;
   tParameters[CityCommandTypes.PARAM_MILITARY_FORMATION_TYPE] = MilitaryFormationTypes.ARMY_MILITARY_FORMATION;
-  if (unitEntry.Yield == "YIELD_GOLD") then
-    tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_GOLD"].Index;
+  if (purchaseType == nil) then
+    if (unitEntry.Yield == "YIELD_GOLD") then
+      tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_GOLD"].Index;
+    else
+      tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_FAITH"].Index;  
+    end
   else
-    tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_FAITH"].Index;  
+    tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = purchaseType;
   end
   CityManager.RequestCommand(city, CityCommandTypes.PURCHASE, tParameters);
-    UI.PlaySound("Purchase_With_Gold");
+  UI.PlaySound("Purchase_With_Gold");
 end
 
 -- ===========================================================================
@@ -433,7 +441,6 @@ function ResetInstanceVisibility(productionItem: table)
     productionItem.ArmyRecommendedIcon:SetHide(true);
     productionItem.ArmyButtonContainer:SetHide(true);
     productionItem.ArmyDisabled:SetHide(true);
-    productionItem.CorpsArmyDropdownArea:SetHide(true);
   end
   if (productionItem.BuildingDrawer ~= nil) then
     productionItem.BuildingDrawer:SetHide(true);
@@ -483,8 +490,20 @@ function PopulateList(data, listIM)
     end
     if (item.Yield == "YIELD_GOLD") then
       CQUI_ProdTable[item.Hash]["gold"] = item.Cost;
+      if(item.Corps) then
+        CQUI_ProdTable[item.Hash]["corpsGold"] = item.CorpsCost;
+      end
+      if(item.Army) then
+        CQUI_ProdTable[item.Hash]["armyGold"] = item.ArmyCost;
+      end
     else
       CQUI_ProdTable[item.Hash]["faith"] = item.Cost;
+      if(item.Corps) then
+        CQUI_ProdTable[item.Hash]["corpsFaith"] = item.CorpsCost;
+      end
+      if(item.Army) then
+        CQUI_ProdTable[item.Hash]["armyFaith"] = item.ArmyCost;
+      end
     end
   end
   for i, item in ipairs(unitData) do
@@ -586,6 +605,135 @@ function PopulateList(data, listIM)
         LuaEvents.OpenCivilopedia(item.Type);
       end); 
       unitListing.TrainUnit:SetTag(UITutorialManager:GetHash(item.Type));
+
+      -- Controls for training unit corps and armies.
+      -- Want a special text string for this!! #NEW TEXT #LOCALIZATION - "You can only directly build corps and armies once you have constructed a military academy."
+      -- LOC_UNIT_TRAIN_NEED_MILITARY_ACADEMY
+      if item.Corps or item.Army then
+        unitListing.CorpsArmyDropdownButton:RegisterCallback( Mouse.eLClick, function()
+          local isExpanded = unitListing.CorpsArmyArrow:IsSelected();
+          unitListing.CorpsArmyArrow:SetSelected(not isExpanded);
+          unitListing.ArmyCorpsDrawer:SetHide(not isExpanded);
+          unitList.List:CalculateSize();
+          unitList.List:ReprocessAnchoring();
+          unitList.Top:CalculateSize();
+          unitList.Top:ReprocessAnchoring();
+          Controls.ProductionList:CalculateSize();            
+          Controls.ProductionListScroll:CalculateSize();
+        end);
+        unitListing.CorpsArmyDropdownButton:SetHide(false);
+      elseif (not item.Civilian) then
+        unitListing.CorpsArmyDropdownButton:SetHide(true);
+      end
+
+      if item.Corps then  
+        -- Check to see if this item is recommended
+        for _,hash in ipairs( m_recommendedItems) do
+          if(item.Hash == hash.BuildItemHash) then
+            unitListing.CorpsRecommendedIcon:SetHide(false);
+          end
+        end
+        unitListing.CorpsButtonContainer:SetHide(false);
+        -- Production meter progress for corps unit
+        if(item.Progress > 0) then
+          unitListing.ProductionCorpsProgressArea:SetHide(false);
+          local unitProgress = item.Progress/item.CorpsCost;
+          if (unitProgress < 1) then
+            unitListing.ProductionCorpsProgress:SetPercent(unitProgress);
+          else
+            unitListing.ProductionCorpsProgressArea:SetHide(true);
+          end
+        else
+          unitListing.ProductionCorpsProgressArea:SetHide(true);
+        end
+        local turnsStr = item.CorpsTurnsLeft .. "[ICON_Turn]";
+        local turnsStrTT = item.CorpsTurnsLeft .. Locale.Lookup("LOC_HUD_CITY_TURNS_TO_COMPLETE", item.CorpsTurnsLeft);
+        unitListing.CorpsCostText:SetText(turnsStr);
+        unitListing.CorpsCostText:SetToolTipString(turnsStrTT);
+        --CQUI Button binds
+        if(CQUI_ProdTable[item.Hash]["corpsGold"] ~= nil) then
+          unitListing.CorpsPurchaseButton:SetText(CQUI_ProdTable[item.Hash]["corpsGold"] .. "[ICON_GOLD]");
+          unitListing.CorpsPurchaseButton:SetHide(false);
+          unitListing.CorpsPurchaseButton:SetDisabled(CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["corpsGold"]);
+        else
+          unitListing.CorpsPurchaseButton:SetHide(true);
+        end
+        if(CQUI_ProdTable[item.Hash]["corpsFaith"] ~= nil) then
+          unitListing.CorpsFaithPurchaseButton:SetText(CQUI_ProdTable[item.Hash]["corpsFaith"] .. "[ICON_FAITH]");
+          unitListing.CorpsFaithPurchaseButton:SetHide(false);
+          unitListing.CorpsFaithPurchaseButton:SetDisabled(CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["corpsFaith"]);
+        else
+          unitListing.CorpsFaithPurchaseButton:SetHide(true);
+        end
+
+        unitListing.CorpsLabelIcon:SetText(item.CorpsName);
+        
+        unitListing.TrainCorpsButton:SetToolTipString(item.CorpsTooltip);
+        unitListing.CorpsDisabled:SetToolTipString(item.CorpsTooltip);
+        unitListing.TrainCorpsButton:RegisterCallback( Mouse.eLClick, function()
+          BuildUnitCorps(data.City, item);
+        end);
+        unitListing.CorpsPurchaseButton:RegisterCallback( Mouse.eLClick, function()
+          PurchaseUnitCorps(data.City, item, GameInfo.Yields["YIELD_GOLD"].Index)
+        end);
+        unitListing.CorpsFaithPurchaseButton:RegisterCallback( Mouse.eLClick, function()
+          PurchaseUnitCorps(data.City, item, GameInfo.Yields["YIELD_FAITH"].Index)
+        end);
+      end   
+      if item.Army then
+        -- Check to see if this item is recommended
+        for _,hash in ipairs( m_recommendedItems) do
+          if(item.Hash == hash.BuildItemHash) then
+            unitListing.ArmyRecommendedIcon:SetHide(false);
+          end
+        end
+        unitListing.ArmyButtonContainer:SetHide(false);
+
+        if(item.Progress > 0) then
+          unitListing.ProductionArmyProgressArea:SetHide(false);
+          local unitProgress = item.Progress/item.ArmyCost;
+          unitListing.ProductionArmyProgress:SetPercent(unitProgress);
+          if (unitProgress < 1) then
+            unitListing.ProductionArmyProgress:SetPercent(unitProgress);
+          else
+            unitListing.ProductionArmyProgressArea:SetHide(true);
+          end
+        else
+          unitListing.ProductionArmyProgressArea:SetHide(true);
+        end
+        local turnsStr = item.ArmyTurnsLeft .. "[ICON_Turn]";
+        local turnsStrTT = item.ArmyTurnsLeft .. Locale.Lookup("LOC_HUD_CITY_TURNS_TO_COMPLETE", item.ArmyTurnsLeft);
+        unitListing.ArmyCostText:SetText(turnsStr);
+        unitListing.ArmyCostText:SetToolTipString(turnsStrTT);
+        --CQUI Button binds
+        if(CQUI_ProdTable[item.Hash]["armyGold"] ~= nil) then
+          unitListing.ArmyPurchaseButton:SetText(CQUI_ProdTable[item.Hash]["armyGold"] .. "[ICON_GOLD]");
+          unitListing.ArmyPurchaseButton:SetHide(false);
+          unitListing.ArmyPurchaseButton:SetDisabled(CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["armyGold"]);
+        else
+          unitListing.ArmyPurchaseButton:SetHide(true);
+        end
+        if(CQUI_ProdTable[item.Hash]["armyFaith"] ~= nil) then
+          unitListing.ArmyFaithPurchaseButton:SetText(CQUI_ProdTable[item.Hash]["armyFaith"] .. "[ICON_FAITH]");
+          unitListing.ArmyFaithPurchaseButton:SetHide(false);
+          unitListing.ArmyFaithPurchaseButton:SetDisabled(CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["armyFaith"]);
+        else
+          unitListing.ArmyFaithPurchaseButton:SetHide(true);
+        end
+        
+        unitListing.ArmyLabelIcon:SetText(item.ArmyName);
+        unitListing.TrainArmyButton:SetToolTipString(item.ArmyTooltip);
+        unitListing.ArmyDisabled:SetToolTipString(item.ArmyTooltip);
+        unitListing.TrainArmyButton:RegisterCallback( Mouse.eLClick, function()
+          BuildUnitArmy(data.City, item);
+        end);
+        unitListing.ArmyPurchaseButton:RegisterCallback( Mouse.eLClick, function()
+          PurchaseUnitArmy(data.City, item, GameInfo.Yields["YIELD_GOLD"].Index)
+        end);
+        unitListing.ArmyFaithPurchaseButton:RegisterCallback( Mouse.eLClick, function()
+          PurchaseUnitArmy(data.City, item, GameInfo.Yields["YIELD_FAITH"].Index)
+        end);
+      end
 
       -- Handle if the item is disabled
       if (item.Disabled) then 

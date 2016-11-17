@@ -175,8 +175,8 @@
             </Stack>
             <Stack Anchor="R,C" StackGrowth="Left" Offset="3,0" Padding="3">
               <Label        ID="CostText"         String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="5,0"/>
-              <GridButton ID="PurchaseButton" Size="58,23" Style="PanelButtonLightweight" Anchor="R,C"/>
-              <GridButton ID="FaithPurchaseButton" Size="58,23" Style="PanelButtonLightweight" Anchor="R,C"/>
+              <GridButton ID="PurchaseButton" Size="62,23" Style="PanelButtonLightweight" Anchor="R,C"/>
+              <GridButton ID="FaithPurchaseButton" Size="62,23" Style="PanelButtonLightweight" Anchor="R,C"/>
             </Stack>
         </GridButton>
       </Container>
@@ -247,8 +247,8 @@
             </Grid>
             <Stack Anchor="R,C" StackGrowth="Left" Offset="3,0" Padding="3">
               <Label ID="CostText" String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="5,0"/>
-              <GridButton ID="PurchaseButton" Size="58,23" Style="PanelButtonLightweight" Anchor="R,C"/>
-              <GridButton ID="FaithPurchaseButton" Size="58,23" Style="PanelButtonLightweight" Anchor="R,C"/>
+              <GridButton ID="PurchaseButton" Size="62,23" Style="PanelButtonLightweight" Anchor="R,C"/>
+              <GridButton ID="FaithPurchaseButton" Size="62,23" Style="PanelButtonLightweight" Anchor="R,C"/>
             </Stack>
           </Stack>
         </GridButton>
@@ -260,22 +260,15 @@
   <Instance           Name="UnitListInstance">
     <Container        ID="Root"       Size="320,56" AutoSize="V">
       <!--Corps and Army Buttons-->
-      <Grid                 ID="ArmyCorpsDrawer" Offset="0,56"  Size="parent,20"      Texture="ProductionPanel_ExtendSlot" SliceCorner="14,6" SliceTextureSize="28,16" AutoSize="V" AutoSizePadding="0,3" Hidden="1">
+      <Grid                 ID="ArmyCorpsDrawer" Offset="0,30"  Size="parent,20"      Texture="ProductionPanel_ExtendSlot" SliceCorner="14,6" SliceTextureSize="28,16" AutoSize="V" AutoSizePadding="0,3" Hidden="1">
         <Stack              ID="ArmyCorpsStack"     Anchor="C,T"  Offset="0,3">
           <!-- Corps Button-->
-          <Container      ID="CorpsButtonContainer" Size="305, 56" Hidden="1">
-            <GridButton       ID="TrainCorpsButton"             Size="305,56"             Style="ProductionButtonNest" Anchor="C,B">
-              <Container                              Size="64,64" Anchor="L,C" Offset="-8,-2">
-                <Image        ID="CorpsFlagBaseOutline" Size="64,64" TextureOffset="0,0"      Texture="UnitFlagBase"/>
-                <Image        ID="CorpsFlagBase"        Size="64,64" TextureOffset="192,0"    Texture="UnitFlagBase"/>
-                <Image        ID="CorpsFlagBaseLighten" Size="64,64" TextureOffset="192,64"   Texture="UnitFlagBase"/>
-                <Image        ID="CorpsFlagBaseDarken"  Size="64,64" TextureOffset="192,128"  Texture="UnitFlagBase"/>
-                <Image        ID="CorpsIcon"              Size="32,32" Texture="Units32" Anchor="C,C" ConsumeMouse="0"/>
-              </Container>
-              <Stack Anchor="L,C" Offset="60,0" StackPadding="3">
-                <Label        ID="CorpsLabelText"       String="?Industrial Zone" Style="WhiteSemiBold14"  Anchor="L,C"  WrapWidth="120"/>
-                <Label        ID="CorpsLabelIcon" String="([ICON_Corps]Corps)" Style="WhiteSemiBold14"  Anchor="L,C" Color0="217,180,119"/>
-              </Stack>
+          <Container      ID="CorpsButtonContainer" Size="305, 32" Hidden="1">
+            <GridButton       ID="TrainCorpsButton"             Size="305,32"             Style="ProductionButtonNest" Anchor="C,B">
+              <Image        ID="ProductionCorpsProgressArea" Texture="CityPanel_MeterSmallBacking" Size="71,21"  Offset="10,0" Anchor="L,C">
+                <TextureBar ID="ProductionCorpsProgress" Texture="CityPanel_ProductionMeterSmall" Size="67,17" Anchor="C,C" Speed="1" Direction="Right"/>
+              </Image>
+              <Label ID="CorpsLabelIcon" String="([ICON_Corps]Corps)" Style="WhiteSemiBold14"  Anchor="L,C" Offset="10,0" Color0="217,180,119"/>
               <Stack Anchor="R,C" StackGrowth="Down" Padding="-6">
                 <Grid               ID="CorpsRecommendedIcon" SliceTextureSize="40,34" SliceCorner="22,15" Size="40,34" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
                   <Image            Texture="AdvisorRec22"      Size="22,22" Anchor="R,T" Offset="6,4">
@@ -283,10 +276,11 @@
                   </Image>
                 </Grid>
                 <Container Size="71,21" Anchor="R,C" Offset="3,0">
-                  <Image        ID="ProductionCorpsProgressArea" Texture="CityPanel_MeterSmallBacking" Size="71,21" Anchor="R,C">
-                    <TextureBar ID="ProductionCorpsProgress" Texture="CityPanel_ProductionMeterSmall" Size="67,17" Anchor="C,C" Speed="1" Direction="Right"/>
-                  </Image>
-                  <Label        ID="CorpsCostText"          String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="5,0"/>
+                  <Stack Anchor="R,C" StackGrowth="Left" Offset="5,0" Padding="3">
+                    <Label ID="CorpsCostText" String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="5,0"/>
+                    <GridButton ID="CorpsPurchaseButton" Size="70,23" Style="PanelButtonLightweight" Anchor="R,C"/>
+                    <GridButton ID="CorpsFaithPurchaseButton" Size="70,23" Style="PanelButtonLightweight" Anchor="R,C"/>
+                  </Stack>
                 </Container>  
               </Stack>
               <Container      ID="CorpsDisabled"          Size="parent,parent" Hidden="1"  ConsumeMouse="1">
@@ -295,20 +289,12 @@
             </GridButton>
           </Container>
           <!-- Army Button -->
-          <Container      ID="ArmyButtonContainer" Size="305, 56" Hidden="1">
-            <GridButton       ID="TrainArmyButton"              Size="305,56"             Style="ProductionButtonNest" Anchor="C,B">
-              <Container                              Size="64,64" Anchor="L,C" Offset="-8,-2">
-                <Image        ID="ArmyFlagBaseOutline" Size="64,64" TextureOffset="0,0"     Texture="UnitFlagBase"/>
-                <Image        ID="ArmyFlagBase"       Size="64,64" TextureOffset="192,0"    Texture="UnitFlagBase"/>
-                <Image        ID="ArmyFlagBaseLighten" Size="64,64" TextureOffset="192,64"    Texture="UnitFlagBase"/>
-                <Image        ID="ArmyFlagBaseDarken" Size="64,64" TextureOffset="192,128"  Texture="UnitFlagBase"/>
-                <Image        ID="ArmyIcon"             Size="32,32" Texture="Units32" Anchor="C,C" ConsumeMouse="0"/>
-                <!--<Label String="[ICON_Army]" Anchor="C,T" Offset="0,8"/>-->
-              </Container>
-              <Stack Anchor="L,C" Offset="60,0" StackPadding="3">
-                <Label        ID="ArmyLabelText"        String="?Industrial Zone" Style="WhiteSemiBold14"  Anchor="L,C"  WrapWidth="120"/>
-                <Label        ID="ArmyLabelIcon" String="([ICON_Army]Army)" Style="WhiteSemiBold14"  Anchor="L,C" Color0="217,180,119"/>
-              </Stack>
+          <Container      ID="ArmyButtonContainer" Size="305, 32" Hidden="1">
+            <GridButton       ID="TrainArmyButton"              Size="305,32"             Style="ProductionButtonNest" Anchor="C,B">
+              <Image        ID="ProductionArmyProgressArea" Texture="CityPanel_MeterSmallBacking" Size="71,21" Offset="10,0" Anchor="L,C">
+                <TextureBar ID="ProductionArmyProgress" Texture="CityPanel_ProductionMeterSmall" Size="67,17" Anchor="C,C" Speed="1" Direction="Right"/>
+              </Image>
+              <Label        ID="ArmyLabelIcon" String="([ICON_Army]Army)" Style="WhiteSemiBold14"  Anchor="L,C" Offset="10,0" Color0="217,180,119"/>
               <Stack Anchor="R,C" StackGrowth="Down" Padding="-6">
                 <Grid               ID="ArmyRecommendedIcon" SliceTextureSize="40,34" SliceCorner="22,15" Size="40,34" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
                   <Image            Texture="AdvisorRec22"      Size="22,22" Anchor="R,T" Offset="6,4">
@@ -316,10 +302,11 @@
                   </Image>
                 </Grid>
                 <Container Size="71,21" Anchor="R,C" Offset="3,0">
-                  <Image        ID="ProductionArmyProgressArea" Texture="CityPanel_MeterSmallBacking" Size="71,21" Anchor="R,C">
-                    <TextureBar ID="ProductionArmyProgress" Texture="CityPanel_ProductionMeterSmall" Size="67,17" Anchor="C,C" Speed="1" Direction="Right"/>
-                  </Image>
-                  <Label        ID="ArmyCostText"         String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="5,0"/>
+                  <Stack Anchor="R,C" StackGrowth="Left" Offset="5,0" Padding="3">
+                    <Label ID="ArmyCostText" String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="5,0"/>
+                    <GridButton ID="ArmyPurchaseButton" Size="70,23" Style="PanelButtonLightweight" Anchor="R,C"/>
+                    <GridButton ID="ArmyFaithPurchaseButton" Size="70,23" Style="PanelButtonLightweight" Anchor="R,C"/>
+                  </Stack>
                 </Container>
               </Stack>
               <Container      ID="ArmyDisabled"         Size="parent,parent" Hidden="1" ConsumeMouse="1" >
@@ -340,9 +327,6 @@
           </Container>
           <Stack StackGrowth="Left" Anchor="R,C" Offset="0,0">
             <Container ID="CorpsArmyDropdownArea" Size="30,55" Hidden="1">
-              <BoxButton ID="CorpsArmyDropdownButton" Size="parent,55" Color="0,0,0,0">
-                <Button   ID="CorpsArmyArrow" Texture="Controls_ButtonExtendSmall" Size="20,16" StateOffsetIncrement="0,16" Anchor="C,C" ConsumeMouse="0"/>
-              </BoxButton>
               <Box Color="22,27,29,200" Size="1,parent" Anchor="L,C"/>
             </Container>
             <Stack Anchor="R,C" StackGrowth="Down" Padding="-6">
@@ -354,16 +338,19 @@
             </Stack>
           </Stack>
           <Container Size="71,21" Anchor="L,C" Offset="50,0">
-            <Image        ID="ProductionProgressArea" Texture="CityPanel_MeterSmallBacking" Size="115,21" Anchor="L,C" Offset="-10,0">
-              <TextureBar ID="ProductionProgress" Texture="CityPanel_ProductionMeterSmall" Size="107,17" Anchor="C,C" Speed="1" Direction="Right"/>
+            <Image        ID="ProductionProgressArea" Texture="CityPanel_MeterSmallBacking" Size="100,21" Anchor="L,C" Offset="-10,0">
+              <TextureBar ID="ProductionProgress" Texture="CityPanel_ProductionMeterSmall" Size="92,17" Anchor="C,C" Speed="1" Direction="Right"/>
             </Image>
-            <Label        ID="LabelText"           WrapWidth="120" String="Industrial Zone" Style="WhiteSemiBold14" Anchor="L,C"/>
+            <Label        ID="LabelText"           WrapWidth="100" String="Industrial Zone" Style="WhiteSemiBold14" Anchor="L,C"/>
           </Container>
-          <Stack Anchor="R,C" StackGrowth="Left" Offset="3,0" Padding="3">
-              <Label ID="CostText" String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="5,0"/>
-              <GridButton ID="PurchaseButton" Size="58,23" Style="PanelButtonLightweight" Anchor="R,C"/>
-              <GridButton ID="FaithPurchaseButton" Size="58,23" Style="PanelButtonLightweight" Anchor="R,C"/>
-            </Stack>
+          <Stack Anchor="R,C" StackGrowth="Left" Offset="3,0" Padding="2">
+            <Label ID="CostText" String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="5,0"/>
+            <GridButton ID="PurchaseButton" Size="62,23" Style="PanelButtonLightweight" Anchor="R,C"/>
+            <GridButton ID="FaithPurchaseButton" Size="62,23" Style="PanelButtonLightweight" Anchor="R,C"/>
+            <BoxButton ID="CorpsArmyDropdownButton" Size="16,23" Color="0,0,0,0" Hidden="1">
+              <Button   ID="CorpsArmyArrow" Texture="Controls_ButtonExtendSmall" Size="16,16" StateOffsetIncrement="0,16" Anchor="C,C" ConsumeMouse="0"/>
+            </BoxButton>
+          </Stack>
         </GridButton>
       </Container>
     </Container>
