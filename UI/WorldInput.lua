@@ -1054,8 +1054,13 @@ function DefaultKeyUpHandler( uiKey:number )
       CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 168372657); --Farm
     end
     if( uiKey == Keys.P ) then
-      CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 154488225); --Pasture
-      CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 1523996587); --Plantation
+		local selectedUnit = UI.GetHeadSelectedUnit();
+		if (selectedUnit) then
+			CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 154488225); --Pasture
+			CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 1523996587); --Plantation
+		else 
+			PlaceMapPin();
+		end
     end
     if( uiKey == Keys.N ) then
       CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 1001859687); --Mine
