@@ -134,6 +134,7 @@ local m_kTutorialUnitMoveRestrictions :table = nil;   -- Restrictions for moving
 --CQUI MEMBERS
 local CQUI_cityview = false;
 local CQUI_hotkeyMode = 1; -- 0: V-Style with enhancements 1: V-Style 2: No changes
+local CQUI_isShiftDown :boolean = false;
 
 function CQUI_OnSettingsUpdate()
   CQUI_hotkeyMode = GameConfiguration.GetValue("CQUI_BindingsMode");
@@ -945,8 +946,13 @@ function DefaultKeyDownHandler( uiKey:number )
       ReadyForDragMap();
     end
     end
-  
   --CQUI Keybinds
+
+  if uiKey == Keys.VK_SHIFT then
+    CQUI_isShiftDown = true;
+  end
+
+
   if CQUI_hotkeyMode ~= 0 then
     if CQUI_hotkeyMode == 2 then
       if( uiKey == Keys.W ) then
@@ -1059,13 +1065,12 @@ function DefaultKeyUpHandler( uiKey:number )
       CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 168372657); --Farm
     end
     if( uiKey == Keys.P ) then
-		local selectedUnit = UI.GetHeadSelectedUnit();
-		if (selectedUnit) then
-			CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 154488225); --Pasture
-			CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 1523996587); --Plantation
-		else 
-			PlaceMapPin();
-		end
+      if ( CQUI_isShiftDown) then
+        PlaceMapPin();
+      else
+        CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 154488225); --Pasture
+        CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 1523996587); --Plantation
+      end
     end
     if( uiKey == Keys.N ) then
       CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 1001859687); --Mine
@@ -1111,6 +1116,10 @@ function DefaultKeyUpHandler( uiKey:number )
       ReadyForDragMap();
     end
     end
+
+  if uiKey == Keys.VK_SHIFT then
+    CQUI_isShiftDown = false;
+  end
 
   if( uiKey == Keys.VK_UP ) then
     m_isUPpressed = false;
@@ -3270,6 +3279,8 @@ function ClearAllCachedInputState()
   m_touchStartPlotX = -1;
   m_touchStartPlotY = -1;
   ms_bGridOn      = true;
+
+  CQUI_isShiftDown = false;
 end
 
 
