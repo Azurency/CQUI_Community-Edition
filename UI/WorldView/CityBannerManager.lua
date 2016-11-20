@@ -1159,7 +1159,7 @@ function CityBanner.UpdateName( self : CityBanner )
         self.m_Instance.CityUnderSiegeIcon:SetHide(false);
       else
         self.m_Instance.CityUnderSiegeIcon:SetHide(true);
-      end
+      end      
 
       -- Update district icons
       -- districtType:number == Index
@@ -1275,6 +1275,15 @@ function CityBanner.UpdateName( self : CityBanner )
           self.m_Instance.CityAmenitiesInsufficientIcon:SetHide(false);
         else
           self.m_Instance.CityAmenitiesInsufficientIcon:SetHide(true);
+        end
+      end
+
+      -- Update occupied icon
+      if self.m_Instance.CityOccupiedIcon ~= nil then
+        if pCity:IsOccupied() then
+          self.m_Instance.CityOccupiedIcon:SetHide(false);
+        else
+          self.m_Instance.CityOccupiedIcon:SetHide(true);
         end
       end
 
@@ -2014,6 +2023,7 @@ function OnImprovementAddedToMap(locX, locY, eImprovementType, eOwner)
         end
       else
         miniBanner.UpdateStats();
+        miniBanner.SetColor();
       end
     end
   end
@@ -2064,11 +2074,14 @@ end
 
 -- ===========================================================================
 function OnCityVisibilityChanged( playerID: number, cityID : number, eVisibility : number)
-
-    local bannerInstance = GetCityBanner( playerID, cityID );
+  local bannerInstance = GetCityBanner( playerID, cityID );
   if (bannerInstance ~= nil) then
     bannerInstance:SetFogState( eVisibility );
-    end
+  end
+end
+
+function OnCityOccupationChanged( playerID: number, cityID : number )
+  RefreshBanner( playerID, cityID );
 end
 
 -- ===========================================================================
@@ -2131,6 +2144,13 @@ function OnBuildingChanged( plotX:number, plotY:number, buildingIndex:number, pl
     end
   end
 
+end
+
+function OnCityNameChange( playerID: number, cityID : number)
+  local banner:CityBanner = GetCityBanner( playerID, cityID );
+  if (banner ~= nil ) then
+    banner:UpdateName();   
+  end
 end
 
 -- ===========================================================================
@@ -2861,6 +2881,7 @@ function Initialize()
   Events.CityAddedToMap.Add(          OnCityAddedToMap );
   Events.CityDefenseStatusChanged.Add(    OnCityDefenseStatusChanged );
   Events.CityFocusChanged.Add(        OnCityFocusChange );
+  Events.CityNameChanged.Add(         OnCityNameChange );
   Events.CityProductionChanged.Add(     OnCityProductionChanged);
   Events.CityProductionUpdated.Add(     OnCityProductionUpdate); 
   Events.CityProductionCompleted.Add(     OnCityProductionCompleted);
@@ -2870,6 +2891,7 @@ function Initialize()
   Events.CitySelectionChanged.Add(      OnSelectionChanged );
   Events.CityUnitsChanged.Add(                OnCityUnitsChanged );
   Events.CityVisibilityChanged.Add(     OnCityVisibilityChanged );
+  Events.CityOccupationChanged.Add(     OnCityOccupationChanged );
   Events.DiplomacyDeclareWar.Add(       OnDiplomacyDeclareWar );
   Events.DiplomacyMakePeace.Add(        OnDiplomacyMakePeace );
   Events.DistrictAddedToMap.Add(        OnDistrictAddedToMap );

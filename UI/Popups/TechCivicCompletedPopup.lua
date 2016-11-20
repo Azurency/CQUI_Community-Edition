@@ -300,6 +300,19 @@ function OnClose()
 end
 
 -- ===========================================================================
+function OnInputHandler( input )
+  local msg = input:GetMessageType();
+  if (msg == KeyEvents.KeyUp) then
+    local key = input:GetKey();
+    if key == Keys.VK_ESCAPE then
+      OnClose();
+      return true;
+    end
+  end
+  return false;
+end
+
+-- ===========================================================================
 function OnChangeGovernment() 
   Close();
   LuaEvents.TechCivicCompletedPopup_GovernmentOpenGovernments();  -- Open Government Screen 
@@ -389,6 +402,7 @@ function Initialize()
   Controls.CloseButton:RegisterCallback( eLClick, OnClose );
   Controls.CloseButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   ContextPtr:SetInitHandler( OnInit );
+  ContextPtr:SetInputHandler( OnInputHandler, true );
   ContextPtr:SetShutdown( OnShutdown );
     ContextPtr:SetShowHandler( OnShow );
 

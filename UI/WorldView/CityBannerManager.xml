@@ -51,6 +51,7 @@
                 <Label      ID="TradingPostDisabledIcon"    Anchor="C,C"  String="[ICON_Exclamation]" Hidden="1"/>
               </Label>
               <Label        ID="CityUnderSiegeIcon"         Anchor="L,C"  Style="FontNormal20" String="[ICON_UnderSiege]" ConsumeMouse="1" ToolTip="LOC_HUD_REPORTS_STATUS_UNDER_SEIGE"/>
+              <Label        ID="CityOccupiedIcon"             Anchor="L,C"  Style="FontNormal20" String="[ICON_Occupied]" ConsumeMouse="1" ToolTip="LOC_HUD_CITY_GROWTH_OCCUPIED"/>
               <Label        ID="CityHousingInsufficientIcon"    Anchor="L,C"  Style="FontNormal20" String="[ICON_HousingInsufficient]"/>
               <Label        ID="CityAmenitiesInsufficientIcon"  Anchor="L,C"  Style="FontNormal20" String="[ICON_AmenitiesInsufficient]"/>
 

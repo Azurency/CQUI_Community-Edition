@@ -22,7 +22,7 @@ local TURN_TIMER_BAR_ACTIVE_COLOR   :number = 0xffffffff;
 local TURN_TIMER_BAR_INACTIVE_COLOR :number = 0xff0000ff;
 
 local MAX_BLOCKER_BUTTONS     :number = 4;  -- Number of buttons around big action button
-local ERA_DEGREES         :table = { 209,190,171,153,137,122,106 }; -- Degrees to place the era indicator
+local ERA_DEGREES         :table = { 209,190,171,153,137,122,106,106 }; -- Degrees to place the era indicator
 local autoEndTurnOptionHash     :number = DB.MakeHash("AutoEndTurn");
 
 local MAX_BEFORE_TRUNC_TURN_STRING  :number = 150;
@@ -112,6 +112,7 @@ local m_EndTurnId           = Input.GetActionId("EndTurn");       -- Hotkey
 local m_lastTurnTickTime  : number  = 0;                    -- When did we last make a tick sound for the turn timer?
 local m_numberVisibleBlockers :number = 0;
 local m_visibleBlockerTypes : table   = {};
+local m_isSlowTurnEnable  : boolean = false;                  -- Tutorial: when active slow to allow clicks when turn raises.
 
 -- ===========================================================================
 --  UI Event
@@ -129,9 +130,10 @@ function OnRefresh()
     return;
   end
 
-  if not pPlayer:IsTurnActiveComplete() or
-    UI.IsProcessingMessages()
-  then
+  Controls.EndTurnButton:SetDisabled( false );
+  Controls.EndTurnButtonLabel:SetDisabled( false ); 
+
+  if not pPlayer:IsTurnActiveComplete() or UI.IsProcessingMessages() then
     SetEndTurnWaiting();
     return;
   end
@@ -140,7 +142,6 @@ function OnRefresh()
   local icon          :string;
   local toolTipString     :string;
   local soundName       :string;
-  local isDisabled      :boolean= false;
   local iFlashingState    :number = NO_FLASHING;
   local m_activeBlockerId   :number = NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
   local kAllBlockingTypes   :table  = NotificationManager.GetAllEndTurnBlocking( Game.GetLocalPlayer() );
@@ -193,7 +194,6 @@ function OnRefresh()
     message     = nextTurnString;
     icon      = "ICON_NOTIFICATION_NEXT_TURN";
     toolTipString = nextTurnTip;
-    isDisabled    = false;
     iFlashingState  = FLASHING_END_TURN;
   end
 
@@ -250,7 +250,6 @@ function OnRefresh()
 
   -- If there are more blockers than room, then add to "+" area:
   if m_numberVisibleBlockers > MAX_BLOCKER_BUTTONS then
-    --Controls.OverflowCheckbox:SetDisabled(false);
     Controls.OverflowCheckboxGroup:SetHide(false);
     m_overflowIM:ResetInstances();
     for iBlocker = MAX_BLOCKER_BUTTONS+1, table.count(kAllBlockingTypes), 1 do
@@ -278,7 +277,6 @@ function OnRefresh()
       end
     end
   else
-    --Controls.OverflowCheckbox:SetDisabled(true);
     Controls.OverflowCheckboxGroup:SetHide(true);
   end
 
@@ -291,7 +289,6 @@ function OnRefresh()
     end
   end
 
-  Controls.EndTurnButton:SetDisabled( isDisabled );
   TruncateStringWithTooltip(Controls.EndTurnText, MAX_BEFORE_TRUNC_TURN_STRING, message);
   Controls.EndTurnButton:SetToolTipString( toolTipString );
 
@@ -464,6 +461,8 @@ function CheckAutoEndTurn( eCurrentEndTurnBlockingType:number )
     end
   end
 end
+
+-- ===========================================================================
 --  Attempt to end the turn or execute the most current blocking notification
 -- ===========================================================================
 function DoEndTurn( optionalNewBlocker:number )
@@ -740,11 +739,32 @@ end
 
 -- ===========================================================================
 function OnLocalPlayerTurnBegin()
+  -- Standard disable is set to false in the refresh.
+  -- This extra level of input catching is done when tutorial has raised
+  -- this boolean and will prevent spam clicking through; as the tutorial
+  -- system itself sets ENABLED as it's hiding all controls.
+  if m_isSlowTurnEnable then
+    Controls.TutorialSlowTurnEnableAnim:SetHide(false);
+    Controls.TutorialSlowTurnEnableAnim:SetToBeginning();
+    Controls.TutorialSlowTurnEnableAnim:RegisterEndCallback(
+      function()
+        Controls.TutorialSlowTurnEnableAnim:SetHide(true);
+      end
+    );
+    Controls.TutorialSlowTurnEnableAnim:Play();
+  end
   ContextPtr:RequestRefresh();
 end
 
 -- ===========================================================================
 function OnLocalPlayerTurnEnd()
+
+  -- Only disable if not in multi-player, so turns can "unend"...
+  if not GameConfiguration.IsAnyMultiplayer() then
+    Controls.EndTurnButton:SetDisabled(true);
+    Controls.EndTurnButtonLabel:SetDisabled(true);
+  end
+
   SetEndTurnWaiting();
   UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
   m_kSoundsPlayed = {};
@@ -866,6 +886,20 @@ end
 function OnAutoPlayEnd()
   ContextPtr:RequestRefresh();
 end
+
+-- ===========================================================================
+--  LUA Event
+--  An additional input shield to prevent click-spamming which, can 
+--  potentially skip to the next item before the tutorial manager has sent
+--  the event to it's handler.
+-- ===========================================================================
+function OnTutorialSlowTurnEnable( isEnabled:boolean )
+  if isEnabled == nil then
+    isEnabled = true;
+  end
+  m_isSlowTurnEnable = isEnabled;
+end
+
 
 
 -- ===========================================================================
@@ -1006,7 +1040,6 @@ function OnTurnTimerUpdated(elapsedTime :number, maxTurnTime :number)
     Controls.TurnTimerLabelBG:SetSizeX(Controls.TurnTimerLabel:GetSizeX() + 14 );
   end
 end
-Events.TurnTimerUpdated.Add(OnTurnTimerUpdated);
 
 -- ===========================================================================
 --  Input Hotkey Event
@@ -1043,10 +1076,12 @@ function Initialize()
   Controls.TurnBlockerContainerAlpha:RegisterEndCallback( HideOverflowContainer );
 
   -- Engine Events
-  Events.CityProductionChanged.Add(   OnCityProductionChanged );
+  Events.CityCommandStarted.Add(      OnCityCommandStarted);
+  Events.CityProductionChanged.Add(   OnCityProductionChanged );  
   Events.EndTurnBlockingChanged.Add(    OnEndTurnBlockingChanged );
   Events.EndTurnDirty.Add(        OnEndTurnDirty );
   Events.InputActionTriggered.Add(    OnInputActionTriggered );
+  Events.InterfaceModeChanged.Add(    OnInterfaceModeChanged );
   Events.LocalPlayerChanged.Add(      OnLocalPlayerChanged );
   Events.LocalPlayerTurnBegin.Add(    OnLocalPlayerTurnBegin );
   Events.LocalPlayerTurnEnd.Add(      OnLocalPlayerTurnEnd );
@@ -1054,15 +1089,15 @@ function Initialize()
   Events.NotificationAdded.Add(     OnNotificationAdded );
   Events.NotificationDismissed.Add(   OnNotificationDismissed );
   Events.ResearchChanged.Add(       OnResearchChanged );
+  Events.TurnTimerUpdated.Add(      OnTurnTimerUpdated );
   Events.UnitOperationSegmentComplete.Add(OnUnitOperationSegmentComplete);
   Events.UnitOperationsCleared.Add(   OnUnitOperationsCleared);
-  Events.CityCommandStarted.Add(      OnCityCommandStarted);
-  Events.UserOptionChanged.Add(     OnUserOptionChanged);
-  Events.InterfaceModeChanged.Add(    OnInterfaceModeChanged );
+  Events.UserOptionChanged.Add(     OnUserOptionChanged); 
 
 
   -- LUA Events
-  LuaEvents.AutoPlayStart.Add(  OnAutoPlayStart );    -- Raised by engine AutoPlay_Manager!
-  LuaEvents.AutoPlayEnd.Add(    OnAutoPlayEnd );    -- Raised by engine AutoPlay_Manager!
+  LuaEvents.AutoPlayStart.Add(        OnAutoPlayStart );    -- Raised by engine AutoPlay_Manager!
+  LuaEvents.AutoPlayEnd.Add(          OnAutoPlayEnd );    -- Raised by engine AutoPlay_Manager! 
+  LuaEvents.Tutorial_SlowNextTurnEnable.Add(  OnTutorialSlowTurnEnable );
 end
 Initialize();

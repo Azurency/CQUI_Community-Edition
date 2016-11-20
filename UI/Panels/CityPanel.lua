@@ -28,6 +28,7 @@ local SIZE_MAIN_ROW_LEFT_COLLAPSED  :number = 157;
 local TXT_NO_PRODUCTION       :string = Locale.Lookup("LOC_HUD_CITY_PRODUCTION_NOTHING_PRODUCED");
 local MAX_BEFORE_TRUNC_TURN_LABELS  :number = 160;
 local MAX_BEFORE_TRUNC_STATIC_LABELS:number = 110;
+local HEX_GROWTH_TEXT_PADDING   :number = 10;
 
 local UV_CITIZEN_GROWTH_STATUS    :table  = {};
     UV_CITIZEN_GROWTH_STATUS[0] = {u=0, v=0  };   -- revolt
@@ -59,12 +60,14 @@ local m_pPlayer           :table  = nil;
 local m_primaryColor        :number = 0xcafef00d; 
 local m_secondaryColor        :number = 0xf00d1ace;
 local m_kTutorialDisabledControls :table  = nil;
+local m_GrowthPlot          :number = -1;
 
 -- ====================CQUI Cityview==========================================
 
 local CQUI_cityview = false;
 local CQUI_usingStrikeButton = false;
 local CQUI_wonderMode = false;
+local CQUI_growthTile = true;
 
 function CQUI_CityviewEnableManager()
   CQUI_cityview = true;
@@ -94,6 +97,7 @@ function CQUI_OnCityviewEnabled()
   UILens.ToggleLayerOn(LensLayers.PURCHASE_PLOT);
   UILens.ToggleLayerOn(LensLayers.CITIZEN_MANAGEMENT);
   UI.SetFixedTiltMode(true);
+  DisplayGrowthTile();
   UI.SetInterfaceMode(InterfaceModeTypes.CITY_MANAGEMENT);
 end
 
@@ -103,6 +107,10 @@ function CQUI_OnCityviewDisabled()
   UILens.ToggleLayerOff(LensLayers.PURCHASE_PLOT);
   UILens.ToggleLayerOff(LensLayers.CITIZEN_MANAGEMENT);
   UI.SetFixedTiltMode(false);
+  if m_GrowthPlot ~= -1 then
+    UILens.ClearHex(LensLayers.PURCHASE_PLOT, m_GrowthPlot);
+    m_GrowthPlot = -1;
+  end
   UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
 end
 
@@ -206,6 +214,16 @@ function CQUI_RecenterCameraGameStart()
       startY = firstUnit:GetY();
   end
   UI.LookAtPlot( startX, startY );
+end
+
+-- Toggles the visibility of the tile growth overlay
+function CQUI_ToggleGrowthTile()
+  CQUI_growthTile = not CQUI_growthTile;
+  if(CQUI_growthTile) then
+    m_GrowthPlot = -1;
+  end
+  UILens.ClearHex(LensLayers.PURCHASE_PLOT, m_GrowthPlot);
+  DisplayGrowthTile();
 end
 
 -- ===========================================================================
@@ -688,14 +706,14 @@ function SetYieldFocus( yieldType:number )
   local pCitizens   :table = m_pCity:GetCitizens();
   local tParameters :table = {};
   tParameters[CityCommandTypes.PARAM_FLAGS]   = 0;      -- Set Favored
-  tParameters[CityCommandTypes.PARAM_UNIT0_PLAYER]= yieldType;  -- Yield type 
+  tParameters[CityCommandTypes.PARAM_YIELD_TYPE]= yieldType;  -- Yield type 
   if pCitizens:IsFavoredYield(yieldType) then
-    tParameters[CityCommandTypes.PARAM_UNIT0_ID]= 0;      -- boolean (1=true, 0=false)
+    tParameters[CityCommandTypes.PARAM_DATA0]= 0;      -- boolean (1=true, 0=false)
   else
     if pCitizens:IsDisfavoredYield(yieldType) then
       SetYieldIgnore(yieldType);
     end
-    tParameters[CityCommandTypes.PARAM_UNIT0_ID] = 1;     -- boolean (1=true, 0=false)
+    tParameters[CityCommandTypes.PARAM_DATA0] = 1;     -- boolean (1=true, 0=false)
   end
   CityManager.RequestCommand(m_pCity, CityCommandTypes.SET_FOCUS, tParameters);
 end
@@ -707,14 +725,14 @@ function SetYieldIgnore( yieldType:number )
   local pCitizens   :table = m_pCity:GetCitizens();
   local tParameters :table = {};
   tParameters[CityCommandTypes.PARAM_FLAGS]   = 1;      -- Set Ignored
-  tParameters[CityCommandTypes.PARAM_UNIT0_PLAYER]= yieldType;  -- Yield type 
+  tParameters[CityCommandTypes.PARAM_YIELD_TYPE]= yieldType;  -- Yield type 
   if pCitizens:IsDisfavoredYield(yieldType) then
-    tParameters[CityCommandTypes.PARAM_UNIT0_ID]= 0;      -- boolean (1=true, 0=false)
+    tParameters[CityCommandTypes.PARAM_DATA0]= 0;      -- boolean (1=true, 0=false)
   else
     if ( pCitizens:IsFavoredYield(yieldType) ) then
       SetYieldFocus(yieldType);
     end
-    tParameters[CityCommandTypes.PARAM_UNIT0_ID] = 1;     -- boolean (1=true, 0=false)
+    tParameters[CityCommandTypes.PARAM_DATA0] = 1;     -- boolean (1=true, 0=false)
   end
   CityManager.RequestCommand(m_pCity, CityCommandTypes.SET_FOCUS, tParameters);
 end
@@ -765,6 +783,15 @@ function OnCityAddedToMap( ownerPlayerID:number, cityID:number )
         UI.DeselectAllCities();
       end
     end
+  end
+end
+
+function OnCityNameChanged( playerID:number, cityID:number )
+  local city = UI.GetHeadSelectedCity();      
+  if(city and city:GetOwner() == playerID and city:GetID() == cityID) then
+    local name = city:IsCapital() and "[ICON_Capital]" or "";
+    name = name .. Locale.ToUpper(Locale.Lookup(city:GetName()));
+    Controls.CityName:SetText(name);
   end
 end
 
@@ -1052,6 +1079,30 @@ function EnableIfNotTutorialBlocked( controlName:string )
   Controls[ controlName ]:SetDisabled( isDisabled );
 end
 
+function DisplayGrowthTile()
+  if m_pCity ~= nil then
+    local cityCulture:table = m_pCity:GetCulture();
+    if cityCulture ~= nil then
+      local newGrowthPlot:number = cityCulture:GetNextPlot();
+      if(newGrowthPlot ~= -1 and newGrowthPlot ~= m_GrowthPlot and CQUI_growthTile) then
+        m_GrowthPlot = newGrowthPlot;
+        
+        local cost:number = cityCulture:GetNextPlotCultureCost();
+        local currentCulture:number = cityCulture:GetCurrentCulture();
+        local currentYield:number = cityCulture:GetCultureYield();
+        local currentGrowth:number = math.max(math.min(currentCulture / cost, 1.0), 0);
+        local nextTurnGrowth:number = math.max(math.min((currentCulture + currentYield) / cost, 1.0), 0);
+
+        UILens.SetLayerGrowthHex(LensLayers.PURCHASE_PLOT, Game.GetLocalPlayer(), m_GrowthPlot, 1, "GrowthHexBG");
+        UILens.SetLayerGrowthHex(LensLayers.PURCHASE_PLOT, Game.GetLocalPlayer(), m_GrowthPlot, nextTurnGrowth, "GrowthHexNext");
+        UILens.SetLayerGrowthHex(LensLayers.PURCHASE_PLOT, Game.GetLocalPlayer(), m_GrowthPlot, currentGrowth, "GrowthHexCurrent");
+
+        local turnsRemaining:number = cityCulture:GetTurnsUntilExpansion();
+      end
+    end
+  end
+end
+
 -- ===========================================================================
 --  Engine EVENT
 --  Local player changed; likely a hotseat game
@@ -1179,6 +1230,7 @@ function Initialize()
 
   -- Game Core Events
   Events.CityAddedToMap.Add(      OnCityAddedToMap );
+  Events.CityNameChanged.Add(     OnCityNameChanged );
   Events.CitySelectionChanged.Add(  CQUI_OnCitySelectionChanged );
   Events.CityFocusChanged.Add(    OnCityFocusChange );
   Events.CityProductionCompleted.Add( OnCityProductionCompleted );
@@ -1201,6 +1253,7 @@ function Initialize()
   LuaEvents.Tutorial_ContextDisableItems.Add( OnTutorial_ContextDisableItems );
   LuaEvents.CQUI_GoNextCity.Add( CQUI_OnNextCity );
   LuaEvents.CQUI_GoPrevCity.Add( CQUI_OnPreviousCity );
+  LuaEvents.CQUI_ToggleGrowthTile.Add( CQUI_ToggleGrowthTile );
 
   -- Truncate possible static text overflows
   TruncateStringWithTooltip(Controls.BreakdownLabel,  MAX_BEFORE_TRUNC_STATIC_LABELS, Controls.BreakdownLabel:GetText());

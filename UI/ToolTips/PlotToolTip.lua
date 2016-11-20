@@ -209,7 +209,7 @@ end
 -- View(data)
 -- Update the layout based on the view model
 -- ===========================================================================
-function View(data)
+function View(data:table, bIsUpdate:boolean)
   -- Build a string that contains all plot details.
   local details = {};
   local debugInfo = {};
@@ -348,6 +348,7 @@ function View(data)
 
   -- Appeal
   if (not data.IsWater) then
+    local strAppealDescriptor;
     for row in GameInfo.AppealHousingChanges() do
       local iMinimumValue = row.MinimumValue;
       local szDescription = row.Description;
@@ -356,7 +357,9 @@ function View(data)
         break;
       end
     end
-    table.insert(details, Locale.Lookup("LOC_TOOLTIP_APPEAL", strAppealDescriptor, data.Appeal));
+    if(strAppealDescriptor) then
+      table.insert(details, Locale.Lookup("LOC_TOOLTIP_APPEAL", strAppealDescriptor, data.Appeal));
+    end
   end
 
   if (data.Continent == nil) then
@@ -547,12 +550,14 @@ function View(data)
     Controls.TooltipMain:SetHide(false);
   else
     -- Pause time is shorter when using touch.
-    Controls.TooltipMain:SetPauseTime( m_isUsingMouse and TIME_DEFAULT_PAUSE or (TIME_DEFAULT_PAUSE/2) );
+    local pauseTime = UserConfiguration.GetPlotTooltipDelay() or TIME_DEFAULT_PAUSE;
+    Controls.TooltipMain:SetPauseTime( m_isUsingMouse and pauseTime or (pauseTime/2) );
   end
 
-  Controls.TooltipMain:SetToBeginning();
-  Controls.TooltipMain:Play();
-
+  if not bIsUpdate then
+    Controls.TooltipMain:SetToBeginning();
+    Controls.TooltipMain:Play();
+  end
 
   -- Resize the background to wrap the content 
   local plotName_width :number, plotName_height :number   = Controls.PlotName:GetSizeVal();
@@ -575,7 +580,7 @@ end
 -- ===========================================================================
 --  Show the information for a given plot
 -- ===========================================================================
-function ShowPlotInfo( plotId:number )
+function ShowPlotInfo( plotId:number, bIsUpdate:boolean )
 
   -- Ignore request to show plot if system is not on or active.
   if (not m_isActive) or m_isOff then
@@ -584,7 +589,7 @@ function ShowPlotInfo( plotId:number )
   end
 
   -- Check cached plot ID, only update contents if a different plot is shown
-  if plotId ~= m_plotId then
+  if plotId ~= m_plotId or bIsUpdate then
     m_plotId = plotId;
     local plot = Map.GetPlotByIndex(plotId);
     if (plot == nil) then
@@ -741,16 +746,16 @@ function ShowPlotInfo( plotId:number )
         end                 
       end
 
-      View(new_data);
+      View(new_data, bIsUpdate);
     end
   end -- If different plot as last frame
 end
 
 
 -- ===========================================================================
-function RealizeNewPlotTooltipMouse()
+function RealizeNewPlotTooltipMouse( bIsUpdate:boolean )
   local plotId :number = UI.GetCursorPlotID();
-  ShowPlotInfo( plotId );
+  ShowPlotInfo( plotId, bIsUpdate );
   
   RealizePositionAt( UIManager:GetMousePos() );
 end
@@ -969,6 +974,7 @@ function Initialize()
   LuaEvents.WorldInput_DragMapBegin.Add( OnDragMapBegin );
   LuaEvents.WorldInput_DragMapEnd.Add( OnDragMapEnd );
   LuaEvents.WorldInput_TouchPlotTooltipShow.Add( OnTouchPlotTooltipShow );
-  LuaEvents.WorldInput_TouchPlotTooltipHide.Add( OnTouchPlotTooltipHide );  
+  LuaEvents.WorldInput_TouchPlotTooltipHide.Add( OnTouchPlotTooltipHide );
+  LuaEvents.PlotInfo_UpdatePlotTooltip.Add( RealizeNewPlotTooltipMouse );  
 end
 Initialize();

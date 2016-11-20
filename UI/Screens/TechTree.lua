@@ -25,7 +25,7 @@ include( "SupportFunctions" );
 include( "Civ6Common" );      -- Tutorial check support
 include( "TechAndCivicSupport");  -- (Already includes Civ6Common and InstanceManager) PopulateUnlockablesForTech
 include( "TechFilterFunctions" );
-
+include( "ModalScreen_PlayerYieldsHelper" );
 
 -- ===========================================================================
 --  DEBUG
@@ -703,7 +703,15 @@ function View( playerTechData:table )
       node.ProgressMeter:SetHide( false );      
       node.ProgressMeter:SetPercent(live.Progress / live.Cost);
     else
-      node.ProgressMeter:SetHide( true );     
+      node.ProgressMeter:SetHide( true );
+    end
+
+    -- Show/Hide Recommended Icon
+    if live.IsRecommended and live.AdvisorType ~= nil then
+      node.RecommendedIcon:SetIcon(live.AdvisorType);
+      node.RecommendedIcon:SetHide(false);
+    else
+      node.RecommendedIcon:SetHide(true);
     end
 
     -- Set art for icon area
@@ -1386,6 +1394,9 @@ function OnOpen()
   UI.PlaySound("UI_Screen_Open");
   View( m_kCurrentData );
   ContextPtr:SetHide(false);
+
+  -- From ModalScreen_PlayerYieldsHelper
+  RefreshYields();
 
   -- From Civ6_styles: FullScreenVignetteConsumer
   Controls.ScreenAnimIn:SetToBeginning();

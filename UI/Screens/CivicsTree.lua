@@ -20,7 +20,7 @@ include( "SupportFunctions" );
 include( "Civ6Common" );      -- Tutorial check support
 include( "TechAndCivicSupport" );
 include( "TechFilterFunctions" );
-
+include( "ModalScreen_PlayerYieldsHelper" );
 
 -- ===========================================================================
 --  DEBUG
@@ -780,6 +780,14 @@ function View( playerTechData:table )
     else
       node.FilteredOut:SetHide( false );
     end
+
+    -- Show/Hide Recommended Icon
+    if live.IsRecommended and live.AdvisorType ~= nil then
+      node.RecommendedIcon:SetIcon(live.AdvisorType);
+      node.RecommendedIcon:SetHide(false);
+    else
+      node.RecommendedIcon:SetHide(true);
+    end
   end
 
   -- Fill in where the markers (representing players) are at:
@@ -1482,6 +1490,9 @@ function OnOpen()
   UI.PlaySound("UI_Screen_Open");
   View( m_kCurrentData );
   ContextPtr:SetHide(false);
+
+  -- From ModalScreen_PlayerYieldsHelper
+  RefreshYields();
 
   -- From Civ6_styles: FullScreenVignetteConsumer
   Controls.ScreenAnimIn:SetToBeginning();

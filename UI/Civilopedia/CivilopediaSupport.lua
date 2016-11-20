@@ -805,16 +805,6 @@ function OnInputHandler( input )
     if key == Keys.VK_ESCAPE then
       OnClose();
       return true;
-    elseif (key == Keys.VK_RETURN) then
-      print("RETURN" .. tostring(_SearchQuery));
-      if(_SearchQuery and #_SearchQuery > 0 and _SearchQuery ~= LOC_TREE_SEARCH_W_DOTS) then
-        OnOpenCivilopedia(_SearchQuery);
-        Controls.SearchResultsPanelContainer:SetHide(true);
-        _SearchQuery = nil; -- clear query.
-      end
-
-      -- Don't let enter propigate or it will hit action panel which will raise a screen (potentially this one again) tied to the action.
-      return true;
     end
   end
   return false;
@@ -836,10 +826,6 @@ end
 function OnSearchBarGainFocus()
   Controls.SearchEditBox:ClearString();
   Controls.SearchResultsPanelContainer:SetHide(true);
-end
-
-function OnSearchBarLoseFocus()
-  Controls.SearchEditBox:SetText(LOC_TREE_SEARCH_W_DOTS);
 end
 
 function OnSearchCharCallback()
@@ -884,6 +870,15 @@ function OnSearchCharCallback()
   end
 end
 
+function OnSearchCommitCallback()
+  if(_SearchQuery and #_SearchQuery > 0 and _SearchQuery ~= LOC_TREE_SEARCH_W_DOTS) then
+    Controls.SearchEditBox:SetText(LOC_TREE_SEARCH_W_DOTS);
+    OnOpenCivilopedia(_SearchQuery);
+    Controls.SearchResultsPanelContainer:SetHide(true);
+    _SearchQuery = nil; -- clear query.
+  end
+end
+
 -------------------------------------------------------------------------------
 --
 -------------------------------------------------------------------------------
@@ -905,8 +900,8 @@ function Initialize()
 
   -- Search support
   Controls.SearchEditBox:RegisterStringChangedCallback(OnSearchCharCallback);
-  Controls.SearchEditBox:RegisterHasFocusCallback( OnSearchBarGainFocus);
-  Controls.SearchEditBox:RegisterCommitCallback( OnSearchBarLoseFocus);
+  Controls.SearchEditBox:RegisterHasFocusCallback(OnSearchBarGainFocus);
+  Controls.SearchEditBox:RegisterCommitCallback(OnSearchCommitCallback);
 
   CacheData();
   RefreshSections();

@@ -12,7 +12,7 @@ include("SupportFunctions");  -- Clamp
 include("TabSupport");
 include("Civ6Common");
 include("PopupDialogSupport");
-
+include("ModalScreen_PlayerYieldsHelper");
 
 -- ===========================================================================
 --  DEBUG
@@ -1444,7 +1444,7 @@ function OnMyGovernmentClick()
   local isPlayingAnimation:boolean = true;
   if m_tabs.prevSelectedControl == Controls.ButtonGovernments then
     Controls.SelectGovernments:SetHide( true );
-    Controls.PolicyPanelCheckbox:SetHide( true );
+    Controls.PolicyPanelGrid:SetHide( true );
   elseif m_tabs.prevSelectedControl == Controls.ButtonPolicies then
     Controls.SelectPolicies:SetHide( true );
   elseif m_tabs.prevSelectedControl == nil then
@@ -1560,7 +1560,7 @@ function OnGovernmentsClick()
     Controls.SelectGovernments:SetHide( false );
     Controls.SelectGovernments:SetToBeginning();
     Controls.SelectGovernments:Play();
-    Controls.PolicyPanelCheckbox:SetHide( false );
+    Controls.PolicyPanelGrid:SetHide( false );
 
     -- Fade
     local progress    :number = Controls.AlphaAnim:GetProgress();
@@ -1603,7 +1603,7 @@ function OnPoliciesClick()
     Controls.SelectMyGovernment:SetHide( true );
   elseif m_tabs.prevSelectedControl == Controls.ButtonGovernments then
     Controls.SelectGovernments:SetHide( true );
-    Controls.PolicyPanelCheckbox:SetHide( true );
+    Controls.PolicyPanelGrid:SetHide( true );
   elseif m_tabs.prevSelectedControl == nil then
     -- Do nothing, initial/reload call.
   else
@@ -1699,6 +1699,9 @@ end
 function RefreshAllData()
   PopulateLivePlayerData( m_ePlayer );
   RealizeTabs();
+
+  -- From ModalScreen_PlayerYieldsHelper
+  RefreshYields();
 end
 
 
@@ -2662,5 +2665,7 @@ function Initialize()
   Controls.ModalScreenTitle:SetText(Locale.ToUpper("LOC_GOVT_GOVERNMENT"));
   Controls.ModalScreenClose:RegisterCallback(Mouse.eLClick, OnClose);
   Controls.ModalBG:SetHide(true);
+  
+  Controls.PolicyPanelHeaderLabel:SetText(Locale.ToUpper("LOC_TREE_OPTIONS"));
 end
 Initialize();

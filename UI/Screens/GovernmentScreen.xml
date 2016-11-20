@@ -248,15 +248,6 @@
         </ScrollBar>
       </ScrollPanel>
       <Container                                                              Size="parent,parent">
-        <Grid         ID="PolicyListPanel"  Offset="0,55"       Anchor="R,T"      Size="300,425"        Texture="Controls_PanelBlue"  SliceCorner="25,28" SliceSize="33,18" SliceTextureSize="83,75" Hidden="1">
-          <Line                                   Start="20,16" End="280,16"  Color="55,95,126,255" Width="2" />    
-          <Label      ID="PoliciesListLabel"      Anchor="C,T"  Offset="0,20" Style="FontFlair16" SmallCaps="20" String="{LOC_GOVT_POLICIES_LIST:upper}" Color0="58,99,131,255" Color1="0,0,0,0" Color2="78,119,151,255" />
-          <Line                                   Start="20,40" End="280,40"  Color="55,95,126,255" Width="2" />
-          <ScrollPanel ID="PolicyListScroller"    Offset="0, 50"              Size="300,425" Vertical="1" AutoScrollBar="1" FullClip="1" Hidden="1">
-            <Stack      ID="PoliciesListStack"                    Offset="10,0" />
-            <ScrollBar        Anchor="R,T" AnchorSide="I,I"  Offset="10,0"  Style="ScrollVerticalBar" Size="8,parent-10"/>
-          </ScrollPanel>
-        </Grid>   
       </Container>
       <Box ID="UnlockGovernmentsContainer" Size="parent,parent" Color="0,0,0,180">
         <Grid Texture="Controls_LightweightLayer" SliceCorner="38,30" SliceTextureSize="76,60" Size="250,60" Anchor="C,B" AutoSize="H" AutoSizePadding="50" Offset="0,50">
@@ -272,8 +263,24 @@
 </ScrollPanel>
 
 <!-- Tabs -->
-<Container Style="ModalScreenWide">
-  <GridButton   ID="PolicyPanelCheckbox"  Style="CheckBoxControl" Size="250,24" String="LOC_GOVERNMENT_TOGGLE_POLICY_TEXT" Anchor="R,T" Offset="35,5" Hidden="1"/>
+<Container Anchor="C,C"                 Size="parent,768">
+  <!-- Policy Panel -->
+  <Grid ID="PolicyPanelGrid" Size="300,34" Offset="0,92" Texture="Controls_TitleBarDark" SliceCorner="10,4" SliceSize="22,24" SliceTextureSize="42,34" Hidden="1">
+    <Grid Size="Parent+16,59" Offset="0,-26" Style="HeaderBannerLeft">
+      <Label ID="PolicyPanelHeaderLabel" Anchor="C,T" Offset="-4,8" Style="BannerHeaderText"/>
+    </Grid>
+    <GridButton   ID="PolicyPanelCheckbox"  Style="CheckBoxControl" Size="Parent,24" String="LOC_GOVERNMENT_TOGGLE_POLICY_TEXT" Anchor="C,C" Offset="0,0" >
+      <Grid         ID="PolicyListPanel"  Offset="-1,29"        Anchor="L,T"      Size="Parent+4,425"       Texture="Controls_PanelBlue"  SliceCorner="25,28" SliceSize="33,18" SliceTextureSize="83,75" Hidden="1">
+        <Line                                   Start="20,16" End="280,16"  Color="55,95,126,255" Width="2" />
+        <Label      ID="PoliciesListLabel"      Anchor="C,T"  Offset="0,20" Style="FontFlair16" SmallCaps="20" String="{LOC_GOVT_POLICIES_LIST:upper}" Color0="58,99,131,255" Color1="0,0,0,0" Color2="78,119,151,255" />
+        <Line                                   Start="20,40" End="280,40"  Color="55,95,126,255" Width="2" />
+        <ScrollPanel ID="PolicyListScroller"    Offset="0, 50"              Size="300,425" Vertical="1" AutoScrollBar="1" FullClip="1" Hidden="1">
+          <Stack      ID="PoliciesListStack"                    Offset="10,0" />
+          <ScrollBar        Anchor="R,T" AnchorSide="I,I"  Offset="10,0"  Style="ScrollVerticalBar" Size="8,parent-10"/>
+        </ScrollPanel>
+      </Grid>
+    </GridButton>
+  </Grid>
   <Container ID="TabArea" Anchor="C,T"  Offset="0,35" Size="parent,31">
     <Image Texture="Controls_TabLedgeFill" Size="parent-100,23" StretchMode="Tile" Anchor="C,T" Offset="0,4"/>
     <Grid Style="WoodenTabBacking"  Size="parent-7,31" Anchor="C,T"/>
@@ -300,6 +307,8 @@
       </SlideAnim>
     </Container>
   </Container>
+  
+  <Container Style="ModalScreenWide"/>
 
   <Tutorial ID="TutChangePolicies"  Style="TutorialContainer" Anchor="C,T" AnchorSide="I,I" Offset="-30,126" TriggerBy="TutorialChangePolicies">
     <Grid Style="TutorialCalloutGrid">

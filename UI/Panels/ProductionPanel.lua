@@ -600,7 +600,7 @@ function PopulateList(data, listIM)
       else
         unitListing.FaithPurchaseButton:SetHide(true);
       end
-
+      unitListing.TrainUnit:RegisterCallback( Mouse.eMouseEnter,  function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
       unitListing.TrainUnit:RegisterCallback( Mouse.eRClick, function()
         LuaEvents.OpenCivilopedia(item.Type);
       end); 
@@ -938,9 +938,11 @@ function PopulateList(data, listIM)
       districtList.Header:RegisterCallback( Mouse.eLClick, function()
         OnExpand(dL);         
         end);
+      districtList.Header:RegisterCallback( Mouse.eMouseEnter,  function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
       districtList.HeaderOn:RegisterCallback( Mouse.eLClick, function()
         OnCollapse(dL);         
         end);
+      districtList.HeaderOn:RegisterCallback( Mouse.eMouseEnter,  function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
     end
 
     prodDistrictList = dL;
@@ -1013,6 +1015,7 @@ function PopulateList(data, listIM)
           buildingListing.Button:RegisterCallback( Mouse.eRClick, function()
             LuaEvents.OpenCivilopedia(buildingItem.Type);
           end);
+          buildingListing.Button:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 
           buildingListing.Button:SetTag(UITutorialManager:GetHash(buildingItem.Type));
 
@@ -1117,6 +1120,7 @@ function PopulateList(data, listIM)
           wonderListing.Button:SetColor(0xffffffff);
         end
         wonderListing.Button:SetDisabled(item.Disabled);
+        wonderListing.Button:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
         wonderListing.Button:RegisterCallback( Mouse.eLClick, function()
           BuildBuilding(data.City, item);
         end);
@@ -1139,9 +1143,11 @@ function PopulateList(data, listIM)
       wonderList.Header:RegisterCallback( Mouse.eLClick, function()
         OnExpand(wL);         
         end);
+      wonderList.Header:RegisterCallback( Mouse.eMouseEnter,  function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
       wonderList.HeaderOn:RegisterCallback( Mouse.eLClick, function()
         OnCollapse(wL);         
         end);
+      wonderList.HeaderOn:RegisterCallback( Mouse.eMouseEnter,  function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
     end
     prodWonderList = wL;
 

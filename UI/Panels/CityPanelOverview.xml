@@ -207,12 +207,12 @@
                   <Stack StackGrowth="Down" Anchor="C,C">
                     <Stack StackGrowth="Right" Padding="3">
                       <Label  ID="HousingTotalNum"    Anchor="L,C"                      Style="CityPanelSubPanelTitle" String="-" />
-                      <Label  Anchor="L,C"                      Style="CityPanelTextSmall" String="LOC_HUD_CITY_HOUSING"  WrapWidth="100"/>
+                      <Label  ID="HousingTotalNumLabel" Anchor="L,C" Style="CityPanelTextSmall" String="-" WrapWidth="100"/>
                     </Stack>
                     <Label                                  Anchor="L,C" Offset="28,0"                        Style="CityPanelTextSmall" String="LOC_HUD_CITY_FOR" FontSize="12"/>
                     <Stack StackGrowth="Right" Padding="3">
                       <Label  ID="CitizensNum"        Anchor="L,C"              Style="CityPanelSubPanelTitle" String="-" />
-                      <Label  ID="CitizensName"                               Anchor="L,C"            Style="CityPanelTextSmall" String="LOC_HUD_CITY_CITIZENS" WrapWidth="100"/>
+                      <Label  ID="CitizensName" Anchor="L,C" Style="CityPanelTextSmall" String="-" WrapWidth="100"/>
                     </Stack>
                   </Stack>
                   <Image  Anchor="R,C" AnchorSide="O,I" Offset="-5,0" Texture="Controls_ThereforeArrow" Size="27,41"/>
@@ -396,13 +396,16 @@
       <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent-12,20" Color="8,34,56,255" Offset="0,90"/>
      
     </Box>
-    <Grid         ID="OverviewHeader"     Style="HeaderBannerLeft" Size="320,59" Anchor="L,T" Offset="0,0">
-      <Container Size="parent-20,parent-27" Anchor="L,T">
+    <Grid         ID="OverviewHeader"     Style="HeaderBannerLeft" Size="320,65" Anchor="L,T" Offset="0,0">
+      <Container Size="parent-20,28" Anchor="L,T">
         <Label      ID="OverviewTitle"      Style="BannerHeaderText" Anchor="C,C" String="{LOC_HUD_CITY_DETAILS:upper}"/>
       </Container>
       
-      <Grid Size="parent-20,parent-27" Anchor="L,B" Style="Subheader">
-        <Label      ID="OverviewSubheader" Anchor="C,C" String="{LOC_HUD_CITY_DETAILS:upper}" Style="HeaderSmallCaps"/>
+      <Grid Size="parent-20,parent-27" Anchor="L,B" Offset="0,2" Style="Subheader">
+        <GridButton	ID="RenameCityButton" Size="parent,26" Offset="0,0" Anchor="C,C" Texture="Controls_TextEntry" SliceCorner="30,0" SliceTextureSize="44,26" StateOffsetIncrement="0,26">
+          <EditBox ID="EditCityName" Offset="25,0" Size="parent-25,parent" Anchor="L,C" EditMode="1" Style="HeaderSmallCaps" String="ChooseReligionName" MaxLength="32" Hidden="1" />
+          <Label      ID="OverviewSubheader" Anchor="C,C" String="{LOC_HUD_CITY_DETAILS:upper}" Style="HeaderSmallCaps"/>
+        </GridButton>
       </Grid>
       
       <Image Texture="Controls_TabLedgeFill" Size="parent-100,23" StretchMode="Tile" AnchorSide="I,O" Anchor="C,B" Offset="0,0"/>

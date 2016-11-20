@@ -2775,7 +2775,7 @@ function ShowCombatAssessment( )
                 combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MINOR_WALL_DAMAGE");
                 ShowCombatStalemateBanner();
               else
-                damagePercentToDefenses = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MAJOR_WALL_DAMAGE"); 
+                combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MAJOR_WALL_DAMAGE"); 
                 ShowCombatVictoryBanner();
               end
             end
@@ -3643,6 +3643,20 @@ function OnPortraitClick()
   end
 end
 
+function OnPortraitRightClick()
+  if m_selectedPlayerId ~= nil then
+    local pUnits  :table = Players[m_selectedPlayerId]:GetUnits( );
+    local pUnit   :table = pUnits:FindID( m_UnitId );
+    if (pUnit ~= nil) then
+      local unitType = GameInfo.Units[pUnit:GetUnitType()];
+      if(unitType) then
+        LuaEvents.OpenCivilopedia(unitType.UnitType);
+      end
+    end
+  end
+end
+
+
 -- ===========================================================================
 function Initialize()
 
@@ -3663,6 +3677,7 @@ function Initialize()
   Controls.UnitName:RegisterCallback( Mouse.eLClick, OnUnitListPopupClicked );
   Controls.UnitListPopup:RegisterSelectionCallback( OnUnitListSelection );
   Controls.SelectionPanelUnitPortrait:RegisterCallback( Mouse.eLClick, OnPortraitClick );
+  Controls.SelectionPanelUnitPortrait:RegisterCallback( Mouse.eRClick, OnPortraitRightClick);
 
   Events.BeginWonderReveal.Add( OnBeginWonderReveal );
   Events.CitySelectionChanged.Add( OnCitySelectionChanged );

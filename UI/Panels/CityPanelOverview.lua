@@ -786,6 +786,21 @@ function ViewPanelQueue( data:table )
 end
 
 -- ===========================================================================
+
+function RenameCity(city, new_name)
+  -- Do nothing if the city names match or new name is blank or invalid.
+  local old_name = city:GetName();
+  if(new_name == nil or new_name == old_name or new_name == Locale.Lookup(old_name)) then
+    return;
+  else
+    -- Send net message to change name.
+    local params = {};
+    params[CityCommandTypes.PARAM_NAME] = new_name;
+  
+    CityManager.RequestCommand(city, CityCommandTypes.NAME_CITY, params);
+  end
+end
+
 function OnAddToProductionQueue()
   -- LuaEvents.CityPanel_ProductionOpenForQueue(); --??TRON
 end
@@ -836,6 +851,20 @@ end
 function View(data)
   if (m_isDirty) then
     Controls.OverviewSubheader:SetText(Locale.ToUpper(Locale.Lookup(data.CityName)));
+    Controls.RenameCityButton:RegisterCallback(Mouse.eLClick, function()
+      Controls.OverviewSubheader:SetHide(true);
+
+      Controls.EditCityName:SetText(Controls.OverviewSubheader:GetText());
+      Controls.EditCityName:SetHide(false);
+      Controls.EditCityName:TakeFocus();
+    end);
+    local city = data.City;
+    Controls.EditCityName:RegisterCommitCallback(function(editBox)
+      local userInput:string = Controls.EditCityName:GetText();
+      RenameCity(city, userInput);
+      Controls.EditCityName:SetHide(true);
+      Controls.OverviewSubheader:SetHide(false);
+    end);
     ViewPanelAmenities( data );
     ViewPanelCitizensGrowth( data );
     ViewPanelHousing( data );
@@ -900,6 +929,12 @@ function OnLiveCityDataChanged( data:table, isSelected:boolean)
     m_isDirty = true;
     ContextPtr:SetHide(false);
     Refresh();
+  end
+end
+
+function OnCityNameChanged( playerID: number, cityID : number )
+  if(m_pCity and playerID == m_pCity:GetOwner() and cityID == m_pCity:GetID()) then
+    Controls.OverviewSubheader:SetText(Locale.ToUpper(Locale.Lookup(m_pCity:GetName())));
   end
 end
 
@@ -968,6 +1003,7 @@ function Initialize()
   LuaEvents.CityPanel_LiveCityDataChanged.Add( OnLiveCityDataChanged )
 
   Events.SystemUpdateUI.Add( OnUpdateUI );
+  Events.CityNameChanged.Add(OnCityNameChanged);
   Events.LocalPlayerTurnEnd.Add( OnLocalPlayerTurnEnd );
   Events.ResearchCompleted.Add( OnResearchCompleted );
   Events.GovernmentPolicyChanged.Add( OnPolicyChanged );

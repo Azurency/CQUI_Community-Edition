@@ -82,6 +82,11 @@ InterfaceModeMessageHandler =
 local DefaultMessageHandler   :table  = {};
 local m_actionHotkeyToggleGrid  :number = Input.GetActionId("ToggleGrid");    --  Hot Key Handling
 local m_actionHotkeyOnlinePause :number = Input.GetActionId("OnlinePause");   --  Hot Key Handling
+local m_actionHotkeyToggleYield :number = Input.GetActionId("ToggleYield");   --  Hot Key Handling
+local m_actionHotkeyPrevUnit  :number = Input.GetActionId("PrevUnit");    --  Hot Key Handling
+local m_actionHotkeyNextUnit  :number = Input.GetActionId("NextUnit");    --  Hot Key Handling
+local m_actionHotkeyPrevCity  :number = Input.GetActionId("PrevCity");    --  Hot Key Handling
+local m_actionHotkeyNextCity  :number = Input.GetActionId("NextCity");    --  Hot Key Handling
 local m_kTouchesDownInWorld   :table  = {};   -- Tracks "down" touches that occurred in this context.
 local m_isTouchEnabled      :boolean= false;
 local m_isALTDown       :boolean= false;
@@ -1085,15 +1090,6 @@ function DefaultKeyUpHandler( uiKey:number )
       CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), -1355513600); --Oil Well
       CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), -396628467); --Offshore Platform
     end
-    if( uiKey == Keys.Y ) then
-      LuaEvents.CQUI_Option_ToggleYields();
-    end
-    if( uiKey == Keys.VK_OEM_PERIOD ) then
-      UI.SelectNextReadyUnit();
-    end
-    if( uiKey == Keys.VK_OEM_COMMA ) then
-      UI.SelectPrevReadyUnit();
-    end
     if( m_isALTDown ) then --Overridden classic binds get an alt-version as well as the normal alt-shortcuts
       if( uiKey == Keys.C ) then
         UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), UnitOperationTypes.HARVEST_RESOURCE);
@@ -1618,8 +1614,41 @@ end
 -- ===========================================================================
 --  Start touch, until release or move, do not take action.
 -- ===========================================================================
-function OnTouchSelectionStart( pInputStruct:table )
+function OnTouchDebugEnd( pInputStruct:table )
 
+  -- If last touch in a sequence or double tapping.
+  if m_touchCount > 0 then
+    return true;
+  end
+
+  -- If a drag was occurring, end it; otherwise attempt selection of whatever
+  -- is in the plot the mouse is currently at.
+  if m_isTouchDragging then
+    m_isTouchDragging = false;
+  else
+    if m_touchTotalNum == 1 then
+      print("Debug placing!!!");
+      local plotID:number = UI.GetCursorPlotID();
+      if (Map.IsPlot(plotID)) then
+        local edge = UI.GetCursorNearestPlotEdge();
+        DebugPlacement( plotID, edge );
+      end
+    else
+      print("Debug removing!!!");
+      OnDebugCancelPlacement( pInputStruct );
+    end
+  end
+
+  EndDragMap(); -- Reset any dragging
+  m_touchTotalNum = 0;
+  m_isTouchZooming  = false;
+  m_touchStartPlotX = -1;
+  m_touchStartPlotY = -1;
+  return true;
+end
+
+function OnTouchSelectionStart( pInputStruct:table )
+  -- Determine maximum # of touches that have occurred.
   if m_touchCount > m_touchTotalNum then
     m_touchTotalNum = m_touchCount;
   end
@@ -3285,9 +3314,35 @@ function OnInputActionTriggered( actionId )
         -- TODO: query if already on (or will get out of sync with button presses!)
         ms_bGridOn = not ms_bGridOn;
         UI.ToggleGrid( ms_bGridOn );
-    end
+    elseif actionId == m_actionHotkeyToggleYield then
+        if m_bShowYield then
+            LuaEvents.MinimapPanel_HideYieldIcons();
+            m_bShowYield = false;
+            UI.PlaySound("Play_UI_Click");
+        else
+            LuaEvents.MinimapPanel_ShowYieldIcons();
+            m_bShowYield = true;
+            UI.PlaySound("Play_UI_Click");
+        end
+    elseif actionId == m_actionHotkeyPrevUnit then
+        UI.SelectPrevReadyUnit();
+        UI.PlaySound("Play_UI_Click");
 
-    if actionId == m_actionHotkeyOnlinePause then
+    elseif actionId == m_actionHotkeyNextUnit then
+        UI.SelectNextReadyUnit();
+        UI.PlaySound("Play_UI_Click");
+
+    elseif actionId == m_actionHotkeyPrevCity then
+        local curCity:table = UI.GetHeadSelectedCity();
+        UI.SelectPrevCity(curCity);
+        UI.PlaySound("Play_UI_Click");
+
+    elseif actionId == m_actionHotkeyNextCity then
+        local curCity:table = UI.GetHeadSelectedCity();
+        UI.SelectNextCity(curCity);
+        UI.PlaySound("Play_UI_Click");
+
+    elseif actionId == m_actionHotkeyOnlinePause then
         if GameConfiguration.IsNetworkMultiplayer() then
             TogglePause();
         end
@@ -3425,7 +3480,9 @@ function Initialize()
 
   -- Touch Events (if a touch system)
   if m_isTouchEnabled then
-    InterfaceModeMessageHandler[InterfaceModeTypes.DEBUG]       [MouseEvents.PointerUp]   = DebugPlacement;
+    InterfaceModeMessageHandler[InterfaceModeTypes.DEBUG]       [MouseEvents.PointerDown] = OnTouchStart;
+    InterfaceModeMessageHandler[InterfaceModeTypes.DEBUG]       [MouseEvents.PointerUpdate] = OnTouchUpdate;
+    InterfaceModeMessageHandler[InterfaceModeTypes.DEBUG]       [MouseEvents.PointerUp]   = OnTouchDebugEnd;
     InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]     [MouseEvents.PointerDown] = OnTouchSelectionStart;
     InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]     [MouseEvents.PointerUpdate] = OnTouchSelectionUpdate;
     InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]     [MouseEvents.PointerUp]   = OnTouchSelectionEnd;
