@@ -1248,7 +1248,6 @@ end
 function OnInterfaceModeEnter_CityManagement( eNewMode:number )
   UIManager:SetUICursor(CursorTypes.RANGE_ATTACK);  
   UILens.SetActive("CityManagement");
-  UILens.SetLayerHexesColoredArea( LensLayers.CITY_MANAGEMENT, Game.GetLocalPlayer(), UI.GetHeadSelectedCity():GetCulture():GetNextPlot(), UI.GetColorValue("COLOR_DISGUSTING_APPEAL") );
 end
 
 -- ===========================================================================
