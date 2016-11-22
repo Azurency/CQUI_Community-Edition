@@ -152,6 +152,7 @@
     <Container        ID="Top"                AutoSize="V"                  Size="160,50" >
       <Image          ID="WinnerIcon"                       Offset="-15,0"                  Texture="Controls_Winner12" Hidden="1" />
       <Label          ID="Country"            Anchor="L,T"  Offset="0,0"    WrapWidth="160" Style="GreatPeopleSmallText" Color="220,220,200,255" String="$Text$" />
+      <Label          ID="CQUI_PerTurn"             Anchor="C,T"  Offset="20,1"    WrapWidth="160" Style="GreatPeopleSmallText" Color="220,220,200,255" String="+x/turn" />
       <Label          ID="Amount"             Anchor="R,T"  Offset="0,0"    WrapWidth="160" Style="GreatPeopleSmallText" Color="220,220,200,255" String="X/Y" />
       <Bar            ID="ProgressBar"                      Offset="0,14"   Size="parent,6" FGColor="220,220,200,255" BGColor="0,0,0,255" Percent="0.5" />
     </Container>

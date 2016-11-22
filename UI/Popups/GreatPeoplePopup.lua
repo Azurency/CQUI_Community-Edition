@@ -252,6 +252,10 @@ function ViewCurrent( data:table )
           local recruitInst:table = instance["m_RecruitIM"]:GetInstance();      
           recruitInst.Country:SetText( kPlayerPoints.PlayerName );
           recruitInst.Amount:SetText( tostring(Round(kPlayerPoints.PointsTotal,1)) .. "/" .. tostring(kPerson.RecruitCost) );
+
+          -- CQUI Points Per Turn -- Add the turn icon into the text 
+          recruitInst.CQUI_PerTurn:SetText( "+" .. tostring(Round(kPlayerPoints.PointsPerTurn,1)) .. " /[ICON_Turn]" );
+
           local progressPercent :number = Clamp( kPlayerPoints.PointsTotal / kPerson.RecruitCost, 0, 1 );
           recruitInst.ProgressBar:SetPercent( progressPercent );
 
@@ -260,8 +264,9 @@ function ViewCurrent( data:table )
             recruitColorName = "GreatPeopleActiveCS";     
           end
           recruitInst.Amount:SetColorByName( recruitColorName );
+          recruitInst.CQUI_PerTurn:SetColorByName( recruitColorName );
           recruitInst.Country:SetColorByName( recruitColorName );
-          recruitInst.Country:SetColorByName( recruitColorName );
+          --recruitInst.Country:SetColorByName( recruitColorName );
           recruitInst.ProgressBar:SetColorByName( recruitColorName );
 
           local recruitDetails:string = Locale.Lookup("LOC_GREAT_PEOPLE_POINT_DETAILS", Round(kPlayerPoints.PointsPerTurn, 1), classData.IconString, classData.Name);
