@@ -4,7 +4,7 @@
         <Name>Chao Quick UI</Name>
         <Description>Reduce clicks and make empire management easy</Description>
         <Teaser>Reduce clicks and make empire management easy</Teaser>
-        <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman</Authors>
+        <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek</Authors>
         <SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod. Greg Miller for his Unit Report Screen mod. Lozenged/kblease for his Production Queue mod.</SpecialThanks>
     </Properties>
     <Components>
@@ -57,6 +57,15 @@
                 <File>CQUI/CQUI_Text_Settings.xml</File>
             </Items>
         </LocalizedText>
+        <UpdateDatabase id="CQUI_Settings">
+            <Properties>
+                <Name>CQUI Settings</Name>
+            </Properties>
+            <Items>
+                <File>CQUI/CQUI_DatabaseSchema.sql</File>
+                <File>CQUI/CQUI_Settings.sql</File>
+            </Items>
+        </UpdateDatabase>
         <ImportFiles id="BETTER_TRADE_SCREEN_IMPORT_FILES">
             <Items>
                 <File>BTS/TradeOverview.xml</File>
@@ -87,6 +96,8 @@
         </ImportFiles>
     </Components>
     <Files>
+        <File>CQUI/CQUI_DatabaseSchema.sql</File>
+        <File>CQUI/CQUI_Settings.sql</File>
         <File>CQUI/CQUI_SettingsElement.lua</File>
         <File>CQUI/CQUI_SettingsElement.xml</File>
         <File>CQUI/CQUI_Text_General.xml</File>

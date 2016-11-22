@@ -1,4 +1,4 @@
-﻿--Custom localizations are temporarily disabled due to reloads breaking them at the moment. Localizations are complete, so remember to enable them once Firaxis fixes this!
+--Custom localizations are temporarily disabled due to reloads breaking them at the moment. Localizations are complete, so remember to enable them once Firaxis fixes this!
 
 include("Civ6Common");
 
@@ -14,12 +14,15 @@ local bindings_options = {
 };
 
 --Used to populate combobox options
-function PopulateComboBox(control, values, default_value, setting_name, tooltip)
+function PopulateComboBox(control, values, setting_name, tooltip)
   control:ClearEntries();
   local current_value = GameConfiguration.GetValue(setting_name);
   if(current_value == nil) then
-    current_value = default_value;
-    GameConfiguration.SetValue(setting_name, default_value);
+  if(GameInfo.CQUI_Settings[setting_name]) then --LY Checks if this setting has a default state defined in the database
+    current_value = GameInfo.CQUI_Settings[setting_name].Value; --reads the default value from the database. Set them in Settings.sql
+  else current_value = 0;
+  end
+    GameConfiguration.SetValue(setting_name, current_value); --/LY
   end
   for i, v in ipairs(values) do
     local instance = {};
@@ -49,11 +52,18 @@ function PopulateComboBox(control, values, default_value, setting_name, tooltip)
 end
 
 --Used to populate checkboxes
-function PopulateCheckBox(control, default_value, setting_name, tooltip)
+function PopulateCheckBox(control, setting_name, tooltip)
   local current_value = GameConfiguration.GetValue(setting_name);
   if(current_value == nil) then
-    GameConfiguration.SetValue(setting_name, default_value);
-    current_value = default_value;
+  if(GameInfo.CQUI_Settings[setting_name]) then --LY Checks if this setting has a default state defined in the database
+    if(GameInfo.CQUI_Settings[setting_name].Value == 0) then --because 0 is true in Lua
+      current_value = false;
+    else
+      current_value = true;
+    end
+  else current_value = false;
+  end
+    GameConfiguration.SetValue(setting_name, current_value); --/LY
   end
     if(current_value == false) then
         control:SetSelected(false);
@@ -100,17 +110,17 @@ function Initialize()
     button:RegisterCallback(Mouse.eLClick, function() ShowTab(button, panel); end);
   end
   --Populating/binding comboboxes...
-  --PopulateComboBox(Controls.BindingsPullDown, bindings_options, 1, Locale.Lookup("LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP"));
-  PopulateComboBox(Controls.BindingsPullDown, bindings_options, 1, "CQUI_BindingsMode", "Standard: Unchanged[NEWLINE]Classic: Civ V binds[NEWLINE]Enhanced: Civ V Binds with the following changes[NEWLINE]  WASD camera control[NEWLINE]  Q/E unit/city cycling[NEWLINE]  Shift toggles city/unit selection[NEWLINE]  Quarry/Airstrike are moved to alt-key + Q/S[NEWLINE]  NOTE:UNBIND W/E IN SETTINGS OR THINGS WON'T WORK!");
+  --PopulateComboBox(Controls.BindingsPullDown, bindings_options, "CQUI_BindingsMode", Locale.Lookup("LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP"));
+  PopulateComboBox(Controls.BindingsPullDown, bindings_options, "CQUI_BindingsMode", "Standard: Unchanged[NEWLINE]Classic: Civ V binds[NEWLINE]Enhanced: Civ V Binds with the following changes[NEWLINE]  WASD camera control[NEWLINE]  Q/E unit/city cycling[NEWLINE]  Shift toggles city/unit selection[NEWLINE]  Quarry/Airstrike are moved to alt-key + Q/S[NEWLINE]  NOTE:UNBIND W/E IN SETTINGS OR THINGS WON'T WORK!");
   
   --Populating/binding checkboxes...
-  PopulateCheckBox(Controls.ShowLuxuryCheckbox, true, "CQUI_ShowLuxuries");
-  --PopulateCheckBox(Controls.SmartbannerCheckbox, true, "CQUI_Smartbanner", Locale.Lookup("LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP"));
-  PopulateCheckBox(Controls.SmartbannerCheckbox, true, "CQUI_Smartbanner", "Displays new icons in the city banner. A food icon is displayed whenever there are unlocked citizens being automatically assigned by the AI city governor. District icons indicate built districts");
-  --PopulateCheckBox(Controls.TechVisualCheckbox, false, "CQUI_TechPopupVisual", Locale.Lookup("LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP"));
-  PopulateCheckBox(Controls.TechVisualCheckbox, false, "CQUI_TechPopupVisual", "Toggles the popup that appears whenever a new tech or civic is achieved");
-  --PopulateCheckBox(Controls.TechAudioCheckbox, true, "CQUI_TechPopupAudio", Locale.Lookup("LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP"));
-  PopulateCheckBox(Controls.TechAudioCheckbox, true, "CQUI_TechPopupAudio", "Toggles the popup audio that plays whenever a new tech or civic is achieved. Is fully indepenedent of the visual component and can play even when there is no visible popup");
+  PopulateCheckBox(Controls.ShowLuxuryCheckbox, "CQUI_ShowLuxuries");
+  --PopulateCheckBox(Controls.SmartbannerCheckbox, "CQUI_Smartbanner", Locale.Lookup("LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP"));
+  PopulateCheckBox(Controls.SmartbannerCheckbox, "CQUI_Smartbanner", "Displays new icons in the city banner. A food icon is displayed whenever there are unlocked citizens being automatically assigned by the AI city governor. District icons indicate built districts");
+  --PopulateCheckBox(Controls.TechVisualCheckbox, "CQUI_TechPopupVisual", Locale.Lookup("LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP"));
+  PopulateCheckBox(Controls.TechVisualCheckbox, "CQUI_TechPopupVisual", "Toggles the popup that appears whenever a new tech or civic is achieved");
+  --PopulateCheckBox(Controls.TechAudioCheckbox, "CQUI_TechPopupAudio", Locale.Lookup("LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP"));
+  PopulateCheckBox(Controls.TechAudioCheckbox, "CQUI_TechPopupAudio", "Toggles the popup audio that plays whenever a new tech or civic is achieved. Is fully indepenedent of the visual component and can play even when there is no visible popup");
   
   --Setting up panel controls
   ShowTab(m_tabs[1][1], m_tabs[1][2]); --Show General Settings on start
