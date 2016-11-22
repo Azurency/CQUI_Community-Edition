@@ -161,18 +161,27 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
 * Divine Yuri from the CivFanatics modding community for his [Custom City Panel mod](http://forums.civfanatics.com/resources/divine-yuris-custom-city-panel.25430/)
 * @zgavin for UI bugfixes in #1 and #2
 * @olegbl for the Amenities overview overhaul in #4 and multiple UI bugfixes ( #9 and #12 )
-  1. Additional kudos to /u/mateusarc from the Civilization subreddit for his original concept art
+  * Additional kudos to /u/mateusarc from the Civilization subreddit for his original concept art
 * @jacks0nX for:
-  *localization in #20
-  *map pin enhancements in PR #21 and #55
-  *UI/Civilopedia improvements in #24 and #32
-  *adding a GP filter to the policy card display in 063d3a668a06b49c9b2394e03cd5deb66b848210
+  * localization in #20
+  * map pin enhancements in PR #21 and #55
+  * UI/Civilopedia improvements in #24 and #32
+  * adding a GP filter to the policy card display in 063d3a668a06b49c9b2394e03cd5deb66b848210
+  * adding a "Create Pin" hotkey in #117
 * @OfekA for providing the improved resource dimming feature in #54
-* @RatchetJ for providing the civic/tech notifications at 50%/100% completion in #66 and 1148edc7ada9a649c15611ef78dbdc690c8adf30
+* @RatchetJ for:
+  * providing the civic/tech notifications at 50%/100% completion in #66 and 1148edc7ada9a649c15611ef78dbdc690c8adf30
+  * improper camera centering on load in #86
+  * useless civic/tech notifications in #91
+  * providing the fix for the production panel "forgetting" the last produced item in #105
+  * adding GP/turn to the GP panel
 * @kblease for:
-  *fortify until healed hotkey bugfix in #73
-  *unit purchasing fix in #80
-* @Proustldee for bringing the BTS mod version up to current in #61
+  * fortify until healed hotkey bugfix in #73
+  * unit purchasing fix in #80
+* @Proustldee 
+  * for bringing the BTS mod version up to current in #61
+  * for bringing the BTS mod version up to current, again, in #106
+* @benjaminjackman for fixing a hotkey conflict in #127
 * @perseghini for providing the fix for issue #33
 * /u/dli511 @ Reddit for their bug report relating to purchasing buildings
 * /u/Nitrium @ Reddit for their bug report relating to broken Gossip notifications
