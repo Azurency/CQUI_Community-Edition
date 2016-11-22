@@ -5,6 +5,34 @@
   <!-- PauseAnim - The amount of time that the window should wait before hiding. -->
   <SlideAnim ID="PauseDismissWindow" Speed="5" Begin="-10,0" End="0,0" Cycle="Once"/>
 
+  <!-- Queue Window -->
+    <AlphaAnim ID="QueueAlphaIn" Anchor="R,T" Size="350,full" AlphaBegin="0" AlphaEnd="1" Function="OutSine" Speed="3.4" Cycle="Once">
+        <SlideAnim ID="QueueSlideIn" Size="350,full" Begin="265,0" End="0,0" Function="OutSine" Speed="3.4" Cycle="Once">
+            <GridButton ID="QueueWindowToggle" Anchor="L,T" AnchorSide="O,I" Offset="255,90" Size="24,30" Style="RowButton">
+                <Label ID="QueueWindowToggleDirection" Anchor="C,C" Style="FontNormalBold14" Offset="-3,0" String=">" />
+            </GridButton>
+
+            <Grid ID="QueueWindow" Anchor="R,T" AnchorSide="I,I" Offset="350,55" Size="265,400" Style="WindowFrameHUD">
+                <Container ID="ProductionQueuePanel" Size="parent,parent" ConsumeMouse="1">
+                    <ScrollPanel ID="ProductionQueueListScroll" Vertical="1" Size="parent,200" AutoScrollBar="1" Offset="-8,26">
+                        <Stack ID="ProductionQueueList" StackGrowth="Down" Offset="0,0" />
+                        <ScrollBar ID="ProductionQueueListScrollBar" Anchor="R,T" AnchorSide="O,I" Offset="12,0" Style="ScrollVerticalBar" />
+                    </ScrollPanel>
+                </Container>
+                <Grid Anchor="L,T" Size="parent,18" Offset="-5,0" Style="DivHeader">
+                    <Container Size="parent,18">
+                        <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 24" FlipY="1" Anchor="C,T" Color="72,103,130,255" />
+                    </Container>
+                    <Label Anchor="C,C" Offset="-5,0" Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_PRODUCTION_QUEUE" />
+                    <GridButton ID="QueueWindowReset" Anchor="L,T" AnchorSide="I,I" Offset="2,2" Size="23,23" Style="RowButton" ToolTip="LOC_LEADER_VIEWER_DEBUG_RESET">
+                        <Label Anchor="C,C" Style="FontNormalBold14" Offset="0,-1" String="x" />
+                    </GridButton>
+                </Grid>
+            </Grid>
+        </SlideAnim>
+    </AlphaAnim>
+    <!-- END Queue Window -->
+
   <AlphaAnim    ID="AlphaIn"    Anchor="R,T"                    Size="350,full" AlphaBegin="0" AlphaEnd="1" Function="OutSine" Speed="3.4" Cycle="Once" >
     <SlideAnim  ID="SlideIn"                                    Size="parent,parent" Begin="330,0" End="0,0" Function="OutSine" Speed="3.4" Cycle="Once" >
       <!--<Grid     ID="DropShadow" Anchor="R,T"  Offset="-50,140"  Size="450,100" Style="DropShadow"   />-->
@@ -137,6 +165,17 @@
 
 
   <!-- =========================== Instances ========================== -->
+  <Instance Name="UnnestedList">
+      <Stack ID="Top" StackGrowth="Down">
+          <!-- <Grid Style="Drawer" Size="255,6" Offset="4,-1" /> -->
+          <SlideAnim ID="ListSlide" Speed="3.5" Begin="0,-10" End="0,0" Cycle="Once" Size="400,0" AutoSize="V">
+              <AlphaAnim ID="ListAlpha" Speed="4" AlphaBegin="0" AlphaEnd="1" Cycle="Once" AutoSize="V">
+                  <Stack ID="List" StackGrowth="Down" Offset="5,0" Padding="0" />
+              </AlphaAnim>
+          </SlideAnim>
+      </Stack>
+  </Instance>
+
   <Instance         Name="NestedList">
     <Stack          ID="Top" StackGrowth="Down" >
       <GridButton   ID="Header" Style="ButtonExpand" String="Districts" Size="325,32"/>
@@ -148,6 +187,41 @@
       </SlideAnim>
       <Grid Style="Drawer" Size="325,6" Offset="4,-1" />
     </Stack>
+  </Instance>
+
+  <Instance Name="QueueListInstance">
+      <Container ID="Root" Size="255,32" AutoSize="V">
+          <Container ID="ButtonContainer" Size="parent,32" Anchor="R,B">
+              <Button ID="Button" Size="parent,parent" Alpha="0" />
+              <Drag ID="Draggable" Size="parent,parent" Buttons="L" SnapBackSpeed="4" RestrictY="1">
+                  <GridButton ID="DraggableButton" Size="parent,32" Style="RowButton" Anchor="R,B">
+                      <Grid ID="Active" Style="Civilopedia_PageTabHeaderOverlay" Size="parent,parent+1" Hidden="1" />
+                      <Container Size="32,32">
+                          <Image ID="Icon" Size="28,28" Texture="Wonders38" Anchor="C,C" ConsumeMouse="0" />
+                      </Container>
+                      <Container Size="parent-65,parent-15" Anchor="R,C" Offset="32,0">
+                          <Label ID="LabelText" WrapWidth="160" String="?Industrial Zone" Style="WhiteSemiBold12" Anchor="L,C" />
+                      </Container>
+                      <Stack Anchor="R,C" StackGrowth="Down" Padding="-6">
+                          <Grid ID="RecommendedIcon" SliceTextureSize="40,34" SliceCorner="22,15" Size="40,34" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
+                              <Image Texture="AdvisorRec22" Size="22,22" Anchor="R,T" Offset="6,4">
+                                  <FlipAnim Texture="AdvisorRecAnim22" Size="26,26" Anchor="C,C" FrameCount="12" Columns="4" Speed="14" EndPause="3" Color="255,255,255,200" />
+                              </Image>
+                          </Grid>
+                          <Container Size="71,21" Anchor="R,C" Offset="3,0">
+                              <Image ID="ProductionProgressArea" Texture="CityPanel_MeterSmallBacking" Size="71,21" Anchor="R,C">
+                                  <TextureBar ID="ProductionProgress" Texture="CityPanel_ProductionMeterSmall" Size="67,17" Anchor="C,C" Speed="1" Direction="Right" />
+                              </Image>
+                              <Label ID="CostText" String="? Turns" Style="WhiteSemiBold12" Anchor="R,C" Offset="3,0" />
+                          </Container>
+                      </Stack>
+                      <Container ID="Disabled" Size="parent,parent" Hidden="1" ConsumeMouse="1">
+                          <GridButton Size="parent,parent" Style="ProductionButtonNest" Color="200,200,200,150" Disabled="1" />
+                      </Container>
+                  </GridButton>
+              </Drag>
+          </Container>
+      </Container>
   </Instance>
 
   <Instance           Name="BuildingListInstance">

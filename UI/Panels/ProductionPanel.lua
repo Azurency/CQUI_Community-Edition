@@ -8,6 +8,8 @@ include( "TabSupport" );
 include( "Civ6Common" );
 include( "SupportFunctions" );
 include( "AdjacencyBonusSupport");
+include( "DragSupport" );
+include( "CitySupport" );
 
 -- ===========================================================================
 --  Constants
@@ -33,11 +35,21 @@ local ICON_PREFIX       :string = "ICON_";
 local LISTMODE          :table  = {PRODUCTION = 1, PURCHASE_GOLD = 2, PURCHASE_FAITH=3};
 local EXTENDED_BUTTON_HEIGHT = 60;
 local DEFAULT_BUTTON_HEIGHT = 48;
+local DROP_OVERLAP_REQUIRED   :number = 0.5;
+local PRODUCTION_TYPE :table = {
+    BUILDING  = 1,
+    UNIT    = 2,
+    CORPS   = 3,
+    ARMY    = 4,
+    PLACED    = 5,
+    PROJECT   = 6
+};
 
 -- ===========================================================================
 --  Members
 -- ===========================================================================
 
+local m_queueIM     = InstanceManager:new( "UnnestedList",  "Top", Controls.ProductionQueueList );
 local CQUI_previousProductionHash :table = {};
 local CQUI_currentProductionHash :table = {};
 
@@ -51,6 +63,7 @@ local m_maxPurchaseSize   :number = 0;
 local m_isQueueMode     :boolean = false;
 local m_TypeNames     :table  = {};
 local m_kClickedInstance;
+local m_isCONTROLpressed  :boolean = false;
 local prodBuildingList;
 local prodWonderList;
 local prodUnitList;
@@ -93,6 +106,21 @@ function toint(n)
     end
 end
 
+-- Production Queue
+local nextDistrictSkipToFront = false;
+local showStandaloneQueueWindow = true;
+local _, screenHeight = UIManager:GetScreenSizeVal();
+local quickRefresh = true;
+local m_kProductionQueueDropAreas = {}; -- Required by drag and drop system
+local lastProductionCompletePerCity = {};
+hstructure DropAreaStruct -- Lua based struct (required copy from DragSupport)
+  x   : number
+  y   : number
+  width : number
+  height  : number
+  control : table
+  id    : number  -- (optional, extra info/ID)
+end
 
 ------------------------------------------------------------------------------
 -- Collapsible List Handling
@@ -125,6 +153,14 @@ end
 
 -- ===========================================================================
 function OnExpand(instance:table)
+  if(quickRefresh) then
+    instance.ListSlide:SetSpeed(100);
+    instance.ListAlpha:SetSpeed(100);
+  else
+    instance.ListSlide:SetSpeed(3.5);
+    instance.ListAlpha:SetSpeed(4);
+  end
+
   m_kClickedInstance = instance;
   instance.HeaderOn:SetHide(false);   
   instance.Header:SetHide(true);      
@@ -149,7 +185,6 @@ function BuildUnit(city, unitEntry)
   tParameters[CityOperationTypes.PARAM_UNIT_TYPE] = unitEntry.Hash;
   tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
   CityManager.RequestOperation(city, CityOperationTypes.BUILD, tParameters);
-  UI.PlaySound("Confirm_Production");
 end
 
 -- ===========================================================================
@@ -159,7 +194,6 @@ function BuildUnitCorps(city, unitEntry)
   tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
   tParameters[CityOperationTypes.MILITARY_FORMATION_TYPE] = MilitaryFormationTypes.CORPS_MILITARY_FORMATION;
   CityManager.RequestOperation(city, CityOperationTypes.BUILD, tParameters);
-  UI.PlaySound("Confirm_Production");
 end
 
 -- ===========================================================================
@@ -169,44 +203,50 @@ function BuildUnitArmy(city, unitEntry)
   tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
   tParameters[CityOperationTypes.MILITARY_FORMATION_TYPE] = MilitaryFormationTypes.ARMY_MILITARY_FORMATION;
   CityManager.RequestOperation(city, CityOperationTypes.BUILD, tParameters);
-  UI.PlaySound("Confirm_Production");
   Refresh();
 end
 
 -- ===========================================================================
 function BuildBuilding(city, buildingEntry)
+  local building      :table    = GameInfo.Buildings[buildingEntry.Hash];
 
-  local building      :table    = GameInfo.Buildings[buildingEntry.Type];
   local bNeedsPlacement :boolean  = building.RequiresPlacement;
-
-  
 
   local pBuildQueue = city:GetBuildQueue();
   if (pBuildQueue:HasBeenPlaced(buildingEntry.Hash)) then
     bNeedsPlacement = false;
   end
 
+  if(not pBuildQueue:CanProduce(buildingEntry.Hash, true)) then
+    -- For one reason or another we can't produce this, so remove it
+    RemoveFromQueue(city:GetID(), 1, true);
+    BuildFirstQueued(city);
+    return;
+  end
+
   -- Does the building need to be placed?
   if ( bNeedsPlacement ) then     
-    -- If so, set the placement mode
-    local tParameters = {}; 
-    tParameters[CityOperationTypes.PARAM_BUILDING_TYPE] = buildingEntry.Hash;
-    tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
-    UI.SetInterfaceMode(InterfaceModeTypes.BUILDING_PLACEMENT, tParameters);
+    --If we were already placing something, quickly pop into selection mode, signalling to CQUI cityview code that placement was interrupted and resetting the view
+    if(UI.GetInterfaceMode() == InterfaceModeTypes.BUILDING_PLACEMENT or UI.GetInterfaceMode() == InterfaceModeTypes.DISTRICT_PLACEMENT) then
+      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+    else
+      local tParameters = {}; 
+      tParameters[CityOperationTypes.PARAM_BUILDING_TYPE] = buildingEntry.Hash;
+      tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
+      UI.SetInterfaceMode(InterfaceModeTypes.BUILDING_PLACEMENT, tParameters);
+    end
   else
-    -- If not, add it to the queue.
     local tParameters = {}; 
     tParameters[CityOperationTypes.PARAM_BUILDING_TYPE] = buildingEntry.Hash;  
     tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
     CityManager.RequestOperation(city, CityOperationTypes.BUILD, tParameters);
-        UI.PlaySound("Confirm_Production");
   end
 end
 
 -- ===========================================================================
 function ZoneDistrict(city, districtEntry)
   
-  local district      :table    = GameInfo.Districts[districtEntry.Type];
+  local district      :table    = GameInfo.Districts[districtEntry.Hash];
   local bNeedsPlacement :boolean  = district.RequiresPlacement;
   local pBuildQueue   :table    = city:GetBuildQueue();
 
@@ -216,11 +256,15 @@ function ZoneDistrict(city, districtEntry)
 
   -- Almost all districts need to be placed, but just in case let's check anyway
   if (bNeedsPlacement ) then      
-    -- If so, set the placement mode
-    local tParameters = {}; 
-    tParameters[CityOperationTypes.PARAM_DISTRICT_TYPE] = districtEntry.Hash;
-    tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
-    UI.SetInterfaceMode(InterfaceModeTypes.DISTRICT_PLACEMENT, tParameters);
+    if(UI.GetInterfaceMode() == InterfaceModeTypes.DISTRICT_PLACEMENT or UI.GetInterfaceMode() ==InterfaceModeTypes.BUILDING_PLACEMENT) then
+      UI.SetInterfaceMode(InterfaceModeTypes.CITY_MANAGEMENT);
+    else
+      -- If so, set the placement mode
+      local tParameters = {}; 
+      tParameters[CityOperationTypes.PARAM_DISTRICT_TYPE] = districtEntry.Hash;
+      tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
+      UI.SetInterfaceMode(InterfaceModeTypes.DISTRICT_PLACEMENT, tParameters);
+    end
   else
     -- If not, add it to the queue.
     local tParameters = {}; 
@@ -237,7 +281,6 @@ function AdvanceProject(city, projectEntry)
   tParameters[CityOperationTypes.PARAM_PROJECT_TYPE] = projectEntry.Hash;
   tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
   CityManager.RequestOperation(city, CityOperationTypes.BUILD, tParameters);
-    UI.PlaySound("Confirm_Production");
 end
 
 -- ===========================================================================
@@ -357,6 +400,14 @@ function Close()
     UI.PlaySound("Production_Panel_Closed");
     Controls.SlideIn:Reverse(); 
     Controls.AlphaIn:Reverse();
+
+    if(showStandaloneQueueWindow) then
+      Controls.QueueSlideIn:Reverse();
+      Controls.QueueAlphaIn:Reverse();
+    else
+      Controls.QueueAlphaIn:SetAlpha(0);
+    end
+
     Controls.PauseDismissWindow:Play();
     LuaEvents.ProductionPanel_Close();
   end
@@ -375,7 +426,7 @@ function Open()
   if ContextPtr:IsHidden() then         -- The ContextPtr is only hidden as a callback to the finished SlideIn animation, so this check should be sufficient to ensure that we are not animating.
     -- Sets up proper selection AND the associated lens so it's not stuck "on".
     UI.PlaySound("Production_Panel_Open");
-    LuaEvents.ProductionPanel_Open()
+    LuaEvents.ProductionPanel_Open();
     Refresh();
     ContextPtr:SetHide(false);
     Controls.ProductionListScroll:SetScrollValue(0);
@@ -385,6 +436,14 @@ function Open()
     Controls.SlideIn:SetToBeginning();
     Controls.AlphaIn:Play();
     Controls.SlideIn:Play();
+
+    if(showStandaloneQueueWindow) then
+      Controls.QueueAlphaIn:SetToBeginning();
+      Controls.QueueSlideIn:SetToBeginning();
+      Controls.QueueAlphaIn:Play();
+      Controls.QueueSlideIn:Play();
+      ResizeQueueWindow();
+    end
   end
 end
 
@@ -459,8 +518,13 @@ function PopulateList(data, listIM)
   local wonderList;
   local projectList;
   local unitList;
+  local queueList;
   Controls.PauseCollapseList:Stop();
   local selectedCity  = UI.GetHeadSelectedCity();
+  local pBuildings = selectedCity:GetBuildings();
+  local cityID = selectedCity:GetID();
+  local cityData = GetCityData(selectedCity);
+  local localPlayer = Players[Game.GetLocalPlayer()];
   local CQUI_ProdTable = {}; --Keeps track of each producable item. Key is the item hash, Value is a table with three keys (time/gold/faith) representing the respective costs
   local CQUI_PlayerGold = Players[Game.GetLocalPlayer()]:GetTreasury():GetGoldBalance();
   local CQUI_PlayerFaith = Players[Game.GetLocalPlayer()]:GetReligion():GetFaithBalance();
@@ -527,20 +591,106 @@ function PopulateList(data, listIM)
 
       local costStr = "";
       local costStrTT = "";
-        -- Production meter progress for parent unit
-        if(item.Progress > 0) then
-          unitListing.ProductionProgressArea:SetHide(false);
-          local unitProgress = item.Progress/item.Cost;
-          if (unitProgress < 1) then
-            unitListing.ProductionProgress:SetPercent(unitProgress);
-          else
-            unitListing.ProductionProgressArea:SetHide(true);
-          end
+
+      -- ProductionQueue: We need to check that there isn't already one of these in the queue
+      if(prodQueue[cityID][1] and prodQueue[cityID][1].entry.Hash == item.Hash) then
+          item.TurnsLeft = math.ceil(item.Cost / cityData.ProductionPerTurn);
+          item.Progress = 0;
+      end
+
+      -- Production meter progress for parent unit
+      if(item.Progress > 0) then
+        unitListing.ProductionProgressArea:SetHide(false);
+        local unitProgress = item.Progress/item.Cost;
+        if (unitProgress < 1) then
+          unitListing.ProductionProgress:SetPercent(unitProgress);
         else
           unitListing.ProductionProgressArea:SetHide(true);
         end
-        costStrTT = item.TurnsLeft .. Locale.Lookup("LOC_HUD_CITY_TURNS_TO_COMPLETE", item.TurnsLeft);
-        costStr = item.TurnsLeft .. "[ICON_Turn]";
+      else
+        unitListing.ProductionProgressArea:SetHide(true);
+      end
+      costStrTT = item.TurnsLeft .. Locale.Lookup("LOC_HUD_CITY_TURNS_TO_COMPLETE", item.TurnsLeft);
+      costStr = item.TurnsLeft .. "[ICON_Turn]";
+
+      -- PQ: Check if we already have max spies including queued
+      if(item.Hash == GameInfo.Units["UNIT_SPY"].Hash) then
+        local localDiplomacy = localPlayer:GetDiplomacy();
+        local spyCap = localDiplomacy:GetSpyCapacity();
+        local numberOfSpies = 0;
+
+        -- Count our spies
+        local localPlayerUnits:table = localPlayer:GetUnits();
+        for i, unit in localPlayerUnits:Members() do
+          local unitInfo:table = GameInfo.Units[unit:GetUnitType()];
+          if unitInfo.Spy then
+            numberOfSpies = numberOfSpies + 1;
+          end
+        end
+
+        -- Loop through all players to see if they have any of our captured spies
+        local players:table = Game.GetPlayers();
+        for i, player in ipairs(players) do
+          local playerDiplomacy:table = player:GetDiplomacy();
+          local numCapturedSpies:number = playerDiplomacy:GetNumSpiesCaptured();
+          for i=0,numCapturedSpies-1,1 do
+            local spyInfo:table = playerDiplomacy:GetNthCapturedSpy(player:GetID(), i);
+            if spyInfo and spyInfo.OwningPlayer == Game.GetLocalPlayer() then
+              numberOfSpies = numberOfSpies + 1;
+            end
+          end
+        end
+
+        -- Count travelling spies
+        if localDiplomacy then
+          local numSpiesOffMap:number = localDiplomacy:GetNumSpiesOffMap();
+          for i=0,numSpiesOffMap-1,1 do
+            local spyOffMapInfo:table = localDiplomacy:GetNthOffMapSpy(Game.GetLocalPlayer(), i);
+            if spyOffMapInfo and spyOffMapInfo.ReturnTurn ~= -1 then
+              numberOfSpies = numberOfSpies + 1;
+            end
+          end
+        end
+
+          if(spyCap > numberOfSpies) then
+            for _,city in pairs(prodQueue) do
+            for _,qi in pairs(city) do
+              if(qi.entry.Hash == item.Hash) then
+                numberOfSpies = numberOfSpies + 1;
+              end
+            end
+          end
+          if(numberOfSpies >= spyCap) then
+            item.Disabled = true;
+            -- No existing localization string for "Need more spy slots" so we'll just gray it out
+            -- item.ToolTip = item.ToolTip .. "[NEWLINE][NEWLINE][COLOR:Red]" .. Locale.Lookup("???");
+          end
+          end
+      end
+
+      -- PQ: Check if we already have max traders queued
+      if(item.Hash == GameInfo.Units["UNIT_TRADER"].Hash) then
+        local playerTrade :table  = localPlayer:GetTrade();
+        local routesActive  :number = playerTrade:GetNumOutgoingRoutes();
+        local routesCapacity:number = playerTrade:GetOutgoingRouteCapacity();
+        local routesQueued  :number = 0;
+
+        if(routesCapacity >= routesActive) then
+          for _,city in pairs(prodQueue) do
+            for _,qi in pairs(city) do
+              if(qi.entry.Hash == item.Hash) then
+                routesQueued = routesQueued + 1;
+              end
+            end
+          end
+          if(routesActive + routesQueued >= routesCapacity) then
+            item.Disabled = true;
+            if(not string.find(item.ToolTip, "[COLOR:Red]")) then
+              item.ToolTip = item.ToolTip .. "[NEWLINE][NEWLINE][COLOR:Red]" .. Locale.Lookup("LOC_UNIT_TRAIN_FULL_TRADE_ROUTE_CAPACITY");
+            end
+          end
+        end
+      end
 
       local nameStr = Locale.Lookup("{1_Name}", item.Name);
       unitListing.LabelText:SetText(nameStr);
@@ -576,8 +726,13 @@ function PopulateList(data, listIM)
       unitListing.Icon:SetIcon(ICON_PREFIX..item.Type);
 
       unitListing.TrainUnit:RegisterCallback( Mouse.eLClick, function()
-        BuildUnit(data.City, item);
-        end);
+        QueueUnit(data.City, item, m_isCONTROLpressed);
+      end);
+
+      unitListing.TrainUnit:RegisterCallback( Mouse.eMClick, function()
+          QueueUnit(data.City, item, true);
+          RecenterCameraToSelectedCity();
+      end);
 
       --CQUI Productionpanel buy buttons
       unitListing.PurchaseButton:RegisterCallback( Mouse.eLClick, function()
@@ -635,6 +790,13 @@ function PopulateList(data, listIM)
         end
         unitListing.CorpsButtonContainer:SetHide(false);
         -- Production meter progress for corps unit
+        
+        -- ProductionQueue: We need to check that there isn't already one of these in the queue
+        if(IsHashInQueue(selectedCity, item.Hash)) then
+          item.CorpsTurnsLeft = math.ceil(item.CorpsCost / cityData.ProductionPerTurn);
+          item.Progress = 0;
+        end
+
         if(item.Progress > 0) then
           unitListing.ProductionCorpsProgressArea:SetHide(false);
           local unitProgress = item.Progress/item.CorpsCost;
@@ -689,6 +851,12 @@ function PopulateList(data, listIM)
         end
         unitListing.ArmyButtonContainer:SetHide(false);
 
+        -- ProductionQueue: We need to check that there isn't already one of these in the queue
+        if(IsHashInQueue(selectedCity, item.Hash)) then
+          item.ArmyTurnsLeft = math.ceil(item.ArmyCost / cityData.ProductionPerTurn);
+          item.Progress = 0;
+        end
+
         if(item.Progress > 0) then
           unitListing.ProductionArmyProgressArea:SetHide(false);
           local unitProgress = item.Progress/item.ArmyCost;
@@ -725,8 +893,14 @@ function PopulateList(data, listIM)
         unitListing.TrainArmyButton:SetToolTipString(item.ArmyTooltip);
         unitListing.ArmyDisabled:SetToolTipString(item.ArmyTooltip);
         unitListing.TrainArmyButton:RegisterCallback( Mouse.eLClick, function()
-          BuildUnitArmy(data.City, item);
+          QueueUnitArmy(data.City, item);
         end);
+
+        unitListing.TrainArmyButton:RegisterCallback( Mouse.eMClick, function()
+          QueueUnitArmy(data.City, item, true);
+          RecenterCameraToSelectedCity();
+        end);
+
         unitListing.ArmyPurchaseButton:RegisterCallback( Mouse.eLClick, function()
           PurchaseUnitArmy(data.City, item, GameInfo.Yields["YIELD_GOLD"].Index)
         end);
@@ -839,6 +1013,15 @@ function PopulateList(data, listIM)
     end
 
     for i, item in ipairs(data.DistrictItems) do
+      if(GameInfo.Districts[item.Hash].RequiresPopulation and cityData.DistrictsNum < cityData.DistrictsPossibleNum) then
+        if(GetNumDistrictsInCityQueue(selectedCity) + cityData.DistrictsNum >= cityData.DistrictsPossibleNum) then
+          item.Disabled = true;
+          if(not string.find(item.ToolTip, "COLOR:Red")) then
+            item.ToolTip = item.ToolTip .. "[NEWLINE][NEWLINE][COLOR:Red]" .. Locale.Lookup("LOC_DISTRICT_ZONE_POPULATION_TOO_LOW_SHORT", cityData.DistrictsPossibleNum * 3 + 1);
+          end
+        end
+      end
+
       local districtListing = districtList["districtListIM"]:GetInstance();
       ResetInstanceVisibility(districtListing);
       -- Check to see if this district item is one of the items that is recommended:
@@ -860,12 +1043,18 @@ function PopulateList(data, listIM)
       local turnsStrTT:string = "";
       local turnsStr:string = "";
 
-      if(item.HasBeenBuilt and GameInfo.Districts[item.Type].OnePerCity == true and not item.Repair and not item.Contaminated) then
+      if(item.HasBeenBuilt and GameInfo.Districts[item.Type].OnePerCity == true and not item.Repair and not item.Contaminated and not item.TurnsLeft) then
         turnsStrTT = Locale.Lookup("LOC_HUD_CITY_DISTRICT_BUILT_TT");
         turnsStr = "[ICON_Checkmark]";
       else
-        turnsStrTT = item.TurnsLeft .. Locale.Lookup("LOC_HUD_CITY_TURNS_TO_COMPLETE", item.TurnsLeft);
-        turnsStr = item.TurnsLeft .. "[ICON_Turn]";
+        if(item.TurnsLeft) then
+          turnsStrTT = item.TurnsLeft .. Locale.Lookup("LOC_HUD_CITY_TURNS_TO_COMPLETE", item.TurnsLeft);
+          turnsStr = item.TurnsLeft .. "[ICON_Turn]";
+        else
+          turnsStrTT = Locale.Lookup("LOC_HUD_CITY_DISTRICT_BUILT_TT");
+          turnsStr = "[ICON_Checkmark]";
+          districtListing.RecommendedIcon:SetHide(true);
+        end
       end
 
       if(item.Progress > 0) then
@@ -901,6 +1090,8 @@ function PopulateList(data, listIM)
 
       if (item.Disabled) then 
         if(item.HasBeenBuilt) then
+          turnsStrTT = Locale.Lookup("LOC_HUD_CITY_DISTRICT_BUILT_TT");
+          turnsStr = "[ICON_Checkmark]";
           districtListing.CompletedArea:SetHide(false);
           districtListing.Disabled:SetHide(true);
         else
@@ -918,7 +1109,18 @@ function PopulateList(data, listIM)
       end
       districtListing.Button:SetDisabled(item.Disabled);
       districtListing.Button:RegisterCallback( Mouse.eLClick, function()
-        ZoneDistrict(data.City, item);
+        if(m_isCONTROLpressed) then
+          nextDistrictSkipToFront = true;
+        else
+          nextDistrictSkipToFront = false;
+        end
+        QueueDistrict(data.City, item, nextDistrictSkipToFront);
+      end);
+
+      districtListing.Button:RegisterCallback( Mouse.eMClick, function()
+        nextDistrictSkipToFront = true;
+        QueueDistrict(data.City, item, true);
+        RecenterCameraToSelectedCity();
       end);
 
       districtListing.Button:RegisterCallback( Mouse.eRClick, function()
@@ -962,7 +1164,23 @@ function PopulateList(data, listIM)
     -- Populate Nested Buildings -----------------
       
     for i, buildingItem in ipairs(data.BuildingItems) do
-      if(not buildingItem.IsWonder) then
+      local displayItem = true;
+
+      -- PQ: Check if this building is mutually exclusive with another
+      if(GameInfo.MutuallyExclusiveBuildings[buildingItem.Hash]) then
+        if(IsBuildingInQueue(selectedCity, GameInfo.Buildings[GameInfo.MutuallyExclusiveBuildings[buildingItem.Hash].MutuallyExclusiveBuilding].Hash) or pBuildings:HasBuilding(GameInfo.Buildings[GameInfo.MutuallyExclusiveBuildings[buildingItem.Hash].MutuallyExclusiveBuilding].Index)) then
+          displayItem = false;
+          -- -- Concatenanting two fragments is not loc friendly.  This needs to change.
+          -- buildingItem.ToolTip = buildingItem.ToolTip .. "[NEWLINE][NEWLINE][COLOR:Red]" .. Locale.Lookup("LOC_UI_PEDIA_EXCLUSIVE_WITH");
+          -- buildingItem.ToolTip = buildingItem.ToolTip .. " " .. Locale.Lookup(GameInfo.Buildings[GameInfo.MutuallyExclusiveBuildings[buildingItem.Hash].MutuallyExclusiveBuilding].Name);
+        end
+      end
+
+      if(buildingItem.Hash == GameInfo.Buildings["BUILDING_PALACE"].Hash) then
+        displayItem = false;
+      end
+
+      if(not buildingItem.IsWonder and not IsBuildingInQueue(selectedCity, buildingItem.Hash) and displayItem) then
         local uniqueDrawerName = BUILDING_DRAWER_PREFIX..buildingItem.PrereqDistrict;
         local uniqueIMName = BUILDING_IM_PREFIX..buildingItem.PrereqDistrict;
         if (districtList[uniqueIMName] ~= nil) then
@@ -1009,7 +1227,12 @@ function PopulateList(data, listIM)
           buildingListing.Disabled:SetToolTipString(buildingItem.ToolTip);
           buildingListing.Icon:SetIcon(ICON_PREFIX..buildingItem.Type);
           buildingListing.Button:RegisterCallback( Mouse.eLClick, function()
-            BuildBuilding(data.City, buildingItem);
+            QueueBuilding(data.City, buildingItem);
+          end);
+
+          buildingListing.Button:RegisterCallback( Mouse.eMClick, function()
+            QueueBuilding(data.City, buildingItem, true);
+            RecenterCameraToSelectedCity();
           end);
 
           buildingListing.Button:RegisterCallback( Mouse.eRClick, function()
@@ -1172,6 +1395,12 @@ function PopulateList(data, listIM)
       --  end
       --end
 
+      -- ProductionQueue: We need to check that there isn't already one of these in the queue
+      if(IsHashInQueue(selectedCity, item.Hash)) then
+        item.TurnsLeft = math.ceil(item.Cost / cityData.ProductionPerTurn);
+        item.Progress = 0;
+      end
+
       -- Production meter progress for project
       if(item.Progress > 0) then
         projectListing.ProductionProgressArea:SetHide(false);
@@ -1207,7 +1436,12 @@ function PopulateList(data, listIM)
       end
       projectListing.Button:SetDisabled(item.Disabled);
       projectListing.Button:RegisterCallback( Mouse.eLClick, function()
-        AdvanceProject(data.City, item);
+          QueueProject(data.City, item);
+      end);
+
+      projectListing.Button:RegisterCallback( Mouse.eMClick, function()
+        QueueProject(data.City, item, true);
+        RecenterCameraToSelectedCity();
       end);
 
       projectListing.Button:RegisterCallback( Mouse.eRClick, function()
@@ -1235,7 +1469,140 @@ function PopulateList(data, listIM)
 
     prodProjectList = pL;
 
-  -----------------------------------
+  --===================================================================================================================
+    ------------------------------------------ Populate the Production Queue --------------------------------------------
+    --===================================================================================================================
+    m_queueIM:ResetInstances();
+
+    if(#prodQueue[cityID] > 0) then
+      queueList = m_queueIM:GetInstance();
+
+      if (queueList.queueListIM ~= nil) then
+        queueList.queueListIM:ResetInstances();
+      else
+        queueList.queueListIM = InstanceManager:new( "QueueListInstance", "Root", queueList.List);
+      end
+
+      local itemEncountered = {};
+
+      for i, qi in pairs(prodQueue[cityID]) do
+        local queueListing = queueList["queueListIM"]:GetInstance();
+        ResetInstanceVisibility(queueListing);
+        queueListing.ProductionProgressArea:SetHide(true);
+
+        if(qi.entry) then
+          local info = GetProductionInfoOfCity(selectedCity, qi.entry.Hash);
+          local turnsText = info.Turns;
+
+          if(itemEncountered[qi.entry.Hash]) then
+            turnsText = math.ceil(info.Cost / cityData.ProductionPerTurn);
+          else
+            if(info.Progress > 0) then
+              queueListing.ProductionProgressArea:SetHide(false);
+
+              local progress = info.Progress/info.Cost;
+              if (progress < 1) then
+                queueListing.ProductionProgress:SetPercent(progress);
+              else
+                queueListing.ProductionProgressArea:SetHide(true);
+              end
+            end
+          end
+
+          local suffix = "";
+
+          if(GameInfo.Units[qi.entry.Hash]) then
+            local unitDef = GameInfo.Units[qi.entry.Hash];
+            local cost = 0;
+
+            if(prodQueue[cityID][i].type == PRODUCTION_TYPE.CORPS) then
+              cost = qi.entry.CorpsCost;
+              if(unitDef.Domain == "DOMAIN_SEA") then
+                suffix = " " .. Locale.Lookup("LOC_UNITFLAG_FLEET_SUFFIX");
+              else
+                suffix = " " .. Locale.Lookup("LOC_UNITFLAG_CORPS_SUFFIX");
+              end
+            elseif(qi.type == PRODUCTION_TYPE.ARMY) then
+              cost = qi.entry.ArmyCost;
+              if(unitDef.Domain == "DOMAIN_SEA") then
+                suffix = " " .. Locale.Lookup("LOC_UNITFLAG_ARMADA_SUFFIX");
+              else
+                suffix = " " .. Locale.Lookup("LOC_UNITFLAG_ARMY_SUFFIX");
+              end
+            elseif(qi.type == PRODUCTION_TYPE.UNIT) then
+              cost = qi.entry.Cost;
+            end
+
+            if(itemEncountered[qi.entry.Hash] and info.Progress ~= 0) then
+              turnsText = math.ceil(cost / cityData.ProductionPerTurn);
+              local percentPerTurn = info.PercentCompleteNextTurn - info.PercentComplete;
+              if(info.PercentCompleteNextTurn < 1) then
+                turnsText = math.ceil(1/percentPerTurn);
+              else
+                turnsText = "~" .. turnsText;
+              end
+            else
+              turnsText = info.Turns;
+              local progress = info.Progress / cost;
+              if (progress < 1) then
+                queueListing.ProductionProgress:SetPercent(progress);
+              end
+            end
+          end
+
+          if(qi.entry.Repair) then suffix = " (" .. Locale.Lookup("LOC_UNITOPERATION_REPAIR_DESCRIPTION") .. ")" end
+
+          queueListing.LabelText:SetText(Locale.Lookup(qi.entry.Name) .. suffix);
+          queueListing.Icon:SetIcon(info.Icon)
+          queueListing.CostText:SetText(turnsText .. "[ICON_Turn]");
+          if(i == 1) then queueListing.Active:SetHide(false); end
+
+          itemEncountered[qi.entry.Hash] = true;
+        end
+
+        -- EVENT HANDLERS --
+        queueListing.Button:RegisterCallback( Mouse.eRClick, function()
+          if(CanRemoveFromQueue(cityID, i)) then
+            if(RemoveFromQueue(cityID, i)) then
+              if(i == 1) then
+                BuildFirstQueued(selectedCity);
+              else
+                Refresh();
+              end
+            end
+          end
+        end);
+
+        queueListing.Button:RegisterCallback( Mouse.eMouseEnter, function()
+          if(not UILens.IsLayerOn( LensLayers.DISTRICTS ) and qi.plotID > -1) then
+            UILens.SetAdjacencyBonusDistict(qi.plotID, "Placement_Valid", {})
+          end
+        end);
+
+        queueListing.Button:RegisterCallback( Mouse.eMouseExit, function()
+          if(not UILens.IsLayerOn( LensLayers.DISTRICTS )) then
+            UILens.ClearLayerHexes( LensLayers.DISTRICTS );
+          end
+        end);
+
+        queueListing.Button:RegisterCallback( Mouse.eLDblClick, function()
+          MoveQueueIndex(cityID, i, 1);
+          BuildFirstQueued(selectedCity);
+        end);
+
+        queueListing.Button:RegisterCallback( Mouse.eMClick, function()
+          MoveQueueIndex(cityID, i, 1);
+          BuildFirstQueued(selectedCity);
+          RecenterCameraToSelectedCity();
+        end);
+
+        queueListing.Draggable:RegisterCallback( Drag.eDown, function(dragStruct) OnDownInQueue(dragStruct, queueListing, i); end );
+        queueListing.Draggable:RegisterCallback( Drag.eDrop, function(dragStruct) OnDropInQueue(dragStruct, queueListing, i); end );
+
+        BuildProductionQueueDropArea( queueListing.Button,  i,  "QUEUE_"..i );
+      end
+    end
+
   m_maxProductionSize = m_maxProductionSize + districtList.List:GetSizeY() + unitList.List:GetSizeY() + projectList.List:GetSizeY();
 
   -- DEBUG %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1251,6 +1618,14 @@ end
     
 function OnLocalPlayerChanged()
   Refresh();
+end
+
+function OnPlayerTurnActivated(player, isFirstTimeThisTurn)
+  if (isFirstTimeThisTurn and Game.GetLocalPlayer() == player) then
+    CheckAndReplaceAllQueuesForUpgrades();
+    Refresh();
+    lastProductionCompletePerCity = {};
+  end
 end
 
 -- Returns ( allReasons:string )
@@ -1452,6 +1827,11 @@ function Refresh()
     local cityBuildings = selectedCity:GetBuildings();
     local cityDistricts = selectedCity:GetDistricts();
     local cityID    = selectedCity:GetID();
+    local cityData    = GetCityData(selectedCity);
+    local cityPlot    = Map.GetPlot(selectedCity:GetX(), selectedCity:GetY());
+
+    if(not prodQueue[cityID]) then prodQueue[cityID] = {}; end
+    CheckAndReplaceQueueForUpgrades(selectedCity);
     
     local new_data = {
       City        = selectedCity,
@@ -1480,12 +1860,20 @@ function Refresh()
         new_data.CurrentProduction = row.Name;
       end
       
-      local isInPanelList     :boolean = row.Hash ~= currentProductionHash and not row.InternalOnly;
+      local isInPanelList     :boolean = not row.InternalOnly;
       local bHasProducedDistrict  :boolean = cityDistricts:HasDistrict( row.Index );
-      if isInPanelList and ( buildQueue:CanProduce( row.Hash, true ) or bHasProducedDistrict ) then
+      local isInQueue       :boolean = IsHashInQueue( selectedCity, row.Hash );
+      local turnsLeft       :number  = buildQueue:GetTurnsLeft( row.DistrictType );
+      if (isInPanelList or isInQueue) and ( buildQueue:CanProduce( row.Hash, true ) or bHasProducedDistrict or isInQueue ) then
         local isCanProduceExclusion, results = buildQueue:CanProduce( row.Hash, false, true );
         local isDisabled      :boolean = not isCanProduceExclusion;
         
+        if(isInQueue) then
+          bHasProducedDistrict = true;
+          turnsLeft = nil;
+          isDisabled = true;
+        end
+
         -- If at least one valid plot is found where the district can be built, consider it buildable.
         local plots :table = GetCityRelatedPlotIndexesDistrictsAlternative( selectedCity, row.Hash );
         if plots == nil or table.count(plots) == 0 then
@@ -1517,7 +1905,7 @@ function Refresh()
           ToolTip     = sToolTip, 
           Hash      = row.Hash, 
           Kind      = row.Kind, 
-          TurnsLeft   = buildQueue:GetTurnsLeft( row.DistrictType ), 
+          TurnsLeft   = turnsLeft,
           Disabled    = isDisabled, 
           Repair      = cityDistricts:IsPillaged( row.Index ),
           Contaminated  = cityDistricts:IsContaminated( row.Index ),
@@ -1532,17 +1920,216 @@ function Refresh()
       if row.Hash == currentProductionHash then
         new_data.CurrentProduction = row.Name;
       end
-      
-      if row.Hash ~= currentProductionHash and not row.MustPurchase and buildQueue:CanProduce( row.Hash, true ) then
+
+      -- PQ: Determine if we have requirements in the queue
+      local hasPrereqTech = row.PrereqTech == nil;
+      local hasPrereqCivic = row.PrereqCivic == nil;
+      local isPrereqDistrictInQueue = false;
+      local disabledTooltip = nil;
+      local doShow = true;
+
+      if(not row.IsWonder) then
+        local prereqTech = GameInfo.Technologies[row.PrereqTech];
+        local prereqCivic = GameInfo.Civics[row.PrereqCivic];
+        local prereqDistrict = GameInfo.Districts[row.PrereqDistrict];
+
+        if(prereqTech and pPlayer:GetTechs():HasTech(prereqTech.Index)) then hasPrereqTech = true; end
+        if(prereqCivic and pPlayer:GetCulture():HasCivic(prereqCivic.Index)) then hasPrereqCivic = true; end
+        if((prereqDistrict and IsHashInQueue( selectedCity, prereqDistrict.Hash)) or cityDistricts:HasDistrict(prereqDistrict.Index, true)) then
+          isPrereqDistrictInQueue = true;
+
+          if(not IsHashInQueue( selectedCity, prereqDistrict.Hash )) then
+            if(cityDistricts:IsPillaged(prereqDistrict.Index)) then
+              disabledTooltip = Locale.Lookup("LOC_BUILDING_CONSTRUCT_DISTRICT_IS_PILLAGED");
+            elseif(cityDistricts:IsContaminated(prereqDistrict.Index)) then
+              disabledTooltip = Locale.Lookup("LOC_BUILDING_CONSTRUCT_DISTRICT_IS_CONTAMINATED");
+            end
+          end
+        end
+
+        if(not isPrereqDistrictInQueue) then
+          for replacesRow in GameInfo.DistrictReplaces() do
+            if(row.PrereqDistrict == replacesRow.ReplacesDistrictType) then
+              local replacementDistrict = GameInfo.Districts[replacesRow.CivUniqueDistrictType];
+              if((replacementDistrict and IsHashInQueue( selectedCity, replacementDistrict.Hash)) or cityDistricts:HasDistrict(replacementDistrict.Index, true)) then
+                isPrereqDistrictInQueue = true;
+
+                if(not IsHashInQueue( selectedCity, replacementDistrict.Hash )) then
+                  if(cityDistricts:IsPillaged(replacementDistrict.Index)) then
+                    disabledTooltip = Locale.Lookup("LOC_BUILDING_CONSTRUCT_DISTRICT_IS_PILLAGED");
+                  elseif(cityDistricts:IsContaminated(replacementDistrict.Index)) then
+                    disabledTooltip = Locale.Lookup("LOC_BUILDING_CONSTRUCT_DISTRICT_IS_CONTAMINATED");
+                  end
+                end
+              end
+              break;
+            end
+          end
+        end
+
+        if(not isPrereqDistrictInQueue) then
+          local canBuild, reasons = buildQueue:CanProduce(row.BuildingType, false, true);
+          if(not canBuild and reasons) then
+            local pFailureReasons = reasons[CityCommandResults.FAILURE_REASONS];
+            if pFailureReasons ~= nil and table.count( pFailureReasons ) > 0 then
+              for i,v in ipairs(pFailureReasons) do
+                if("LOC_BUILDING_CONSTRUCT_IS_OCCUPIED" == v) then
+                  disabledTooltip = Locale.Lookup("LOC_BUILDING_CONSTRUCT_IS_OCCUPIED");
+                end
+              end
+            end
+          end
+        end
+
+        local civTypeName = PlayerConfigurations[playerID]:GetCivilizationTypeName();
+
+        -- Check for unique buildings
+        for replaceRow in GameInfo.BuildingReplaces() do
+          if(replaceRow.CivUniqueBuildingType == row.BuildingType) then
+            local traitName = "TRAIT_CIVILIZATION_" .. row.BuildingType;
+            local isCorrectCiv = false;
+
+            for traitRow in GameInfo.CivilizationTraits() do
+              if(traitRow.TraitType == traitName and traitRow.CivilizationType == civTypeName) then
+                isCorrectCiv = true;
+                break;
+              end
+            end
+
+            if(not isCorrectCiv) then doShow = false; end
+          end
+
+          if(replaceRow.ReplacesBuildingType == row.BuildingType) then
+            local traitName = "TRAIT_CIVILIZATION_" .. replaceRow.CivUniqueBuildingType;
+            local isCorrectCiv = false;
+
+            for traitRow in GameInfo.CivilizationTraits() do
+              if(traitRow.TraitType == traitName and traitRow.CivilizationType == civTypeName) then
+                isCorrectCiv = true;
+                break;
+              end
+            end
+
+            if(isCorrectCiv) then doShow = false; end
+          end
+        end
+
+        -- Check for building prereqs
+        if(GameInfo.BuildingPrereqs[row.Hash]) then
+          local prereqInQueue = false;
+
+          for prereqRow in GameInfo.BuildingPrereqs() do
+            if(prereqRow.Building == row.BuildingType) then
+              for replaceRow in GameInfo.BuildingReplaces() do
+                if(replaceRow.ReplacesBuildingType == prereqRow.PrereqBuilding and IsHashInQueue(selectedCity, GameInfo.Buildings[replaceRow.CivUniqueBuildingType].Hash)) then
+                  prereqInQueue = true;
+                  break;
+                end
+              end
+
+              if(prereqInQueue or IsHashInQueue(selectedCity, GameInfo.Buildings[prereqRow.PrereqBuilding].Hash)) then
+                prereqInQueue = true;
+
+                -- Check for buildings enabled by dominant religious beliefs
+                if(GameInfo.Buildings[row.Hash].EnabledByReligion) then
+                  doShow = false;
+
+                  if ((table.count(cityData.Religions) > 1) or (cityData.PantheonBelief > -1)) then
+                    local modifierIDs = {};
+
+                    if cityData.PantheonBelief > -1 then
+                      table.insert(modifierIDs, GameInfo.BeliefModifiers[GameInfo.Beliefs[cityData.PantheonBelief].BeliefType].ModifierID);
+                    end
+                    if (table.count(cityData.Religions) > 0) then
+                      for _, beliefIndex in ipairs(cityData.BeliefsOfDominantReligion) do
+                        table.insert(modifierIDs, GameInfo.BeliefModifiers[GameInfo.Beliefs[beliefIndex].BeliefType].ModifierID);
+                      end
+                    end
+
+                    if(#modifierIDs > 0) then
+                      for i=#modifierIDs, 1, -1 do
+                        if(string.find(modifierIDs[i], "ALLOW_")) then
+                          modifierIDs[i] = string.gsub(modifierIDs[i], "ALLOW", "BUILDING");
+                          if(row.BuildingType == string.gsub(modifierIDs[i], "ALLOW", "BUILDING")) then
+                            doShow = true;
+                          end
+                        end
+                      end
+                    end
+                  end
+                end
+
+                break;
+              end
+            end
+          end
+
+          if(not prereqInQueue) then doShow = false; end
+        end
+
+        -- Check for river adjacency requirement
+        if (row.RequiresAdjacentRiver and not cityPlot:IsRiver()) then
+          doShow = false;
+        end
+
+        -- Check for wall obsolescence
+        if(row.OuterDefenseHitPoints and pPlayer:GetCulture():HasCivic(GameInfo.Civics["CIVIC_CIVIL_ENGINEERING"].Index)) then
+          doShow = false;
+        end
+
+        -- Check for internal only buildings
+        if(row.InternalOnly) then doShow = false end
+
+        -- Check if it's been built already
+        if(hasPrereqTech and hasPrereqCivic and isPrereqDistrictInQueue and doShow) then
+          for _, district in ipairs(cityData.BuildingsAndDistricts) do
+            if district.isBuilt then
+              local match = false;
+
+              for _,building in ipairs(district.Buildings) do
+                if(building.Name == Locale.Lookup(row.Name)) then
+                  if(building.isBuilt and not building.isPillaged) then
+                    doShow = false;
+                  else
+                    doShow = true;
+                  end
+
+                  match = true;
+                  break;
+                end
+              end
+
+              if(match) then break; end
+            end
+          end
+        else
+          doShow = false;
+        end
+      end
+
+      if not row.MustPurchase and ( buildQueue:CanProduce( row.Hash, true ) or (doShow and not row.IsWonder) ) then
         local isCanStart, results      = buildQueue:CanProduce( row.Hash, false, true );
         local isDisabled      :boolean = not isCanStart;
+
+        if(row.IsWonder or not doShow) then
+          isDisabled = not isCanStart;
+        end
+
         local allReasons       :string = ComposeFailureReasonStrings( isDisabled, results );
         local sToolTip         :string = ToolTipHelper.GetBuildingToolTip( row.Hash, playerID, selectedCity ) .. allReasons;
 
         local iProductionCost   :number = buildQueue:GetBuildingCost( row.Index );
         local iProductionProgress :number = buildQueue:GetBuildingProgress( row.Index );
+
+        if(disabledTooltip) then
+          isDisabled = true;
+          if(not string.find(sToolTip, "COLOR:Red")) then
+            sToolTip = sToolTip .. "[NEWLINE][NEWLINE][COLOR:Red]" .. disabledTooltip .. "[ENDCOLOR]";
+          end
+        end
+
         sToolTip = sToolTip .. ComposeProductionCostString( iProductionProgress, iProductionCost );
-      
+        
         local iPrereqDistrict = "";
         if row.PrereqDistrict ~= nil then
           iPrereqDistrict = row.PrereqDistrict;
@@ -1563,7 +2150,7 @@ function Refresh()
           PrereqDistrict  = iPrereqDistrict }
         );
       end
-      
+
       -- Can it be purchased with gold?
       if row.PurchaseYield == "YIELD_GOLD" then
         local isAllowed, kBldg = ComposeBldgForPurchase( row, selectedCity, "YIELD_GOLD", playerTreasury, "LOC_BUILDING_INSUFFICIENT_FUNDS" );
@@ -1594,7 +2181,7 @@ function Refresh()
         local nProductionCost   :number = buildQueue:GetUnitCost( row.Index );
         local nProductionProgress :number = buildQueue:GetUnitProgress( row.Index );
         sToolTip = sToolTip .. ComposeProductionCostString( nProductionProgress, nProductionCost );
-        
+
         local kUnit :table = {
           Type      = row.UnitType, 
           Name      = row.Name, 
@@ -1618,7 +2205,7 @@ function Refresh()
           ArmyTooltip   = "",
           ArmyName    = ""
         };
-        
+
         -- Should we present options for building Corps or Army versions?
         if results ~= nil then
           if results[CityOperationResults.CAN_TRAIN_CORPS] then
@@ -1637,7 +2224,7 @@ function Refresh()
         
         table.insert(new_data.UnitItems, kUnit );
       end
-      
+
       -- Can it be purchased with gold?
       if row.PurchaseYield == "YIELD_GOLD" then
         local isAllowed, kUnit = ComposeUnitForPurchase( row, selectedCity, "YIELD_GOLD", playerTreasury, "LOC_BUILDING_INSUFFICIENT_FUNDS" );
@@ -1659,7 +2246,7 @@ function Refresh()
         new_data.CurrentProduction = row.Name;
       end
       
-      if row.Hash ~= currentProductionHash and buildQueue:CanProduce( row.Hash, true ) then
+      if buildQueue:CanProduce( row.Hash, true ) and not (row.MaxPlayerInstances and IsHashInAnyQueue(row.Hash)) then
         local isCanProduceExclusion, results = buildQueue:CanProduce( row.Hash, false, true );
         local isDisabled      :boolean = not isCanProduceExclusion;
         
@@ -1685,6 +2272,8 @@ function Refresh()
     end
     
     View(new_data);
+    ResizeQueueWindow();
+    SaveQueues();
   end
 end
 
@@ -1833,10 +2422,19 @@ function OnGameDebugReturn( context:string, contextTable:table )
 end
 
 -- ===========================================================================
---  Keyboard INPUT Handler
+--  Keyboard INPUT UP Handler
 -- ===========================================================================
-function KeyHandler( key:number )
+function KeyUpHandler( key:number )
   if (key == Keys.VK_ESCAPE) then Close(); return true; end
+  if (key == Keys.VK_CONTROL) then m_isCONTROLpressed = false; return true; end
+  return false;
+end
+
+-- ===========================================================================
+--  Keyboard INPUT Down Handler
+-- ===========================================================================
+function KeyDownHandler( key:number )
+  if (key == Keys.VK_CONTROL) then m_isCONTROLpressed = true; return true; end
   return false;
 end
 
@@ -1845,7 +2443,8 @@ end
 -- ===========================================================================
 function OnInputHandler( pInputStruct:table )
   local uiMsg = pInputStruct:GetMessageType();
-  if uiMsg == KeyEvents.KeyUp then return KeyHandler( pInputStruct:GetKey() ); end;
+  if uiMsg == KeyEvents.KeyUp then return KeyUpHandler( pInputStruct:GetKey() ); end;
+  if uiMsg == KeyEvents.KeyDown then return KeyDownHandler( pInputStruct:GetKey() ); end;
   return false;
 end
 
@@ -1863,6 +2462,7 @@ end
 -- ===========================================================================
 function OnShutdown()
   LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID,  "m_isQueueMode", m_isQueueMode );
+  LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID,  "prodQueue", prodQueue );
   LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID,  "isHidden",    ContextPtr:IsHidden() );  
 end
 
@@ -1930,6 +2530,1074 @@ function CreateCorrectTabs()
     tabArrowControl = Controls.TabArrow;
   end
 end
+
+
+--- =========================================================================================================
+--  ====================================== PRODUCTION QUEUE MOD FUNCTIONS ===================================
+--- =========================================================================================================
+
+--- =======================================================================================================
+--  === Production event handlers
+--- =======================================================================================================
+
+--- ===========================================================================
+--  Fires when a city's current production changes
+--- ===========================================================================
+function OnCityProductionChanged(playerID:number, cityID:number)
+  Refresh();
+end
+
+function OnCityProductionUpdated( ownerPlayerID:number, cityID:number, eProductionType, eProductionObject)
+  if(ownerPlayerID ~= Game.GetLocalPlayer()) then return end
+  lastProductionCompletePerCity[cityID] = nil;
+end
+
+--- ===========================================================================
+--  Fires when a city's production is completed
+--  Note: This seems to sometimes fire more than once for a turn
+--- ===========================================================================
+function OnCityProductionCompleted(playerID, cityID, orderType, unitType, canceled, typeModifier)
+  if (playerID ~= Game.GetLocalPlayer()) then return end;
+
+  local pPlayer = Players[ playerID ];
+  if (pPlayer == nil) then return end;
+
+  local pCity = pPlayer:GetCities():FindID(cityID);
+  if (pCity == nil) then return end;
+
+  local currentTurn = Game.GetCurrentGameTurn();
+
+  -- Only one item can be produced per turn per city
+  if(lastProductionCompletePerCity[cityID] and lastProductionCompletePerCity[cityID] == currentTurn) then
+    return;
+  end
+
+  if(prodQueue[cityID] and prodQueue[cityID][1]) then
+    -- Check that the production is actually completed
+    local productionInfo = GetProductionInfoOfCity(pCity, prodQueue[cityID][1].entry.Hash);
+    local pDistricts = pCity:GetDistricts();
+    local pBuildings = pCity:GetBuildings();
+    local isComplete = false;
+
+    if(prodQueue[cityID][1].type == PRODUCTION_TYPE.BUILDING or prodQueue[cityID][1].type == PRODUCTION_TYPE.PLACED) then
+      if(GameInfo.Districts[prodQueue[cityID][1].entry.Hash] and pDistricts:HasDistrict(GameInfo.Districts[prodQueue[cityID][1].entry.Hash].Index, true)) then
+        isComplete = true;
+      elseif(GameInfo.Buildings[prodQueue[cityID][1].entry.Hash] and pBuildings:HasBuilding(GameInfo.Buildings[prodQueue[cityID][1].entry.Hash].Index)) then
+        isComplete = true;
+      elseif(productionInfo.PercentComplete >= 1) then
+        isComplete = true;
+      end
+
+      if(not isComplete) then
+        return;
+      end
+    end
+
+    -- PQ: Experimental
+    local productionType = prodQueue[cityID][1].type;
+    if(orderType == 0) then
+      if(productionType == PRODUCTION_TYPE.UNIT or productionType == PRODUCTION_TYPE.CORPS or productionType == PRODUCTION_TYPE.ARMY) then
+        if(GameInfo.Units[prodQueue[cityID][1].entry.Hash].Index == unitType) then
+          isComplete = true;
+        end
+      end
+    elseif(orderType == 1) then
+      -- Building/wonder
+      if(productionType == PRODUCTION_TYPE.BUILDING or productionType == PRODUCTION_TYPE.PLACED) then
+        local buildingInfo = GameInfo.Buildings[prodQueue[cityID][1].entry.Hash];
+        if(buildingInfo and buildingInfo.Index == unitType) then
+          isComplete = true;
+        end
+      end
+
+        -- Check if this building is in our queue at all
+      if(not isComplete and IsHashInQueue(pCity, GameInfo.Buildings[unitType].Hash)) then
+        local removeIndex = GetIndexOfHashInQueue(pCity, GameInfo.Buildings[unitType].Hash);
+        RemoveFromQueue(cityID, removeIndex, true);
+
+        if(removeIndex == 1) then
+          BuildFirstQueued(pCity);
+        else
+          Refresh();
+        end
+
+        SaveQueues();
+        return;
+      end
+    elseif(orderType == 2) then
+      -- District
+      if(productionType == PRODUCTION_TYPE.PLACED) then
+        local districtInfo = GameInfo.Districts[prodQueue[cityID][1].entry.Hash];
+        if(districtInfo and districtInfo.Index == unitType) then
+          isComplete = true;
+        end
+      end
+    elseif(orderType == 3) then
+      -- Project
+      if(productionType == PRODUCTION_TYPE.PROJECT) then
+        local projectInfo = GameInfo.Projects[prodQueue[cityID][1].entry.Hash];
+        if(projectInfo and projectInfo.Index == unitType) then
+          isComplete = true;
+        end
+      end
+    end
+
+    if(not isComplete) then
+      print("Non matching orderType and/or unitType");
+      Refresh();
+      return;
+    end
+
+    table.remove(prodQueue[cityID], 1);
+    if(#prodQueue[cityID] > 0) then
+      BuildFirstQueued(pCity);
+    end
+
+    lastProductionCompletePerCity[cityID] = currentTurn;
+    SaveQueues();
+  end
+end
+
+
+--- =======================================================================================================
+--  === Load/Save
+--- =======================================================================================================
+
+--- ==========================================================================
+--  Updates the PlayerConfiguration with all ProductionQueue data
+--- ==========================================================================
+function SaveQueues()
+  PlayerConfigurations[Game.GetLocalPlayer()]:SetValue("ZenProductionQueue", DataDumper(prodQueue, "prodQueue"));
+end
+
+--- ==========================================================================
+--  Loads ProductionQueue data from PlayerConfiguration, and populates the
+--  queue with current production information if saved info not present
+--- ==========================================================================
+function LoadQueues()
+  local localPlayerID = Game.GetLocalPlayer();
+  if(PlayerConfigurations[localPlayerID]:GetValue("ZenProductionQueue") ~= nil) then
+    loadstring(PlayerConfigurations[localPlayerID]:GetValue("ZenProductionQueue"))();
+  end
+
+  if(not prodQueue) then
+    prodQueue = {};
+  end
+
+  local player = Players[localPlayerID];
+  local cities = player:GetCities();
+
+  for j, city in cities:Members() do
+    local cityID = city:GetID();
+    local buildQueue = city:GetBuildQueue();
+    local currentProductionHash = buildQueue:GetCurrentProductionTypeHash();
+    local plotID = -1;
+
+    if(not prodQueue[cityID]) then
+      prodQueue[cityID] = {};
+    end
+
+    if(not prodQueue[cityID][1] and currentProductionHash ~= 0) then
+      -- Determine the type of the item
+      local currentType = 0;
+      local productionInfo = GetProductionInfoOfCity(city, currentProductionHash);
+      productionInfo.Hash = currentProductionHash;
+
+      if(productionInfo.Type == "UNIT") then
+        currentType = buildQueue:GetCurrentProductionTypeModifier() + 2;
+      elseif(productionInfo.Type == "BUILDING") then
+        if(GameInfo.Buildings[currentProductionHash].MaxWorldInstances == 1) then
+          currentType = PRODUCTION_TYPE.PLACED;
+
+          local pCityBuildings  :table = city:GetBuildings();
+          local kCityPlots    :table = Map.GetCityPlots():GetPurchasedPlots( city );
+          if (kCityPlots ~= nil) then
+            for _,plot in pairs(kCityPlots) do
+              local kPlot:table =  Map.GetPlotByIndex(plot);
+              local wonderType = kPlot:GetWonderType();
+              if(wonderType ~= -1 and GameInfo.Buildings[wonderType].BuildingType == GameInfo.Buildings[currentProductionHash].BuildingType) then
+                plotID = plot;
+              end
+            end
+          end
+        else
+          currentType = PRODUCTION_TYPE.BUILDING;
+        end
+      elseif(productionInfo.Type == "DISTRICT") then
+        currentType = PRODUCTION_TYPE.PLACED;
+      elseif(productionInfo.Type == "PROJECT") then
+        currentType = PRODUCTION_TYPE.PROJECT;
+      end
+
+      if(currentType == 0) then
+        print("Could not find production type for hash: " .. currentProductionHash);
+      end
+
+      prodQueue[cityID][1] = {
+        entry=productionInfo,
+        type=currentType,
+        plotID=plotID
+      }
+
+    elseif(currentProductionHash == 0) then
+    end
+  end
+end
+
+
+--- =======================================================================================================
+--  === Queue information
+--- =======================================================================================================
+
+--- ===========================================================================
+--  Checks if there is a specific building hash in a city's Production Queue
+--- ===========================================================================
+function IsBuildingInQueue(city, buildingHash)
+  local cityID = city:GetID();
+
+  if(prodQueue and #prodQueue[cityID] > 0) then
+    for _, qi in pairs(prodQueue[cityID]) do
+      if(qi.entry and qi.entry.Hash == buildingHash) then
+        if(qi.type == PRODUCTION_TYPE.BUILDING or qi.type == PRODUCTION_TYPE.PLACED) then
+          return true;
+        end
+      end
+    end
+  end
+  return false;
+end
+
+--- ===========================================================================
+--  Checks if there is a specific wonder hash in all Production Queues
+--- ===========================================================================
+function IsWonderInQueue(wonderHash)
+  for _,city in pairs(prodQueue) do
+    for _, qi in pairs(city) do
+      if(qi.entry and qi.entry.Hash == wonderHash) then
+        if(qi.type == PRODUCTION_TYPE.PLACED) then
+          return true;
+        end
+      end
+    end
+  end
+  return false;
+end
+
+--- ===========================================================================
+--  Checks if there is a specific hash in all Production Queues
+--- ===========================================================================
+function IsHashInAnyQueue(hash)
+  for _,city in pairs(prodQueue) do
+    for _, qi in pairs(city) do
+      if(qi.entry and qi.entry.Hash == hash) then
+        return true;
+      end
+    end
+  end
+  return false;
+end
+
+--- ===========================================================================
+--  Checks if there is a specific item hash in a city's Production Queue
+--- ===========================================================================
+function IsHashInQueue(city, hash)
+  local cityID = city:GetID();
+
+  if(prodQueue and #prodQueue[cityID] > 0) then
+    for i, qi in pairs(prodQueue[cityID]) do
+      if(qi.entry and qi.entry.Hash == hash) then
+        return true;
+      end
+    end
+  end
+  return false;
+end
+
+--- ===========================================================================
+--  Returns the first instance of a hash in a city's Production Queue
+--- ===========================================================================
+function GetIndexOfHashInQueue(city, hash)
+  local cityID = city:GetID();
+
+  if(prodQueue and #prodQueue[cityID] > 0) then
+    for i, qi in pairs(prodQueue[cityID]) do
+      if(qi.entry and qi.entry.Hash == hash) then
+        return i;
+      end
+    end
+  end
+  return nil;
+end
+
+--- ===========================================================================
+--  Get the total number of districts (requiring population)
+--  in a city's Production Queue still requiring placement
+--- ===========================================================================
+function GetNumDistrictsInCityQueue(city)
+  local numDistricts = 0;
+  local cityID = city:GetID();
+  local pBuildQueue = city:GetBuildQueue();
+
+  if(#prodQueue[cityID] > 0) then
+    for _,qi in pairs(prodQueue[cityID]) do
+      if(GameInfo.Districts[qi.entry.Hash] and GameInfo.Districts[qi.entry.Hash].RequiresPopulation) then
+        if (not pBuildQueue:HasBeenPlaced(qi.entry.Hash)) then
+          numDistricts = numDistricts + 1;
+        end
+      end
+    end
+  end
+
+  return numDistricts;
+end
+
+--- =============================================================================
+--  [Doing it this way is ridiculous and hacky but I am tired; Please forgive me]
+--  Checks the Production Queue for matching reserved plots
+--- =============================================================================
+GameInfo.Districts['DISTRICT_CITY_CENTER'].IsPlotValid = function(pCity, plotID)
+  local cityID = pCity:GetID();
+
+  if(#prodQueue[cityID] > 0) then
+    for j,item in ipairs(prodQueue[cityID]) do
+      if(item.plotID == plotID) then
+        return false;
+      end
+    end
+  end
+  return true;
+end
+
+
+--- =======================================================================================================
+--  === Drag and Drop
+--- =======================================================================================================
+
+--- ==========================================================================
+--  Creates a valid drop area for the queue item drag and drop system
+--- ==========================================================================
+function BuildProductionQueueDropArea( control:table, num:number, label:string )
+  AddDropArea( control, num, m_kProductionQueueDropAreas );
+end
+
+--- ===========================================================================
+--  Fires when picking up an item in the Production Queue
+--- ===========================================================================
+function OnDownInQueue( dragStruct:table, queueListing:table, index:number )
+  UI.PlaySound("Play_UI_Click");
+end
+
+--- ===========================================================================
+--  Fires when dropping an item in the Production Queue
+--- ===========================================================================
+function OnDropInQueue( dragStruct:table, queueListing:table, index:number )
+  local dragControl:table     = dragStruct:GetControl();
+  local x:number,y:number     = dragControl:GetScreenOffset();
+  local width:number,height:number= dragControl:GetSizeVal();
+  local dropArea:DropAreaStruct = GetDropArea(x,y,width,height,m_kProductionQueueDropAreas);
+
+  if dropArea ~= nil and dropArea.id ~= index then
+    local city = UI.GetHeadSelectedCity();
+    local cityID = city:GetID();
+
+    MoveQueueIndex(cityID, index, dropArea.id);
+    dragControl:StopSnapBack();
+    if(index == 1 or dropArea.id == 1) then
+      BuildFirstQueued(city);
+    else
+      Refresh();
+    end
+  end
+end
+
+--- =======================================================================================================
+--  === Queueing/Building
+--- =======================================================================================================
+
+--- ==========================================================================
+--  Adds unit of given type to the Production Queue and builds it if requested
+--- ==========================================================================
+function QueueUnitOfType(city, unitEntry, unitType, skipToFront)
+  local cityID = city:GetID();
+  local index = 1;
+
+  if(not prodQueue[cityID]) then prodQueue[cityID] = {}; end
+  if(not skipToFront) then index = #prodQueue[cityID] + 1; end
+
+  table.insert(prodQueue[cityID], index, {
+    entry=unitEntry,
+    type=unitType,
+    plotID=-1
+    });
+
+  if(#prodQueue[cityID] == 1 or skipToFront) then
+    BuildFirstQueued(city);
+  else
+    Refresh();
+  end
+
+    UI.PlaySound("Confirm_Production");
+end
+
+--- ==========================================================================
+--  Adds unit to the Production Queue and builds if requested
+--- ==========================================================================
+function QueueUnit(city, unitEntry, skipToFront)
+  QueueUnitOfType(city, unitEntry, PRODUCTION_TYPE.UNIT, skipToFront);
+end
+
+--- ==========================================================================
+--  Adds corps to the Production Queue and builds if requested
+--- ==========================================================================
+function QueueUnitCorps(city, unitEntry, skipToFront)
+  QueueUnitOfType(city, unitEntry, PRODUCTION_TYPE.CORPS, skipToFront);
+end
+
+--- ==========================================================================
+--  Adds army to the Production Queue and builds if requested
+--- ==========================================================================
+function QueueUnitArmy(city, unitEntry, skipToFront)
+  QueueUnitOfType(city, unitEntry, PRODUCTION_TYPE.ARMY, skipToFront);
+end
+
+--- ==========================================================================
+--  Adds building to the Production Queue and builds if requested
+--- ==========================================================================
+function QueueBuilding(city, buildingEntry, skipToFront)
+  local building      :table    = GameInfo.Buildings[buildingEntry.Type];
+  local bNeedsPlacement :boolean  = building.RequiresPlacement;
+  local pBuildQueue = city:GetBuildQueue();
+  if (pBuildQueue:HasBeenPlaced(buildingEntry.Hash)) then
+    bNeedsPlacement = false;
+  end
+
+  -- UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+
+  if (bNeedsPlacement) then
+    local tParameters = {};
+    tParameters[CityOperationTypes.PARAM_BUILDING_TYPE] = buildingEntry.Hash;
+    tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
+    UI.SetInterfaceMode(InterfaceModeTypes.BUILDING_PLACEMENT, tParameters);
+  else
+    local cityID = city:GetID();
+    local plotID = -1;
+    local buildingType = PRODUCTION_TYPE.BUILDING;
+
+    if(not prodQueue[cityID]) then
+      prodQueue[cityID] = {};
+    end
+
+    if(building.RequiresPlacement) then
+      local pCityBuildings  :table = city:GetBuildings();
+      local kCityPlots    :table = Map.GetCityPlots():GetPurchasedPlots( city );
+      if (kCityPlots ~= nil) then
+        for _,plot in pairs(kCityPlots) do
+          local kPlot:table =  Map.GetPlotByIndex(plot);
+          local wonderType = kPlot:GetWonderType();
+          if(wonderType ~= -1 and GameInfo.Buildings[wonderType].BuildingType == building.BuildingType) then
+            plotID = plot;
+            buildingType = PRODUCTION_TYPE.PLACED;
+          end
+        end
+      end
+    end
+
+    table.insert(prodQueue[cityID], {
+      entry=buildingEntry,
+      type=buildingType,
+      plotID=plotID
+      });
+
+    if(skipToFront) then
+      if(MoveQueueIndex(cityID, #prodQueue[cityID], 1) ~= 0) then
+        Refresh();
+      else
+        BuildFirstQueued(city);
+      end
+    elseif(#prodQueue[cityID] == 1) then
+      BuildFirstQueued(city);
+    else
+      Refresh();
+    end
+
+        UI.PlaySound("Confirm_Production");
+  end
+end
+
+--- ==========================================================================
+--  Adds district to the Production Queue and builds if requested
+--- ==========================================================================
+function QueueDistrict(city, districtEntry, skipToFront)
+  -- UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+
+  local district      :table    = GameInfo.Districts[districtEntry.Type];
+  local bNeedsPlacement :boolean  = district.RequiresPlacement;
+  local pBuildQueue   :table    = city:GetBuildQueue();
+
+  if (pBuildQueue:HasBeenPlaced(districtEntry.Hash)) then
+    bNeedsPlacement = false;
+  end
+
+  if (bNeedsPlacement) then
+    --If we were already placing something, quickly pop into selection mode, signalling to CQUI cityview code that placement was interrupted and resetting the view
+    if(UI.GetInterfaceMode() == InterfaceModeTypes.BUILDING_PLACEMENT or UI.GetInterfaceMode() == InterfaceModeTypes.DISTRICT_PLACEMENT) then
+      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+    else
+      local tParameters = {};
+      tParameters[CityOperationTypes.PARAM_DISTRICT_TYPE] = districtEntry.Hash;
+      tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
+      UI.SetInterfaceMode(InterfaceModeTypes.DISTRICT_PLACEMENT, tParameters);
+    end
+  else
+    local tParameters = {};
+    tParameters[CityOperationTypes.PARAM_DISTRICT_TYPE] = districtEntry.Hash;
+    tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
+
+    local cityID = city:GetID();
+
+    if(not prodQueue[cityID]) then
+      prodQueue[cityID] = {};
+    end
+
+    local index = 1;
+    if(not skipToFront) then index = #prodQueue[cityID] + 1; end
+
+    table.insert(prodQueue[cityID], index, {
+      entry=districtEntry,
+      type=PRODUCTION_TYPE.PLACED,
+      plotID=-1,
+      tParameters=tParameters
+      });
+
+    if(#prodQueue[cityID] == 1 or skipToFront) then
+      BuildFirstQueued(city);
+    else
+      Refresh();
+    end
+    UI.PlaySound("Confirm_Production");
+  end
+end
+
+--- ==========================================================================
+--  Adds project to the Production Queue and builds if requested
+--- ==========================================================================
+function QueueProject(city, projectEntry, skipToFront)
+  local cityID = city:GetID();
+
+  if(not prodQueue[cityID]) then
+    prodQueue[cityID] = {};
+  end
+
+  local index = 1;
+  if(not skipToFront) then index = #prodQueue[cityID] + 1; end
+
+  table.insert(prodQueue[cityID], index, {
+    entry=projectEntry,
+    type=PRODUCTION_TYPE.PROJECT,
+    plotID=-1
+    });
+
+  if(#prodQueue[cityID] == 1 or skipToFront) then
+      BuildFirstQueued(city);
+  else
+    Refresh();
+  end
+
+    UI.PlaySound("Confirm_Production");
+end
+
+--- ===========================================================================
+--  Check if removing an index would result in an empty queue
+--- ===========================================================================
+function CanRemoveFromQueue(cityID, index)
+  local totalItemsToRemove = 1;
+
+  if(prodQueue[cityID] and #prodQueue[cityID] > 1 and prodQueue[cityID][index]) then
+    local destIndex = MoveQueueIndex(cityID, index, #prodQueue[cityID], true);
+    if(destIndex > 0) then
+      totalItemsToRemove = totalItemsToRemove + 1;
+      CanRemoveFromQueue(cityID, destIndex + 1);
+    end
+  end
+
+  if(totalItemsToRemove == #prodQueue[cityID]) then
+    return false;
+  else
+    return true;
+  end
+end
+
+--- ===========================================================================
+--  Remove a specific index from a city's Production Queue
+--- ===========================================================================
+function RemoveFromQueue(cityID, index, force)
+  if(prodQueue[cityID] and (#prodQueue[cityID] > 1 or force) and prodQueue[cityID][index]) then
+    local destIndex = MoveQueueIndex(cityID, index, #prodQueue[cityID]);
+    if(destIndex > 0) then
+      -- There was a conflict
+      RemoveFromQueue(cityID, destIndex + 1);
+      table.remove(prodQueue[cityID], destIndex);
+    else
+      table.remove(prodQueue[cityID], #prodQueue[cityID]);
+    end
+    return true;
+  end
+  return false;
+end
+
+--- ==========================================================================
+--  Directly requests the city to build a placed district/wonder using
+--  tParameters provided from the StrategicView callback event
+--- ==========================================================================
+function BuildPlaced(city, tParameters)
+  -- Check if we still have enough population for a district we're about to place
+  local districtHash = tParameters[CityOperationTypes.PARAM_DISTRICT_TYPE];
+  if(districtHash) then
+    local pCityDistricts = city:GetDistricts();
+    local numDistricts = pCityDistricts:GetNumZonedDistrictsRequiringPopulation();
+    local numPossibleDistricts = pCityDistricts:GetNumAllowedDistrictsRequiringPopulation();
+
+    if(GameInfo.Districts[districtHash] and GameInfo.Districts[districtHash].RequiresPopulation and numDistricts <= numPossibleDistricts) then
+      if(GetNumDistrictsInCityQueue(city) + numDistricts > numPossibleDistricts) then
+        RemoveFromQueue(city:GetID(), 1);
+        BuildFirstQueued(city);
+        return;
+      end
+    end
+  end
+
+  CityManager.RequestOperation(city, CityOperationTypes.BUILD, tParameters);
+end
+
+--- ==========================================================================
+--  Builds the first item in the Production Queue
+--- ==========================================================================
+function BuildFirstQueued(pCity)
+  local cityID = pCity:GetID();
+  if(prodQueue[cityID][1]) then
+    if(prodQueue[cityID][1].type == PRODUCTION_TYPE.BUILDING) then
+      BuildBuilding(pCity, prodQueue[cityID][1].entry);
+    elseif(prodQueue[cityID][1].type == PRODUCTION_TYPE.UNIT) then
+      BuildUnit(pCity, prodQueue[cityID][1].entry);
+    elseif(prodQueue[cityID][1].type == PRODUCTION_TYPE.ARMY) then
+      BuildUnitArmy(pCity, prodQueue[cityID][1].entry);
+    elseif(prodQueue[cityID][1].type == PRODUCTION_TYPE.CORPS) then
+      BuildUnitCorps(pCity, prodQueue[cityID][1].entry);
+    elseif(prodQueue[cityID][1].type == PRODUCTION_TYPE.PLACED) then
+      if(not prodQueue[cityID][1].tParameters) then
+        if(GameInfo.Buildings[prodQueue[cityID][1].entry.Hash]) then
+          BuildBuilding(pCity, prodQueue[cityID][1].entry);
+        else
+          ZoneDistrict(pCity, prodQueue[cityID][1].entry);
+        end
+      else
+        BuildPlaced(pCity, prodQueue[cityID][1].tParameters);
+      end
+    elseif(prodQueue[cityID][1].type == PRODUCTION_TYPE.PROJECT) then
+      AdvanceProject(pCity, prodQueue[cityID][1].entry);
+    end
+  else
+    Refresh();
+  end
+end
+
+--- ============================================================================
+--  Lua Event
+--  This is fired when a district or wonder plot has been selected and confirmed
+--- ============================================================================
+function OnStrategicViewMapPlacementProductionClose(tProductionQueueParameters)
+  local cityID = tProductionQueueParameters.pSelectedCity:GetID();
+  local entry = GetProductionInfoOfCity(tProductionQueueParameters.pSelectedCity, tProductionQueueParameters.buildingHash);
+  entry.Hash = tProductionQueueParameters.buildingHash;
+
+  if(not prodQueue[cityID]) then prodQueue[cityID] = {}; end
+
+  local index = 1;
+  if(not nextDistrictSkipToFront) then index = #prodQueue[cityID] + 1; end
+
+  table.insert(prodQueue[cityID], index, {
+    entry=entry,
+    type=PRODUCTION_TYPE.PLACED,
+    plotID=tProductionQueueParameters.plotId,
+    tParameters=tProductionQueueParameters.tParameters
+    });
+
+  if(nextDistrictSkipToFront or #prodQueue[cityID] == 1) then BuildFirstQueued(tProductionQueueParameters.pSelectedCity); end
+  Refresh();
+  UI.PlaySound("Confirm_Production");
+end
+
+--- ===========================================================================
+--  Move a city's queue item from one index to another
+--- ===========================================================================
+function MoveQueueIndex(cityID, sourceIndex, destIndex, noMove)
+  local direction = -1;
+  local actualDest = 0;
+
+  local sourceInfo = prodQueue[cityID][sourceIndex];
+
+  if(sourceIndex < destIndex) then direction = 1; end
+  for i=sourceIndex, math.max(destIndex-direction, 1), direction do
+    -- Each time we swap, we need to check that there isn't a prereq that would break
+    if(sourceInfo.type == PRODUCTION_TYPE.BUILDING and prodQueue[cityID][i+direction].type == PRODUCTION_TYPE.PLACED) then
+      local buildingInfo = GameInfo.Buildings[sourceInfo.entry.Hash];
+      if(buildingInfo and buildingInfo.PrereqDistrict) then
+        local districtInfo = GameInfo.Districts[prodQueue[cityID][i+direction].entry.Hash];
+        if(districtInfo and (districtInfo.DistrictType == buildingInfo.PrereqDistrict or (GameInfo.DistrictReplaces[prodQueue[cityID][i+direction].entry.Hash] and GameInfo.DistrictReplaces[prodQueue[cityID][i+direction].entry.Hash].ReplacesDistrictType == buildingInfo.PrereqDistrict))) then
+          actualDest = i;
+          break;
+        end
+      end
+    elseif(sourceInfo.type == PRODUCTION_TYPE.PLACED and prodQueue[cityID][i+direction].type == PRODUCTION_TYPE.BUILDING) then
+      local buildingInfo = GameInfo.Buildings[prodQueue[cityID][i+direction].entry.Hash];
+      local districtInfo = GameInfo.Districts[sourceInfo.entry.Hash];
+
+      if(buildingInfo and buildingInfo.PrereqDistrict) then
+        if(districtInfo and (districtInfo.DistrictType == buildingInfo.PrereqDistrict or (GameInfo.DistrictReplaces[sourceInfo.entry.Hash] and GameInfo.DistrictReplaces[sourceInfo.entry.Hash].ReplacesDistrictType == buildingInfo.PrereqDistrict))) then
+          actualDest = i;
+          break;
+        end
+      end
+    elseif(sourceInfo.type == PRODUCTION_TYPE.BUILDING and prodQueue[cityID][i+direction].type == PRODUCTION_TYPE.BUILDING) then
+      local destInfo = GameInfo.Buildings[prodQueue[cityID][i+direction].entry.Hash];
+      local sourceBuildingInfo = GameInfo.Buildings[sourceInfo.entry.Hash];
+
+      if(GameInfo.BuildingReplaces[destInfo.BuildingType]) then
+        destInfo = GameInfo.Buildings[GameInfo.BuildingReplaces[destInfo.BuildingType].ReplacesBuildingType];
+      end
+
+      if(GameInfo.BuildingReplaces[sourceBuildingInfo.BuildingType]) then
+        sourceBuildingInfo = GameInfo.Buildings[GameInfo.BuildingReplaces[sourceBuildingInfo.BuildingType].ReplacesBuildingType];
+      end
+
+      local halt = false;
+
+      for prereqRow in GameInfo.BuildingPrereqs() do
+        if(prereqRow.Building == sourceBuildingInfo.BuildingType) then
+          if(destInfo.BuildingType == prereqRow.PrereqBuilding) then
+            halt = true;
+            actualDest = i;
+            break;
+          end
+        end
+
+        if(prereqRow.PrereqBuilding == sourceBuildingInfo.BuildingType) then
+          if(destInfo.BuildingType == prereqRow.Building) then
+            halt = true;
+            actualDest = i;
+            break;
+          end
+        end
+      end
+
+      if(halt == true) then break; end
+    end
+
+    if(not noMove) then
+      prodQueue[cityID][i], prodQueue[cityID][i+direction] = prodQueue[cityID][i+direction], prodQueue[cityID][i];
+    end
+  end
+
+  return actualDest;
+end
+
+--- ===========================================================================
+--  Check the entire queue for mandatory item upgrades
+--- ===========================================================================
+function CheckAndReplaceAllQueuesForUpgrades()
+  local localPlayerId:number = Game.GetLocalPlayer();
+  local player = Players[localPlayerId];
+
+  if(player == nil) then
+    return;
+  end
+
+  local cities = player:GetCities();
+
+  for j, city in cities:Members() do
+    CheckAndReplaceQueueForUpgrades(city);
+  end
+end
+
+--- ===========================================================================
+--  Check a city's queue for items that must be upgraded or removed
+--  as per tech/civic knowledge
+--- ===========================================================================
+function CheckAndReplaceQueueForUpgrades(city)
+  local playerID = Game.GetLocalPlayer();
+  local pPlayer = Players[playerID];
+  local pTech = pPlayer:GetTechs();
+  local pCulture = pPlayer:GetCulture();
+  local buildQueue = city:GetBuildQueue();
+  local cityID = city:GetID();
+  local pBuildings = city:GetBuildings();
+  local civTypeName = PlayerConfigurations[playerID]:GetCivilizationTypeName();
+  local removeUnits = {};
+
+  if(not prodQueue[cityID]) then prodQueue[cityID] = {} end
+
+  for i, qi in pairs(prodQueue[cityID]) do
+    if(qi.type == PRODUCTION_TYPE.UNIT or qi.type == PRODUCTION_TYPE.CORPS or qi.type == PRODUCTION_TYPE.ARMY) then
+      local unitUpgrades = GameInfo.UnitUpgrades[qi.entry.Hash];
+      if(unitUpgrades) then
+        local upgradeUnit = GameInfo.Units[unitUpgrades.UpgradeUnit];
+
+        -- Check for unique units
+        for unitReplaces in GameInfo.UnitReplaces() do
+          if(unitReplaces.ReplacesUnitType == unitUpgrades.UpgradeUnit) then
+            local match = false;
+
+            for civTraits in GameInfo.CivilizationTraits() do
+              if(civTraits.TraitType == "TRAIT_CIVILIZATION_" .. unitReplaces.CivUniqueUnitType and civTraits.CivilizationType == civTypeName) then
+                upgradeUnit = GameInfo.Units[unitReplaces.CivUniqueUnitType];
+                match = true;
+                break;
+              end
+            end
+
+            if(match) then break; end
+          end
+        end
+
+        if(upgradeUnit) then
+          local canUpgrade = true;
+
+          if(upgradeUnit.PrereqTech and not pTech:HasTech(GameInfo.Technologies[upgradeUnit.PrereqTech].Index)) then
+            canUpgrade = false;
+          end
+          if(upgradeUnit.PrereqCivic and not pCulture:HasCivic(GameInfo.Civics[upgradeUnit.PrereqCivic].Index)) then
+            canUpgrade = false;
+          end
+
+          local canBuildNewUnit = buildQueue:CanProduce( upgradeUnit.Hash, false, true );
+
+          -- Only auto replace if we CAN'T queue the old unit
+          if(not buildQueue:CanProduce( qi.entry.Hash, true ) and canUpgrade and canBuildNewUnit) then
+            local isCanProduceExclusion, results   = buildQueue:CanProduce( upgradeUnit.Hash, false, true );
+            local isDisabled        :boolean = not isCanProduceExclusion;
+            local sAllReasons        :string = ComposeFailureReasonStrings( isDisabled, results );
+            local sToolTip           :string = ToolTipHelper.GetUnitToolTip( upgradeUnit.Hash ) .. sAllReasons;
+
+            local nProductionCost   :number = buildQueue:GetUnitCost( upgradeUnit.Index );
+            local nProductionProgress :number = buildQueue:GetUnitProgress( upgradeUnit.Index );
+            sToolTip = sToolTip .. ComposeProductionCostString( nProductionProgress, nProductionCost );
+
+            prodQueue[cityID][i].entry = {
+              Type      = upgradeUnit.UnitType,
+              Name      = upgradeUnit.Name,
+              ToolTip     = sToolTip,
+              Hash      = upgradeUnit.Hash,
+              Kind      = upgradeUnit.Kind,
+              TurnsLeft   = buildQueue:GetTurnsLeft( upgradeUnit.Hash ),
+              Disabled    = isDisabled,
+              Civilian    = upgradeUnit.FormationClass == "FORMATION_CLASS_CIVILIAN",
+              Cost      = nProductionCost,
+              Progress    = nProductionProgress,
+              Corps     = false,
+              CorpsCost   = 0,
+              CorpsTurnsLeft  = 1,
+              CorpsTooltip  = "",
+              CorpsName   = "",
+              Army      = false,
+              ArmyCost    = 0,
+              ArmyTurnsLeft = 1,
+              ArmyTooltip   = "",
+              ArmyName    = ""
+            };
+
+            if results ~= nil then
+              if results[CityOperationResults.CAN_TRAIN_CORPS] then
+                kUnit.Corps     = true;
+                kUnit.CorpsCost   = buildQueue:GetUnitCorpsCost( upgradeUnit.Index );
+                kUnit.CorpsTurnsLeft  = buildQueue:GetTurnsLeft( upgradeUnit.Hash, MilitaryFormationTypes.CORPS_MILITARY_FORMATION );
+                kUnit.CorpsTooltip, kUnit.CorpsName = ComposeUnitCorpsStrings( upgradeUnit.Name, upgradeUnit.Domain, nProductionProgress, kUnit.CorpsCost );
+              end
+              if results[CityOperationResults.CAN_TRAIN_ARMY] then
+                kUnit.Army      = true;
+                kUnit.ArmyCost    = buildQueue:GetUnitArmyCost( upgradeUnit.Index );
+                kUnit.ArmyTurnsLeft = buildQueue:GetTurnsLeft( upgradeUnit.Hash, MilitaryFormationTypes.ARMY_MILITARY_FORMATION );
+                kUnit.ArmyTooltip, kUnit.ArmyName = ComposeUnitArmyStrings( upgradeUnit.Name, upgradeUnit.Domain, nProductionProgress, kUnit.ArmyCost );
+              end
+            end
+          elseif(canUpgrade and not canBuildNewUnit) then
+            -- Can't build the old or new unit. Probably missing a resource. Remove from queue.
+            table.insert(removeUnits, i);
+          end
+        end
+      else
+        local canBuildUnit = buildQueue:CanProduce( qi.entry.Hash, false, true );
+        if(not canBuildUnit) then
+          table.insert(removeUnits, i);
+        end
+      end
+    elseif(qi.type == PRODUCTION_TYPE.BUILDING or qi.type == PRODUCTION_TYPE.PLACED) then
+      if(qi.entry.Repair == true and GameInfo.Buildings[qi.entry.Hash]) then
+        local isPillaged = pBuildings:IsPillaged(GameInfo.Buildings[qi.entry.Hash].Index);
+        if(not isPillaged) then
+          -- Repair complete, remove from queue
+          table.insert(removeUnits, i);
+        end
+      end
+
+      -- Check if a queued wonder is still available
+      if(GameInfo.Buildings[qi.entry.Hash] and GameInfo.Buildings[qi.entry.Hash].MaxWorldInstances == 1) then
+        if(not buildQueue:CanProduce(qi.entry.Hash, true)) then
+          table.insert(removeUnits, i);
+        elseif(not IsCityPlotValidForWonderPlacement(city, qi.plotID, GameInfo.Buildings[qi.entry.Hash]) and not buildQueue:HasBeenPlaced(qi.entry.Hash)) then
+          table.insert(removeUnits, i);
+        end
+      end
+    end
+  end
+
+  if(#removeUnits > 0) then
+    for i=#removeUnits, 1, -1 do
+      local success = RemoveFromQueue(cityID, removeUnits[i]);
+      if(success and removeUnits[i] == 1) then
+        BuildFirstQueued(city);
+      end
+    end
+  end
+end
+
+function IsCityPlotValidForWonderPlacement(city, plotID, wonder)
+  if(not plotID or plotID == -1) then return true end
+  if Map.GetPlotByIndex(plotID):CanHaveWonder(wonder.Index, city:GetOwner(), city:GetID()) then
+    return true;
+  else
+    return false;
+  end
+end
+
+--- =======================================================================================================
+--  === UI handling
+--- =======================================================================================================
+
+--- ==========================================================================
+--  Resize the Production Queue window to fit the items
+--- ==========================================================================
+function ResizeQueueWindow()
+  Controls.QueueWindow:SetSizeY(1);
+  local windowHeight = math.min(math.max(Controls.ProductionQueueList:GetSizeY()+38, 70), screenHeight-300);
+  Controls.QueueWindow:SetSizeY(windowHeight);
+  Controls.ProductionQueueListScroll:SetSizeY(windowHeight-38);
+  Controls.ProductionQueueListScroll:CalculateSize();
+end
+
+--- ==========================================================================
+--  Slide-in/hide the Production Queue panel
+--- ==========================================================================
+function CloseQueueWindow()
+  Controls.QueueSlideIn:Reverse();
+  Controls.QueueWindowToggleDirection:SetText("<");
+end
+
+--- ==========================================================================
+--  Slide-out/show the Production Queue panel
+--- ==========================================================================
+function OpenQueueWindow()
+  Controls.QueueSlideIn:SetToBeginning();
+  Controls.QueueSlideIn:Play();
+  Controls.QueueWindowToggleDirection:SetText(">");
+end
+
+--- ==========================================================================
+--  Toggle the visibility of the Production Queue panel
+--- ==========================================================================
+function ToggleQueueWindow()
+  showStandaloneQueueWindow = not showStandaloneQueueWindow;
+
+  if(showStandaloneQueueWindow) then
+    OpenQueueWindow();
+  else
+    CloseQueueWindow();
+  end
+end
+
+--- ===============================================================================
+--  Control Event
+--  Fires when the production panel has finished fading in
+--  Use this to, if it is toggled off, delay showing the Production Queue panel
+--  (and therefore toggle tab) unitl after the production panel is there to
+--  cover it up
+--- ===============================================================================
+function OnPanelFadeInComplete()
+  if(not showStandaloneQueueWindow) then
+    Controls.QueueAlphaIn:Play();
+  end
+end
+
+--- ===========================================================================
+--  Recenter the camera over the selected city
+--  This is here for the sake of middle mouse clicking on a production item
+--  which ordinarily recenters the map to the cursor position
+--- ===========================================================================
+function RecenterCameraToSelectedCity()
+  local kCity:table = UI.GetHeadSelectedCity();
+  UI.LookAtPlot( kCity:GetX(), kCity:GetY() );
+end
+
+function ResetSelectedCityQueue()
+  local selectedCity = UI.GetHeadSelectedCity();
+  if(not selectedCity) then return end
+
+  local cityID = selectedCity:GetID();
+  if(not cityID) then return end
+
+  local buildQueue = selectedCity:GetBuildQueue();
+  local currentProductionHash = buildQueue:GetCurrentProductionTypeHash();
+  local plotID = -1;
+
+  if(prodQueue[cityID]) then prodQueue[cityID] = {}; end
+
+  if(currentProductionHash ~= 0) then
+    -- Determine the type of the item
+    local currentType = 0;
+    local productionInfo = GetProductionInfoOfCity(selectedCity, currentProductionHash);
+    productionInfo.Hash = currentProductionHash;
+
+    if(productionInfo.Type == "UNIT") then
+      currentType = buildQueue:GetCurrentProductionTypeModifier() + 2;
+    elseif(productionInfo.Type == "BUILDING") then
+      if(GameInfo.Buildings[currentProductionHash].MaxWorldInstances == 1) then
+        currentType = PRODUCTION_TYPE.PLACED;
+
+        local pCityBuildings  :table = selectedCity:GetBuildings();
+        local kCityPlots    :table = Map.GetCityPlots():GetPurchasedPlots( selectedCity );
+        if (kCityPlots ~= nil) then
+          for _,plot in pairs(kCityPlots) do
+            local kPlot:table =  Map.GetPlotByIndex(plot);
+            local wonderType = kPlot:GetWonderType();
+            if(wonderType ~= -1 and GameInfo.Buildings[wonderType].BuildingType == GameInfo.Buildings[currentProductionHash].BuildingType) then
+              plotID = plot;
+            end
+          end
+        end
+      else
+        currentType = PRODUCTION_TYPE.BUILDING;
+      end
+    elseif(productionInfo.Type == "DISTRICT") then
+      currentType = PRODUCTION_TYPE.PLACED;
+    elseif(productionInfo.Type == "PROJECT") then
+      currentType = PRODUCTION_TYPE.PROJECT;
+    end
+
+    if(currentType == 0) then
+      print("Could not find production type for hash: " .. currentProductionHash);
+    end
+
+    prodQueue[cityID][1] = {
+      entry=productionInfo,
+      type=currentType,
+      plotID=plotID
+    }
+  end
+
+  Refresh();
+end
+--- =========================================================================================================
+--- =========================================================================================================
+--- =========================================================================================================
 
 function OnCityProductionChanged()
   Refresh();
@@ -2066,10 +3734,12 @@ end
 
 function Initialize()
   
+  LoadQueues();
   Controls.PauseCollapseList:Stop();
   Controls.PauseDismissWindow:Stop(); 
   --CreateCorrectTabs();
   Resize();
+  SetDropOverlap( DROP_OVERLAP_REQUIRED );
 
   --Controls.HideDisabled:RegisterCallback( Mouse.eLClick, ShowHideDisabled);
   --AutoSizeGridButton(Controls.HideDisabled,45,24,20,"H");
@@ -2079,6 +3749,10 @@ function Initialize()
   Controls.CloseButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.PauseCollapseList:RegisterEndCallback( OnCollapseTheList );
   Controls.PauseDismissWindow:RegisterEndCallback( OnHide );
+  Controls.QueueWindowToggle:RegisterCallback(Mouse.eLClick, ToggleQueueWindow);
+  Controls.AlphaIn:RegisterEndCallback( OnPanelFadeInComplete )
+  Controls.QueueWindowReset:RegisterCallback(Mouse.eLClick, ResetSelectedCityQueue);
+
   ContextPtr:SetInitHandler( OnInit  );
   ContextPtr:SetInputHandler( OnInputHandler, true );
   ContextPtr:SetShutdown( OnShutdown );
@@ -2087,6 +3761,7 @@ function Initialize()
   Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );
   Events.UnitSelectionChanged.Add( OnUnitSelectionChanged );
   Events.LocalPlayerChanged.Add( OnLocalPlayerChanged );    
+  Events.PlayerTurnActivated.Add( OnPlayerTurnActivated );
   
   LuaEvents.CityBannerManager_ProductionToggle.Add( OnCityBannerManagerProductionToggle );
   LuaEvents.CityPanel_ChooseProduction.Add( OnCityPanelChooseProduction );
@@ -2100,7 +3775,12 @@ function Initialize()
   LuaEvents.GameDebug_Return.Add( OnGameDebugReturn );
   LuaEvents.NotificationPanel_ChooseProduction.Add( OnNotificationPanelChooseProduction );
   LuaEvents.StrageticView_MapPlacement_ProductionOpen.Add( OnStrategicViewMapPlacementProductionOpen );
+  LuaEvents.StrageticView_MapPlacement_ProductionClose.Add( OnStrategicViewMapPlacementProductionClose );
   LuaEvents.Tutorial_ProductionOpen.Add( OnTutorialProductionOpen );  
+
+  Events.CityProductionChanged.Add( OnCityProductionChanged );
+  Events.CityProductionCompleted.Add(OnCityProductionCompleted);
+  Events.CityProductionUpdated.Add(OnCityProductionUpdated);
   
   Events.CityWorkerChanged.Add(Refresh);
   Events.CityProductionChanged.Add( OnCityProductionChanged );

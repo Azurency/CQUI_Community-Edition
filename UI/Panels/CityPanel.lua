@@ -129,7 +129,7 @@ LuaEvents.CQUI_CityviewEnable.Add( CQUI_CityviewEnableManager);
 LuaEvents.CQUI_Strike_Enter.Add (function() CQUI_usingStrikeButton = true; end)
 LuaEvents.CQUI_Strike_Exit.Add (function() CQUI_usingStrikeButton = false; end)
 
-function CQUI_OnInterfaceModeChanged( eOldMode:number, eNewMode:number )  
+function CQUI_OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
   if(eOldMode == InterfaceModeTypes.CITY_MANAGEMENT or eOldMode == InterfaceModeTypes.DISTRICT_PLACEMENT or eOldMode == InterfaceModeTypes.BUILDING_PLACEMENT) then
     if(eNewMode == InterfaceModeTypes.DISTRICT_PLACEMENT or eNewMode == InterfaceModeTypes.BUILDING_PLACEMENT) then 
       CQUI_WonderModeEnabled();

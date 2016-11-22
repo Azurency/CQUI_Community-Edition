@@ -5,7 +5,7 @@
         <Description>Reduce clicks and make empire management easy</Description>
         <Teaser>Reduce clicks and make empire management easy</Teaser>
         <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman</Authors>
-        <SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod. Greg Miller for his Unit Report Screen mod.</SpecialThanks>
+        <SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod. Greg Miller for his Unit Report Screen mod. Lozenged/kblease for his Production Queue mod.</SpecialThanks>
     </Properties>
     <Components>
         <ImportFiles id="CQUI_IMPORT_FILES">
@@ -72,6 +72,12 @@
                 <File>BTS/BetterTradeScreen_Text.xml</File>
             </Items>
         </LocalizedText>
+        <ImportFiles id="PRODUCTION_QUEUE_IMPORT_FILES">
+            <Items>
+                <File>PQ/StrategicView_MapPlacement.lua</File>
+                <File>PQ/SupportFunctions.lua</File>
+            </Items>
+        </ImportFiles>
         <ImportFiles id="UNITREPORT_IMPORT_FILES">
             <Items>
                 <File>URS/ReportScreen.lua</File>
@@ -129,6 +135,8 @@
         <File>BTS/Choosers/TradeOriginChooser.xml</File>
         <File>BTS/Choosers/TradeOriginChooser.lua</File>
         <File>BTS/BetterTradeScreen_Text.xml</File>
+        <File>PQ/StrategicView_MapPlacement.lua</File>
+        <File>PQ/SupportFunctions.lua</File>
         <File>URS/ReportScreen.lua</File>
         <File>URS/ReportScreen.xml</File>
         <File>URS/UnitPromotionPopup.lua</File>
