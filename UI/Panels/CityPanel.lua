@@ -396,7 +396,8 @@ function ViewMain( data:table )
   -- Religion tooltip/icon
   local ReligionTooltip :string;
   if ((table.count(data.Religions) > 1) or (data.PantheonBelief > -1)) then
-    ReligionTooltip = "Your Pantheon:[NEWLINE]";
+    ReligionTooltip = Locale.Lookup("LOC_BELIEF_CLASS_PANTHEON_NAME") .. ":[NEWLINE]";
+
     if data.PantheonBelief > -1 then
       local kPantheonBelief = GameInfo.Beliefs[data.PantheonBelief];
       ReligionTooltip = ReligionTooltip..Locale.Lookup(kPantheonBelief.Name).."[NEWLINE]"..Locale.Lookup(kPantheonBelief.Description);
@@ -409,11 +410,11 @@ function ViewMain( data:table )
         local iconName    :string = "ICON_" .. religion.ReligionType;
         if religion == data.Religions[DATA_DOMINANT_RELIGION] then
           Controls.ReligionIcon:SetIcon("ICON_" .. religion.ReligionType);
-          ReligionTooltip = ReligionTooltip.."[NEWLINE][NEWLINE]"..religionName..": "..religion.Followers.." Followers";
+          ReligionTooltip = ReligionTooltip.."[NEWLINE][NEWLINE]"..Locale.Lookup("LOC_UI_RELIGION_NUM_FOLLOWERS_TT", religionName, religion.Followers);
         else
           if ( religion.ID > -1 and religion.Followers > 0) then 
             religiousMinoritiesExist = true;
-            religiousMinorities = religiousMinorities.. "[NEWLINE]"..religionName..": "..religion.Followers.." Followers";
+            religiousMinorities = religiousMinorities.. "[NEWLINE]"..Locale.Lookup("LOC_UI_RELIGION_NUM_FOLLOWERS_TT", religionName, religion.Followers);
           end
         end
       end
@@ -426,7 +427,7 @@ function ViewMain( data:table )
       end
     end
   else
-    ReligionTooltip = "This city has no religion.";
+    ReligionTooltip = Locale.Lookup("LOC_RELIGIONPANEL_NO_RELIGION");
   end
   -- District tooltip
   local DistrictTooltip = "";
@@ -460,10 +461,10 @@ function ViewMain( data:table )
   tableChanges["Neg"] = {}
   tableChanges["Pos"] = {};
   function repeatAvoidAddNew( TextKey, dataID, isNegative, special)
-    local textValue = Locale.Lookup(TextKey);
+    local textValue = Locale.Lookup(TextKey, "");
     if (isNegative) then
       if special then
-        table.insert(tableChanges["Neg"], {Amenities = Locale.ToNumber(data[dataID]), AmenityType = textValue});
+        table.insert(tableChanges["Neg"], {Amenities = Locale.ToNumber(data[dataID]), AmenityType = textValue.." "});
       elseif (data["AmenitiesLostFrom"..dataID] ~= 0) then
         table.insert(tableChanges["Neg"], {Amenities = Locale.ToNumber(data["AmenitiesLostFrom"..dataID]), AmenityType = textValue});
       end
@@ -482,7 +483,7 @@ function ViewMain( data:table )
   repeatAvoidAddNew("LOC_HUD_CITY_AMENITIES_FROM_STARTING_ERA",     "StartingEra"             );
   repeatAvoidAddNew("LOC_HUD_CITY_AMENITIES_LOST_FROM_WAR_WEARINESS", "WarWeariness",     true    );
   repeatAvoidAddNew("LOC_HUD_CITY_AMENITIES_LOST_FROM_BANKRUPTCY",  "Bankruptcy",       true    );
-  repeatAvoidAddNew("Amenities from Population:",           "AmenitiesRequiredNum", true, true  );
+  repeatAvoidAddNew("LOC_HUD_REPORTS_FROM_POPULATION",           "AmenitiesRequiredNum", true, true  );
   function AmenitiesSort(a, b)
     return a["Amenities"] > b["Amenities"];
   end
@@ -557,7 +558,6 @@ function ViewMain( data:table )
   end
   Controls.LabelButtonRows:ReprocessAnchoring();
   Controls.BreakdownNum:SetText( data.DistrictsNum.."/"..data.DistrictsPossibleNum );
-  Controls.BreakdownLabel:SetText("DISTRICTS");
   Controls.BreakdownGrid:SetToolTipString(DistrictTooltip);
   Controls.AmenitiesGrid:SetToolTipString(HappinessTooltipString);
   Controls.ReligionGrid:SetToolTipString(ReligionTooltip);

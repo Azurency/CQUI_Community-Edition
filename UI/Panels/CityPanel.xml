@@ -11,7 +11,7 @@
             <Image                                    Anchor="R,B" Offset="0,-7"                                Texture="SelectionPanel_Divider"  />
             <Grid           ID="BreakdownGrid"        Anchor="R,T" Offset="4,20"    Size="parent-100,20"        Style="CityPanelSlotGrid">
               <Label        ID="BreakdownNum"         Anchor="L,C" Offset="33,1"    Style="CityPanelNumLarge"   String="-" />
-              <Label        ID="BreakdownLabel"       Anchor="R,C" Offset="4,1"     Style="CityPanelHeader"     String="{LOC_HUD_CITY_BUILDINGS:upper}" />
+              <Label        ID="BreakdownLabel"       Anchor="R,C" Offset="4,1"     Style="CityPanelHeader"     String="{LOC_HUD_DISTRICTS:upper}" />
             </Grid>
             <Grid           ID="ReligionGrid"         Anchor="R,T" Offset="4,45"    Size="parent-100,20"        Style="CityPanelSlotGrid">
               <Label        ID="ReligionNum"          Anchor="L,C" Offset="33,1"    Style="CityPanelNumLarge"   String="-" />

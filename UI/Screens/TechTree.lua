@@ -1127,7 +1127,7 @@ function OnResearchComplete( ePlayer:number, eTech:number)
         if currentTechID ~= -1 then
           local techName = GameInfo.Technologies[currentTechID].Name;
 
-          LuaEvents.CQUI_AddStatusMessage("The Technology, " .. Locale.Lookup( techName ) .. ", is completed.", 10, CQUI_STATUS_MESSAGE_TECHS);
+          LuaEvents.CQUI_AddStatusMessage(Locale.Lookup("LOC_TECH_BOOST_COMPLETE", techName), 10, CQUI_STATUS_MESSAGE_TECHS);
 
         end -- end of techID check
 
