@@ -2172,7 +2172,7 @@ function Refresh()
         new_data.CurrentProduction = row.Name;
       end
       -- Can it be built normally?
-      if row.Hash ~= currentProductionHash and buildQueue:CanProduce( row.Hash, true ) then
+      if buildQueue:CanProduce( row.Hash, true ) then
         local isCanProduceExclusion, results   = buildQueue:CanProduce( row.Hash, false, true );
         local isDisabled        :boolean = not isCanProduceExclusion;
         local sAllReasons        :string = ComposeFailureReasonStrings( isDisabled, results );
