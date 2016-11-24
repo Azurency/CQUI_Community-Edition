@@ -62,12 +62,6 @@
       <Container ID="HiddenOptions" Size="parent,parent" Hidden="1">
         <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
           <Stack Anchor="R,T" StackGrowth="Down" Padding="5">
-            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-              <GridButton ID="CowboyCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_HIDDEN_COWBOY" />
-            </Stack>
-            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-              <GridButton ID="BadCowboyCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_HIDDEN_BADCOWBOY" />
-            </Stack>
           </Stack>
         </Stack>
       </Container> 
