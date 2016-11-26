@@ -8,7 +8,7 @@
       <Container ID="Header" Style="ShellHeaderContainer">
         <Grid Style="ShellHeaderButtonGrid">
         </Grid>
-    <Label ID="WindowTitle" Style="ShellHeader" Anchor="C,C"/>
+        <Label ID="WindowTitle" Style="ShellHeader" Anchor="C,C"/>
       </Container>
       <Grid ID="Content" Style="SubContainer4" Size="parent-10,670" Anchor="C,T" Color="7,28,50" Offset="0,55">
         <Grid Style="SubContainerFill" Size="210,parent-6" Offset="3,3" Color="6,36,57,150">
@@ -17,9 +17,11 @@
               <!--<GridButton ID="GeneralTab" Style="ShellTabSmall" String="{LOC_CQUI_GENERAL:upper}" Size="200,32"/>
               <GridButton ID="PopupsTab" Style="ShellTabSmall" String="{LOC_CQUI_POPUPS:upper}" Size="200,32"/>
               <GridButton ID="BindingsTab" Style="ShellTabSmall" String="{LOC_CQUI_BINDINGS:upper}" Size="200,32"/>
+              <GridButton ID="BindingsTab" Style="ShellTabSmall" String="{LOC_CQUI_STATUS:upper}" Size="200,32"/>
               <GridButton ID="HiddenTab" Style="ShellTabSmall" String="{LOC_CQUI_HIDDEN:upper}" Size="200,32" Hidden="1"/>-->
               <GridButton ID="GeneralTab" Style="ShellTabSmall" String="GENERAL" Size="200,32"/>
               <GridButton ID="PopupsTab" Style="ShellTabSmall" String="POPUPS" Size="200,32"/>
+              <GridButton ID="GossipTab" Style="ShellTabSmall" String="GOSSIP" Size="200,32"/>
               <GridButton ID="BindingsTab" Style="ShellTabSmall" String="BINDINGS" Size="200,32"/>
               <GridButton ID="HiddenTab" Style="ShellTabSmall" String="HIDDEN" Size="200,32" Hidden="1"/>
             </Stack>
@@ -50,6 +52,224 @@
           </Stack>
         </Stack>
       </Container>
+      <Container ID="GossipOptions" Size="parent,parent" Hidden="1">
+        <ScrollPanel Anchor="C,T" Style="ListingScrollPanel" Offset="0,10" Size="parent-20,parent-5" Vertical="1">
+          <ScrollBar Style="ScrollVerticalBar" Offset="-20,-5" Length="420" Anchor="R,C" AnchorSide="O,I" />
+          <Stack Anchor="C,T" StackGrowth="Down" Padding="5">
+            <!-- Diplo gossips -->
+            <Label Anchor="C,C" Style="ShellOptionText" String="LOC_HUD_REPORTS_TRADE_DIPLOMACY"/>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_DELEGATIONCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_EMBASSYCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_CITY_STATE_INFLUENCECheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_DECLARED_FRIENDSHIPCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_ALLIEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_RESEARCH_AGREEMENTCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_DENOUNCEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <!-- City gossips -->
+            <Label Anchor="C,C" Style="ShellOptionText" String="LOC_CITY_NAME_BLANK"/>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_TRAIN_SETTLERCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_FOUND_CITYCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_CITY_BESIEGEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_CONQUER_CITYCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_CITY_RAZEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_CITY_LIBERATEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <!-- Military gossips -->
+            <Label Anchor="C,C" Style="ShellOptionText" String="LOC_CATEGORY_MILITARY_NAME"/>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_MAKE_DOWCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_RECEIVE_DOWCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_TRAIN_UNITCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_TRAIN_UNIQUE_UNITCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_LAND_UNIT_LEVELCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_PILLAGECheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_WMD_BUILTCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_WMD_STRIKECheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <!-- Construction gossips -->
+            <Label Anchor="C,C" Style="ShellOptionText" String="LOC_TECH_CONSTRUCTION_NAME"/>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_CONSTRUCT_DISTRICTCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_WONDER_STARTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_PROJECT_STARTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_GREATPERSON_CREATEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <!-- Culture/Tech gossips -->
+            <Label Anchor="C,C" Style="ShellOptionText" String="[ICON_Science] / [ICON_Culture] / [ICON_Government]"/>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_ERA_CHANGEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_RESEARCH_TECHCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_CULTURVATE_CIVICCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_POLICY_ENACTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_CHANGE_GOVERNMENTCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_ANARCHY_BEGINSCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <!-- Trade gossips -->
+            <Label Anchor="C,C" Style="ShellOptionText" String="LOC_CATEGORY_TRADE_NAME"/>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_TRADE_DEALCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_TRADE_RENEGECheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <!-- Spy gossips -->
+            <Label Anchor="C,C" Style="ShellOptionText" String="LOC_UNIT_SPY_NAME"/>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_SPY_STEAL_TECH_BOOST_DETECTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_SPY_STEAL_TECH_BOOST_UNDETECTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_SPY_RECRUIT_PARTISANS_DETECTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_SPY_RECRUIT_PARTISANS_UNDETECTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_SPY_SABOTAGE_PRODUCTION_DETECTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_SPY_SABOTAGE_PRODUCTION_UNDETECTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_SPY_SIPHON_FUNDS_DETECTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_SPY_SIPHON_FUNDS_UNDETECTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_SPY_DISRUPT_ROCKETRY_DETECTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_SPY_DISRUPT_ROCKETRY_UNDETECTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_SPY_GREAT_WORK_HEIST_DETECTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_SPY_GREAT_WORK_HEIST_UNDETECTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <!-- Religion gossips -->
+            <Label Anchor="C,C" Style="ShellOptionText" String="LOC_CATEGORY_RELIGION_NAME"/>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_CREATE_PANTHEONCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_FOUND_RELIGIONCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_NEW_RELIGIOUS_MAJORITYCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_INQUISITION_LAUNCHEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <!-- Tourism gossips -->
+            <Label Anchor="C,C" Style="ShellOptionText" String="LOC_TOP_PANEL_TOURISM"/>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_RELIC_RECEIVEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_ARTIFACT_EXTRACTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_BEACH_RESORT_CREATEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_NATIONAL_PARK_CREATEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <!-- AI-specific gossips -->
+            <Label Anchor="C,C" Style="ShellOptionText" String="LOC_SLOTTYPE_AI"/>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_START_VICTORY_STRATEGYCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_STOP_VICTORY_STRATEGYCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_AGENDA_KUDOSCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_AGENDA_WARNINGCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_WAR_PREPARATIONCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_LAUNCHING_ATTACKCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <!-- Other gossips -->
+            <Label Anchor="C,C" Style="ShellOptionText" String="..."/>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_BARBARIAN_INVASION_STARTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_BARBARIAN_RAID_STARTEDCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_CLEAR_CAMPCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+              <GridButton ID="LOC_GOSSIP_FIND_NATURAL_WONDERCheckbox" Anchor="L,C" Offset="0,0" Size="600,24" Style="CheckBoxControl" />
+            </Stack>            
+          </Stack>
+        </ScrollPanel>
+      </Container> 
       <Container ID="BindingsOptions" Size="parent,parent" Hidden="1">
         <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
@@ -58,7 +278,7 @@
             <Label Anchor="L,C" Style="ShellOptionText" String="Binding Modes"/>
           </Stack>
         </Stack>
-      </Container> 
+      </Container>
       <Container ID="HiddenOptions" Size="parent,parent" Hidden="1">
         <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
           <Stack Anchor="R,T" StackGrowth="Down" Padding="5">
@@ -66,7 +286,7 @@
         </Stack>
       </Container> 
       <!--<Label Anchor="c,b" Style="FontFlair16" String="LOC_CQUI_SETTINGS_REMINDER"/>-->
-      <Label Anchor="c,b" Style="FontFlair16" String="Remember: CQUI settings are attached to individual saves!"/>
+      <Label Anchor="c,b" Offset="0,-25" Style="FontFlair16" String="Remember: CQUI settings are attached to individual saves!"/>
     </Container>
       </Grid>
     </Container>

@@ -3,6 +3,7 @@
 -- Non-interactive messages that appear in the upper-center of the screen.
 -- =========================================================================== 
 include( "InstanceManager" );
+include( "SupportFunctions" );
 
 -- =========================================================================== 
 --  CONSTANTS
@@ -41,9 +42,234 @@ local m_kMessages :table = {};
 
 -- =========================================================================== 
 -- =========================================================================== 
+-- Gets a list of ignored gossip messages based on current settings
+function CQUI_GetIgnoredGossipMessages() --Yeah... as far as I can tell there's no way to get these programatically, so I just made a script that grepped these from the LOC files
+  local ignored :table = {};
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_AGENDA_KUDOS") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_AGENDA_KUDOS", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_AGENDA_WARNING") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_AGENDA_WARNING", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_ALLIED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_ALLIED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_ANARCHY_BEGINS") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_ANARCHY_BEGINS", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_ARTIFACT_EXTRACTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_ARTIFACT_EXTRACTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_BARBARIAN_INVASION_STARTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_BARBARIAN_INVASION_STARTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_BARBARIAN_RAID_STARTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_BARBARIAN_RAID_STARTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_BEACH_RESORT_CREATED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_BEACH_RESORT_CREATED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_CHANGE_GOVERNMENT") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_CHANGE_GOVERNMENT", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_CITY_BESIEGED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_CITY_BESIEGED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_CITY_LIBERATED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_CITY_LIBERATED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_CITY_RAZED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_CITY_RAZED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_CLEAR_CAMP") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_CLEAR_CAMP", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_CITY_STATE_INFLUENCE") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_CITY_STATE_INFLUENCE", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_CONQUER_CITY") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_CONQUER_CITY", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_CONSTRUCT_BUILDING") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_CONSTRUCT_BUILDING", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_CONSTRUCT_DISTRICT") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_CONSTRUCT_DISTRICT", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_CREATE_PANTHEON") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_CREATE_PANTHEON", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_CULTURVATE_CIVIC") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_CULTURVATE_CIVIC", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_DECLARED_FRIENDSHIP") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_DECLARED_FRIENDSHIP", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_DELEGATION") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_DELEGATION", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_DENOUNCED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_DENOUNCED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_EMBASSY") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_EMBASSY", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_ERA_CHANGED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_ERA_CHANGED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_FIND_NATURAL_WONDER") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_FIND_NATURAL_WONDER", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_FOUND_CITY") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_FOUND_CITY", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_FOUND_RELIGION") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_FOUND_RELIGION", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_GREATPERSON_CREATED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_GREATPERSON_CREATED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_LAUNCHING_ATTACK") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_LAUNCHING_ATTACK", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_WAR_PREPARATION") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_WAR_PREPARATION", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_INQUISITION_LAUNCHED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_INQUISITION_LAUNCHED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_LAND_UNIT_LEVEL") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_LAND_UNIT_LEVEL", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_MAKE_DOW") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_MAKE_DOW", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_NATIONAL_PARK_CREATED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_NATIONAL_PARK_CREATED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_NEW_RELIGIOUS_MAJORITY") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_NEW_RELIGIOUS_MAJORITY", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_PILLAGE") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_PILLAGE", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_POLICY_ENACTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_POLICY_ENACTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_RECEIVE_DOW") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_RECEIVE_DOW", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_RELIC_RECEIVED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_RELIC_RECEIVED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_RESEARCH_AGREEMENT") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_RESEARCH_AGREEMENT", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_RESEARCH_TECH") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_RESEARCH_TECH", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_SPY_DISRUPT_ROCKETRY_DETECTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_SPY_DISRUPT_ROCKETRY_DETECTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_SPY_DISRUPT_ROCKETRY_UNDETECTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_SPY_DISRUPT_ROCKETRY_UNDETECTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_SPY_GREAT_WORK_HEIST_DETECTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_SPY_GREAT_WORK_HEIST_DETECTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_SPY_GREAT_WORK_HEIST_UNDETECTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_SPY_GREAT_WORK_HEIST_UNDETECTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_SPY_RECRUIT_PARTISANS_DETECTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_SPY_RECRUIT_PARTISANS_DETECTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_SPY_RECRUIT_PARTISANS_UNDETECTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_SPY_RECRUIT_PARTISANS_UNDETECTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_SPY_SABOTAGE_PRODUCTION_DETECTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_SPY_SABOTAGE_PRODUCTION_DETECTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_SPY_SABOTAGE_PRODUCTION_UNDETECTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_SPY_SABOTAGE_PRODUCTION_UNDETECTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_SPY_SIPHON_FUNDS_DETECTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_SPY_SIPHON_FUNDS_DETECTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_SPY_SIPHON_FUNDS_UNDETECTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_SPY_SIPHON_FUNDS_UNDETECTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_SPY_STEAL_TECH_BOOST_DETECTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_SPY_STEAL_TECH_BOOST_DETECTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_SPY_STEAL_TECH_BOOST_UNDETECTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_SPY_STEAL_TECH_BOOST_UNDETECTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_TRADE_DEAL") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_TRADE_DEAL", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_TRADE_RENEGE") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_TRADE_RENEGE", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_TRAIN_SETTLER") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_TRAIN_SETTLER", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_TRAIN_UNIT") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_TRAIN_UNIT", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_TRAIN_UNIQUE_UNIT") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_TRAIN_UNIQUE_UNIT", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_PROJECT_STARTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_PROJECT_STARTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_START_VICTORY_STRATEGY") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_START_VICTORY_STRATEGY", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_STOP_VICTORY_STRATEGY") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_STOP_VICTORY_STRATEGY", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_WMD_BUILT") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_WMD_BUILT", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_WMD_STRIKE") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_WMD_STRIKE", "X", "Y", "Z", "1", "2", "3");
+  end
+  if(GameConfiguration.GetValue("CQUI_LOC_GOSSIP_WONDER_STARTED") == false) then
+    ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_WONDER_STARTED", "X", "Y", "Z", "1", "2", "3");
+  end
+  return ignored;
+end
+
+-- Returns true if the given message is disabled in settings
+function CQUI_IsGossipMessageIgnored(str:string) --Heuristics for figuring out if the given message should be ignored
+  local sourceSample = Locale.Lookup("LOC_GOSSIP_SOURCE_DELEGATE", "X", "Y", "Z"); --Get a sample of a gossip source string
+  _, last = string.match(sourceSample, "(.-)%s(%S+)$"); --Get last word that occurs in the gossip source string. "that" in English. Assumes the last word is always the same, which it is in English, unsure if this holds true in other languages
+  str = Split(str, " " .. last .. " " , 2)[2]; --Get the rest of the string after the last word from the gossip source string
+  if (str == nil) then return false; end --str will be nil if the last word from the gossip source string can't be found in message. Generally means the incoming message wasn't gossip at all
+  local strwords = Split(str, " "); --Split into component words
+  local ignored = CQUI_GetIgnoredGossipMessages();
+  for _, message in ipairs(ignored) do
+    message = Split(message, " ");
+    for _, strword in ipairs(strwords) do
+      local tally = 0; --Tracks how many words from the ignored message were matched in comparison to the real message
+      for i, messageword in ipairs(message) do 
+        if(messageword == strword or string.find(messageword, "X") or string.find(messageword, "Y") or string.find(messageword, "Z")) then --Ignores words containing the given placeholder letters. Has some chance for false positives, but it's very unlikely this will every actually make much difference
+          tally = tally + 1;
+        end
+      end
+      if(tally >= #message - 1) then --If every single word from the ignored message matched the real message, return true
+        return true;
+      end
+    end
+  end
+  return false;
+end
+
 function OnStatusMessage( str:string, fDisplayTime:number, type:number )
-  if (type == ReportingStatusTypes.DEFAULT or
-    type == ReportingStatusTypes.GOSSIP) then -- A type we handle?
+  if (type == ReportingStatusTypes.DEFAULT or type == ReportingStatusTypes.GOSSIP) then -- A type we handle?
+    if (type == ReportingStatusTypes.GOSSIP) then
+      if (CQUI_IsGossipMessageIgnored(str)) then return; end --If the message is supposed to be ignored, give up!
+    end
 
     local kTypeEntry :table = m_kMessages[type];
     if (kTypeEntry == nil) then
