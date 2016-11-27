@@ -56,6 +56,12 @@
         <ScrollPanel Anchor="C,T" Style="ListingScrollPanel" Offset="0,10" Size="parent-20,parent-5" Vertical="1">
           <ScrollBar Style="ScrollVerticalBar" Offset="-20,-5" Length="420" Anchor="R,C" AnchorSide="O,I" />
           <Stack Anchor="C,T" StackGrowth="Down" Padding="5">
+            <!-- Gossip options -->
+            <Stack Anchor="C,T" StackGrowth="Left" Padding="5">
+              <!--<GridButton ID="TrimGossipCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GOSSIP_TRIMMESSAGE" />-->
+              <GridButton ID="TrimGossipCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Trim gossip messages" />
+            </Stack>
+            <Line Start="0,0" End="600,0" Width="2" Color="84,77,66,255" />
             <!-- Diplo gossips -->
             <Label Anchor="C,C" Style="ShellOptionText" String="LOC_HUD_REPORTS_TRADE_DIPLOMACY"/>
             <Stack Anchor="R,T" StackGrowth="Left" Padding="5">

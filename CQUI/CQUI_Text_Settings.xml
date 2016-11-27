@@ -31,8 +31,14 @@
   <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="en_US">
       <Text>Displays new icons in the city banner. A food icon is displayed whenever there are unlocked citizens being automatically assigned by the AI city governor. District icons indicate built districts</Text>
     </Row>
-  <Row Tag="LOC_CQUI_Gossip" Language="en_US">
+  <Row Tag="LOC_CQUI_GOSSIP" Language="en_US">
     <Text>Gossip</Text>
+  </Row>
+  <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="en_US">
+    <Text>Trim gossip messages</Text>
+  </Row>
+  <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="en_US">
+    <Text>Removes the mostly useless start of the gossip message describing where the information came from</Text>
   </Row>
   <Row Tag="LOC_CQUI_HIDDEN" Language="en_US">
       <Text>Hidden</Text>

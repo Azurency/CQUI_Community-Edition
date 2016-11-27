@@ -48,7 +48,8 @@ INSERT INTO CQUI_Settings -- Don't touch this line!
 */
 
 INSERT INTO CQUI_Settings -- Don't touch this line!
-  VALUES  ("CQUI_LOC_GOSSIP_AGENDA_KUDOS", 0),
+  VALUES  ("CQUI_TrimGossip", 1),
+    ("CQUI_LOC_GOSSIP_AGENDA_KUDOS", 0),
     ("CQUI_LOC_GOSSIP_AGENDA_WARNING", 1),
     ("CQUI_LOC_GOSSIP_ALLIED", 1),
     ("CQUI_LOC_GOSSIP_ANARCHY_BEGINS", 1),

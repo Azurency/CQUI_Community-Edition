@@ -35,6 +35,17 @@ local CQUI_messageType          :number = 0;
 
 local m_kMessages :table = {};
 
+--CQUI Members
+local CQUI_trimGossip = true;
+local CQUI_ignoredMessages = {};
+
+function CQUI_OnSettingsUpdate()
+  CQUI_trimGossip = GameConfiguration.GetValue("CQUI_TrimGossip");
+  CQUI_ignoredMessages = CQUI_GetIgnoredGossipMessages();
+end
+
+LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
+LuaEvents.CQUI_SettingsInitialized.Add( CQUI_OnSettingsUpdate );
 
 -- =========================================================================== 
 --  FUNCTIONS
@@ -240,15 +251,18 @@ function CQUI_GetIgnoredGossipMessages() --Yeah... as far as I can tell there's 
   return ignored;
 end
 
--- Returns true if the given message is disabled in settings
-function CQUI_IsGossipMessageIgnored(str:string) --Heuristics for figuring out if the given message should be ignored
+--Trims source information from gossip messages. Returns nil if the message couldn't be trimmed (this usually means the provided string wasn't a gossip message at all)
+function CQUI_TrimGossipMessage(str:string)
   local sourceSample = Locale.Lookup("LOC_GOSSIP_SOURCE_DELEGATE", "X", "Y", "Z"); --Get a sample of a gossip source string
   _, last = string.match(sourceSample, "(.-)%s(%S+)$"); --Get last word that occurs in the gossip source string. "that" in English. Assumes the last word is always the same, which it is in English, unsure if this holds true in other languages
-  str = Split(str, " " .. last .. " " , 2)[2]; --Get the rest of the string after the last word from the gossip source string
+  return Split(str, " " .. last .. " " , 2)[2]; --Get the rest of the string after the last word from the gossip source string
+end
+
+-- Returns true if the given message is disabled in settings
+function CQUI_IsGossipMessageIgnored(str:string) --Heuristics for figuring out if the given message should be ignored
   if (str == nil) then return false; end --str will be nil if the last word from the gossip source string can't be found in message. Generally means the incoming message wasn't gossip at all
   local strwords = Split(str, " "); --Split into component words
-  local ignored = CQUI_GetIgnoredGossipMessages();
-  for _, message in ipairs(ignored) do
+  for _, message in ipairs(CQUI_ignoredMessages) do
     message = Split(message, " ");
     for _, strword in ipairs(strwords) do
       local tally = 0; --Tracks how many words from the ignored message were matched in comparison to the real message
@@ -268,7 +282,14 @@ end
 function OnStatusMessage( str:string, fDisplayTime:number, type:number )
   if (type == ReportingStatusTypes.DEFAULT or type == ReportingStatusTypes.GOSSIP) then -- A type we handle?
     if (type == ReportingStatusTypes.GOSSIP) then
-      if (CQUI_IsGossipMessageIgnored(str)) then return; end --If the message is supposed to be ignored, give up!
+      local trimmed = CQUI_TrimGossipMessage(str);
+      if(trimmed ~= nil) then
+        if (CQUI_IsGossipMessageIgnored(trimmed)) then
+          return; --If the message is supposed to be ignored, give up!
+        elseif(CQUI_trimGossip) then
+          str = trimmed
+        end
+      end
     end
 
     local kTypeEntry :table = m_kMessages[type];
