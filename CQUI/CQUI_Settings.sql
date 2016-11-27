@@ -23,7 +23,8 @@ INSERT INTO CQUI_Settings -- Don't touch this line!
   VALUES  ("CQUI_ShowLuxuries", 1), -- Luxury resources will show in the top-bar next to strategic resources
       ("CQUI_Smartbanner", 1), -- Additional informations such as districts will show in the city banner
       ("CQUI_TechPopupVisual", 0), -- Popups will be displayed when you discover a new tech or civic (this is the normal behavior for the unmoded game)
-      ("CQUI_TechPopupAudio", 1); -- Play the voiceovers when you discover a new tech or civic (this is the normal behavior for the unmoded game)
+      ("CQUI_TechPopupAudio", 1), -- Play the voiceovers when you discover a new tech or civic (this is the normal behavior for the unmoded game)
+      ("CQUI_ToggleYieldsOnLoad", 1); -- Toggles yields immediately on load
       
 /*  
     ┌────────────────────────────────────────────────────────────────────────────────────────────┐
@@ -48,7 +49,8 @@ INSERT INTO CQUI_Settings -- Don't touch this line!
 */
 
 INSERT INTO CQUI_Settings -- Don't touch this line!
-  VALUES  ("CQUI_TrimGossip", 1),
+  VALUES  ("CQUI_TrimGossip", 1), --Trims the source from the start of gossip messages
+    --Values controlling individual gossip messages
     ("CQUI_LOC_GOSSIP_AGENDA_KUDOS", 0),
     ("CQUI_LOC_GOSSIP_AGENDA_WARNING", 1),
     ("CQUI_LOC_GOSSIP_ALLIED", 1),

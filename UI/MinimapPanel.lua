@@ -788,5 +788,11 @@ function Initialize()
   -- CQUI Handlers
   LuaEvents.CQUI_Option_ToggleBindings.Add( CQUI_OnToggleBindings );
   LuaEvents.CQUI_Option_ToggleYields.Add( ToggleYieldIcons );
+
+  -- CQUI: Toggle yield icons if option is enabled
+  if(GameConfiguration.GetValue("CQUI_ToggleYieldsOnLoad")) then
+    print("test");
+    ToggleYieldIcons();
+  end
 end
 Initialize();
