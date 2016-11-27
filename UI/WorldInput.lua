@@ -141,6 +141,7 @@ function CQUI_OnSettingsUpdate()
 end
 
 LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
+LuaEvents.CQUI_SettingsInitialized.Add( CQUI_OnSettingsUpdate );
 -- ===========================================================================
 --  FUNCTIONS
 -- ===========================================================================
