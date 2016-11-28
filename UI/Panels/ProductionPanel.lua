@@ -45,6 +45,15 @@ local PRODUCTION_TYPE :table = {
     PROJECT   = 6
 };
 
+--CQUI Members
+local CQUI_INSTANCE_Y :number = 32;
+function CQUI_OnSettingsUpdate()
+  CQUI_INSTANCE_Y = GameConfiguration.GetValue("CQUI_ProductionItemHeight");
+  Refresh();
+end
+LuaEvents.CQUI_SettingsUpdate.Add(CQUI_OnSettingsUpdate);
+LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
+
 -- ===========================================================================
 --  Members
 -- ===========================================================================
@@ -582,6 +591,7 @@ function PopulateList(data, listIM)
         unitListing = unitList["unitListIM"]:GetInstance();
       end
       ResetInstanceVisibility(unitListing);
+      unitListing.ButtonContainer:SetSizeY(CQUI_INSTANCE_Y);
       -- Check to see if this item is recommended
       --for _,hash in ipairs( m_recommendedItems) do
       --  if(item.Hash == hash.BuildItemHash) then
@@ -765,6 +775,13 @@ function PopulateList(data, listIM)
       -- Want a special text string for this!! #NEW TEXT #LOCALIZATION - "You can only directly build corps and armies once you have constructed a military academy."
       -- LOC_UNIT_TRAIN_NEED_MILITARY_ACADEMY
       if item.Corps or item.Army then
+        unitListing.ArmyCorpsDrawer:SetOffsetY(CQUI_INSTANCE_Y - 2);
+        unitListing.CorpsButtonContainer:SetSizeY(CQUI_INSTANCE_Y);
+        unitListing.CorpsPurchaseButton:SetSizeY(CQUI_INSTANCE_Y - 9);
+        unitListing.CorpsFaithPurchaseButton:SetSizeY(CQUI_INSTANCE_Y - 9);
+        unitListing.ArmyButtonContainer:SetSizeY(CQUI_INSTANCE_Y);
+        unitListing.ArmyPurchaseButton:SetSizeY(CQUI_INSTANCE_Y - 9);
+        unitListing.ArmyFaithPurchaseButton:SetSizeY(CQUI_INSTANCE_Y - 9);
         unitListing.CorpsArmyDropdownButton:RegisterCallback( Mouse.eLClick, function()
           local isExpanded = unitListing.CorpsArmyArrow:IsSelected();
           unitListing.CorpsArmyArrow:SetSelected(not isExpanded);
@@ -1023,6 +1040,8 @@ function PopulateList(data, listIM)
       end
 
       local districtListing = districtList["districtListIM"]:GetInstance();
+      districtListing.ButtonContainer:SetSizeY(CQUI_INSTANCE_Y);
+      districtListing.BuildingDrawer:SetOffsetY(CQUI_INSTANCE_Y);
       ResetInstanceVisibility(districtListing);
       -- Check to see if this district item is one of the items that is recommended:
       --for _,hash in ipairs( m_recommendedItems) do
@@ -1275,7 +1294,8 @@ function PopulateList(data, listIM)
           else
             buildingListing.Button:SetHide(false);
             buildingListing.Disabled:SetHide(true);
-            buildingListing.Button:SetSizeY(BUTTON_Y);
+            buildingListing.ButtonContainer:SetSizeY(CQUI_INSTANCE_Y);
+            buildingListing.Button:SetSizeY(CQUI_INSTANCE_Y);
             buildingListing.Button:SetColor(0xffffffff);
           end
           buildingListing.Button:SetDisabled(buildingItem.Disabled);
@@ -1298,6 +1318,8 @@ function PopulateList(data, listIM)
       if(item.IsWonder) then
         local wonderListing = wonderList["wonderListIM"]:GetInstance();
         ResetInstanceVisibility(wonderListing);
+        wonderListing.ButtonContainer:SetSizeY(CQUI_INSTANCE_Y);
+        wonderListing.Button:SetSizeY(CQUI_INSTANCE_Y);
         wonderListing.PurchaseButton:SetHide(true);
         wonderListing.FaithPurchaseButton:SetHide(true);
         --for _,hash in ipairs( m_recommendedItems) do
@@ -1339,7 +1361,6 @@ function PopulateList(data, listIM)
         else
           wonderListing.Button:SetHide(false);
           wonderListing.Disabled:SetHide(true);
-          wonderListing.Button:SetSizeY(BUTTON_Y);
           wonderListing.Button:SetColor(0xffffffff);
         end
         wonderListing.Button:SetDisabled(item.Disabled);
@@ -1422,6 +1443,7 @@ function PopulateList(data, listIM)
       projectListing.Button:SetToolTipString(item.ToolTip);
       projectListing.Disabled:SetToolTipString(item.ToolTip);
       projectListing.Icon:SetIcon(ICON_PREFIX..item.Type);
+      projectListing.ButtonContainer:SetSizeY(CQUI_INSTANCE_Y);
       if (item.Disabled) then 
         if(showDisabled) then
           projectListing.Disabled:SetHide(false);

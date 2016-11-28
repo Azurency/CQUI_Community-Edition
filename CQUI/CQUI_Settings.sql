@@ -41,6 +41,19 @@ INSERT INTO CQUI_Settings -- Don't touch this line!
 
 /*  
     ┌────────────────────────────────────────────────────────────────────────────────────────────┐
+    │                                    Slider settings                                         │
+    ├────────────────────────────────────────────────────────────────────────────────────────────┤
+    │These settings control the default value of the CQUI configuration sliders.                 │
+    │Different values can be used depending on individual settings.                              │
+    │Don't change the names of the settings or the first line!                                   │
+    └────────────────────────────────────────────────────────────────────────────────────────────┘
+*/
+
+INSERT INTO CQUI_Settings -- Don't touch this line!
+  VALUES  ("CQUI_ProductionItemHeight", 32); -- Height used for individual items in the production queue. Recommended values fall between 24 and 128, though any positive could work
+
+/*  
+    ┌────────────────────────────────────────────────────────────────────────────────────────────┐
     │                                    Gossip settings                                         │
     ├────────────────────────────────────────────────────────────────────────────────────────────┤
     │These settings control the default state of the Gossip message checkboxes                   │

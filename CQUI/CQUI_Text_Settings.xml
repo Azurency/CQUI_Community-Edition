@@ -67,6 +67,12 @@
   <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="en_US">
       <Text>Toggles the popup audio that plays whenever a new tech or civic is achieved. Is fully indepenedent of the visual component and can play even when there is no visible popup</Text>
     </Row>
+  <Row Tag="LOC_CQUI_PRODUCTION" Language="en_US">
+    <Text>Production</Text>
+  </Row>
+  <Row Tag="LOC_CQUI_PRODUCTION_ITEMHEIGHT" Language="en_US">
+    <Text>Production item height</Text>
+  </Row>
   <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="en_US">
       <Text>Remember: CQUI settings are attached to individual saves!</Text>
     </Row>

@@ -55,21 +55,21 @@ end
 function PopulateCheckBox(control, setting_name, tooltip)
   local current_value = GameConfiguration.GetValue(setting_name);
   if(current_value == nil) then
-  if(GameInfo.CQUI_Settings[setting_name]) then --LY Checks if this setting has a default state defined in the database
-    if(GameInfo.CQUI_Settings[setting_name].Value == 0) then --because 0 is true in Lua
-      current_value = false;
-    else
-      current_value = true;
+    if(GameInfo.CQUI_Settings[setting_name]) then --LY Checks if this setting has a default state defined in the database
+      if(GameInfo.CQUI_Settings[setting_name].Value == 0) then --because 0 is true in Lua
+        current_value = false;
+      else
+        current_value = true;
+      end
+    else current_value = false;
     end
-  else current_value = false;
-  end
     GameConfiguration.SetValue(setting_name, current_value); --/LY
   end
-    if(current_value == false) then
-        control:SetSelected(false);
-    else
-        control:SetSelected(true);
-    end
+  if(current_value == false) then
+    control:SetSelected(false);
+  else
+    control:SetSelected(true);
+  end
   control:RegisterCallback(Mouse.eLClick, 
     function()
       local selected = not control:IsSelected();
@@ -256,6 +256,22 @@ function InitializeGossipCheckboxes()
   PopulateCheckBox(Controls.LOC_GOSSIP_WONDER_STARTEDCheckbox, "CQUI_LOC_GOSSIP_WONDER_STARTED");
 end
 
+--Used to convert between slider steps and production item height
+--Minimum value is 24, maximum is 128. This translates to the 0th step and the 104th
+local ProductionItemHeightConverter = {
+  ToSteps = function(value)
+    local out = value - 24;
+    if(out < 0) then out = 0;
+    elseif(out > 104) then out = 104; end
+    return out;
+  end,
+  ToValue = function(steps)
+    local out = steps + 24;
+    if(out > 128) then out = 128; end
+    return out;
+  end
+};
+
 function Initialize()
   --Adding/binding tabs...
   m_tabs = {
@@ -263,6 +279,7 @@ function Initialize()
     {Controls.BindingsTab, Controls.BindingsOptions},
     {Controls.PopupsTab, Controls.PopupsOptions},
     {Controls.GossipTab, Controls.GossipOptions},
+    {Controls.ProductionTab, Controls.ProductionOptions},
     {Controls.HiddenTab, Controls.HiddenOptions}
   };
   for i, tab in ipairs(m_tabs) do
@@ -285,6 +302,8 @@ function Initialize()
   PopulateCheckBox(Controls.TechAudioCheckbox, "CQUI_TechPopupAudio", "Toggles the popup audio that plays whenever a new tech or civic is achieved. Is fully indepenedent of the visual component and can play even when there is no visible popup");
   -- PopulateCheckBox(Controls.TrimGossipCheckbox, "CQUI_TrimGossip", Locale.Lookup("LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP"));
   PopulateCheckBox(Controls.TrimGossipCheckbox, "CQUI_TrimGossip", "Removes the mostly useless start of the gossip message describing where the information came from");
+
+  PopulateSlider(Controls.ProductionItemHeightSlider, Controls.ProductionItemHeightText, "CQUI_ProductionItemHeight", ProductionItemHeightConverter);
 
   InitializeGossipCheckboxes();
   

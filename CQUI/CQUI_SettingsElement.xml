@@ -15,11 +15,13 @@
           <Grid Style="SubContainer3" Size="parent-6,parent-6" Anchor="C,C" Color="13,70,82,255">
             <Stack ID="TabStack" StackGrowth="Down" Anchor="C,T" Padding="10">
               <!--<GridButton ID="GeneralTab" Style="ShellTabSmall" String="{LOC_CQUI_GENERAL:upper}" Size="200,32"/>
+              <GridButton ID="ProductionTab" Style="ShellTabSmall" String="{LOC_CQUI_PRODUCTION:upper}" Size="200,32"/>
               <GridButton ID="PopupsTab" Style="ShellTabSmall" String="{LOC_CQUI_POPUPS:upper}" Size="200,32"/>
               <GridButton ID="BindingsTab" Style="ShellTabSmall" String="{LOC_CQUI_BINDINGS:upper}" Size="200,32"/>
               <GridButton ID="BindingsTab" Style="ShellTabSmall" String="{LOC_CQUI_STATUS:upper}" Size="200,32"/>
               <GridButton ID="HiddenTab" Style="ShellTabSmall" String="{LOC_CQUI_HIDDEN:upper}" Size="200,32" Hidden="1"/>-->
               <GridButton ID="GeneralTab" Style="ShellTabSmall" String="GENERAL" Size="200,32"/>
+              <GridButton ID="ProductionTab" Style="ShellTabSmall" String="PRODUCTION" Size="200,32"/>
               <GridButton ID="PopupsTab" Style="ShellTabSmall" String="POPUPS" Size="200,32"/>
               <GridButton ID="GossipTab" Style="ShellTabSmall" String="GOSSIP" Size="200,32"/>
               <GridButton ID="BindingsTab" Style="ShellTabSmall" String="BINDINGS" Size="200,32"/>
@@ -53,6 +55,18 @@
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <!--<GridButton ID="TechAudioCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_POPUPS_TECHAUDIO" />-->
             <GridButton ID="TechAudioCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Play tech/civic popup audio" />
+          </Stack>
+        </Stack>
+      </Container>
+      <Container ID="ProductionOptions" Size="parent,parent" Hidden="1">
+        <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <Container Anchor="R,C" Size="300,32" Padding="5">
+              <Slider Style="SliderControl" Anchor="R,C" Size="220,13" Offset="5,0" SpaceForScroll="0" ID="ProductionItemHeightSlider" Steps="104" />
+              <Label String="0" Style="ShellOptionText" Anchor="L,C" ID="ProductionItemHeightText" Offset="3,0" />
+            </Container>
+            <!-- <Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_PRODUCTION_ITEMHEIGHT"/> -->
+            <Label Anchor="L,C" Style="ShellOptionText" String="Production item height"/>
           </Stack>
         </Stack>
       </Container>
