@@ -83,6 +83,35 @@ function PopulateCheckBox(control, setting_name, tooltip)
   end
 end
 
+--Used to populate sliders. data_converter is a table containing two functions: ToStep and ToValue, which describe how to hanlde converting from the incremental slider steps to a setting value, think of it as a less elegant inner class
+function PopulateSlider(control, label, setting_name, data_converter, tooltip)
+  local hasScrolled = false; --Necessary because RegisterSliderCallback fires twice when releasing the mouse cursor for some reason
+  local current_value = GameConfiguration.GetValue(setting_name);
+  if(current_value == nil) then
+    if(GameInfo.CQUI_Settings[setting_name]) then --LY Checks if this setting has a default state defined in the database
+      current_value = GameInfo.CQUI_Settings[setting_name].Value;
+    else current_value = 0; end
+    GameConfiguration.SetValue(setting_name, current_value); --/LY
+    label:SetText(current_value);
+  end
+  control:SetStep(data_converter.ToSteps(current_value));
+  label:SetText(current_value);
+  control:RegisterSliderCallback(
+    function()
+      local value = data_converter.ToValue(control:GetStep());
+      label:SetText(value);
+      if(not control:IsTrackingLeftMouseButton() and hasScrolled == true) then
+        GameConfiguration.SetValue(setting_name, value);
+        LuaEvents.CQUI_SettingsUpdate();
+        hasScrolled = false;
+      else hasScrolled = true; end
+    end
+  );
+  if(tooltip ~= nil)then
+    control:SetToolTipString(tooltip);
+  end
+end
+
 --Used to switch active panels/tabs in the settings panel
 function ShowTab(button, panel)
   -- Unfocus all tabs and hide panels
