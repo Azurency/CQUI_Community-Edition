@@ -13,6 +13,13 @@ local bindings_options = {
   {"Enhanced", 2}
 };
 
+local resource_icon_style_options = 
+{
+  {"Solid", 0},
+  {"Transparent", 1},
+  {"Hidden", 2}
+};
+
 --Used to populate combobox options
 function PopulateComboBox(control, values, setting_name, tooltip)
   control:ClearEntries();
@@ -290,6 +297,8 @@ function Initialize()
   --Populating/binding comboboxes...
   --PopulateComboBox(Controls.BindingsPullDown, bindings_options, "CQUI_BindingsMode", Locale.Lookup("LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP"));
   PopulateComboBox(Controls.BindingsPullDown, bindings_options, "CQUI_BindingsMode", "Standard: Unchanged[NEWLINE]Classic: Civ V binds[NEWLINE]Enhanced: Civ V Binds with the following changes[NEWLINE]  WASD camera control[NEWLINE]  Q/E unit/city cycling[NEWLINE]  Shift toggles city/unit selection[NEWLINE]  Quarry/Airstrike are moved to alt-key + Q/S[NEWLINE]  NOTE:UNBIND W/E IN SETTINGS OR THINGS WON'T WORK!");
+  -- PopulateComboBox(Controls.ResourceIconStyle, resource_icon_style_options, "CQUI_ResourceDimmingStyle", "LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE", "LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP");
+  PopulateComboBox(Controls.ResourceIconStyle, resource_icon_style_options, "CQUI_ResourceDimmingStyle", "Solid: always draw resource icons[NEWLINE]Transparent: improved resource icons are transparent[NEWLINE]Hidden: improved resource icons are hidden");
   
   --Populating/binding checkboxes...
   PopulateCheckBox(Controls.ShowLuxuryCheckbox, "CQUI_ShowLuxuries");

@@ -41,6 +41,11 @@
             <GridButton ID="SmartbannerCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Enable Smartbanner" />
           </Stack>
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <PullDown ID="ResourceIconStyle" Style="PullDownBlue" ScrollThreshold="400" Size="300,24" Offset="0,0" SpaceForScroll="0"/>
+            <!--<Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE"/>-->
+            <Label Anchor="L,C" Style="ShellOptionText" String="Improved resource icon style"/>
+            </Stack>
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <!--<GridButton ID="ToggleYieldsOnLoadCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" />-->
             <GridButton ID="ToggleYieldsOnLoadCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Toggle Yields ON by default" />
           </Stack>

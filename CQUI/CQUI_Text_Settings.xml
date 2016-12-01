@@ -22,7 +22,13 @@
   <Row Tag="LOC_CQUI_GENERAL" Language="en_US">
       <Text>General</Text>
     </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="en_US">
+  <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="en_US">
+    <Text>Improved resource icon style</Text>
+  </Row>
+  <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="en_US">
+    <Text>Solid: always draw resource icons[NEWLINE]Transparent: improved resource icons are transparent[NEWLINE]Hidden: improved resource icons are hidden</Text>
+  </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="en_US">
       <Text>Show luxuries in top panel</Text>
     </Row>
   <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="en_US">
