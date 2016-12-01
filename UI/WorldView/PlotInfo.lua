@@ -434,6 +434,18 @@ function InitYieldIcons()
   UpdateYieldIcons(yields);
 end
 
+function CQUI_ResetYieldIcons(yieldIDs:table)
+
+  local yields:table = {};
+  local count:number = Map.GetPlotCount();
+
+  for i, plotId in ipairs(yieldIDs) do
+    GetPlotYields(plotId, yields);
+  end
+
+  UpdateYieldIcons(yields);
+end
+
 -- ===========================================================================
 local m_PlotYieldsChanged = {};
 function OnPlotYieldChanged(x, y)
@@ -946,6 +958,8 @@ function Initialize()
   if( UserConfiguration.ShowMapYield() ) then
     ShowYieldIcons();
   end
+
+  LuaEvents.CQUI_ResetYieldIcons.Add( CQUI_ResetYieldIcons );
 
 end
 Initialize();
