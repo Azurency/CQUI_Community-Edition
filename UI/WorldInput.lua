@@ -1043,7 +1043,7 @@ function DefaultKeyUpHandler( uiKey:number )
           UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
           UI.SelectNextReadyUnit();
         else
-          UI.SelectNextCity();
+          LuaEvents.CQUI_GoNextCity();
         end
       end
     else --Classic binds that would overlap with the enhanced binds
@@ -3348,13 +3348,11 @@ function OnInputActionTriggered( actionId )
         UI.PlaySound("Play_UI_Click");
 
     elseif actionId == m_actionHotkeyPrevCity then
-        local curCity:table = UI.GetHeadSelectedCity();
-        UI.SelectPrevCity(curCity);
+        LuaEvents.CQUI_GoPrevCity();
         UI.PlaySound("Play_UI_Click");
 
     elseif actionId == m_actionHotkeyNextCity then
-        local curCity:table = UI.GetHeadSelectedCity();
-        UI.SelectNextCity(curCity);
+        LuaEvents.CQUI_GoNextCity();
         UI.PlaySound("Play_UI_Click");
 
     elseif actionId == m_actionHotkeyOnlinePause then

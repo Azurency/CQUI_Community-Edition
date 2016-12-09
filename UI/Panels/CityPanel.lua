@@ -107,10 +107,6 @@ function CQUI_OnCityviewDisabled()
   UILens.ToggleLayerOff(LensLayers.PURCHASE_PLOT);
   UILens.ToggleLayerOff(LensLayers.CITIZEN_MANAGEMENT);
   UI.SetFixedTiltMode(false);
-  if m_GrowthPlot ~= -1 then
-    UILens.ClearHex(LensLayers.PURCHASE_PLOT, m_GrowthPlot);
-    m_GrowthPlot = -1;
-  end
   UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
 end
 
@@ -147,6 +143,14 @@ function CQUI_OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
   end
 end
 
+-- Clear city culture growth tile overlay if one exists
+function CQUI_ClearGrowthTile()
+  if m_GrowthPlot ~= -1 then
+    UILens.ClearHex(LensLayers.PURCHASE_PLOT, m_GrowthPlot);
+    m_GrowthPlot = -1;
+  end
+end
+
 function CQUI_OnCitySelectionChanged( ownerPlayerID:number, cityID:number, i:number, j:number, k:number, isSelected:boolean, isEditable:boolean)
   if (ownerPlayerID == Game.GetLocalPlayer()) then
     if (isSelected) then
@@ -172,6 +176,8 @@ function CQUI_OnCitySelectionChanged( ownerPlayerID:number, cityID:number, i:num
         LuaEvents.CQUI_CityviewEnable();
         Refresh();
       end
+    else
+      CQUI_ClearGrowthTile();
     end
   end
 end
@@ -1102,6 +1108,7 @@ function DisplayGrowthTile()
     end
   end
 end
+
 
 -- ===========================================================================
 --  Engine EVENT
