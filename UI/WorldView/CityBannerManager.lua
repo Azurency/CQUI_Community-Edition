@@ -419,6 +419,8 @@ function CQUI_GetInstanceAt( plotIndex:number )
     CQUI_uiWorldMap[plotIndex] = pInstance;
     local worldX:number, worldY:number = UI.GridToWorld( plotIndex );
     pInstance.Anchor:SetWorldPositionVal( worldX, worldY, 20 );
+    -- Make it so that the button can't be clicked while it's in this temporary state, this stops it from blocking clicks intended for the citybanner
+    pInstance.CitizenButton:SetConsumeMouseButton(false);
     pInstance.Anchor:SetHide( false );
   end
   return pInstance;
@@ -429,6 +431,8 @@ function CQUI_ReleaseInstanceAt( plotIndex:number)
   local pInstance :table = CQUI_uiWorldMap[plotIndex];
   if pInstance ~= nil then
     pInstance.Anchor:SetHide( true );
+    -- Return the button to normal so that it can be clicked again
+    pInstance.CitizenButton:SetConsumeMouseButton(true);
     -- m_AdjacentPlotIconIM:ReleaseInstance( pInstance );
     CQUI_uiWorldMap[plotIndex] = nil;
   end
