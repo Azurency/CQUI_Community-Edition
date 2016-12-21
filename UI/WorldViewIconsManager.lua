@@ -90,7 +90,7 @@ function SetResourceIcon( pInstance:table, pPlot, type, state)
     if (state == RevealedState.REVEALED) then
       iconName = iconName .. "_FOW";
     end
-    local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(iconName);
+    local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(iconName, 64);
     if (textureSheet ~= nil) then
       pInstance[KEY_PREVIOUS_ICON_INFO] = DeepCopy( pInstance[KEY_CURRENT_ICON_INFO] );
       if pInstance[KEY_PREVIOUS_ICON_INFO] ~= nil then
