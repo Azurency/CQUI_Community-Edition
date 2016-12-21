@@ -1,107 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Mod id="03B8BDDE-DEAD-BEEF-9540-26E685E3156E" version="0.6">
-    <Properties>
-        <Name>Chao Quick UI</Name>
-        <Description>Reduce clicks and make empire management easy</Description>
-        <Teaser>Reduce clicks and make empire management easy</Teaser>
-        <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek</Authors>
-        <SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod. Greg Miller for his Unit Report Screen mod. Lozenged/kblease for his Production Queue mod.</SpecialThanks>
-    </Properties>
-    <Components>
-        <ImportFiles id="CQUI_IMPORT_FILES">
-            <Items>
-                <File>CQUI/CQUI_SettingsElement.lua</File>
-                <File>CQUI/CQUI_SettingsElement.xml</File>
-                <File>UI/ActionPanel.lua</File>
-                <File>UI/CitySupport.lua</File>
-                <File>UI/MapPinManager.lua</File>
-                <File>UI/MinimapPanel.lua</File>
-                <File>UI/MinimapPanel.xml</File>
-                <File>UI/ProductionPanel.xml</File>
-                <File>UI/TopPanel.lua</File>
-                <File>UI/UnitPanel.xml</File>
-                <File>UI/WorldInput.lua</File>
-                <File>UI/WorldViewIconsManager.lua</File>
-                <File>UI/Civilopedia/CivilopediaSupport.lua</File>
-                <File>UI/Panels/CityPanel.lua</File>
-                <File>UI/Panels/CityPanel.xml</File>
-                <File>UI/Panels/CityPanelOverview.lua</File>
-                <File>UI/Panels/CityPanelOverview.xml</File>
-                <File>UI/Panels/NotificationPanel.lua</File>
-                <File>UI/Panels/ProductionPanel.lua</File>
-                <File>UI/Panels/StatusMessagePanel.lua</File>
-                <File>UI/Panels/StatusMessagePanel.xml</File>
-                <File>UI/Panels/UnitPanel.lua</File>
-                <File>UI/Popups/GreatPeoplePopup.lua</File>
-                <File>UI/Popups/GreatPeoplePopup.xml</File>
-                <File>UI/Popups/MapPinListPanel.lua</File>
-                <File>UI/Popups/MapPinListPanel.xml</File>
-                <File>UI/Popups/MapPinPopup.lua</File>
-                <File>UI/Popups/MapPinPopup.xml</File>
-                <File>UI/Popups/TechCivicCompletedPopup.lua</File>
-                <File>UI/Screens/TechTree.lua</File>
-                <File>UI/Screens/CivicsTree.lua</File>
-                <File>UI/Screens/GovernmentScreen.lua</File>
-                <File>UI/Screens/GovernmentScreen.xml</File>
-                <File>UI/ToolTips/PlotToolTip.lua</File>
-                <File>UI/ToolTips/PlotToolTip.xml</File>
-                <File>UI/WorldView/CityBannerManager.lua</File>
-                <File>UI/WorldView/CityBannerManager.xml</File>
-                <File>UI/WorldView/PlotInfo.lua</File>
-                <File>UI/WorldView/PlotInfo.xml</File>
-            </Items>
-        </ImportFiles>
-        <LocalizedText id="CQUI_TEXT">
-            <Items>
-                <File>CQUI/CQUI_Text_General.xml</File>
-                <File>CQUI/CQUI_Text_Settings.xml</File>
-            </Items>
-        </LocalizedText>
-        <UpdateDatabase id="CQUI_Settings">
-            <Properties>
-                <Name>CQUI Settings</Name>
-            </Properties>
-            <Items>
-                <File>CQUI/CQUI_DatabaseSchema.sql</File>
-                <File>CQUI/CQUI_Settings.sql</File>
-            </Items>
-        </UpdateDatabase>
-        <ImportFiles id="BETTER_TRADE_SCREEN_IMPORT_FILES">
-            <Items>
-                <File>BTS/TradeOverview.xml</File>
-                <File>BTS/TradeOverview.lua</File>
-                <File>BTS/Choosers/TradeRouteChooser.xml</File>
-                <File>BTS/Choosers/TradeRouteChooser.lua</File>
-                <File>BTS/Choosers/TradeOriginChooser.xml</File>
-                <File>BTS/Choosers/TradeOriginChooser.lua</File>
-            </Items>
-        </ImportFiles>
-        <LocalizedText id="BETTER_TRADE_TEXT">
-            <Items>
-                <File>BTS/BetterTradeScreen_Text.xml</File>
-            </Items>
-        </LocalizedText>
-        <ImportFiles id="PRODUCTION_QUEUE_IMPORT_FILES">
-            <Items>
-                <File>PQ/StrategicView_MapPlacement.lua</File>
-                <File>PQ/SupportFunctions.lua</File>
-            </Items>
-        </ImportFiles>
-        <ImportFiles id="UNITREPORT_IMPORT_FILES">
-            <Items>
-                <File>URS/ReportScreen.lua</File>
-                <File>URS/ReportScreen.xml</File>
-                <File>URS/UnitPromotionPopup.lua</File>
-            </Items>
-        </ImportFiles>
-    </Components>
-    <Files>
-        <File>CQUI/CQUI_DatabaseSchema.sql</File>
-        <File>CQUI/CQUI_Settings.sql</File>
+  <Properties>
+    <Name>Chao Quick UI</Name>
+    <Description>Reduce clicks and make empire management easy</Description>
+    <Teaser>Reduce clicks and make empire management easy</Teaser>
+    <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek</Authors>
+    <SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod. Greg Miller for his Unit Report Screen mod. Lozenged/kblease for his Production Queue mod.</SpecialThanks>
+  </Properties>
+  <Components>
+    <ImportFiles id="CQUI_IMPORT_FILES">
+      <Items>
         <File>CQUI/CQUI_SettingsElement.lua</File>
         <File>CQUI/CQUI_SettingsElement.xml</File>
-        <File>CQUI/CQUI_Text_General.xml</File>
-        <File>CQUI/CQUI_Text_Settings.xml</File>
         <File>UI/ActionPanel.lua</File>
         <File>UI/CitySupport.lua</File>
         <File>UI/MapPinManager.lua</File>
@@ -109,7 +19,7 @@
         <File>UI/MinimapPanel.xml</File>
         <File>UI/ProductionPanel.xml</File>
         <File>UI/TopPanel.lua</File>
-        <File>UI/UnitPanel.xml</File> 
+        <File>UI/UnitPanel.xml</File>
         <File>UI/WorldInput.lua</File>
         <File>UI/WorldViewIconsManager.lua</File>
         <File>UI/Civilopedia/CivilopediaSupport.lua</File>
@@ -129,36 +39,157 @@
         <File>UI/Popups/MapPinPopup.lua</File>
         <File>UI/Popups/MapPinPopup.xml</File>
         <File>UI/Popups/TechCivicCompletedPopup.lua</File>
+        <File>UI/Screens/TechTree.lua</File>
         <File>UI/Screens/CivicsTree.lua</File>
         <File>UI/Screens/GovernmentScreen.lua</File>
         <File>UI/Screens/GovernmentScreen.xml</File>
-        <File>UI/Screens/TechTree.lua</File>
         <File>UI/ToolTips/PlotToolTip.lua</File>
         <File>UI/ToolTips/PlotToolTip.xml</File>
         <File>UI/WorldView/CityBannerManager.lua</File>
         <File>UI/WorldView/CityBannerManager.xml</File>
         <File>UI/WorldView/PlotInfo.lua</File>
         <File>UI/WorldView/PlotInfo.xml</File>
+      </Items>
+    </ImportFiles>
+    <LocalizedText id="CQUI_TEXT">
+      <Items>
+        <File>CQUI/CQUI_Text_General.xml</File>
+        <File>CQUI/CQUI_Text_Settings.xml</File>
+      </Items>
+    </LocalizedText>
+    <UpdateDatabase id="CQUI_Settings">
+      <Properties>
+        <Name>CQUI Settings</Name>
+      </Properties>
+      <Items>
+        <File>CQUI/CQUI_DatabaseSchema.sql</File>
+        <File>CQUI/CQUI_Settings.sql</File>
+      </Items>
+    </UpdateDatabase>
+    <ImportFiles id="BETTER_TRADE_SCREEN_IMPORT_FILES">
+      <Items>
         <File>BTS/TradeOverview.xml</File>
         <File>BTS/TradeOverview.lua</File>
         <File>BTS/Choosers/TradeRouteChooser.xml</File>
         <File>BTS/Choosers/TradeRouteChooser.lua</File>
         <File>BTS/Choosers/TradeOriginChooser.xml</File>
         <File>BTS/Choosers/TradeOriginChooser.lua</File>
+      </Items>
+    </ImportFiles>
+    <LocalizedText id="BETTER_TRADE_TEXT">
+      <Items>
         <File>BTS/BetterTradeScreen_Text.xml</File>
+      </Items>
+    </LocalizedText>
+    <ImportFiles id="PRODUCTION_QUEUE_IMPORT_FILES">
+      <Items>
         <File>PQ/StrategicView_MapPlacement.lua</File>
         <File>PQ/SupportFunctions.lua</File>
+      </Items>
+    </ImportFiles>
+    <ImportFiles id="UNITREPORT_IMPORT_FILES">
+      <Items>
         <File>URS/ReportScreen.lua</File>
         <File>URS/ReportScreen.xml</File>
         <File>URS/UnitPromotionPopup.lua</File>
-    </Files>
-    <Settings>
-        <Custom id="BETTER_TRADE_SCREEN_SETTINGS">
-            <Items>
-                <Component>BETTER_TRADE_SCREEN_IMPORT_FILES</Component>
-                <Component>BETTER_TRADE_TEXT</Component>
-                <Component>BETTER_TRADE_DATABASE</Component>
-            </Items>
-        </Custom>
-    </Settings>
+      </Items>
+    </ImportFiles>
+    <ImportFiles id="MORELENSES_IMPORT_FILES">
+      <Items>
+        <File>ML/UI/MinimapPanel.lua</File>
+        <File>ML/UI/MinimapPanel.xml</File>
+        <File>ML/UI/Panels/ModalLensPanel.lua</File>
+        <File>ML/UI/Panels/ModalLensPanel.xml</File>
+      </Items>
+    </ImportFiles>
+    <UpdateDatabase id="MORELENSES_DATABASE">
+      <Items>
+        <File>ML/MoreLenses_Colors.sql</File>
+      </Items>
+    </UpdateDatabase>
+    <LocalizedText id="MORELENSES_TEXT">
+      <Items>
+        <File>ML/Text/MoreLenses_Text.xml</File>
+      </Items>
+    </LocalizedText>
+  </Components>
+  <Files>
+    <File>CQUI/CQUI_DatabaseSchema.sql</File>
+    <File>CQUI/CQUI_Settings.sql</File>
+    <File>CQUI/CQUI_SettingsElement.lua</File>
+    <File>CQUI/CQUI_SettingsElement.xml</File>
+    <File>CQUI/CQUI_Text_General.xml</File>
+    <File>CQUI/CQUI_Text_Settings.xml</File>
+    <File>UI/ActionPanel.lua</File>
+    <File>UI/CitySupport.lua</File>
+    <File>UI/MapPinManager.lua</File>
+    <File>UI/MinimapPanel.lua</File>
+    <File>UI/MinimapPanel.xml</File>
+    <File>UI/ProductionPanel.xml</File>
+    <File>UI/TopPanel.lua</File>
+    <File>UI/UnitPanel.xml</File> 
+    <File>UI/WorldInput.lua</File>
+    <File>UI/WorldViewIconsManager.lua</File>
+    <File>UI/Civilopedia/CivilopediaSupport.lua</File>
+    <File>UI/Panels/CityPanel.lua</File>
+    <File>UI/Panels/CityPanel.xml</File>
+    <File>UI/Panels/CityPanelOverview.lua</File>
+    <File>UI/Panels/CityPanelOverview.xml</File>
+    <File>UI/Panels/NotificationPanel.lua</File>
+    <File>UI/Panels/ProductionPanel.lua</File>
+    <File>UI/Panels/StatusMessagePanel.lua</File>
+    <File>UI/Panels/StatusMessagePanel.xml</File>
+    <File>UI/Panels/UnitPanel.lua</File>
+    <File>UI/Popups/GreatPeoplePopup.lua</File>
+    <File>UI/Popups/GreatPeoplePopup.xml</File>
+    <File>UI/Popups/MapPinListPanel.lua</File>
+    <File>UI/Popups/MapPinListPanel.xml</File>
+    <File>UI/Popups/MapPinPopup.lua</File>
+    <File>UI/Popups/MapPinPopup.xml</File>
+    <File>UI/Popups/TechCivicCompletedPopup.lua</File>
+    <File>UI/Screens/CivicsTree.lua</File>
+    <File>UI/Screens/GovernmentScreen.lua</File>
+    <File>UI/Screens/GovernmentScreen.xml</File>
+    <File>UI/Screens/TechTree.lua</File>
+    <File>UI/ToolTips/PlotToolTip.lua</File>
+    <File>UI/ToolTips/PlotToolTip.xml</File>
+    <File>UI/WorldView/CityBannerManager.lua</File>
+    <File>UI/WorldView/CityBannerManager.xml</File>
+    <File>UI/WorldView/PlotInfo.lua</File>
+    <File>UI/WorldView/PlotInfo.xml</File>
+    <File>BTS/TradeOverview.xml</File>
+    <File>BTS/TradeOverview.lua</File>
+    <File>BTS/Choosers/TradeRouteChooser.xml</File>
+    <File>BTS/Choosers/TradeRouteChooser.lua</File>
+    <File>BTS/Choosers/TradeOriginChooser.xml</File>
+    <File>BTS/Choosers/TradeOriginChooser.lua</File>
+    <File>BTS/BetterTradeScreen_Text.xml</File>
+    <File>PQ/StrategicView_MapPlacement.lua</File>
+    <File>PQ/SupportFunctions.lua</File>
+    <File>URS/ReportScreen.lua</File>
+    <File>URS/ReportScreen.xml</File>
+    <File>URS/UnitPromotionPopup.lua</File>
+    <File>ML/UI/MinimapPanel.lua</File>
+    <File>ML/UI/MinimapPanel.xml</File>
+    <File>ML/UI/Panels/ModalLensPanel.lua</File>
+    <File>ML/UI/Panels/ModalLensPanel.xml</File>
+    <File>ML/MoreLenses_Colors.sql</File>
+    <File>ML/Text/MoreLenses_Text.xml</File>
+  </Files>
+  <Settings>
+    <Custom id="BETTER_TRADE_SCREEN_SETTINGS">
+      <Items>
+        <Component>BETTER_TRADE_SCREEN_IMPORT_FILES</Component>
+        <Component>BETTER_TRADE_TEXT</Component>
+        <Component>BETTER_TRADE_DATABASE</Component>
+      </Items>
+    </Custom>
+    <Custom id="MORELENSES_SETTINGS">
+      <Items>
+        <Component>MORELENSES_IMPORT_FILES</Component>
+        <Component>MORELENSES_TEXT</Component>
+        <Component>MORELENSES_DATABASE</Component>
+      </Items>
+    </Custom>
+  </Settings>
 </Mod>
