@@ -5,6 +5,8 @@
 include("InstanceManager");
 include("TabSupport");
 include("SupportFunctions");
+include("Civ6Common"); --DifferentiateCivs
+include("ModalScreen_PlayerYieldsHelper");
 
 
 -- ===========================================================================
@@ -36,9 +38,9 @@ local m_defaultPastRowHeight    :number = -1; -- Default/mix height (from XML) f
 -- ===========================================================================
 function GetActivationEffectTextByGreatPersonClass( greatPersonClassID:number )
   local text;
-  if (greatPersonClassID == GameInfo.GreatPersonClasses["GREAT_PERSON_CLASS_WRITER"].Index or
-    greatPersonClassID == GameInfo.GreatPersonClasses["GREAT_PERSON_CLASS_ARTIST"].Index or
-    greatPersonClassID == GameInfo.GreatPersonClasses["GREAT_PERSON_CLASS_MUSICIAN"].Index) then
+  if ((GameInfo.GreatPersonClasses["GREAT_PERSON_CLASS_WRITER"] ~= nil and greatPersonClassID == GameInfo.GreatPersonClasses["GREAT_PERSON_CLASS_WRITER"].Index) or
+    (GameInfo.GreatPersonClasses["GREAT_PERSON_CLASS_ARTIST"] ~= nil and greatPersonClassID == GameInfo.GreatPersonClasses["GREAT_PERSON_CLASS_ARTIST"].Index) or
+    (GameInfo.GreatPersonClasses["GREAT_PERSON_CLASS_MUSICIAN"] ~= nil and greatPersonClassID == GameInfo.GreatPersonClasses["GREAT_PERSON_CLASS_MUSICIAN"].Index)) then
     text = Locale.Lookup("LOC_GREAT_PEOPLE_WORK_CREATED");
   else
     text = Locale.Lookup("LOC_GREAT_PEOPLE_PERSON_ACTIVATED");
@@ -243,7 +245,21 @@ function ViewCurrent( data:table )
       end
       
       -- Recruiting standings
+      -- Let's sort the table first by points total, then by the lower player id (to push yours toward the top of the list for readability)
+      local recruitTable: table = {};
       for i, kPlayerPoints in ipairs(data.PointsByClass[kPerson.ClassID]) do
+        table.insert(recruitTable,kPlayerPoints);
+      end
+      table.sort(recruitTable,
+        function (a,b) 
+          if(a.PointsTotal == b.PointsTotal) then
+            return a.PlayerID < b.PlayerID;
+          else
+            return a.PointsTotal > b.PointsTotal;
+          end 
+          end);
+
+      for i, kPlayerPoints in ipairs(recruitTable) do 
         local canEarnAnotherOfThisClass:boolean = true;
         if (kPlayerPoints.MaxPlayerInstances ~= nil and kPlayerPoints.NumInstancesEarned ~= nil) then
           canEarnAnotherOfThisClass = kPlayerPoints.MaxPlayerInstances > kPlayerPoints.NumInstancesEarned;
@@ -270,6 +286,9 @@ function ViewCurrent( data:table )
           recruitInst.ProgressBar:SetColorByName( recruitColorName );
 
           local recruitDetails:string = Locale.Lookup("LOC_GREAT_PEOPLE_POINT_DETAILS", Round(kPlayerPoints.PointsPerTurn, 1), classData.IconString, classData.Name);
+
+          DifferentiateCiv(kPlayerPoints.PlayerID,recruitInst.CivIcon,recruitInst.CivIcon,recruitInst.CivBacking, nil, nil, Game.GetLocalPlayer());
+
           recruitInst.Top:SetToolTipString(recruitDetails);
         end
       end
@@ -354,7 +373,7 @@ function ViewPast( data:table )
     local rowHeight :number = m_defaultPastRowHeight;
 
     
-    local date    :string = Calendar.MakeYearStr( kPerson.TurnGranted, GameConfiguration.GetCalendarType(), GameConfiguration.GetGameSpeedType(), false);   
+    local date    :string = Calendar.MakeYearStr( kPerson.TurnGranted);
     instance.EarnDate:SetText( date );    
 
     local classText :string = "";
@@ -364,7 +383,8 @@ function ViewPast( data:table )
       UI.DataError("GreatPeople previous recruited as unable to find the class text for #"..tostring(i));
     end
     instance.ClassName:SetText( Locale.ToUpper(classText) );
-    instance.GreatPersonInfo:SetText( kPerson.Name )
+    instance.GreatPersonInfo:SetText( kPerson.Name );
+    DifferentiateCiv(kPerson.ClaimantID, instance.CivIcon, instance.CivIcon, instance.CivIndicator, nil, nil, localPlayerID);
 
     instance.RecruitedImage:SetHide(true);
     instance.YouIndicator:SetHide(true);
@@ -457,6 +477,12 @@ function ViewPast( data:table )
     instance.Content:SetSizeY( rowHeight );
 
   end
+
+  -- Scaling to screen width required for the previously recruited tab
+  local screenX,_     :number = UIManager:GetScreenSizeVal();
+  Controls.PopupContainer:SetSizeX( screenX );
+  Controls.ModalFrame:SetSizeX( screenX );  
+
   Controls.RecruitedStack:CalculateSize();
   Controls.RecruitedScroller:CalculateSize();
 end
@@ -646,6 +672,7 @@ function PopulateData( data:table, isPast:boolean )
         PlayerName      = playerName,
         PointsTotal     = player:GetGreatPeoplePoints():GetPointsTotal(classID),
         PointsPerTurn   = player:GetGreatPeoplePoints():GetPointsPerTurn(classID),
+        PlayerID      = player:GetID()
       };
       table.insert(pointsTable, playerPoints);
     end
@@ -666,6 +693,10 @@ end
 
 -- =======================================================================================
 function Open()
+  if (Game.GetLocalPlayer() == -1) then
+    return
+  end
+  
   ContextPtr:SetHide(false);
   Refresh();
   UI.PlaySound("UI_Screen_Open");

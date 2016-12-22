@@ -1752,6 +1752,10 @@ function OnLocalPlayerTurnBegin()
 end
 function OnLocalPlayerTurnEnd()
   m_isLocalPlayerTurn = false;
+
+  if(GameConfiguration.IsHotseat()) then
+    Close();
+  end
 end
 
 -- ===========================================================================

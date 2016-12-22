@@ -119,9 +119,14 @@
       <Label          ID="ClassName"            Anchor="L,T"  Offset="100,7"  WrapWidth="250"       Color="GreatPeopleRow"        Style="FontBoldFlair18"   SmallCaps="22" SmallCapsType="Every" String="$ClassName$" />
       <Label          ID="GreatPersonInfo"      Anchor="L,T"  Offset="100,25" WrapWidth="250"       Color="GreatPeopleRow"        Style="FontNormal14"      String="$GreatPersonInfo" />
       <Line                                     Start="340,2" End="340,41"    Width="2" Color="42,57,72,255" />
-      <Image          ID="RecruitedImage"       Anchor="L,T"  Offset="350,0"  Size="55,55"          Texture="Leaders55">
-        <Image        ID="YouIndicator"         Anchor="C,C"                  Size="55,53" Texture="Diplomacy_YouIndicatorSmall" Hidden="1" />
-      </Image>
+      <Container Anchor="L,T" Offset="345,0" Size="68,68">
+        <Image Texture="Controls_CircleBacking68" Size="68,68" Anchor="C,C"/>
+        <Image  ID="YouIndicator" Hidden="1" Size="64,62" Texture="Diplomacy_YouIndicator" Anchor="C,C"/>
+        <Image  ID="RecruitedImage" Anchor="C,C" Size="55,55" Texture="Leaders55" />
+        <Image ID="CivIndicator" Anchor="R,T" Texture="CircleBacking22" Size="22,22" Offset="0,0">
+          <Image ID="CivIcon" Anchor="C,C" Texture="CivSymbols22" Size="22,22"/>
+        </Image>
+      </Container>
       <Line                                     Start="415,2" End="415,41" Width="2" Color="42,57,72,255" />
       <Stack          ID="EffectStack"                      Offset="420,0" StackGrowth="Right" />
     </Grid>
@@ -150,11 +155,16 @@
 
   <Instance           Name="RecruitInstance">
     <Container        ID="Top"                AutoSize="V"                  Size="160,50" >
-      <Image          ID="WinnerIcon"                       Offset="-15,0"                  Texture="Controls_Winner12" Hidden="1" />
-      <Label          ID="Country"            Anchor="L,T"  Offset="0,0"    WrapWidth="160" Style="GreatPeopleSmallText" Color="220,220,200,255" String="$Text$" />
+      <Stack StackGrowth="Right">
+        <Image          ID="WinnerIcon"                       Offset="0,0"                  Texture="Controls_Winner12" Hidden="1" />
+        <Label          ID="Country"            Anchor="L,T"  Offset="0,0"    WrapWidth="160" Style="GreatPeopleSmallText" Color="220,220,200,255" String="$Text$" />
+      </Stack>
       <Label          ID="CQUI_PerTurn"             Anchor="C,T"  Offset="20,1"    WrapWidth="160" Style="GreatPeopleSmallText" Color="220,220,200,255" String="+x/turn" />
       <Label          ID="Amount"             Anchor="R,T"  Offset="0,0"    WrapWidth="160" Style="GreatPeopleSmallText" Color="220,220,200,255" String="X/Y" />
       <Bar            ID="ProgressBar"                      Offset="0,14"   Size="parent,6" FGColor="220,220,200,255" BGColor="0,0,0,255" Percent="0.5" />
+      <Image ID="CivBacking" Anchor="L,C" Texture="CircleBacking22" Size="22,22" Offset="-25,0">
+        <Image ID="CivIcon" Anchor="C,C" Texture="CivSymbols22" Size="22,22"/>
+      </Image>
     </Container>
   </Instance>
 </Context>

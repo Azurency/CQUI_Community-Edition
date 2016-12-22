@@ -117,6 +117,7 @@ function GetCityData( pCity:table )
     AmenitiesFromEntertainment = 0,
     AmenitiesFromCivics = 0,
     AmenitiesFromGreatPeople = 0,
+    AmenitiesFromCityStates = 0,
     AmenitiesFromReligion = 0,
     AmenitiesFromNationalParks = 0,
     AmenitiesFromStartingEra = 0,
@@ -269,6 +270,7 @@ function GetCityData( pCity:table )
   data.AmenitiesFromEntertainment = pCityGrowth:GetAmenitiesFromEntertainment();
   data.AmenitiesFromCivics = pCityGrowth:GetAmenitiesFromCivics();
   data.AmenitiesFromGreatPeople = pCityGrowth:GetAmenitiesFromGreatPeople();
+  data.AmenitiesFromCityStates = pCityGrowth:GetAmenitiesFromCityStates();
   data.AmenitiesFromReligion = pCityGrowth:GetAmenitiesFromReligion();
   data.AmenitiesFromNationalParks = pCityGrowth:GetAmenitiesFromNationalParks();
   data.AmenitiesFromStartingEra = pCityGrowth:GetAmenitiesFromStartingEra();

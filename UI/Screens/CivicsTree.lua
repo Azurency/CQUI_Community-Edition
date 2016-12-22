@@ -1185,6 +1185,10 @@ function OnLocalPlayerTurnEnd()
       m_kAllPlayersTechData[ePlayer] = m_kCurrentData;
     end
   end
+
+  if(GameConfiguration.IsHotseat()) then
+    Close();
+  end
 end
 
 -- ===========================================================================
@@ -1422,37 +1426,37 @@ function PopulateSearchData()
 
     for row in GameInfo.Improvements() do
       if(row.PrereqCivic) then
-        Search.AddData(searchContext, row.PrereqCivic, Locale.Lookup("LOC_" .. row.PrereqCivic .. "_NAME"), Locale.Lookup(row.Name));
+        Search.AddData(searchContext, row.PrereqCivic, Locale.Lookup(GameInfo.Civics[row.PrereqCivic].Name), Locale.Lookup(row.Name));
       end
     end
 
     for row in GameInfo.Units() do
       if(row.PrereqCivic) then
-        Search.AddData(searchContext, row.PrereqCivic, Locale.Lookup("LOC_" .. row.PrereqCivic .. "_NAME"), Locale.Lookup(row.Name));
+        Search.AddData(searchContext, row.PrereqCivic, Locale.Lookup(GameInfo.Civics[row.PrereqCivic].Name), Locale.Lookup(row.Name));
       end
     end
 
     for row in GameInfo.Buildings() do
       if(row.PrereqCivic) then
-        Search.AddData(searchContext, row.PrereqCivic, Locale.Lookup("LOC_" .. row.PrereqCivic .. "_NAME"), Locale.Lookup(row.Name));
+        Search.AddData(searchContext, row.PrereqCivic, Locale.Lookup(GameInfo.Civics[row.PrereqCivic].Name), Locale.Lookup(row.Name));
       end
     end
 
     for row in GameInfo.Districts() do
       if(row.PrereqCivic) then
-        Search.AddData(searchContext, row.PrereqCivic, Locale.Lookup("LOC_" .. row.PrereqCivic .. "_NAME"), Locale.Lookup(row.Name));
+        Search.AddData(searchContext, row.PrereqCivic, Locale.Lookup(GameInfo.Civics[row.PrereqCivic].Name), Locale.Lookup(row.Name));
       end
     end
 
     for row in GameInfo.Resources() do
       if(row.PrereqCivic) then
-        Search.AddData(searchContext, row.PrereqCivic, Locale.Lookup("LOC_" .. row.PrereqCivic .. "_NAME"), Locale.Lookup(row.Name));
+        Search.AddData(searchContext, row.PrereqCivic, Locale.Lookup(GameInfo.Civics[row.PrereqCivic].Name), Locale.Lookup(row.Name));
       end
     end
 
     for row in GameInfo.Policies() do
       if(row.PrereqCivic) then
-        Search.AddData(searchContext, row.PrereqCivic, Locale.Lookup("LOC_" .. row.PrereqCivic .. "_NAME"), Locale.Lookup(row.Name));
+        Search.AddData(searchContext, row.PrereqCivic, Locale.Lookup(GameInfo.Civics[row.PrereqCivic].Name), Locale.Lookup(row.Name));
       end
     end
 
@@ -1485,6 +1489,10 @@ end
 
 -- ===========================================================================
 function OnOpen()
+  if (Game.GetLocalPlayer() == -1) then
+    return
+  end
+  
   UI.PlaySound("UI_Screen_Open");
   View( m_kCurrentData );
   ContextPtr:SetHide(false);

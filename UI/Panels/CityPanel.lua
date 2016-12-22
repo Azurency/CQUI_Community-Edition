@@ -779,6 +779,12 @@ end
 -- ===========================================================================
 --  GAME Event
 -- ===========================================================================
+function OnPlayerResourceChanged( ownerPlayerID:number, resourceTypeID:number)
+  if (Game.GetLocalPlayer() ~= nil and ownerPlayerID == Game.GetLocalPlayer()) then
+    Refresh();
+  end
+end
+
 function OnCityAddedToMap( ownerPlayerID:number, cityID:number )
   if Game.GetLocalPlayer() ~= nil then
     if ownerPlayerID == Game.GetLocalPlayer() then
@@ -1250,6 +1256,7 @@ function Initialize()
   Events.InterfaceModeChanged.Add(  CQUI_OnInterfaceModeChanged );
   Events.LocalPlayerChanged.Add(    OnLocalPlayerChanged );
   Events.UnitSelectionChanged.Add(  OnUnitSelectionChanged );
+  Events.PlayerResourceChanged.Add( OnPlayerResourceChanged );
   Events.LoadScreenClose.Add( CQUI_OnLoadScreenClose );
 
   -- LUA Events

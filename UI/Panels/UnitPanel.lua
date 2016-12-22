@@ -916,11 +916,11 @@ function View(data)
   end
 
   -- Populate Earned Promotions UI
-  if (data.UnitExperience > 0 and not UILens.IsLensActive("Religion")) then
+  if (not UILens.IsLensActive("Religion") and data.Combat > 0) then
     Controls.XPArea:SetHide(false);
     Controls.XPBar:SetPercent( data.UnitExperience / data.MaxExperience );
     Controls.XPArea:SetToolTipString( Locale.Lookup("LOC_HUD_UNIT_PANEL_XP_TT", data.UnitExperience, data.MaxExperience, data.UnitLevel+1 ) );
-    else
+  else
     Controls.XPArea:SetHide(true);
   end
   

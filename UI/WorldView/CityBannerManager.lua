@@ -44,6 +44,7 @@ local SIZE_HOLY_SITE_ICON   :number = 22;
 local SIZE_RELIGION_ICON_LARGE  :number = 100;
 local SIZE_RELIGION_ICON_SMALL  :number = 22;
 local ZOOM_MULT_DELTA     :number = .01;
+local ALPHA_DIM         :number = 0.45;
 
 local m_pDirtyCityComponents  :table = {};
 local m_isReligionLensActive  :boolean = false;

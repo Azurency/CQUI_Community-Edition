@@ -54,73 +54,57 @@ local m_lastMouseMoveTime     = nil;    -- Last time the mouse moved.
 -- This is horrible, i'm sorry.
 local TerrainTypeMap :table = {};
 do
-  local i = 0;
   for row in GameInfo.Terrains() do
-    TerrainTypeMap[i] = row.TerrainType;
-    i = i + 1;
+    TerrainTypeMap[row.Index] = row.TerrainType;
   end
 end
 
 local FeatureTypeMap :table = {};
 do
-  local i = 0;
   for row in GameInfo.Features() do
-    FeatureTypeMap[i] = row.FeatureType;
-    i = i + 1;
+    FeatureTypeMap[row.Index] = row.FeatureType;
   end
 end
 
 local ImprovementTypeMap :table = {};
 do
-  local i = 0;
   for row in GameInfo.Improvements() do
-    ImprovementTypeMap[i] = row.ImprovementType;
-    i = i + 1;
+    ImprovementTypeMap[row.Index] = row.ImprovementType;
   end
 end
 
 local ResourceTypeMap :table = {};
 do
-  local i = 0;
   for row in GameInfo.Resources() do
-    ResourceTypeMap[i] = row.ResourceType;
-    i = i + 1;
+    ResourceTypeMap[row.Index] = row.ResourceType;
   end
 end
 
 local UnitTypeMap :table = {};
 do
-  local i = 0;
   for row in GameInfo.Units() do
-    UnitTypeMap[i] = row.UnitType;
-    i = i + 1;
+    UnitTypeMap[row.Index] = row.UnitType;
   end
 end
 
 local BuildingTypeMap :table = {};
 do
-  local i = 0;
   for row in GameInfo.Buildings() do
-    BuildingTypeMap[i] = row.BuildingType;
-    i = i + 1;
+    BuildingTypeMap[row.Index] = row.BuildingType;
   end
 end
 
 local DistrictTypeMap :table = {};
 do
-  local i = 0;
   for row in GameInfo.Districts() do
-    DistrictTypeMap[i] = row.DistrictType;
-    i = i + 1;
+    DistrictTypeMap[row.Index] = row.DistrictType;
   end
 end
 
 local ContinentTypeMap :table = {};
 do
-  local i = 0;
   for row in GameInfo.Continents() do
-    ContinentTypeMap[i] = row.ContinentType;
-    i = i + 1;
+    ContinentTypeMap[row.Index] = row.ContinentType;
   end
 end
 
@@ -716,33 +700,29 @@ function ShowPlotInfo( plotId:number, bIsUpdate:boolean )
         end
       end
       if (new_data.IsCity == true or new_data.DistrictID == -1) then
-        local index = 0;
         for row in GameInfo.Yields() do
-          local yield = plot:GetYield(index);
+          local yield = plot:GetYield(row.Index);
           if (yield > 0) then
             new_data.Yields[row.YieldType] = yield;
           end
-          index = index + 1;
         end 
       else
         local plotOwner = plot:GetOwner();
         local plotPlayer = Players[plotOwner];
         local district = plotPlayer:GetDistricts():FindID(new_data.DistrictID);
-        local index = 0;
         for row in GameInfo.Yields() do
-          local yield = plot:GetYield(index);
+          local yield = plot:GetYield(row.Index);
           local workers = plot:GetWorkerCount();
           if (yield > 0 and workers > 0) then
             yield = yield * workers;
             new_data.Yields[row.YieldType] = yield;
           end
 
-          local districtYield = district:GetYield(index);
+          local districtYield = district:GetYield(row.Index);
           if (districtYield > 0) then
             new_data.DistrictYields[row.YieldType] = districtYield;
           end
 
-          index = index + 1;
         end                 
       end
 

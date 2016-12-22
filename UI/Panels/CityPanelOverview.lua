@@ -522,6 +522,10 @@ function ViewPanelAmenities( data:table )
   kInstance.AmenityYield:SetText( Locale.ToNumber(data.AmenitiesFromGreatPeople) );
 
   kInstance = m_kAmenitiesIM:GetInstance();
+  kInstance.Amenity:SetText( Locale.Lookup("LOC_HUD_CITY_AMENITIES_FROM_CITY_STATES") );
+  kInstance.AmenityYield:SetText( Locale.ToNumber(data.AmenitiesFromCityStates) );
+
+  kInstance = m_kAmenitiesIM:GetInstance();
   kInstance.Amenity:SetText( Locale.Lookup("LOC_HUD_CITY_AMENITIES_FROM_RELIGION") );
   kInstance.AmenityYield:SetText( Locale.ToNumber(data.AmenitiesFromReligion) );
 

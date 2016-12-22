@@ -1093,6 +1093,10 @@ function OnLocalPlayerTurnEnd()
       m_kAllPlayersTechData[ePlayer] = m_kCurrentData;
     end
   end
+
+  if(GameConfiguration.IsHotseat()) then
+    Close();
+  end
 end
 
 -- ===========================================================================
@@ -1334,31 +1338,31 @@ function PopulateSearchData()
 
     for row in GameInfo.Improvements() do
       if(row.PrereqTech) then
-        Search.AddData(searchContext, row.PrereqTech, Locale.Lookup("LOC_" .. row.PrereqTech .. "_NAME"), Locale.Lookup(row.Name));
+        Search.AddData(searchContext, row.PrereqTech, Locale.Lookup(GameInfo.Technologies[row.PrereqTech].Name), Locale.Lookup(row.Name));
       end
     end
 
     for row in GameInfo.Units() do
       if(row.PrereqTech) then
-        Search.AddData(searchContext, row.PrereqTech, Locale.Lookup("LOC_" .. row.PrereqTech .. "_NAME"), Locale.Lookup(row.Name));
+        Search.AddData(searchContext, row.PrereqTech, Locale.Lookup(GameInfo.Technologies[row.PrereqTech].Name), Locale.Lookup(row.Name));
       end
     end
 
     for row in GameInfo.Buildings() do
       if(row.PrereqTech) then
-        Search.AddData(searchContext, row.PrereqTech, Locale.Lookup("LOC_" .. row.PrereqTech .. "_NAME"), Locale.Lookup(row.Name));
+        Search.AddData(searchContext, row.PrereqTech, Locale.Lookup(GameInfo.Technologies[row.PrereqTech].Name), Locale.Lookup(row.Name));
       end
     end
 
     for row in GameInfo.Districts() do
       if(row.PrereqTech) then
-        Search.AddData(searchContext, row.PrereqTech, Locale.Lookup("LOC_" .. row.PrereqTech .. "_NAME"), Locale.Lookup(row.Name));
+        Search.AddData(searchContext, row.PrereqTech, Locale.Lookup(GameInfo.Technologies[row.PrereqTech].Name), Locale.Lookup(row.Name));
       end
     end
 
     for row in GameInfo.Resources() do
       if(row.PrereqTech) then
-        Search.AddData(searchContext, row.PrereqTech, Locale.Lookup("LOC_" .. row.PrereqTech .. "_NAME"), Locale.Lookup(row.Name));
+        Search.AddData(searchContext, row.PrereqTech, Locale.Lookup(GameInfo.Technologies[row.PrereqTech].Name), Locale.Lookup(row.Name));
       end
     end
 
@@ -1391,6 +1395,10 @@ end
 
 -- ===========================================================================
 function OnOpen()
+  if (Game.GetLocalPlayer() == -1) then
+    return
+  end
+
   UI.PlaySound("UI_Screen_Open");
   View( m_kCurrentData );
   ContextPtr:SetHide(false);
@@ -1590,12 +1598,10 @@ function OnSearchCharCallback()
           -- v[3] == Snippet of Technology description w/ search term highlighted.
           local instance = m_kSearchResultIM:GetInstance();
           local techType:number;
-          local i:number = 0;
           for row in GameInfo.Technologies() do
             if row.TechnologyType == v[1] then
-              techType = i;
+              techType = row.Index;
             end
-            i = i + 1;
           end
 
           -- Going to take this out right now... we may decide we want this back.
@@ -1606,7 +1612,8 @@ function OnSearchCharCallback()
           --PopulateUnlockablesForTech(Players[Game.GetLocalPlayer()]:GetID(), techType, instance["unlockIM"], function() ScrollToNode(v[1]); end);
 
           -- Search results already localized.
-          instance.Name:SetText(Locale.ToUpper(v[2]));
+          local techName:string = v[2];
+          instance.Name:SetText(Locale.ToUpper(techName));
           local iconName :string = DATA_ICON_PREFIX .. v[1];
           instance.SearchIcon:SetIcon(iconName);
 

@@ -377,7 +377,7 @@ function RefreshTurnsRemaining()
   local turn = Game.GetCurrentGameTurn();
   Controls.Turns:SetText(tostring(turn));
 
-  local strDate = Calendar.MakeYearStr(turn, GameConfiguration.GetCalendarType(), GameConfiguration.GetGameSpeedType(), false);
+  local strDate = Calendar.MakeYearStr(turn);
   Controls.CurrentDate:SetText(strDate);
 end
 
@@ -487,6 +487,7 @@ function Initialize()
   Controls.MenuButton:RegisterCallback( Mouse.eLClick, OnMenu );
   Controls.MenuButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.ViewReports:RegisterCallback( Mouse.eLClick, OnToggleReportsScreen );
+  Controls.ViewReports:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 
   -- Game Events
   Events.AnarchyBegins.Add(       OnRefreshYields );
@@ -508,6 +509,7 @@ function Initialize()
   Events.LocalPlayerChanged.Add(      OnLocalPlayerChanged );
   Events.PantheonFounded.Add(       OnRefreshYields );
   Events.ResearchCompleted.Add(     OnRefreshResources );
+  Events.PlayerResourceChanged.Add(   OnRefreshResources );
   Events.SystemUpdateUI.Add(        OnUpdateUI );
   Events.TradeRouteActivityChanged.Add( RefreshTrade );
   Events.TradeRouteCapacityChanged.Add( RefreshTrade );

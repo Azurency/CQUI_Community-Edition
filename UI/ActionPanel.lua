@@ -6,6 +6,7 @@
 
 include( "InstanceManager" );
 include( "SupportFunctions" );
+include("Civ6Common"); -- IsTutorialRunning()
 
 
 -- ===========================================================================
@@ -754,6 +755,11 @@ function OnLocalPlayerTurnBegin()
     Controls.TutorialSlowTurnEnableAnim:Play();
   end
   ContextPtr:RequestRefresh();
+
+  -- if auto-cycle is OFF, play this sound to indicate "start of turn"
+  if (not UserConfiguration.IsAutoUnitCycle()) then
+      UI.PlaySound("SP_Turn_Start");
+  end
 end
 
 -- ===========================================================================
@@ -858,7 +864,7 @@ function OnInputHandler( pInputStruct:table )
   local uiMsg:number = pInputStruct:GetMessageType();
   if uiMsg == KeyEvents.KeyUp then
     if pInputStruct:GetKey() == Keys.VK_RETURN then
-      if pInputStruct:IsShiftDown() and (not UI.IsFinalRelease()) then
+      if pInputStruct:IsShiftDown() and not IsTutorialRunning() then
         UI.RequestAction(ActionTypes.ACTION_ENDTURN); -- Shift + Enter = Force End Turn
       else
         DoEndTurn();                  -- Enter = Normal End Turn

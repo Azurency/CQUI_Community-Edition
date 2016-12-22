@@ -2823,6 +2823,7 @@ function OnMouseAirliftEnd( pInputStruct )
     m_isMouseDragging = false;
   else
     if IsSelectionAllowedAt( UI.GetCursorPlotID() ) then
+      UI.PlaySound("Unit_Airlift");
       UnitAirlift(pInputStruct);
     end
   end
@@ -3326,19 +3327,20 @@ end
 -- ===========================================================================
 function OnInputActionTriggered( actionId )
     if actionId == m_actionHotkeyToggleGrid then
-        -- TODO: query if already on (or will get out of sync with button presses!)
-        ms_bGridOn = not ms_bGridOn;
-        UI.ToggleGrid( ms_bGridOn );
+        LuaEvents.MinimapPanel_ToggleGrid();
+        LuaEvents.MinimapPanel_RefreshMinimapOptions();
+
     elseif actionId == m_actionHotkeyToggleYield then
-        if m_bShowYield then
+        if UserConfiguration.ShowMapYield() then    -- yield already visible, hide
             LuaEvents.MinimapPanel_HideYieldIcons();
-            m_bShowYield = false;
-            UI.PlaySound("Play_UI_Click");
+            UserConfiguration.ShowMapYield( false );
         else
             LuaEvents.MinimapPanel_ShowYieldIcons();
-            m_bShowYield = true;
-            UI.PlaySound("Play_UI_Click");
+            UserConfiguration.ShowMapYield( true );
         end
+        
+        LuaEvents.MinimapPanel_RefreshMinimapOptions();
+        UI.PlaySound("Play_UI_Click");
     elseif actionId == m_actionHotkeyPrevUnit then
         UI.SelectPrevReadyUnit();
         UI.PlaySound("Play_UI_Click");
@@ -3519,7 +3521,7 @@ function Initialize()
     InterfaceModeMessageHandler[InterfaceModeTypes.FORM_ARMY]     [MouseEvents.PointerUp]   = FormArmy;
     InterfaceModeMessageHandler[InterfaceModeTypes.FORM_CORPS]      [MouseEvents.PointerUp]   = FormCorps;
     InterfaceModeMessageHandler[InterfaceModeTypes.AIRLIFT]       [MouseEvents.PointerUp]   = Airlift;
-    InterfaceModeMessageHandler[InterfaceModeTypes.RANGE_ATTACK]    [MouseEvents.PointerUp]   = UnitRangeAttack;
+    InterfaceModeMessageHandler[InterfaceModeTypes.RANGE_ATTACK]    [MouseEvents.PointerUp]   = OnTouchUnitRangeAttack;
     InterfaceModeMessageHandler[InterfaceModeTypes.AIR_ATTACK]      [MouseEvents.PointerUp]   = UnitAirAttack;
     InterfaceModeMessageHandler[InterfaceModeTypes.WMD_STRIKE]      [MouseEvents.PointerUp]   = OnWMDStrikeEnd;
     InterfaceModeMessageHandler[InterfaceModeTypes.ICBM_STRIKE]     [MouseEvents.PointerUp]   = OnICBMStrikeEnd;
