@@ -79,6 +79,9 @@
   <Row Tag="LOC_CQUI_PRODUCTION_ITEMHEIGHT" Language="en_US">
     <Text>Production item height</Text>
   </Row>
+  <Row Tag="LOC_CQUI_PRODUCTION_QUEUE" Language="en_US">
+    <Text>Enable production queue</Text>
+  </Row>
   <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="en_US">
       <Text>Remember: CQUI settings are attached to individual saves!</Text>
     </Row>

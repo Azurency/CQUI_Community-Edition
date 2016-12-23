@@ -20,7 +20,8 @@
 */
 
 INSERT INTO CQUI_Settings -- Don't touch this line!
-  VALUES  ("CQUI_ShowLuxuries", 1), -- Luxury resources will show in the top-bar next to strategic resources
+  VALUES  ("CQUI_ProductionQueue", 1), -- A production queue appears next to the production panel, allowing multiple constructions to be queued at once
+      ("CQUI_ShowLuxuries", 1), -- Luxury resources will show in the top-bar next to strategic resources
       ("CQUI_Smartbanner", 1), -- Additional informations such as districts will show in the city banner
       ("CQUI_TechPopupVisual", 0), -- Popups will be displayed when you discover a new tech or civic (this is the normal behavior for the unmoded game)
       ("CQUI_TechPopupAudio", 1), -- Play the voiceovers when you discover a new tech or civic (this is the normal behavior for the unmoded game)

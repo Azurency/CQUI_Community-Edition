@@ -65,6 +65,10 @@
       </Container>
       <Container ID="ProductionOptions" Size="parent,parent" Hidden="1">
         <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
+          <Stack Anchor="C,T" StackGrowth="Left" Padding="5">
+            <GridButton ID="ProductionQueueCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Enable production queue" />
+            <!-- <GridButton ID="ProductionQueueCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_PRODUCTION_PRODUCTIONQUEUE" /> -->
+          </Stack>
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <Container Anchor="R,C" Size="300,32" Padding="5">
               <Slider Style="SliderControl" Anchor="R,C" Size="220,13" Offset="5,0" SpaceForScroll="0" ID="ProductionItemHeightSlider" Steps="104" />
