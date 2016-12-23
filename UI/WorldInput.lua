@@ -1001,10 +1001,6 @@ end
 function DefaultKeyUpHandler( uiKey:number )
   local keyPanChanged :boolean = false;
 
-  if( uiKey == Keys.Y ) then
-    LuaEvents.CQUI_Option_ToggleYields();
-  end
-
   --CQUI Keybinds
   if CQUI_hotkeyMode ~= 0 then
     if CQUI_hotkeyMode == 2 then
