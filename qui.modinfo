@@ -14,6 +14,7 @@
         <File>CQUI/CQUI_SettingsElement.xml</File>
         <File>UI/ActionPanel.lua</File>
         <File>UI/CitySupport.lua</File>
+        <File>UI/Civ6Common.lua</File>
         <File>UI/MapPinManager.lua</File>
         <File>UI/MinimapPanel.lua</File>
         <File>UI/MinimapPanel.xml</File>
@@ -122,6 +123,7 @@
     <File>CQUI/CQUI_Text_Settings.xml</File>
     <File>UI/ActionPanel.lua</File>
     <File>UI/CitySupport.lua</File>
+    <File>UI/Civ6Common.lua</File>
     <File>UI/MapPinManager.lua</File>
     <File>UI/MinimapPanel.lua</File>
     <File>UI/MinimapPanel.xml</File>
