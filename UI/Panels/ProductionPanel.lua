@@ -3718,6 +3718,9 @@ function Initialize()
   
   Events.CityWorkerChanged.Add(Refresh);
 
+  -- CQUI Setting Controls
+  PopulateCheckBox(Controls.CQUI_ProductionQueueCheckbox, "CQUI_ProductionQueue");  
+
   -- CQUI Loading Previous Turn items
   -- ===================================================================
   local ePlayer :number = Game.GetLocalPlayer();

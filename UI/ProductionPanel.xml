@@ -151,6 +151,7 @@
         <!-- Blue Window Header -->
         <Grid                                   Anchor="R,T"                  Size="parent+16,59"       Style="HeaderBannerRight" >
           <Container                            Anchor="L,T"                  Size="parent-20,parent-27" >
+            <GridButton ID="CQUI_ProductionQueueCheckbox" Anchor="L,T" Offset="20,3" Size="40,24" Style="CheckBoxControl" String="[ICON_Production]" />
             <Label            ID="HeaderLabel"  Anchor="C,T"  Offset="10,10"                            Style="BannerHeaderText"  String="LOC_HUD_CHOOSE_PRODUCTION" />
           </Container>
           <Image                                Anchor="R,T"                  Size="38,30"              Texture="Controls_CornerDetail.dds" />
