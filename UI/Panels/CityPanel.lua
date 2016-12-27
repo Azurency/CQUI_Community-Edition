@@ -222,14 +222,25 @@ function CQUI_RecenterCameraGameStart()
   UI.LookAtPlot( startX, startY );
 end
 
+
+-- Sets the visibility of the tile growth overlay
+function CQUI_SetGrowthTile(state)
+  GameConfiguration.SetValue("CQUI_ShowCultureGrowth", state);
+  LuaEvents.CQUI_SettingsUpdate();
+end
 -- Toggles the visibility of the tile growth overlay
 function CQUI_ToggleGrowthTile()
-  CQUI_growthTile = not CQUI_growthTile;
+  CQUI_SetGrowthTile(not CQUI_growthTile);
+end
+function CQUI_SettingsUpdate()
+  CQUI_growthTile = GameConfiguration.GetValue("CQUI_ShowCultureGrowth");
   if(CQUI_growthTile) then
     m_GrowthPlot = -1;
   end
   UILens.ClearHex(LensLayers.PURCHASE_PLOT, m_GrowthPlot);
-  DisplayGrowthTile();
+  if(UI.GetInterfaceMode() == InterfaceModeTypes.CITY_MANAGEMENT) then
+    DisplayGrowthTile();
+  end
 end
 
 -- ===========================================================================
@@ -1268,6 +1279,7 @@ function Initialize()
   LuaEvents.CQUI_GoNextCity.Add( CQUI_OnNextCity );
   LuaEvents.CQUI_GoPrevCity.Add( CQUI_OnPreviousCity );
   LuaEvents.CQUI_ToggleGrowthTile.Add( CQUI_ToggleGrowthTile );
+  LuaEvents.CQUI_SettingsUpdate.Add( CQUI_SettingsUpdate );
 
   -- Truncate possible static text overflows
   TruncateStringWithTooltip(Controls.BreakdownLabel,  MAX_BEFORE_TRUNC_STATIC_LABELS, Controls.BreakdownLabel:GetText());

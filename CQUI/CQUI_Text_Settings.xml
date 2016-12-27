@@ -31,6 +31,12 @@
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="en_US">
       <Text>Show luxuries in top panel</Text>
     </Row>
+  <Row Tag="LOC_CQUI_GENERAL_SHOWCULTUREGROWTH" Language="en_US">
+    <Text>Show cultural growth overlay in cityview</Text>
+  </Row>
+  <Row Tag="LOC_CQUI_GENERAL_SHOWCULTUREGROWTH_TOOLTIP" Language="en_US">
+    <Text>This can also be toggled by clicking on the growth emblem in the cityview</Text>
+  </Row>
   <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="en_US">
       <Text>Enable Smartbanners</Text>
     </Row>
