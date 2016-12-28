@@ -3719,7 +3719,8 @@ function Initialize()
   Events.CityWorkerChanged.Add(Refresh);
 
   -- CQUI Setting Controls
-  PopulateCheckBox(Controls.CQUI_ProductionQueueCheckbox, "CQUI_ProductionQueue");  
+  PopulateCheckBox(Controls.CQUI_ProductionQueueCheckbox, "CQUI_ProductionQueue");
+  RegisterControl(Controls.CQUI_ProductionQueueCheckbox, "CQUI_ProductionQueue", UpdateCheckbox);
 
   -- CQUI Loading Previous Turn items
   -- ===================================================================

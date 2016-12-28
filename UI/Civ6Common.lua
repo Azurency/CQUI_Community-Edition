@@ -879,6 +879,28 @@ end
 
 --CQUI setting control support functions
 
+--Used to register a control to be updated whenever settings update (only necessary for controls that can be updated from multiple places)
+function RegisterControl(control, setting_name, update_function, extra_data)
+  LuaEvents.CQUI_SettingsUpdate.Add(function() update_function(control, setting_name, extra_data); end);
+end
+
+--Companion functions to RegisterControl
+function UpdateComboBox(control, setting_name, values)
+  --This is a tough one! TODO for later
+end
+
+function UpdateCheckbox(control, setting_name)
+  local value = GameConfiguration.GetValue(setting_name);
+  if(value == nil) then return; end
+  control:SetSelected(value);
+end
+
+function UpdateSlider( control, setting_name, data_converter)
+  local value = GameConfiguration.GetValue(setting_name);
+  if(value == nil) then return; end
+  control:SetStep(data_converter.ToSteps(value));
+end
+
 --Used to populate combobox options
 function PopulateComboBox(control, values, setting_name, tooltip)
   control:ClearEntries();

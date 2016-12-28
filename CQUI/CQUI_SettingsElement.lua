@@ -203,6 +203,7 @@ function Initialize()
   
   --Populating/binding checkboxes...
   PopulateCheckBox(Controls.ProductionQueueCheckbox, "CQUI_ProductionQueue");
+  RegisterControl(Controls.ProductionQueueCheckbox, "CQUI_ProductionQueue", UpdateCheckbox);
   PopulateCheckBox(Controls.ShowLuxuryCheckbox, "CQUI_ShowLuxuries");
   PopulateCheckBox(Controls.ShowCultureGrowthCheckbox, "CQUI_ShowCultureGrowth", "This can also be toggled by clicking on the growth emblem in the cityview");
   --PopulateCheckBox(Controls.ShowCultureGrowthCheckbox, "CQUI_ShowCultureGrowth", Locale.Lookup("LOC_CQUI_GENERAL_SHOWCULTUREGROWTH_TOOLTIP"));
