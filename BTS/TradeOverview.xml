@@ -99,7 +99,7 @@
       <!-- Checkbox -->
       <Stack StackGrowth="Left" Anchor="R,B" Offset="8,24" StackPadding="-4">
         <CheckBox ID="GroupShowAllCheckBox" Style="CityPanelCBFaith" IsChecked="0" />
-        <Label ID="GroupShowAllCheckBoxLabel" String="Expand All:" Offset="0,0" Style="CityPanelCBFaith" />
+        <Label ID="GroupShowAllCheckBoxLabel" String="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT" Offset="0,0" Style="CityPanelCBFaith" />
       </Stack>
 
       <Container Anchor="C,T" Size="parent-40, 35" Offset="0,88">

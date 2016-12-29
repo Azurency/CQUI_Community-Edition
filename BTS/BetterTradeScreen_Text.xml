@@ -121,5 +121,126 @@
     <Row Tag="LOC_ORIGIN_CHOOSER_CHANGE_DESTINATION_BUTTON">
         <Text>CONFIRM</Text>
     </Row>
+
   </BaseGameText>
+  <LocalizedText>
+    <Replace Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="zh_Hans_CN">
+        <Text>按 [ICON_Food] 食物排序</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_PRODUCTION_TOOLTIP" Language="zh_Hans_CN">
+        <Text>按 [ICON_Production] 生产力排序</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_GOLD_TOOLTIP" Language="zh_Hans_CN">
+        <Text>按 [ICON_Gold] 金币排序</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_SCIENCE_TOOLTIP" Language="zh_Hans_CN">
+        <Text>按 [ICON_Science] 科技值排序</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_CULTURE_TOOLTIP" Language="zh_Hans_CN">
+        <Text>按 [ICON_Culture] 文化值排序</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_FAITH_TOOLTIP" Language="zh_Hans_CN">
+        <Text>按 [ICON_Faith] 信仰值排序</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_TURNS_REMAINING_TOOLTIP" Language="zh_Hans_CN">
+        <Text>按 [ICON_Turn] 剩余回合数排序</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FILTER_INTERNATIONAL_ROUTES_TEXT" Language="zh_Hans_CN">
+        <Text>国际贸易路线</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FILTER_CS_WITH_QUEST_TOOLTIP" Language="zh_Hans_CN">
+        <Text>有贸易路线请求的城邦</Text>
+    </Replace>
+
+    <!-- Trade Overview -->
+    <Replace Tag="LOC_TRADE_NO_BENEFIT_TEXT" Language="zh_Hans_CN">
+        <Text>不会从此贸易路线获得收益</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_TEXT" Language="zh_Hans_CN">
+        <Text>排序：</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT" Language="zh_Hans_CN">
+        <Text>全部展开：</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_COLLAPSE_ALL_BUTTON_TEXT" Language="zh_Hans_CN">
+        <Text>全部折叠：</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP" Language="zh_Hans_CN">
+        <Text>贸易路线剩余 [ICON_Turn] 回合数</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_ALT_HELP_TOOLTIP" Language="zh_Hans_CN">
+        <Text>此贸易路线将在 {1_TurnsRemaining}[Icon_Turn] 后完成</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_ALT2_HELP_TOOLTIP" Language="zh_Hans_CN">
+        <Text>此贸易路线将在 {1_TurnsRemaining}[Icon_Turn] 内完成</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER" Language="zh_Hans_CN">
+        <Text>----------------------------</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_ROUTE_LENGTH_TOOLTIP" Language="zh_Hans_CN">
+        <Text>贸易路线 [ICON_Movement]: {1_TripsToDestination}</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TRIPS_COUNT_TOOLTIP" Language="zh_Hans_CN">
+        <Text>到目的地: {1_TripsToDestination}</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_TOOLTIP" Language="zh_Hans_CN">
+        <Text>贸易路线将在 [ICON_Turn]{1_TurnWhenCompleted} 时完成</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_ALT_TOOLTIP" Language="zh_Hans_CN">
+        <Text>如果此时出发，贸易路线将在 [ICON_Turn]{1_TurnWhenCompleted} 时完成</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_CANCEL_AUTOMATION_TOOLTIP" Language="zh_Hans_CN">
+        <Text>取消自动贸易，一旦贸易完成，商队将等候派遣。</Text>
+    </Replace>
+
+    <!-- Make Trade Route -->
+    <Replace Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_LABEL" Language="zh_Hans_CN">
+        <Text>长期的贸易路线：</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_TOOLTIP" Language="zh_Hans_CN">
+        <Text>使商队进行长期（反复）的贸易。一般情况下，长期的贸易是商队一生进行的最后一次贸易（笑）。</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_LABEL" Language="zh_Hans_CN">
+        <Text>从顶部排序：</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_TOOLTIP" Language="zh_Hans_CN">
+        <Text>长期贸易路线在最顶部，短期（不重复）的在最底部。</Text>
+    </Replace>
+
+    <!-- Trade Origin Chooser -->
+    <Replace Tag="LOC_ORIGIN_CHOOSER_HEADER_BACKGROUND_TEXT" Language="zh_Hans_CN">
+        <Text>选择一个城市</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_ORIGIN_CHOOSER_HEADER_LABEL_TEXT" Language="zh_Hans_CN">
+        <Text>转移商队至</Text>
+    </Replace>
+
+    <Replace Tag="LOC_ORIGIN_CHOOSER_CHANGE_DESTINATION_BUTTON" Language="zh_Hans_CN">
+        <Text>确认</Text>
+    </Replace>
+  </LocalizedText>
 </GameData>

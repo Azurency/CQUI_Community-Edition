@@ -364,11 +364,17 @@ function AddCityToDestinationStack(city:table)
 
 	-- Update turns to complete route
 	local tradePathLength, tripsToDestination, turnsToCompleteRoute = GetRouteInfo(m_originCity, city);
-	local tooltipString = (	"Total amount of[ICON_Turn]to complete this trade route[NEWLINE]" ..
-							"--------------------------------------------------------[NEWLINE]" ..
-							"Trade Route[ICON_Movement]: " .. tradePathLength .. "[NEWLINE]" ..
-							"Trips to destination: " .. tripsToDestination .. "[NEWLINE]" ..
-							"If started, route will complete in[ICON_Turn]: " .. Game.GetCurrentGameTurn() + turnsToCompleteRoute);
+	local tooltipString = ( Locale.Lookup("LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP") .. "[NEWLINE]" ..
+							Locale.Lookup("LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER") .. "[NEWLINE]" ..
+							Locale.Lookup("LOC_TRADE_TURNS_REMAINING_ROUTE_LENGTH_TOOLTIP") .. "[NEWLINE]" ..
+							Locale.Lookup("LOC_TRADE_TURNS_REMAINING_TRIPS_COUNT_TOOLTIP") .. "[NEWLINE]" ..
+							Locale.Lookup("LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_ALT_TOOLTIP") .. 
+							Game.GetCurrentGameTurn() + turnsToCompleteRoute );
+	-- local tooltipString = (	"Total amount of[ICON_Turn]to complete this trade route[NEWLINE]" ..
+	-- 						"--------------------------------------------------------[NEWLINE]" ..
+	-- 						"Trade Route[ICON_Movement]: " .. tradePathLength .. "[NEWLINE]" ..
+	-- 						"Trips to destination: " .. tripsToDestination .. "[NEWLINE]" ..
+	-- 						"If started, route will complete in[ICON_Turn]: " .. Game.GetCurrentGameTurn() + turnsToCompleteRoute);
 
 	cityEntry.TurnsToComplete:SetText(turnsToCompleteRoute);
 	cityEntry.TurnsToComplete:SetToolTipString( tooltipString );

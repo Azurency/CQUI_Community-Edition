@@ -139,12 +139,12 @@
                       <Image ID="AmenetiesStatusIconContainerEntertainment" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
                         <Image ID="AmenetiesStatusIconEntertainment" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_PROJECT_CARNIVAL" />
                         <Label ID="AmenetiesStatusYieldEntertainment" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelEntertainment" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="Entertainment" />
+                        <Label ID="AmenetiesStatusLabelEntertainment" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CQUI_CITY_ENTERTAINMENT" />
                       </Image>
                       <Image ID="AmenetiesStatusIconContainerGreatPeople" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
                         <Image ID="AmenetiesStatusIconGreatPeople" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_NOTIFICATION_CLAIM_GREAT_PERSON" />
                         <Label ID="AmenetiesStatusYieldGreatPeople" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelGreatPeople" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="Great[NEWLINE]People" />
+                        <Label ID="AmenetiesStatusLabelGreatPeople" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CQUI_CITY_GREAT_PEOPLE" />
                       </Image>
                     </Stack>
                     <Container Size="1,20" />
@@ -157,12 +157,12 @@
                       <Image ID="AmenetiesStatusIconContainerNationalParks" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
                         <Image ID="AmenetiesStatusIconNationalParks" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_UNITOPERATION_DESIGNATE_PARK" />
                         <Label ID="AmenetiesStatusYieldNationalParks" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelNationalParks" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="National[NEWLINE]Parks" />
+                        <Label ID="AmenetiesStatusLabelNationalParks" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CQUI_CITY_NATIONAL_PARK" />
                       </Image>
                       <Image ID="AmenetiesStatusIconContainerWarWeariness" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
                         <Image ID="AmenetiesStatusIconWarWeariness" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_UNITOPERATION_FORTIFY" />
                         <Label ID="AmenetiesStatusYieldWarWeariness" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelWarWeariness" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="War[NEWLINE]Weariness" />
+                        <Label ID="AmenetiesStatusLabelWarWeariness" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CQUI_CITY_WAR_WEARINESS" />
                       </Image>
                       <Image ID="AmenetiesStatusIconContainerBankruptcy" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
                         <Image ID="AmenetiesStatusIconBankruptcy" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_NOTIFICATION_TREASURY_BANKRUPT" />

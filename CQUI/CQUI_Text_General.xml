@@ -4,5 +4,59 @@
     <Row Tag="LOC_CQUI_NAME" Language="en_US">
       <Text>CQUI</Text>
     </Row>
+
+    <!-- MESSAGES -->
+    <Row Tag="LOC_CQUI_CIVIC_MESSAGE_S" Language="en_US">
+      <Text>The current Civic, </Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CIVIC_MESSAGE_S" Language="zh_Hans_CN">
+      <Text>当前市政，</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TECH_MESSAGE_S" Language="en_US">
+      <Text>The current Technology, </Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TECH_MESSAGE_S" Language="zh_Hans_CN">
+      <Text>当前科技，</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_HALF_MESSAGE_E" Language="en_US">
+      <Text>, is one turn away from maximum Inspiration potential.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_HALF_MESSAGE_E" Language="zh_Hans_CN">
+      <Text>，离最充分利用尤里卡还有1回合。</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_FINISH_MESSAGE_E" Language="en_US">
+      <Text>, is completed.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_FINISH_MESSAGE_E" Language="zh_Hans_CN">
+      <Text>，已完成。</Text>
+    </Row>
+
+    <!-- CITY PANEL AMENITY -->
+    <Row Tag="LOC_CQUI_CITY_ENTERTAINMENT" Language="en_US">
+      <Text>Entertainment</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITY_ENTERTAINMENT" Language="zh_Hans_CN">
+      <Text>娱乐</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITY_GREAT_PEOPLE" Language="en_US">
+      <Text>Great[NEWLINE]People</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITY_GREAT_PEOPLE" Language="zh_Hans_CN">
+      <Text>伟人</Text>
+    </Row>
+	<Row Tag="LOC_CQUI_CITY_NATIONAL_PARK" Language="en_US">
+      <Text>National[NEWLINE]Parks</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITY_NATIONAL_PARK" Language="zh_Hans_CN">
+      <Text>国家公园</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITY_WAR_WEARINESS" Language="en_US">
+      <Text>War[NEWLINE]Weariness</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITY_WAR_WEARINESS" Language="zh_Hans_CN">
+      <Text>厌战</Text>
+    </Row>
+    
+    
   </LocalizedText>
 </GameData>
