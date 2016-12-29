@@ -196,26 +196,19 @@ function Initialize()
     button:RegisterCallback(Mouse.eLClick, function() ShowTab(button, panel); end);
   end
   --Populating/binding comboboxes...
-  --PopulateComboBox(Controls.BindingsPullDown, bindings_options, "CQUI_BindingsMode", Locale.Lookup("LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP"));
-  PopulateComboBox(Controls.BindingsPullDown, bindings_options, "CQUI_BindingsMode", "Standard: Unchanged[NEWLINE]Classic: Civ V binds[NEWLINE]Enhanced: Civ V Binds with the following changes[NEWLINE]  WASD camera control[NEWLINE]  Q/E unit/city cycling[NEWLINE]  Shift toggles city/unit selection[NEWLINE]  Quarry/Airstrike are moved to alt-key + Q/S[NEWLINE]  NOTE:UNBIND W/E IN SETTINGS OR THINGS WON'T WORK!");
-  -- PopulateComboBox(Controls.ResourceIconStyle, resource_icon_style_options, "CQUI_ResourceDimmingStyle", "LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE", "LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP");
-  PopulateComboBox(Controls.ResourceIconStyle, resource_icon_style_options, "CQUI_ResourceDimmingStyle", "Solid: always draw resource icons[NEWLINE]Transparent: improved resource icons are transparent[NEWLINE]Hidden: improved resource icons are hidden");
+  PopulateComboBox(Controls.BindingsPullDown, bindings_options, "CQUI_BindingsMode", Locale.Lookup("LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP"));
+  PopulateComboBox(Controls.ResourceIconStyle, resource_icon_style_options, "CQUI_ResourceDimmingStyle", Locale.Lookup("LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP"));
   
   --Populating/binding checkboxes...
   PopulateCheckBox(Controls.ProductionQueueCheckbox, "CQUI_ProductionQueue");
   RegisterControl(Controls.ProductionQueueCheckbox, "CQUI_ProductionQueue", UpdateCheckbox);
   PopulateCheckBox(Controls.ShowLuxuryCheckbox, "CQUI_ShowLuxuries");
-  PopulateCheckBox(Controls.ShowCultureGrowthCheckbox, "CQUI_ShowCultureGrowth", "This can also be toggled by clicking on the growth emblem in the cityview");
-  --PopulateCheckBox(Controls.ShowCultureGrowthCheckbox, "CQUI_ShowCultureGrowth", Locale.Lookup("LOC_CQUI_GENERAL_SHOWCULTUREGROWTH_TOOLTIP"));
-  --PopulateCheckBox(Controls.SmartbannerCheckbox, "CQUI_Smartbanner", Locale.Lookup("LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP"));
-  PopulateCheckBox(Controls.SmartbannerCheckbox, "CQUI_Smartbanner", "Displays new icons in the city banner. A food icon is displayed whenever there are unlocked citizens being automatically assigned by the AI city governor. District icons indicate built districts");
+  PopulateCheckBox(Controls.ShowCultureGrowthCheckbox, "CQUI_ShowCultureGrowth", Locale.Lookup("LOC_CQUI_GENERAL_SHOWCULTUREGROWTH_TOOLTIP"));
+  PopulateCheckBox(Controls.SmartbannerCheckbox, "CQUI_Smartbanner", Locale.Lookup("LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP"));
   PopulateCheckBox(Controls.ToggleYieldsOnLoadCheckbox, "CQUI_ToggleYieldsOnLoad");
-  --PopulateCheckBox(Controls.TechVisualCheckbox, "CQUI_TechPopupVisual", Locale.Lookup("LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP"));
-  PopulateCheckBox(Controls.TechVisualCheckbox, "CQUI_TechPopupVisual", "Toggles the popup that appears whenever a new tech or civic is achieved");
-  --PopulateCheckBox(Controls.TechAudioCheckbox, "CQUI_TechPopupAudio", Locale.Lookup("LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP"));
-  PopulateCheckBox(Controls.TechAudioCheckbox, "CQUI_TechPopupAudio", "Toggles the popup audio that plays whenever a new tech or civic is achieved. Is fully indepenedent of the visual component and can play even when there is no visible popup");
-  -- PopulateCheckBox(Controls.TrimGossipCheckbox, "CQUI_TrimGossip", Locale.Lookup("LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP"));
-  PopulateCheckBox(Controls.TrimGossipCheckbox, "CQUI_TrimGossip", "Removes the mostly useless start of the gossip message describing where the information came from");
+  PopulateCheckBox(Controls.TechVisualCheckbox, "CQUI_TechPopupVisual", Locale.Lookup("LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP"));
+  PopulateCheckBox(Controls.TechAudioCheckbox, "CQUI_TechPopupAudio", Locale.Lookup("LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP"));
+  PopulateCheckBox(Controls.TrimGossipCheckbox, "CQUI_TrimGossip", Locale.Lookup("LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP"));
 
   PopulateSlider(Controls.ProductionItemHeightSlider, Controls.ProductionItemHeightText, "CQUI_ProductionItemHeight", ProductionItemHeightConverter);
 
