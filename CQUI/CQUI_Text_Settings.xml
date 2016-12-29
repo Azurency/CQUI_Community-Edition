@@ -41,7 +41,7 @@
       <Text>Enable Smartbanners</Text>
     </Row>
   <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="en_US">
-      <Text>Displays new icons in the city banner. A food icon is displayed whenever there are unlocked citizens being automatically assigned by the AI city governor. District icons indicate built districts</Text>
+      <Text>Displays new icons in the city banner. A [ICON_EXCLAMATION] is displayed whenever there are unlocked citizens being automatically assigned by the AI city governor. District icons indicate built districts</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="en_US">
       <Text>Toggles yields ON by default</Text>
@@ -58,23 +58,17 @@
   <Row Tag="LOC_CQUI_HIDDEN" Language="en_US">
       <Text>Hidden</Text>
     </Row>
-  <Row Tag="LOC_CQUI_HIDDEN_COWBOY" Language="en_US">
-      <Text>Toggle Horseman Autoproduce</Text>
-    </Row>
-  <Row Tag="LOC_CQUI_HIDDEN_BADCOWBOY" Language="en_US">
-      <Text>Toggle Horseman Autosell</Text>
-    </Row>
   <Row Tag="LOC_CQUI_POPUPS" Language="en_US">
       <Text>Popups</Text>
     </Row>
   <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="en_US">
-      <Text>Tech/Civic Popup Visual</Text>
+      <Text>Tech/Civic popup visual</Text>
     </Row>
   <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="en_US">
       <Text>Toggles the popup that appears whenever a new tech or civic is achieved</Text>
     </Row>
   <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="en_US">
-      <Text>Tech/Civic Popup Audio</Text>
+      <Text>Tech/Civic popup audio</Text>
     </Row>
   <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="en_US">
       <Text>Toggles the popup audio that plays whenever a new tech or civic is achieved. Is fully indepenedent of the visual component and can play even when there is no visible popup</Text>
@@ -85,11 +79,11 @@
   <Row Tag="LOC_CQUI_PRODUCTION_ITEMHEIGHT" Language="en_US">
     <Text>Production item height</Text>
   </Row>
-  <Row Tag="LOC_CQUI_PRODUCTION_QUEUE" Language="en_US">
+  <Row Tag="LOC_CQUI_PRODUCTION_PRODUCTIONQUEUE" Language="en_US">
     <Text>Enable production queue</Text>
   </Row>
   <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="en_US">
-      <Text>Remember: CQUI settings are attached to individual saves!</Text>
-    </Row>
+    <Text>Remember: CQUI settings are attached to individual saves![NEWLINE]If you'd like to change a setting by default, please edit the CQUI_Settings.sql file within the [MOD INSTALL DIRECTORY]/CQUI/ directory</Text>
+  </Row>
   </LocalizedText>
 </GameData>

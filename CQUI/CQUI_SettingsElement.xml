@@ -14,18 +14,12 @@
         <Grid Style="SubContainerFill" Size="210,parent-6" Offset="3,3" Color="6,36,57,150">
           <Grid Style="SubContainer3" Size="parent-6,parent-6" Anchor="C,C" Color="13,70,82,255">
             <Stack ID="TabStack" StackGrowth="Down" Anchor="C,T" Padding="10">
-              <!--<GridButton ID="GeneralTab" Style="ShellTabSmall" String="{LOC_CQUI_GENERAL:upper}" Size="200,32"/>
+              <GridButton ID="GeneralTab" Style="ShellTabSmall" String="{LOC_CQUI_GENERAL:upper}" Size="200,32"/>
               <GridButton ID="ProductionTab" Style="ShellTabSmall" String="{LOC_CQUI_PRODUCTION:upper}" Size="200,32"/>
               <GridButton ID="PopupsTab" Style="ShellTabSmall" String="{LOC_CQUI_POPUPS:upper}" Size="200,32"/>
               <GridButton ID="BindingsTab" Style="ShellTabSmall" String="{LOC_CQUI_BINDINGS:upper}" Size="200,32"/>
-              <GridButton ID="BindingsTab" Style="ShellTabSmall" String="{LOC_CQUI_STATUS:upper}" Size="200,32"/>
-              <GridButton ID="HiddenTab" Style="ShellTabSmall" String="{LOC_CQUI_HIDDEN:upper}" Size="200,32" Hidden="1"/>-->
-              <GridButton ID="GeneralTab" Style="ShellTabSmall" String="GENERAL" Size="200,32"/>
-              <GridButton ID="ProductionTab" Style="ShellTabSmall" String="PRODUCTION" Size="200,32"/>
-              <GridButton ID="PopupsTab" Style="ShellTabSmall" String="POPUPS" Size="200,32"/>
-              <GridButton ID="GossipTab" Style="ShellTabSmall" String="GOSSIP" Size="200,32"/>
-              <GridButton ID="BindingsTab" Style="ShellTabSmall" String="BINDINGS" Size="200,32"/>
-              <GridButton ID="HiddenTab" Style="ShellTabSmall" String="HIDDEN" Size="200,32" Hidden="1"/>
+              <GridButton ID="GossipTab" Style="ShellTabSmall" String="{LOC_CQUI_GOSSIP:upper}" Size="200,32"/>
+              <GridButton ID="HiddenTab" Style="ShellTabSmall" String="{LOC_CQUI_HIDDEN:upper}" Size="200,32" Hidden="1"/>
             </Stack>
           </Grid>
         </Grid>
@@ -33,53 +27,44 @@
       <Container ID="GeneralOptions" Size="parent,parent" Hidden="1">
         <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-            <!--<GridButton ID="ShowLuxuryCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_SHOWLUXURY" />-->
-            <GridButton ID="ShowLuxuryCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Show luxuries in top panel" />
+            <GridButton ID="ShowLuxuryCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_SHOWLUXURY" />
           </Stack>
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-            <!--<GridButton ID="SmartbannerCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_SMARTBANNER" />-->
-            <GridButton ID="SmartbannerCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Enable Smartbanner" />
+            <GridButton ID="SmartbannerCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_SMARTBANNER" />
           </Stack>
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <PullDown ID="ResourceIconStyle" Style="PullDownBlue" ScrollThreshold="400" Size="300,24" Offset="0,0" SpaceForScroll="0"/>
-            <!--<Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE"/>-->
-            <Label Anchor="L,C" Style="ShellOptionText" String="Improved resource icon style"/>
-            </Stack>
-          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-            <!--<GridButton ID="ToggleYieldsOnLoadCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" />-->
-            <GridButton ID="ToggleYieldsOnLoadCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Toggle Yields ON by default" />
+            <Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE"/>
           </Stack>
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-            <!--<GridButton ID="ShowCultureGrowthCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_SHOWCULTUREGROWTH" />-->
-            <GridButton ID="ShowCultureGrowthCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Show cultural growth overlay in cityview" />
+            <GridButton ID="ToggleYieldsOnLoadCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" />
+          </Stack>
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <GridButton ID="ShowCultureGrowthCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_SHOWCULTUREGROWTH" />
           </Stack>
         </Stack>
       </Container>
       <Container ID="PopupsOptions" Size="parent,parent" Hidden="1">
         <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-            <!--<GridButton ID="TechVisualCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_POPUPS_TECHVISUAL" />-->
-            <GridButton ID="TechVisualCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Show tech/civic popup visual" />
+            <GridButton ID="TechVisualCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_POPUPS_TECHVISUAL" />
           </Stack>
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-            <!--<GridButton ID="TechAudioCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_POPUPS_TECHAUDIO" />-->
-            <GridButton ID="TechAudioCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Play tech/civic popup audio" />
+            <GridButton ID="TechAudioCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_POPUPS_TECHAUDIO" />
           </Stack>
         </Stack>
       </Container>
       <Container ID="ProductionOptions" Size="parent,parent" Hidden="1">
         <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
           <Stack Anchor="C,T" StackGrowth="Left" Padding="5">
-            <GridButton ID="ProductionQueueCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Enable production queue" />
-            <!-- <GridButton ID="ProductionQueueCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_PRODUCTION_PRODUCTIONQUEUE" /> -->
+            <GridButton ID="ProductionQueueCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_PRODUCTION_PRODUCTIONQUEUE" />
           </Stack>
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <Container Anchor="R,C" Size="300,32" Padding="5">
               <Slider Style="SliderControl" Anchor="R,C" Size="220,13" Offset="5,0" SpaceForScroll="0" ID="ProductionItemHeightSlider" Steps="104" />
               <Label String="0" Style="ShellOptionText" Anchor="L,C" ID="ProductionItemHeightText" Offset="3,0" />
             </Container>
-            <!-- <Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_PRODUCTION_ITEMHEIGHT"/> -->
-            <Label Anchor="L,C" Style="ShellOptionText" String="Production item height"/>
+            <Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_PRODUCTION_ITEMHEIGHT"/>
           </Stack>
         </Stack>
       </Container>
@@ -89,8 +74,7 @@
           <Stack Anchor="C,T" StackGrowth="Down" Padding="5">
             <!-- Gossip options -->
             <Stack Anchor="C,T" StackGrowth="Left" Padding="5">
-              <!--<GridButton ID="TrimGossipCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GOSSIP_TRIMMESSAGE" />-->
-              <GridButton ID="TrimGossipCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="Trim gossip messages" />
+              <GridButton ID="TrimGossipCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GOSSIP_TRIMMESSAGE" />
             </Stack>
             <Line Start="0,0" End="600,0" Width="2" Color="84,77,66,255" />
             <!-- Diplo gossips -->
@@ -311,8 +295,7 @@
         <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <PullDown ID="BindingsPullDown" Style="PullDownBlue" ScrollThreshold="400" Size="300,24" Offset="0,0" SpaceForScroll="0"/>
-            <!--<Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_BINDINGS_DROPDOWN"/>-->
-            <Label Anchor="L,C" Style="ShellOptionText" String="Binding Modes"/>
+            <Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_BINDINGS_DROPDOWN"/>
           </Stack>
         </Stack>
       </Container>
@@ -322,10 +305,9 @@
           </Stack>
         </Stack>
       </Container> 
-      <!--<Label Anchor="c,b" Style="FontFlair16" String="LOC_CQUI_SETTINGS_REMINDER"/>-->
-      <Label Anchor="c,b" Offset="0,-25" Style="FontFlair16" String="Remember: CQUI settings are attached to individual saves!"/>
     </Container>
       </Grid>
+    <Label Anchor="c,b" Style="FontFlair16" String="LOC_CQUI_SETTINGS_REMINDER"/>
     </Container>
   </Box>
 </Context>
