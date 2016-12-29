@@ -156,9 +156,10 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
 
 # THANKS:
 * @Vans163 for his original QUI mod :heart:
-* astog from the CivFanatics modding community for his [Better Trade Routes mod](http://forums.civfanatics.com/threads/better-trade-screen.602636/)
+* @astog from the CivFanatics modding community for his [Better Trade Routes mod](http://forums.civfanatics.com/threads/better-trade-screen.602636/) AND his [More Lenses mod](https://forums.civfanatics.com/threads/more-lenses.606150/), which he merged personally in #165
 * Ace from the CivFanatics modding community for his [Next City Plot mod](http://forums.civfanatics.com/resources/next-city-plot-by-ace.25437/)
 * Divine Yuri from the CivFanatics modding community for his [Custom City Panel mod](http://forums.civfanatics.com/resources/divine-yuris-custom-city-panel.25430/)
+* @ZhouYzzz for providing the Chinese localization
 * @zgavin for UI bugfixes in #1 and #2
 * @olegbl for the Amenities overview overhaul in #4 and multiple UI bugfixes ( #9 and #12 )
   * Additional kudos to /u/mateusarc from the Civilization subreddit for his original concept art
@@ -168,6 +169,7 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
   * UI/Civilopedia improvements in #24 and #32
   * adding a GP filter to the policy card display in 063d3a668a06b49c9b2394e03cd5deb66b848210
   * adding a "Create Pin" hotkey in #117
+  * fixing missing translations in #135
 * @OfekA for providing the improved resource dimming feature in #54
 * @RatchetJ for:
   * providing the civic/tech notifications at 50%/100% completion in #66 and 1148edc7ada9a649c15611ef78dbdc690c8adf30
@@ -175,6 +177,7 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
   * useless civic/tech notifications in #91
   * providing the fix for the production panel "forgetting" the last produced item in #105
   * adding GP/turn to the GP panel
+  * Adding city yield/citizen assignment information on hover in #136
 * @kblease for:
   * fortify until healed hotkey bugfix in #73
   * unit purchasing fix in #80
@@ -182,6 +185,9 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
   * for bringing the BTS mod version up to current in #61
   * for bringing the BTS mod version up to current, again, in #106
 * @benjaminjackman for fixing a hotkey conflict in #127
+* @zeyangl for adding new options to the resource dimming feature in #146
+* @velit for a UI bugfix in #138
+* @the-m4a for a patch incompatibility bugfix in #181
 * @perseghini for providing the fix for issue #33
 * /u/dli511 @ Reddit for their bug report relating to purchasing buildings
 * /u/Nitrium @ Reddit for their bug report relating to broken Gossip notifications

@@ -4,8 +4,8 @@
     <Name>Chao Quick UI</Name>
     <Description>Reduce clicks and make empire management easy</Description>
     <Teaser>Reduce clicks and make empire management easy</Teaser>
-    <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek</Authors>
-    <SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod. Greg Miller for his Unit Report Screen mod. Lozenged/kblease for his Production Queue mod.</SpecialThanks>
+    <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek, zeyangl, velit, the-m4a</Authors>
+    <SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod + More Lenses mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod. Greg Miller for his Unit Report Screen mod. Lozenged/kblease for his Production Queue mod. ZhouYzzz for providing the Chinese translation of CQUI</SpecialThanks>
   </Properties>
   <Components>
     <ImportFiles id="CQUI_IMPORT_FILES">
