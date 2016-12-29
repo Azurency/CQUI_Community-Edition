@@ -102,6 +102,11 @@ function CQUI_ToggleMinimapSize()
   end
 end
 
+function CQUI_OnSettingsUpdate()
+  AUTO_APPLY_ARCHEOLOGIST_LENS = GameConfiguration.GetValue("CQUI_AutoapplyArchaeologistLens");
+  AUTO_APPLY_BUILDER_LENS = GameConfiguration.GetValue("CQUI_AutoapplyBuilderLens");
+  AUTO_APPLY_SCOUT_LENS = GameConfiguration.GetValue("CQUI_AutoapplyScoutLens");
+end
 -- ===========================================================================
 function GetContinentsCache()
   if m_ContinentsCache == nil then
@@ -2064,6 +2069,7 @@ function Initialize()
   -- CQUI Handlers
   LuaEvents.CQUI_Option_ToggleBindings.Add( CQUI_OnToggleBindings );
   LuaEvents.CQUI_Option_ToggleYields.Add( ToggleYieldIcons );
+  LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
 
   -- CQUI: Toggle yield icons if option is enabled
   if(GameConfiguration.GetValue("CQUI_ToggleYieldsOnLoad")) then

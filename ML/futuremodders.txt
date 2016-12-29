@@ -1,0 +1,1 @@
+ML/UI/MinimapPanel.lua requires special attention when updating, due to custom hooks into the CQUI mod options

@@ -58,6 +58,18 @@
   <Row Tag="LOC_CQUI_HIDDEN" Language="en_US">
       <Text>Hidden</Text>
     </Row>
+  <Row Tag="LOC_CQUI_LENSES" Language="en_US">
+    <Text>Lenses</Text>
+  </Row>
+  <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="en_US">
+    <Text>Autoapply archaeologist lens</Text>
+  </Row>
+  <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="en_US">
+    <Text>Autoapply builder lens</Text>
+  </Row>
+  <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="en_US">
+    <Text>Autoapply scout lens</Text>
+  </Row>
   <Row Tag="LOC_CQUI_POPUPS" Language="en_US">
       <Text>Popups</Text>
     </Row>
