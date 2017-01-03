@@ -459,9 +459,9 @@
           <Button ID="ReligionButton" Offset="0,2" Anchor="L,C" Size="44,44"  Texture="LaunchBar_Hook_ButtonMedium" Style="ButtonNormalText" ToolTip="LOC_HUD_CITY_OVERVIEW_RELIGION_TOOLTIP" >
             <Image ID="ReligionIcon" Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="C,C"  Icon="ICON_RELIGION"/>
           </Button>
-         <!-- <Button ID="QueueButton" Offset="0,2" Anchor="L,C" Size="44,44"  Texture="LaunchBar_Hook_ButtonMedium" Style="ButtonNormalText">
+         <!--  <Button ID="QueueButton" Offset="0,2" Anchor="L,C" Size="44,44"  Texture="LaunchBar_Hook_ButtonMedium" Style="ButtonNormalText">
             <Image ID="QueueIcon" Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="C,C"  Icon="ICON_QUEUE"/>
-          </Button>-->
+          </Button> -->
           <!--<Button ID="StrengthButton" Offset="0,2" Anchor="L,C" Size="44,44"  Texture="LaunchBar_Hook_ButtonMedium" Style="ButtonNormalText">
             <Image ID="StrengthIcon" Offset="-1,-1" Texture="Stats32" Size="32,32" Anchor="C,C"  Icon="ICON_DEFENSE"/>
           </Button>-->
