@@ -4,7 +4,7 @@
     <Name>Chao Quick UI</Name>
     <Description>Reduce clicks and make empire management easy</Description>
     <Teaser>Reduce clicks and make empire management easy</Teaser>
-    <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek, zeyangl, velit, the-m4a</Authors>
+    <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek, zeyangl, velit, the-m4a, Remolten</Authors>
     <SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod + More Lenses mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod. Greg Miller for his Unit Report Screen mod. Lozenged/kblease for his Production Queue mod. ZhouYzzz for providing the Chinese translation of CQUI</SpecialThanks>
   </Properties>
   <Components>
@@ -33,6 +33,8 @@
         <File>UI/Panels/StatusMessagePanel.lua</File>
         <File>UI/Panels/StatusMessagePanel.xml</File>
         <File>UI/Panels/UnitPanel.lua</File>
+        <File>UI/PartialScreens/CityStates.lua</File>
+        <File>UI/PartialScreens/CityStates.xml</File>
         <File>UI/Popups/GreatPeoplePopup.lua</File>
         <File>UI/Popups/GreatPeoplePopup.xml</File>
         <File>UI/Popups/MapPinListPanel.lua</File>
@@ -129,7 +131,7 @@
     <File>UI/MinimapPanel.xml</File>
     <File>UI/ProductionPanel.xml</File>
     <File>UI/TopPanel.lua</File>
-    <File>UI/UnitPanel.xml</File> 
+    <File>UI/UnitPanel.xml</File>
     <File>UI/WorldInput.lua</File>
     <File>UI/WorldViewIconsManager.lua</File>
     <File>UI/Civilopedia/CivilopediaSupport.lua</File>
@@ -142,6 +144,8 @@
     <File>UI/Panels/StatusMessagePanel.lua</File>
     <File>UI/Panels/StatusMessagePanel.xml</File>
     <File>UI/Panels/UnitPanel.lua</File>
+    <File>UI/PartialScreens/CityStates.lua</File>
+    <File>UI/PartialScreens/CityStates.xml</File>
     <File>UI/Popups/GreatPeoplePopup.lua</File>
     <File>UI/Popups/GreatPeoplePopup.xml</File>
     <File>UI/Popups/MapPinListPanel.lua</File>
