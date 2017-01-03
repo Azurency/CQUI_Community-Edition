@@ -99,12 +99,33 @@ function ViewCurrent( data:table )
     local classData   :table = GameInfo.GreatPersonClasses[kPerson.ClassID];
     local individualData:table = GameInfo.GreatPersonIndividuals[kPerson.IndividualID];
     local classText   :string = "";
-
-    if (kPerson.ClassID ~= nil) then
+	
+	--CQUI Changes to Keep Great Person Class Label even when all are claimed
+    
+	--[[if (kPerson.ClassID ~= nil) then
       classText = Locale.Lookup(classData.Name);
       instance.ClassName:SetText(classText);
-    end
-    
+    --end]]
+	if(i==1) then
+	  instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_GENERAL_NAME"));
+	elseif(i==2) then
+      instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_ADMIRAL_NAME"));
+	elseif(i==3) then
+	  instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_ENGINEER_NAME"));
+	elseif(i==4) then
+	  instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_MERCHANT_NAME"));
+	elseif(i==5) then
+	  instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_PROPHET_NAME"));
+	elseif(i==6) then
+	  instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_SCIENTIST_NAME"));
+	elseif(i==7) then
+	  instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_WRITER_NAME"));
+	elseif(i==8) then
+	  instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_ARTIST_NAME"));
+	else
+	  instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_MUSICIAN_NAME"));
+	end
+	
     if kPerson.IndividualID ~= nil then
       local individualName:string = Locale.ToUpper(kPerson.Name);
       instance.IndividualName:SetText( individualName );
@@ -267,10 +288,13 @@ function ViewCurrent( data:table )
         if (canEarnAnotherOfThisClass) then
           local recruitInst:table = instance["m_RecruitIM"]:GetInstance();      
           recruitInst.Country:SetText( kPlayerPoints.PlayerName );
-          recruitInst.Amount:SetText( tostring(Round(kPlayerPoints.PointsTotal,1)) .. "/" .. tostring(kPerson.RecruitCost) );
+          --recruitInst.Amount:SetText( tostring(Round(kPlayerPoints.PointsTotal,1)) .. "/" .. tostring(kPerson.RecruitCost) );
 
-          -- CQUI Points Per Turn -- Add the turn icon into the text 
-          recruitInst.CQUI_PerTurn:SetText( "+" .. tostring(Round(kPlayerPoints.PointsPerTurn,1)) .. " /[ICON_Turn]" );
+          -- CQUI Points Per Turn and Turns Left -- Add the turn icon into the text
+          --recruitTurnsLeft gets +0.5 so that's rounded up
+          local recruitTurnsLeft:number = Round((kPerson.RecruitCost-kPlayerPoints.PointsTotal)/kPlayerPoints.PointsPerTurn + 0.5,0);
+		  recruitInst.CQUI_PerTurn:SetText( "+" .. tostring(Round(kPlayerPoints.PointsPerTurn,1)) .. " /[ICON_Turn] " .. tostring(recruitTurnsLeft) .. "[ICON_Turn]");
+		  
 
           local progressPercent :number = Clamp( kPlayerPoints.PointsTotal / kPerson.RecruitCost, 0, 1 );
           recruitInst.ProgressBar:SetPercent( progressPercent );
@@ -279,13 +303,14 @@ function ViewCurrent( data:table )
           if kPlayerPoints.IsPlayer then
             recruitColorName = "GreatPeopleActiveCS";     
           end
-          recruitInst.Amount:SetColorByName( recruitColorName );
+          --recruitInst.Amount:SetColorByName( recruitColorName );
           recruitInst.CQUI_PerTurn:SetColorByName( recruitColorName );
           recruitInst.Country:SetColorByName( recruitColorName );
           --recruitInst.Country:SetColorByName( recruitColorName );
           recruitInst.ProgressBar:SetColorByName( recruitColorName );
 
-          local recruitDetails:string = Locale.Lookup("LOC_GREAT_PEOPLE_POINT_DETAILS", Round(kPlayerPoints.PointsPerTurn, 1), classData.IconString, classData.Name);
+          local recruitDetails:string = "Progress:" .. tostring(Round(kPlayerPoints.PointsTotal,1)) .. "/" .. tostring(kPerson.RecruitCost) 
+			.. "[NEWLINE]" .. Locale.Lookup("LOC_GREAT_PEOPLE_POINT_DETAILS", Round(kPlayerPoints.PointsPerTurn, 1), classData.IconString, classData.Name);
 
           DifferentiateCiv(kPlayerPoints.PlayerID,recruitInst.CivIcon,recruitInst.CivIcon,recruitInst.CivBacking, nil, nil, Game.GetLocalPlayer());
 
@@ -314,7 +339,7 @@ function ViewCurrent( data:table )
     end
 
     local noneAvailable   :boolean = (kPerson.ClassID == nil);
-    instance.ClassName:SetHide( noneAvailable );
+    --instance.ClassName:SetHide( noneAvailable );
     instance.TitleLine:SetHide( noneAvailable );
     instance.IndividualName:SetHide( noneAvailable );
     instance.EraName:SetHide( noneAvailable );

@@ -134,17 +134,17 @@
                       <Image ID="AmenetiesStatusIconContainerCivics" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
                         <Image ID="AmenetiesStatusIconCivics" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_NOTIFICATION_CONSIDER_GOVERNMENT_CHANGE" />
                         <Label ID="AmenetiesStatusYieldCivics" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelCivics" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CIVIC_NAME" />
+                        <Label ID="AmenetiesStatusLabelCivics" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CATEGORY_CIVICS_NAME" />
                       </Image>
                       <Image ID="AmenetiesStatusIconContainerEntertainment" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
                         <Image ID="AmenetiesStatusIconEntertainment" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_PROJECT_CARNIVAL" />
                         <Label ID="AmenetiesStatusYieldEntertainment" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelEntertainment" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CQUI_CITY_ENTERTAINMENT" />
+                        <Label ID="AmenetiesStatusLabelEntertainment" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="Entertainment" />
                       </Image>
                       <Image ID="AmenetiesStatusIconContainerGreatPeople" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
                         <Image ID="AmenetiesStatusIconGreatPeople" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_NOTIFICATION_CLAIM_GREAT_PERSON" />
                         <Label ID="AmenetiesStatusYieldGreatPeople" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelGreatPeople" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CQUI_CITY_GREAT_PEOPLE" />
+                        <Label ID="AmenetiesStatusLabelGreatPeople" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="Great[NEWLINE]People" />
                       </Image>
                     </Stack>
                     <Container Size="1,20" />
@@ -157,12 +157,12 @@
                       <Image ID="AmenetiesStatusIconContainerNationalParks" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
                         <Image ID="AmenetiesStatusIconNationalParks" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_UNITOPERATION_DESIGNATE_PARK" />
                         <Label ID="AmenetiesStatusYieldNationalParks" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelNationalParks" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CQUI_CITY_NATIONAL_PARK" />
+                        <Label ID="AmenetiesStatusLabelNationalParks" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="National[NEWLINE]Parks" />
                       </Image>
                       <Image ID="AmenetiesStatusIconContainerWarWeariness" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
                         <Image ID="AmenetiesStatusIconWarWeariness" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_UNITOPERATION_FORTIFY" />
                         <Label ID="AmenetiesStatusYieldWarWeariness" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelWarWeariness" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CQUI_CITY_WAR_WEARINESS" />
+                        <Label ID="AmenetiesStatusLabelWarWeariness" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="War[NEWLINE]Weariness" />
                       </Image>
                       <Image ID="AmenetiesStatusIconContainerBankruptcy" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
                         <Image ID="AmenetiesStatusIconBankruptcy" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_NOTIFICATION_TREASURY_BANKRUPT" />
@@ -220,11 +220,54 @@
               </Container>
               <Grid                                       Anchor="L,T" Offset="0,0"     Size="parent,0"       AutoSize="Vertical" Style="CityPanelSubPanelContainer" InnerPadding="0,10" InnerOffset="0,5">
                 <Stack                                                                  StackGrowth="Bottom" StackPadding="0">
-                  <Stack      ID="HousingStack"                                         StackGrowth="Bottom" StackPadding="4" />
-                  <Container                              Size="parent,0" AutoSize="Vertical">
-                    <Label                                Anchor="L,B" Offset="4,0" Style="CityPanelTextSmall" String="LOC_HUD_CITY_TOTAL_HOUSING" />
-                    <Label    ID="HousingTotalNum2"       Anchor="R,B" Offset="5,-2" Style="CityPanelNumLarge" String="0" FontStyle="Glow"/>
-                  </Container>
+                  <Stack    ID="HousingStack"                                           StackGrowth="Bottom" StackPadding="4" />
+                  <Stack StackGrowth="Down" Anchor="C,C">
+                    <Stack StackGrowth="Right" Padding="16">
+                      <Image ID="HousingStatusIconContainerBuildings" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
+                        <Image ID="HousingStatusIconBuildings" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_BUILDING_GRANARY" />
+                        <Label ID="HousingStatusYieldBuildings" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
+                        <Label ID="HousingStatusLabelBuildings" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_BUILDING_NAME" />
+                      </Image>
+                      <Image ID="HousingStatusIconContainerCivics" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
+                        <Image ID="HousingStatusIconCivics" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_NOTIFICATION_CONSIDER_GOVERNMENT_CHANGE" />
+                        <Label ID="HousingStatusYieldCivics" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
+                        <Label ID="HousingStatusLabelCivics" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CATEGORY_CIVICS_NAME" />
+                      </Image>
+                      <Image ID="HousingStatusIconContainerDistricts" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
+                        <Image ID="HousingStatusIconDistricts" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_DISTRICT_CITY_CENTER" />
+                        <Label ID="HousingStatusYieldDistricts" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
+                        <Label ID="HousingStatusLabelDistricts" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_DISTRICT_NAME" />
+                      </Image>
+                      <Image ID="HousingStatusIconContainerGreatPeople" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
+                        <Image ID="HousingStatusIconGreatPeople" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_NOTIFICATION_CLAIM_GREAT_PERSON" />
+                        <Label ID="HousingStatusYieldGreatPeople" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
+                        <Label ID="HousingStatusLabelGreatPeople" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="Great[NEWLINE]People" />
+                      </Image>
+                    </Stack>
+                    <Container Size="1,20" />
+                    <Stack StackGrowth="Right" Anchor="C,C" Padding="16">
+                      <Image ID="HousingStatusIconContainerWater" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
+                        <Image ID="HousingStatusIconWater" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_GREAT_PERSON_CLASS_ADMIRAL" />
+                        <Label ID="HousingStatusYieldWater" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
+                        <Label ID="HousingStatusLabelWater" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="Water" />
+                      </Image>
+                      <Image ID="HousingStatusIconContainerImprovements" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
+                        <Image ID="HousingStatusIconImprovements" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_IMPROVEMENT_PASTURE" />
+                        <Label ID="HousingStatusYieldImprovements" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
+                        <Label ID="HousingStatusLabelImprovements" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_IMPROVEMENT_NAME" />
+                      </Image>
+                      <Image ID="HousingStatusIconContainerStartingEra" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
+                        <Image ID="HousingStatusIconStartingEra" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_GREAT_PERSON_CLASS_SCIENTIST" />
+                        <Label ID="HousingStatusYieldStartingEra" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
+                        <Label ID="HousingStatusLabelStartingEra" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_ERA_NAME" />
+                      </Image>
+                    </Stack>
+                  </Stack>
+                  <Container Size="1,8" />
+                  <Container                                Size="parent,0" AutoSize="Vertical">
+                    <Label                                  Anchor="L,B" Offset="4,0" Style="CityPanelTextSmall" String="LOC_HUD_CITY_TOTAL_HOUSING" />
+                    <Label      ID="HousingTotalNum2"        Anchor="R,B" Offset="5,-2" Style="CityPanelNumLarge" String="-" FontStyle="Glow"/>
+				  </Container>
                 </Stack>
               </Grid>
               <Container ID="HousingAdvisorBubble" Size="parent,0"  AutoSize="V">

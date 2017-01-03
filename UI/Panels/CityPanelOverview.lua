@@ -565,6 +565,60 @@ end
 function ViewPanelHousing( data:table ) 
   -- Only show the advisor bubbles during the tutorial
   Controls.HousingAdvisorBubble:SetHide( IsTutorialRunning() == false );
+  
+  -- CQUI new housing section
+  Controls.HousingStack:SetHide( true );
+
+  Controls.HousingStatusIconContainerBuildings:SetTextureOffsetVal(0, 100);
+  Controls.HousingStatusYieldBuildings:SetText( Locale.ToNumber(data.HousingFromBuildings) );
+  --Controls.HousingStatusYieldBuildings:SetColorByName( GetHousingColor(data.HousingFromBuildings) );
+  Controls.HousingStatusYieldBuildings:SetFontSize(24);
+  Controls.HousingStatusIconBuildings:SetColor(0x3fffffff);
+  Controls.HousingStatusLabelBuildings:SetColor(0xffffffff);
+
+  Controls.HousingStatusIconContainerCivics:SetTextureOffsetVal(0, 100);
+  Controls.HousingStatusYieldCivics:SetText( Locale.ToNumber(data.HousingFromCivics) );
+  --Controls.HousingStatusYieldCivics:SetColorByName( GetHousingColor(data.HousingFromCivics) );
+  Controls.HousingStatusYieldCivics:SetFontSize(24);
+  Controls.HousingStatusIconCivics:SetColor(0x3fffffff);
+  Controls.HousingStatusLabelCivics:SetColor(0xffffffff);
+
+  Controls.HousingStatusIconContainerDistricts:SetTextureOffsetVal(0, 100);
+  Controls.HousingStatusYieldDistricts:SetText( Locale.ToNumber(data.HousingFromDistricts) );
+  --Controls.HousingStatusYieldDistricts:SetColorByName( GetHousingColor(data.HousingFromDistricts) );
+  Controls.HousingStatusYieldDistricts:SetFontSize(24);
+  Controls.HousingStatusIconDistricts:SetColor(0x3fffffff);
+  Controls.HousingStatusLabelDistricts:SetColor(0xffffffff);
+
+  Controls.HousingStatusIconContainerImprovements:SetTextureOffsetVal(0, 100);
+  Controls.HousingStatusYieldImprovements:SetText( Locale.ToNumber(data.HousingFromImprovements) );
+  --Controls.HousingStatusYieldImprovements:SetColorByName( GetHousingColor(data.HousingFromImprovements) );
+  Controls.HousingStatusYieldImprovements:SetFontSize(24);
+  Controls.HousingStatusIconImprovements:SetColor(0x3fffffff);
+  Controls.HousingStatusLabelImprovements:SetColor(0xffffffff);
+
+  Controls.HousingStatusIconContainerWater:SetTextureOffsetVal(0, 100);
+  Controls.HousingStatusYieldWater:SetText( Locale.ToNumber(data.HousingFromWater) );
+  --Controls.HousingStatusYieldWater:SetColorByName( GetHousingColor(data.HousingFromWater) );
+  Controls.HousingStatusYieldWater:SetFontSize(24);
+  Controls.HousingStatusIconWater:SetColor(0x3fffffff);
+  Controls.HousingStatusLabelWater:SetColor(0xffffffff);
+
+  Controls.HousingStatusIconContainerGreatPeople:SetTextureOffsetVal(0, 100);
+  Controls.HousingStatusYieldGreatPeople:SetText( Locale.ToNumber(data.HousingFromGreatPeople) );
+  --Controls.HousingStatusYieldGreatPeople:SetColorByName( GetHousingColor(data.HousingFromGreatPeople) );
+  Controls.HousingStatusYieldGreatPeople:SetFontSize(24);
+  Controls.HousingStatusIconGreatPeople:SetColor(0x3fffffff);
+  Controls.HousingStatusLabelGreatPeople:SetColor(0xffffffff);
+
+  Controls.HousingStatusIconContainerStartingEra:SetTextureOffsetVal(0, 100);
+  Controls.HousingStatusYieldStartingEra:SetText( Locale.ToNumber(data.HousingFromStartingEra) );
+  --Controls.HousingStatusYieldStartingEra:SetColorByName( GetHousingColor(data.HousingFromStartingEra) );
+  Controls.HousingStatusYieldStartingEra:SetFontSize(24);
+  Controls.HousingStatusIconStartingEra:SetColor(0x3fffffff);
+  Controls.HousingStatusLabelStartingEra:SetColor(0xffffffff);
+  -- end new housing section
+  
   local colorName:string = GetPercentGrowthColor( data.HousingMultiplier ) ;
   Controls.HousingTotalNum:SetText( data.Housing ); 
   Controls.HousingTotalNum:SetColorByName( colorName );
@@ -603,7 +657,9 @@ function ViewPanelHousing( data:table )
   Controls.HousingAdvice:SetText(data.HousingAdvice);
 
   m_kHousingIM:ResetInstances();
-    
+  
+  
+  
   local kInstance :table = m_kHousingIM:GetInstance();
   kInstance.HousingName:SetText( Locale.Lookup("LOC_HUD_CITY_HOUSING_FROM_BUILDINGS") );
   kInstance.HousingYield:SetText( Locale.ToNumber(data.HousingFromBuildings) );
