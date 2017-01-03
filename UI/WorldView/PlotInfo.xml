@@ -12,16 +12,16 @@
       <GridButton       ID="SwapTileOwnerButton" Anchor="C,T" Offset="0,-40" Size="61,30" Hidden="1" Style="PurchaseTileButton">
         <Label      ID="SwapLabel" String="LOC_PLOTINFO_SWAP_TILE_OWNER" ToolTip="LOC_PLOTINFO_SWAP_TILE_OWNER_TOOLTIP" Anchor="C,C"  Offset="0,0" Style="CityPanelText" Align="Center"/>
       </GridButton>
-      <Image      ID="CitizenMeterBG"       Anchor="L,C"  Offset="-10,-20"  Size="76,62"  Texture="CityPanel_ManageCitizensMeterBacking" Hidden="1">
-        <TextureBar ID="CitizenMeter"       Anchor="C,B"  Offset="19,3"   Direction="Up" Speed="0" Size="31,56" Texture="CityPanel_ManageCitizensMeter"/>
-        <Label      ID="CurrentAmount"      Anchor="L,T"  Offset="49,10"  Style="FontFlair18"   FontStyle="Stroke"  Color="201,217,227,255" EffectColor="0,0,0,150"/>
-        <Line                               Anchor="L,T"                  Start="49,37" End="67,25" Width="1" Color="201,217,227,255" />
-        <Label      ID="TotalAmount"        Anchor="R,B"  Offset="9,7"    Style="FontFlair18"   FontStyle="Stroke"  Color="201,217,227,255" EffectColor="0,0,0,150"/>
+      <Image      ID="CitizenMeterBG"       Anchor="L,C"  Offset="-32,-19"  Size="110,68"  Texture="CityPanel_ManageCitizensMeterBacking" Hidden="1">
+        <TextureBar ID="CitizenMeter"       Anchor="R,B"  Offset="11,5"   Direction="Up" Speed="0" Size="31,56" Texture="CityPanel_ManageCitizensMeter"/>
+        <Label      ID="CurrentAmount"      Anchor="R,T"  Offset="21,12"  Style="FontFlair18"   FontStyle="Stroke"  Color="201,217,227,255" EffectColor="0,0,0,150"/>
+        <Line                               Anchor="R,T"                  Start="-16,40" End="2,28" Width="1" Color="201,217,227,255" />
+        <Label      ID="TotalAmount"        Anchor="R,B"  Offset="21,9"    Style="FontFlair18"   FontStyle="Stroke"  Color="201,217,227,255" EffectColor="0,0,0,150"/>
       </Image>
       <GridButton       ID="CQUI_NextPlotButton" Anchor="C,T"  Offset="0,-10" Size="95,30" Hidden="1" Style="PurchaseTileButton" ToolTip="The city will expand to this tile upon the next cultural borders growth">
         <Label      ID="CQUI_NextPlotLabel" String="Next Tile" ToolTip="The city will expand to this tile upon the next cultural borders growth" Anchor="C,C"  Offset="0,0" Style="CityPanelCBCulture" Align="Left"/>
       </GridButton>
-      <Button       ID="CitizenButton"  Anchor="C,T"  Offset="0,-50"  Size="64,64" Alpha=".50"      Texture="CityPanel_ManageCitizenButton.dds" Hidden="1"  NoStateChange="1" />
+      <Button       ID="CitizenButton"  Anchor="C,C"  Offset="0,-19"  Size="64,64" Alpha=".50"      Texture="CityPanel_ManageCitizenButton.dds" Hidden="1"  NoStateChange="1" />
       <Image      ID="LockedIcon"     Anchor="R,B"  Offset="-35,30" Size="32,32"    Texture="Padlock" Hidden="1"/>
     </WorldAnchor>
   </Instance>

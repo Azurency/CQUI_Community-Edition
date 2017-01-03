@@ -104,7 +104,7 @@
           </Image>
         </Image>
 
-        <Grid               ID="YieldsArea"           Anchor="R,T" Offset="0,-28"   Size="parent-5,27"  Texture="CityPanel_YieldBacking"  SliceCorner="6,12"  SliceSize="17,1" SliceTextureSize="29,25">
+        <Grid               ID="YieldsArea"           Anchor="R,T" Offset="0,-28"   Size="parent+30,27"  Texture="CityPanel_YieldBacking"  SliceCorner="6,12"  SliceSize="17,1" SliceTextureSize="29,25">
           <Grid                                       Anchor="L,B" Offset="0,-3"    Size="parent,5"       Texture="SelectionPanel_TopRim"   SliceCorner="2,3"   SliceSize="10,1" SliceTextureSize="14,5" />
           <Stack            ID="YieldStack"           Anchor="C,C" Offset="3,0"     StackGrowth="Right" StackPadding="2" >
             <Grid           ID="CultureGrid"          Style="CityPanelFilterGrid" >
