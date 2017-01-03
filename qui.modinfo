@@ -198,4 +198,19 @@
       </Items>
     </Custom>
   </Settings>
+  <!--Incompatible mods.-->
+  <Blocks>
+    <!-- Divine Yuri's Citypanel mod: Integrated already, doubling up on installed mods is bad! -->
+    <Mod id="37b5fdca-2690-96ff-ea23-d8612ae7a757" title="Divine Yuri's Custom City Panel" />
+    <!-- Next City Plot: Integrated already, doubling up on installed mods is bad! -->
+    <Mod id="37b5fdca-2690-96ff-ea23-d8612ae7a758" title="Next City Plot by Ace" />
+    <!-- Unit Report Screen: Integrated already, doubling up on installed mods is bad! -->
+    <Mod id="4becac48-4a0c-379a-5dd1-33d0c65a471d" title="Unit Report Screen" />
+    <!-- Production Queue: Integrated already, doubling up on installed mods is bad! -->
+    <Mod id="2027E5A2-A48D-E606-031F-141E1196975A" title="Production Queue" />
+    <!-- More Lenses: Integrated already, doubling up on installed mods is bad! -->
+    <Mod id="35f33319-ad93-4d6b-bf27-406fac382d06" title="More Lenses" />
+    <!-- YnAMP: Breaks CQUI for some reason... see issue #207 on the Github tracker and issue #43 on the YnAMP Github tracker for more details -->
+    <Mod id="36e88483-48fe-4545-b85f-bafc50dde315" title="Yet (not) Another Maps Pack" />
+  </Blocks>
 </Mod>
