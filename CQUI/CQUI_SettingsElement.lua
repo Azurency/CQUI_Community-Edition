@@ -205,6 +205,7 @@ function Initialize()
   RegisterControl(Controls.ProductionQueueCheckbox, "CQUI_ProductionQueue", UpdateCheckbox);
   PopulateCheckBox(Controls.ShowLuxuryCheckbox, "CQUI_ShowLuxuries");
   PopulateCheckBox(Controls.ShowCultureGrowthCheckbox, "CQUI_ShowCultureGrowth", Locale.Lookup("LOC_CQUI_GENERAL_SHOWCULTUREGROWTH_TOOLTIP"));
+  RegisterControl(Controls.ShowCultureGrowthCheckbox, "CQUI_ShowCultureGrowth", UpdateCheckbox);
   PopulateCheckBox(Controls.SmartbannerCheckbox, "CQUI_Smartbanner", Locale.Lookup("LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP"));
   PopulateCheckBox(Controls.ToggleYieldsOnLoadCheckbox, "CQUI_ToggleYieldsOnLoad");
   PopulateCheckBox(Controls.TechVisualCheckbox, "CQUI_TechPopupVisual", Locale.Lookup("LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP"));
