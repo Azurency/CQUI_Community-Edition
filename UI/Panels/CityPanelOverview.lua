@@ -470,7 +470,6 @@ function ViewPanelAmenities( data:table )
   local colorName:string = GetHappinessColor(data.Happiness);
   Controls.AmenitiesConstructedLabel:SetText( Locale.Lookup( "LOC_HUD_CITY_AMENITY", data.AmenitiesNum) );
   Controls.AmenitiesConstructedNum:SetText( Locale.ToNumber(data.AmenitiesNum) );
-  Controls.AmenityTotalNum:SetText( Locale.ToNumber(data.AmenitiesNum) );
   Controls.AmenitiesConstructedNum:SetColorByName( colorName );
   Controls.Mood:SetText( Locale.Lookup(GameInfo.Happinesses[data.Happiness].Name) );
   Controls.Mood:SetColorByName( colorName );
@@ -647,8 +646,6 @@ function ViewPanelHousing( data:table )
   elseif data.Population > 1 then
     Controls.CitizensName:SetText(Locale.Lookup("LOC_HUD_CITY_CITIZENS"));
   end
-  Controls.HousingTotalNum2:SetText( data.Housing );
-  Controls.HousingTotalNum2:SetColorByName( colorName );
     
   --local uv:number = data.TurnsUntilGrowth > 0 and 1 or 0;
   Controls.HousingStatus:SetTextureOffsetVal( UV_HOUSING_GROWTH_STATUS[uv].u, UV_HOUSING_GROWTH_STATUS[uv].v );

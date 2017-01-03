@@ -171,10 +171,6 @@
                     </Stack>
                   </Stack>
                   <Container Size="1,8" />
-                  <Container                                Size="parent,0" AutoSize="Vertical">
-                    <Label                                  Anchor="L,B" Offset="4,0" Style="CityPanelTextSmall" String="LOC_HUD_CITY_TOTAL_AMENITIES" />
-                    <Label      ID="AmenityTotalNum"        Anchor="R,B" Offset="5,-2" Style="CityPanelNumLarge" String="-" FontStyle="Glow"/>
-                  </Container>
                 </Stack>
               </Grid>
               <Container ID="AmenitiesAdvisorBubble" Size="parent,0"  AutoSize="V">
@@ -263,10 +259,6 @@
                     </Stack>
                   </Stack>
                   <Container Size="1,8" />
-                  <Container                                Size="parent,0" AutoSize="Vertical">
-                    <Label                                  Anchor="L,B" Offset="4,0" Style="CityPanelTextSmall" String="LOC_HUD_CITY_TOTAL_HOUSING" />
-                    <Label      ID="HousingTotalNum2"        Anchor="R,B" Offset="5,-2" Style="CityPanelNumLarge" String="-" FontStyle="Glow"/>
-				  </Container>
                 </Stack>
               </Grid>
               <Container ID="HousingAdvisorBubble" Size="parent,0"  AutoSize="V">
