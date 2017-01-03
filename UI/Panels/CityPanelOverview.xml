@@ -7,9 +7,8 @@
       <Image Texture="Controls_Gradient" Size="parent, 120" Anchor="C,B" Color="13,57,92,255"/>
       <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" Offset="0,30" Anchor="C,B" Color="72,103,130,255"/>
       <Image Texture="Controls_Compass" Size="193, 122" Anchor="C,B" Offset="0,35" Color="62,93,120,150"/>
-      <ScrollPanel        ID="PanelScrollPanel"       Anchor="R,B"                  Size="parent,parent-125" AutoScrollBar="1" Vertical="1" Offset="0,35">
+      <ScrollPanel        ID="PanelScrollPanel"       Anchor="R,B"                  Size="parent,parent-100" AutoScrollBar="1" Vertical="1" Offset="0,30">
         <Stack            ID="PanelStack"             Anchor="R,T" Offset="0,0"     Size="parent,0"       StackGrowth="Down" Hidden="0" >
-          <Container Size="parent,20"/>
           <Grid           ID="PanelCitizensGrowth"        Anchor="L,T"                  Size="parent,0"       Style="CityPanelStatPanelGrid">
             <Grid                                     Anchor="L,T"                  Size="parent,24"    Style="DivHeader">
               <Container Size="parent,24">
@@ -434,25 +433,22 @@
         </Stack>
         <ScrollBar Style="Slider_Blue" Anchor="L,C" AnchorSide="O,I"/>
       </ScrollPanel>
-      <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent-12,30" Color="8,34,56,255" Offset="0,90"/>
-      <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent-12,20" Color="8,34,56,255" Offset="0,90"/>
-      <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent-12,20" Color="8,34,56,255" Offset="0,90"/>
+      <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent-12,30" Color="8,34,56,255" Offset="0,60"/>
+      <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent-12,20" Color="8,34,56,255" Offset="0,60"/>
+      <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent-12,20" Color="8,34,56,255" Offset="0,60"/>
      
     </Box>
     <Grid         ID="OverviewHeader"     Style="HeaderBannerLeft" Size="320,65" Anchor="L,T" Offset="0,0">
       <Container Size="parent-20,28" Anchor="L,T">
-        <Label      ID="OverviewTitle"      Style="BannerHeaderText" Anchor="C,C" String="{LOC_HUD_CITY_DETAILS:upper}"/>
-      </Container>
-      
-      <Grid Size="parent-20,parent-27" Anchor="L,B" Offset="0,2" Style="Subheader">
-        <GridButton	ID="RenameCityButton" Size="parent,26" Offset="0,0" Anchor="C,C" Texture="Controls_TextEntry" SliceCorner="30,0" SliceTextureSize="44,26" StateOffsetIncrement="0,26">
+        <GridButton ID="RenameCityButton" Size="parent,26" Offset="0,0" Anchor="C,C" Texture="Controls_TextEntry" SliceCorner="30,0" SliceTextureSize="44,26" StateOffsetIncrement="0,26">
           <EditBox ID="EditCityName" Offset="25,0" Size="parent-25,parent" Anchor="L,C" EditMode="1" Style="HeaderSmallCaps" String="ChooseReligionName" MaxLength="32" Hidden="1" />
           <Label      ID="OverviewSubheader" Anchor="C,C" String="{LOC_HUD_CITY_DETAILS:upper}" Style="HeaderSmallCaps"/>
         </GridButton>
-      </Grid>
+      </Container>
       
-      <Image Texture="Controls_TabLedgeFill" Size="parent-100,23" StretchMode="Tile" AnchorSide="I,O" Anchor="C,B" Offset="0,0"/>
-      <Grid Style="WoodenTabBacking" Size="parent-20,31" Offset="-10,-5" AnchorSide="I,O" Anchor="C,B">
+      
+      <Image Texture="Controls_TabLedgeFill" Size="parent-100,23" StretchMode="Tile" AnchorSide="I,O" Anchor="C,T" Offset="0,-50"/>
+      <Grid Style="WoodenTabBacking" Size="parent-20,31" Offset="-10,-55" AnchorSide="I,O" Anchor="C,T">
         <Container ID="TabContainer" Anchor="C,B" Offset="0,-15" Size="parent,36">
           <Button ID="HealthButton" Offset="0,2" Anchor="L,C" UseSelectedTextures="1" Size="44,44"  Texture="LaunchBar_Hook_ButtonMedium" Style="ButtonNormalText" ToolTip="LOC_HUD_CITY_OVERVIEW_CITIZENS_TOOLTIP" >
             <Image ID="HealthIcon" Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="C,C"  Icon="ICON_CITIZEN"/>
