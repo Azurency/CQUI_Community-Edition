@@ -117,6 +117,7 @@ end
 -- ===========================================================================
 
 -- CQUI taken from PlotInfo
+local CQUI_ShowYieldsOnCityHover = false;
 local CQUI_PlotIM        :table = InstanceManager:new( "CQUI_WorkedPlotInstance", "Anchor", Controls.CQUI_WorkedPlotContainer );
 local CQUI_uiWorldMap    :table = {};
 local CQUI_yieldsOn    :boolean = false;
@@ -163,6 +164,7 @@ local SIZEOFPOPANDPRODMETERS    :number = 15; --The amount to add to the city ba
 
 local g_smartbanner = true;
 function CQUI_OnSettingsUpdate()
+  CQUI_ShowYieldsOnCityHover = GameConfiguration.GetValue("CQUI_ShowYieldsOnCityHover");
   g_smartbanner = GameConfiguration.GetValue("CQUI_Smartbanner")
   Reload();
 end
@@ -233,117 +235,119 @@ end
 -- CQUI -- When a banner is moused over, display the relevant yields and next culture plot
 function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
 
-  local kPlayer = Players[playerID];
-  local kCities = kPlayer:GetCities();
-  local kCity = kCities:FindID(cityID);
+  if(CQUI_ShowYieldsOnCityHover) then
 
-  local tParameters :table = {};
-  tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
-  tParameters[CityCommandTypes.PARAM_PLOT_PURCHASE] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_PLOT_PURCHASE);
+    local kPlayer = Players[playerID];
+    local kCities = kPlayer:GetCities();
+    local kCity = kCities:FindID(cityID);
 
-  local tResults  :table = CityManager.GetCommandTargets( kCity, CityCommandTypes.MANAGE, tParameters );
- 
-  if tResults == nil then
-    -- Add error message here
-    return;
+    local tParameters :table = {};
+    tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
+    tParameters[CityCommandTypes.PARAM_PLOT_PURCHASE] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_PLOT_PURCHASE);
+
+    local tResults  :table = CityManager.GetCommandTargets( kCity, CityCommandTypes.MANAGE, tParameters );
+   
+    if tResults == nil then
+      -- Add error message here
+      return;
+    end
+
+    local tPlots    :table = tResults[CityCommandResults.PLOTS];
+    local tUnits    :table = tResults[CityCommandResults.CITIZENS];
+    local tMaxUnits   :table = tResults[CityCommandResults.MAX_CITIZENS];
+    local tLockedUnits  :table = tResults[CityCommandResults.LOCKED_CITIZENS];
+
+    local pCityCulture          :table  = kCity:GetCulture();
+    local pNextPlotID           :number = pCityCulture:GetNextPlot();
+    local TurnsUntilExpansion   :number = pCityCulture:GetTurnsUntilExpansion();
+
+    local yields :table = {};
+    CQUI_antiYields[cityID] = {};
+    local yieldsIndex :table = {};
+
+    if (tPlots ~= nil and table.count(tPlots) ~= 0) and UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) == false then
+
+      CQUI_yieldsOn = UserConfiguration.ShowMapYield();
+
+      for i,plotId in pairs(tPlots) do
+        local kPlot :table = Map.GetPlotByIndex(plotId);
+        local workerCount = kPlot:GetWorkerCount();
+        local index:number = kPlot:GetIndex();
+        local pInstance :table =  CQUI_GetInstanceAt(index);
+        local numUnits:number = tUnits[i];
+        local maxUnits:number = tMaxUnits[i];
+
+        -- If this plot is getting worked
+        if workerCount > 0 and kPlot:IsCity() == false then
+          pInstance.CitizenButton:SetHide(false);
+          pInstance.CitizenButton:SetTextureOffsetVal(0, CQUI_CITIZEN_BUTTON_HEIGHT*4);
+          pInstance.CitizenButton:SetSizeVal(64,64);
+          pInstance.CitizenButton:SetAlpha(.45);
+        end
+
+        if(tLockedUnits[i] > 0) then
+          pInstance.LockedIcon:SetHide(false);
+        else
+          pInstance.LockedIcon:SetHide(true);
+        end
+
+        table.insert(yields, plotId);
+        yieldsIndex[index] = plotId;
+
+      end
+
+    end
+
+    tResults  = CityManager.GetCommandTargets( kCity, CityCommandTypes.PURCHASE, tParameters );
+    tPlots    = tResults[CityCommandResults.PLOTS];
+
+    if (tPlots ~= nil and table.count(tPlots) ~= 0) and UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) == false then
+
+      --UILens.ToggleLayerOn( LensLayers.PURCHASE_PLOT ); 
+
+      for i,plotId in pairs(tPlots) do
+        local kPlot :table = Map.GetPlotByIndex(plotId);
+        local index:number = kPlot:GetIndex();
+        local pInstance :table =  CQUI_GetInstanceAt(index);
+
+        if (index == pNextPlotID ) then
+          pInstance.CQUI_NextPlotLabel:SetString("[ICON_Turn]" .. Locale.Lookup("LOC_HUD_CITY_IN_TURNS" , TurnsUntilExpansion ) .. "   ");
+          pInstance.CQUI_NextPlotButton:SetHide( false );
+
+          -- Eventually also get the colored hex
+  --        local cost:number = pCityCulture:GetNextPlotCultureCost();
+  --        local currentCulture:number = pCityCulture:GetCurrentCulture();
+  --        local currentYield:number = pCityCulture:GetCultureYield();
+  --        local currentGrowth:number = math.max(math.min(currentCulture / cost, 1.0), 0);
+  --        local nextTurnGrowth:number = math.max(math.min((currentCulture + currentYield) / cost, 1.0), 0);
+
+          --UILens.SetLayerGrowthHex(LensLayers.PURCHASE_PLOT, kPlayer, pNextPlotID, 1, "GrowthHexBG");
+          --UILens.SetLayerGrowthHex(LensLayers.PURCHASE_PLOT, kPlayer, pNextPlotID, nextTurnGrowth, "GrowthHexNext");
+          --UILens.SetLayerGrowthHex(LensLayers.PURCHASE_PLOT, kPlayer, pNextPlotID, currentGrowth, "GrowthHexCurrent");
+        end
+
+        table.insert(yields, plotId);
+        yieldsIndex[index] = plotId;
+
+      end
+
+      local plotCount = Map.GetPlotCount();
+
+      for plotIndex = 0, plotCount - 1 do
+        local thisPlotId = yieldsIndex[plotIndex];
+           
+        if thisPlotId == nil then
+          table.insert(CQUI_antiYields[cityID], plotIndex);
+        end
+      end
+
+      if CQUI_yieldsOn == false then
+        UILens.ToggleLayerOn( LensLayers.YIELD_ICONS );   
+        UILens.ClearHexes(LensLayers.YIELD_ICONS, CQUI_antiYields[cityID]);
+      end
+
+    end
   end
-
-  local tPlots    :table = tResults[CityCommandResults.PLOTS];
-  local tUnits    :table = tResults[CityCommandResults.CITIZENS];
-  local tMaxUnits   :table = tResults[CityCommandResults.MAX_CITIZENS];
-  local tLockedUnits  :table = tResults[CityCommandResults.LOCKED_CITIZENS];
-
-  local pCityCulture          :table  = kCity:GetCulture();
-  local pNextPlotID           :number = pCityCulture:GetNextPlot();
-  local TurnsUntilExpansion   :number = pCityCulture:GetTurnsUntilExpansion();
-
-  local yields :table = {};
-  CQUI_antiYields[cityID] = {};
-  local yieldsIndex :table = {};
-
-  if (tPlots ~= nil and table.count(tPlots) ~= 0) and UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) == false then
-
-    CQUI_yieldsOn = UserConfiguration.ShowMapYield();
-
-    for i,plotId in pairs(tPlots) do
-      local kPlot :table = Map.GetPlotByIndex(plotId);
-      local workerCount = kPlot:GetWorkerCount();
-      local index:number = kPlot:GetIndex();
-      local pInstance :table =  CQUI_GetInstanceAt(index);
-      local numUnits:number = tUnits[i];
-      local maxUnits:number = tMaxUnits[i];
-
-      -- If this plot is getting worked
-      if workerCount > 0 and kPlot:IsCity() == false then
-        pInstance.CitizenButton:SetHide(false);
-        pInstance.CitizenButton:SetTextureOffsetVal(0, CQUI_CITIZEN_BUTTON_HEIGHT*4);
-        pInstance.CitizenButton:SetSizeVal(64,64);
-        pInstance.CitizenButton:SetAlpha(.45);
-      end
-
-      if(tLockedUnits[i] > 0) then
-        pInstance.LockedIcon:SetHide(false);
-      else
-        pInstance.LockedIcon:SetHide(true);
-      end
-
-      table.insert(yields, plotId);
-      yieldsIndex[index] = plotId;
-
-    end
-
-  end
-
-  tResults  = CityManager.GetCommandTargets( kCity, CityCommandTypes.PURCHASE, tParameters );
-  tPlots    = tResults[CityCommandResults.PLOTS];
-
-  if (tPlots ~= nil and table.count(tPlots) ~= 0) and UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) == false then
-
-    --UILens.ToggleLayerOn( LensLayers.PURCHASE_PLOT ); 
-
-    for i,plotId in pairs(tPlots) do
-      local kPlot :table = Map.GetPlotByIndex(plotId);
-      local index:number = kPlot:GetIndex();
-      local pInstance :table =  CQUI_GetInstanceAt(index);
-
-      if (index == pNextPlotID ) then
-        pInstance.CQUI_NextPlotLabel:SetString("[ICON_Turn]" .. Locale.Lookup("LOC_HUD_CITY_IN_TURNS" , TurnsUntilExpansion ) .. "   ");
-        pInstance.CQUI_NextPlotButton:SetHide( false );
-
-        -- Eventually also get the colored hex
---        local cost:number = pCityCulture:GetNextPlotCultureCost();
---        local currentCulture:number = pCityCulture:GetCurrentCulture();
---        local currentYield:number = pCityCulture:GetCultureYield();
---        local currentGrowth:number = math.max(math.min(currentCulture / cost, 1.0), 0);
---        local nextTurnGrowth:number = math.max(math.min((currentCulture + currentYield) / cost, 1.0), 0);
-
-        --UILens.SetLayerGrowthHex(LensLayers.PURCHASE_PLOT, kPlayer, pNextPlotID, 1, "GrowthHexBG");
-        --UILens.SetLayerGrowthHex(LensLayers.PURCHASE_PLOT, kPlayer, pNextPlotID, nextTurnGrowth, "GrowthHexNext");
-        --UILens.SetLayerGrowthHex(LensLayers.PURCHASE_PLOT, kPlayer, pNextPlotID, currentGrowth, "GrowthHexCurrent");
-      end
-
-      table.insert(yields, plotId);
-      yieldsIndex[index] = plotId;
-
-    end
-
-    local plotCount = Map.GetPlotCount();
-
-    for plotIndex = 0, plotCount - 1 do
-      local thisPlotId = yieldsIndex[plotIndex];
-         
-      if thisPlotId == nil then
-        table.insert(CQUI_antiYields[cityID], plotIndex);
-      end
-    end
-
-    if CQUI_yieldsOn == false then
-      UILens.ToggleLayerOn( LensLayers.YIELD_ICONS );   
-      UILens.ClearHexes(LensLayers.YIELD_ICONS, CQUI_antiYields[cityID]);
-    end
-
-  end
-
 end
 
 -- ===========================================================================
@@ -438,8 +442,6 @@ function CQUI_ReleaseInstanceAt( plotIndex:number)
     CQUI_uiWorldMap[plotIndex] = nil;
   end
 end
-
-
 
 -- ===========================================================================
 function CityBanner.Initialize( self : CityBanner, playerID: number, cityID : number, districtID : number, bannerType : number, bannerStyle : number)

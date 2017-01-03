@@ -37,6 +37,12 @@
   <Row Tag="LOC_CQUI_GENERAL_SHOWCULTUREGROWTH_TOOLTIP" Language="en_US">
     <Text>This can also be toggled by clicking on the growth emblem in the cityview</Text>
   </Row>
+  <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER" Language="en_US">
+    <Text>Show city management info on hover</Text>
+  </Row>
+  <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="en_US">
+    <Text>Shows citizen managament icons, tile yields, and border growth on hover</Text>
+  </Row>
   <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="en_US">
       <Text>Enable Smartbanners</Text>
     </Row>

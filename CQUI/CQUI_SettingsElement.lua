@@ -214,6 +214,7 @@ function Initialize()
   PopulateCheckBox(Controls.AutoapplyArchaeologistLensCheckbox, "CQUI_AutoapplyArchaeologistLens");
   PopulateCheckBox(Controls.AutoapplyBuilderLensCheckbox, "CQUI_AutoapplyBuilderLens");
   PopulateCheckBox(Controls.AutoapplyScoutLensCheckbox, "CQUI_AutoapplyScoutLens");
+  PopulateCheckBox(Controls.ShowYieldsOnCityHoverCheckbox, "CQUI_ShowYieldsOnCityHover", Locale.Lookup("LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER_TOOLTIP"));
 
   PopulateSlider(Controls.ProductionItemHeightSlider, Controls.ProductionItemHeightText, "CQUI_ProductionItemHeight", ProductionItemHeightConverter);
 
