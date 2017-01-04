@@ -121,7 +121,6 @@ local CQUI_ShowYieldsOnCityHover = false;
 local CQUI_PlotIM        :table = InstanceManager:new( "CQUI_WorkedPlotInstance", "Anchor", Controls.CQUI_WorkedPlotContainer );
 local CQUI_uiWorldMap    :table = {};
 local CQUI_yieldsOn    :boolean = false;
-local CQUI_antiYields    :table = {};
 
 
 local m_CityCenterTeamIM  :table  = InstanceManager:new( "TeamCityBanner",  "Anchor", Controls.CityBanners );
@@ -262,7 +261,6 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
     local TurnsUntilExpansion   :number = pCityCulture:GetTurnsUntilExpansion();
 
     local yields :table = {};
-    CQUI_antiYields[cityID] = {};
     local yieldsIndex :table = {};
 
     if (tPlots ~= nil and table.count(tPlots) ~= 0) and UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) == false then
@@ -333,17 +331,9 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
 
       local plotCount = Map.GetPlotCount();
 
-      for plotIndex = 0, plotCount - 1 do
-        local thisPlotId = yieldsIndex[plotIndex];
-           
-        if thisPlotId == nil then
-          table.insert(CQUI_antiYields[cityID], plotIndex);
-        end
-      end
-
-      if CQUI_yieldsOn == false then
-        UILens.ToggleLayerOn( LensLayers.YIELD_ICONS );   
-        UILens.ClearHexes(LensLayers.YIELD_ICONS, CQUI_antiYields[cityID]);
+      if (CQUI_yieldsOn == false and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)) then
+        UILens.SetLayerHexesArea(LensLayers.CITY_YIELDS, Game.GetLocalPlayer(), yields);
+        UILens.ToggleLayerOn( LensLayers.CITY_YIELDS );   
       end
 
     end
@@ -356,10 +346,8 @@ function CQUI_OnBannerMouseExit(playerID: number, cityID: number)
 
   CQUI_yieldsOn = UserConfiguration.ShowMapYield();  
 
-  if CQUI_yieldsOn == false then
-    UILens.ToggleLayerOff( LensLayers.YIELD_ICONS );
-    LuaEvents.CQUI_ResetYieldIcons(CQUI_antiYields[cityID]);
-    CQUI_antiYields[cityID] = {};
+  if (CQUI_yieldsOn == false and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)) then
+    UILens.ClearLayerHexes( LensLayers.CITY_YIELDS );
   end
 
   local kPlayer = Players[playerID];
