@@ -15,6 +15,8 @@
         <File>UI/ActionPanel.lua</File>
         <File>UI/CitySupport.lua</File>
         <File>UI/Civ6Common.lua</File>
+        <File>UI/DiplomacyActionView.xml</File>
+        <File>UI/DiplomacyDealView.lua</File>
         <File>UI/MapPinManager.lua</File>
         <File>UI/MinimapPanel.lua</File>
         <File>UI/MinimapPanel.xml</File>
@@ -126,6 +128,8 @@
     <File>UI/ActionPanel.lua</File>
     <File>UI/CitySupport.lua</File>
     <File>UI/Civ6Common.lua</File>
+    <File>UI/DiplomacyActionView.xml</File>
+    <File>UI/DiplomacyDealView.lua</File>
     <File>UI/MapPinManager.lua</File>
     <File>UI/MinimapPanel.lua</File>
     <File>UI/MinimapPanel.xml</File>
