@@ -71,19 +71,20 @@
         <File>CQUI/CQUI_Settings.sql</File>
       </Items>
     </UpdateDatabase>
-    <ImportFiles id="BETTER_TRADE_SCREEN_IMPORT_FILES">
+    <ImportFiles id="BTS_IMPORT_FILES">
       <Items>
-        <File>BTS/TradeOverview.xml</File>
-        <File>BTS/TradeOverview.lua</File>
-        <File>BTS/Choosers/TradeRouteChooser.xml</File>
-        <File>BTS/Choosers/TradeRouteChooser.lua</File>
-        <File>BTS/Choosers/TradeOriginChooser.xml</File>
-        <File>BTS/Choosers/TradeOriginChooser.lua</File>
+        <File>BTS/UI/TradeOverview.xml</File>
+        <File>BTS/UI/TradeOverview.lua</File>
+        <File>BTS/UI/TradeSupport.lua</File>
+        <File>BTS/UI/Choosers/TradeRouteChooser.xml</File>
+        <File>BTS/UI/Choosers/TradeRouteChooser.lua</File>
+        <File>BTS/UI/Choosers/TradeOriginChooser.xml</File>
+        <File>BTS/UI/Choosers/TradeOriginChooser.lua</File>
       </Items>
     </ImportFiles>
-    <LocalizedText id="BETTER_TRADE_TEXT">
+    <LocalizedText id="BTS_TEXT">
       <Items>
-        <File>BTS/BetterTradeScreen_Text.xml</File>
+        <File>BTS/Text/BTS_Text.xml</File>
       </Items>
     </LocalizedText>
     <ImportFiles id="PRODUCTION_QUEUE_IMPORT_FILES">
@@ -167,13 +168,14 @@
     <File>UI/WorldView/CityBannerManager.xml</File>
     <File>UI/WorldView/PlotInfo.lua</File>
     <File>UI/WorldView/PlotInfo.xml</File>
-    <File>BTS/TradeOverview.xml</File>
-    <File>BTS/TradeOverview.lua</File>
-    <File>BTS/Choosers/TradeRouteChooser.xml</File>
-    <File>BTS/Choosers/TradeRouteChooser.lua</File>
-    <File>BTS/Choosers/TradeOriginChooser.xml</File>
-    <File>BTS/Choosers/TradeOriginChooser.lua</File>
-    <File>BTS/BetterTradeScreen_Text.xml</File>
+    <File>BTS/UI/TradeOverview.xml</File>
+    <File>BTS/UI/TradeOverview.lua</File>
+    <File>BTS/UI/TradeSupport.lua</File>
+    <File>BTS/UI/Choosers/TradeRouteChooser.xml</File>
+    <File>BTS/UI/Choosers/TradeRouteChooser.lua</File>
+    <File>BTS/UI/Choosers/TradeOriginChooser.xml</File>
+    <File>BTS/UI/Choosers/TradeOriginChooser.lua</File>
+    <File>BTS/Text/BTS_Text.xml</File>
     <File>PQ/StrategicView_MapPlacement.lua</File>
     <File>PQ/SupportFunctions.lua</File>
     <File>URS/ReportScreen.lua</File>
@@ -186,22 +188,6 @@
     <File>ML/MoreLenses_Colors.sql</File>
     <File>ML/Text/MoreLenses_Text.xml</File>
   </Files>
-  <Settings>
-    <Custom id="BETTER_TRADE_SCREEN_SETTINGS">
-      <Items>
-        <Component>BETTER_TRADE_SCREEN_IMPORT_FILES</Component>
-        <Component>BETTER_TRADE_TEXT</Component>
-        <Component>BETTER_TRADE_DATABASE</Component>
-      </Items>
-    </Custom>
-    <Custom id="MORELENSES_SETTINGS">
-      <Items>
-        <Component>MORELENSES_IMPORT_FILES</Component>
-        <Component>MORELENSES_TEXT</Component>
-        <Component>MORELENSES_DATABASE</Component>
-      </Items>
-    </Custom>
-  </Settings>
   <!--Incompatible mods.-->
   <Blocks>
     <!-- Divine Yuri's Citypanel mod: Integrated already, doubling up on installed mods is bad! -->

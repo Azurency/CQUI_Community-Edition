@@ -64,10 +64,6 @@
         <Text>This route will take {1_TurnsRemaining}[Icon_Turn] to complete.</Text>
     </Row>
 
-    <Row Tag="LOC_TRADE_TURNS_REMAINING_ALT2_HELP_TOOLTIP">
-        <Text>This route will take less than {1_TurnsRemaining}[Icon_Turn] to complete.</Text>
-    </Row>
-
     <Row Tag="LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER">
         <Text>----------------------------</Text>
     </Row>
@@ -85,7 +81,7 @@
     </Row>
 
     <Row Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_ALT_TOOLTIP">
-        <Text>If started, route will complete in [ICON_Turn]{1_TurnWhenCompleted}</Text>
+        <Text>If started, route will take {1_TurnsToComplete} turns and will complete on turn {2_TurnWhenCompleted}</Text>
     </Row>
 
     <Row Tag="LOC_TRADE_CANCEL_AUTOMATION_TOOLTIP">
@@ -121,8 +117,8 @@
     <Row Tag="LOC_ORIGIN_CHOOSER_CHANGE_DESTINATION_BUTTON">
         <Text>CONFIRM</Text>
     </Row>
-
   </BaseGameText>
+
   <LocalizedText>
     <Replace Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="zh_Hans_CN">
         <Text>按 [ICON_Food] 食物排序</Text>

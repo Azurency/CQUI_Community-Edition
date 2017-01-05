@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd" Style="FontNormal20">
+  <!-- Left Panel -->
+  <SlideAnim ID="RouteChooserSlideAnim" Anchor="L,T" Begin="-350,0" End="0,0" Cycle="Once" Speed="2" Function="OutQuint">
+    <Container ID="RouteChooser" Offset="-3,54">
+      <!-- Body container-->
+      <Container AutoSize="1" ConsumeAllMouse="1">
+        <!-- Top Panel -->
+        <Grid Size="390,240" Texture="DestinationChooser_CurrentSlot" SliceStart="0,0" SliceCorner="30,30" SliceSize="250,150" SliceTextureSize="308,207" >
+          <Container ID="CurrentSelectionContainer" Size="parent, parent" Offset="0,0">
+            <!-- Selected City -->
+            <Grid								ID="BannerBase"						Anchor="C,T" Offset="0,12"		Size="parent-70,33"								Texture="CityPanel_BannerBase"				SliceCorner="20,10" SliceSize="160,1" SliceTextureSize="199,33" Color="150,170,100,255">
+              <Grid							ID="BannerDarker"					Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerDarker"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="0,0,0,100" />
+              <Grid							ID="BannerLighter"				Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerLighter"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="255,255,255,255" />
+              <Grid																				Anchor="L,T" Offset="6,2"			Size="parent-10,parent-8"		Texture="CityPanel_BannerNone"				SliceCorner="70,10" SliceSize="1,1" SliceTextureSize="179,20" Color="255,0,0,255" />
+              <Label						ID="CityName"							Anchor="L,C" Offset="40,-2"		Style="FontFlair16"					FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="EveryWord" TruncateWidth="220" />
+
+              <Label						ID="TradingPostIcon"	Anchor="L,C" Offset="14,-4"	Style="FontNormal16" FontStyle="Shadow" String="[ICON_TradingPost]" Color="255,0,0,255" EffectColor="255,0,0,255" GradientColor="255,0,0,255" />
+              <Label						ID="CityStateQuestIcon"	Anchor="L,C" Offset="-2,-12"	Style="FontNormal16" FontStyle="Shadow" String="[ICON_CityStateQuest]" Color="255,0,0,255" EffectColor="255,0,0,255" GradientColor="255,0,0,255" />
+              <Stack StackGrowth="Left"  Offset="14,-4" Anchor="R,C">
+                <Label          ID="TurnsToComplete"        Anchor="R,C" Style="FontFlair16" String="??" FontStyle="Stroke" EffectColor="0,0,0,25" />
+                <Label ID="TurnsToCompleteIcon"  String="[ICON_Turn]" Offset="0,-1" Anchor="R,C" Style="FontFlair16" FontStyle="Stroke" EffectColor="0,0,0,25" />
+              </Stack>
+            </Grid>
+
+            <!-- Resource Information -->
+            <Grid	ID="DestinationResources" Size="313,35" Anchor="C,T"	Offset="1,65"		Texture="Controls_ItemContainerDestination" SliceCorner="6,2" SliceSize="2,31" SliceTextureSize="24,35" >
+              <!-- Column Background -->
+              <Box Size="50,parent" Offset="0,0" Color="0,0,0,22"/>
+              <Box Size="50,parent" Offset="100,0" Color="0,0,0,22"/>
+              <Box Size="50,parent" Offset="200,0" Color="0,0,0,22"/>
+
+              <Label ID="DestinationResourceHeader" Size="300,20" Anchor="L,T" Offset="2,-15" Style="FontNormal14" Color="0,0,0,150" String="$Destination$ receives:"/>
+              <Stack ID="DestinationResourceList" Anchor="L,T" Offset="3,8" StackGrowth="Bottom"/>
+              <Label ID="DestinationReceivesNoBenefitsLabel" Anchor="C,C" Offset="-4,0" Style="FontNormal16" FontStyle="Shadow" EffectColor="Black" String="LOC_ROUTECHOOSER_NO_BENEFITS_FROM_ROUTE" Hidden="1"/>
+            </Grid>
+
+            <Grid	ID="OriginResources" Size="313,35" Anchor="C,T"	Offset="-10,123"		Texture="Controls_ItemContainerOrigin" SliceCorner="14,2" SliceSize="3,31" SliceTextureSize="24,35" >
+              <!-- Column Background -->
+              <Box Size="50,parent" Offset="62,0" Color="0,0,0,22"/>
+              <Box Size="50,parent" Offset="162,0" Color="0,0,0,22"/>
+              <Box Size="50,parent" Offset="262,0" Color="0,0,0,22"/>
+
+              <Label ID="OriginResourceHeader" Size="250,20" Anchor="L,T" Offset="13,-15" Style="FontNormal14" Color="0,0,0,150" String="$Origin$ receives:"/>
+              <Stack ID="OriginResourceList" Anchor="C,C" Offset="6,-1" StackGrowth="Bottom"/>
+              <Label ID="OriginReceivesNoBenefitsLabel" Anchor="C,C" Style="FontNormal16" FontStyle="Shadow" EffectColor="Black" String="LOC_ROUTECHOOSER_NO_BENEFITS_FROM_ROUTE" Hidden="1"/>
+            </Grid>
+
+            <Stack StackGrowth="Right" Anchor="C,B" Offset="0,55" StackPadding="5">
+              <Label Offset="0,2" FontStyle="Shadow" Style="FontNormal14" String="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_LABEL" ToolTip="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_TOOLTIP" Color="White"/>
+              <CheckBox ID="RepeatRouteCheckbox" Style="MainCheckBox" IsChecked="0"/>
+
+              <Label Offset="20,2" FontStyle="Shadow" Style="FontNormal14" String="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_LABEL" ToolTip="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_TOOLTIP" Color="White"/>
+              <CheckBox ID="FromTopSortEntryCheckbox" Style="MainCheckBox" IsChecked="0"/>
+            </Stack>
+
+            <!-- Confirm Button -->
+            <GridButton ID="BeginRouteButton" Size="parent-100,26" Offset="0,20" Anchor="C,B" String="LOC_ROUTECHOOSER_BEGIN_ROUTE_BUTTON" Style="FontFlair14" FontStyle="Shadows" TextOffset="0,2" EffectColor="0,0,0,255" SmallCaps="20" SmallCapsType="EveryWord">
+              <GridData Texture="Controls_ConfirmSmall" StateOffsetIncrement="0,26" SliceCorner="26,13" SliceSize="2,2" SliceTextureSize="51,26"/>
+            </GridButton>
+          </Container>
+
+          <Container Size="parent, parent">
+            <Label ID="StatusMessage" Size="300,50" Anchor="C,C" Style="FontNormal16" Color="0,0,0,150"/>
+          </Container>
+        </Grid>
+
+        <!-- Bottom Panel -->
+        <Grid Size="395,parent-294" Anchor="L,T" Offset="-8,237" Texture="Controls_ContainerBlue" SliceStart="0,0" SliceCorner="3,3" SliceSize="9,9" SliceTextureSize="16,16">
+
+          <!-- Filter Pulldown -->
+          <PullDown ID="DestinationFilterPulldown" ConsumeMouse="0" Offset="5,28" Anchor="C,T" Size="360,30" AutoSizePopUp="1" AutoFlip="1" ScrollThreshold="400">
+            <ButtonData>
+              <GridButton   ID="FilterButton" TextAnchor="R,C" TextOffset="15,0" Style="FontNormal14" FontStyle="Shadow" EffectColor="0,0,0,255" Offset="0,-25" Size="50,-20" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" />
+            </ButtonData>
+
+            <GridData InnerPadding="15,15" Offset="0,0" Anchor="L,T" Style="Drawer"/>
+
+            <ScrollPanelData Anchor="L,T"  Vertical="1" Size="11,14"  Offset="0,0" AutoScrollBar="1">
+              <ScrollBar Style="ScrollVerticalBacking" Anchor="L,T" AnchorSide="I,I" Color="28,60,90,255" Offset="-2,2">
+                <Thumb Style="ScrollThumbAlt" Color="28,60,90,255" />
+              </ScrollBar>
+            </ScrollPanelData>
+
+            <StackData StackGrowth="Bottom" Offset="0,0" Size="200,400" Anchor="L,T" />
+
+            <InstanceData Name="FilterEntry">
+              <GridButton Anchor="L,T" ID="Button" Size="265,26" Offset="1,0" Style="FontNormal14" FontStyle="Shadow" EffectColor="0,0,0,255" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" StateOffsetIncrement="0,24"/>
+            </InstanceData>
+
+            <!-- Show Route Text -->
+            <Label String="LOC_ROUTECHOOSER_FILTER_SHOWROUTES" Anchor="L,T" Offset="30,-17" Style="FontNormal14" FontStyle="Shadow" EffectColor="0,0,0,255"/>
+            <Image ID="PulldownOpenedArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,T" Offset="7,-18"/>
+            <Image ID="PulldownClosedArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,T" Offset="7,-22"/>
+          </PullDown>
+
+          <!-- Sort Yield Stack -->
+          <Stack Anchor="L,T" ID="SortBarStack" StackGrowth="Right" Offset="0,34" StackPadding="2">
+            <GridButton ID="FoodSortButton" ToolTip="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Offset="28,0" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
+              <Label ID="FoodSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Food]"/>
+              <Label ID="FoodSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
+              <Image ID="FoodDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
+              <Image ID="FoodAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
+            </GridButton>
+
+            <GridButton ID="ProductionSortButton" ToolTip="LOC_TRADE_SORT_BY_PRODUCTION_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
+              <Label ID="ProductionSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Production]"/>
+              <Label ID="ProductionSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
+              <Image ID="ProductionDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
+              <Image ID="ProductionAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
+            </GridButton>
+
+            <GridButton ID="GoldSortButton" ToolTip="LOC_TRADE_SORT_BY_GOLD_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
+              <Label ID="GoldSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Gold]"/>
+              <Label ID="GoldSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
+              <Image ID="GoldDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
+              <Image ID="GoldAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
+            </GridButton>
+
+            <GridButton ID="ScienceSortButton" ToolTip="LOC_TRADE_SORT_BY_SCIENCE_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
+              <Label ID="ScienceSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Science]"/>
+              <Label ID="ScienceSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
+              <Image ID="ScienceDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
+              <Image ID="ScienceAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
+            </GridButton>
+
+            <GridButton ID="CultureSortButton" ToolTip="LOC_TRADE_SORT_BY_CULTURE_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
+              <Label ID="CultureSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Culture]"/>
+              <Label ID="CultureSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
+              <Image ID="CultureDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
+              <Image ID="CultureAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
+            </GridButton>
+
+            <GridButton ID="FaithSortButton" ToolTip="LOC_TRADE_SORT_BY_FAITH_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
+              <Label ID="FaithSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Faith]"/>
+              <Label ID="FaithSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
+              <Image ID="FaithDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
+              <Image ID="FaithAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
+            </GridButton>
+
+            <GridButton ID="TurnsToCompleteSortButton" ToolTip="LOC_TRADE_SORT_BY_TURNS_REMAINING_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
+              <Label ID="TurnsToCompleteSortLabel" Anchor="R,C" Offset="-2,0" Style="FontNormal14" String="[Icon_Turn]"/>
+              <Label ID="TurnsToCompleteSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
+              <Image ID="TurnsToCompleteDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
+              <Image ID="TurnsToCompleteAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
+            </GridButton>
+          </Stack>
+
+          <!-- Destination List -->
+          <ScrollPanel ID="RouteChoiceScrollPanel" Offset="0,54" Size="parent,parent-54" Vertical="1" AutoScrollBar="1" AutoSizeScrollBar="1">
+            <ScrollBar Style="ScrollVerticalBacking" Anchor="L,T" AnchorSide="O,I" Color="28,60,90,255" Offset="-7,2">
+              <Thumb Style="ScrollThumbAlt" Color="28,60,90,255" />
+            </ScrollBar>
+
+            <!-- Destination Stack -->
+            <Stack ID="RouteChoiceStack" Offset="10,0" StackGrowth="Down"/>
+          </ScrollPanel>
+
+          <!-- Bottom Divider -->
+          <Grid Size="parent+5,10" Anchor="C,B" Offset="0,-8" Style="Divider3Grid" />
+        </Grid>
+
+      </Container>
+
+      <!-- Header container-->
+      <Grid ID="HeaderBannerGrid" Size="400,60" Offset="3,-25" Style="HeaderBannerLeft" ConsumeAllMouse="1">
+        <Label ID="Header_OriginText" Size="200, 50" Offset="0,7" Anchor="C,T" Style="FontFlair16" Color0="0,59,77,255" SmallCaps="20" SmallCapsType="FirstOnly" String="$Origin To...$"/>
+        <Button ID="Header_CloseButton" Size="32,32" Offset="10,-2" Anchor="R,T" Texture="Controls_CloseButtonAlt"/>
+      </Grid>
+
+		<Tutorial  ID="TutTradePanel" Style="TutorialContainer" AnchorSide="O,I" Offset="-280,190" TriggerBy="TutorialTradePanel" >
+			<SlideAnim Anchor="C,T" Start="30,0" EndOffset="40,0" Cycle="Bounce" Function="OutQuad" >
+				<Image Texture="Tutorial_ArrowH" Offset="0,0" Size="58,44" FlipX="1"/>
+			</SlideAnim>
+		</Tutorial>
+
+		<Tutorial  ID="TutTradeRoute" Style="TutorialContainer" AnchorSide="O,I" Offset="-280,250" TriggerBy="TutorialTradeRoute" >
+			<Grid Style="TutorialCalloutGrid" Offset="220,0">
+				<Label Style="TutorialBodyText" String="LOC_META_145b_BODY" />
+			</Grid>
+			<SlideAnim Anchor="C,T" Start="30,0" EndOffset="40,0" Cycle="Bounce" Function="OutQuad" >
+				<Image Texture="Tutorial_ArrowH" Offset="0,0" Size="58,44" FlipX="1"/>
+			</SlideAnim>
+		</Tutorial>
+
+		<Tutorial  ID="TutBeginRoute" Style="TutorialContainer" AnchorSide="O,I" Offset="-260,154" TriggerBy="TutorialBeginRoute" >
+			<Grid Style="TutorialCalloutGrid" Offset="220,0">
+				<Label Style="TutorialBodyText" String="LOC_META_145c_BODY" />
+			</Grid>
+			<SlideAnim Anchor="C,T" Start="30,0" EndOffset="40,0" Cycle="Bounce" Function="OutQuad" >
+				<Image Texture="Tutorial_ArrowH" Offset="0,0" Size="58,44" FlipX="1"/>
+			</SlideAnim>
+		</Tutorial>
+
+    </Container>
+  </SlideAnim>
+
+  <!-- Instances -->
+  <Instance				Name="RouteChoiceInstance">
+    <Container ID="Top"	Size="364,95" Offset="0,2">
+      <GridButton ID="Button" Size="parent,parent" Anchor="C,T">
+        <GridData Texture="DestinationChooser_Button" StateOffsetIncrement="0,76" SliceCorner="14,14" SliceSize="19,44" SliceTextureSize="48,76"/>
+
+        <!-- Selector Brace -->
+        <Grid ID="SelectorBrace" Size="parent+4,parent+4" Anchor="C,C" Texture="Controls_SelectorBrace" SliceCorner="29,29" SliceSize="2,2" SliceTextureSize="62,62"/>
+
+        <!-- City Banner -->
+        <Grid								ID="BannerBase"								Anchor="C,T" Offset="-1,4"		Size="parent-10,33"								Texture="CityPanel_BannerBase"				SliceCorner="20,10" SliceSize="160,1" SliceTextureSize="199,33" Color="150,170,100,255">
+          <Grid							ID="BannerDarker"													Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerDarker"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="0,0,0,100" />
+          <Grid							ID="BannerLighter"													Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerLighter"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="255,255,255,255" />
+          <Grid																				Anchor="L,T" Offset="6,2"			Size="parent-10,parent-8"		Texture="CityPanel_BannerNone"				SliceCorner="70,10" SliceSize="1,1" SliceTextureSize="179,20" Color="255,0,0,255" />
+          <Label						ID="CityName"							Anchor="L,C" Offset="34,-2"		Style="FontFlair16"					FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="EveryWord" TruncateWidth="225"/>
+
+          <Label						ID="TradingPostIcon"	Anchor="L,C" Offset="10,-4"	Style="FontNormal16" FontStyle="Shadow" String="[ICON_TradingPost]" Color="255,0,0,255" EffectColor="255,0,0,255" GradientColor="255,0,0,255" />
+          <Label						ID="CityStateQuestIcon"	Anchor="L,C" Offset="-2,-12"	Style="FontNormal16" FontStyle="Shadow" String="[ICON_CityStateQuest]" Color="255,0,0,255" EffectColor="255,0,0,255" GradientColor="255,0,0,255" />
+
+          <Stack StackGrowth="Left" Anchor="R,C" Offset="12,-4" StackPadding="0">
+            <Label ID="TurnsToComplete" Anchor="C,C" Offset="0,0" Style="FontFlair14" FontStyle="Stroke" EffectColor="0,0,0,25" String="??" />
+            <Label ID="TurnsToCompleteIcon"  String="[ICON_Turn]" Anchor="C,C" Offset="0,-1"  Style="FontFlair16" FontStyle="Stroke" EffectColor="0,0,0,25" />
+          </Stack>
+        </Grid>
+
+        <!-- Resource Info -->
+        <Grid	Size="350,50" Anchor="C,B" Offset="-1,7" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16" >
+          <!-- Column Background -->
+          <Box Size="50,parent" Offset="50,0" Color="0,0,0,22"/>
+          <Box Size="50,parent" Offset="150,0" Color="0,0,0,22"/>
+          <Box Size="50,parent" Offset="250,0" Color="0,0,0,22"/>
+
+          <Stack ID="ResourceList" Anchor="C,C" Offset="-23,0" StackGrowth="Bottom" StackPadding="4"/>
+        </Grid>
+      </GridButton>
+    </Container>
+  </Instance>
+
+  <!-- Route Yields Instance -->
+  <Instance Name="RouteYieldInstance">
+    <Stack StackGrowth="Right" StackPadding="2">
+      <Container Size="48,20">
+        <Label ID="YieldFoodLabel" Color="Food" Anchor="C,C" Offset="0,0" Style="FontNormal12" FontStyle="Shadow" String="+15[Icon_Food]"/>
+      </Container>
+
+      <Container Size="48,20">
+        <Label ID="YieldProductionLabel" Color="Production" Anchor="C,C" Offset="0,0" Style="FontNormal12" FontStyle="Shadow" String="+15[Icon_Production]"/>
+      </Container>
+
+      <Container Size="48,20">
+        <Label ID="YieldGoldLabel" Color="Gold" Anchor="C,C" Offset="0,0" Style="FontNormal12" FontStyle="Shadow" String="+15[Icon_Gold]"/>
+      </Container>
+
+      <Container Size="48,20">
+        <Label ID="YieldScienceLabel" Color="Science" Anchor="C,C" Offset="0,0" Style="FontNormal12" FontStyle="Shadow" String="+15[Icon_Science]"/>
+      </Container>
+
+      <Container Size="48,20">
+        <Label ID="YieldCultureLabel" Color="Culture" Anchor="C,C" Offset="0,0" Style="FontNormal12" FontStyle="Shadow" String="+15[Icon_Culture]"/>
+      </Container>
+
+      <Container Size="48,20">
+        <Label ID="YieldFaithLabel" Color="Faith" Anchor="C,C" Offset="0,0" Style="FontNormal12" FontStyle="Shadow" String="+15[Icon_Faith]"/>
+      </Container>
+    </Stack>
+  </Instance>
+</Context>
