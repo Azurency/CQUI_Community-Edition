@@ -48,7 +48,6 @@ local PRODUCTION_TYPE :table = {
 --CQUI Members
 local CQUI_INSTANCE_Y :number = 32;
 local CQUI_ProductionQueue :boolean = true;
-local CQUI_ListWasLoaded = {["Units"] = false, ["Districts"] = false, ["Wonders"] = false, ["Projects"] = false};
 function CQUI_OnSettingsUpdate()
   CQUI_INSTANCE_Y = GameConfiguration.GetValue("CQUI_ProductionItemHeight");
   CQUI_ProductionQueue = GameConfiguration.GetValue("CQUI_ProductionQueue");
@@ -482,21 +481,29 @@ function View(data)
   m_recommendedItems = selectedCity:GetCityAI():GetBuildRecommendations();
   PopulateList(data, m_listIM);
 
-  if(prodDistrictList ~= nil and not CQUI_ListWasLoaded["Districts"]) then
-    CQUI_ListWasLoaded["Districts"] = true;
+  if( prodDistrictList ~= nil) then
     OnExpand(prodDistrictList);
   end
-  if(prodWonderList ~= nil and not CQUI_ListWasLoaded["Wonders"]) then
-    CQUI_ListWasLoaded["Wonders"] = true;
+  if( prodWonderList ~= nil) then
     OnExpand(prodWonderList);
   end
-  if(prodUnitList ~= nil and not CQUI_ListWasLoaded["Units"]) then
-    CQUI_ListWasLoaded["Units"] = true;
+  if(prodUnitList ~= nil) then
     OnExpand(prodUnitList);
   end
-  if(prodProjectList ~= nil and not CQUI_ListWasLoaded["Projects"]) then
-    CQUI_ListWasLoaded["Projects"] = true;
+  if(prodProjectList ~= nil) then
     OnExpand(prodProjectList);
+  end
+  if( purchFaithBuildingList ~= nil) then
+    OnExpand(purchFaithBuildingList);
+  end
+  if( purchGoldBuildingList ~= nil) then
+    OnExpand(purchGoldBuildingList);
+  end
+  if( purchFaithUnitList ~= nil ) then
+    OnExpand(purchFaithUnitList);
+  end
+  if( purchGoldUnitList ~= nil) then
+    OnExpand(purchGoldUnitList);
   end
 end
 
