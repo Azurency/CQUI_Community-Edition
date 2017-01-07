@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd">
+
+	<AlphaAnim ID="ChatIndicatorWaitTimer" Cycle="Once" Speed="0.5" AlphaBegin="0.0" AlphaEnd="1.0" Stopped="1"/>
+	
+  <Container ID="RibbonContainer" Size="500,120" Anchor="R,T" Offset="0,27" AutoSize="H">
+    <ScrollPanel ID="LeaderBGClip" Anchor="R,T" Size="full,80" Disabled="1" Offset="-20,5" FullClip="1">
+      <Grid ID="LeaderBG" Anchor="R,T" Size="500,100" Style="DropShadow2" Offset="0,-30" Color="255,255,255,150"/>
+    </ScrollPanel>
+    <ScrollPanel ID="LeaderScroll" Anchor="R,T" Size="10,120" FullClip="1">
+      <Stack ID="LeaderStack" Anchor="R,T" StackGrowth="Left" StackPadding="2" Offset="3,4"/>
+      <Image    ID="NextButtonContainer" Texture="ActionPanel_Badge" Offset="-32,-45" Size="40,37" Anchor="R,B" AnchorSide="O,O">
+        <Button ID="NextButton" Anchor="R,B" Offset="4,2" Style="ArrowButtonRight"/>
+      </Image>
+      <Container ID="PreviousButtonContainer" Offset="-32,-45" Size="40,37" Anchor="L,B" AnchorSide="O,O">
+        <Image Texture="DiploRibbon_Separator" Size="62,34" Offset="-22,-29"/>
+        <Image     Texture="ActionPanel_Badge" Size="40,37" FlipX="1">
+          <Button ID="PreviousButton" Anchor="L,B" Offset="4,2" Style="ArrowButtonLeft"/>        
+        </Image>
+      </Container>
+    </ScrollPanel>
+	  
+	<Tutorial   			ID="TutDiploRibbon"	Style="TutorialContainer"	Offset="80,90" Anchor="R,T" TriggerBy="TutorialDiploRibbon">
+		<SlideAnim				Anchor="R,T" Start="0,0"	EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" >
+			<Image				Offset="0,0"	Size="44,58"		Texture="Tutorial_ArrowV" FlipY="1" />
+		</SlideAnim>
+	</Tutorial>
+
+	<Tutorial   			ID="TutSelectLeaderIcon"	Style="TutorialContainer"	Anchor="R,T" Offset="200,12"  TriggerBy="TutorialSelectLeaderIcon">
+		<Grid						Style="TutorialEndTurnCalloutGrid">
+			<Label				Style="TutorialEndTurnHeaderText"		String="LOC_META_158b_HEAD" />
+			<Label				Style="TutorialEndTurnBodyText"			String="LOC_META_158b_BODY" />
+		</Grid>
+		<SlideAnim				Anchor="R,T" Start="0,0"		EndOffset="-20,0" Cycle="Bounce" Function="OutQuad" >
+			<Image				Offset="0,0"	Size="58,44"		Texture="Tutorial_ArrowH" />
+		</SlideAnim>
+	</Tutorial>
+	  
+  </Container>
+
+  <!-- ==================================================================	-->
+  <!--	Instances															-->
+  <!-- ==================================================================	-->
+  <Instance Name="LeaderInstance">
+      <SlideAnim ID="LeaderContainer" Size="52,100" Offset="0,0" Begin="0,0" EndOffset="0,20" Cycle="Once" Stopped="1">
+        <Button ID="Button" Size="parent,52">
+          <Image Texture="Controls_CircleBacking45" Size="51,51" Anchor="C,C" Offset="0,1"/>
+          <Image Anchor="C,C" ID="YouIndicator" Hidden="1" Size="55,53" Texture="Diplomacy_YouIndicator45"/>
+          <Image ID="Portrait" Anchor="C,C" Size="45,45" Texture="Leaders45" />
+          <Button ID="Relationship" StretchMode="None" Style="DiplomacyRelationshipPips" Anchor="L,B" Disabled="1" ConsumeMouse="0"/>
+        </Button>
+        <Stack ID="ScoreDisplayStack" Size="30,30" Anchor="C,T" Offset="0,52" StackGrowth="Bottom" StackPadding="2" >
+          <Label  ID="DRSScoreOverall"                Anchor="B,B" Offset="0,0"     Style="CityPanelNumSmall"   String="-" />
+          <Label  ID="DRSScienceRate"                Anchor="B,B" Offset="0,0"     Style="CityPanelCBScience"   String="Sci" />
+          <Label  ID="DRSMilitaryStrength"               Anchor="B,B" Offset="0,0"     Style="CityPanelCBProduction"   String="Mil" />
+        </Stack>
+        <Image ID="CivIndicator" Anchor="R,T" Texture="CircleBacking22" Size="22,22" Offset="-5,-2" Hidden="1">
+          <Image ID="CivIcon" Anchor="C,C" Texture="CivSymbols22" Size="22,22"/>
+        </Image>
+				<AlphaAnim ID="ChatIndicatorFade" Cycle="Once" AlphaBegin="0.0" AlphaEnd="1.0" Speed="3" Stopped="1">
+					<Image ID="ChatIndicator" Hidden="0" Offset="35,0" Size="22,22" Texture="DiploRibbon_TypingIndicator"/>
+				</AlphaAnim>
+      </SlideAnim>
+  </Instance>
+  
+</Context>
