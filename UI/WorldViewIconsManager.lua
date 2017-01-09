@@ -186,26 +186,27 @@ function SetResourceIcon( pInstance:table, pPlot, type, state)
       table.insert(toolTipItems, resourceString)
       pInstance.ResourceIcon:SetToolTipString(table.concat(toolTipItems, "[NEWLINE]"));
 
-      --CQUI: Resource icon becomes transparent after being improved
-      local CQUI_ICON_LOW_OPACITY :number = 0x77ffffff;
+      --CQUI: Improved resource icon dimming/hiding
 
-      local icon_style = CQUI_ResourceIconStyle;
+      if(pPlot:GetOwner() == Game.GetLocalPlayer()) then --Only affects plots we own
+        local CQUI_ICON_LOW_OPACITY :number = 0x77ffffff;
 
-      if icon_style == 0 then
-        local white :number = 0xffffffff;
-        pInstance.ResourceIcon:SetColor(white);
-      elseif icon_style == 1 then 
-        if CQUI_IsResourceOptimalImproved(resourceInfo, pPlot) then
-          pInstance.ResourceIcon:SetColor(CQUI_ICON_LOW_OPACITY);
-        else
-          pInstance.ResourceIcon:SetColor(nil);
-        end
-      elseif icon_style == 2 then
-        if CQUI_IsResourceOptimalImproved(resourceInfo, pPlot) then
-          local no_color :number = 0x00ffffff;
-          pInstance.ResourceIcon:SetColor(no_color);
-        else
-          pInstance.ResourceIcon:SetColor(nil);
+        if CQUI_ResourceIconStyle == 0 then
+          local white :number = 0xffffffff;
+          pInstance.ResourceIcon:SetColor(white);
+        elseif CQUI_ResourceIconStyle == 1 then 
+          if CQUI_IsResourceOptimalImproved(resourceInfo, pPlot) then
+            pInstance.ResourceIcon:SetColor(CQUI_ICON_LOW_OPACITY);
+          else
+            pInstance.ResourceIcon:SetColor(nil);
+          end
+        elseif CQUI_ResourceIconStyle == 2 then
+          if CQUI_IsResourceOptimalImproved(resourceInfo, pPlot) then
+            local no_color :number = 0x00ffffff;
+            pInstance.ResourceIcon:SetColor(no_color);
+          else
+            pInstance.ResourceIcon:SetColor(nil);
+          end
         end
       end
     end
