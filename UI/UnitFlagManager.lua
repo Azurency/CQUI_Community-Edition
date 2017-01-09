@@ -152,7 +152,52 @@ UnitFlag = {};
 -- Link its __index to itself
 UnitFlag.__index = UnitFlag;
 
+--CQUI Members
+local CQUI_ShowingPath = nil; --unitID for the unit whose path is currently being shown. nil for no unit
+local CQUI_SelectionMade = false; 
+local CQUI_ShowPaths = true; --Toggle for showing the paths
 
+--CQUI Functions
+--Draws a path with numbers for the given unitID. Hijacks trade layer
+function CQUI_ShowPath(unitID)
+	if(CQUI_ShowPaths) then
+		local unit = Players[Game.GetLocalPlayer()]:GetUnits():FindID(unitID);
+		if (GameInfo.Units[unit:GetUnitType()].UnitType ~= "UNIT_TRADER") then --Since this hijacks the trade layer, be sure to NOT touch it when the game actually needs the trade layer!
+			local dest = UnitManager.GetQueuedDestination(unit);
+			local pathPlots, turnsToReach, _ = UnitManager.GetMoveToPath(unit, dest); --pathPlots holds the tileIDs for each tile in the path in order. turnsToReach describes how many turns it takes to reach each given tile, also in order
+			local last = 1; --The number of turns it takes to reach the last given tile
+			for i,v in pairs(turnsToReach) do --Show numbers, but only once for each turn incrememnt
+				if(v > last) then
+					 UI.AddNumberToPath(last, pathPlots[i - 1]);
+				end
+				last = v;
+			end
+			UI.AddNumberToPath(last, dest); --Show a number on the destination plot unconditionally
+			local variations:table = {};
+			table.insert(variations, {"TradeRoute_Destination", dest} );
+			UILens.SetLayerHexesPath( LensLayers.TRADE_ROUTE, Game.GetLocalPlayer(), pathPlots, variations );
+			CQUI_ShowingPath = unitID; 
+		end
+	end
+end
+--Hides any currently drawn paths. 
+function CQUI_HidePath(unitID)
+	if(CQUI_ShowPaths) then
+		local unit = Players[Game.GetLocalPlayer()]:GetUnits():FindID(unitID);
+		if (unitID == nil or GameInfo.Units[unit:GetUnitType()].UnitType ~= "UNIT_TRADER") then
+			UILens.ClearLayerHexes(LensLayers.TRADE_ROUTE); --Hide path
+			UILens.ClearLayerHexes(LensLayers.NUMBERS); --Hide numbers
+		end
+	end
+end
+
+function CQUI_OnSettingsUpdate()
+	CQUI_HidePath();
+	CQUI_ShowPaths = GameConfiguration.GetValue("CQUI_ShowUnitPaths");
+end
+
+LuaEvents.CQUI_SettingsUpdate.Add(CQUI_OnSettingsUpdate);
+LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 
 -- ===========================================================================
 --	Obtain the unit flag associate with a player and unit.
@@ -320,16 +365,23 @@ function UnitFlag.SetInteractivity( self )
 	-- Off of the root flag set callbacks to let other UI pieces know that it's focus.
 	-- This cannot be done on the buttons because enemy flags are disabled and some
 	-- UI (e.g., CombatPreview) may want to query this.
+
+	--CQUI modifications for showing unit paths on hover
 	self.m_Instance.FlagRoot:RegisterMouseEnterCallback( 
 		function()
-			LuaEvents.UnitFlagManager_PointerEntered( flagPlayerID, unitID ); 
+			LuaEvents.UnitFlagManager_PointerEntered( flagPlayerID, unitID );
+			if(not CQUI_SelectionMade) then
+				CQUI_ShowPath(unitID);
+			end
 		end );
-	
-	self.m_Instance.FlagRoot:RegisterMouseExitCallback(	 
-		function() 
-			LuaEvents.UnitFlagManager_PointerExited( flagPlayerID, unitID ); 
-		end);
 
+	self.m_Instance.FlagRoot:RegisterMouseExitCallback(	 
+		function()
+			LuaEvents.UnitFlagManager_PointerExited( flagPlayerID, unitID ); 
+			if(not CQUI_SelectionMade) then
+				CQUI_HidePath(unitID);
+			end
+		end );
 end
 
 ------------------------------------------------------------------
@@ -1084,12 +1136,12 @@ function OnUnitEmbarkedStateChanged( playerID: number, unitID : number, bEmbarke
     end
 end
 
-------------------------------------------------------------------
+--CQUI modified to hide unit paths on deselect
 function OnUnitSelectionChanged( playerID : number, unitID : number, hexI : number, hexJ : number, hexK : number, bSelected : boolean, bEditable : boolean )
-    local flagInstance = GetUnitFlag( playerID, unitID );
+  local flagInstance = GetUnitFlag( playerID, unitID );
 	if (flagInstance ~= nil) then
 		flagInstance:UpdateSelected( bSelected );
-    end
+  end
 
 	if (bSelected) then
 		--[[
@@ -1100,6 +1152,19 @@ function OnUnitSelectionChanged( playerID : number, unitID : number, hexI : numb
 		end
 		--]]
 		UpdateIconStack(hexI, hexJ);
+		--CQUI modifications for tracking unit selection and displaying unit paths
+		CQUI_SelectionMade = true;
+		if(CQUI_ShowingPath ~= unitID) then
+			if(CQUI_ShowingPath ~= nil) then
+				CQUI_HidePath(unitID);
+			end
+			CQUI_ShowPath(unitID);
+			CQUI_ShowingPath = unitID;
+		end
+	else
+		CQUI_SelectionMade = false;
+		CQUI_HidePath(unitID);
+		CQUI_ShowingPath = nil;
 	end
 end
 

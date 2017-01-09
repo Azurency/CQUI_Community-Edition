@@ -37,6 +37,9 @@
   <Row Tag="LOC_CQUI_GENERAL_SHOWCULTUREGROWTH_TOOLTIP" Language="en_US">
     <Text>This can also be toggled by clicking on the growth emblem in the cityview</Text>
   </Row>
+  <Row Tag="LOC_CQUI_GENERAL_SHOWUNITPATHS" Language="en_US">
+    <Text>Show unit path on hover or selection</Text>
+  </Row>
   <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER" Language="en_US">
     <Text>Show city management info on hover</Text>
   </Row>
