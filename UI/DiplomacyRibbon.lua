@@ -116,10 +116,10 @@ function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean
 		end
 	end
   
-  -- DRS MOD: Set score values for DRS display
-  instance.DRSScoreOverall:SetText("[ICON_Capital]"..Players[playerID]:GetScore());
-  instance.DRSScienceRate:SetText("[ICON_Science]"..Round(Players[playerID]:GetTechs():GetScienceYield(),0));
-  instance.DRSMilitaryStrength:SetText("[ICON_Strength]"..Players[playerID]:GetStats():GetMilitaryStrength());
+  -- CQUI: Set score values for DRS display
+  instance.CQUI_ScoreOverall:SetText("[ICON_Capital]"..Players[playerID]:GetScore());
+  instance.CQUI_ScienceRate:SetText("[ICON_Science]"..Round(Players[playerID]:GetTechs():GetScienceYield(),0));
+  instance.CQUI_MilitaryStrength:SetText("[ICON_Strength]"..Players[playerID]:GetStats():GetMilitaryStrength());
   
 	instance.Relationship:SetHide(not bShowRelationshipIcon);
 
