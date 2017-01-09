@@ -164,6 +164,41 @@ function InitializeGossipCheckboxes()
   PopulateCheckBox(Controls.LOC_GOSSIP_WONDER_STARTEDCheckbox, "CQUI_LOC_GOSSIP_WONDER_STARTED");
 end
 
+-- ===========================================================================
+--  Input
+--  UI Event Handler
+-- ===========================================================================
+function KeyDownHandler( key:number )
+  if key == Keys.VK_SHIFT then
+    m_shiftDown = true;
+    -- let it fall through
+  end
+  return false;
+end
+function KeyUpHandler( key:number )
+  if key == Keys.VK_SHIFT then
+    m_shiftDown = false;
+    -- let it fall through
+  end
+  if key == Keys.VK_ESCAPE then
+    Close();
+    return true;
+  end
+  if key == Keys.VK_RETURN then
+    return true; -- Don't let enter propigate or it will hit action panel which will raise a screen (potentially this one again) tied to the action.
+  end
+  return false;
+end
+function OnInputHandler( pInputStruct:table )
+  local uiMsg = pInputStruct:GetMessageType();
+  if uiMsg == KeyEvents.KeyDown then return KeyDownHandler( pInputStruct:GetKey() ); end
+  if uiMsg == KeyEvents.KeyUp then return KeyUpHandler( pInputStruct:GetKey() ); end  
+  return false;
+end
+function Close()
+  ContextPtr:SetHide(true);
+end
+
 --Used to convert between slider steps and production item height
 --Minimum value is 24, maximum is 128. This translates to the 0th step and the 104th
 local ProductionItemHeightConverter = {
@@ -223,6 +258,8 @@ function Initialize()
   
   --Setting up panel controls
   ShowTab(m_tabs[1][1], m_tabs[1][2]); --Show General Settings on start
+  ContextPtr:SetInputHandler( OnInputHandler, true );
+
   LuaEvents.CQUI_SettingsInitialized(); --Tell other elements that the settings have been initialized and it's safe to try accessing settings now
 end
 
