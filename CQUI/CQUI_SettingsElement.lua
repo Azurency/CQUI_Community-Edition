@@ -187,7 +187,7 @@ function Initialize()
     {Controls.BindingsTab, Controls.BindingsOptions},
     {Controls.PopupsTab, Controls.PopupsOptions},
     {Controls.GossipTab, Controls.GossipOptions},
-    {Controls.ProductionTab, Controls.ProductionOptions},
+    {Controls.CityviewTab, Controls.CityviewOptions},
     {Controls.LensesTab, Controls.LensesOptions},
     {Controls.HiddenTab, Controls.HiddenOptions}
   };
@@ -204,7 +204,7 @@ function Initialize()
   PopulateCheckBox(Controls.ProductionQueueCheckbox, "CQUI_ProductionQueue");
   RegisterControl(Controls.ProductionQueueCheckbox, "CQUI_ProductionQueue", UpdateCheckbox);
   PopulateCheckBox(Controls.ShowLuxuryCheckbox, "CQUI_ShowLuxuries");
-  PopulateCheckBox(Controls.ShowCultureGrowthCheckbox, "CQUI_ShowCultureGrowth", Locale.Lookup("LOC_CQUI_GENERAL_SHOWCULTUREGROWTH_TOOLTIP"));
+  PopulateCheckBox(Controls.ShowCultureGrowthCheckbox, "CQUI_ShowCultureGrowth", Locale.Lookup("LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP"));
   RegisterControl(Controls.ShowCultureGrowthCheckbox, "CQUI_ShowCultureGrowth", UpdateCheckbox);
   PopulateCheckBox(Controls.SmartbannerCheckbox, "CQUI_Smartbanner", Locale.Lookup("LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP"));
   PopulateCheckBox(Controls.ToggleYieldsOnLoadCheckbox, "CQUI_ToggleYieldsOnLoad");

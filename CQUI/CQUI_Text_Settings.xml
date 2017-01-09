@@ -19,6 +19,21 @@
   <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="en_US">
       <Text>Standard</Text>
     </Row>
+  <Row Tag="LOC_CQUI_CITYVIEW" Language="en_US">
+    <Text>City View</Text>
+  </Row>
+  <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="en_US">
+    <Text>Production item height</Text>
+  </Row>
+  <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="en_US">
+    <Text>Enable production queue</Text>
+  </Row>
+  <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="en_US">
+    <Text>Show cultural growth overlay</Text>
+  </Row>
+  <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="en_US">
+    <Text>This can also be toggled by clicking on the growth emblem in the cityview</Text>
+  </Row>
   <Row Tag="LOC_CQUI_GENERAL" Language="en_US">
       <Text>General</Text>
     </Row>
@@ -31,12 +46,6 @@
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="en_US">
       <Text>Show luxuries in top panel</Text>
     </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SHOWCULTUREGROWTH" Language="en_US">
-    <Text>Show cultural growth overlay in cityview</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SHOWCULTUREGROWTH_TOOLTIP" Language="en_US">
-    <Text>This can also be toggled by clicking on the growth emblem in the cityview</Text>
-  </Row>
   <Row Tag="LOC_CQUI_GENERAL_SHOWUNITPATHS" Language="en_US">
     <Text>Show unit path on hover or selection</Text>
   </Row>
@@ -94,15 +103,6 @@
   <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="en_US">
       <Text>Toggles the popup audio that plays whenever a new tech or civic is achieved. Is fully independent of the visual component and can play even when there is no visible popup</Text>
     </Row>
-  <Row Tag="LOC_CQUI_PRODUCTION" Language="en_US">
-    <Text>Production</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_PRODUCTION_ITEMHEIGHT" Language="en_US">
-    <Text>Production item height</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_PRODUCTION_PRODUCTIONQUEUE" Language="en_US">
-    <Text>Enable production queue</Text>
-  </Row>
   <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="en_US">
     <Text>Remember: CQUI settings are attached to individual saves![NEWLINE]If you'd like to change a setting by default, please edit the CQUI_Settings.sql file within the [MOD INSTALL DIRECTORY]/CQUI/ directory</Text>
   </Row>
