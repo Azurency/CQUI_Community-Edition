@@ -25,6 +25,7 @@
         <File>UI/ProductionPanel.xml</File>
         <File>UI/TopPanel.lua</File>
         <File>UI/UnitPanel.xml</File>
+        <File>UI/UnitFlagManager.lua</File>
         <File>UI/WorldInput.lua</File>
         <File>UI/WorldViewIconsManager.lua</File>
         <File>UI/Civilopedia/CivilopediaSupport.lua</File>
@@ -141,6 +142,7 @@
     <File>UI/ProductionPanel.xml</File>
     <File>UI/TopPanel.lua</File>
     <File>UI/UnitPanel.xml</File>
+    <File>UI/UnitFlagManager.lua</File>
     <File>UI/WorldInput.lua</File>
     <File>UI/WorldViewIconsManager.lua</File>
     <File>UI/Civilopedia/CivilopediaSupport.lua</File>
