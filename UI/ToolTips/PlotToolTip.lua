@@ -198,6 +198,7 @@ function View(data:table, bIsUpdate:boolean)
   local details = {};
   local debugInfo = {};
 
+  --Civilization and city ownership line
   if(data.Owner ~= nil) then
 
     local szOwnerString;
@@ -215,10 +216,23 @@ function View(data:table, bIsUpdate:boolean)
     if(GameConfiguration:IsAnyMultiplayer() and pPlayer:IsHuman()) then
       szOwnerString = szOwnerString .. " (" .. pPlayerConfig:GetPlayerName() .. ")";
     end
-
-    table.insert(details, Locale.Lookup("LOC_TOOLTIP_CITY_OWNER",szOwnerString, data.OwningCityName));
+    
+    --CQUI Remove City Owner if it's a city state as civ name is the same as city owner name
+    local szOwnerString2 = Locale.Lookup("LOC_TOOLTIP_CITY_OWNER",szOwnerString, data.OwningCityName);
+    if (pPlayer:IsMajor() == false) then
+      local cutoff1, cutoff2 = string.find(szOwnerString2,"(",1,true);
+      szOwnerString2 = string.sub(szOwnerString2,1,cutoff1-1);
+    end
+    table.insert(details,szOwnerString2);
   end
 
+  local szTerrainString;
+  if (data.IsLake) then
+    szTerrainString=Locale.Lookup("LOC_TOOLTIP_LAKE");
+  else
+    szTerrainString = Locale.Lookup(data.TerrainTypeName);
+  end
+  
   if(data.FeatureType ~= nil) then
     local szFeatureString = Locale.Lookup(GameInfo.Features[data.FeatureType].Name);
     local localPlayer = Players[Game.GetLocalPlayer()];
@@ -235,8 +249,16 @@ function View(data:table, bIsUpdate:boolean)
         szFeatureString = szFeatureString .. " " .. szAdditionalString;
       end
     end
-    table.insert(details, szFeatureString);
+    szTerrainString = szTerrainString.."/ ".. szFeatureString;
+    --table.insert(details, szFeatureString);
   end
+  
+  if (data.IsRiver == true) then
+    szTerrainString = szTerrainString.."/ "..Locale.Lookup("LOC_TOOLTIP_RIVER");
+  end
+  table.insert(details, szTerrainString);
+  
+  
   if(data.NationalPark ~= "") then
     table.insert(details, data.NationalPark);
   end
@@ -245,10 +267,25 @@ function View(data:table, bIsUpdate:boolean)
     --if it's a resource that requires a tech to improve, let the player know that in the tooltip
     local resourceType = data.ResourceType;
     local resource = GameInfo.Resources[resourceType];
-
-    local resourceString = Locale.Lookup(resource.Name);
+    local resourceColor;
+    if (resource.ResourceClassType ~= nil) then
+      if (resource.ResourceClassType == "RESOURCECLASS_BONUS") then
+        resourceColor = "GoldDark";
+      elseif (resource.ResourceClassType == "RESOURCECLASS_LUXURY") then
+        resourceColor = "Civ6Purple";
+      elseif (resource.ResourceClassType == "RESOURCECLASS_STRATEGIC") then
+        resourceColor = "Civ6Red";
+      end
+    end
+    --Color code the resource text if they have a color. For example, antiquity sites don't have a color
+    local resourceString;
+    if (resourceColor ~= nil) then
+      resourceString = "[ICON_"..resourceType.. "] " .. "[COLOR:"..resourceColor.."]"..Locale.Lookup(resource.Name).."[ENDCOLOR]";
+    else
+      resourceString = "[ICON_"..resourceType.. "] " .. Locale.Lookup(resource.Name);
+    end
+    
     local resourceTechType;
-
     local terrainType = data.TerrainType;
     local featureType = data.FeatureType;
 
@@ -300,34 +337,39 @@ function View(data:table, bIsUpdate:boolean)
     table.insert(details, resourceString)
   end
   
-  if (data.IsRiver == true) then
-    table.insert(details, Locale.Lookup("LOC_TOOLTIP_RIVER"));
-  end
+  table.insert(details, "------------------");
 
+  --[[ 
   -- Movement cost
   if (not data.Impassable and data.MovementCost > 0) then
     table.insert(details, Locale.Lookup("LOC_TOOLTIP_MOVEMENT_COST", data.MovementCost));
   end
-
-  -- ROUTE TILE
+  ]]
+  
+  -- ROUTE TILE - CQUI Modified Doesn't display movement cost if route movement exists
+  local szMoveString: string;
   if (data.IsRoute) then
     local routeInfo = GameInfo.Routes[data.RouteType];
     if (routeInfo ~= nil and routeInfo.MovementCost ~= nil and routeInfo.Name ~= nil) then
-      
-      local str;
       if(data.RoutePillaged) then
-        str = Locale.Lookup("LOC_TOOLTIP_ROUTE_MOVEMENT_PILLAGED", routeInfo.MovementCost, routeInfo.Name);
+        szMoveString = Locale.Lookup("LOC_TOOLTIP_ROUTE_MOVEMENT_PILLAGED", routeInfo.MovementCost, routeInfo.Name);
       else
-        str = Locale.Lookup("LOC_TOOLTIP_ROUTE_MOVEMENT", routeInfo.MovementCost, routeInfo.Name);
+        szMoveString = Locale.Lookup("LOC_TOOLTIP_ROUTE_MOVEMENT", routeInfo.MovementCost, routeInfo.Name);
       end
-
-      table.insert(details, str);
-    end   
+      szMoveString = szMoveString:gsub("%d?%.?%d+%s",routeInfo.MovementCost.. "[ICON_Movement]",1);
+    end
+  elseif (not data.Impassable and data.MovementCost > 0) then
+    szMoveString = Locale.Lookup("LOC_TOOLTIP_MOVEMENT_COST", data.MovementCost);
+    szMoveString = szMoveString:gsub("%d?%.?%d+",data.MovementCost.. "[ICON_Movement]",1);
   end
-
+  if (szMoveString ~=nil) then
+    --szMoveString = szMoveString:gsub("%d+%s",": [ICON_Movement]",1);
+    table.insert(details,szMoveString);
+  end
+  
   -- Defense modifier
   if (data.DefenseModifier ~= 0) then
-    table.insert(details, Locale.Lookup("LOC_TOOLTIP_DEFENSE_MODIFIER", data.DefenseModifier));
+    table.insert(details, Locale.Lookup("LOC_TOOLTIP_DEFENSE_MODIFIER", data.DefenseModifier).. " [ICON_STRENGTH]");
   end
 
   -- Appeal
@@ -368,20 +410,26 @@ function View(data:table, bIsUpdate:boolean)
     end
   end
 
+  --CQUI Use this table to set up a better order of listing the yields... ie Food before Production
+  local CQUIYields = {};
+  
   -- CITY TILE
   if(data.IsCity == true) then
     
     table.insert(details, "------------------");
     
     table.insert(details, Locale.Lookup(GameInfo.Districts[data.DistrictType].Name))
-
+    
     for yieldType, v in pairs(data.Yields) do
       local yield = GameInfo.Yields[yieldType].Name;
       local yieldicon = GameInfo.Yields[yieldType].IconString;
       local str = tostring(v) .. Locale.Lookup(yieldicon) .. Locale.Lookup(yield);
-      table.insert(details, str);
+      table.insert(CQUIYields,1,str);
+      --table.insert(details, str);
     end
-    
+    for i, v in ipairs(CQUIYields) do
+      table.insert(details,v);
+    end
     --if(data.Buildings ~= nil and table.count(data.Buildings) > 0) then
     --  table.insert(details, "Buildings: ");
       
@@ -451,7 +499,15 @@ function View(data:table, bIsUpdate:boolean)
       local yield = GameInfo.Yields[yieldType].Name;
       local yieldicon = GameInfo.Yields[yieldType].IconString;
       local str = tostring(v) .. Locale.Lookup(yieldicon) .. Locale.Lookup(yield);
-      table.insert(details, str);
+      if (yieldType == "YIELD_FOOD" or yieldType == "YIELD_PRODUCTION") then
+        table.insert(CQUIYields,1,str);
+      else
+        table.insert(CQUIYields,str);
+      --table.insert(details, str);
+      end
+    end
+    for i, v in ipairs(CQUIYields) do
+      table.insert(details,v);
     end
   end
 
@@ -485,7 +541,7 @@ function View(data:table, bIsUpdate:boolean)
           local greatWorkIndex:number = cityBuildings:GetGreatWorkInSlot(data.BuildingTypes[i], j);
           if (greatWorkIndex ~= -1) then
             local greatWorkType:number = cityBuildings:GetGreatWorkTypeFromIndex(greatWorkIndex)
-            table.insert(details, "- " .. Locale.Lookup(GameInfo.GreatWorks[greatWorkType].Name));
+            table.insert(details, "  * " .. Locale.Lookup(GameInfo.GreatWorks[greatWorkType].Name));
           end
         end
       end
@@ -517,11 +573,7 @@ function View(data:table, bIsUpdate:boolean)
 
   
   -- Set the control values
-  if (data.IsLake) then
-    Controls.PlotName:LocalizeAndSetText("LOC_TOOLTIP_LAKE");
-  else
-    Controls.PlotName:LocalizeAndSetText(data.TerrainTypeName);
-  end
+  
   Controls.PlotDetails:SetText(table.concat(details, "[NEWLINE]"));
 
   if m_isShowDebug then
