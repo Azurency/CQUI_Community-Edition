@@ -19,6 +19,7 @@
         <File>Assets/UI/DiplomacyDealView.lua</File>
         <File>Assets/UI/DiplomacyRibbon.lua</File>
         <File>Assets/UI/DiplomacyRibbon.xml</File>
+        <File>Assets/UI/InGame.lua</File>
         <File>Assets/UI/MapPinManager.lua</File>
         <File>Assets/UI/MinimapPanel.lua</File>
         <File>Assets/UI/MinimapPanel.xml</File>
@@ -136,6 +137,7 @@
     <File>Assets/UI/DiplomacyDealView.lua</File>
     <File>Assets/UI/DiplomacyRibbon.lua</File>
     <File>Assets/UI/DiplomacyRibbon.xml</File>
+    <File>Assets/UI/InGame.lua</File>
     <File>Assets/UI/MapPinManager.lua</File>
     <File>Assets/UI/MinimapPanel.lua</File>
     <File>Assets/UI/MinimapPanel.xml</File>
