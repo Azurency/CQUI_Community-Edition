@@ -22,6 +22,15 @@ local m_QuicksaveId;
 --	FUNCTIONS
 -- ===========================================================================
 
+--CQUI Functions
+function CQUI_RequestUIAddin( request: string ) --Returns the first context to match the request string. Returns nil if a matching context can't be found
+	for _,v in ipairs(g_uiAddins) do
+		if(v:GetID() == request) then
+			return v;
+		end
+	end
+end
+
 -- ===========================================================================
 --	Open up the TopOptionsMenu with the utmost priority.
 -- ===========================================================================
@@ -216,6 +225,8 @@ function Initialize()
 	LuaEvents.NaturalWonderPopup_Closed.Add( OnNaturalWonderPopupClosed );
 	LuaEvents.Tutorial_ToggleInGameOptionsMenu.Add( OnTutorialToggleInGameOptionsMenu );
 	LuaEvents.Tutorial_TutorialEndHideBulkUI.Add( OnTutorialEndHide );
+	--CQUI event handling
+	LuaEvents.CQUI_RequestUIAddin.Add(function(request: string) LuaEvents.CQUI_PushUIAddIn(CQUI_RequestUIAddin(request)); end); --Responds to an addin request with a PushUIAddIn event containing the requested context. Can return nil
 	
 end
 Initialize();
