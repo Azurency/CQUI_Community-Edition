@@ -238,5 +238,122 @@
     <Replace Tag="LOC_ORIGIN_CHOOSER_CHANGE_DESTINATION_BUTTON" Language="zh_Hans_CN">
         <Text>确认</Text>
     </Replace>
+
+
+    <!-- ITALIAN -->
+    <Replace Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="it_IT">
+        <Text>Ordina per [ICON_Food]Cibo.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_PRODUCTION_TOOLTIP" Language="it_IT">
+        <Text>Ordina per [ICON_Production]Produzione.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_GOLD_TOOLTIP" Language="it_IT">
+        <Text>Ordina per [ICON_Gold]Oro.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_SCIENCE_TOOLTIP" Language="it_IT">
+        <Text>Ordina per [ICON_Science]Scienza.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_CULTURE_TOOLTIP" Language="it_IT">
+        <Text>Ordina per [ICON_Culture]Cultura.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_FAITH_TOOLTIP" Language="it_IT">
+        <Text>Ordina per [ICON_Faith]Fede.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_TURNS_REMAINING_TOOLTIP" Language="it_IT">
+        <Text>Ordina per [ICON_Turn]Turni al completamento della rotta.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FILTER_INTERNATIONAL_ROUTES_TEXT" Language="it_IT">
+        <Text>Rotte Internazionali</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FILTER_CS_WITH_QUEST_TOOLTIP" Language="it_IT">
+        <Text>Città Stato con Missione Rotta Commerciale</Text>
+    </Replace>
+
+    <!-- Trade Overview -->
+    <Replace Tag="LOC_TRADE_NO_BENEFIT_TEXT" Language="it_IT">
+    	<Text>non ha benefici da questa Rotta Commerciale.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_TEXT" Language="it_IT">
+    	<Text>Ordina per:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT" Language="it_IT">
+        <Text>Espandi tutto:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_COLLAPSE_ALL_BUTTON_TEXT" Language="it_IT">
+        <Text>Comprimi tutto:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP" Language="it_IT">
+        <Text>Numero di[ICON_Turn]al termine della rotta commerciale</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_ALT_HELP_TOOLTIP" Language="it_IT">
+        <Text>Questa rotta verrà completata in {1_TurnsRemaining}[Icon_Turn].</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER" Language="it_IT">
+        <Text>----------------------------</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_ROUTE_LENGTH_TOOLTIP" Language="it_IT">
+        <Text>Rotta Commerciale[ICON_Movement]: {1_TripsToDestination}</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TRIPS_COUNT_TOOLTIP" Language="it_IT">
+        <Text>Viaggi a destinazione: {1_TripsToDestination}</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_TOOLTIP" Language="it_IT">
+        <Text>La rotta verrà completata in [ICON_Turn]{1_TurnWhenCompleted}</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_ALT_TOOLTIP" Language="it_IT">
+        <Text>Se avviata, la rotta verrà completata in {1_TurnsToComplete} turni e si concluderà al turno {2_TurnWhenCompleted}</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_CANCEL_AUTOMATION_TOOLTIP" Language="it_IT">
+        <Text>Cancella l'automazione di questa rotta commerciale. Il commerciante sarà disponibile al suo completamento.</Text>
+    </Replace>
+
+    <!-- Make Trade Route -->
+    <Replace Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_LABEL" Language="it_IT">
+        <Text>Ripeti Rotta:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_TOOLTIP" Language="it_IT">
+        <Text>Abilita per ripetere la rotta. Di default, la rotta commerciale ripetuta è l'ultima portata a termine dal commerciante.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_LABEL" Language="it_IT">
+        <Text>Ordina dall'alto per:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_TOOLTIP" Language="it_IT">
+        <Text>La rotta ripetuta è la migliore secondo l'attuale criterio di ordinamento. La rotta verrà scelta quando il commerciante terminerà quella corrente.</Text>
+    </Replace>
+
+    <!-- Trade Origin Chooser -->
+    <Replace Tag="LOC_ORIGIN_CHOOSER_HEADER_BACKGROUND_TEXT" Language="it_IT">
+        <Text>Scegli una città</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_ORIGIN_CHOOSER_HEADER_LABEL_TEXT" Language="it_IT">
+        <Text>TRASFERISCI COMMERCIANTE A...</Text>
+    </Replace>
+
+    <Replace Tag="LOC_ORIGIN_CHOOSER_CHANGE_DESTINATION_BUTTON" Language="it_IT">
+        <Text>CONFERMA</Text>
+    </Replace>
   </LocalizedText>
 </GameData>

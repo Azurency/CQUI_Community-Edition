@@ -56,7 +56,34 @@
     <Row Tag="LOC_CQUI_CITY_WAR_WEARINESS" Language="zh_Hans_CN">
       <Text>厌战</Text>
     </Row>
-    
-    
+
+    <!--  ITALIAN -->
+    <Row Tag="LOC_CQUI_CIVIC_MESSAGE_S" Language="it_IT">
+      <Text>Progresso civico corrente, </Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TECH_MESSAGE_S" Language="it_IT">
+      <Text>Tecnologia corrente, </Text>
+    </Row>
+    <Row Tag="LOC_CQUI_HALF_MESSAGE_E" Language="it_IT">
+      <Text>, è ad un turno dall'Ispirazione massima potenziale.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_FINISH_MESSAGE_E" Language="it_IT">
+      <Text>, è completata.</Text>
+    </Row>
+
+    <!-- CITY PANEL AMENITY -->
+    <Row Tag="LOC_CQUI_CITY_ENTERTAINMENT" Language="it_IT">
+      <Text>Svaghi</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITY_GREAT_PEOPLE" Language="it_IT">
+      <Text>Grandi[NEWLINE]Personaggi</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITY_NATIONAL_PARK" Language="it_IT">
+      <Text>Parchi[NEWLINE]Nazionali</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITY_WAR_WEARINESS" Language="it_IT">
+      <Text>Stanchezza[NEWLINE]di Guerra</Text>
+    </Row>
+
   </LocalizedText>
 </GameData>

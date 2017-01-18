@@ -125,4 +125,130 @@
     </Row>
 
   </BaseGameText>
+  
+  <LocalizedText>
+    
+    <!-- ITALIAN -->
+    <Replace Tag="LOC_HUD_BUILDER_LENS" Language="it_IT">
+      <Text>Costruttore</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_BUILDER_LENS_TOOLTIP" Language="it_IT">
+      <Text>Evidenzia quali caselle possono essere migliorate dal costruttore</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_IMP" Language="it_IT">
+      <Text>Risorsa/Casella Saccheggiata/Abilità Unica</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_HILL" Language="it_IT">
+      <Text>Collina</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_FEATURE" Language="it_IT">
+      <Text>Caratteristica Rimovibile</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_GENERIC" Language="it_IT">
+      <Text>Casella Generica</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_NOTHING" Language="it_IT">
+      <Text>Niente da fare</Text>
+    </Replace>
+
+    <!-- Archaeologist Lens -->
+    <Replace Tag="LOC_HUD_ARCHAEOLOGIST_LENS" Language="it_IT">
+      <Text>Archeologo</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_ARCHAEOLOGIST_LENS_TOOLTIP" Language="it_IT">
+      <Text>Evidenzia siti di scavo archeologici.</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_ARTIFACT" Language="it_IT">
+      <Text>Artefatto</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_SHIPWRECK" Language="it_IT">
+      <Text>Relitto</Text>
+    </Replace>
+
+    <!-- City Overlap Lens -->
+    <Replace Tag="LOC_HUD_CITYOVERLAP6_LENS" Language="it_IT">
+      <Text>6 Caselle</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_CITYOVERLAP6_LENS_TOOLTIP" Language="it_IT">
+      <Text>Mostra l'intersezione di una casella con città nel raggio di 6 caselle</Text>
+    </Replace>
+
+    <!-- City Overlap Lens -->
+    <Replace Tag="LOC_HUD_CITYOVERLAP9_LENS" Language="it_IT">
+      <Text>9 Caselle</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_CITYOVERLAP9_LENS_TOOLTIP" Language="it_IT">
+      <Text>Mostra l'intersezione di una casella con città nel raggio di 9 caselle</Text>
+    </Replace>
+
+    <!-- Barbarian Lens -->
+    <Replace Tag="LOC_HUD_BARBARIAN_LENS" Language="it_IT">
+      <Text>Barbari</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_BARBARIAN_LENS_TOOLTIP" Language="it_IT">
+      <Text>Evidenzia gli accampamenti barbari sulla mappa</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BARBARIAN_LENS_ENCAPMENT" Language="it_IT">
+      <Text>Accampamenti Barbari</Text>
+    </Replace>
+
+    <!-- Resources Lens -->
+    <Replace Tag="LOC_HUD_RESOURCE_LENS" Language="it_IT">
+      <Text>Risorse</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_RESOURCE_LENS_TOOLTIP" Language="it_IT">
+      <Text>Evidenzia le risorse sulla mappa</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_LUXURY" Language="it_IT">
+      <Text>Risorse di Lusso</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NLUXURY" Language="it_IT">
+      <Text>Risorse non Migliorate</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_STRATEGIC" Language="it_IT">
+      <Text>Risorse Strategiche</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NSTRATEGIC" Language="it_IT">
+      <Text>Risorse Strategiche non Migliorate</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_BONUS" Language="it_IT">
+      <Text>Risorse Bonus</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NBONUS" Language="it_IT">
+      <Text>Risorse Bonus non Migliorate</Text>
+    </Replace>
+
+    <!-- Wonder Lens -->
+    <Replace Tag="LOC_HUD_WONDER_LENS" Language="it_IT">
+      <Text>Meraviglie</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_WONDER_LENS_TOOLTIP" Language="it_IT">
+      <Text>Evidenzia le meraviglie naturali e quelle costruite dai giocatori</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_WONDER_LENS_NWONDER" Language="it_IT">
+      <Text>Meraviglie Naturali</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_PWONDER" Language="it_IT">
+      <Text>Meraviglie costruite dai giocartori</Text>
+    </Replace>
+
+    <!-- Adjacency Yield Lens -->
+    <Replace Tag="LOC_HUD_ADJYIELD_LENS" Language="it_IT">
+      <Text>Bonus Adiacenza</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_ADJYIELD_LENS_TOOLTIP" Language="it_IT">
+      <Text>Mostra il bonus adiacenza dei distretti</Text>
+    </Replace>
+
+    <!-- Scout Lens -->
+    <Replace Tag="LOC_HUD_SCOUT_LENS" Language="it_IT">
+      <Text>Scout</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_SCOUT_LENS_TOOLTIP" Language="it_IT">
+      <Text>Evidenzia i villaggi tribali sulla mappa</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_SCOUT_LENS_GHUT" Language="it_IT">
+      <Text>Villaggi Tribali</Text>
+    </Replace>
+  </LocalizedText>
 </GameData>
