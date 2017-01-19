@@ -79,5 +79,4 @@
       </SlideAnim>
     </SlideAnim>
   </Container>
-  <LuaContext FileName="CQUI/CQUI_SettingsElement" ID="CQUI_SettingsElement"  Hidden="1" />
 </Context>

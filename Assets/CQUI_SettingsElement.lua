@@ -216,6 +216,7 @@ local ProductionItemHeightConverter = {
 };
 
 function Initialize()
+  ContextPtr:SetHide(true);
   --Adding/binding tabs...
   m_tabs = {
     {Controls.GeneralTab, Controls.GeneralOptions},
@@ -259,6 +260,9 @@ function Initialize()
   --Setting up panel controls
   ShowTab(m_tabs[1][1], m_tabs[1][2]); --Show General Settings on start
   ContextPtr:SetInputHandler( OnInputHandler, true );
+
+  --Bind CQUI events
+  LuaEvents.CQUI_ToggleSettings.Add(function() ContextPtr:SetHide(not ContextPtr:IsHidden()); end);
 
   LuaEvents.CQUI_SettingsInitialized(); --Tell other elements that the settings have been initialized and it's safe to try accessing settings now
 end

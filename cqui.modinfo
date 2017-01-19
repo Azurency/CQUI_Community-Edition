@@ -115,8 +115,6 @@
     <!-- CQUI changes that override the base game files -->
     <ImportFiles id="CQUI_IMPORT_FILES">
       <Items>
-        <File>Assets/CQUI_SettingsElement.lua</File>
-        <File>Assets/CQUI_SettingsElement.xml</File>
         <File>Assets/UI/ActionPanel.lua</File>
         <File>Assets/UI/CitySupport.lua</File>
         <File>Assets/UI/Civ6Common.lua</File>
@@ -188,6 +186,7 @@
         <Context>InGame</Context>
       </Properties>
       <Items>
+        <File>Assets/CQUI_SettingsElement.xml</File>
         <File>Assets/CQUI_TopLayer.xml</File>
         <!--the lua files are taken as implied-->
       </Items>

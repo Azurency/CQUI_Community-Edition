@@ -184,10 +184,6 @@ function ToggleMapOptionsList()
   Controls.MapOptionsButton:SetSelected( not Controls.MapOptionsPanel:IsHidden() );
 end
 
-function ToggleCQUIOptionsList()
-  Controls.CQUI_SettingsElement:SetHide( not Controls.CQUI_SettingsElement:IsHidden() );
-end
-
 -- ===========================================================================
 function OnToggleLensList()
   Controls.LensPanel:SetHide( not Controls.LensPanel:IsHidden() );
@@ -2468,8 +2464,6 @@ function Initialize()
   Controls.LensButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.MapOptionsButton:RegisterCallback( Mouse.eLClick, ToggleMapOptionsList );
   Controls.MapOptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eLClick, ToggleCQUIOptionsList );
-  Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.MapPinListButton:RegisterCallback( Mouse.eLClick, ToggleMapPinMode );
   Controls.MapPinListButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.OwnerLensButton:RegisterCallback( Mouse.eLClick, ToggleOwnerLens );
@@ -2482,6 +2476,10 @@ function Initialize()
   Controls.ToggleResourcesButton:RegisterCallback( Mouse.eLClick, ToggleResourceIcons );
   Controls.ToggleYieldsButton:RegisterCallback( Mouse.eLClick, ToggleYieldIcons );
   Controls.WaterLensButton:RegisterCallback( Mouse.eLClick, ToggleWaterLens );
+
+  --CQUI Options Button
+  Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_ToggleSettings() end);
+  Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 
   -- Make sure the StrategicSwitcherButton has the correct image when the game starts in StrategicView
   if UI.GetWorldRenderView() == WorldRenderView.VIEW_2D then
