@@ -39,6 +39,9 @@
     <File>Assets/CQUI_SettingsElement.xml</File>
     <File>Assets/CQUI_Text_General.xml</File>
     <File>Assets/CQUI_Text_Settings.xml</File>
+    <File>Assets/CQUI_Main.lua</File>
+    <File>Assets/CQUI_TopLayer.xml</File>
+    <File>Assets/CQUI_TopLayer.lua</File>
     <File>Assets/UI/ActionPanel.lua</File>
     <File>Assets/UI/CitySupport.lua</File>
     <File>Assets/UI/Civ6Common.lua</File>
@@ -185,12 +188,14 @@
         <Context>InGame</Context>
       </Properties>
       <Items>
+        <File>Assets/CQUI_TopLayer.xml</File>
         <!--the lua files are taken as implied-->
       </Items>
     </UserInterface>
     <!-- CQUI specific scripts -->
     <GameplayScripts id="CQUI_SCRIPTS">
       <Items>
+        <File>Assets/CQUI_Main.lua</File>
       </Items>
     </GameplayScripts>
 

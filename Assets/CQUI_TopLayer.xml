@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- This context is as high up on the z-axis as possible, which means it is excellent for handling mouse inputs globally and for elements that always need to appear above other things -->
+<Context Name="CQUI_TopLayer">
+  <Container ID="Frame" Size="Full,Full">
+
+  </Container>
+</Context>
