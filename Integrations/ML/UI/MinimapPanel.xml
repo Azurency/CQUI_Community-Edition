@@ -55,7 +55,7 @@
             <CheckBox ID="MapOptionsButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="LOC_HUD_MAP_OPTIONS" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
               <Image Texture="Minimap_MapOptions" Size="22,22" Anchor="C,C"/>
             </CheckBox>
-            <CheckBox ID="CQUIOptionsButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="CQUI Mod Options" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
+            <CheckBox ID="CQUI_OptionsButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
               <Image Texture="Stats30" Icon="ICON_RESOURCE_TOBACCO" Size="35,35" Anchor="C,C"/>
             </CheckBox>
             <Image                       Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip" Color="255,255,255,200" Offset="0,-2"/>

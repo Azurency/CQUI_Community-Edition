@@ -2468,8 +2468,8 @@ function Initialize()
   Controls.LensButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.MapOptionsButton:RegisterCallback( Mouse.eLClick, ToggleMapOptionsList );
   Controls.MapOptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.CQUIOptionsButton:RegisterCallback( Mouse.eLClick, ToggleCQUIOptionsList );
-  Controls.CQUIOptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+  Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eLClick, ToggleCQUIOptionsList );
+  Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.MapPinListButton:RegisterCallback( Mouse.eLClick, ToggleMapPinMode );
   Controls.MapPinListButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.OwnerLensButton:RegisterCallback( Mouse.eLClick, ToggleOwnerLens );
