@@ -226,7 +226,7 @@ function Initialize()
 	LuaEvents.Tutorial_ToggleInGameOptionsMenu.Add( OnTutorialToggleInGameOptionsMenu );
 	LuaEvents.Tutorial_TutorialEndHideBulkUI.Add( OnTutorialEndHide );
 	--CQUI event handling
-	LuaEvents.CQUI_RequestUIAddin.Add(function(request: string) LuaEvents.CQUI_PushUIAddIn(CQUI_RequestUIAddin(request)); end); --Responds to an addin request with a PushUIAddIn event containing the requested context. Can return nil
+	LuaEvents.CQUI_RequestUIAddin.Add(function(request: string, requester: string) LuaEvents.CQUI_PushUIAddIn(CQUI_RequestUIAddin(request), recipient); end); --Responds to an addin request with a PushUIAddIn event containing the requested context. Can return nil
 	
 end
 Initialize();
