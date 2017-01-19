@@ -474,5 +474,124 @@
     <Replace Tag="LOC_ORIGIN_CHOOSER_CHANGE_DESTINATION_BUTTON" Language="ru_RU">
         <Text>ПОДТВЕРДИТЬ</Text>
     </Replace>
+
+
+    <!-- POLISH -->
+
+    <!-- Common Text -->
+    <Replace Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="pl_PL">
+        <Text>Sortuj po [ICON_Food]Jedzeniu.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_PRODUCTION_TOOLTIP" Language="pl_PL">
+        <Text>Sortuj po [ICON_Production]Produkcji.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_GOLD_TOOLTIP" Language="pl_PL">
+        <Text>Sortuj po [ICON_Gold]Złocie.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_SCIENCE_TOOLTIP" Language="pl_PL">
+        <Text>Sortuj po [ICON_Science]Nauce.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_CULTURE_TOOLTIP" Language="pl_PL">
+        <Text>Sortuj po [ICON_Culture]Kulturze.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_FAITH_TOOLTIP" Language="pl_PL">
+        <Text>Sortuj po [ICON_Faith]Wierze.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_TURNS_REMAINING_TOOLTIP" Language="pl_PL">
+        <Text>Sortuj po [ICON_Turn]liczbie tur do zakończenia szlaku.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FILTER_INTERNATIONAL_ROUTES_TEXT" Language="pl_PL">
+        <Text>Międzynarodowe szlaki</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FILTER_CS_WITH_QUEST_TOOLTIP" Language="pl_PL">
+        <Text>Miasta-państwa z zadaniami handlowymi</Text>
+    </Replace>
+
+    <!-- Trade Overview -->
+    <Replace Tag="LOC_TRADE_NO_BENEFIT_TEXT" Language="pl_PL">
+      <Text>nie zyskuje nic z tego szlaku.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_TEXT" Language="pl_PL">
+      <Text>Sortuj po:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT" Language="pl_PL">
+        <Text>Rozwiń wszystkie:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_COLLAPSE_ALL_BUTTON_TEXT" Language="pl_PL">
+        <Text>Zwiń wszystkie:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP" Language="pl_PL">
+        <Text>Całkowita ilość [ICON_Turn]do zakończenia tego szlaku handlowego</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_ALT_HELP_TOOLTIP" Language="pl_PL">
+        <Text>Zakończenie tego szlaku zajmie {1_TurnsRemaining}[Icon_Turn].</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER" Language="pl_PL">
+        <Text>----------------------------</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_ROUTE_LENGTH_TOOLTIP" Language="pl_PL">
+        <Text>Szlak handlowy[ICON_Movement]: {1_TripsToDestination}</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TRIPS_COUNT_TOOLTIP" Language="pl_PL">
+        <Text>Podróże do celu: {1_TripsToDestination}</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_TOOLTIP" Language="pl_PL">
+        <Text>Szlak zakończy się w turze: [ICON_Turn]{1_TurnWhenCompleted}</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_ALT_TOOLTIP" Language="pl_PL">
+        <Text>Jeśli rozpoczęty, szlak te zajmie {1_TurnsToComplete} turn i zostanie zakończony w turze {2_TurnWhenCompleted}.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_CANCEL_AUTOMATION_TOOLTIP" Language="pl_PL">
+        <Text>Wyłącz automatyzację tego szlaku handlowego. Kupiec będzie dostępny po zakończeniu szlaku.</Text>
+    </Replace>
+
+    <!-- Make Trade Route -->
+    <Replace Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_LABEL" Language="pl_PL">
+        <Text>Powtarzaj szlak:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_TOOLTIP" Language="pl_PL">
+        <Text>Włącz by ten kupiec powtarzał swój szlak. Standardowo, powtórzony zostanie ostatni szlak wykonany przez kupca.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_LABEL" Language="pl_PL">
+        <Text>Powtarzaj szlak według sortowania:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_TOOLTIP" Language="pl_PL">
+        <Text>Powtórzony zostanie szlak z góry aktualnie sortowanej listy. Szlak zostanie wybrany gdy kupiec zakończy ostatni szlak.</Text>
+    </Replace>
+
+    <!-- Trade Origin Chooser -->
+    <Replace Tag="LOC_ORIGIN_CHOOSER_HEADER_BACKGROUND_TEXT" Language="pl_PL">
+        <Text>Wybierz miasto</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_ORIGIN_CHOOSER_HEADER_LABEL_TEXT" Language="pl_PL">
+        <Text>PRZENIEŚ KUPCA DO...</Text>
+    </Replace>
+
+    <Replace Tag="LOC_ORIGIN_CHOOSER_CHANGE_DESTINATION_BUTTON" Language="pl_PL">
+        <Text>POTWIERDŹ</Text>
+    </Replace>
   </LocalizedText>
 </GameData>
