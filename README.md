@@ -156,13 +156,14 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
 
 # THANKS:
 * @Vans163 for his original QUI mod :heart:
-* @astog from the CivFanatics modding community for his [Better Trade Routes mod](http://forums.civfanatics.com/threads/better-trade-screen.602636/) AND his [More Lenses mod](https://forums.civfanatics.com/threads/more-lenses.606150/), which he merged personally in #165
+* @astog from the CivFanatics modding community for his [Better Trade Screen mod](http://forums.civfanatics.com/threads/better-trade-screen.602636/) AND his [More Lenses mod](https://forums.civfanatics.com/threads/more-lenses.606150/), which he merged personally in #165
+* Greg Miller (GMiller7138 on Civfanatics) for his [Unit Report Screen mod](https://forums.civfanatics.com/threads/unit-report-screen.602305/)
 * Ace from the CivFanatics modding community for his [Next City Plot mod](http://forums.civfanatics.com/resources/next-city-plot-by-ace.25437/)
 * Divine Yuri from the CivFanatics modding community for his [Custom City Panel mod](http://forums.civfanatics.com/resources/divine-yuris-custom-city-panel.25430/)
-* @ZhouYzzz for providing the Chinese localization
-* @zgavin for UI bugfixes in #1 and #2
-* @olegbl for the Amenities overview overhaul in #4 and multiple UI bugfixes ( #9 and #12 )
-  * Additional kudos to /u/mateusarc from the Civilization subreddit for his original concept art
+* @ZhouYzzz for providing the Chinese localization in #161
+* @deggesim (Simone1974 on Civfanatics) for providing the Italian localization in #250
+* @e1ectron for providing the Russian localization in #251
+* @sejbr for providing the Polish localization in #253
 * @jacks0nX for:
   * localization in #20
   * map pin enhancements in PR #21 and #55
@@ -170,7 +171,6 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
   * adding a GP filter to the policy card display in 063d3a668a06b49c9b2394e03cd5deb66b848210
   * adding a "Create Pin" hotkey in #117
   * fixing missing translations in #135
-* @OfekA for providing the improved resource dimming feature in #54
 * @RatchetJ for:
   * providing the civic/tech notifications at 50%/100% completion in #66 and 1148edc7ada9a649c15611ef78dbdc690c8adf30
   * improper camera centering on load in #86
@@ -178,19 +178,29 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
   * providing the fix for the production panel "forgetting" the last produced item in #105
   * adding GP/turn to the GP panel
   * Adding city yield/citizen assignment information on hover in #136
+* @Frozen-In-Ice for:
+  * revamping the Housing section of the City Details panel in #205
+  * adding turns-left indicators to the GP screen in #205
+  * fixing cityview UI bugs in #209 and #238
+  * adding faster diplomacy fadeouts in #217
+  * adding type/yields to the GW trade tooltip in #217
+  * cleaning up the plot tooltip in #232
+* @zgavin for UI bugfixes in #1 and #2
+* @olegbl for the Amenities overview overhaul in #4 and multiple UI bugfixes ( #9 and #12 )
+  * Additional kudos to /u/mateusarc from the Civilization subreddit for his original concept art
+* @Proustldee for:
+  * bringing the BTS mod version up to current in #61
+  * bringing the BTS mod version up to current, again, in #106
 * @kblease for:
   * fortify until healed hotkey bugfix in #73
   * unit purchasing fix in #80
-* @Proustldee 
-  * for bringing the BTS mod version up to current in #61
-  * for bringing the BTS mod version up to current, again, in #106
-* @benjaminjackman for fixing a hotkey conflict in #127
+* @OfekA for providing the improved resource dimming feature in #54
 * @zeyangl for adding new options to the resource dimming feature in #146
+* @Remolten for adding the 2nd highest envoy holder info to the main Citystate screen in #208
+* @bestekov for adding score displays to the diplomacy ribbon in #221
+* @perseghini for providing the fix for issue #33
+* @benjaminjackman for fixing a hotkey conflict in #127
 * @velit for a UI bugfix in #138
 * @the-m4a for a patch incompatibility bugfix in #181
-* @perseghini for providing the fix for issue #33
-* /u/dli511 @ Reddit for their bug report relating to purchasing buildings
-* /u/Nitrium @ Reddit for their bug report relating to broken Gossip notifications
-* /u/Hitesh0630 @ Reddit for their bug report relating to production queue not refreshing on changing citizen assignment
 * The lovely folks over at Civfanatics for their guides, knowledge, tools, and resources
 * The even lovelier folks over at /r/civ for their input and testing
