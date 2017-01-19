@@ -355,5 +355,124 @@
     <Replace Tag="LOC_ORIGIN_CHOOSER_CHANGE_DESTINATION_BUTTON" Language="it_IT">
         <Text>CONFERMA</Text>
     </Replace>
+
+
+    <!-- RUSSIAN -->
+
+    <!-- Common Text -->
+    <Replace Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="ru_RU">
+        <Text>Сортировать по [ICON_Food]Пище.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_PRODUCTION_TOOLTIP" Language="ru_RU">
+        <Text>Сортировать по [ICON_Production]Производству.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_GOLD_TOOLTIP" Language="ru_RU">
+        <Text>Сортировать по [ICON_Gold]Золоту.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_SCIENCE_TOOLTIP" Language="ru_RU">
+        <Text>Сортировать по [ICON_Science]Науке.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_CULTURE_TOOLTIP" Language="ru_RU">
+        <Text>Сортировать по [ICON_Culture]Культуре.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_FAITH_TOOLTIP" Language="ru_RU">
+        <Text>Сортировать по [ICON_Faith]Вере.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_TURNS_REMAINING_TOOLTIP" Language="ru_RU">
+        <Text>Сортировать по [ICON_Turn]Ходам до завершения пути.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FILTER_INTERNATIONAL_ROUTES_TEXT" Language="ru_RU">
+        <Text>Международные пути</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FILTER_CS_WITH_QUEST_TOOLTIP" Language="ru_RU">
+        <Text>Города-государства с торговым заданием</Text>
+    </Replace>
+
+    <!-- Trade Overview -->
+    <Replace Tag="LOC_TRADE_NO_BENEFIT_TEXT" Language="ru_RU">
+      <Text>Никакой выгоды от этого пути.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_TEXT" Language="ru_RU">
+      <Text>Сортировать по:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT" Language="ru_RU">
+        <Text>Развернуть все:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_COLLAPSE_ALL_BUTTON_TEXT" Language="ru_RU">
+        <Text>Свернуть все:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP" Language="ru_RU">
+        <Text>Общее количество [ICON_Turn]Ходов для завершения торгового пути</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_ALT_HELP_TOOLTIP" Language="ru_RU">
+        <Text>Этот путь займет {1_TurnsRemaining}[Icon_Turn] ход до завершения.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER" Language="ru_RU">
+        <Text>----------------------------</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_ROUTE_LENGTH_TOOLTIP" Language="ru_RU">
+        <Text>Торговый путь[ICON_Movement]: {1_TripsToDestination}</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TRIPS_COUNT_TOOLTIP" Language="ru_RU">
+        <Text>Поездок в пункт назначения: {1_TripsToDestination}</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_TOOLTIP" Language="ru_RU">
+        <Text>Ходов до завершения пути: [ICON_Turn]{1_TurnWhenCompleted}</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_ALT_TOOLTIP" Language="ru_RU">
+        <Text>При запуске, путь займёт {1_TurnsToComplete} и завершится на {2_TurnWhenCompleted} ход.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_CANCEL_AUTOMATION_TOOLTIP" Language="ru_RU">
+        <Text>Отменить автоматизацию этого торгового пути. Торговец будет доступен, как только путь завершится.</Text>
+    </Replace>
+
+    <!-- Make Trade Route -->
+    <Replace Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_LABEL" Language="ru_RU">
+        <Text>Повторить путь:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_TOOLTIP" Language="ru_RU">
+        <Text>Включите, чтобы торговец повторил торговый путь. По умолчанию, повторяется последний выбранный путь.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_LABEL" Language="ru_RU">
+        <Text>Сортировать по убыванию:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_TOOLTIP" Language="ru_RU">
+        <Text>Повторённый путь — верхний в списке при текущей сортировке. Путь будет выбран, как только торговец завершит свой последний.</Text>
+    </Replace>
+
+    <!-- Trade Origin Chooser -->
+    <Replace Tag="LOC_ORIGIN_CHOOSER_HEADER_BACKGROUND_TEXT" Language="ru_RU">
+        <Text>Выберите город</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_ORIGIN_CHOOSER_HEADER_LABEL_TEXT" Language="ru_RU">
+        <Text>ПЕРЕМЕСТИТЬ ТОРГОВЦА В...</Text>
+    </Replace>
+
+    <Replace Tag="LOC_ORIGIN_CHOOSER_CHANGE_DESTINATION_BUTTON" Language="ru_RU">
+        <Text>ПОДТВЕРДИТЬ</Text>
+    </Replace>
   </LocalizedText>
 </GameData>
