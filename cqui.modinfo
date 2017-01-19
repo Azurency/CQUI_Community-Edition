@@ -1,128 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Mod id="03B8BDDE-DEAD-BEEF-9540-26E685E3156E" version="0.6">
+  <!-- Basic Mod Information -->
   <Properties>
-    <Name>Chao Quick UI</Name>
-    <Description>Reduce clicks and make empire management easy</Description>
-    <Teaser>Reduce clicks and make empire management easy</Teaser>
+    <Name>Chao's Quick UI</Name>
+    <Teaser>CQUI_TEASER</Teaser>
     <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek, zeyangl, velit, the-m4a, Remolten</Authors>
     <SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod + More Lenses mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod. Greg Miller for his Unit Report Screen mod. Lozenged/kblease for his Production Queue mod. ZhouYzzz for providing the Chinese translation of CQUI</SpecialThanks>
+    <Stability>CQUI_STABILITY_NIGHTLY</Stability>
   </Properties>
-  <Components>
-    <ImportFiles id="CQUI_IMPORT_FILES">
-      <Items>
-        <File>Assets/CQUI_SettingsElement.lua</File>
-        <File>Assets/CQUI_SettingsElement.xml</File>
-        <File>Assets/UI/ActionPanel.lua</File>
-        <File>Assets/UI/CitySupport.lua</File>
-        <File>Assets/UI/Civ6Common.lua</File>
-        <File>Assets/UI/DiplomacyActionView.xml</File>
-        <File>Assets/UI/DiplomacyDealView.lua</File>
-        <File>Assets/UI/DiplomacyRibbon.lua</File>
-        <File>Assets/UI/DiplomacyRibbon.xml</File>
-        <File>Assets/UI/InGame.lua</File>
-        <File>Assets/UI/MapPinManager.lua</File>
-        <File>Assets/UI/MinimapPanel.lua</File>
-        <File>Assets/UI/MinimapPanel.xml</File>
-        <File>Assets/UI/ProductionPanel.xml</File>
-        <File>Assets/UI/TopPanel.lua</File>
-        <File>Assets/UI/UnitPanel.xml</File>
-        <File>Assets/UI/UnitFlagManager.lua</File>
-        <File>Assets/UI/WorldInput.lua</File>
-        <File>Assets/UI/WorldViewIconsManager.lua</File>
-        <File>Assets/UI/Civilopedia/CivilopediaSupport.lua</File>
-        <File>Assets/UI/Panels/CityPanel.lua</File>
-        <File>Assets/UI/Panels/CityPanel.xml</File>
-        <File>Assets/UI/Panels/CityPanelOverview.lua</File>
-        <File>Assets/UI/Panels/CityPanelOverview.xml</File>
-        <File>Assets/UI/Panels/NotificationPanel.lua</File>
-        <File>Assets/UI/Panels/ProductionPanel.lua</File>
-        <File>Assets/UI/Panels/StatusMessagePanel.lua</File>
-        <File>Assets/UI/Panels/StatusMessagePanel.xml</File>
-        <File>Assets/UI/Panels/UnitPanel.lua</File>
-        <File>Assets/UI/PartialScreens/CityStates.lua</File>
-        <File>Assets/UI/PartialScreens/CityStates.xml</File>
-        <File>Assets/UI/Popups/GreatPeoplePopup.lua</File>
-        <File>Assets/UI/Popups/GreatPeoplePopup.xml</File>
-        <File>Assets/UI/Popups/MapPinListPanel.lua</File>
-        <File>Assets/UI/Popups/MapPinListPanel.xml</File>
-        <File>Assets/UI/Popups/MapPinPopup.lua</File>
-        <File>Assets/UI/Popups/MapPinPopup.xml</File>
-        <File>Assets/UI/Popups/TechCivicCompletedPopup.lua</File>
-        <File>Assets/UI/Screens/TechTree.lua</File>
-        <File>Assets/UI/Screens/CivicsTree.lua</File>
-        <File>Assets/UI/Screens/GovernmentScreen.lua</File>
-        <File>Assets/UI/Screens/GovernmentScreen.xml</File>
-        <File>Assets/UI/ToolTips/PlotToolTip.lua</File>
-        <File>Assets/UI/ToolTips/PlotToolTip.xml</File>
-        <File>Assets/UI/WorldView/CityBannerManager.lua</File>
-        <File>Assets/UI/WorldView/CityBannerManager.xml</File>
-        <File>Assets/UI/WorldView/PlotInfo.lua</File>
-        <File>Assets/UI/WorldView/PlotInfo.xml</File>
-      </Items>
-    </ImportFiles>
-    <LocalizedText id="CQUI_TEXT">
-      <Items>
-        <File>Assets/CQUI_Text_General.xml</File>
-        <File>Assets/CQUI_Text_Settings.xml</File>
-      </Items>
-    </LocalizedText>
-    <UpdateDatabase id="CQUI_Settings">
-      <Properties>
-        <Name>CQUI Settings</Name>
-      </Properties>
-      <Items>
-        <File>Assets/CQUI_DatabaseSchema.sql</File>
-        <File>Assets/CQUI_Settings.sql</File>
-      </Items>
-    </UpdateDatabase>
-    <ImportFiles id="BTS_IMPORT_FILES">
-      <Items>
-        <File>Integrations/BTS/UI/TradeOverview.xml</File>
-        <File>Integrations/BTS/UI/TradeOverview.lua</File>
-        <File>Integrations/BTS/UI/TradeSupport.lua</File>
-        <File>Integrations/BTS/UI/Choosers/TradeRouteChooser.xml</File>
-        <File>Integrations/BTS/UI/Choosers/TradeRouteChooser.lua</File>
-        <File>Integrations/BTS/UI/Choosers/TradeOriginChooser.xml</File>
-        <File>Integrations/BTS/UI/Choosers/TradeOriginChooser.lua</File>
-      </Items>
-    </ImportFiles>
-    <LocalizedText id="BTS_TEXT">
-      <Items>
-        <File>Integrations/BTS/Text/BTS_Text.xml</File>
-      </Items>
-    </LocalizedText>
-    <ImportFiles id="PRODUCTION_QUEUE_IMPORT_FILES">
-      <Items>
-        <File>Integrations/PQ/StrategicView_MapPlacement.lua</File>
-        <File>Integrations/PQ/SupportFunctions.lua</File>
-      </Items>
-    </ImportFiles>
-    <ImportFiles id="UNITREPORT_IMPORT_FILES">
-      <Items>
-        <File>Integrations/URS/ReportScreen.lua</File>
-        <File>Integrations/URS/ReportScreen.xml</File>
-        <File>Integrations/URS/UnitPromotionPopup.lua</File>
-      </Items>
-    </ImportFiles>
-    <ImportFiles id="MORELENSES_IMPORT_FILES">
-      <Items>
-        <File>Integrations/ML/UI/MinimapPanel.lua</File>
-        <File>Integrations/ML/UI/MinimapPanel.xml</File>
-        <File>Integrations/ML/UI/Panels/ModalLensPanel.lua</File>
-        <File>Integrations/ML/UI/Panels/ModalLensPanel.xml</File>
-      </Items>
-    </ImportFiles>
-    <UpdateDatabase id="MORELENSES_DATABASE">
-      <Items>
-        <File>Integrations/ML/MoreLenses_Colors.sql</File>
-      </Items>
-    </UpdateDatabase>
-    <LocalizedText id="MORELENSES_TEXT">
-      <Items>
-        <File>Integrations/ML/Text/MoreLenses_Text.xml</File>
-      </Items>
-    </LocalizedText>
-  </Components>
+
+  <!-- Modinfo Specific LOC -->
+  <LocalizedText>
+    <Text id="CQUI_TEASER">
+      <en_US>Reduce clicks and make empire management easy</en_US>
+    </Text>
+    <Text id="CQUI_STABILITY_ALPHA">
+      <en_US>Alpha</en_US>
+    </Text>
+    <Text id="CQUI_STABILITY_BETA">
+      <en_US>Beta</en_US>
+    </Text>
+    <Text id="CQUI_STABILITY_RELEASECANDIDATE">
+      <en_US>Release Candidate</en_US>
+    </Text>
+    <Text id="CQUI_STABILITY_RELEASE">
+      <en_US>Release</en_US>
+    </Text>
+    <Text id="CQUI_STABILITY_NIGHTLY">
+      <en_US>Nightly</en_US>
+    </Text>
+  </LocalizedText>
+
+  <!-- Complete File Manifest -->
   <Files>
     <File>Assets/CQUI_DatabaseSchema.sql</File>
     <File>Assets/CQUI_Settings.sql</File>
@@ -196,6 +105,145 @@
     <File>Integrations/ML/MoreLenses_Colors.sql</File>
     <File>Integrations/ML/Text/MoreLenses_Text.xml</File>
   </Files>
+
+  <!-- Describes how each file is used -->
+  <Components>
+
+    <!-- CQUI changes that override the base game files -->
+    <ImportFiles id="CQUI_IMPORT_FILES">
+      <Items>
+        <File>Assets/CQUI_SettingsElement.lua</File>
+        <File>Assets/CQUI_SettingsElement.xml</File>
+        <File>Assets/UI/ActionPanel.lua</File>
+        <File>Assets/UI/CitySupport.lua</File>
+        <File>Assets/UI/Civ6Common.lua</File>
+        <File>Assets/UI/DiplomacyActionView.xml</File>
+        <File>Assets/UI/DiplomacyDealView.lua</File>
+        <File>Assets/UI/DiplomacyRibbon.lua</File>
+        <File>Assets/UI/DiplomacyRibbon.xml</File>
+        <File>Assets/UI/InGame.lua</File>
+        <File>Assets/UI/MapPinManager.lua</File>
+        <File>Assets/UI/MinimapPanel.lua</File>
+        <File>Assets/UI/MinimapPanel.xml</File>
+        <File>Assets/UI/ProductionPanel.xml</File>
+        <File>Assets/UI/TopPanel.lua</File>
+        <File>Assets/UI/UnitPanel.xml</File>
+        <File>Assets/UI/UnitFlagManager.lua</File>
+        <File>Assets/UI/WorldInput.lua</File>
+        <File>Assets/UI/WorldViewIconsManager.lua</File>
+        <File>Assets/UI/Civilopedia/CivilopediaSupport.lua</File>
+        <File>Assets/UI/Panels/CityPanel.lua</File>
+        <File>Assets/UI/Panels/CityPanel.xml</File>
+        <File>Assets/UI/Panels/CityPanelOverview.lua</File>
+        <File>Assets/UI/Panels/CityPanelOverview.xml</File>
+        <File>Assets/UI/Panels/NotificationPanel.lua</File>
+        <File>Assets/UI/Panels/ProductionPanel.lua</File>
+        <File>Assets/UI/Panels/StatusMessagePanel.lua</File>
+        <File>Assets/UI/Panels/StatusMessagePanel.xml</File>
+        <File>Assets/UI/Panels/UnitPanel.lua</File>
+        <File>Assets/UI/PartialScreens/CityStates.lua</File>
+        <File>Assets/UI/PartialScreens/CityStates.xml</File>
+        <File>Assets/UI/Popups/GreatPeoplePopup.lua</File>
+        <File>Assets/UI/Popups/GreatPeoplePopup.xml</File>
+        <File>Assets/UI/Popups/MapPinListPanel.lua</File>
+        <File>Assets/UI/Popups/MapPinListPanel.xml</File>
+        <File>Assets/UI/Popups/MapPinPopup.lua</File>
+        <File>Assets/UI/Popups/MapPinPopup.xml</File>
+        <File>Assets/UI/Popups/TechCivicCompletedPopup.lua</File>
+        <File>Assets/UI/Screens/TechTree.lua</File>
+        <File>Assets/UI/Screens/CivicsTree.lua</File>
+        <File>Assets/UI/Screens/GovernmentScreen.lua</File>
+        <File>Assets/UI/Screens/GovernmentScreen.xml</File>
+        <File>Assets/UI/ToolTips/PlotToolTip.lua</File>
+        <File>Assets/UI/ToolTips/PlotToolTip.xml</File>
+        <File>Assets/UI/WorldView/CityBannerManager.lua</File>
+        <File>Assets/UI/WorldView/CityBannerManager.xml</File>
+        <File>Assets/UI/WorldView/PlotInfo.lua</File>
+        <File>Assets/UI/WorldView/PlotInfo.xml</File>
+      </Items>
+    </ImportFiles>
+    <!-- CQUI specific LOCs  -->
+    <LocalizedText id="CQUI_TEXT">
+      <Items>
+        <File>Assets/CQUI_Text_General.xml</File>
+        <File>Assets/CQUI_Text_Settings.xml</File>
+      </Items>
+    </LocalizedText>
+    <!-- CQUI specific settings -->
+    <UpdateDatabase id="CQUI_Settings">
+      <Properties>
+        <Name>CQUI Settings</Name>
+      </Properties>
+      <Items>
+        <File>Assets/CQUI_DatabaseSchema.sql</File>
+        <File>Assets/CQUI_Settings.sql</File>
+      </Items>
+    </UpdateDatabase>
+    <!-- CQUI specific UIs -->
+    <UserInterface id="CQUI_UI">
+      <Properties>
+        <Context>InGame</Context>
+      </Properties>
+      <Items>
+        <!--the lua files are taken as implied-->
+      </Items>
+    </UserInterface>
+    <!-- CQUI specific scripts -->
+    <GameplayScripts id="CQUI_SCRIPTS">
+      <Items>
+      </Items>
+    </GameplayScripts>
+
+    <!-- Mod integrations -->
+    <ImportFiles id="BTS_IMPORT_FILES">
+      <Items>
+        <File>Integrations/BTS/UI/TradeOverview.xml</File>
+        <File>Integrations/BTS/UI/TradeOverview.lua</File>
+        <File>Integrations/BTS/UI/TradeSupport.lua</File>
+        <File>Integrations/BTS/UI/Choosers/TradeRouteChooser.xml</File>
+        <File>Integrations/BTS/UI/Choosers/TradeRouteChooser.lua</File>
+        <File>Integrations/BTS/UI/Choosers/TradeOriginChooser.xml</File>
+        <File>Integrations/BTS/UI/Choosers/TradeOriginChooser.lua</File>
+      </Items>
+    </ImportFiles>
+    <LocalizedText id="BTS_TEXT">
+      <Items>
+        <File>Integrations/BTS/Text/BTS_Text.xml</File>
+      </Items>
+    </LocalizedText>
+    <ImportFiles id="PRODUCTION_QUEUE_IMPORT_FILES">
+      <Items>
+        <File>Integrations/PQ/StrategicView_MapPlacement.lua</File>
+        <File>Integrations/PQ/SupportFunctions.lua</File>
+      </Items>
+    </ImportFiles>
+    <ImportFiles id="UNITREPORT_IMPORT_FILES">
+      <Items>
+        <File>Integrations/URS/ReportScreen.lua</File>
+        <File>Integrations/URS/ReportScreen.xml</File>
+        <File>Integrations/URS/UnitPromotionPopup.lua</File>
+      </Items>
+    </ImportFiles>
+    <ImportFiles id="MORELENSES_IMPORT_FILES">
+      <Items>
+        <File>Integrations/ML/UI/MinimapPanel.lua</File>
+        <File>Integrations/ML/UI/MinimapPanel.xml</File>
+        <File>Integrations/ML/UI/Panels/ModalLensPanel.lua</File>
+        <File>Integrations/ML/UI/Panels/ModalLensPanel.xml</File>
+      </Items>
+    </ImportFiles>
+    <UpdateDatabase id="MORELENSES_DATABASE">
+      <Items>
+        <File>Integrations/ML/MoreLenses_Colors.sql</File>
+      </Items>
+    </UpdateDatabase>
+    <LocalizedText id="MORELENSES_TEXT">
+      <Items>
+        <File>Integrations/ML/Text/MoreLenses_Text.xml</File>
+      </Items>
+    </LocalizedText>
+  </Components>
+  
   <!--Incompatible mods.-->
   <Blocks>
     <!-- Divine Yuri's Citypanel mod: Integrated already, doubling up on installed mods is bad! -->
