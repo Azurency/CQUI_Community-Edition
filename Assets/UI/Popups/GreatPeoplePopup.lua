@@ -292,8 +292,9 @@ function ViewCurrent( data:table )
 
           -- CQUI Points Per Turn and Turns Left -- Add the turn icon into the text
           --recruitTurnsLeft gets +0.5 so that's rounded up
-          local recruitTurnsLeft:number = Round((kPerson.RecruitCost-kPlayerPoints.PointsTotal)/kPlayerPoints.PointsPerTurn + 0.5,0);
-		  recruitInst.CQUI_PerTurn:SetText( "+" .. tostring(Round(kPlayerPoints.PointsPerTurn,1)) .. " /[ICON_Turn] " .. tostring(recruitTurnsLeft) .. "[ICON_Turn]");
+          local recruitTurnsLeft = Round((kPerson.RecruitCost-kPlayerPoints.PointsTotal)/kPlayerPoints.PointsPerTurn + 0.5,0);
+          if(recruitTurnsLeft == math.huge) then recruitTurnsLeft = "∞"; end
+		      recruitInst.CQUI_PerTurn:SetText( "(+" .. tostring(Round(kPlayerPoints.PointsPerTurn,1)) .. ") " .. tostring(recruitTurnsLeft) .. "[ICON_Turn]");
 		  
 
           local progressPercent :number = Clamp( kPlayerPoints.PointsTotal / kPerson.RecruitCost, 0, 1 );

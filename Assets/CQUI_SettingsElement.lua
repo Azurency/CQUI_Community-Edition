@@ -5,19 +5,16 @@ include("Civ6Common");
 -- Members
 local m_tabs; --Add new options tabs to this in Initialize function
 local bindings_options = {
-  --{"LOC_CQUI_BINDINGS_STANDARD", 0},
-  --{"LOC_CQUI_BINDINGS_CLASSIC", 1},
-  --{"LOC_CQUI_BINDINGS_ENHANCED", 2}
-  {"Standard", 0},
-  {"Classic", 1},
-  {"Enhanced", 2}
+  {"LOC_CQUI_BINDINGS_STANDARD", 0},
+  {"LOC_CQUI_BINDINGS_CLASSIC", 1},
+  {"LOC_CQUI_BINDINGS_ENHANCED", 2}
 };
 
 local resource_icon_style_options = 
 {
-  {"Solid", 0},
-  {"Transparent", 1},
-  {"Hidden", 2}
+  {"LOC_CQUI_GENERAL_SOLID", 0},
+  {"LOC_CQUI_GENERAL_TRANSPARENT", 1},
+  {"LOC_CQUI_GENERAL_HIDDEN", 2}
 };
 
 --Used to switch active panels/tabs in the settings panel

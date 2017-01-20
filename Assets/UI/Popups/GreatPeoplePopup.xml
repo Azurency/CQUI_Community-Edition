@@ -154,16 +154,19 @@
   </Instance>
 
   <Instance           Name="RecruitInstance">
-    <Container        ID="Top"                AutoSize="V"                  Size="160,70" >
-      <Stack StackGrowth="Right">
-        <Image          ID="WinnerIcon"                       Offset="0,0"                  Texture="Controls_Winner12" Hidden="1" />
-        <Label          ID="Country"            Anchor="L,T"  Offset="0,0"    WrapWidth="160" Style="GreatPeopleSmallText" Color="220,220,200,255" String="$Text$" />
+    <Container ID="Top" AutoSize="V" Size="160,70" >
+      <Stack StackGrowth="Down" StackPadding="5">
+        <Stack StackGrowth="Right">
+          <Image ID="WinnerIcon" Offset="0,0" Texture="Controls_Winner12" Hidden="1" />
+          <Grid Size="parent,0" AutoSize="V" Color="0,0,0,0">
+            <Label ID="Country" Anchor="L,T" WrapWidth="100" Style="GreatPeopleSmallText" Color="220,220,200,255" String="$Text$" />
+            <Label ID="CQUI_PerTurn" Anchor="R,C" Style="GreatPeopleSmallText" Color="220,220,200,255" String="+x/turn" />
+          </Grid>
+        </Stack>
+        <Bar ID="ProgressBar"   Size="parent,6" FGColor="220,220,200,255" BGColor="0,0,0,255" Percent="0.5" />
       </Stack>
-      <Label          ID="CQUI_PerTurn"             Anchor="R,T"  Offset="0,0"    WrapWidth="160" Style="GreatPeopleSmallText" Color="220,220,200,255" String="+x/turn" />
-      <!--<Label          ID="Amount"             Anchor="R,T"  Offset="0,0"    WrapWidth="160" Style="GreatPeopleSmallText" Color="220,220,200,255" String="X/Y" />-->
-      <Bar            ID="ProgressBar"                      Offset="0,14"   Size="parent,6" FGColor="220,220,200,255" BGColor="0,0,0,255" Percent="0.5" />
-      <Image ID="CivBacking" Anchor="L,T" Texture="CircleBacking22" Size="22,22" Offset="-25,0">
-        <Image ID="CivIcon" Anchor="C,T" Texture="CivSymbols22" Size="22,22"/>
+      <Image ID="CivBacking" Anchor="L,C" Texture="CircleBacking22" Size="22,22" Offset="-25,0">
+          <Image ID="CivIcon" Anchor="C,T" Texture="CivSymbols22" Size="22,22"/>
       </Image>
     </Container>
   </Instance>

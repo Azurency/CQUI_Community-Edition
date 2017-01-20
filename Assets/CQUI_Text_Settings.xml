@@ -37,6 +37,9 @@
   <Row Tag="LOC_CQUI_GENERAL" Language="en_US">
       <Text>General</Text>
     </Row>
+  <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="en_US">
+    <Text>Hidden</Text>
+  </Row>
   <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="en_US">
     <Text>Improved resource icon style</Text>
   </Row>
@@ -58,12 +61,18 @@
   <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="en_US">
       <Text>Enable Smartbanners</Text>
     </Row>
+  <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="en_US">
+    <Text>Solid</Text>
+  </Row>
   <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="en_US">
       <Text>Displays new icons in the city banner. A [ICON_EXCLAMATION] is displayed whenever there are unlocked citizens being automatically assigned by the AI city governor. District icons indicate built districts</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="en_US">
       <Text>Toggles yields ON by default</Text>
     </Row>
+  <Row Tag="LOC_CQUI_GENERAL_TRANSPARENT" Language="en_US">
+    <Text>Transparent</Text>
+  </Row>
   <Row Tag="LOC_CQUI_GOSSIP" Language="en_US">
     <Text>Gossip</Text>
   </Row>
