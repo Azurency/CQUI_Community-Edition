@@ -113,7 +113,7 @@
       <Text>Toggles the popup audio that plays whenever a new tech or civic is achieved. Is fully independent of the visual component and can play even when there is no visible popup</Text>
     </Row>
   <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="en_US">
-    <Text>Remember: CQUI settings are attached to individual saves![NEWLINE]If you'd like to change a setting by default, please edit the CQUI_Settings.sql file within the [MOD INSTALL DIRECTORY]/CQUI/ directory</Text>
+    <Text>Remember: CQUI settings are attached to individual saves![NEWLINE]If you'd like to change a setting by default, please edit the CQUI_Settings.sql file within the [MOD INSTALL DIRECTORY]/CQUI/Assets directory</Text>
   </Row>
 
   <!-- zh_Hans_CN -->
@@ -279,7 +279,7 @@
     <Text>Attiva/disattiva l'audio dei popup di completamento di una tecnologica o un progresso civico. Impostazione indipindente dall'opzione di visualizzazione dei popup, l'audio suona anche in caso di popup non visibili.</Text>
   </Row>
   <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="it_IT">
-    <Text>Ricorda: le impostazioni CQUI sono legate ai singoli salvataggi![NEWLINE]Se vuoi impostare un parametro di default puoi modificare il file CQUI_Settings.sql all'interno della cartella [MOD INSTALL DIRECTORY]/CQUI/</Text>
+    <Text>Ricorda: le impostazioni CQUI sono legate ai singoli salvataggi![NEWLINE]Se vuoi impostare un parametro di default puoi modificare il file CQUI_Settings.sql all'interno della cartella [MOD INSTALL DIRECTORY]/CQUI/Assets</Text>
   </Row>
 
 
@@ -388,7 +388,7 @@
       <Text>Оповещение и голосовое описание, которое воспроизводится всякий раз, когда были исследованы новая технология или социальный институт. Является полностью независимым от визуальной состваляющей компонентом и может проигрываться даже, когда всплывающее окно выключено</Text>
     </Row>
   <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="ru_RU">
-    <Text>Запомните: настройки CQUI связаны с каждым сохранением![NEWLINE]Если вы хотите изменить настройки по умолчанию, измените файл CQUI_Settings.sql в папке [MOD INSTALL DIRECTORY]/CQUI/</Text>
+    <Text>Запомните: настройки CQUI связаны с каждым сохранением![NEWLINE]Если вы хотите изменить настройки по умолчанию, измените файл CQUI_Settings.sql в папке [MOD INSTALL DIRECTORY]/CQUI/Assets</Text>
   </Row>
 
   <!-- POLISH -->
@@ -496,7 +496,7 @@
       <Text>Przełącza odtwarzanie dzwięku po zakończeniu badania bądź kodeksu prawnego. Jest całkowicie niezależny od popup'u i może być odtwarzany nawet gdy wizualny popup jest wyłączony</Text>
     </Row>
   <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="pl_PL">
-    <Text>Pamiętaj: Ustawienia CQUI są przypisane do poszczególnych zapisów gry![NEWLINE]Jeśli chcesz zmienić ustawienia na stałe, zmień je w pliku CQUI_Settings.sql znajdującym się w katalogu [MOD INSTALL DIRECTORY]/CQUI/</Text>
+    <Text>Pamiętaj: Ustawienia CQUI są przypisane do poszczególnych zapisów gry![NEWLINE]Jeśli chcesz zmienić ustawienia na stałe, zmień je w pliku CQUI_Settings.sql znajdującym się w katalogu [KATALOG INSTALACJI MODU]/CQUI/Assets</Text>
   </Row>
   </LocalizedText>
 </GameData>
