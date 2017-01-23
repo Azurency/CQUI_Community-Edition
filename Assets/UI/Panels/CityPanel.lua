@@ -1238,6 +1238,8 @@ function Initialize()
   Controls.NextCityButton:RegisterCallback( Mouse.eLClick,  CQUI_OnNextCity); 
   Controls.PrevCityButton:RegisterCallback( Mouse.eLClick,  CQUI_OnPreviousCity); 
   
+  -- CQUI recenter on the city when clicking the round icon in the panel
+  Controls.CircleBacking:RegisterCallback( Mouse.eLClick,  RecenterCameraOnCity);
 
   Controls.PurchaseTileCheck:RegisterCheckHandler(  OnTogglePurchaseTile );
   Controls.PurchaseTileCheck:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);

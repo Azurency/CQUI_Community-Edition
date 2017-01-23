@@ -52,13 +52,13 @@
               </Image>
               <Meter        ID="CityHealthMeter"      Anchor="L,C"  Offset="7,-2"   Size="95,95"    Texture="SelectionPanel_Health"   Percent=".6"/>
             </Image>
-
-            <Image          ID="CircleBacking"  Texture="Circle80_Base"     Size="80,80" Anchor="C,C" Offset="0,-2">
+            <!-- CQUI add a round button to recenter camera on city -->
+            <Button          ID="CircleBacking"  Texture="Circle80_Base"     Size="80,80" Anchor="C,C" Offset="0,-2" ConsumeMouse="1" NoStateChange="1">
               <Image        ID="CircleLighter"  Texture="Circle80_Lighter"  Size="80,80" Anchor="C,C"/>
               <Image        ID="CircleDarker"   Texture="Circle80_Darker"   Size="80,80" Anchor="C,C"/>
               <Image        ID="CivIcon"        Texture="CivSymbols64"      Size="64,64" Anchor="C,C"/>
               <Image                            Texture="Circle80_None"     Size="80,80" Anchor="C,C"/>
-            </Image>
+            </Button>
           </Image>
 
           <Button ID="BreakdownButton" Texture="SelectionPanel_Stat" Size="28,32" Offset="85,18" Disabled="1">
