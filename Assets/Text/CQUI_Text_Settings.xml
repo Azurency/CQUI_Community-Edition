@@ -115,6 +115,9 @@
     <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="en_US">
       <Text>Show unit path on hover or selection</Text>
     </Row>
+    <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="en_US">
+      <Text>Autoexpand all actions in the unit panel</Text>
+    </Row>
 
     <!-- SIMPLIFY-CHINESE -->
 

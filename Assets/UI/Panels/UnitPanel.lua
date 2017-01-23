@@ -1,5 +1,5 @@
 ﻿-- ===========================================================================
---  Unit Panel Screen 
+--  Unit Panel Screen
 -- ===========================================================================
 include( "InstanceManager" );
 include( "SupportFunctions" );
@@ -24,7 +24,7 @@ local MAX_BEFORE_TRUNC_STAT_NAME  :number = 170;
 -- ===========================================================================
 
 hstructure DisabledByTutorial
-  kLockedHashes : table;    -- Action hashes that the tutorial says shouldn't be enabled. 
+  kLockedHashes : table;    -- Action hashes that the tutorial says shouldn't be enabled.
 end
 
 
@@ -35,7 +35,7 @@ local m_buildActionsIM      :table  = InstanceManager:new( "BuildActionsColumnIn
 local m_earnedPromotionIM   :table  = InstanceManager:new( "EarnedPromotionInstance",   "Top",          Controls.EarnedPromotionsStack);
 local m_PromotionListInstanceMgr:table  = InstanceManager:new( "PromotionSelectionInstance",  "PromotionSelection", Controls.PromotionList );
 local m_subjectModifierIM   :table  = InstanceManager:new( "ModifierInstance",  "ModifierContainer",  Controls.SubjectModifierStack );
-local m_targetModifierIM    :table  = InstanceManager:new( "ModifierInstance",  "ModifierContainer",  Controls.TargetModifierStack ); 
+local m_targetModifierIM    :table  = InstanceManager:new( "ModifierInstance",  "ModifierContainer",  Controls.TargetModifierStack );
 local m_interceptorModifierIM :table  = InstanceManager:new( "ModifierInstance",  "ModifierContainer",  Controls.InterceptorModifierStack );
 local m_antiAirModifierIM   :table  = InstanceManager:new( "ModifierInstance",  "ModifierContainer",  Controls.AntiAirModifierStack );
 
@@ -87,8 +87,8 @@ local m_DeleteHotkeyId      = Input.GetActionId("DeleteUnit");
 --  FUNCTIONS
 -- ===========================================================================
 
-function InitSubjectData() 
-  m_subjectData = 
+function InitSubjectData()
+  m_subjectData =
   {
     Name            = "",
     Moves           = 0,
@@ -140,7 +140,7 @@ function InitSubjectData()
 end
 
 function InitTargetData()
-  m_targetData = 
+  m_targetData =
   {
     Name            = "",
     Combat            = 0,
@@ -182,7 +182,7 @@ function AddActionButton( instance:table, action:table )
   instance.UnitActionButton:SetDisabled( action.Disabled );
   instance.UnitActionButton:SetAlpha( (action.Disabled and 0.7) or 1 );
   instance.UnitActionButton:SetToolTipString( action.helpString );
-  instance.UnitActionButton:RegisterCallback( Mouse.eLClick, 
+  instance.UnitActionButton:RegisterCallback( Mouse.eLClick,
     function(void1,void2)
       if action.Sound ~= nil and action.Sound ~= "" then
         UI.PlaySound(action.Sound);
@@ -203,7 +203,7 @@ end
 function GetHashFromType( actionType:string )
   local hash:number = 0;
   if GameInfo.UnitCommands[actionType] ~= nil then
-    hash = GameInfo.UnitCommands[actionType].Hash;      
+    hash = GameInfo.UnitCommands[actionType].Hash;
   elseif GameInfo.UnitOperations[actionType] ~= nil then
     hash = GameInfo.UnitOperations[actionType].Hash;
   end
@@ -253,18 +253,18 @@ function AddActionToTable( actionsTable:table, action:table, disabled:boolean, t
     actionsCategoryTable = actionsTable["SPECIFIC"];
   end
 
-  -- Wrap every callback function with a call that guarantees the interface 
+  -- Wrap every callback function with a call that guarantees the interface
   -- mode is reset.  It prevents issues such as selecting range attack and
   -- then instead of attacking, choosing another action, which would leave
   -- up the range attack lens layer.
-  local wrappedCallback:ifunction = 
+  local wrappedCallback:ifunction =
     function(void1,void2)
       if UI.GetInterfaceMode() ~= InterfaceModeTypes.SELECTION then
         print("Unit panel forcing interface mode back to selection before performing operation/action"); --Debug
         UI.SetInterfaceMode( InterfaceModeTypes.SELECTION );
       end
       callbackFunc(void1,void2);
-    end;  
+    end;
 
   table.insert( actionsCategoryTable, {
     IconId        = (overrideIcon and overrideIcon) or action.Icon,
@@ -313,11 +313,11 @@ function GetUnitActionsTable( pUnit )
     displayOrder = {
       primaryArea = {"ATTACK","OFFENSIVESPY","SPECIFIC","MOVE","INPLACE","GAMEMODIFY"}, -- How they appear in the UI
       secondaryArea = {"SECONDARY"}
-    }   
+    }
   };
 
   m_bestValidImprovement = -1;
-  
+
   if pUnit == nil then
     UI.DataError("NIL unit when attempting to get action table.");
     return;
@@ -328,7 +328,7 @@ function GetUnitActionsTable( pUnit )
     for commandRow in GameInfo.UnitCommands() do
     if ( commandRow.VisibleInUI ) then
       local actionHash  :number   = commandRow.Hash;
-      local isDisabled  :boolean  = IsDisabledByTutorial(unitType, actionHash ); 
+      local isDisabled  :boolean  = IsDisabledByTutorial(unitType, actionHash );
 
       if (actionHash == UnitCommandTypes.ENTER_FORMATION) then
         --Check if there are any units in the same tile that this unit can create a formation with
@@ -342,7 +342,7 @@ function GetUnitActionsTable( pUnit )
               if (pUnitInstance ~= nil) then
 
                 local toolTipString :string   = Locale.Lookup(commandRow.Description, GameInfo.Units[pUnitInstance:GetUnitType()].Name);
-                local callback    :ifunction  = function() OnUnitActionClicked_EnterFormation(pUnitInstance) end                
+                local callback    :ifunction  = function() OnUnitActionClicked_EnterFormation(pUnitInstance) end
 
                 AddActionToTable( actionsTable, commandRow, isDisabled, toolTipString, actionHash, callback );
               end
@@ -354,7 +354,7 @@ function GetUnitActionsTable( pUnit )
         local bCanStart, tResults = UnitManager.CanStartCommand( pUnit, actionHash, true, true);
         if (bCanStart and tResults) then
           if (tResults[UnitCommandResults.PROMOTIONS] ~= nil and #tResults[UnitCommandResults.PROMOTIONS] ~= 0) then
-            local tPromotions   = tResults[UnitCommandResults.PROMOTIONS];            
+            local tPromotions   = tResults[UnitCommandResults.PROMOTIONS];
             local toolTipString   = Locale.Lookup(commandRow.Description);
             local callback      = function() ShowPromotionsList(tPromotions); end
 
@@ -363,11 +363,11 @@ function GetUnitActionsTable( pUnit )
         end
       elseif (actionHash == UnitCommandTypes.NAME_UNIT) then
         local bCanStart = UnitManager.CanStartCommand( pUnit, UnitCommandTypes.NAME_UNIT, true);
-        if (bCanStart) then     
+        if (bCanStart) then
           local toolTipString = Locale.Lookup(commandRow.Description);
           AddActionToTable( actionsTable, commandRow, isDisabled, toolTipString, actionHash, OnNameUnit );
         end
-      elseif (actionHash == UnitCommandTypes.DELETE) then       
+      elseif (actionHash == UnitCommandTypes.DELETE) then
         local bCanStart = UnitManager.CanStartCommand( pUnit, UnitCommandTypes.DELETE, true);
         if (bCanStart) then
           local toolTipString = Locale.Lookup(commandRow.Description);
@@ -436,15 +436,15 @@ function GetUnitActionsTable( pUnit )
 
 
   -- Loop over the UnitOperations (like commands but may take 1 to N turns to complete)
-  
+
   -- Only show the operations if the unit has moves left.
     local isHasMovesLeft = pUnit:GetMovesRemaining() > 0;
   if isHasMovesLeft then
-    
+
     for operationRow in GameInfo.UnitOperations() do
-                            
-      local actionHash  :number = operationRow.Hash; 
-      local isDisabled  :boolean= IsDisabledByTutorial( unitType, actionHash ); 
+
+      local actionHash  :number = operationRow.Hash;
+      local isDisabled  :boolean= IsDisabledByTutorial( unitType, actionHash );
 
       local instance;
 
@@ -457,16 +457,16 @@ function GetUnitActionsTable( pUnit )
         --Call CanStartOperation asking for results
         local bCanStart, tResults = UnitManager.CanStartOperation( pUnit, UnitOperationTypes.BUILD_IMPROVEMENT, nil, tParameters, true);
 
-        if (bCanStart and tResults ~= nil) then         
+        if (bCanStart and tResults ~= nil) then
           if (tResults[UnitOperationResults.IMPROVEMENTS] ~= nil and #tResults[UnitOperationResults.IMPROVEMENTS] ~= 0) then
-            
+
             m_bestValidImprovement = tResults[UnitOperationResults.BEST_IMPROVEMENT];
-            
+
             local tImprovements = tResults[UnitOperationResults.IMPROVEMENTS];
             for i, eImprovement in ipairs(tImprovements) do
-              
+
               tParameters[UnitOperationTypes.PARAM_IMPROVEMENT_TYPE] = eImprovement;
-              
+
               local improvement   = GameInfo.Improvements[eImprovement];
 
               bCanStart, tResults = UnitManager.CanStartOperation(pUnit, actionHash, nil, tParameters, true);
@@ -501,7 +501,7 @@ function GetUnitActionsTable( pUnit )
 
               improvement["CategoryInUI"] = "BUILD";  -- TODO: Force improvement to be a type of "BUILD", this can be removed if CategoryInUI is added to "Improvements" in the database schema. ??TRON
               AddActionToTable( actionsTable, improvement, isDisabled, toolTipString, actionHash, OnUnitActionClicked_BuildImprovement, improvement.Hash );
-            end           
+            end
           end
         end
       elseif (actionHash == UnitOperationTypes.MOVE_TO) then
@@ -556,7 +556,7 @@ function GetUnitActionsTable( pUnit )
               end
             end
 
-            AddActionToTable( actionsTable, operationRow, isWMDTypeDisabled, toolTipString, actionHash, callBack );             
+            AddActionToTable( actionsTable, operationRow, isWMDTypeDisabled, toolTipString, actionHash, callBack );
           end
         end
       else
@@ -586,7 +586,7 @@ function GetUnitActionsTable( pUnit )
                   toolTipString = Locale.Lookup("LOC_UNITOPERATION_UPGRADE_INFO", upgradeUnitName, upgradeCost);
                 end
               end
-              
+
             end
 
             if (tResults ~= nil) then
@@ -621,8 +621,8 @@ function GetUnitActionsTable( pUnit )
         end
       end
     end
-  end 
-  
+  end
+
   return actionsTable;
 end
 
@@ -640,9 +640,9 @@ function EndIconGroup()
   if m_currentIconGroup == nil then
     UI.DataError("Attempt to end an icon group, but their are no icons!");
     return;
-  end     
-  
-  local instance  :table = m_standardActionsIM:GetInstance(); 
+  end
+
+  local instance  :table = m_standardActionsIM:GetInstance();
   local width   :number = instance.UnitActionButton:GetSizeX();
   m_standardActionsIM:ReleaseInstance( instance );
 
@@ -666,15 +666,15 @@ end
 --  Set the health meter
 -- ===========================================================================
 function RealizeHealthMeter( control:table, percent:number, controlShadow:table, shadowPercent:number )
-  if  ( percent > 0.7 ) then 
-    control:SetColor( COLORS.METER_HP_GOOD ); 
-    controlShadow:SetColor( COLORS.METER_HP_GOOD_SHADOW );  
+  if  ( percent > 0.7 ) then
+    control:SetColor( COLORS.METER_HP_GOOD );
+    controlShadow:SetColor( COLORS.METER_HP_GOOD_SHADOW );
   elseif ( percent > 0.4 )  then
     control:SetColor( COLORS.METER_HP_OK );
-    controlShadow:SetColor( COLORS.METER_HP_OK_SHADOW );  
-  else             
-    control:SetColor( COLORS.METER_HP_BAD ); 
-    controlShadow:SetColor( COLORS.METER_HP_BAD_SHADOW ); 
+    controlShadow:SetColor( COLORS.METER_HP_OK_SHADOW );
+  else
+    control:SetColor( COLORS.METER_HP_BAD );
+    controlShadow:SetColor( COLORS.METER_HP_BAD_SHADOW );
   end
 
   -- Meter control is half circle, so add enough to start at half point and condence % into the half area
@@ -690,13 +690,13 @@ end
 -- Update the layout based on the view model
 -- ===========================================================================
 function View(data)
-  
+
   -- TODO: Explore what (if anything) could be done with prior values so Reset can be utilized instead of destory; this would gain LUA side pooling
   m_buildActionsIM:DestroyInstances();
     m_standardActionsIM:ResetInstances();
     m_secondaryActionsIM:ResetInstances();
   m_groupArtIM:ResetInstances();
-  m_buildActionsIM:ResetInstances();   
+  m_buildActionsIM:ResetInstances();
 
   ---=======[ ACTIONS ]=======---
 
@@ -713,17 +713,17 @@ function View(data)
         local allNames :string = "";
         for _,catName in ipairs(data.Actions) do allNames = allNames .. "'" .. catName .. "' "; end
         print("ERROR: Unit panel's primary actions sort reference '"..categoryName.."' but no table of that name.  Tables in actionsTable: " .. allNames);
-        Controls.ForceAnAssertDueToAboveCondition();    
+        Controls.ForceAnAssertDueToAboveCondition();
       else
         StartIconGroup();
         for _,action in ipairs(categoryTable) do
-          local instance:table = m_standardActionsIM:GetInstance(); 
+          local instance:table = m_standardActionsIM:GetInstance();
           AddActionButton( instance, action );
         end
         EndIconGroup();
       end
     end
-  
+
 
     -- Next fill in secondardy actions area
     local numSecondaryItems:number = 0;
@@ -733,7 +733,7 @@ function View(data)
         local allNames :string = "";
         for _,catName in ipairs(data.Actions) do allNames = allNames .. "'" .. catName .. "' "; end
         print("ERROR: Unit panel's secondary actions sort reference '"..categoryName.."' but no table of that name.  Tables in actionsTable: " .. allNames);
-        Controls.ForceAnAssertDueToAboveCondition();    
+        Controls.ForceAnAssertDueToAboveCondition();
       else
         for _,action in ipairs(categoryTable) do
           local instance:table = m_secondaryActionsIM:GetInstance();
@@ -748,21 +748,21 @@ function View(data)
 
   -- Build panel options (if any)
   if ( data.Actions["BUILD"] ~= nil and #data.Actions["BUILD"] > 0 ) then
-    
+
     Controls.BuildActionsPanel:SetHide(false);
 
     local bestBuildAction :table = nil;
 
     -- Create columns (each able to hold x3 icons) and fill them top to bottom
     local numBuildCommands = table.count(data.Actions["BUILD"]);
-    for i=1,numBuildCommands,3 do     
+    for i=1,numBuildCommands,3 do
       local buildColumnInstance = m_buildActionsIM:GetInstance();
       for iRow=1,3,1 do
         if ( (i+iRow)-1 <= numBuildCommands ) then
           local slotName  = "Row"..tostring(iRow);
-          local action  = data.Actions["BUILD"][(i+iRow)-1];    
+          local action  = data.Actions["BUILD"][(i+iRow)-1];
           local instance  = {};
-          ContextPtr:BuildInstanceForControl( "BuildActionInstance", instance, buildColumnInstance[slotName]);        
+          ContextPtr:BuildInstanceForControl( "BuildActionInstance", instance, buildColumnInstance[slotName]);
 
           instance.UnitActionIcon:SetTexture( IconManager:FindIconAtlas(action.IconId) );
 
@@ -780,7 +780,7 @@ function View(data)
         end
       end
     end
-    
+
     local BUILD_PANEL_ART_PADDING_X = 24;
     local BUILD_PANEL_ART_PADDING_Y = 20;
     Controls.BuildActionsStack:CalculateSize();
@@ -817,7 +817,7 @@ function View(data)
 
   Controls.StandardActionsStack:CalculateSize();
     Controls.StandardActionsStack:ReprocessAnchoring();
-  
+
   Controls.SecondaryActionsStack:CalculateSize();
     Controls.SecondaryActionsStack:ReprocessAnchoring();
 
@@ -829,7 +829,7 @@ function View(data)
   TradeUnitView(data);
 
   EspionageView(data);
-  
+
   -- Unit Name
   local unitName = Locale.Lookup(data.Name);
 
@@ -877,7 +877,7 @@ function View(data)
     local healthPercent   :number = 1 - GetPercentFromDamage( data.Damage + data.PotentialDamage, data.MaxDamage );
     local healthShadowPercent :number = 1 - GetPercentFromDamage( data.Damage, data.MaxDamage );
     RealizeHealthMeter( Controls.CityHealthMeter, healthPercent, Controls.CityHealthMeterShadow, healthShadowPercent );
-    
+
     local wallsPercent    :number = 1 - GetPercentFromDamage(data.WallDamage + data.PotentialWallDamage, data.MaxWallDamage);
     local wallsShadowPercent  :number = 1 - GetPercentFromDamage( data.WallDamage, data.MaxWallDamage );
     local wallRealizedPercent     = (wallsPercent * 0.5) + 0.5;
@@ -923,14 +923,14 @@ function View(data)
   else
     Controls.XPArea:SetHide(true);
   end
-  
+
   Controls.PromotionBanner:SetColor( m_primaryColor );
 
   m_earnedPromotionIM:ResetInstances();
   if (table.count(data.CurrentPromotions) > 0) then
     for i, promotion in ipairs(data.CurrentPromotions) do
       local promotionInst = m_earnedPromotionIM:GetInstance();
-      if (data.CurrentPromotions[i] ~= nil) then        
+      if (data.CurrentPromotions[i] ~= nil) then
         local descriptionStr = Locale.Lookup(data.CurrentPromotions[i].Name);
         descriptionStr = descriptionStr .. "[NEWLINE]" .. Locale.Lookup(data.CurrentPromotions[i].Desc);
         promotionInst.Top:SetToolTipString(descriptionStr);
@@ -955,7 +955,7 @@ function View(data)
   else
     Controls.SettlementWaterContainer:SetHide(true);
   end
-  
+
   ContextPtr:SetHide(false);
 
   -- Hide combat preview unless we have valid combat results
@@ -969,7 +969,7 @@ end
 
 -- ===========================================================================
 function ViewTarget(data)
-  
+
   -- Unit Name
   local targetName = data.Name;
 
@@ -1105,9 +1105,9 @@ function ShowSubjectUnitStats(showCombat:boolean)
       AddCustomUnitStat(m_subjectData.TradeRouteIcon, "", m_subjectData.TradeRouteName, xOffset);
       xOffset = xOffset - 12;
     end
-    
+
     AddCustomUnitStat("ICON_STATS_LAND_TRADE", tostring(m_subjectData.TradeLandRange), "LOC_HUD_UNIT_PANEL_LAND_ROUTE_RANGE", xOffset);
-    
+
     -- If offset is still 0 then make sure to adjust it for the next stat
     if xOffset == 0 then
       xOffset = xOffset - 12;
@@ -1404,7 +1404,7 @@ end
 function AddTradeResourceEntry(yieldInfo:table, yieldValue:number)
   local entryInstance:table = {};
   ContextPtr:BuildInstanceForControl( "TradeResourceyInstance", entryInstance, Controls.TradeResourceList );
-  
+
   local icon:string, text:string = FormatTradeYieldText(yieldInfo, yieldValue);
   entryInstance.ResourceEntryIcon:SetText(icon);
   entryInstance.ResourceEntryText:SetText(text);
@@ -1464,7 +1464,7 @@ function OnShowCombat( showCombat )
 
       -- Never show combat for civilian units unless it's between two religious untis.
       if showCombat then
-        if (GameInfo.Units[pAttacker:GetUnitType()].FormationClass == "FORMATION_CLASS_CIVILIAN") 
+        if (GameInfo.Units[pAttacker:GetUnitType()].FormationClass == "FORMATION_CLASS_CIVILIAN")
         and (IsAttackerReligiousCombat(pAttacker)==false) then
           showCombat = false;   -- All this showCombat logic, should be done before VIEW! :(
         end
@@ -1572,7 +1572,7 @@ function OnShowCombat( showCombat )
   Controls.CombatPreview_CombatStat:SetHide(not showCombat);
   Controls.CombatPreviewBanners:SetHide(not showCombat);
   Controls.EnemyUnitPanel:SetHide(not showCombat);
-  
+
   if (bAttackerIsUnit) then
     if (pAttacker:GetExperience():GetLevel() > 1) then
       Controls.PromotionBanner:SetHide(showCombat);
@@ -1640,7 +1640,7 @@ end
 function UpdateAntiAirModifiers(startIndex:number)
   local modifierList:table, modifierListSize:number = GetCombatModifierList(CombatResultParameters.ANTI_AIR);
   UpdateModifiers(startIndex, Controls.AntiAirModifierStack, Controls.AntiAirModifierStackAnim, UpdateAntiAirModifiers, m_antiAirModifierIM, modifierList, modifierListSize);
-end 
+end
 
 -- ===========================================================================
 function UpdateTargetModifiers(startIndex:number)
@@ -1693,10 +1693,10 @@ function UpdateModifiers(startIndex:number, stack:table, stackAnim:table, stackA
   -- Play anim if we have multiple pages
   if shouldPlayAnim then
     stackAnim:Play();
-    stackAnim:RegisterEndCallback( 
+    stackAnim:RegisterEndCallback(
       function()
         stackAnimCallback(nextIndex);
-      end 
+      end
     );
   end
 end
@@ -1711,7 +1711,7 @@ function GetCombatModifierList(combatantHash:number)
   local combatantResults = m_combatResults[combatantHash];
 
   baseStrengthValue = combatantResults[CombatResultParameters.COMBAT_STRENGTH];
-  
+
   local baseStrengthText = baseStrengthValue .. " " .. Locale.Lookup("LOC_COMBAT_PREVIEW_BASE_STRENGTH");
   local interceptorModifierText = combatantResults[CombatResultParameters.PREVIEW_TEXT_INTERCEPTOR];
   local antiAirModifierText = combatantResults[CombatResultParameters.PREVIEW_TEXT_ANTI_AIR];
@@ -1841,7 +1841,7 @@ function OnToggleSecondRow()
     Controls.SecondaryActionsStack:SetHide(true);
     Controls.ExpandSecondaryActionsButton:SetTextureOffsetVal(0,0);
   end
-  
+
   Controls.ExpandSecondaryActionStack:CalculateSize();
   Controls.ExpandSecondaryActionStack:ReprocessAnchoring();
 
@@ -1874,7 +1874,7 @@ function ResizeUnitPanelToFitActionButtons()
     Controls.UnitPanelBaseContainer:SetSizeX(m_minUnitPanelWidth);
   end
 
-  -- Update unit stat size and anchoring 
+  -- Update unit stat size and anchoring
   Controls.SubjectStatStack:CalculateSize();
   Controls.SubjectStatStack:ReprocessAnchoring();
   Controls.SubjectStatContainer:ReprocessAnchoring();
@@ -1954,7 +1954,7 @@ function ReadUnitData( unit:table )
   for i, promotion in ipairs(promotionList) do
     local promotionDef = GameInfo.UnitPromotions[promotion];
     table.insert(m_subjectData.CurrentPromotions, {
-      Name = promotionDef.Name, 
+      Name = promotionDef.Name,
       Desc = promotionDef.Description,
       Level = promotionDef.Level
       });
@@ -1965,7 +1965,7 @@ function ReadUnitData( unit:table )
   -- Espionage Data
   if (GameInfo.Units[m_subjectData.UnitType].Spy == true) then
     m_subjectData.IsSpy = true;
-      
+
     local activityType:number = UnitManager.GetActivityType(unit);
     if activityType == ActivityTypes.ACTIVITY_OPERATION then
       m_subjectData.SpyOperation = unit:GetSpyOperation();
@@ -2004,7 +2004,7 @@ function ReadUnitData( unit:table )
           -- Set origin to destination name
           if originCity and destinationCity then
             m_subjectData.TradeRouteName = Locale.Lookup("LOC_HUD_UNIT_PANEL_TRADE_ROUTE_NAME", originCity:GetName(), destinationCity:GetName());
-          
+
             local civID:number = PlayerConfigurations[destinationCity:GetOwner()]:GetCivilizationTypeID();
             local civ:table = GameInfo.Civilizations[civID];
             if civ then
@@ -2027,7 +2027,7 @@ function ReadUnitData( unit:table )
 
   -- Check if we're a settler
   if (GameInfo.Units[m_subjectData.UnitType].FoundCity == true) then
-    m_subjectData.IsSettler = true;       
+    m_subjectData.IsSettler = true;
   end
 
   View(m_subjectData);
@@ -2073,23 +2073,37 @@ function ReadDistrictData( pDistrict:table )
     end
     View(m_subjectData);
   end
-  
+
 end
 
 -- ===========================================================================
 function Refresh(player, unitId)
   if(player ~= nil and player ~= -1 and unitId ~= nil and unitId ~= -1) then
-    
+
     m_kHotkeyActions = {};
     m_kHotkeyCV1 = {};
     m_kHotkeyCV2 = {};
         m_kSoundCV1 = {};
 
-    local units = Players[player]:GetUnits(); 
+    local units = Players[player]:GetUnits();
     local unit = units:FindID(unitId);
     if(unit ~= nil) then
       ReadUnitData( unit, numUnits );
-      -- UI.SetRenderGameObject( Controls.PortraitFrame ,unit); 
+      --CQUI auto-expando
+      if(GameConfiguration.GetValue("CQUI_AutoExpandUnitActions")) then
+        local isHidden:boolean = Controls.SecondaryActionsStack:IsHidden();
+        if isHidden then
+          Controls.SecondaryActionsStack:SetHide(false);
+          Controls.ExpandSecondaryActionsButton:SetTextureOffsetVal(0,29);
+          OnSecondaryActionStackMouseEnter();
+          Controls.ExpandSecondaryActionStack:CalculateSize();
+          Controls.ExpandSecondaryActionStack:ReprocessAnchoring();
+        end
+
+        ResizeUnitPanelToFitActionButtons();
+      end
+
+      -- UI.SetRenderGameObject( Controls.PortraitFrame ,unit);
     else
       Hide();
     end
@@ -2208,7 +2222,7 @@ end
 -- UnitAction<idx> was clicked.
 --------------------------------------------------------------------------------
 function OnUnitActionClicked( actionType:number, actionHash:number )
-  
+
   if m_isOkayToProcess then
     local pSelectedUnit :table= UI.GetHeadSelectedUnit();
     if (pSelectedUnit ~= nil) then
@@ -2271,7 +2285,7 @@ function OnUnitActionClicked_BuildImprovement( improvementHash, dummy )
       tParameters[UnitOperationTypes.PARAM_X] = pSelectedUnit:GetX();
       tParameters[UnitOperationTypes.PARAM_Y] = pSelectedUnit:GetY();
       tParameters[UnitOperationTypes.PARAM_IMPROVEMENT_TYPE] = improvementHash;
-      
+
       UnitManager.RequestOperation( pSelectedUnit, UnitOperationTypes.BUILD_IMPROVEMENT, tParameters );
     end
     ContextPtr:RequestRefresh();
@@ -2396,7 +2410,7 @@ function ShowPromotionsList(tPromotions)
         end
       end
     else
-      LuaEvents.UnitPanel_PromoteUnit();    
+      LuaEvents.UnitPanel_PromoteUnit();
     end
   end
 end
@@ -2508,7 +2522,7 @@ end
 
 --------------------------------------------------------------------------------
 function GetRandomNameSuffix()
-  
+
   if (m_SuffixNames == nil) then
     m_SuffixNames = MakeUnitNameTable( "SUFFIX_ALL" );
   end
@@ -2592,21 +2606,21 @@ end
 
 -- ===========================================================================
 function OnPlayerTurnDeactivated( ePlayer:number )
-  if ePlayer == Game.GetLocalPlayer() then    
+  if ePlayer == Game.GetLocalPlayer() then
     m_isOkayToProcess = false;
   end
 end
 
 -- ===========================================================================
 function OnPlayerTurnActivated( ePlayer:number, isFirstTime:boolean )
-  if ePlayer == Game.GetLocalPlayer() then    
+  if ePlayer == Game.GetLocalPlayer() then
     ShowHideSelectedUnit();
   end
 end
 
 -- ===========================================================================
 function OnPlayerChangeClose( ePlayer:number )
-  
+
   local isPaused:boolean = GameConfiguration.IsPaused();
   print("OnPlayerChangeClose: " .. ePlayer .. ", GameConfiguration.IsPaused()=" .. tostring(isPaused));
   if(isPaused) then
@@ -2650,14 +2664,14 @@ end
 
 -- ===========================================================================
 function OnContextInitialize( isHotload : boolean)
-  if isHotload then       
+  if isHotload then
     OnPlayerTurnActivated( Game.GetLocalPlayer(), true ) ;  -- Fake player activated call.
   end
 end
 
 -- ===========================================================================
 function OnCitySelectionChanged(owner, ID, i, j, k, bSelected, bEditable)
-  Hide(); 
+  Hide();
 end
 
 -- ===========================================================================
@@ -2686,7 +2700,7 @@ function OnInputActionTriggered( actionId )
     return;
   end
   -- If an entry with this actionId exists, call the function associated with it.
-  if m_kHotkeyActions[actionId] ~= nil then   
+  if m_kHotkeyActions[actionId] ~= nil then
         UI.PlaySound("Play_UI_Click");
         if m_kSoundCV1[actionId] ~= nil and m_kSoundCV1[actionId] ~= "" then
             UI.PlaySound(m_kSoundCV1[actionId]);
@@ -2704,7 +2718,7 @@ function OnInputActionTriggered( actionId )
 end
 
 -- ===========================================================================
-function OnUnitRemovedFromMap( playerID: number, unitID : number )  
+function OnUnitRemovedFromMap( playerID: number, unitID : number )
   if(playerID == m_selectedPlayerId and unitID == m_UnitId) then
     Hide();
   end
@@ -2725,7 +2739,7 @@ function ShowCombatAssessment( )
     local iAttackerStrength = iAttackerCombatStrength + iAttackerBonus;
     local iDefenderStrength = iDefenderCombatStrength + iDefenderBonus;
     local extraDamage;
-    local isSafe = false; 
+    local isSafe = false;
     for row in GameInfo.GlobalParameters() do
       if(row.Name == "COMBAT_MAX_EXTRA_DAMAGE") then
         extraDamage = row.Value;
@@ -2733,7 +2747,7 @@ function ShowCombatAssessment( )
       end
     end
     if (attacker[CombatResultParameters.FINAL_DAMAGE_TO] + (extraDamage/2) < attacker[CombatResultParameters.MAX_HIT_POINTS]) then
-      isSafe = true; 
+      isSafe = true;
     end
 
     local combatAssessmentStr :string = "";
@@ -2760,7 +2774,7 @@ function ShowCombatAssessment( )
                 combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MINOR_CITY_DAMAGE");
                 ShowCombatStalemateBanner();
               else
-                combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MAJOR_CITY_DAMAGE"); 
+                combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MAJOR_CITY_DAMAGE");
                 ShowCombatVictoryBanner();
               end
             end
@@ -2775,7 +2789,7 @@ function ShowCombatAssessment( )
                 combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MINOR_WALL_DAMAGE");
                 ShowCombatStalemateBanner();
               else
-                combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MAJOR_WALL_DAMAGE"); 
+                combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MAJOR_WALL_DAMAGE");
                 ShowCombatVictoryBanner();
               end
             end
@@ -2789,7 +2803,7 @@ function ShowCombatAssessment( )
               combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MINOR_VICTORY");
               ShowCombatStalemateBanner();
             else
-              combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MAJOR_VICTORY"); 
+              combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MAJOR_VICTORY");
               ShowCombatVictoryBanner();
             end
           end
@@ -2812,7 +2826,7 @@ function ShowCombatAssessment( )
                   combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MINOR_VICTORY");
                   ShowCombatVictoryBanner();
                 else
-                  combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MAJOR_VICTORY");  
+                  combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MAJOR_VICTORY");
                   ShowCombatVictoryBanner();
                 end
               end
@@ -2825,7 +2839,7 @@ function ShowCombatAssessment( )
                   combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MINOR_DEFEAT");
                   ShowCombatDefeatBanner();
                 else
-                  combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MAJOR_DEFEAT"); 
+                  combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MAJOR_DEFEAT");
                   ShowCombatDefeatBanner();
                 end
               end
@@ -2841,7 +2855,7 @@ function ShowCombatAssessment( )
                   combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MINOR_VICTORY");
                   ShowCombatVictoryBanner();
                 else
-                  combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MAJOR_VICTORY");  
+                  combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MAJOR_VICTORY");
                   ShowCombatVictoryBanner();
                 end
               end
@@ -2854,7 +2868,7 @@ function ShowCombatAssessment( )
                   combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MINOR_DEFEAT");
                   ShowCombatDefeatBanner();
                 else
-                  combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MAJOR_DEFEAT"); 
+                  combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_MAJOR_DEFEAT");
                   ShowCombatDefeatBanner();
                 end
               end
@@ -2921,11 +2935,11 @@ end
 
 -- ===========================================================================
 function OnHideCombat()
-  Refresh(m_selectedPlayerId, m_UnitId);  
+  Refresh(m_selectedPlayerId, m_UnitId);
   Controls.UnitPanelBaseContainer:SetHide(true);
 end
 
--- ===========================================================================         
+-- ===========================================================================
 function InspectWhatsBelowTheCursor()
   local localPlayerID     :number = Game.GetLocalPlayer();
   if (localPlayerID == -1) then
@@ -2988,49 +3002,49 @@ end
 --  If mouse/touch is giving focus to a unit flag, that takes precedence over
 --  the hex which may be behind the flag (likey a hex "above" the current one)
 function OnUnitFlagPointerEntered( playerID:number, unitID:number )
-  
+
   m_isFlagFocused = true;   -- Some flag (could be own) is focused.
 
   --make sure it's not one of our units
   -- And Game Core is not busy, the simulation currently needs to run on the Game Core side for accurate results.
   local isValidToShow :boolean = (playerID ~= Game.GetLocalPlayer() and not UI.IsGameCoreBusy());
-  
+
   if (isValidToShow) then
-    
+
     if (UI.GetInterfaceMode() == InterfaceModeTypes.CITY_RANGE_ATTACK) then
       local attackingCity = UI.GetHeadSelectedCity();
       if (attackingCity ~= nil) then
         local pDistrict = GetDistrictFromCity(attackingCity);
         if (pDistrict ~= nil) then
-          local pDefender = UnitManager.GetUnit(playerID, unitID);  
+          local pDefender = UnitManager.GetUnit(playerID, unitID);
           if (pDefender ~= nil) then
             m_combatResults = CombatManager.SimulateAttackVersus( pDistrict:GetComponentID(), pDefender:GetComponentID() );
-            isValidToShow = ReadTargetData();   
+            isValidToShow = ReadTargetData();
           end
         end
       end
     elseif (UI.GetInterfaceMode() == InterfaceModeTypes.DISTRICT_RANGE_ATTACK) then
       local pDistrict = UI.GetHeadSelectedDistrict();
       if (pDistrict ~= nil) then
-        local pDefender = UnitManager.GetUnit(playerID, unitID);  
+        local pDefender = UnitManager.GetUnit(playerID, unitID);
         if (pDefender ~= nil) then
           m_combatResults = CombatManager.SimulateAttackVersus( pDistrict:GetComponentID(), pDefender:GetComponentID() );
-          isValidToShow = ReadTargetData();   
+          isValidToShow = ReadTargetData();
         end
       end
     else
       local attackerUnit = UI.GetHeadSelectedUnit();
       if (attackerUnit ~= nil) then
-        
+
         -- do not show the combat preview for non-combat or embarked units
         if (attackerUnit:GetCombat() == 0 and attackerUnit:GetReligiousStrength() == 0) then
           return;
         end
 
-        local pDefender = UnitManager.GetUnit(playerID, unitID);  
+        local pDefender = UnitManager.GetUnit(playerID, unitID);
         if (pDefender ~= nil) then
           m_combatResults = CombatManager.SimulateAttackVersus( attackerUnit:GetComponentID(), pDefender:GetComponentID() );
-          isValidToShow = ReadTargetData(attackerUnit);   
+          isValidToShow = ReadTargetData(attackerUnit);
         end
       end
     end
@@ -3052,7 +3066,7 @@ end
 --  LUA Event
 -- ===========================================================================
 function OnCityRangeStrikeClicked( playerID:number, unitID:number )
-    
+
 end
 
 -- ===========================================================================
@@ -3098,7 +3112,7 @@ function InspectPlot( plot:table )
   end
 
   OnShowCombat( isValidToShow );
-  
+
 end
 
 function IsTargetCombat(targetData)
@@ -3176,7 +3190,7 @@ function ReadTargetData(attacker)
         m_targetData.MaxMoves         = pkDefender:GetMaxMoves();
         m_targetData.UnitType         = pkDefender:GetUnitType();
         m_targetData.UnitID           = pkDefender:GetID();
-        
+
         -- Only display target data if the combat type of the attacker and target match
         if (attacker ~= nil) then
           if
@@ -3237,7 +3251,7 @@ function ReadTargetData(attacker)
           bShowTarget = true;
         end
       end
-      
+
     end
 
     local interceptorCombatResults = m_combatResults[CombatResultParameters.INTERCEPTOR];
@@ -3296,7 +3310,7 @@ function OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
       end
     end
   end
-  
+
   -- Set Make Trade Route Button Selected
   if (eNewMode == InterfaceModeTypes.MAKE_TRADE_ROUTE) then
     SetStandardActionButtonSelected("INTERFACEMODE_MAKE_TRADE_ROUTE", true);
@@ -3433,7 +3447,7 @@ function OnInputHandler( pInputStruct:table )
   end
 
   -- If moved, there is a possibility of moving into a new hex.
-  if( uiMsg == MouseEvents.MouseMove ) then 
+  if( uiMsg == MouseEvents.MouseMove ) then
     InspectWhatsBelowTheCursor();
   end
 
@@ -3452,7 +3466,7 @@ end
 -- ===========================================================================
 function RefreshUnitListPopup()
   Controls.UnitListPopup:ClearEntries();
-  
+
   local pPlayer:table = Players[Game.GetLocalPlayer()];
   local pPlayerUnits:table = pPlayer:GetUnits();
 
@@ -3482,7 +3496,7 @@ function RefreshUnitListPopup()
   end
 
   -- Alphabetize groups
-  local sortFunc = function(a, b) 
+  local sortFunc = function(a, b)
     local aType:string = GameInfo.Units[a:GetUnitType()].UnitType;
     local bType:string = GameInfo.Units[b:GetUnitType()].UnitType;
     return aType < bType;
@@ -3496,7 +3510,7 @@ function RefreshUnitListPopup()
   -- Add units by sorted groups
   for _, pUnit in ipairs(militaryUnits) do  AddUnitToUnitList( pUnit ); end
   for _, pUnit in ipairs(navalUnits) do     AddUnitToUnitList( pUnit ); end
-  for _, pUnit in ipairs(airUnits) do     AddUnitToUnitList( pUnit ); end 
+  for _, pUnit in ipairs(airUnits) do     AddUnitToUnitList( pUnit ); end
   for _, pUnit in ipairs(supportUnits) do   AddUnitToUnitList( pUnit ); end
   for _, pUnit in ipairs(civilianUnits) do  AddUnitToUnitList( pUnit ); end
   for _, pUnit in ipairs(tradeUnits) do   AddUnitToUnitList( pUnit ); end
@@ -3588,14 +3602,14 @@ end
 --  LUA Event
 --  Set action/operation to not be enabled for a certain unit type.
 --  actionType  String of the CommandType, or OperationType
---  unitType  String of the "UnitType" 
+--  unitType  String of the "UnitType"
 -- ===========================================================================
 function OnTutorialDisableActions( actionType:string, unitType:string  )
-      
+
   if m_kTutorialDisabled[unitType] == nil then
-    m_kTutorialDisabled[unitType] = hmake DisabledByTutorial 
-    { 
-      kLockedHashes = {} 
+    m_kTutorialDisabled[unitType] = hmake DisabledByTutorial
+    {
+      kLockedHashes = {}
     };
   end
 
@@ -3611,17 +3625,17 @@ end
 --  LUA Event
 --  Set action/operation to be re-enabled for a certain unit type.
 --  actionType  String of the CommandType, or OperationType
---  unitType  String of the "UnitType" 
+--  unitType  String of the "UnitType"
 -- ===========================================================================
 function OnTutorialEnableActions( actionType:string, unitType:string  )
-  
+
   if m_kTutorialDisabled[unitType] == nil then
     UI.DataError("There is no spoon, '"..unitType.."' never had a disable call.");
     return;
   end
 
   local hash:number = GetHashFromType(actionType);
-  if hash ~= 0 then     
+  if hash ~= 0 then
     local count:number = table.count(m_kTutorialDisabled[unitType].kLockedHashes);
     for n = count,1,-1 do
       if hash == m_kTutorialDisabled[unitType].kLockedHashes[n] then
@@ -3686,7 +3700,7 @@ function Initialize()
   Events.InputActionTriggered.Add( OnInputActionTriggered );
   Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );
   Events.PantheonFounded.Add( OnPantheonFounded );
-  Events.PhaseBegin.Add( OnPhaseBegin );    
+  Events.PhaseBegin.Add( OnPhaseBegin );
   Events.PlayerTurnActivated.Add( OnPlayerTurnActivated );
   Events.PlayerTurnDeactivated.Add( OnPlayerTurnDeactivated );
   Events.UnitCommandStarted.Add( OnUnitCommandStarted );
@@ -3695,17 +3709,17 @@ function Initialize()
   Events.UnitChargesChanged.Add( OnUnitChargesChanged );
   Events.UnitPromoted.Add( OnUnitPromotionChanged );
   Events.UnitOperationsCleared.Add( OnUnitOperationsCleared );
-  Events.UnitOperationAdded.Add( OnUnitOperationAdded );  
+  Events.UnitOperationAdded.Add( OnUnitOperationAdded );
   Events.UnitOperationDeactivated.Add( OnUnitOperationDeactivated );
   Events.UnitRemovedFromMap.Add( OnUnitRemovedFromMap );
   Events.UnitSelectionChanged.Add( OnUnitSelectionChanged );
-  
+
   LuaEvents.TradeOriginChooser_SetTradeUnitStatus.Add(OnSetTradeUnitStatus );
   LuaEvents.TradeRouteChooser_SetTradeUnitStatus.Add( OnSetTradeUnitStatus );
   LuaEvents.TutorialUIRoot_DisableActions.Add(    OnTutorialDisableActions );
   LuaEvents.TutorialUIRoot_DisableActionForAll.Add( OnTutorialDisableActionForAll );
   LuaEvents.TutorialUIRoot_EnableActions.Add(     OnTutorialEnableActions );
-  LuaEvents.TutorialUIRoot_EnableActionForAll.Add(  OnTutorialEnableActionForAll ); 
+  LuaEvents.TutorialUIRoot_EnableActionForAll.Add(  OnTutorialEnableActionForAll );
   LuaEvents.UnitFlagManager_PointerEntered.Add(   OnUnitFlagPointerEntered );
   LuaEvents.UnitFlagManager_PointerExited.Add(    OnUnitFlagPointerExited );
   LuaEvents.PlayerChange_Close.Add(         OnPlayerChangeClose );
