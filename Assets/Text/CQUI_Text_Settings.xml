@@ -82,9 +82,6 @@
     <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="en_US">
       <Text>Removes the mostly useless start of the gossip message describing where the information came from</Text>
     </Row>
-    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="en_US">
-      <Text>Hidden</Text>
-    </Row>
     <Row Tag="LOC_CQUI_LENSES" Language="en_US">
       <Text>Lenses</Text>
     </Row>
@@ -198,9 +195,6 @@
     </Row>
     <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="zh_Hans_CN">
       <Text>移除情报消息中说明情报来源的废话</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="zh_Hans_CN">
-      <Text>隐藏</Text>
     </Row>
     <Row Tag="LOC_CQUI_LENSES" Language="zh_Hans_CN">
       <Text>滤镜</Text>
@@ -316,9 +310,6 @@
     <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="it_IT">
       <Text>Rimuove le inutili parti iniziali dei pettegolezzi, descrivendo la provenieinza delle informazioni</Text>
     </Row>
-    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="it_IT">
-      <Text>Nascosto</Text>
-    </Row>
     <Row Tag="LOC_CQUI_LENSES" Language="it_IT">
       <Text>Lenti</Text>
     </Row>
@@ -433,9 +424,6 @@
     <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="ru_RU">
       <Text>Удаляет, в основном, бесполезное начало слухов, описывающее от кого пришла информация.</Text>
     </Row>
-    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="ru_RU">
-      <Text>Скрытый</Text>
-    </Row>
     <Row Tag="LOC_CQUI_LENSES" Language="ru_RU">
       <Text>Линзы</Text>
     </Row>
@@ -549,9 +537,6 @@
     </Row>
     <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="pl_PL">
       <Text>Usuwa głównie bezużyteczne początki wiadomości opisujące skąd pochodzi dana plotka</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="pl_PL">
-      <Text>Ukryte</Text>
     </Row>
     <Row Tag="LOC_CQUI_LENSES" Language="pl_PL">
       <Text>Filtry</Text>
