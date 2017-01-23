@@ -66,6 +66,8 @@
     <File>Assets/UI/MinimapPanel.lua</File>
     <File>Assets/UI/MinimapPanel.xml</File>
     <File>Assets/UI/ProductionPanel.xml</File>
+    <File>Assets/UI/StrategicView_MapPlacement.lua</File>
+    <File>Assets/UI/SupportFunctions.lua</File>
     <File>Assets/UI/TopPanel.lua</File>
     <File>Assets/UI/UnitPanel.xml</File>
     <File>Assets/UI/UnitFlagManager.lua</File>
@@ -108,8 +110,6 @@
     <File>Integrations/BTS/UI/Choosers/TradeOriginChooser.xml</File>
     <File>Integrations/BTS/UI/Choosers/TradeOriginChooser.lua</File>
     <File>Integrations/BTS/Text/BTS_Text.xml</File>
-    <File>Integrations/PQ/StrategicView_MapPlacement.lua</File>
-    <File>Integrations/PQ/SupportFunctions.lua</File>
     <File>Integrations/URS/ReportScreen.lua</File>
     <File>Integrations/URS/ReportScreen.xml</File>
     <File>Integrations/URS/UnitPromotionPopup.lua</File>
@@ -139,6 +139,8 @@
         <File>Assets/UI/MinimapPanel.lua</File>
         <File>Assets/UI/MinimapPanel.xml</File>
         <File>Assets/UI/ProductionPanel.xml</File>
+        <File>Assets/UI/StrategicView_MapPlacement.lua</File>
+        <File>Assets/UI/SupportFunctions.lua</File>
         <File>Assets/UI/TopPanel.lua</File>
         <File>Assets/UI/UnitPanel.xml</File>
         <File>Assets/UI/UnitFlagManager.lua</File>
@@ -227,12 +229,6 @@
         <File>Integrations/BTS/Text/BTS_Text.xml</File>
       </Items>
     </LocalizedText>
-    <ImportFiles id="PRODUCTION_QUEUE_IMPORT_FILES">
-      <Items>
-        <File>Integrations/PQ/StrategicView_MapPlacement.lua</File>
-        <File>Integrations/PQ/SupportFunctions.lua</File>
-      </Items>
-    </ImportFiles>
     <ImportFiles id="UNITREPORT_IMPORT_FILES">
       <Items>
         <File>Integrations/URS/ReportScreen.lua</File>
@@ -259,7 +255,7 @@
       </Items>
     </LocalizedText>
   </Components>
-  
+
   <!--Incompatible mods.-->
   <Blocks>
     <!-- Divine Yuri's Citypanel mod: Integrated already, doubling up on installed mods is bad! -->
