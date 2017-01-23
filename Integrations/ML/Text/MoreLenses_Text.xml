@@ -388,7 +388,7 @@
       <Text>Выделяет на каких клетках строитель может работать</Text>
     </Replace>
     <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_IMP" Language="ru_RU">
-      <Text>Ресурс/Разграблен/Уникальная способность</Text>
+      <Text>Ресурс / Разграблено / Уникальная способность</Text>
     </Replace>
     <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_HILL" Language="ru_RU">
       <Text>Холм</Text>
@@ -453,22 +453,22 @@
       <Text>Выделяет ресурсы на карте</Text>
     </Replace>
     <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_LUXURY" Language="ru_RU">
-      <Text>Редкие ресурс</Text>
+      <Text>Редкий</Text>
     </Replace>
     <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NLUXURY" Language="ru_RU">
-      <Text>Необработанный редкий ресурс</Text>
+      <Text>Необработанный редкий</Text>
     </Replace>
     <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_STRATEGIC" Language="ru_RU">
-      <Text>Стратегические ресурс</Text>
+      <Text>Стратегический</Text>
     </Replace>
     <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NSTRATEGIC" Language="ru_RU">
-      <Text>Необработанный стратегический ресурс</Text>
+      <Text>Необработанный стратегический</Text>
     </Replace>
     <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_BONUS" Language="ru_RU">
-      <Text>Бонусный ресурс</Text>
+      <Text>Бонусный</Text>
     </Replace>
     <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NBONUS" Language="ru_RU">
-      <Text>Необработанный бонусный ресурс</Text>
+      <Text>Необработанный бонусный</Text>
     </Replace>
 
     <!-- Wonder Lens -->
