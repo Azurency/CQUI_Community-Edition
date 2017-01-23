@@ -119,6 +119,10 @@
     </Row>
   </BaseGameText>
 
+
+  <!-- SIMPLIFY-CHINESE -->
+
+  <!-- Common Text -->
   <LocalizedText>
     <Replace Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="zh_Hans_CN">
         <Text>按 [ICON_Food] 食物排序</Text>
@@ -241,6 +245,8 @@
 
 
     <!-- ITALIAN -->
+
+    <!-- Common Text -->
     <Replace Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="it_IT">
         <Text>Ordina per [ICON_Food]Cibo.</Text>
     </Replace>

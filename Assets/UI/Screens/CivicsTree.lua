@@ -1161,7 +1161,7 @@ function OnLocalPlayerTurnBegin()
       if isCurrentBoosted then
         CQUI_halfwayNotified[civicName] = true;
       elseif percentageNextTurn >= CQUI_halfway and CQUI_halfwayNotified[civicName] ~= true then
-          LuaEvents.CQUI_AddStatusMessage("The current Civic, " .. Locale.Lookup( civicName ) .. ", is one turn away from maximum Inspiration potential.", 10, CQUI_STATUS_MESSAGE_CIVIC);
+          LuaEvents.CQUI_AddStatusMessage(Locale.Lookup("LOC_CQUI_CIVIC_MESSAGE_S") .. Locale.Lookup( civicName ) .. Locale.Lookup("LOC_CQUI_HALF_MESSAGE_E"), 10, CQUI_STATUS_MESSAGE_CIVIC);
           CQUI_halfwayNotified[civicName] = true;
       end
 

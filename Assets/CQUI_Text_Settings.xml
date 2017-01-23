@@ -1,502 +1,587 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <GameData>
   <LocalizedText>
-  <Row Tag="LOC_CQUI_BINDINGS" Language="en_US">
+    <Row Tag="LOC_CQUI_BINDINGS" Language="en_US">
       <Text>Bindings</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="en_US">
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="en_US">
       <Text>Bindings Mode</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="en_US">
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="en_US">
       <Text>Standard: Unchanged[NEWLINE]Classic: Civ V binds[NEWLINE]Enhanced: Civ V Binds with the following changes[NEWLINE]  WASD camera control[NEWLINE]  Q/E unit/city cycling[NEWLINE]  Shift toggles city/unit selection[NEWLINE]  Quarry/Airstrike are moved to alt-key + Q/S[NEWLINE]  NOTE:UNBIND W/E IN SETTINGS OR THINGS WON'T WORK!</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="en_US">
+    <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="en_US">
       <Text>Classic</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="en_US">
+    <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="en_US">
       <Text>Enhanced</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="en_US">
+    <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="en_US">
       <Text>Standard</Text>
     </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW" Language="en_US">
-    <Text>City View</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="en_US">
-    <Text>Production item height</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="en_US">
-    <Text>Enable production queue</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="en_US">
-    <Text>Show cultural growth overlay</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="en_US">
-    <Text>This can also be toggled by clicking on the growth emblem in the cityview</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL" Language="en_US">
+    <Row Tag="LOC_CQUI_CITYVIEW" Language="en_US">
+      <Text>City View</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="en_US">
+      <Text>Production item height</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="en_US">
+      <Text>Enable production queue</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="en_US">
+      <Text>Show cultural growth overlay</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="en_US">
+      <Text>This can also be toggled by clicking on the growth emblem in the cityview</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL" Language="en_US">
       <Text>General</Text>
     </Row>
-  <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="en_US">
-    <Text>Hidden</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="en_US">
-    <Text>Improved resource icon style</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="en_US">
-    <Text>Solid: always draw resource icons[NEWLINE]Transparent: improved resource icons are transparent[NEWLINE]Hidden: improved resource icons are hidden</Text>
-  </Row>
+    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="en_US">
+      <Text>Hidden</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="en_US">
+      <Text>Improved resource icon style</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="en_US">
+      <Text>Solid: always draw resource icons[NEWLINE]Transparent: improved resource icons are transparent[NEWLINE]Hidden: improved resource icons are hidden</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="en_US">
       <Text>Show luxuries in top panel</Text>
     </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SHOWUNITPATHS" Language="en_US">
-    <Text>Show unit path on hover or selection</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER" Language="en_US">
-    <Text>Show city management info on hover</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="en_US">
-    <Text>Shows citizen managament icons, tile yields, and border growth on hover</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="en_US">
+    <Row Tag="LOC_CQUI_GENERAL_SHOWUNITPATHS" Language="en_US">
+      <Text>Show unit path on hover or selection</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER" Language="en_US">
+      <Text>Show city management info on hover</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="en_US">
+      <Text>Shows citizen managament icons, tile yields, and border growth on hover</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="en_US">
       <Text>Enable Smartbanners</Text>
     </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="en_US">
-    <Text>Solid</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="en_US">
+    <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="en_US">
+      <Text>Solid</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="en_US">
       <Text>Displays new icons in the city banner. A [ICON_EXCLAMATION] is displayed whenever there are unlocked citizens being automatically assigned by the AI city governor. District icons indicate built districts</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="en_US">
       <Text>Toggles yields ON by default</Text>
     </Row>
-  <Row Tag="LOC_CQUI_GENERAL_TRANSPARENT" Language="en_US">
-    <Text>Transparent</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GOSSIP" Language="en_US">
-    <Text>Gossip</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="en_US">
-    <Text>Trim gossip messages</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="en_US">
-    <Text>Removes the mostly useless start of the gossip message describing where the information came from</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_HIDDEN" Language="en_US">
+    <Row Tag="LOC_CQUI_GENERAL_TRANSPARENT" Language="en_US">
+      <Text>Transparent</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP" Language="en_US">
+      <Text>Gossip</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="en_US">
+      <Text>Trim gossip messages</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="en_US">
+      <Text>Removes the mostly useless start of the gossip message describing where the information came from</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_HIDDEN" Language="en_US">
       <Text>Hidden</Text>
     </Row>
-  <Row Tag="LOC_CQUI_LENSES" Language="en_US">
-    <Text>Lenses</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="en_US">
-    <Text>Autoapply archaeologist lens</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="en_US">
-    <Text>Autoapply builder lens</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="en_US">
-    <Text>Autoapply scout lens</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_POPUPS" Language="en_US">
+    <Row Tag="LOC_CQUI_LENSES" Language="en_US">
+      <Text>Lenses</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="en_US">
+      <Text>Autoapply archaeologist lens</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="en_US">
+      <Text>Autoapply builder lens</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="en_US">
+      <Text>Autoapply scout lens</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS" Language="en_US">
       <Text>Popups</Text>
     </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="en_US">
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="en_US">
       <Text>Tech/Civic popup visual</Text>
     </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="en_US">
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="en_US">
       <Text>Toggles the popup that appears whenever a new tech or civic is achieved</Text>
     </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="en_US">
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="en_US">
       <Text>Tech/Civic popup audio</Text>
     </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="en_US">
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="en_US">
       <Text>Toggles the popup audio that plays whenever a new tech or civic is achieved. Is fully independent of the visual component and can play even when there is no visible popup</Text>
     </Row>
-  <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="en_US">
-    <Text>Remember: CQUI settings are attached to individual saves![NEWLINE]If you'd like to change a setting by default, please edit the CQUI_Settings.sql file within the [MOD INSTALL DIRECTORY]/CQUI/Assets directory</Text>
-  </Row>
+    <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="en_US">
+      <Text>Remember: CQUI settings are attached to individual saves![NEWLINE]If you'd like to change a setting by default, please edit the CQUI_Settings.sql file within the [MOD INSTALL DIRECTORY]/CQUI/Assets directory</Text>
+    </Row>
 
-  <!-- zh_Hans_CN -->
-  <Row Tag="LOC_CQUI_BINDINGS" Language="zh_Hans_CN">
+    <!-- SIMPLIFY-CHINESE -->
+
+    <Row Tag="LOC_CQUI_BINDINGS" Language="zh_Hans_CN">
       <Text>热键</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="zh_Hans_CN">
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="zh_Hans_CN">
       <Text>热键模式</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="zh_Hans_CN">
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="zh_Hans_CN">
       <Text>标准：不变[NEWLINE]经典: 文明5热键[NEWLINE]强化: 文明5热键加上如下改动[NEWLINE]  WASD 控制视角[NEWLINE]  Q/E 单位/城市 轮转[NEWLINE]  Shift 切换 城市/单位 选择[NEWLINE]  挖掘/空袭 移至 alt-键 + Q/S[NEWLINE]  注意:在设置里取消 W/E 的热键，否则以上无效。</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="zh_Hans_CN">
+    <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="zh_Hans_CN">
       <Text>经典</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="zh_Hans_CN">
+    <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="zh_Hans_CN">
       <Text>强化</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="zh_Hans_CN">
+    <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="zh_Hans_CN">
       <Text>标准</Text>
     </Row>
-  <Row Tag="LOC_CQUI_GENERAL" Language="zh_Hans_CN">
+    <Row Tag="LOC_CQUI_CITYVIEW" Language="zh_Hans_CN">
+      <Text>城市视图</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="zh_Hans_CN">
+      <Text>高亮生产中的单位</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="zh_Hans_CN">
+      <Text>启用生产队列</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="zh_Hans_CN">
+      <Text>显示边境拓展的高亮</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="zh_Hans_CN">
+      <Text>点击城市视图中的成长按钮也可切换显示/隐藏</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL" Language="zh_Hans_CN">
       <Text>通用</Text>
     </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="zh_Hans_CN">
-      <Text>在顶部面板显示奢侈</Text>
-    </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="zh_Hans_CN">
-      <Text>开启智能横幅</Text>
-    </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="zh_Hans_CN">
-      <Text>在城市横幅上显示新的图标，每当有未锁公民自动安置时会显示食物图标，区域图标表示建造区域</Text>
-    </Row>
-  <Row Tag="LOC_CQUI_HIDDEN" Language="zh_Hans_CN">
+    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="zh_Hans_CN">
       <Text>隐藏</Text>
     </Row>
-  <Row Tag="LOC_CQUI_HIDDEN_COWBOY" Language="zh_Hans_CN">
-      <Text>切换：自动生产骑士</Text>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="zh_Hans_CN">
+      <Text>已开发过的资源图标</Text>
     </Row>
-  <Row Tag="LOC_CQUI_HIDDEN_BADCOWBOY" Language="zh_Hans_CN">
-      <Text>切换：自动解散骑士</Text>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="zh_Hans_CN">
+      <Text>固定：总是显示资源的图标[NEWLINE]透明：改良过的资源的图标透明显示[NEWLINE]隐藏：改良过的资源的图标隐藏</Text>
     </Row>
-  <Row Tag="LOC_CQUI_POPUPS" Language="zh_Hans_CN">
+    <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="zh_Hans_CN">
+      <Text>在顶部面板显示奢侈</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWUNITPATHS" Language="zh_Hans_CN">
+      <Text>选中或者鼠标指向时显示单位行进路径</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER" Language="zh_Hans_CN">
+      <Text>鼠标指向时显示城市市民分配信息</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="zh_Hans_CN">
+      <Text>鼠标指向时显示市民分配，顶部显示，以及边境增长</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="zh_Hans_CN">
+      <Text>开启智能横幅</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="zh_Hans_CN">
+      <Text>固定</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="zh_Hans_CN">
+      <Text>在城市横幅上显示新的图标，每当有未锁公民自动安置时会显示食物图标，区域图标表示建造区域</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="zh_Hans_CN">
+      <Text>默认显示产量</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TRANSPARENT" Language="zh_Hans_CN">
+      <Text>透明</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP" Language="zh_Hans_CN">
+      <Text>情报消息</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="zh_Hans_CN">
+      <Text>简略情报消息</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="zh_Hans_CN">
+      <Text>移除情报消息中说明情报来源的废话</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_HIDDEN" Language="zh_Hans_CN">
+      <Text>隐藏</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES" Language="zh_Hans_CN">
+      <Text>滤镜</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="zh_Hans_CN">
+      <Text>选中考古学家自动切换为考古透镜</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="zh_Hans_CN">
+      <Text>选中建造者自动切换为建造者透镜</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="zh_Hans_CN">
+      <Text>选中侦察兵自动切换为侦查透镜</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS" Language="zh_Hans_CN">
       <Text>弹窗</Text>
     </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="zh_Hans_CN">
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="zh_Hans_CN">
       <Text>开启科技/市政弹窗</Text>
     </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="zh_Hans_CN">
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="zh_Hans_CN">
       <Text>每当新的科技/市政完成时弹窗</Text>
     </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="zh_Hans_CN">
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="zh_Hans_CN">
       <Text>开启科技/市政语音</Text>
     </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="zh_Hans_CN">
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="zh_Hans_CN">
       <Text>每当新的科技/市政完成时播放语音。即使没有弹窗也可以播放。</Text>
     </Row>
-  <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="zh_Hans_CN">
-      <Text>注意：CQUI的设置在存档间是相互独立的。</Text>
+    <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="zh_Hans_CN">
+      <Text>注意：CQUI的设置在存档间是相互独立的。[NEWLINE]如果你想要修改默认配置，请编辑 [MOD INSTALL DIRECTORY]/CQUI/Assets目录下的CQUI_Settings.sql文件</Text>
     </Row>
 
-  <!-- ITALIAN -->
-  <Row Tag="LOC_CQUI_BINDINGS" Language="it_IT">
-      <Text>Combinazione tasti</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="it_IT">
-    <Text>Modalità</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="it_IT">
-    <Text>Standard: senza modifiche[NEWLINE]Classica: combinazione Civ V[NEWLINE]Avanzata: combinazione Civ V con le seguenti modifiche:[NEWLINE]  controllo camera WASD[NEWLINE]  Q/E scorrimento unità/città[NEWLINE]  Shift attiva/disattiva la selezione di città/unità[NEWLINE]  il comando Cava/Attacco Aereo diventa ALT+Q/ALT+S[NEWLINE]  NOTA:SCOLLEGA I TASTI W/E NELLE IMPOSTAZIONI ALTRIMENTI NON FUNZIONA!</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="it_IT">
-    <Text>Classica</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="it_IT">
-    <Text>Avanzata</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="it_IT">
-    <Text>Standard</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW" Language="it_IT">
-    <Text>Vista Cittadina</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="it_IT">
-    <Text>Altezza elemento da produrre</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="it_IT">
-    <Text>Abilita coda di produzione</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="it_IT">
-    <Text>Mostra crescita culturale</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="it_IT">
-    <Text>Può anche essere attivata cliccando sul simbolo della crescita nella vista cittadina</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL" Language="it_IT">
-    <Text>Generali</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="it_IT">
-    <Text>Stile icone risorse migliorato</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="it_IT">
-    <Text>Solido: disegna sempre l'icone risorse[NEWLINE]Trasparente: icone risorse con effetto trasparenza[NEWLINE]Nascosto: icone risorse nascoste</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="it_IT">
-    <Text>Risorse di lusso nel pannello superiore</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SHOWUNITPATHS" Language="it_IT">
-    <Text>Percorso dell'unità visibile</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER" Language="it_IT">
-    <Text>Mostra gestione cittadina al passaggio del mouse</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="it_IT">
-    <Text>Mostra la gestione dei cittadini, la resa delle caselle e la crescita dei confini al passaggio del mouse</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="it_IT">
-    <Text>Abilita banner smart</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="it_IT">
-    <Text>Mostra nuove icone nel banner cittadino. Un [ICON_EXCLAMATION] appare quando il governatore assegna automaticamente cittadini alle caselle della città. Le icone distretto indicano i distretti costruiti.</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="it_IT">
-    <Text>Attiva le rese di default</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GOSSIP" Language="it_IT">
-    <Text>Pettegolezzi</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="it_IT">
-    <Text>Abbrevia i pettegolezzi</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="it_IT">
-    <Text>Rimuove le inutili parti iniziali dei pettegolezzi, descrivendo la provenieinza delle informazioni</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_HIDDEN" Language="it_IT">
-    <Text>Nascosto</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_LENSES" Language="it_IT">
-    <Text>Lenti</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="it_IT">
-    <Text>Lente Archeologo in automatico</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="it_IT">
-    <Text>Lente Costruttore in automatico</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="it_IT">
-    <Text>Lente Scout in automatico</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_POPUPS" Language="it_IT">
-    <Text>Popup</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="it_IT">
-    <Text>Popup Scienza/Progressi Civici</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="it_IT">
-    <Text>Attiva/disattiva i popup di completamento di una tecnologica o un progresso civico</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="it_IT">
-    <Text>Audio Scienza/Progressi Civici</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="it_IT">
-    <Text>Attiva/disattiva l'audio dei popup di completamento di una tecnologica o un progresso civico. Impostazione indipindente dall'opzione di visualizzazione dei popup, l'audio suona anche in caso di popup non visibili.</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="it_IT">
-    <Text>Ricorda: le impostazioni CQUI sono legate ai singoli salvataggi![NEWLINE]Se vuoi impostare un parametro di default puoi modificare il file CQUI_Settings.sql all'interno della cartella [MOD INSTALL DIRECTORY]/CQUI/Assets</Text>
-  </Row>
+    <!-- ITALIAN -->
 
+    <Row Tag="LOC_CQUI_BINDINGS" Language="it_IT">
+        <Text>Combinazione tasti</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="it_IT">
+      <Text>Modalità</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="it_IT">
+      <Text>Standard: senza modifiche[NEWLINE]Classica: combinazione Civ V[NEWLINE]Avanzata: combinazione Civ V con le seguenti modifiche:[NEWLINE]  controllo camera WASD[NEWLINE]  Q/E scorrimento unità/città[NEWLINE]  Shift attiva/disattiva la selezione di città/unità[NEWLINE]  il comando Cava/Attacco Aereo diventa ALT+Q/ALT+S[NEWLINE]  NOTA:SCOLLEGA I TASTI W/E NELLE IMPOSTAZIONI ALTRIMENTI NON FUNZIONA!</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="it_IT">
+      <Text>Classica</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="it_IT">
+      <Text>Avanzata</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="it_IT">
+      <Text>Standard</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW" Language="it_IT">
+      <Text>Vista Cittadina</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="it_IT">
+      <Text>Altezza elemento da produrre</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="it_IT">
+      <Text>Abilita coda di produzione</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="it_IT">
+      <Text>Mostra crescita culturale</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="it_IT">
+      <Text>Può anche essere attivata cliccando sul simbolo della crescita nella vista cittadina</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL" Language="it_IT">
+      <Text>Generali</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="it_IT">
+      <Text>Nascosto</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="it_IT">
+      <Text>Stile icone risorse migliorato</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="it_IT">
+      <Text>Solido: disegna sempre l'icone risorse[NEWLINE]Trasparente: icone risorse con effetto trasparenza[NEWLINE]Nascosto: icone risorse nascoste</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="it_IT">
+      <Text>Risorse di lusso nel pannello superiore</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWUNITPATHS" Language="it_IT">
+      <Text>Percorso dell'unità visibile</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER" Language="it_IT">
+      <Text>Mostra gestione cittadina al passaggio del mouse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="it_IT">
+      <Text>Mostra la gestione dei cittadini, la resa delle caselle e la crescita dei confini al passaggio del mouse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="it_IT">
+      <Text>Abilita banner smart</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="it_IT">
+      <Text>Solido</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="it_IT">
+      <Text>Mostra nuove icone nel banner cittadino. Un [ICON_EXCLAMATION] appare quando il governatore assegna automaticamente cittadini alle caselle della città. Le icone distretto indicano i distretti costruiti.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="it_IT">
+      <Text>Attiva le rese di default</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TRANSPARENT" Language="it_IT">
+      <Text>Trasparente</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP" Language="it_IT">
+      <Text>Pettegolezzi</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="it_IT">
+      <Text>Abbrevia i pettegolezzi</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="it_IT">
+      <Text>Rimuove le inutili parti iniziali dei pettegolezzi, descrivendo la provenieinza delle informazioni</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_HIDDEN" Language="it_IT">
+      <Text>Nascosto</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES" Language="it_IT">
+      <Text>Lenti</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="it_IT">
+      <Text>Lente Archeologo in automatico</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="it_IT">
+      <Text>Lente Costruttore in automatico</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="it_IT">
+      <Text>Lente Scout in automatico</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS" Language="it_IT">
+      <Text>Popup</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="it_IT">
+      <Text>Popup Scienza/Progressi Civici</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="it_IT">
+      <Text>Attiva/disattiva i popup di completamento di una tecnologica o un progresso civico</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="it_IT">
+      <Text>Audio Scienza/Progressi Civici</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="it_IT">
+      <Text>Attiva/disattiva l'audio dei popup di completamento di una tecnologica o un progresso civico. Impostazione indipindente dall'opzione di visualizzazione dei popup, l'audio suona anche in caso di popup non visibili.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="it_IT">
+      <Text>Ricorda: le impostazioni CQUI sono legate ai singoli salvataggi![NEWLINE]Se vuoi impostare un parametro di default puoi modificare il file CQUI_Settings.sql all'interno della cartella [MOD INSTALL DIRECTORY]/CQUI/Assets</Text>
+    </Row>
 
-  <!-- RUSSIAN -->
+    <!-- RUSSIAN -->
 
-  <Row Tag="LOC_CQUI_BINDINGS" Language="ru_RU">
+    <Row Tag="LOC_CQUI_BINDINGS" Language="ru_RU">
       <Text>Сочетания клавиш</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="ru_RU">
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="ru_RU">
       <Text>Сочетания</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="ru_RU">
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="ru_RU">
       <Text>Стандартные: Без изменений[NEWLINE]Классические: клавиши из Civ V[NEWLINE]Продвинутые: Клавиши из Civ V со следующими изменениями:[NEWLINE]  WASD контроль камеры[NEWLINE]  Q/E переключение юнита/города[NEWLINE]  Shift переключает выбор города/юнита[NEWLINE] Карьер/Авиаудар изменён на Alt + Q/S[NEWLINE]  ВНИМЕНИЕ: ОТКРЕПИТЕ КЛАВИШИ W/E В НАСТРОЙКАХ ИЛИ ДАННЫЙ РЕЖИМ НЕ ЗАРАБОТАЕТ!</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="ru_RU">
+    <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="ru_RU">
       <Text>Классические</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="ru_RU">
+    <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="ru_RU">
       <Text>Продвинутые</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="ru_RU">
+    <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="ru_RU">
       <Text>Стандартные</Text>
     </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW" Language="ru_RU">
-    <Text>Обзор города</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="ru_RU">
-    <Text>Высота строки элемента производства</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="ru_RU">
-    <Text>Очередь производства</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="ru_RU">
-    <Text>Показывать культурный рост</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="ru_RU">
-    <Text>Также может быть включена нажатием на иконку роста в обзоре города</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL" Language="ru_RU">
+    <Row Tag="LOC_CQUI_CITYVIEW" Language="ru_RU">
+      <Text>Обзор города</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="ru_RU">
+      <Text>Высота строки элемента производства</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="ru_RU">
+      <Text>Очередь производства</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="ru_RU">
+      <Text>Показывать культурный рост</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="ru_RU">
+      <Text>Также может быть включена нажатием на иконку роста в обзоре города</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL" Language="ru_RU">
       <Text>Основные</Text>
     </Row>
-  <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="ru_RU">
-    <Text>Отображение иконок ресурсов</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="ru_RU">
-    <Text>Сплошные: всегда показывать иконки ресурсов[NEWLINE]Прозрачные: делает иконки ресурсов полупрозрачными[NEWLINE]Скрытые: скрывает иконки ресурсов</Text>
-  </Row>
+    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="ru_RU">
+      <Text>Скрытый</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="ru_RU">
+      <Text>Отображение иконок ресурсов</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="ru_RU">
+      <Text>Сплошные: всегда показывать иконки ресурсов[NEWLINE]Прозрачные: делает иконки ресурсов полупрозрачными[NEWLINE]Скрытые: скрывает иконки ресурсов</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="ru_RU">
       <Text>Редкие ресурсы на верхней панели</Text>
     </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SHOWUNITPATHS" Language="ru_RU">
-    <Text>Путь юнита при выборе/наведении</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER" Language="ru_RU">
-    <Text>Информация о городе при наведении</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="ru_RU">
-    <Text>Расстановка горожан, урожайность клеток, и рост границ при наведении</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="ru_RU">
+    <Row Tag="LOC_CQUI_GENERAL_SHOWUNITPATHS" Language="ru_RU">
+      <Text>Путь юнита при выборе/наведении</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER" Language="ru_RU">
+      <Text>Информация о городе при наведении</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="ru_RU">
+      <Text>Расстановка горожан, урожайность клеток, и рост границ при наведении</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="ru_RU">
       <Text>Умные баннеры</Text>
     </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="ru_RU">
-      <Text>Отображает новые иконки на баннере города. [ICON_EXCLAMATION] отображается пока в городе есть незаблокированные горожане, распределенные ИИ. Иконки районов отображают построенные на территории города районы</Text>
+    <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="ru_RU">
+      <Text>Сплошные</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="ru_RU">
+        <Text>Отображает новые иконки на баннере города. [ICON_EXCLAMATION] отображается пока в городе есть незаблокированные горожане, распределенные ИИ. Иконки районов отображают построенные на территории города районы</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="ru_RU">
       <Text>Показать урожайность по умолчанию</Text>
     </Row>
-  <Row Tag="LOC_CQUI_GOSSIP" Language="ru_RU">
-    <Text>Слухи</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="ru_RU">
-    <Text>Сокращает сообщения о слухах</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="ru_RU">
-    <Text>Удаляет, в основном, бесполезное начало слухов, описывающее от кого пришла информация.</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_HIDDEN" Language="ru_RU">
+    <Row Tag="LOC_CQUI_GENERAL_TRANSPARENT" Language="ru_RU">
+      <Text>Прозрачные</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP" Language="ru_RU">
+      <Text>Слухи</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="ru_RU">
+      <Text>Сокращает сообщения о слухах</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="ru_RU">
+      <Text>Удаляет, в основном, бесполезное начало слухов, описывающее от кого пришла информация.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_HIDDEN" Language="ru_RU">
       <Text>Скрытый</Text>
     </Row>
-  <Row Tag="LOC_CQUI_LENSES" Language="ru_RU">
-    <Text>Линзы</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="ru_RU">
-    <Text>Автовключение линзы археолога</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="ru_RU">
-    <Text>Автовключение линзы строителей</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="ru_RU">
-    <Text>Автовключение линзы разведки</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_POPUPS" Language="ru_RU">
+    <Row Tag="LOC_CQUI_LENSES" Language="ru_RU">
+      <Text>Линзы</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="ru_RU">
+      <Text>Автовключение линзы археолога</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="ru_RU">
+      <Text>Автовключение линзы строителей</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="ru_RU">
+      <Text>Автовключение линзы разведки</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS" Language="ru_RU">
       <Text>Попапы</Text>
     </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="ru_RU">
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="ru_RU">
       <Text>Попапы Исследований/Институтов</Text>
     </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="ru_RU">
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="ru_RU">
       <Text>Всплывающие окна, которые появлялись всякий раз, когда были исследованы новая технология или социальный институт</Text>
     </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="ru_RU">
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="ru_RU">
       <Text>Звуки Исследований/Институтов</Text>
     </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="ru_RU">
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="ru_RU">
       <Text>Оповещение и голосовое описание, которое воспроизводится всякий раз, когда были исследованы новая технология или социальный институт. Является полностью независимым от визуальной состваляющей компонентом и может проигрываться даже, когда всплывающее окно выключено</Text>
     </Row>
-  <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="ru_RU">
-    <Text>Запомните: настройки CQUI связаны с каждым сохранением![NEWLINE]Если вы хотите изменить настройки по умолчанию, измените файл CQUI_Settings.sql в папке [MOD INSTALL DIRECTORY]/CQUI/Assets</Text>
-  </Row>
+    <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="ru_RU">
+      <Text>Запомните: настройки CQUI связаны с каждым сохранением![NEWLINE]Если вы хотите изменить настройки по умолчанию, измените файл CQUI_Settings.sql в папке [MOD INSTALL DIRECTORY]/CQUI/Assets</Text>
+    </Row>
 
-  <!-- POLISH -->
+    <!-- POLISH -->
 
-  <Row Tag="LOC_CQUI_BINDINGS" Language="pl_PL">
+    <Row Tag="LOC_CQUI_BINDINGS" Language="pl_PL">
       <Text>Skróty klawiszowe</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="pl_PL">
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="pl_PL">
       <Text>Typ skrótów</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="pl_PL">
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="pl_PL">
       <Text>Standardowe: Niezmienione[NEWLINE]Klasyczne: Skróty z Civ V[NEWLINE]Ulepszone: Skróty z Civ V z następującymi zmianami[NEWLINE]  WASD poruszanie kamerą[NEWLINE]  Q/E zmiana jednostki/miasta na kolejną[NEWLINE]  Shift przełącza wybór miasta/jednostki[NEWLINE]  Kamieniołom/Nalot zostały przeniesione na skróty alt + Q/S[NEWLINE]  NOTKA:USUŃ PRZYPISANIE W/E W USTAWIENIACH GRY LUB NIEKTÓRZE RZECZY NIE BĘDĄ DZIAŁAĆ!</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="pl_PL">
+    <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="pl_PL">
       <Text>Klasyczny</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="pl_PL">
+    <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="pl_PL">
       <Text>Ulepszony</Text>
     </Row>
-  <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="pl_PL">
+    <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="pl_PL">
       <Text>Standardowy</Text>
     </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW" Language="pl_PL">
-    <Text>Widok miasta</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="pl_PL">
-    <Text>Wysokość elementu produkcji</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="pl_PL">
-    <Text>Włącz kolejkę budowania</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="pl_PL">
-    <Text>Pokaż nakładkę wzrostu naturalnego</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="pl_PL">
-    <Text>Możesz to także przełączać klikając na emblemat wzrostu w widoku miasta</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL" Language="pl_PL">
+    <Row Tag="LOC_CQUI_CITYVIEW" Language="pl_PL">
+      <Text>Widok miasta</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="pl_PL">
+      <Text>Wysokość elementu produkcji</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="pl_PL">
+      <Text>Włącz kolejkę budowania</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="pl_PL">
+      <Text>Pokaż nakładkę wzrostu naturalnego</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="pl_PL">
+      <Text>Możesz to także przełączać klikając na emblemat wzrostu w widoku miasta</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL" Language="pl_PL">
       <Text>Ogólne</Text>
     </Row>
-  <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="pl_PL">
-    <Text>Styl ikon ulepszonych zasobów</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="pl_PL">
-    <Text>Pełny: zawsze rysuj ikony zasobów[NEWLINE]Przeźroczysty: ikony ulepszonych zasobów są przeźroczyste[NEWLINE]Ukryty: ikony ulepszonych zasobów są ukryte</Text>
-  </Row>
+    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="pl_PL">
+      <Text>Ukryte</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="pl_PL">
+      <Text>Styl ikon ulepszonych zasobów</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="pl_PL">
+      <Text>Pełny: zawsze rysuj ikony zasobów[NEWLINE]Przeźroczysty: ikony ulepszonych zasobów są przeźroczyste[NEWLINE]Ukryty: ikony ulepszonych zasobów są ukryte</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="pl_PL">
       <Text>Wyświetlaj zasoby luksusowe w górnym panelu</Text>
     </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SHOWUNITPATHS" Language="pl_PL">
-    <Text>Wyświetlaj drogę jednostki po najechaniu myszką bądź wybraniu</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER" Language="pl_PL">
-    <Text>Wyświetlaj informacje o mieście po najechaniu myszką</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="pl_PL">
-    <Text>Wyświetla ikony obywateli, ikony dochodu oraz rozrost granic po najechaniu myszką</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="pl_PL">
+    <Row Tag="LOC_CQUI_GENERAL_SHOWUNITPATHS" Language="pl_PL">
+      <Text>Wyświetlaj drogę jednostki po najechaniu myszką bądź wybraniu</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER" Language="pl_PL">
+      <Text>Wyświetlaj informacje o mieście po najechaniu myszką</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="pl_PL">
+      <Text>Wyświetla ikony obywateli, ikony dochodu oraz rozrost granic po najechaniu myszką</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="pl_PL">
       <Text>Włącz inteligentne banery</Text>
     </Row>
-  <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="pl_PL">
+    <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="pl_PL">
+      <Text>Pełny</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="pl_PL">
       <Text>Wyświetla nowe ikony w banerze miasta. Ikona [ICON_EXCLAMATION] jest wyświetlona gdy niezablokowani obywatele są automatycznie przypisywani przez AI zarządcy miasta. Ikony dystryktów wskazują zbydowane dystrykty</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="pl_PL">
       <Text>Automatycznie włącza ikony dochodu</Text>
     </Row>
-  <Row Tag="LOC_CQUI_GOSSIP" Language="pl_PL">
-    <Text>Plotki</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="pl_PL">
-    <Text>Przycinaj plotki</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="pl_PL">
-    <Text>Usuwa głównie bezużyteczne początki wiadomości opisujące skąd pochodzi dana plotka</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_HIDDEN" Language="pl_PL">
+    <Row Tag="LOC_CQUI_GENERAL_TRANSPARENT" Language="pl_PL">
+      <Text>Przeźroczysty</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP" Language="pl_PL">
+      <Text>Plotki</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="pl_PL">
+      <Text>Przycinaj plotki</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="pl_PL">
+      <Text>Usuwa głównie bezużyteczne początki wiadomości opisujące skąd pochodzi dana plotka</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_HIDDEN" Language="pl_PL">
       <Text>Ukryte</Text>
     </Row>
-  <Row Tag="LOC_CQUI_LENSES" Language="pl_PL">
-    <Text>Filtry</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="pl_PL">
-    <Text>Automatycznie włączaj filtr archeologa</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="pl_PL">
-    <Text>Automatycznie włączaj filtr budowniczego</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="pl_PL">
-    <Text>Automatycznie włączaj filtr zwiadowcy</Text>
-  </Row>
-  <Row Tag="LOC_CQUI_POPUPS" Language="pl_PL">
+    <Row Tag="LOC_CQUI_LENSES" Language="pl_PL">
+      <Text>Filtry</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="pl_PL">
+      <Text>Automatycznie włączaj filtr archeologa</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="pl_PL">
+      <Text>Automatycznie włączaj filtr budowniczego</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="pl_PL">
+      <Text>Automatycznie włączaj filtr zwiadowcy</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS" Language="pl_PL">
       <Text>Popup'y</Text>
     </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="pl_PL">
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="pl_PL">
       <Text>Popup zakończenia Badania/Kodeksu</Text>
     </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="pl_PL">
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="pl_PL">
       <Text>Przełącza wyskakiwanie popup'u który informuje o zakończeniu badania bądź kodeksu prawnego</Text>
     </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="pl_PL">
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="pl_PL">
       <Text>Dzwięk zakończenia Badania/Kodeksu</Text>
     </Row>
-  <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="pl_PL">
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="pl_PL">
       <Text>Przełącza odtwarzanie dzwięku po zakończeniu badania bądź kodeksu prawnego. Jest całkowicie niezależny od popup'u i może być odtwarzany nawet gdy wizualny popup jest wyłączony</Text>
     </Row>
-  <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="pl_PL">
-    <Text>Pamiętaj: Ustawienia CQUI są przypisane do poszczególnych zapisów gry![NEWLINE]Jeśli chcesz zmienić ustawienia na stałe, zmień je w pliku CQUI_Settings.sql znajdującym się w katalogu [KATALOG INSTALACJI MODU]/CQUI/Assets</Text>
-  </Row>
+    <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="pl_PL">
+      <Text>Pamiętaj: Ustawienia CQUI są przypisane do poszczególnych zapisów gry![NEWLINE]Jeśli chcesz zmienić ustawienia na stałe, zmień je w pliku CQUI_Settings.sql znajdującym się w katalogu [KATALOG INSTALACJI MODU]/CQUI/Assets</Text>
+    </Row>
   </LocalizedText>
 </GameData>

@@ -1068,7 +1068,7 @@ function OnLocalPlayerTurnBegin()
           if isCurrentBoosted then
             CQUI_halfwayNotified[techName] = true;
           elseif percentageNextTurn >= CQUI_halfway and isCurrentBoosted == false and CQUI_halfwayNotified[techName] ~= true then
-              LuaEvents.CQUI_AddStatusMessage("The current Technology, " .. Locale.Lookup( techName ) .. ", is one turn away from maximum Eureka potential.", 10, CQUI_STATUS_MESSAGE_TECHS);
+              LuaEvents.CQUI_AddStatusMessage(Locale.Lookup("LOC_CQUI_TECH_MESSAGE_S") .. Locale.Lookup( techName ) .. Locale.Lookup("LOC_CQUI_HALF_MESSAGE_E"), 10, CQUI_STATUS_MESSAGE_TECHS);
               CQUI_halfwayNotified[techName] = true;
           end
 
