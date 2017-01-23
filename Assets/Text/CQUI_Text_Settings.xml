@@ -34,6 +34,18 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="en_US">
       <Text>This can also be toggled by clicking on the growth emblem in the cityview</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" Language="en_US">
+      <Text>Show city management info on hover</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="en_US">
+      <Text>Shows citizen managament icons, tile yields, and border growth on hover</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="en_US">
+      <Text>Enable Smartbanners</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="en_US">
+      <Text>Displays new icons in the city banner. A [ICON_EXCLAMATION] is displayed whenever there are unlocked citizens being automatically assigned by the AI city governor. District icons indicate built districts</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL" Language="en_US">
       <Text>General</Text>
     </Row>
@@ -49,23 +61,8 @@
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="en_US">
       <Text>Show luxuries in top panel</Text>
     </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SHOWUNITPATHS" Language="en_US">
-      <Text>Show unit path on hover or selection</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER" Language="en_US">
-      <Text>Show city management info on hover</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="en_US">
-      <Text>Shows citizen managament icons, tile yields, and border growth on hover</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="en_US">
-      <Text>Enable Smartbanners</Text>
-    </Row>
     <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="en_US">
       <Text>Solid</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="en_US">
-      <Text>Displays new icons in the city banner. A [ICON_EXCLAMATION] is displayed whenever there are unlocked citizens being automatically assigned by the AI city governor. District icons indicate built districts</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="en_US">
       <Text>Toggles yields ON by default</Text>
@@ -112,6 +109,12 @@
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="en_US">
       <Text>Remember: CQUI settings are attached to individual saves![NEWLINE]If you'd like to change a setting by default, please edit the CQUI_Settings.sql file within the [MOD INSTALL DIRECTORY]/CQUI/Assets directory</Text>
     </Row>
+    <Row Tag="LOC_CQUI_UNITS" Language="en_US">
+      <Text>Units</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="en_US">
+      <Text>Show unit path on hover or selection</Text>
+    </Row>
 
     <!-- SIMPLIFY-CHINESE -->
 
@@ -148,6 +151,18 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="zh_Hans_CN">
       <Text>点击城市视图中的成长按钮也可切换显示/隐藏</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" Language="zh_Hans_CN">
+      <Text>鼠标指向时显示城市市民分配信息</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="zh_Hans_CN">
+      <Text>鼠标指向时显示市民分配，顶部显示，以及边境增长</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="zh_Hans_CN">
+      <Text>开启智能横幅</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="zh_Hans_CN">
+      <Text>在城市横幅上显示新的图标，每当有未锁公民自动安置时会显示食物图标，区域图标表示建造区域</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL" Language="zh_Hans_CN">
       <Text>通用</Text>
     </Row>
@@ -163,23 +178,8 @@
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="zh_Hans_CN">
       <Text>在顶部面板显示奢侈</Text>
     </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SHOWUNITPATHS" Language="zh_Hans_CN">
-      <Text>选中或者鼠标指向时显示单位行进路径</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER" Language="zh_Hans_CN">
-      <Text>鼠标指向时显示城市市民分配信息</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="zh_Hans_CN">
-      <Text>鼠标指向时显示市民分配，顶部显示，以及边境增长</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="zh_Hans_CN">
-      <Text>开启智能横幅</Text>
-    </Row>
     <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="zh_Hans_CN">
       <Text>固定</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="zh_Hans_CN">
-      <Text>在城市横幅上显示新的图标，每当有未锁公民自动安置时会显示食物图标，区域图标表示建造区域</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="zh_Hans_CN">
       <Text>默认显示产量</Text>
@@ -226,6 +226,9 @@
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="zh_Hans_CN">
       <Text>注意：CQUI的设置在存档间是相互独立的。[NEWLINE]如果你想要修改默认配置，请编辑 [MOD INSTALL DIRECTORY]/CQUI/Assets目录下的CQUI_Settings.sql文件</Text>
     </Row>
+    <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="zh_Hans_CN">
+      <Text>选中或者鼠标指向时显示单位行进路径</Text>
+    </Row>
 
     <!-- ITALIAN -->
 
@@ -262,6 +265,18 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="it_IT">
       <Text>Può anche essere attivata cliccando sul simbolo della crescita nella vista cittadina</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" Language="it_IT">
+      <Text>Mostra gestione cittadina al passaggio del mouse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="it_IT">
+      <Text>Mostra la gestione dei cittadini, la resa delle caselle e la crescita dei confini al passaggio del mouse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="it_IT">
+      <Text>Abilita banner smart</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="it_IT">
+      <Text>Mostra nuove icone nel banner cittadino. Un [ICON_EXCLAMATION] appare quando il governatore assegna automaticamente cittadini alle caselle della città. Le icone distretto indicano i distretti costruiti.</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL" Language="it_IT">
       <Text>Generali</Text>
     </Row>
@@ -277,23 +292,8 @@
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="it_IT">
       <Text>Risorse di lusso nel pannello superiore</Text>
     </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SHOWUNITPATHS" Language="it_IT">
-      <Text>Percorso dell'unità visibile</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER" Language="it_IT">
-      <Text>Mostra gestione cittadina al passaggio del mouse</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="it_IT">
-      <Text>Mostra la gestione dei cittadini, la resa delle caselle e la crescita dei confini al passaggio del mouse</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="it_IT">
-      <Text>Abilita banner smart</Text>
-    </Row>
     <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="it_IT">
       <Text>Solido</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="it_IT">
-      <Text>Mostra nuove icone nel banner cittadino. Un [ICON_EXCLAMATION] appare quando il governatore assegna automaticamente cittadini alle caselle della città. Le icone distretto indicano i distretti costruiti.</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="it_IT">
       <Text>Attiva le rese di default</Text>
@@ -340,6 +340,9 @@
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="it_IT">
       <Text>Ricorda: le impostazioni CQUI sono legate ai singoli salvataggi![NEWLINE]Se vuoi impostare un parametro di default puoi modificare il file CQUI_Settings.sql all'interno della cartella [MOD INSTALL DIRECTORY]/CQUI/Assets</Text>
     </Row>
+    <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="it_IT">
+      <Text>Percorso dell'unità visibile</Text>
+    </Row>
 
     <!-- RUSSIAN -->
 
@@ -376,6 +379,18 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="ru_RU">
       <Text>Также может быть включена нажатием на иконку роста в обзоре города</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" Language="ru_RU">
+      <Text>Информация о городе при наведении</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="ru_RU">
+      <Text>Расстановка горожан, урожайность клеток, и рост границ при наведении</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="ru_RU">
+      <Text>Умные баннеры</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="ru_RU">
+        <Text>Отображает новые иконки на баннере города. [ICON_EXCLAMATION] отображается пока в городе есть незаблокированные горожане, распределенные ИИ. Иконки районов отображают построенные на территории города районы</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL" Language="ru_RU">
       <Text>Основные</Text>
     </Row>
@@ -391,23 +406,8 @@
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="ru_RU">
       <Text>Редкие ресурсы на верхней панели</Text>
     </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SHOWUNITPATHS" Language="ru_RU">
-      <Text>Путь юнита при выборе/наведении</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER" Language="ru_RU">
-      <Text>Информация о городе при наведении</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="ru_RU">
-      <Text>Расстановка горожан, урожайность клеток, и рост границ при наведении</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="ru_RU">
-      <Text>Умные баннеры</Text>
-    </Row>
     <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="ru_RU">
       <Text>Сплошные</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="ru_RU">
-        <Text>Отображает новые иконки на баннере города. [ICON_EXCLAMATION] отображается пока в городе есть незаблокированные горожане, распределенные ИИ. Иконки районов отображают построенные на территории города районы</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="ru_RU">
       <Text>Показать урожайность по умолчанию</Text>
@@ -454,6 +454,9 @@
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="ru_RU">
       <Text>Запомните: настройки CQUI связаны с каждым сохранением![NEWLINE]Если вы хотите изменить настройки по умолчанию, измените файл CQUI_Settings.sql в папке [MOD INSTALL DIRECTORY]/CQUI/Assets</Text>
     </Row>
+    <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="ru_RU">
+      <Text>Путь юнита при выборе/наведении</Text>
+    </Row>
 
     <!-- POLISH -->
 
@@ -490,6 +493,18 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="pl_PL">
       <Text>Możesz to także przełączać klikając na emblemat wzrostu w widoku miasta</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" Language="pl_PL">
+      <Text>Wyświetlaj informacje o mieście po najechaniu myszką</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="pl_PL">
+      <Text>Wyświetla ikony obywateli, ikony dochodu oraz rozrost granic po najechaniu myszką</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="pl_PL">
+      <Text>Włącz inteligentne banery</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="pl_PL">
+      <Text>Wyświetla nowe ikony w banerze miasta. Ikona [ICON_EXCLAMATION] jest wyświetlona gdy niezablokowani obywatele są automatycznie przypisywani przez AI zarządcy miasta. Ikony dystryktów wskazują zbydowane dystrykty</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL" Language="pl_PL">
       <Text>Ogólne</Text>
     </Row>
@@ -505,23 +520,8 @@
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="pl_PL">
       <Text>Wyświetlaj zasoby luksusowe w górnym panelu</Text>
     </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SHOWUNITPATHS" Language="pl_PL">
-      <Text>Wyświetlaj drogę jednostki po najechaniu myszką bądź wybraniu</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER" Language="pl_PL">
-      <Text>Wyświetlaj informacje o mieście po najechaniu myszką</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="pl_PL">
-      <Text>Wyświetla ikony obywateli, ikony dochodu oraz rozrost granic po najechaniu myszką</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER" Language="pl_PL">
-      <Text>Włącz inteligentne banery</Text>
-    </Row>
     <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="pl_PL">
       <Text>Pełny</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP" Language="pl_PL">
-      <Text>Wyświetla nowe ikony w banerze miasta. Ikona [ICON_EXCLAMATION] jest wyświetlona gdy niezablokowani obywatele są automatycznie przypisywani przez AI zarządcy miasta. Ikony dystryktów wskazują zbydowane dystrykty</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="pl_PL">
       <Text>Automatycznie włącza ikony dochodu</Text>
@@ -567,6 +567,9 @@
     </Row>
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="pl_PL">
       <Text>Pamiętaj: Ustawienia CQUI są przypisane do poszczególnych zapisów gry![NEWLINE]Jeśli chcesz zmienić ustawienia na stałe, zmień je w pliku CQUI_Settings.sql znajdującym się w katalogu [KATALOG INSTALACJI MODU]/CQUI/Assets</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="pl_PL">
+      <Text>Wyświetlaj drogę jednostki po najechaniu myszką bądź wybraniu</Text>
     </Row>
   </LocalizedText>
 </GameData>

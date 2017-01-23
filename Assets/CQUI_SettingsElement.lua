@@ -10,7 +10,7 @@ local bindings_options = {
   {"LOC_CQUI_BINDINGS_ENHANCED", 2}
 };
 
-local resource_icon_style_options = 
+local resource_icon_style_options =
 {
   {"LOC_CQUI_GENERAL_SOLID", 0},
   {"LOC_CQUI_GENERAL_TRANSPARENT", 1},
@@ -23,9 +23,9 @@ function ShowTab(button, panel)
   for i, v in ipairs(m_tabs) do
     v[2]:SetHide(true);
     v[1]:SetSelected(false);
-  end 
+  end
   button:SetSelected(true);
-  panel:SetHide(false);   
+  panel:SetHide(false);
   --Controls.WindowTitle:SetText(Locale.Lookup("LOC_CQUI_NAME") .. ": " .. Locale.ToUpper(button:GetText()));
   Controls.WindowTitle:SetText("CQUI: " .. Locale.ToUpper(button:GetText()));
 end
@@ -189,7 +189,7 @@ end
 function OnInputHandler( pInputStruct:table )
   local uiMsg = pInputStruct:GetMessageType();
   if uiMsg == KeyEvents.KeyDown then return KeyDownHandler( pInputStruct:GetKey() ); end
-  if uiMsg == KeyEvents.KeyUp then return KeyUpHandler( pInputStruct:GetKey() ); end  
+  if uiMsg == KeyEvents.KeyUp then return KeyUpHandler( pInputStruct:GetKey() ); end
   return false;
 end
 function Close()
@@ -222,6 +222,7 @@ function Initialize()
     {Controls.GossipTab, Controls.GossipOptions},
     {Controls.CityviewTab, Controls.CityviewOptions},
     {Controls.LensesTab, Controls.LensesOptions},
+    {Controls.UnitsTab, Controls.UnitsOptions},
     {Controls.HiddenTab, Controls.HiddenOptions}
   };
   for i, tab in ipairs(m_tabs) do
@@ -232,14 +233,14 @@ function Initialize()
   --Populating/binding comboboxes...
   PopulateComboBox(Controls.BindingsPullDown, bindings_options, "CQUI_BindingsMode", Locale.Lookup("LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP"));
   PopulateComboBox(Controls.ResourceIconStyle, resource_icon_style_options, "CQUI_ResourceDimmingStyle", Locale.Lookup("LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP"));
-  
+
   --Populating/binding checkboxes...
   PopulateCheckBox(Controls.ProductionQueueCheckbox, "CQUI_ProductionQueue");
   RegisterControl(Controls.ProductionQueueCheckbox, "CQUI_ProductionQueue", UpdateCheckbox);
   PopulateCheckBox(Controls.ShowLuxuryCheckbox, "CQUI_ShowLuxuries");
   PopulateCheckBox(Controls.ShowCultureGrowthCheckbox, "CQUI_ShowCultureGrowth", Locale.Lookup("LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP"));
   RegisterControl(Controls.ShowCultureGrowthCheckbox, "CQUI_ShowCultureGrowth", UpdateCheckbox);
-  PopulateCheckBox(Controls.SmartbannerCheckbox, "CQUI_Smartbanner", Locale.Lookup("LOC_CQUI_GENERAL_SMARTBANNER_TOOLTIP"));
+  PopulateCheckBox(Controls.SmartbannerCheckbox, "CQUI_Smartbanner", Locale.Lookup("LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP"));
   PopulateCheckBox(Controls.ToggleYieldsOnLoadCheckbox, "CQUI_ToggleYieldsOnLoad");
   PopulateCheckBox(Controls.TechVisualCheckbox, "CQUI_TechPopupVisual", Locale.Lookup("LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP"));
   PopulateCheckBox(Controls.TechAudioCheckbox, "CQUI_TechPopupAudio", Locale.Lookup("LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP"));
@@ -247,13 +248,13 @@ function Initialize()
   PopulateCheckBox(Controls.AutoapplyArchaeologistLensCheckbox, "CQUI_AutoapplyArchaeologistLens");
   PopulateCheckBox(Controls.AutoapplyBuilderLensCheckbox, "CQUI_AutoapplyBuilderLens");
   PopulateCheckBox(Controls.AutoapplyScoutLensCheckbox, "CQUI_AutoapplyScoutLens");
-  PopulateCheckBox(Controls.ShowYieldsOnCityHoverCheckbox, "CQUI_ShowYieldsOnCityHover", Locale.Lookup("LOC_CQUI_GENERAL_SHOWYIELDSONCITYHOVER_TOOLTIP"));
+  PopulateCheckBox(Controls.ShowYieldsOnCityHoverCheckbox, "CQUI_ShowYieldsOnCityHover", Locale.Lookup("LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP"));
   PopulateCheckBox(Controls.ShowUnitPathsCheckbox, "CQUI_ShowUnitPaths");
 
   PopulateSlider(Controls.ProductionItemHeightSlider, Controls.ProductionItemHeightText, "CQUI_ProductionItemHeight", ProductionItemHeightConverter);
 
   InitializeGossipCheckboxes();
-  
+
   --Setting up panel controls
   ShowTab(m_tabs[1][1], m_tabs[1][2]); --Show General Settings on start
   ContextPtr:SetInputHandler( OnInputHandler, true );
