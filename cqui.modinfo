@@ -49,11 +49,11 @@
     <File>Assets/CQUI_Settings.sql</File>
     <File>Assets/CQUI_SettingsElement.lua</File>
     <File>Assets/CQUI_SettingsElement.xml</File>
-    <File>Assets/CQUI_Text_General.xml</File>
-    <File>Assets/CQUI_Text_Settings.xml</File>
     <File>Assets/CQUI_Main.lua</File>
     <File>Assets/CQUI_TopLayer.xml</File>
     <File>Assets/CQUI_TopLayer.lua</File>
+    <File>Assets/Text/CQUI_Text_General.xml</File>
+    <File>Assets/Text/CQUI_Text_Settings.xml</File>
     <File>Assets/UI/ActionPanel.lua</File>
     <File>Assets/UI/CitySupport.lua</File>
     <File>Assets/UI/Civ6Common.lua</File>
@@ -180,8 +180,8 @@
     <!-- CQUI specific LOCs  -->
     <LocalizedText id="CQUI_TEXT">
       <Items>
-        <File>Assets/CQUI_Text_General.xml</File>
-        <File>Assets/CQUI_Text_Settings.xml</File>
+        <File>Assets/Text/CQUI_Text_General.xml</File>
+        <File>Assets/Text/CQUI_Text_Settings.xml</File>
       </Items>
     </LocalizedText>
     <!-- CQUI specific settings -->

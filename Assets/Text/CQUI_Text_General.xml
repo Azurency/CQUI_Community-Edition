@@ -23,15 +23,6 @@
     <Row Tag="LOC_CQUI_CITY_ENTERTAINMENT" Language="en_US">
       <Text>Entertainment</Text>
     </Row>
-    <Row Tag="LOC_CQUI_CITY_GREAT_PEOPLE" Language="en_US">
-      <Text>Great[NEWLINE]People</Text>
-    </Row>
-	<Row Tag="LOC_CQUI_CITY_NATIONAL_PARK" Language="en_US">
-      <Text>National[NEWLINE]Parks</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_CITY_WAR_WEARINESS" Language="en_US">
-      <Text>War[NEWLINE]Weariness</Text>
-    </Row>
 
 	<!-- SIMPLIFY-CHINESE -->
 
@@ -55,15 +46,6 @@
     <!-- CITY PANEL AMENITY -->
     <Replace Tag="LOC_CQUI_CITY_ENTERTAINMENT" Language="zh_Hans_CN">
       <Text>娱乐</Text>
-    </Replace>
-    <Replace Tag="LOC_CQUI_CITY_GREAT_PEOPLE" Language="zh_Hans_CN">
-      <Text>伟人</Text>
-    </Replace>
-    <Replace Tag="LOC_CQUI_CITY_NATIONAL_PARK" Language="zh_Hans_CN">
-      <Text>国家公园</Text>
-    </Replace>
-    <Replace Tag="LOC_CQUI_CITY_WAR_WEARINESS" Language="zh_Hans_CN">
-      <Text>厌战</Text>
     </Replace>
 
     <!--  ITALIAN -->
@@ -89,15 +71,6 @@
     <Replace Tag="LOC_CQUI_CITY_ENTERTAINMENT" Language="it_IT">
       <Text>Svaghi</Text>
     </Replace>
-    <Replace Tag="LOC_CQUI_CITY_GREAT_PEOPLE" Language="it_IT">
-      <Text>Grandi[NEWLINE]Personaggi</Text>
-    </Replace>
-    <Replace Tag="LOC_CQUI_CITY_NATIONAL_PARK" Language="it_IT">
-      <Text>Parchi[NEWLINE]Nazionali</Text>
-    </Replace>
-    <Replace Tag="LOC_CQUI_CITY_WAR_WEARINESS" Language="it_IT">
-      <Text>Stanchezza[NEWLINE]di Guerra</Text>
-    </Replace>
 
     <!-- RUSSIAN -->
     <!-- MESSAGES -->
@@ -120,15 +93,6 @@
     <Replace Tag="LOC_CQUI_CITY_ENTERTAINMENT" Language="ru_RU">
       <Text>Развлечения</Text>
     </Replace>
-    <Replace Tag="LOC_CQUI_CITY_GREAT_PEOPLE" Language="ru_RU">
-      <Text>Великие[NEWLINE]Люди</Text>
-    </Replace>
-    <Replace Tag="LOC_CQUI_CITY_NATIONAL_PARK" Language="ru_RU">
-      <Text>Национальные[NEWLINE]Парки</Text>
-    </Replace>
-    <Replace Tag="LOC_CQUI_CITY_WAR_WEARINESS" Language="ru_RU">
-      <Text>Усталость[NEWLINE]от войны</Text>
-    </Replace>
 
     <!-- POLISH -->
     <!-- MESSAGES -->
@@ -150,15 +114,6 @@
     <!-- CITY PANEL AMENITY -->
     <Replace Tag="LOC_CQUI_CITY_ENTERTAINMENT" Language="pl_PL">
       <Text>Rozrywka</Text>
-    </Replace>
-    <Replace Tag="LOC_CQUI_CITY_GREAT_PEOPLE" Language="pl_PL">
-      <Text>Wielcy[NEWLINE]Ludzie</Text>
-    </Replace>
-    <Replace Tag="LOC_CQUI_CITY_NATIONAL_PARK" Language="pl_PL">
-      <Text>Parki[NEWLINE]Narodowe</Text>
-    </Replace>
-    <Replace Tag="LOC_CQUI_CITY_WAR_WEARINESS" Language="pl_PL">
-      <Text>Zmęczenie[NEWLINE]Wojną</Text>
     </Replace>
   </LocalizedText>
 </GameData>
