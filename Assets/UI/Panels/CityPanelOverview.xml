@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Context  ColorSet="BodyTextCool" FontStyle="Shadow">
-  
+
   <SlideAnim    ID="OverviewSlide"  Anchor="L,T"                  Size="300,full"       Start="-330,27" End="0,27" Cycle="Once" Speed="3.5" Function="OutSine" Stopped="1" >
     <Box          ID="OverviewBackground" Anchor="L,T"                  Size="parent,parent+5" ConsumeMouse="1" Color="8,34,56,255">
       <Image ID="PanelDropShadow" Texture="Controls_GradientSmall" Size="22,parent" AnchorSide="O,I" Anchor="R,T" Color="0,0,0,190" Rotate="270" Offset="-1,0"/>
@@ -79,7 +79,7 @@
                   <TextureBar ID="GrowthLongTurnsBar"   Anchor="L,T"  Size="parent-4,parent-3"    Texture="CityPanel_CitizenMeter"        ShadowColor="255,255,255,100">
                     <Label        ID="GrowthLongNum"                                      Style="CityPanelNumLarge"   String="-" WrapWidth="parent" Offset="4,0"/>
                   </TextureBar>
-                </Image>    
+                </Image>
               </Grid>
               <Container  Size="1,5" />
             </Stack>
@@ -121,58 +121,8 @@
                 <Label      ID="CitizenGrowth"            Anchor="L,C" Offset="48,0"    WrapWidth="235"     Style="CityPanelTextSmall" String="$CitizenGrowth$" LeadingOffset="4" />
               </Grid>
               <Grid                                       Anchor="L,T" Offset="0,0"     Size="parent,0"       AutoSize="Vertical" Style="CityPanelSubPanelContainer" InnerPadding="0,10" InnerOffset="0,5">
-                <Stack    Anchor="C,C"                                                              StackGrowth="Bottom" StackPadding="0">
-                  <Stack    ID="AmenityStack"                                           StackGrowth="Bottom" StackPadding="4" />
-                  <Stack StackGrowth="Down" Anchor="C,C">
-                    <Stack StackGrowth="Right" Anchor="C,C" Padding="16">
-                      <Image ID="AmenetiesStatusIconContainerLuxuries" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
-                        <Image ID="AmenetiesStatusIconLuxuries" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_IMPROVEMENT_BEACH_RESORT" />
-                        <Label ID="AmenetiesStatusYieldLuxuries" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelLuxuries" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_PEDIA_RESOURCES_PAGEGROUP_LUXURY_NAME" />
-                      </Image>
-                      <Image ID="AmenetiesStatusIconContainerCivics" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
-                        <Image ID="AmenetiesStatusIconCivics" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_NOTIFICATION_CONSIDER_GOVERNMENT_CHANGE" />
-                        <Label ID="AmenetiesStatusYieldCivics" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelCivics" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CATEGORY_CIVICS_NAME" />
-                      </Image>
-                      <Image ID="AmenetiesStatusIconContainerEntertainment" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
-                        <Image ID="AmenetiesStatusIconEntertainment" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_PROJECT_CARNIVAL" />
-                        <Label ID="AmenetiesStatusYieldEntertainment" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelEntertainment" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CQUI_CITY_ENTERTAINMENT" />
-                      </Image>
-                      <Image ID="AmenetiesStatusIconContainerGreatPeople" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
-                        <Image ID="AmenetiesStatusIconGreatPeople" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_NOTIFICATION_CLAIM_GREAT_PERSON" />
-                        <Label ID="AmenetiesStatusYieldGreatPeople" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelGreatPeople" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CQUI_CITY_GREAT_PEOPLE" />
-                      </Image>
-                    </Stack>
-                    <Container Size="1,20" />
-                    <Stack StackGrowth="Right" Anchor="C,C" Padding="16">
-                      <Image ID="AmenetiesStatusIconContainerReligion" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
-                        <Image ID="AmenetiesStatusIconReligion" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_UNITOPERATION_FOUND_RELIGION" />
-                        <Label ID="AmenetiesStatusYieldReligion" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelReligion" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_UI_RELIGION_TITLE" />
-                      </Image>
-                      <Image ID="AmenetiesStatusIconContainerNationalParks" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
-                        <Image ID="AmenetiesStatusIconNationalParks" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_UNITOPERATION_DESIGNATE_PARK" />
-                        <Label ID="AmenetiesStatusYieldNationalParks" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelNationalParks" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CQUI_CITY_NATIONAL_PARK" />
-                      </Image>
-                      <Image ID="AmenetiesStatusIconContainerWarWeariness" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
-                        <Image ID="AmenetiesStatusIconWarWeariness" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_UNITOPERATION_FORTIFY" />
-                        <Label ID="AmenetiesStatusYieldWarWeariness" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelWarWeariness" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CQUI_CITY_WAR_WEARINESS" />
-                      </Image>
-                      <Image ID="AmenetiesStatusIconContainerBankruptcy" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
-                        <Image ID="AmenetiesStatusIconBankruptcy" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_NOTIFICATION_TREASURY_BANKRUPT" />
-                        <Label ID="AmenetiesStatusYieldBankruptcy" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="AmenetiesStatusLabelBankruptcy" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_PEDIA_CONCEPTS_PAGE_GOLD_4_CHAPTER_CONTENT_TITLE" />
-                      </Image>
-                    </Stack>
-                    <Container Size="1,8" />
-                  </Stack>
-                  <Container Size="1,8" />
-                </Stack>
+                <Stack ID="AmenityStack" Anchor="C,C" WrapWidth="150" WrapGrowth="Right" StackGrowth="Down" />
+                <Container Anchor="L,B" Size="1,50" />
               </Grid>
               <Container ID="AmenitiesAdvisorBubble" Size="parent,0"  AutoSize="V">
                 <Image Anchor="R,T" Size="64,64" Texture="Advisors64"/>
@@ -214,54 +164,9 @@
                   <Image  Anchor="R,C" AnchorSide="O,I" Offset="5,0" Texture="Controls_ThereforeArrow" Size="27,41"/>
                 </Grid>
               </Container>
-              <Grid                                       Anchor="L,T" Offset="0,0"     Size="parent,0"       AutoSize="Vertical" Style="CityPanelSubPanelContainer" InnerPadding="0,10" InnerOffset="0,5">
-                <Stack  Anchor="C,C"                                                    StackGrowth="Bottom" StackPadding="0">
-                  <Stack    ID="HousingStack"                                           StackGrowth="Bottom" StackPadding="4" />
-                  <Stack StackGrowth="Down" Anchor="C,C">
-                    <Stack StackGrowth="Right" Padding="16">
-                      <Image ID="HousingStatusIconContainerBuildings" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
-                        <Image ID="HousingStatusIconBuildings" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_BUILDING_GRANARY" />
-                        <Label ID="HousingStatusYieldBuildings" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="HousingStatusLabelBuildings" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_BUILDING_NAME" />
-                      </Image>
-                      <Image ID="HousingStatusIconContainerCivics" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
-                        <Image ID="HousingStatusIconCivics" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_NOTIFICATION_CONSIDER_GOVERNMENT_CHANGE" />
-                        <Label ID="HousingStatusYieldCivics" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="HousingStatusLabelCivics" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CATEGORY_CIVICS_NAME" />
-                      </Image>
-                      <Image ID="HousingStatusIconContainerDistricts" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
-                        <Image ID="HousingStatusIconDistricts" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_DISTRICT_CITY_CENTER" />
-                        <Label ID="HousingStatusYieldDistricts" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="HousingStatusLabelDistricts" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_DISTRICT_NAME" />
-                      </Image>
-                      <Image ID="HousingStatusIconContainerGreatPeople" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
-                        <Image ID="HousingStatusIconGreatPeople" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_NOTIFICATION_CLAIM_GREAT_PERSON" />
-                        <Label ID="HousingStatusYieldGreatPeople" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="HousingStatusLabelGreatPeople" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_CQUI_CITY_GREAT_PEOPLE" />
-                      </Image>
-                    </Stack>
-                    <Container Size="1,20" />
-                    <Stack StackGrowth="Right" Anchor="C,C" Padding="16">
-                      <Image ID="HousingStatusIconContainerWater" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
-                        <Image ID="HousingStatusIconWater" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_GREAT_PERSON_CLASS_ADMIRAL" />
-                        <Label ID="HousingStatusYieldWater" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="HousingStatusLabelWater" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="Water" />
-                      </Image>
-                      <Image ID="HousingStatusIconContainerImprovements" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
-                        <Image ID="HousingStatusIconImprovements" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_IMPROVEMENT_PASTURE" />
-                        <Label ID="HousingStatusYieldImprovements" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="HousingStatusLabelImprovements" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_IMPROVEMENT_NAME" />
-                      </Image>
-                      <Image ID="HousingStatusIconContainerStartingEra" Anchor="C,C" Size="50,50" Texture="CityPanel_StatusIcon">
-                        <Image ID="HousingStatusIconStartingEra" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_GREAT_PERSON_CLASS_SCIENTIST" />
-                        <Label ID="HousingStatusYieldStartingEra" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="1" />
-                        <Label ID="HousingStatusLabelStartingEra" Anchor="C,C" Offset="0,30" Style="UnitPanelStatLabel" Align="Center" String="LOC_ERA_NAME" />
-                      </Image>
-                    </Stack>
-                    <Container Size="1,8" />
-                  </Stack>
-                  <Container Size="1,8" />
-                </Stack>
+              <Grid Anchor="L,T" Offset="0,0" Size="parent,0" AutoSize="Vertical" Style="CityPanelSubPanelContainer" InnerPadding="0,10" InnerOffset="0,5">
+                <Stack ID="HousingStack" Anchor="C,C" WrapWidth="150" WrapGrowth="Right" StackGrowth="Down" />
+                <Container Anchor="L,B" Size="1,50" />
               </Grid>
               <Container ID="HousingAdvisorBubble" Size="parent,0"  AutoSize="V">
                 <Image Anchor="R,T" Size="64,64" Texture="Advisors64"/>
@@ -307,7 +212,7 @@
                 <Stack      ID="BuildingAndDistrictsStack" StackGrowth="Bottom" Padding="3" />
               </Container>
               <Container Size="5,5"/>
-              
+
               <Grid                                   Anchor="L,T"                  Size="parent,24"    Style="DivHeader">
                 <Container Size="parent,24">
                   <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" FlipY="1" Anchor="C,T" Color="72,103,130,255"/>
@@ -323,7 +228,7 @@
                 <Stack      ID="WondersStack" StackGrowth="Bottom" />
               </Container>
               <Container Size="5,5"/>
-              
+
               <Grid                                   Anchor="L,T"                  Size="parent,24"    Style="DivHeader">
                 <Container Size="parent,24">
                   <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" FlipY="1" Anchor="C,T" Color="72,103,130,255"/>
@@ -349,7 +254,7 @@
               </Container>
               <Label                                  Anchor="C,C" Offset="5,0"                         Style="CityPanelSubPanelTitle" String="LOC_HUD_CITY_RELIGION" />
             </Grid>
-           
+
             <Container    ID="NoReligionArea" Size="parent,0" AutoSize="Vertical" InnerPadding="0,10">
               <Grid                                       Offset="5,30"   Size="parent-10,0"  AutoSize="Vertical" InnerPadding="40,30" Texture="Controls_DecoFrame" SliceCorner="20,19" SliceSize="1,1" SliceTextureSize="40,38" Color="255,255,255,50">
                 <Label  Style="CityPanelText" WrapWidth="parent"  String="LOC_HUD_CITY_RELIGION_NO_CITIZENS" />
@@ -430,7 +335,7 @@
       <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent-12,30" Color="8,34,56,255" Offset="0,60"/>
       <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent-12,20" Color="8,34,56,255" Offset="0,60"/>
       <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent-12,20" Color="8,34,56,255" Offset="0,60"/>
-     
+
     </Box>
     <Grid         ID="OverviewHeader"     Style="HeaderBannerLeft" Size="320,65" Anchor="L,T" Offset="0,0">
       <Container Size="parent-20,28" Anchor="L,T">
@@ -439,8 +344,8 @@
           <Label      ID="OverviewSubheader" Anchor="C,C" String="{LOC_HUD_CITY_DETAILS:upper}" Style="HeaderSmallCaps"/>
         </GridButton>
       </Container>
-      
-      
+
+
       <Image Texture="Controls_TabLedgeFill" Size="parent-100,23" StretchMode="Tile" AnchorSide="I,O" Anchor="C,T" Offset="0,-50"/>
       <Grid Style="WoodenTabBacking" Size="parent-20,31" Offset="-10,-55" AnchorSide="I,O" Anchor="C,T">
         <Container ID="TabContainer" Anchor="C,B" Offset="0,-15" Size="parent,36">
@@ -471,7 +376,7 @@
       <Button ID="Close" Style="CloseButtonAlt" Anchor="C,C"/>
     </Image>
   </SlideAnim>
-  
+
   <!-- ==================================================================== -->
   <!--  INSTANCES                                                           -->
   <!-- ==================================================================== -->
@@ -554,5 +459,14 @@
     </Grid>
   </Instance>
 
+  <Instance Name="CQUI_BubbleInstance">
+    <Grid ID="Top" Anchor="L,C" MinSize="65,65" AutoSize="H" Color="0,0,0,0">
+      <Image ID="BubbleContainer" Size="50,50" Anchor="C,T" Texture="CityPanel_StatusIcon">
+        <Image ID="BubbleIcon" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_IMPROVEMENT_BEACH_RESORT" />
+        <Label ID="BubbleAmount" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="Amount" />
+      </Image>
+      <Label ID="BubbleLabel" Anchor="C,T" Offset="-2,45" Style="UnitPanelStatLabel" Align="Center" String="Bubble Label" />
+    </Grid>
+  </Instance>
 
 </Context>
