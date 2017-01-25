@@ -229,10 +229,15 @@
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="zh_Hans_CN">
       <Text>注意：CQUI的设置在存档间是相互独立的。[NEWLINE]如果你想要修改默认配置，请编辑 [MOD INSTALL DIRECTORY]/CQUI/Assets目录下的CQUI_Settings.sql文件</Text>
     </Row>
+    <Row Tag="LOC_CQUI_UNITS" Language="zh_Hans_CN">
+      <Text>单位</Text>
+    </Row>
     <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="zh_Hans_CN">
       <Text>选中或者鼠标指向时显示单位行进路径</Text>
     </Row>
-
+    <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="zh_Hans_CN">
+      <Text>自动展开单位的指令面板</Text>
+    </Row>
     <!-- ITALIAN -->
 
     <Row Tag="LOC_CQUI_BINDINGS" Language="it_IT">

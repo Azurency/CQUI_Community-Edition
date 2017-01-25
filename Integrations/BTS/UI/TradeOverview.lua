@@ -1204,9 +1204,9 @@ function RefreshGroupByPulldown()
     m_groupByList = {};
 
     -- Build entries
-    AddGroupByEntry("None", GROUP_BY_SETTINGS.NONE);
-    AddGroupByEntry("Origin City", GROUP_BY_SETTINGS.ORIGIN);
-    AddGroupByEntry("Destination City", GROUP_BY_SETTINGS.DESTINATION);
+    AddGroupByEntry(Locale.Lookup("LOC_CITY_STATES_NONE"), GROUP_BY_SETTINGS.NONE);
+    AddGroupByEntry(Locale.Lookup("LOC_TRADE_OVERVIEW_ORIGIN"), GROUP_BY_SETTINGS.ORIGIN);
+    AddGroupByEntry(Locale.Lookup("LOC_TRADE_OVERVIEW_DESTINATION"), GROUP_BY_SETTINGS.DESTINATION);
 
     -- Calculate Internals
     Controls.OverviewGroupByPulldown:CalculateInternals();
@@ -1312,7 +1312,7 @@ function RefreshFilters()
     end
 
     -- Add "City States" Filter
-    AddFilter("City-States", IsCityState);
+    AddFilter(Locale.Lookup("LOC_HUD_REPORTS_CITY_STATE"), IsCityState);
 
     -- Add filters to pulldown
     for index, filter in ipairs(m_filterList) do

@@ -310,7 +310,7 @@ function ViewCurrent( data:table )
           --recruitInst.Country:SetColorByName( recruitColorName );
           recruitInst.ProgressBar:SetColorByName( recruitColorName );
 
-          local recruitDetails:string = "Progress:" .. tostring(Round(kPlayerPoints.PointsTotal,1)) .. "/" .. tostring(kPerson.RecruitCost) 
+          local recruitDetails:string = Locale.Lookup("LOC_CQUI_GREAT_PERSON_PROGRESS") .. tostring(Round(kPlayerPoints.PointsTotal,1)) .. "/" .. tostring(kPerson.RecruitCost)
 			.. "[NEWLINE]" .. Locale.Lookup("LOC_GREAT_PEOPLE_POINT_DETAILS", Round(kPlayerPoints.PointsPerTurn, 1), classData.IconString, classData.Name);
 
           DifferentiateCiv(kPlayerPoints.PlayerID,recruitInst.CivIcon,recruitInst.CivIcon,recruitInst.CivBacking, nil, nil, Game.GetLocalPlayer());

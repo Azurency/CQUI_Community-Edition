@@ -3,6 +3,15 @@
   <BaseGameText>
 
     <!-- Common Text -->
+
+    <Row Tag="LOC_TRADE_GROUP_SETTINGS">
+        <Text>Group Settings</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_FILTER_SETTINGS">
+        <Text>Filter Settings</Text>
+    </Row>
+
     <Row Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP">
         <Text>Sort by [ICON_Food]Food.</Text>
     </Row>
@@ -49,11 +58,11 @@
     </Row>
 
     <Row Tag="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT">
-        <Text>Expand All:</Text>
+        <Text>Exp:</Text>
     </Row>
 
     <Row Tag="LOC_TRADE_COLLAPSE_ALL_BUTTON_TEXT">
-        <Text>Collapse All:</Text>
+        <Text>Col:</Text>
     </Row>
 
     <Row Tag="LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP">
@@ -124,6 +133,14 @@
 
   <!-- Common Text -->
   <LocalizedText>
+    <Replace Tag="LOC_TRADE_GROUP_SETTINGS" Language="zh_Hans_CN">
+        <Text>设置分组筛选</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FILTER_SETTINGS" Language="zh_Hans_CN">
+        <Text>设置过滤条件</Text>
+    </Replace>
+
     <Replace Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="zh_Hans_CN">
         <Text>按 [ICON_Food] 食物排序</Text>
     </Replace>
@@ -170,11 +187,11 @@
     </Replace>
 
     <Replace Tag="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT" Language="zh_Hans_CN">
-        <Text>全部展开：</Text>
+        <Text>展开</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_COLLAPSE_ALL_BUTTON_TEXT" Language="zh_Hans_CN">
-        <Text>全部折叠：</Text>
+        <Text>折叠</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP" Language="zh_Hans_CN">

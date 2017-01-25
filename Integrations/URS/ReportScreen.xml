@@ -8,7 +8,7 @@
 		<Button				ID="CloseButton"		Anchor="R,T"	Offset="-3,-1"	Size="44,44"																			Texture="Controls_CloseLarge"  />
 		<Image														Anchor="C,T"									Size="parent,44"					Color="61,112,154,255"	Texture="Controls_Gradient_HalfRadial"  />
 		<GridButton		ID="CollapseAll"									Offset="48,13"	SizeToText="80,12"				Style="RoundedButton"		String="LOC_HUD_REPORTS_COLLAPSE_ALL"  Hidden="0" />
-		<GridButton   ID="CityBuildingsCheckbox"  Style="CheckBoxControl" SizeToText="80,12" String="Hide City Buildings" Offset="220,15" Hidden="1"/>
+		<GridButton   ID="CityBuildingsCheckbox"  Style="CheckBoxControl" SizeToText="80,12" String="LOC_HUD_REPORTS_TAB_HIDE_CITY_BUILDINGS" Offset="220,15" Hidden="1"/>
 		<Label														Anchor="C,T"	Offset="0,16"															Style="FontFlair20"			String="{LOC_HUD_REPORTS_TITLE:upper}" FontStyle="Glow" Color0="133,205,235,255" Color1="203,215,225,100" Color2="254,254,254,255" SmallCaps="28" SmallCapsType="EveryWord" />
 		<Grid															Anchor="C,T"	Offset="0,44"		Size="parent-6,8"					Style="Divider3Grid" />
 		
@@ -248,27 +248,27 @@
 				<Container																										Size="33,40" />
 				<Box																													Size="2,40"	Color="46,70,95,255" />
 				<Container																										Size="100,40">
-					<Label		ID="Production"				Style="ReportValueText"			String="P"  Color="Production" />
+					<Label		ID="Production"				Style="ReportValueText"			String=""  Color="Production" />
 				</Container>
 				<Box																													Size="2,40"	Color="46,70,95,255" />
 				<Container																										Size="100,40">
-					<Label		ID="Food"							Style="ReportValueText"			String="F"	Color="Food" />
+					<Label		ID="Food"							Style="ReportValueText"			String=""	Color="Food" />
 				</Container>
 				<Box																													Size="2,40"	Color="46,70,95,255" />
 				<Container																										Size="100,40">
-					<Label		ID="Gold"							Style="ReportValueText"			String="G"	Color="Gold" />
+					<Label		ID="Gold"							Style="ReportValueText"			String=""	Color="Gold" />
 				</Container>
 				<Box																													Size="2,40"	Color="46,70,95,255" />
 				<Container																										Size="100,40">
-					<Label		ID="Faith"						Style="ReportValueText"			String="F"	Color="Faith" />
+					<Label		ID="Faith"						Style="ReportValueText"			String=""	Color="Faith" />
 				</Container>
 				<Box																													Size="2,40"	Color="46,70,95,255" />
 				<Container																										Size="100,40">
-					<Label		ID="Science"					Style="ReportValueText"			String="S"	Color="Science" />
+					<Label		ID="Science"					Style="ReportValueText"			String=""	Color="Science" />
 				</Container>
 				<Box																													Size="2,40"	Color="46,70,95,255" />
 				<Container																										Size="100,40">
-					<Label		ID="Culture"					Style="ReportValueText"			String="C"	Color="Culture" />
+					<Label		ID="Culture"					Style="ReportValueText"			String=""	Color="Culture" />
 				</Container>
 				<Box																													Size="2,40"	Color="46,70,95,255" />
 				<Container																										Size="100,40">
@@ -295,33 +295,33 @@
 			<Stack	StackGrowth="Right" >
 				<Box																													Size="2,parent"	Color="46,70,95,128" />
 				<Container																			Offset="1,0"	Size="232,parent">
-					<Label		ID="LineItemName"			Style="ReportRowStart"			String="District" Offset="36,0" />
+					<Label		ID="LineItemName"			Style="ReportRowStart"			String="LOC_HUD_DISTRICTS" Offset="36,0" />
 				</Container>
 				<Box																													Size="2,parent"	Color="46,70,95,255" />
 				<Container																										Size="33,parent" />
 				<Box																													Size="2,parent"	Color="46,70,95,255" />
 				<Container																										Size="100,20">
-					<Label		ID="Production"				Style="ReportValueText"			String="P"  Color="Production" />
+					<Label		ID="Production"				Style="ReportValueText"			String=""  Color="Production" />
 				</Container>
 				<Box																													Size="2,20"	Color="46,70,95,255" />
 				<Container																										Size="100,20">
-					<Label		ID="Food"							Style="ReportValueText"			String="F"	Color="Food" />
+					<Label		ID="Food"							Style="ReportValueText"			String=""	Color="Food" />
 				</Container>
 				<Box																													Size="2,20"	Color="46,70,95,255" />
 				<Container																										Size="100,20">
-					<Label		ID="Gold"							Style="ReportValueText"			String="G"	Color="Gold" />
+					<Label		ID="Gold"							Style="ReportValueText"			String=""	Color="Gold" />
 				</Container>
 				<Box																													Size="2,20"	Color="46,70,95,255" />
 				<Container																										Size="100,20">
-					<Label		ID="Faith"						Style="ReportValueText"			String="F"	Color="Faith" />
+					<Label		ID="Faith"						Style="ReportValueText"			String=""	Color="Faith" />
 				</Container>
 				<Box																													Size="2,20"	Color="46,70,95,255" />
 				<Container																										Size="100,20">
-					<Label		ID="Science"					Style="ReportValueText"			String="S"	Color="Science" />
+					<Label		ID="Science"					Style="ReportValueText"			String=""	Color="Science" />
 				</Container>
 				<Box																													Size="2,20"	Color="46,70,95,255" />
 				<Container																										Size="100,20">
-					<Label		ID="Culture"					Style="ReportValueText"			String="C"	Color="Culture" />
+					<Label		ID="Culture"					Style="ReportValueText"			String=""	Color="Culture" />
 				</Container>
 				<Box																													Size="2,20"	Color="46,70,95,255" />
 				<Container																										Size="100,20">
@@ -469,7 +469,7 @@
 			<Stack	StackGrowth="Right" >
 				<Box																													Size="2,parent"	Color="46,70,95,128" />
 				<Container																			Offset="2,0"	Size="470,parent">
-					<Label													Style="ReportHeaderText"		String="Unit" />
+					<Label													Style="ReportHeaderText"		String="LOC_UNIT_NAME" />
 				</Container>
 				<Box																													Size="2,parent"	Color="46,70,95,255" />
 				
@@ -495,7 +495,7 @@
 			<Stack	StackGrowth="Right" >
 				<Box															Anchor="C,C"								Size="2,22"	Color="46,70,95,128" />				
 				<Container																			Offset="2,0"	Size="470,parent">
-					<Label			ID="UnitName"				Style="ReportValueText"	String="UnitName" />
+					<Label			ID="UnitName"				Style="ReportValueText"	String="LOC_HUD_REPORTS_HEADER_UNITNAME" />
 				</Container>
 				<Box															Anchor="C,C"								Size="2,19"	Color="46,70,95,255" />
 				
@@ -667,7 +667,7 @@
 				<Container																										Size="100,parent">
 					<GridButton		ID="CityPopulationButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
 						<Label													Style="ReportHeaderSmallText"		String="LOC_HUD_REPORTS_HEADER_POPULATION" />
-					</GridButton
+					</GridButton>
 				</Container>
 				<Box																													Size="2,parent"	Color="46,70,95,255" />
 				<Container																										Size="80,parent">
@@ -777,22 +777,22 @@
 			<Stack	StackGrowth="Right" >
 				<Box																													Size="2,parent"	Color="46,70,95,128" />
 				<Container																			Offset="1,0"	Size="236,parent">
-					<Label													Style="ReportHeaderSmallText"		String="Name" />
+					<Label													Style="ReportHeaderSmallText"		String="LOC_MODS_SORTBY_NAME" />
 				</Container>
 				<Container																										Size="22,parent">
-					<Label													Style="ReportHeaderSmallText"		String="Status" />
+					<Label													Style="ReportHeaderSmallText"		String="LOC_HUD_REPORTS_HEADER_STATUS" />
 				</Container>
 				<Container																										Size="100,parent">
-					<Label													Style="ReportHeaderSmallText"		String="Level" />
+					<Label													Style="ReportHeaderSmallText"		String="LOC_HUD_UNIT_PANEL_LEVEL_ABBREVIATION" />
 				</Container>
 				<Container																										Size="125,parent">
-					<Label													Style="ReportHeaderSmallText"		String="Experience" />
+					<Label													Style="ReportHeaderSmallText"		String="LOC_HUD_UNIT_PANEL_XP" />
 				</Container>
 				<Container																										Size="100,parent">
-					<Label													Style="ReportHeaderSmallText"		String="Health" />
+					<Label													Style="ReportHeaderSmallText"		String="LOC_TECH_FILTER_HEALTH" />
 				</Container>
 				<Container																										Size="100,parent">
-					<Label													Style="ReportHeaderSmallText"		String="Movement" />
+					<Label													Style="ReportHeaderSmallText"		String="LOC_HUD_UNIT_PANEL_MOVEMENT" />
 				</Container>				
 				<Container																										Size="298,parent">
 					<Label													Style="ReportHeaderSmallText"		String="" />
@@ -814,43 +814,43 @@
 
 				<Container Offset="1,0" Size="50,parent">
 					<GridButton		ID="UnitTypeButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Type"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_CITY_STATES_TYPE"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="250,parent">
 					<GridButton		ID="UnitNameButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Name"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_MODS_SORTBY_NAME"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="50,parent">
 					<GridButton		ID="UnitStatusButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Status"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_HUD_REPORTS_HEADER_STATUS"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="100,parent">
 					<GridButton		ID="UnitLevelButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Level"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_HUD_UNIT_PANEL_LEVEL_ABBREVIATION"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="125,parent">
 					<GridButton		ID="UnitExpButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Experience"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_HUD_UNIT_PANEL_XP"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="100,parent">
 					<GridButton		ID="UnitHealthButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Health"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_TECH_FILTER_HEALTH"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="125,parent">
 					<GridButton		ID="UnitMoveButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Movement"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_HUD_UNIT_PANEL_MOVEMENT"/>
 					</GridButton>
 				</Container>
 				
@@ -870,31 +870,31 @@
 				
 				<Container Offset="1,0" Size="50,parent">
 					<GridButton		ID="UnitTypeButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Type"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_CITY_STATES_TYPE"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="250,parent">
 					<GridButton		ID="UnitNameButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Name"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_MODS_SORTBY_NAME"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="50,parent">
 					<GridButton		ID="UnitStatusButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Status"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_HUD_REPORTS_HEADER_STATUS"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="125,parent">
 					<GridButton		ID="UnitMoveButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Movement"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_HUD_UNIT_PANEL_MOVEMENT"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="100,parent">
 					<GridButton		ID="UnitChargeButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Charges"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_HUD_UNIT_PANEL_CHARGES"/>
 					</GridButton>
 				</Container>
 				
@@ -914,31 +914,31 @@
 				
 				<Container Offset="1,0" Size="50,parent">
 					<GridButton		ID="UnitTypeButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Type"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_CITY_STATES_TYPE"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="250,parent">
 					<GridButton		ID="UnitNameButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Name"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_MODS_SORTBY_NAME"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="50,parent">
 					<GridButton		ID="UnitStatusButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Status"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_HUD_REPORTS_HEADER_STATUS"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="300,parent">
 					<GridButton		ID="UnitRouteButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-					<Label Style="ReportHeaderSmallText" String="Route"/>
+					<Label Style="ReportHeaderSmallText" String="LOC_ROUTE_NAME"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="300,parent">
 					<GridButton		ID="UnitYieldButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Yields"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_HUD_REPORTS_TAB_YIELDS"/>
 					</GridButton>
 				</Container>
 				
@@ -958,31 +958,31 @@
 				
 				<Container Offset="1,0" Size="50,parent">
 					<GridButton		ID="UnitTypeButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Type"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_CITY_STATES_TYPE"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="250,parent">
 					<GridButton		ID="UnitNameButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Name"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_MODS_SORTBY_NAME"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="50,parent">
 					<GridButton		ID="UnitStatusButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Status"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_HUD_REPORTS_HEADER_STATUS"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="125,parent">
 					<GridButton		ID="UnitMoveButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Movement"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_HUD_UNIT_PANEL_MOVEMENT"/>
 					</GridButton>
 				</Container>
 
 				<Container Offset="1,0" Size="250,parent">
 					<GridButton		ID="UnitClassButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Class"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_UI_PEDIA_PROMOTION_CLASS"/>
 					</GridButton>
 				</Container>
 				
@@ -1002,37 +1002,37 @@
 				
 				<Container Offset="1,0" Size="50,parent">
 					<GridButton		ID="UnitTypeButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Type"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_CITY_STATES_TYPE"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="250,parent">
 					<GridButton		ID="UnitNameButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Name"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_MODS_SORTBY_NAME"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="50,parent">
 					<GridButton		ID="UnitStatusButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Status"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_HUD_REPORTS_HEADER_STATUS"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="125,parent">
 					<GridButton		ID="UnitMoveButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Movement"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_HUD_UNIT_PANEL_MOVEMENT"/>
 					</GridButton>
 				</Container>
 
 				<Container Offset="1,0" Size="100,parent">
 					<GridButton		ID="UnitStrengthButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Strength"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_HUD_REPORTS_HEADER_STRENGTH"/>
 					</GridButton>
 				</Container>
 
 				<Container Offset="1,0" Size="100,parent">
 					<GridButton		ID="UnitSpreadButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Spreads"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_HUD_UNIT_PANEL_SPREADS"/>
 					</GridButton>
 				</Container>
 				
@@ -1052,37 +1052,37 @@
 				
 				<Container Offset="1,0" Size="50,parent">
 					<GridButton		ID="UnitTypeButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Type"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_CITY_STATES_TYPE"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="250,parent">
 					<GridButton		ID="UnitNameButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Name"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_MODS_SORTBY_NAME"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="50,parent">
 					<GridButton		ID="UnitStatusButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Status"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_HUD_REPORTS_HEADER_STATUS"/>
 					</GridButton>
 				</Container>
 				
 				<Container Offset="1,0" Size="125,parent">
 					<GridButton		ID="UnitMoveButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Movement"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_HUD_UNIT_PANEL_MOVEMENT"/>
 					</GridButton>
 				</Container>
 
 				<Container Offset="1,0" Size="200,parent">
 					<GridButton		ID="UnitMissionButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Mission"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_ESPIONAGEPANEL_PANEL_MISSION"/>
 					</GridButton>
 				</Container>
 
 				<Container Offset="1,0" Size="200,parent">
 					<GridButton		ID="UnitTurnsButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
-						<Label Style="ReportHeaderSmallText" String="Turns Left"/>
+						<Label Style="ReportHeaderSmallText" String="LOC_ESPIONAGEPANEL_PANEL_TURNS"/>
 					</GridButton>
 				</Container>
 				
@@ -1139,7 +1139,7 @@
 				</Container>
 				
 				<Container Offset="1,0" Size="73,parent">
-					<Button ID="LookAtButton" Anchor="R,C" Size="23,31" Texture="Controls_ShowMe" StateOffsetIncrement="0,0" Offset="10,0" ToolTip="View this unit on the map."/>
+					<Button ID="LookAtButton" Anchor="R,C" Size="23,31" Texture="Controls_ShowMe" StateOffsetIncrement="0,0" Offset="10,0" ToolTip="LOC_UNITS_VIEW_ON_THE_MAP"/>
 				</Container>
 				
 				<Box Offset="1,0" Size="2,parent" Color="46,70,95,128"/>
@@ -1175,7 +1175,7 @@
 				</Container>
 				
 				<Container Offset="1,0" Size="401,parent">
-					<Button ID="LookAtButton" Anchor="R,C" Size="23,31" Texture="Controls_ShowMe" StateOffsetIncrement="0,0" Offset="10,0" ToolTip="View this unit on the map."/>
+					<Button ID="LookAtButton" Anchor="R,C" Size="23,31" Texture="Controls_ShowMe" StateOffsetIncrement="0,0" Offset="10,0" ToolTip="LOC_UNITS_VIEW_ON_THE_MAP"/>
 				</Container>
 				
 				<Box Offset="1,0" Size="2,parent" Color="46,70,95,128"/>
@@ -1202,15 +1202,15 @@
 				</Container>
 
 				<Container Offset="1,0" Size="300,parent">
-					<Label ID="UnitRoute" Style="ReportValueText" String="No Route" Align="Center" Anchor="C,C" Offset="0,0"/>
+					<Label ID="UnitRoute" Style="ReportValueText" String="LOC_CITY_STATES_NONE" Align="Center" Anchor="C,C" Offset="0,0"/>
 				</Container>
 
 				<Container Offset="1,0" Size="300,parent">
-					<Label ID="UnitYields" Style="ReportValueText" String="No Yields" Align="Center" Anchor="C,C" Offset="0,0"/>
+					<Label ID="UnitYields" Style="ReportValueText" String="LOC_CITY_STATES_NONE" Align="Center" Anchor="C,C" Offset="0,0"/>
 				</Container>
 				
 				<Container Offset="1,0" Size="26,parent">
-					<Button ID="LookAtButton" Anchor="R,C" Size="23,31" Texture="Controls_ShowMe" StateOffsetIncrement="0,0" Offset="10,0" ToolTip="View this unit on the map."/>
+					<Button ID="LookAtButton" Anchor="R,C" Size="23,31" Texture="Controls_ShowMe" StateOffsetIncrement="0,0" Offset="10,0" ToolTip="LOC_UNITS_VIEW_ON_THE_MAP"/>
 				</Container>				
 				
 				<Box Offset="1,0" Size="2,parent" Color="46,70,95,128"/>
@@ -1246,7 +1246,7 @@
 				</Container>
 				
 				<Container Offset="1,0" Size="251,parent">
-					<Button ID="LookAtButton" Anchor="R,C" Size="23,31" Texture="Controls_ShowMe" StateOffsetIncrement="0,0" Offset="10,0" ToolTip="View this unit on the map."/>
+					<Button ID="LookAtButton" Anchor="R,C" Size="23,31" Texture="Controls_ShowMe" StateOffsetIncrement="0,0" Offset="10,0" ToolTip="LOC_UNITS_VIEW_ON_THE_MAP"/>
 				</Container>
 				
 				<Box Offset="1,0" Size="2,parent" Color="46,70,95,128"/>
@@ -1286,7 +1286,7 @@
 				</Container>
 				
 				<Container Offset="1,0" Size="300,parent">
-					<Button ID="LookAtButton" Anchor="R,C" Size="23,31" Texture="Controls_ShowMe" StateOffsetIncrement="0,0" Offset="10,0" ToolTip="View this unit on the map."/>
+					<Button ID="LookAtButton" Anchor="R,C" Size="23,31" Texture="Controls_ShowMe" StateOffsetIncrement="0,0" Offset="10,0" ToolTip="LOC_UNITS_VIEW_ON_THE_MAP"/>
 				</Container>
 				
 				<Box Offset="1,0" Size="2,parent" Color="46,70,95,128"/>
@@ -1326,7 +1326,7 @@
 				</Container>
 				
 				<Container Offset="1,0" Size="100,parent">
-					<Button ID="LookAtButton" Anchor="R,C" Size="23,31" Texture="Controls_ShowMe" StateOffsetIncrement="0,0" Offset="10,0" ToolTip="View this unit on the map."/>
+					<Button ID="LookAtButton" Anchor="R,C" Size="23,31" Texture="Controls_ShowMe" StateOffsetIncrement="0,0" Offset="10,0" ToolTip="LOC_UNITS_VIEW_ON_THE_MAP"/>
 				</Container>
 				
 				<Box Offset="1,0" Size="2,parent" Color="46,70,95,128"/>
@@ -1340,7 +1340,7 @@
 			<Stack StackGrowth="Right">
 				<Box Size="2,26"	Color="46,70,95,128"/>
 				<Container Size="780,26">
-					<Label Anchor="R,C" Offset="5,1" Style="ReportTotalText" String="Number of Units"/>
+					<Label Anchor="R,C" Offset="5,1" Style="ReportTotalText" String="LOC_HUD_REPORTS_HEADER_UNITCOUNT"/>
 				</Container>
 				<Box Size="2,26" Color="46,70,95,255"/>
 				<Container Size="200,26">
@@ -1359,13 +1359,13 @@
 				<Box Size="2,parent" Color="46,70,95,128" />
 
 				<Container Offset="1,0" Size="500,parent">
-					<Label Style="ReportHeaderText" Anchor="C,C" Color="255,255,255,255" String="Outgoing"/>
+					<Label Style="ReportHeaderText" Anchor="C,C" Color="255,255,255,255" String="LOC_CURRENT_DEALS_OUTGOING"/>
 				</Container>
 
 				<Box Offset="1,0" Size="2,parent" Color="46,70,95,128"/>
 
 				<Container Offset="1,0" Size="477,parent">
-						<Label Style="ReportHeaderText" Anchor="C,C" Color="255,255,255,255" String="Incoming"/>
+						<Label Style="ReportHeaderText" Anchor="C,C" Color="255,255,255,255" String="LOC_CURRENT_DEALS_INCOMING"/>
 				</Container>
 				
 				<Box Offset="1,0" Size="2,parent" Color="46,70,95,128"/>

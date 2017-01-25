@@ -119,6 +119,7 @@
     <File>Integrations/URS/ReportScreen.lua</File>
     <File>Integrations/URS/ReportScreen.xml</File>
     <File>Integrations/URS/UnitPromotionPopup.lua</File>
+    <File>Integrations/URS/Text/URS_Text.xml</File>
     <File>Integrations/ML/UI/MinimapPanel.lua</File>
     <File>Integrations/ML/UI/MinimapPanel.xml</File>
     <File>Integrations/ML/UI/Panels/ModalLensPanel.lua</File>
@@ -242,6 +243,11 @@
         <File>Integrations/URS/UnitPromotionPopup.lua</File>
       </Items>
     </ImportFiles>
+    <LocalizedText id="UNITREPORT_TEXT">
+      <Items>
+        <File>Integrations/URS/Text/URS_Text.xml</File>
+      </Items>
+    </LocalizedText>
     <ImportFiles id="MORELENSES_IMPORT_FILES">
       <Items>
         <File>Integrations/ML/UI/MinimapPanel.lua</File>

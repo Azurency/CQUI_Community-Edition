@@ -23,6 +23,11 @@
     <Row Tag="LOC_CQUI_CITY_ENTERTAINMENT" Language="en_US">
       <Text>Entertainment</Text>
     </Row>
+    <!-- POPUPS -->
+    <Row Tag="LOC_CQUI_GREAT_PERSON_PROGRESS" Language="en_US">
+      <Text>Progress:</Text>
+    </Row>
+
 
 	<!-- SIMPLIFY-CHINESE -->
 
@@ -46,6 +51,10 @@
     <!-- CITY PANEL AMENITY -->
     <Replace Tag="LOC_CQUI_CITY_ENTERTAINMENT" Language="zh_Hans_CN">
       <Text>娱乐</Text>
+    </Replace>
+    <!-- POPUPS -->
+    <Replace Tag="LOC_CQUI_GREAT_PERSON_PROGRESS" Language="zh_Hans_CN">
+      <Text>进度：</Text>
     </Replace>
 
     <!--  ITALIAN -->
