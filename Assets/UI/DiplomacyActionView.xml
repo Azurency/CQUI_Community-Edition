@@ -530,8 +530,8 @@
       </SlideAnim>
     </AlphaAnim>
 
-    <AlphaAnim			ID="ConversationSelection_Alpha"				AlphaBegin="0"	AlphaEnd="1"		Speed="2" Function="Root" Cycle="Once" Pause="0.5" Size="full,full" >
-      <SlideAnim		ID="ConversationSelection_Slide"				Begin="10,0"		End="0,0"				Speed="2" Function="Root" Cycle="Once" Pause="0.5" Size="full,full" >
+    <AlphaAnim			ID="ConversationSelection_Alpha"				AlphaBegin="0"	AlphaEnd="1"		Speed="0.5" Function="Root" Cycle="Once" Pause="0.5" Size="full,full" >
+      <SlideAnim		ID="ConversationSelection_Slide"				Begin="10,0"		End="0,0"				Speed="0.5" Function="Root" Cycle="Once" Pause="0.3" Size="full,full" >
         <Grid			ID="ConversationSelectionGrid" Anchor="L,B" Offset="50,50" Size="450,79" Style="DiplomacyWordBubble" AutoSize="V" Color="255,255,255,200">
           <Stack		ID="ConversationSelectionStack"	StackGrowth="Bottom" Padding="2" Anchor="C,C"/>
         </Grid>
@@ -575,11 +575,11 @@
 
 	<!--The fade-to-black stuff -->
   <Container ID="BlackFade" Hidden="1">
-    <AlphaAnim ID="BlackFadeAnim" Begin="0" End="1" Speed="2" Cycle="Once" Stopped="1">
+    <AlphaAnim ID="BlackFadeAnim" Begin="0" End="1" Speed="3" Cycle="Once" Stopped="1">
       <Box Color="0,0,0,255" Size="full,full" ConsumeMouse="0"/>
     </AlphaAnim>
   </Container>
-  <AlphaAnim ID="FadeTimerAnim" Begin="0" End="1" Speed="2" Cycle="Once" Stopped="1"/>
+  <AlphaAnim ID="FadeTimerAnim" Begin="0" End="1" Speed="3" Cycle="Once" Stopped="1"/>
 
 	
 	
