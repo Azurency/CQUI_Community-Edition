@@ -3350,16 +3350,32 @@ function OnInputActionTriggered( actionId )
     elseif actionId == m_actionHotkeyPrevCity then
         LuaEvents.CQUI_GoPrevCity();
         UI.PlaySound("Play_UI_Click");
+        CQUI_UpdateSelectedCityCitizens();
 
     elseif actionId == m_actionHotkeyNextCity then
         LuaEvents.CQUI_GoNextCity();
         UI.PlaySound("Play_UI_Click");
+        CQUI_UpdateSelectedCityCitizens();
 
     elseif actionId == m_actionHotkeyOnlinePause then
         if GameConfiguration.IsNetworkMultiplayer() then
             TogglePause();
         end
     end
+end
+
+-- ===========================================================================
+function CQUI_UpdateSelectedCityCitizens( plotId:number )
+
+	local pSelectedCity	:table = UI.GetHeadSelectedCity();
+	local kPlot			:table = Map.GetPlotByIndex(plotId);
+	local tParameters	:table = {};
+	tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
+	tParameters[CityCommandTypes.PARAM_X] = kPlot:GetX();
+	tParameters[CityCommandTypes.PARAM_Y] = kPlot:GetY();
+
+	local tResults :table = CityManager.RequestCommand( pSelectedCity, CityCommandTypes.MANAGE, tParameters );
+	return true;
 end
 
 -- ===========================================================================
