@@ -69,8 +69,32 @@
         <!-- RUSSIAN -->
 
         <!-- HUD Common Text -->
+        <Row Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="ru_RU">
+            <Text>Текущие Сделки</Text>
+        </Row>
+        <Row Tag="LOC_HUD_REPORTS_TAB_HIDE_CITY_BUILDINGS" Language="ru_RU">
+            <Text>Скрыть городские постройки</Text>
+        </Row>
         <!-- Current Deals -->
+        <Row Tag="LOC_CURRENT_DEALS_OUTGOING" Language="ru_RU">
+            <Text>Исходящие</Text>
+        </Row>
+        <Row Tag="LOC_CURRENT_DEALS_INCOMING" Language="ru_RU">
+            <Text>Входящие</Text>
+        </Row>
         <!-- Units Overview -->
+        <Row Tag="LOC_UNITS_MILITARY_LAND" Language="ru_RU">
+            <Text>Военный (Наземный)</Text>
+        </Row>
+        <Row Tag="LOC_UNITS_MILITARY_AIR" Language="ru_RU">
+            <Text>Военный (Воздушный)</Text>
+        </Row>
+        <Row Tag="LOC_UNITS_MILITARY_SEA" Language="ru_RU">
+            <Text>Военный (Морской)</Text>
+        </Row>
+        <Row Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="ru_RU">
+            <Text>Показать юнит на карте.</Text>
+        </Row>
 
         <!-- POLISH -->
 

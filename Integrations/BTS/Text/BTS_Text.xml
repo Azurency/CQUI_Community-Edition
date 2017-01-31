@@ -383,6 +383,14 @@
     <!-- RUSSIAN -->
 
     <!-- Common Text -->
+    <Replace Tag="LOC_TRADE_GROUP_SETTINGS" Language="ru_RU">
+        <Text>Настройки Групп</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FILTER_SETTINGS" Language="ru_RU">
+        <Text>Настройки Фильтра</Text>
+    </Replace>
+
     <Replace Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="ru_RU">
         <Text>Сортировать по [ICON_Food]Пище.</Text>
     </Replace>
@@ -437,11 +445,11 @@
     </Replace>
 
     <Replace Tag="LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP" Language="ru_RU">
-        <Text>Общее количество [ICON_Turn]Ходов для завершения торгового пути</Text>
+        <Text>Общее количество [ICON_Turn] для завершения торгового пути</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_TURNS_REMAINING_ALT_HELP_TOOLTIP" Language="ru_RU">
-        <Text>Этот путь займет {1_TurnsRemaining}[Icon_Turn] ход до завершения.</Text>
+        <Text>Торговый путь завершится через {1_TurnsRemaining}[Icon_Turn].</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER" Language="ru_RU">

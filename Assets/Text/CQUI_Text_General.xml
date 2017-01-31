@@ -102,6 +102,10 @@
     <Replace Tag="LOC_CQUI_CITY_ENTERTAINMENT" Language="ru_RU">
       <Text>Развлечения</Text>
     </Replace>
+    <!-- POPUPS -->
+    <Row Tag="LOC_CQUI_GREAT_PERSON_PROGRESS" Language="ru_RU">
+      <Text>Прогресс:</Text>
+    </Row>
 
     <!-- POLISH -->
     <!-- MESSAGES -->
