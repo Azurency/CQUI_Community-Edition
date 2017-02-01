@@ -165,6 +165,10 @@ local g_smartbanner = true;
 function CQUI_OnSettingsUpdate()
   CQUI_ShowYieldsOnCityHover = GameConfiguration.GetValue("CQUI_ShowYieldsOnCityHover");
   g_smartbanner = GameConfiguration.GetValue("CQUI_Smartbanner")
+  g_smartbanner_unmanaged_citizen = GameConfiguration.GetValue("CQUI_Smartbanner_UnlockedCitizen")
+  g_smartbanner_districts = GameConfiguration.GetValue("CQUI_Smartbanner_Districts")
+  g_smartbanner_population = GameConfiguration.GetValue("CQUI_Smartbanner_Population")
+  g_smartbanner_cultural = GameConfiguration.GetValue("CQUI_Smartbanner_Cultural")
   Reload();
 end
 LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
@@ -979,26 +983,42 @@ function CityBanner.UpdateStats( self : CityBanner)
         turnsUntilGrowth = -pCityGrowth:GetTurnsUntilStarvation();  -- Make negative
       end 
       --- POPULATION AND GROWTH INFO ---
-      local popTooltip :string = Locale.Lookup("LOC_CITY_BANNER_POPULATION") .. ": " .. currentPopulation;
-      if turnsUntilGrowth > 0 then
-        popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_TURNS_GROWTH", turnsUntilGrowth);
-        popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_FOOD_SURPLUS", round(foodSurplus,1));        
-        self.m_Instance.CityPopTurnsLeft:SetColorByName("StatGoodCS");
-      elseif turnsUntilGrowth < 0 then
-        popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_TURNS_STARVATION", -turnsUntilGrowth);
-        self.m_Instance.CityPopTurnsLeft:SetColorByName("StatBadCS");
-      else
-        self.m_Instance.CityPopTurnsLeft:SetColorByName("StatNormalCS");
-      end
       self.m_Instance.CityPopulation:SetText(currentPopulation);
+      if (self.m_Player == Players[localPlayerID]) then --Only show growth data if the player is you
+        local popTooltip :string = Locale.Lookup("LOC_CITY_BANNER_POPULATION") .. ": " .. currentPopulation;
+        if turnsUntilGrowth > 0 then
+          popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_TURNS_GROWTH", turnsUntilGrowth);
+          popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_FOOD_SURPLUS", round(foodSurplus,1));        
+          self.m_Instance.CityPopTurnsLeft:SetColorByName("StatGoodCS");
+        elseif turnsUntilGrowth < 0 then
+          popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_TURNS_STARVATION", -turnsUntilGrowth);
+          self.m_Instance.CityPopTurnsLeft:SetColorByName("StatBadCS");
+        else
+          self.m_Instance.CityPopTurnsLeft:SetColorByName("StatNormalCS");
+        end
 
-      if (self.m_Player == Players[localPlayerID]) then     --Only show growth data if the player is you
-        self.m_Instance.CityPopulation:SetToolTipString(popTooltip);
-        local turnsUntilBorderGrowth = pCityCulture:GetTurnsUntilExpansion();
-        local housing = pCityGrowth:GetHousing();
-        local CTLS = turnsUntilGrowth.."  ["..currentPopulation.."/"..housing..
-          "]  "..turnsUntilBorderGrowth;
-        self.m_Instance.CityPopTurnsLeft:SetText(CTLS);
+        if g_smartbanner then
+          if g_smartbanner_cultural then
+            local turnsUntilBorderGrowth = pCityCulture:GetTurnsUntilExpansion();
+            self.m_Instance.CityCultureTurnsLeft:SetText(turnsUntilBorderGrowth);
+            self.m_Instance.CityCultureTurnsLeft:SetHide(false);
+          else
+            self.m_Instance.CityCultureTurnsLeft:SetHide(true);
+          end
+
+          if g_smartbanner_population then
+            self.m_Instance.CityPopulation:SetToolTipString(popTooltip);
+            local housing = pCityGrowth:GetHousing();
+            local CTLS = turnsUntilGrowth.."  ["..currentPopulation.."/"..housing.."]  ";
+            self.m_Instance.CityPopTurnsLeft:SetText(CTLS);
+            self.m_Instance.CityPopTurnsLeft:SetHide(false);
+          else
+            self.m_Instance.CityPopTurnsLeft:SetHide(true);
+          end
+        else
+          self.m_Instance.CityPopTurnsLeft:SetHide(true);
+          self.m_Instance.CityCultureTurnsLeft:SetHide(true);
+        end
       end
 
       local food             :number = pCityGrowth:GetFood();
@@ -1421,51 +1441,54 @@ function CityBanner.UpdateName( self : CityBanner )
       local pCityDistricts:table  = pCity:GetDistricts();
       if g_smartbanner and self.m_Instance.CityBuiltDistrictAquaduct ~= nil then
         --Unlocked citizen check
-        local tParameters :table = {};
-        tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
+        if g_smartbanner_unmanaged_citizen then
+          local tParameters :table = {};
+          tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
 
-        local tResults  :table = CityManager.GetCommandTargets( pCity, CityCommandTypes.MANAGE, tParameters );
-        if tResults ~= nil then
-          local tPlots    :table = tResults[CityCommandResults.PLOTS];
-          local tUnits    :table = tResults[CityCommandResults.CITIZENS];
-          local tMaxUnits   :table = tResults[CityCommandResults.MAX_CITIZENS];
-          local tLockedUnits  :table = tResults[CityCommandResults.LOCKED_CITIZENS];
-          if tPlots ~= nil and (table.count(tPlots) > 0) then
-            for i,plotId in pairs(tPlots) do      
-              local kPlot :table = Map.GetPlotByIndex(plotId);
-              if(tMaxUnits[i] >= 1 and tUnits[i] >= 1 and tLockedUnits[i] <= 0) then
-                self.m_Instance.CityUnlockedCitizen:SetHide(false);
-              end
-            end    
+          local tResults  :table = CityManager.GetCommandTargets( pCity, CityCommandTypes.MANAGE, tParameters );
+          if tResults ~= nil then
+            local tPlots    :table = tResults[CityCommandResults.PLOTS];
+            local tUnits    :table = tResults[CityCommandResults.CITIZENS];
+            local tMaxUnits   :table = tResults[CityCommandResults.MAX_CITIZENS];
+            local tLockedUnits  :table = tResults[CityCommandResults.LOCKED_CITIZENS];
+            if tPlots ~= nil and (table.count(tPlots) > 0) then
+              for i,plotId in pairs(tPlots) do      
+                local kPlot :table = Map.GetPlotByIndex(plotId);
+                if(tMaxUnits[i] >= 1 and tUnits[i] >= 1 and tLockedUnits[i] <= 0) then
+                  self.m_Instance.CityUnlockedCitizen:SetHide(false);
+                end
+              end    
+            end
           end
         end
         -- End Unlocked Citizen Check
         
-        for i, district in pCityDistricts:Members() do
-          local districtType = district:GetType();
-          local districtInfo:table = GameInfo.Districts[districtType];
-          local isBuilt = pCityDistricts:HasDistrict(districtInfo.Index, true);
-          if isBuilt then
-            if (districtType == iAquaduct) then self.m_Instance.CityBuiltDistrictAquaduct:SetHide(false); end
-            if (districtType == iBath) then self.m_Instance.CityBuiltDistrictBath:SetHide(false); end
-            if (districtType == iNeighborhood) then self.m_Instance.CityBuiltDistrictNeighborhood:SetHide(false); end
-            if (districtType == iMbanza) then self.m_Instance.CityBuiltDistrictMbanza:SetHide(false); end
-            if (districtType == iCampus) then self.m_Instance.CityBuiltDistrictCampus:SetHide(false); end
-            if (districtType == iCommerce) then self.m_Instance.CityBuiltDistrictCommercial:SetHide(false); end
-            if (districtType == iEncampment) then self.m_Instance.CityBuiltDistrictEncampment:SetHide(false); end
-            if (districtType == iTheater) then self.m_Instance.CityBuiltDistrictTheatre:SetHide(false); end
-            if (districtType == iAcropolis) then self.m_Instance.CityBuiltDistrictAcropolis:SetHide(false); end
-            if (districtType == iIndustrial) then self.m_Instance.CityBuiltDistrictIndustrial:SetHide(false); end
-            if (districtType == iHansa) then self.m_Instance.CityBuiltDistrictHansa:SetHide(false); end
-            if (districtType == iHarbor) then self.m_Instance.CityBuiltDistrictHarbor:SetHide(false); end
-            if (districtType == iRoyalNavy) then self.m_Instance.CityBuiltDistrictRoyalNavy:SetHide(false); end
-            if (districtType == iSpaceport) then self.m_Instance.CityBuiltDistrictSpaceport:SetHide(false); end
-            if (districtType == iEntertainmentComplex) then self.m_Instance.CityBuiltDistrictEntertainment:SetHide(false); end
-            if (districtType == iHolySite) then self.m_Instance.CityBuiltDistrictHoly:SetHide(false); end
-            if (districtType == iAerodrome) then self.m_Instance.CityBuiltDistrictAerodrome:SetHide(false); end
-            if (districtType == iStreetCarnival) then self.m_Instance.CityBuiltDistrictStreetCarnival:SetHide(false); end
-            if (districtType == iLavra) then self.m_Instance.CityBuiltDistrictLavra:SetHide(false); end
-            
+        if g_smartbanner_districts then
+          for i, district in pCityDistricts:Members() do
+            local districtType = district:GetType();
+            local districtInfo:table = GameInfo.Districts[districtType];
+            local isBuilt = pCityDistricts:HasDistrict(districtInfo.Index, true);
+            if isBuilt then
+              if (districtType == iAquaduct) then self.m_Instance.CityBuiltDistrictAquaduct:SetHide(false); end
+              if (districtType == iBath) then self.m_Instance.CityBuiltDistrictBath:SetHide(false); end
+              if (districtType == iNeighborhood) then self.m_Instance.CityBuiltDistrictNeighborhood:SetHide(false); end
+              if (districtType == iMbanza) then self.m_Instance.CityBuiltDistrictMbanza:SetHide(false); end
+              if (districtType == iCampus) then self.m_Instance.CityBuiltDistrictCampus:SetHide(false); end
+              if (districtType == iCommerce) then self.m_Instance.CityBuiltDistrictCommercial:SetHide(false); end
+              if (districtType == iEncampment) then self.m_Instance.CityBuiltDistrictEncampment:SetHide(false); end
+              if (districtType == iTheater) then self.m_Instance.CityBuiltDistrictTheatre:SetHide(false); end
+              if (districtType == iAcropolis) then self.m_Instance.CityBuiltDistrictAcropolis:SetHide(false); end
+              if (districtType == iIndustrial) then self.m_Instance.CityBuiltDistrictIndustrial:SetHide(false); end
+              if (districtType == iHansa) then self.m_Instance.CityBuiltDistrictHansa:SetHide(false); end
+              if (districtType == iHarbor) then self.m_Instance.CityBuiltDistrictHarbor:SetHide(false); end
+              if (districtType == iRoyalNavy) then self.m_Instance.CityBuiltDistrictRoyalNavy:SetHide(false); end
+              if (districtType == iSpaceport) then self.m_Instance.CityBuiltDistrictSpaceport:SetHide(false); end
+              if (districtType == iEntertainmentComplex) then self.m_Instance.CityBuiltDistrictEntertainment:SetHide(false); end
+              if (districtType == iHolySite) then self.m_Instance.CityBuiltDistrictHoly:SetHide(false); end
+              if (districtType == iAerodrome) then self.m_Instance.CityBuiltDistrictAerodrome:SetHide(false); end
+              if (districtType == iStreetCarnival) then self.m_Instance.CityBuiltDistrictStreetCarnival:SetHide(false); end
+              if (districtType == iLavra) then self.m_Instance.CityBuiltDistrictLavra:SetHide(false); end
+            end
           end
         end
       end

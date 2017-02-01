@@ -55,12 +55,12 @@
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <GridButton ID="ProductionQueueCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" />
           </Stack>
-          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-            <Container Anchor="R,C" Size="300,32" Padding="5">
-              <Slider Style="SliderControl" Anchor="R,C" Size="220,13" Offset="5,0" SpaceForScroll="0" ID="ProductionItemHeightSlider" Steps="104" />
-              <Label String="0" Style="ShellOptionText" Anchor="L,C" ID="ProductionItemHeightText" Offset="3,0" />
-            </Container>
+          <Stack Anchor="C,T" StackGrowth="Left" Padding="5">
+            <Label String="0" Style="ShellOptionText" Anchor="L,C" ID="ProductionItemHeightText" Offset="3,0" />
             <Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_CITYVIEW_ITEMHEIGHT"/>
+          </Stack>
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <Slider Style="SliderControl" Anchor="R,C" Size="300,13" Offset="5,0" SpaceForScroll="0" ID="ProductionItemHeightSlider" Steps="104" />
           </Stack>
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <GridButton ID="ShowCultureGrowthCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" />
@@ -68,8 +68,26 @@
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <GridButton ID="ShowYieldsOnCityHoverCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" />
           </Stack>
+          <Stack Anchor="C,C" StackGrowth="Left">
+            <Label Anchor="C,C" Style="ShellOptionText" String="LOC_CQUI_CITYVIEW_SMARTBANNER_HEADER" Offset="0,10"/>
+          </Stack>
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <GridButton ID="SmartbannerCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_CITYVIEW_SMARTBANNER" />
+          </Stack>
+          <Stack ID="SmartbannerCheckboxes" Anchor="R,T" StackGrowth="Down">
+            <Line Start="0,0" End="300,0" Width="2" Color="84,77,66,255" />
+            <Stack Anchor="R,T" StackGrowth="Left" Offset="0,5">
+              <GridButton ID="SmartbannerUnlockedCitizenCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_HUD_CITY_UNASSIGNED_CITIZENS" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Offset="0,5">
+              <GridButton ID="SmartbannerDistrictsCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_PEDIA_DISTRICTS_TITLE" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Offset="0,5">
+              <GridButton ID="SmartbannerPopulationCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CIVINFO_POPULATION" />
+            </Stack>
+            <Stack Anchor="R,T" StackGrowth="Left" Offset="0,5">
+              <GridButton ID="SmartbannerCulturalCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_PEDIA_CITYSTATES_PAGEGROUP_CULTURAL_NAME" />
+            </Stack>
           </Stack>
         </Stack>
       </Container>

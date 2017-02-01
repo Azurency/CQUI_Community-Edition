@@ -59,7 +59,10 @@
         <Stack              ID="ContentStack"               Anchor="C,T" StackGrowth="Right" Padding="5" >
           <Container                                        Anchor="L,C" Size="34,34">
             <Label          ID="CityPopulation"             Anchor="C,C" String="999"   Style="FontFlair28" FontStyle="glow" KerningAdjustment="-3" />
-            <Label          ID="CityPopTurnsLeft"           Anchor="L,T" Offset="3,-6"  Style="StrongSmall2"/>
+            <Stack StackGrowth="Right">
+              <Label ID="CityPopTurnsLeft" Anchor="L,T" Offset="3,-6" Style="StrongSmall2" />
+              <Label ID="CityCultureTurnsLeft" Anchor="L,T" Offset="3,-6" Style="StrongSmall2" Color="204,109,197,255" />
+            </Stack>
           </Container>
 
           <Container        ID="CityNameContainer"          Anchor="L,C"  Size="50,34">
@@ -195,6 +198,7 @@
           <Container                                    Anchor="L,C" Size="34,34">
             <Label          ID="CityPopulation"         Anchor="C,C" String="999" Style="FontFlair28" FontStyle="glow" />
             <Label          ID="CityPopTurnsLeft"       AnchorSide="O,I" Offset="3,-2" Style="StrongSmall2" KerningAdjustment="-1" Hidden="1"/>
+            <Label          ID="CityCultureTurnsLeft"       AnchorSide="O,I" Offset="3,-2" Style="StrongSmall2" KerningAdjustment="-1" Hidden="1"/>
           </Container>
             
           <Container        ID="CityNameContainer"            Anchor ="L,C" Size="50,34">

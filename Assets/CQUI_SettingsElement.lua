@@ -241,6 +241,10 @@ function Initialize()
   PopulateCheckBox(Controls.ShowCultureGrowthCheckbox, "CQUI_ShowCultureGrowth", Locale.Lookup("LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP"));
   RegisterControl(Controls.ShowCultureGrowthCheckbox, "CQUI_ShowCultureGrowth", UpdateCheckbox);
   PopulateCheckBox(Controls.SmartbannerCheckbox, "CQUI_Smartbanner", Locale.Lookup("LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP"));
+  PopulateCheckBox(Controls.SmartbannerUnlockedCitizenCheckbox, "CQUI_Smartbanner_UnlockedCitizen", Locale.Lookup("LOC_CQUI_CITYVIEW_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP"));
+  PopulateCheckBox(Controls.SmartbannerDistrictsCheckbox, "CQUI_Smartbanner_Districts", Locale.Lookup("LOC_CQUI_CITYVIEW_SMARTBANNER_DISTRICTS_TOOLTIP"));
+  PopulateCheckBox(Controls.SmartbannerPopulationCheckbox, "CQUI_Smartbanner_Population", Locale.Lookup("LOC_CQUI_CITYVIEW_SMARTBANNER_POPULATION_TOOLTIP"));
+  PopulateCheckBox(Controls.SmartbannerCulturalCheckbox, "CQUI_Smartbanner_Cultural", Locale.Lookup("LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP"));
   PopulateCheckBox(Controls.ToggleYieldsOnLoadCheckbox, "CQUI_ToggleYieldsOnLoad");
   PopulateCheckBox(Controls.TechVisualCheckbox, "CQUI_TechPopupVisual", Locale.Lookup("LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP"));
   PopulateCheckBox(Controls.TechAudioCheckbox, "CQUI_TechPopupAudio", Locale.Lookup("LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP"));
@@ -262,8 +266,14 @@ function Initialize()
 
   --Bind CQUI events
   LuaEvents.CQUI_ToggleSettings.Add(function() ContextPtr:SetHide(not ContextPtr:IsHidden()); end);
+  LuaEvents.CQUI_SettingsUpdate.Add(ToggleSmartbannerCheckboxes);
 
   LuaEvents.CQUI_SettingsInitialized(); --Tell other elements that the settings have been initialized and it's safe to try accessing settings now
+end
+
+function ToggleSmartbannerCheckboxes()
+    local selected = Controls.SmartbannerCheckbox:IsSelected();
+    Controls.SmartbannerCheckboxes:SetHide(not selected);
 end
 
 Initialize();
