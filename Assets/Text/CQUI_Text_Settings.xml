@@ -624,5 +624,140 @@
     <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="pl_PL">
       <Text>Automatycznie rozwijaj listę akcji w panelu jednostki</Text>
     </Row>
+
+    <!-- GERMAN -->
+
+    <Row Tag="LOC_CQUI_BINDINGS" Language="de_DE">
+      <Text>Tastaturbelegung</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="de_DE">
+      <Text>Belegungsmodus</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="de_DE">
+      <Text>Standard: Unverändert[NEWLINE]Klassisch: Civ V Belegung[NEWLINE]Erweitert: Civ V Belegung mit folgenden Veränderungen[NEWLINE]  WASD Kamera-Kontrolle[NEWLINE]  Q/E Einheit/Stadt Cycling[NEWLINE]  Shift Wechsel Stadt/Einheit Auswahl[NEWLINE]  Verfolgung/Airstrike  verändert zu (alt) + Q/S[NEWLINE]  Hinweis: Lösche W/E Belegung in den Einstellungen, damit es wie gewünscht funktioniert!</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="de_DE">
+      <Text>Klassisch</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="de_DE">
+      <Text>Erweitert</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="de_DE">
+      <Text>Standard</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW" Language="de_DE">
+      <Text>Stadtansicht</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="de_DE">
+      <Text>Produktionsrang</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="de_DE">
+      <Text>Produktionsliste einschalten</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="de_DE">
+      <Text>Zeige Overlay Grenzausdehnung</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="de_DE">
+      <Text>Kann außerdem aktiviert werden per Anklicken des Grenzausdehnungssymbols in der Stadtansicht</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" Language="de_DE">
+      <Text>Zeige aktive BürgerIcons beim Hovern</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="de_DE">
+      <Text>Zeige BürgerIcons, Erträge pro Feld und Grenzausdehnung beim Hovern.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_HEADER" Language="de_DE">
+      <Text>Smartbanner</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="de_DE">
+      <Text>Aktiviere Smartbanner</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="de_DE">
+      <Text>Zeige neue Symbole und Informationen im Stadtbanner an.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="de_DE">
+      <Text>Zeige ein [ICON_EXCLAMATION] , immer wenn ein frei verfügbarer Bürger automatisch von der StadtverwaltungsAI zugewiesen wurde.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_DISTRICTS_TOOLTIP" Language="de_DE">
+      <Text>Zeige die gebauten Bezirke als Symbole im Banner an.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_POPULATION_TOOLTIP" Language="de_DE">
+      <Text>Zeige die Rundenzahl bis zum Bevölkerungswachstum[NEWLINE]und die Wohnraumbelegung an.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="de_DE">
+      <Text>Zeige die Rundenzahl bis zur Grenzausdehnung an.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL" Language="de_DE">
+      <Text>Allgemein</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="de_DE">
+      <Text>Versteckt</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="de_DE">
+      <Text>Verbesserte Ressourcensymbole</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="de_DE">
+      <Text>Opak: Zeige immer Ressourcensymbole[NEWLINE]Transparent: Verbesserte Ressourcensymbole sind transparent[NEWLINE]Versteckt: Verbesserte Ressourcensymbole werden nicht angezeigt</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="de_DE">
+      <Text>Zeige Luxusgüter im Top-Panel</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="de_DE">
+      <Text>Opak</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="de_DE">
+      <Text>Ansicht Erträge immer AN</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TRANSPARENT" Language="de_DE">
+      <Text>Transparent</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP" Language="de_DE">
+      <Text>Nachrichten</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="de_DE">
+      <Text>Nachrichtenauswahl</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="de_DE">
+      <Text>Entfernt die meisten unnötigen Beschreibungen innerhalb der Nachricht, von wo die Nachricht herkam</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES" Language="de_DE">
+      <Text>Linsen</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="de_DE">
+      <Text>Automat. Archäologen-Linse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="de_DE">
+      <Text>Automat. Handwerker-Linse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="de_DE">
+      <Text>Automat. Späher-Linse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS" Language="de_DE">
+      <Text>Popups</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="de_DE">
+      <Text>Tech/Ausrichtung Popups Anzeige</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="de_DE">
+      <Text>Zeige das Popup an, das erscheint, wenn eine neue Tech oder Ausrichtung abgeschlossen wurde</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="de_DE">
+      <Text>Tech/Ausrichtung Popup Audio</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="de_DE">
+      <Text>Spiele das Popup-Audio ab, das erfolgt, wenn eine neue Tech oder Ausrichtung abgeschlossen wurde. Kann völlig unabhängig von der visuellen Popup-Komponente ein- und ausgeschaltet werden</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="de_DE">
+      <Text>Denk dran: CQUI Einstellungen werden mit dem individuellen Savegame gespeichert![NEWLINE]Wenn Du die Voreinstellungen generell ändern willst, bitte editiere die CQUI_Settings.sql Datei innerhalb des [MOD INSTALL DIRECTORY]/CQUI/Assets Verzeichnisses</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS" Language="de_DE">
+      <Text>Einheiten</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="de_DE">
+      <Text>Einheit-Wegepfad bei Anwahl oder Hover</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="de_DE">
+      <Text>Ansicht aller Befehle im Einheiten-Panel</Text>
+    </Row>
   </LocalizedText>
 </GameData>

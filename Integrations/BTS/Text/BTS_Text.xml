@@ -631,5 +631,131 @@
     <Replace Tag="LOC_ORIGIN_CHOOSER_CHANGE_DESTINATION_BUTTON" Language="pl_PL">
         <Text>POTWIERDŹ</Text>
     </Replace>
+    
+   <!-- GERMAN -->
+
+   <!-- Common Text -->
+     <Replace Tag="LOC_TRADE_GROUP_SETTINGS" Language="de_DE">
+        <Text>Gruppen-Einstellungen</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FILTER_SETTINGS" Language="de_DE">
+        <Text>Filter-Einstellungen</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="de_DE">
+        <Text>Sort.n. [ICON_Food] Nahrung</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_PRODUCTION_TOOLTIP" Language="de_DE">
+        <Text>Sort.n. [ICON_Production] Produktion</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_GOLD_TOOLTIP" Language="de_DE">
+        <Text>Sort.n. [ICON_Gold] Gold</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_SCIENCE_TOOLTIP" Language="de_DE">
+        <Text>Sort.n. [ICON_Science] Forschung</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_CULTURE_TOOLTIP" Language="de_DE">
+        <Text>Sort.n. [ICON_Culture] Kultur</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_FAITH_TOOLTIP" Language="de_DE">
+        <Text>Sort.n. [ICON_Faith] Glaube</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_TURNS_REMAINING_TOOLTIP" Language="de_DE">
+        <Text>Sort.n. [ICON_Turn] Runden bis Route fertig ist</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FILTER_INTERNATIONAL_ROUTES_TEXT" Language="de_DE">
+        <Text>Internationale Routen</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FILTER_CS_WITH_QUEST_TOOLTIP" Language="de_DE">
+        <Text>Stadtstaaten mit Handelsquest</Text>
+    </Replace>
+
+    <!-- Trade Overview -->
+    <Replace Tag="LOC_TRADE_NO_BENEFIT_TEXT" Language="de_DE">
+        <Text>erhält keine Bonusse durch Handelsroute</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_TEXT" Language="de_DE">
+        <Text>Sort.n.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT" Language="de_DE">
+        <Text>Max</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_COLLAPSE_ALL_BUTTON_TEXT" Language="de_DE">
+        <Text>Min</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP" Language="de_DE">
+        <Text>Gesamtbetrag an[ICON_Turn] bis zur Erstellung der Handelsroute</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_ALT_HELP_TOOLTIP" Language="de_DE">
+        <Text>Diese Route benötigt {1_TurnsRemaining}[Icon_Turn] bis zu Fertigstellung.</Text>
+    </Replace>
+   
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER" Language="de_DE">
+        <Text>----------------------------</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_ROUTE_LENGTH_TOOLTIP" Language="de_DE">
+        <Text>Handelsroute[ICON_Movement]: {1_TripsToDestination}</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TRIPS_COUNT_TOOLTIP" Language="de_DE">
+        <Text>Züge bis zum Ziel: {1_TripsToDestination}</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_TOOLTIP" Language="de_DE">
+        <Text>Route wird fertiggestellt in [ICON_Turn]{1_TurnWhenCompleted}</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_ALT_TOOLTIP" Language="de_DE">
+        <Text>Die begonnene Route benötigt {1_TurnsToComplete} Runden und wird fertiggestellt in Runde {2_TurnWhenCompleted}</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_CANCEL_AUTOMATION_TOOLTIP" Language="de_DE">
+        <Text>Abbruch der automatisierten Handelsroute. Der Händler wird verfügbar sein, wenn seine Route abgeschlossen ist.</Text>
+    </Replace>
+
+    <!-- Make Trade Route -->
+    <Replace Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_LABEL" Language="de_DE">
+        <Text>Wiederhole Route:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_TOOLTIP" Language="de_DE">
+        <Text>Aktiviere, damit der Händler diese Route widerholt. Standardmäßig ist die wiederholte Route die letzte genommene Route des Händlers.</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_LABEL" Language="de_DE">
+        <Text>Von oben sort.Einträge:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_TOOLTIP" Language="de_DE">
+        <Text>Die wiederholte Route ist die oberste Route in der Sortierliste. Die Route wird gewählt, wenn der Händler die vorige abgeschlossen hat.</Text>
+    </Replace>
+
+    <!-- Trade Origin Chooser -->
+    <Replace Tag="LOC_ORIGIN_CHOOSER_HEADER_BACKGROUND_TEXT" Language="de_DE">
+        <Text>Wähle eine Stadt</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_ORIGIN_CHOOSER_HEADER_LABEL_TEXT" Language="de_DE">
+        <Text>Transferiere den Händler nach...</Text>
+    </Replace>
+
+    <Replace Tag="LOC_ORIGIN_CHOOSER_CHANGE_DESTINATION_BUTTON" Language="de_DE">
+        <Text>Bestätige</Text>
+    </Replace>		
   </LocalizedText>
 </GameData>
