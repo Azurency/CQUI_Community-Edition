@@ -2072,7 +2072,8 @@ function Refresh()
                     end
                     if (table.count(cityData.Religions) > 0) then
                       for _, beliefIndex in ipairs(cityData.BeliefsOfDominantReligion) do
-                        table.insert(modifierIDs, GameInfo.BeliefModifiers[GameInfo.Beliefs[beliefIndex].BeliefType].ModifierID);
+                        local beliefmod = GameInfo.BeliefModifiers[GameInfo.Beliefs[beliefIndex].BeliefType];
+                        if(beliefmod) then table.insert(modifierIDs, beliefmod.ModifierID); end
                       end
                     end
 
