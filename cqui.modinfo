@@ -32,7 +32,7 @@
     <Text id="CQUI_STABILITY_RELEASECANDIDATE">
       <en_US>Release Candidate</en_US>
       <zh_Hans_CN>待发布</zh_Hans_CN>
-      <pl-PL>Kandydat do wydania</pl_PL>
+      <pl_PL>Kandydat do wydania</pl_PL>
       <ru_RU>Релиз-кандидат</ru_RU>
     </Text>
     <Text id="CQUI_STABILITY_RELEASE">

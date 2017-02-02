@@ -528,11 +528,26 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="pl_PL">
       <Text>Wyświetla ikony obywateli, ikony dochodu oraz rozrost granic po najechaniu myszką</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_HEADER" Language="pl_PL">
+      <Text>Inteligentne Banery</Text>
+    </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="pl_PL">
       <Text>Włącz inteligentne banery</Text>
     </Row>
-    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="pl_PL">
-      <Text>Wyświetla nowe ikony w banerze miasta. Ikona [ICON_EXCLAMATION] jest wyświetlona gdy niezablokowani obywatele są automatycznie przypisywani przez AI zarządcy miasta. Ikony dystryktów wskazują zbydowane dystrykty</Text>
+   <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="pl_PL">
+      <Text>Wyświetla nowe ikony i informacje w banerze miasta.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="pl_PL">
+      <Text>Ikona [ICON_EXCLAMATION] jest wyświetlona gdy niezablokowani obywatele są automatycznie przypisywani przez AI zarządcy miasta.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_DISTRICTS_TOOLTIP" Language="pl_PL">
+      <Text>Ikony dystryktów wskazują zbydowane dystrykty</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_POPULATION_TOOLTIP" Language="pl_PL">
+      <Text>Wyświetla pozostałą liczbę tur do wzrostu populacji[NEWLINE]oraz [obecną populację/ilość wolnych miejsc populacji].</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="pl_PL">
+      <Text>Wyświetla pozostałą liczbę tur do rozrostu kulturowego.</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL" Language="pl_PL">
       <Text>Ogólne</Text>
@@ -599,6 +614,15 @@
     </Row>
     <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="pl_PL">
       <Text>Wyświetlaj drogę jednostki po najechaniu myszką bądź wybraniu</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS" Language="pl_PL">
+      <Text>Jednostki</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="pl_PL">
+      <Text>Pokazuj drogę jednostki po zaznaczeniu bądź najechaniu myszką</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="pl_PL">
+      <Text>Automatycznie rozwijaj listę akcji w panelu jednostki</Text>
     </Row>
   </LocalizedText>
 </GameData>

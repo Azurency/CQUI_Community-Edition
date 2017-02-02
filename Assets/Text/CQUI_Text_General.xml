@@ -128,5 +128,9 @@
     <Replace Tag="LOC_CQUI_CITY_ENTERTAINMENT" Language="pl_PL">
       <Text>Rozrywka</Text>
     </Replace>
+    <!-- POPUPS -->
+    <Row Tag="LOC_CQUI_GREAT_PERSON_PROGRESS" Language="pl_PL">
+      <Text>Postęp:</Text>
+    </Row>
   </LocalizedText>
 </GameData>

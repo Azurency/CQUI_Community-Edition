@@ -510,6 +510,13 @@
     <!-- POLISH -->
 
     <!-- Common Text -->
+    <Replace Tag="LOC_TRADE_GROUP_SETTINGS" Language="pl_PL">
+        <Text>Ustawienia grup</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FILTER_SETTINGS" Language="pl_PL">
+        <Text>Ustawienia filtrów</Text>
+    </Replace>
     <Replace Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="pl_PL">
         <Text>Sortuj po [ICON_Food]Jedzeniu.</Text>
     </Replace>
@@ -556,11 +563,11 @@
     </Replace>
 
     <Replace Tag="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT" Language="pl_PL">
-        <Text>Rozwiń wszystkie:</Text>
+        <Text>Rozw:</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_COLLAPSE_ALL_BUTTON_TEXT" Language="pl_PL">
-        <Text>Zwiń wszystkie:</Text>
+        <Text>Zwiń:</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP" Language="pl_PL">
