@@ -85,6 +85,8 @@
     <File>Assets/UI/UnitFlagManager.lua</File>
     <File>Assets/UI/WorldInput.lua</File>
     <File>Assets/UI/WorldViewIconsManager.lua</File>
+    <File>Assets/UI/Choosers/CivicsChooser.lua</File>
+    <File>Assets/UI/Choosers/ResearchChooser.lua</File>
     <File>Assets/UI/Civilopedia/CivilopediaSupport.lua</File>
     <File>Assets/UI/Panels/CityPanel.lua</File>
     <File>Assets/UI/Panels/CityPanel.xml</File>
@@ -159,6 +161,8 @@
         <File>Assets/UI/UnitFlagManager.lua</File>
         <File>Assets/UI/WorldInput.lua</File>
         <File>Assets/UI/WorldViewIconsManager.lua</File>
+        <File>Assets/UI/Choosers/CivicsChooser.lua</File>
+        <File>Assets/UI/Choosers/ResearchChooser.lua</File>
         <File>Assets/UI/Civilopedia/CivilopediaSupport.lua</File>
         <File>Assets/UI/Panels/CityPanel.lua</File>
         <File>Assets/UI/Panels/CityPanel.xml</File>
