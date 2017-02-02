@@ -612,9 +612,6 @@
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="pl_PL">
       <Text>Pamiętaj: Ustawienia CQUI są przypisane do poszczególnych zapisów gry![NEWLINE]Jeśli chcesz zmienić ustawienia na stałe, zmień je w pliku CQUI_Settings.sql znajdującym się w katalogu [KATALOG INSTALACJI MODU]/CQUI/Assets</Text>
     </Row>
-    <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="pl_PL">
-      <Text>Wyświetlaj drogę jednostki po najechaniu myszką bądź wybraniu</Text>
-    </Row>
     <Row Tag="LOC_CQUI_UNITS" Language="pl_PL">
       <Text>Jednostki</Text>
     </Row>
