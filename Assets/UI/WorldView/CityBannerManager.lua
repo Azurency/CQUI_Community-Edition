@@ -986,38 +986,47 @@ function CityBanner.UpdateStats( self : CityBanner)
       self.m_Instance.CityPopulation:SetText(currentPopulation);
       if (self.m_Player == Players[localPlayerID]) then --Only show growth data if the player is you
         local popTooltip :string = Locale.Lookup("LOC_CITY_BANNER_POPULATION") .. ": " .. currentPopulation;
+        local popTurnLeftColor = "";
         if turnsUntilGrowth > 0 then
           popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_TURNS_GROWTH", turnsUntilGrowth);
           popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_FOOD_SURPLUS", round(foodSurplus,1));        
-          self.m_Instance.CityPopTurnsLeft:SetColorByName("StatGoodCS");
+          popTurnLeftColor = "StatGoodCS";
         elseif turnsUntilGrowth < 0 then
           popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_TURNS_STARVATION", -turnsUntilGrowth);
-          self.m_Instance.CityPopTurnsLeft:SetColorByName("StatBadCS");
+          popTurnLeftColor = "StatBadCS";
         else
-          self.m_Instance.CityPopTurnsLeft:SetColorByName("StatNormalCS");
+          popTurnLeftColor = "StatNormalCS";
         end
 
-        if g_smartbanner then
-          if g_smartbanner_cultural then
-            local turnsUntilBorderGrowth = pCityCulture:GetTurnsUntilExpansion();
-            self.m_Instance.CityCultureTurnsLeft:SetText(turnsUntilBorderGrowth);
-            self.m_Instance.CityCultureTurnsLeft:SetHide(false);
-          else
-            self.m_Instance.CityCultureTurnsLeft:SetHide(true);
-          end
+        if g_smartbanner and g_smartbanner_cultural then
+          local turnsUntilBorderGrowth = pCityCulture:GetTurnsUntilExpansion();
+          self.m_Instance.CityCultureTurnsLeft:SetText(turnsUntilBorderGrowth);
+          self.m_Instance.CityCultureTurnsLeft:SetHide(false);
+        else
+          self.m_Instance.CityCultureTurnsLeft:SetHide(true);
+        end
 
-          if g_smartbanner_population then
-            self.m_Instance.CityPopulation:SetToolTipString(popTooltip);
-            local housing = pCityGrowth:GetHousing();
-            local CTLS = turnsUntilGrowth.."  ["..currentPopulation.."/"..housing.."]  ";
-            self.m_Instance.CityPopTurnsLeft:SetText(CTLS);
-            self.m_Instance.CityPopTurnsLeft:SetHide(false);
-          else
-            self.m_Instance.CityPopTurnsLeft:SetHide(true);
+        if g_smartbanner and g_smartbanner_population then
+          self.m_Instance.CityPopulation:SetToolTipString(popTooltip);
+          local housingLeft = pCityGrowth:GetHousing() - currentPopulation;
+          local housingLeftText = housingLeft;
+          local housingLeftColor = "Error";
+          if housingLeft > 1 then
+            housingLeftColor = "StatGoodCS";
+            housingLeftText = "+"..housingLeft;
+            --COLOR: Green
+          elseif housingLeft == 1 then
+            housingLeftColor = "WarningMinor";
+            housingLeftText = "+"..housingLeft;
+            --COLOR: Yellow
+          elseif housingLeft <= 0 and housingLeft >= -4 then
+            housingLeftColor = "WarningMajor";
           end
+          local CTLS = "[COLOR:"..popTurnLeftColor.."]"..turnsUntilGrowth.."[ENDCOLOR]  [[COLOR:"..housingLeftColor.."]"..housingLeftText.."[ENDCOLOR]]  ";
+          self.m_Instance.CityPopTurnsLeft:SetText(CTLS);
+          self.m_Instance.CityPopTurnsLeft:SetHide(false);
         else
           self.m_Instance.CityPopTurnsLeft:SetHide(true);
-          self.m_Instance.CityCultureTurnsLeft:SetHide(true);
         end
       end
 
@@ -3106,15 +3115,15 @@ end
 -- ===========================================================================
 function CQUI_UpdateSelectedCityCitizens( plotId:number )
 
-	local pSelectedCity	:table = UI.GetHeadSelectedCity();
-	local kPlot			:table = Map.GetPlotByIndex(plotId);
-	local tParameters	:table = {};
-	tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
-	tParameters[CityCommandTypes.PARAM_X] = kPlot:GetX();
-	tParameters[CityCommandTypes.PARAM_Y] = kPlot:GetY();
+  local pSelectedCity	:table = UI.GetHeadSelectedCity();
+  local kPlot			:table = Map.GetPlotByIndex(plotId);
+  local tParameters	:table = {};
+  tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
+  tParameters[CityCommandTypes.PARAM_X] = kPlot:GetX();
+  tParameters[CityCommandTypes.PARAM_Y] = kPlot:GetY();
 
-	local tResults :table = CityManager.RequestCommand( pSelectedCity, CityCommandTypes.MANAGE, tParameters );
-	return true;
+  local tResults :table = CityManager.RequestCommand( pSelectedCity, CityCommandTypes.MANAGE, tParameters );
+  return true;
 end
 
 -- ===========================================================================
