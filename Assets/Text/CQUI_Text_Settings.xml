@@ -652,7 +652,7 @@
       <Text>Stadtansicht</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="de_DE">
-      <Text>Produktionsrang</Text>
+      <Text>Zeilenhöhe i.d. Produktwahlliste</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="de_DE">
       <Text>Produktionsliste einschalten</Text>
@@ -696,6 +696,9 @@
     <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="de_DE">
       <Text>Versteckt</Text>
     </Row>
+    <Row Tag="LOC_CQUI_GENERAL_MINIMAPSIZE" Language="de_DE">
+      <Text>Minimapgröße</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="de_DE">
       <Text>Verbesserte Ressourcensymbole</Text>
     </Row>
@@ -738,8 +741,11 @@
     <Row Tag="LOC_CQUI_POPUPS" Language="de_DE">
       <Text>Popups</Text>
     </Row>
+    <Row Tag="LOC_CQUI_POPUPS_ALWAYSOPENTECHTREES" Language="de_DE">
+      <Text>Zeige immer ganze Bäume statt Popups</Text>
+    </Row>
     <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="de_DE">
-      <Text>Tech/Ausrichtung Popups Anzeige</Text>
+      <Text>Tech/Ausrichtung Popup Anzeige</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="de_DE">
       <Text>Zeige das Popup an, das erscheint, wenn eine neue Tech oder Ausrichtung abgeschlossen wurde</Text>
