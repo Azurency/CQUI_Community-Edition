@@ -73,7 +73,7 @@ local m_isMouseDragging         :boolean = false; -- Was LMB clicked inside the 
 local m_hasMouseDragged         :boolean = false; -- Has there been any movements since m_isMouseDragging became true?
 local m_wasMouseInMinimap       :boolean = false; -- Was the mouse over the minimap the last time we checked?
 
-local CQUI_bigMinimap = true;
+local CQUI_MapSize = 512;
 
 local m_CurrentModdedLensOn     :number  = MODDED_LENS_ID.NONE;
 -- ===========================================================================
@@ -112,6 +112,22 @@ function CQUI_OnSettingsUpdate()
   AUTO_APPLY_ARCHEOLOGIST_LENS = GameConfiguration.GetValue("CQUI_AutoapplyArchaeologistLens");
   AUTO_APPLY_BUILDER_LENS = GameConfiguration.GetValue("CQUI_AutoapplyBuilderLens");
   AUTO_APPLY_SCOUT_LENS = GameConfiguration.GetValue("CQUI_AutoapplyScoutLens");
+  CQUI_MapSize = GameConfiguration.GetValue("CQUI_MinimapSize");
+
+  --Cycles the minimap after resizing
+  if(Controls.MinimapImage:GetSizeX() ~= CQUI_MapSize) then
+    Controls.MinimapImage:SetSizeVal(CQUI_MapSize, CQUI_MapSize / 2);
+    Controls.CollapseAnim:SetEndVal(0, Controls.MinimapImage:GetOffsetY() + Controls.MinimapImage:GetSizeY() -25);
+    Controls.CollapseAnim:SetProgress(1);
+    m_isCollapsed = true;
+    OnCollapseToggle();
+    --Squeezes the map buttons if extra space is needed
+    if(CQUI_MapSize < 256) then
+      Controls.OptionsStack:SetPadding(-7);
+    else
+      Controls.OptionsStack:SetPadding(-3);
+    end
+  end
 end
 -- ===========================================================================
 function GetContinentsCache()
@@ -584,7 +600,7 @@ function OnCollapseToggle()
     UI.PlaySound("Minimap_Open");
     Controls.ExpandButton:SetHide( true );
     Controls.CollapseButton:SetHide( false );
-    Controls.ExpandAnim:SetEndVal(0, -Controls.MinimapImage:GetOffsetY() - Controls.MinimapImage:GetSizeY());
+    Controls.ExpandAnim:SetEndVal(0, -Controls.MinimapImage:GetOffsetY() - Controls.MinimapImage:GetSizeY() + 25);
     Controls.ExpandAnim:SetToBeginning();
     Controls.ExpandAnim:Play();
     Controls.CompassArm:SetPercent(.25);
@@ -593,7 +609,7 @@ function OnCollapseToggle()
     Controls.ExpandButton:SetHide( false );
     Controls.CollapseButton:SetHide( true );
     Controls.Pause:Play();
-    Controls.CollapseAnim:SetEndVal(0, Controls.MinimapImage:GetOffsetY() + Controls.MinimapImage:GetSizeY());
+    Controls.CollapseAnim:SetEndVal(0, Controls.MinimapImage:GetOffsetY() + Controls.MinimapImage:GetSizeY() - 25);
     Controls.CollapseAnim:SetToBeginning();
     Controls.CollapseAnim:Play();
     Controls.CompassArm:SetPercent(.5);
@@ -2398,7 +2414,7 @@ function OnInputHandler( pInputStruct:table )
     if msg == MouseEvents.RButtonDown then
       local minix, miniy = GetMinimapMouseCoords( pInputStruct:GetX(), pInputStruct:GetY() );
       if IsMouseInMinimap( minix, miniy ) then
-        CQUI_ToggleMinimapSize();
+        return true
       end
     end
   end

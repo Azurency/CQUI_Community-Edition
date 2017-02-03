@@ -212,6 +212,21 @@ local ProductionItemHeightConverter = {
   end
 };
 
+--Minimum value is 224, maximum is 768, but only multiples of 8 are allowed. This translates to 68 steps, or 0th step to the 67th
+local MinimapSizeConverter = {
+  ToSteps = function(value)
+    local out = math.floor((value - 224) / 8);
+    if(out < 0) then out = 0;
+    elseif(out > 67) then out = 67; end
+    return out;
+  end,
+  ToValue = function(steps)
+    local out = (steps) * 8 + 224;
+    if(out > 768) then out = 768; end
+    return out;
+  end
+};
+
 function Initialize()
   ContextPtr:SetHide(true);
   --Adding/binding tabs...
@@ -258,6 +273,7 @@ function Initialize()
   PopulateCheckBox(Controls.AlwaysOpenTechTreesCheckbox, "CQUI_AlwaysOpenTechTrees");
 
   PopulateSlider(Controls.ProductionItemHeightSlider, Controls.ProductionItemHeightText, "CQUI_ProductionItemHeight", ProductionItemHeightConverter);
+  PopulateSlider(Controls.MinimapSizeSlider, Controls.MinimapSizeText, "CQUI_MinimapSize", MinimapSizeConverter);
 
   InitializeGossipCheckboxes();
 

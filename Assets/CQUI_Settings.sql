@@ -64,7 +64,8 @@ INSERT INTO CQUI_Settings -- Don't touch this line!
 */
 
 INSERT INTO CQUI_Settings -- Don't touch this line!
-  VALUES  ("CQUI_ProductionItemHeight", 32); -- Height used for individual items in the production queue. Recommended values fall between 24 and 128, though any positive could work
+  VALUES  ("CQUI_MinimapSize", 512), -- Factor used for setting minimap size (ex: 512 = 512x256). Recommended values fall between 224 and 768, though any positive could work
+  ("CQUI_ProductionItemHeight", 32); -- Height used for individual items in the production queue. Recommended values fall between 24 and 128, though any positive could work
 
 /*
     ┌────────────────────────────────────────────────────────────────────────────────────────────┐

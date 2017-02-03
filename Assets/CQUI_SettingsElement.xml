@@ -38,6 +38,13 @@
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <GridButton ID="ToggleYieldsOnLoadCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" />
           </Stack>
+          <Grid Size="0,35" Anchor="R,T" AutoSize="H" Color="0,0,0,0">
+            <Stack Anchor="C,T" StackGrowth="Left" Padding="3">
+              <Label String="777" Style="ShellOptionText" Anchor="L,C" ID="MinimapSizeText" />
+              <Label Style="ShellOptionText" String="LOC_CQUI_GENERAL_MINIMAPSIZE"/>
+            </Stack>
+            <Slider Style="SliderControl" Anchor="C,B" Size="300,13" SpaceForScroll="0" ID="MinimapSizeSlider" Steps="68" />
+          </Grid>
         </Stack>
       </Container>
       <Container ID="PopupsOptions" Size="parent,parent" Hidden="1">

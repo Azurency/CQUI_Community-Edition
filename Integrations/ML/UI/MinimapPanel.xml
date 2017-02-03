@@ -39,15 +39,14 @@
     </ScrollPanel>
     <Image Texture="Controls_ButtonExtendSmall" TextureOffset="0,60" Size="20,20" Anchor="L,B" Offset="20,10"/>
   </Grid>
-  <Container  Size="300,200"    ID="MiniMap" Anchor="L,B" Offset="-3,0" ConsumeMouse="0">
+  <Container  Size="300,200"    ID="MiniMap" Anchor="L,B" Offset="-15,-15" ConsumeMouse="0">
     <SlideAnim  Size="parent,parent"  ID="CollapseAnim" Begin="0,0" End="0,195" Function="OutQuint" FunctionPower="1" Speed="2"   Cycle="Once"  Stopped="1">
       <SlideAnim  Size="parent,parent" ID="ExpandAnim" Begin="0,0" End="0,-195" Function="OutQuint" FunctionPower="3" Speed="2"   Cycle="Once"  Stopped="1">
-        <Image ID="MinimapBacking" Texture="MiniMap_WoodBacking" Offset="-17,-125" Size="555,340"/>
         <Image ID="MinimapImage" Anchor ="L,B" Offset="18,21" Texture="MiniMap_BG.dds" ToolTip="LOC_HUD_MINIMAP_TOOLTIP" StretchMode="Fill" Sampler="Linear" Size="512,256">
           <Button ID="CollapseButton" Anchor="R,T" AnchorSide="I,O" Offset="3,3"  Size="47,16"  Hidden="0" Texture="Controls_Collapse.dds" ToolTip="LOC_HUD_MINIMAP_COLLAPSE_TOOLTIP" />
           <Button ID="ExpandButton" Anchor="R,T" AnchorSide="I,O" Offset="3,3"  Size="47,16"  Hidden="1" ConsumeAllMouse="1" Texture="Controls_ButtonExtend.dds" ToolTip="LOC_HUD_MINIMAP_EXPAND_TOOLTIP" />
           <Grid Texture="MiniMap_Frame" Size="parent+10,parent+12" SliceCorner="18,40" SliceTextureSize="37,149" Offset="-5,-5"/>
-          <Stack ID="OptionsStack" Anchor="L,T" AnchorSide="I,O" Offset="0,-4" StackGrowth="Right" Padding="-2">
+          <Stack ID="OptionsStack" Anchor="L,T" AnchorSide="I,O" Offset="0,-15" StackGrowth="Right" Padding="-3">
             <CheckBox ID="LensButton" Offset="0,1" Anchor="L,C" UseSelectedTextures="1" ButtonSize="44,44"  ButtonTexture="LaunchBar_Hook_ButtonMedium" Style="ButtonNormalText" ToolTip="LOC_HUD_LENSES" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
               <Image Texture="MiniMap_Lenses" Size="36,36" Anchor="C,C" Offset="-4,-1"/>
             </CheckBox>
@@ -72,7 +71,7 @@
             <Image                       Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip" Color="255,255,255,200" Offset="0,-2"/>
           </Stack>
         </Image>
-        <Container Anchor="L,B" Offset="7,8">
+        <Container Anchor="L,B" Offset="10,8">
           <Meter ID="CompassArm" Offset="-169,-152" Texture="MiniMap_CompassSide.dds"  Percent=".25" Follow="1" Speed="4" Size="320,320"/>
           <Image Anchor="L,B" Offset="0,-6" Texture="MiniMap_CompassBase.dds"  />
         </Container>

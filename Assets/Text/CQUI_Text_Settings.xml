@@ -67,6 +67,9 @@
     <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="en_US">
       <Text>Hidden</Text>
     </Row>
+    <Row Tag="LOC_CQUI_GENERAL_MINIMAPSIZE" Language="en_US">
+      <Text>Minimap Size</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="en_US">
       <Text>Improved resource icon style</Text>
     </Row>
