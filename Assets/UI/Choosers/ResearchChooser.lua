@@ -36,6 +36,9 @@ local m_lastCompletedID	:number = -1;
 local m_isTutorial		:boolean = false;
 local m_needsRefresh	:boolean = false; --used to track whether a given series of events (terminated by GameCoreEventPublishComplete)
 
+--CQUI Members
+local CQUI_AlwaysOpenTechTrees = false; --Ignores events calling for this to open when true
+
 -- ===========================================================================
 --	METHODS
 -- ===========================================================================
@@ -60,13 +63,13 @@ function GetData()
 	end
 
 	pResearchQueue = pPlayerTechs:GetResearchQueue(pResearchQueue);
-	
+
 	-- Fill in the "other" (not-current) items
 	for kTech in GameInfo.Technologies() do
-		
+
 		local iTech	:number = kTech.Index;
-		if	iTech == m_currentID or 
-			iTech == m_lastCompletedID or 
+		if	iTech == m_currentID or
+			iTech == m_lastCompletedID or
 			(iTech ~= m_currentID and pPlayerTechs:CanResearch(iTech)) then
 
 			local kResearchData :table = GetResearchData( ePlayer, pPlayerTechs, kTech );
@@ -90,7 +93,7 @@ function GetData()
 				end
 			end
 
-			table.insert( kData, kResearchData ); 
+			table.insert( kData, kResearchData );
 		end
 	end
 
@@ -101,16 +104,16 @@ end
 -- ===========================================================================
 --	Populate the list of research options.
 -- ===========================================================================
-function View( playerID:number, kData:table )	
-		
+function View( playerID:number, kData:table )
+
 	m_researchIM:ResetInstances();
 
-	local kActive : table = GetActiveData(kData);		
+	local kActive : table = GetActiveData(kData);
 	if kActive == nil then
 		RealizeCurrentResearch( nil );	-- No research done yet
 	end
 
-	table.sort(kData, function(a, b) return Locale.Compare(a.Name, b.Name) == -1; end);	
+	table.sort(kData, function(a, b) return Locale.Compare(a.Name, b.Name) == -1; end);
 
 	for i, data in ipairs(kData) do
 		if data.IsCurrent or data.IsLastCompleted then
@@ -121,7 +124,7 @@ function View( playerID:number, kData:table )
 		else
 			AddAvailableResearch( playerID, data );
 		end
-	end		
+	end
 
 	-- TUTORIAL HACK: Ensure tutorial techs are in a specific position in the list:
 	if m_isTutorial then
@@ -144,7 +147,7 @@ function View( playerID:number, kData:table )
 		end
 	end
 
-	RealizeSize();	
+	RealizeSize();
 end
 
 
@@ -154,7 +157,7 @@ end
 function Refresh()
 	local player:number = Game.GetLocalPlayer();
 	if (player >= 0) then
-		local kData :table	= GetData();	
+		local kData :table	= GetData();
 		View( player, kData );
 	end
 
@@ -168,11 +171,11 @@ end
 function AddAvailableResearch( playerID:number, kData:table )
 	local numUnlockables	:number;
 	local isDisabled:boolean = (kData.TurnsLeft < 1);	-- No cities, turns will be -1
-	
+
 	-- Create main instance and the Instance Manager for any unlocks.
 	local kItemInstance	:table = m_researchIM:GetInstance();
 	local techUnlockIM	:table = GetUnlockIM( kItemInstance );
-		
+
 	kItemInstance.TechName:SetText(Locale.ToUpper(kData.Name));
 	kItemInstance.Top:LocalizeAndSetToolTip(kData.ToolTip);
 	kItemInstance.Top:SetTag( UITutorialManager:GetHash(kData.TechType) );	-- Mark for tutorial dynamic element
@@ -183,11 +186,11 @@ function AddAvailableResearch( playerID:number, kData:table )
 
 	local callback:ifunction = nil;
 	if not isDisabled then
-		callback = function() 
+		callback = function()
 			ResetOverflowArrow( kItemInstance );
-			OnChooseResearch(kData.Hash); 
+			OnChooseResearch(kData.Hash);
 		end;
-	end 
+	end
 
 	numUnlockables = PopulateUnlockablesForTech( playerID, kData.ID, techUnlockIM, callback );
 	if numUnlockables ~= nil then
@@ -206,15 +209,15 @@ function AddAvailableResearch( playerID:number, kData:table )
 	else
 		kItemInstance.QueueBadge:SetHide(true);
 		kItemInstance.NodeNumber:SetHide(true);
-	end 
+	end
 
     kItemInstance.Top:RegisterCallback( Mouse.eMouseEnter,	function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 
-	-- Set up callback that changes the current research	
-	kItemInstance.Top:RegisterCallback(		Mouse.eLClick,	
+	-- Set up callback that changes the current research
+	kItemInstance.Top:RegisterCallback(		Mouse.eLClick,
 											function()
 												ResetOverflowArrow( kItemInstance );
-												OnChooseResearch(kData.Hash); 
+												OnChooseResearch(kData.Hash);
 											end);
 	-- Only wire up Civilopedia handlers if not in a on-rails tutorial
 	if IsTutorialRunning()==false then
@@ -246,7 +249,7 @@ function OnChooseResearch( techHash:number )
 
 	if m_isExpanded then
 		OnClosePanel();
-	end	
+	end
 end
 
 -- ===========================================================================
@@ -257,7 +260,7 @@ function RealizeSize()
 
 	Controls.ResearchStack:CalculateSize();
 	Controls.ResearchStack:ReprocessAnchoring();
-	
+
 	if(Controls.ChooseResearchList:GetScrollBar():IsHidden()) then
 		Controls.ChooseResearchList:SetOffsetX(10);
 	else
@@ -266,11 +269,17 @@ function RealizeSize()
 end
 
 -- ===========================================================================
-function OnOpenPanel()	
-	LuaEvents.ResearchChooser_ForceHideWorldTracker();
+function OnOpenPanel()
+  --CQUI: ignores command and opens the tech tree instead if AlwaysShowTechTrees is true
+  print(CQUI_AlwaysOpenTechTrees);
+  if(CQUI_AlwaysOpenTechTrees) then
+    LuaEvents.ResearchChooser_RaiseTechTree();
+  else
+    LuaEvents.ResearchChooser_ForceHideWorldTracker();
     UI.PlaySound("Tech_Tray_Slide_Open");
-	m_isExpanded = true;
-	m_kSlideAnimator.Show();
+    m_isExpanded = true;
+    m_kSlideAnimator.Show();
+  end
 end
 
 -- ===========================================================================
@@ -289,7 +298,7 @@ end
 
 -- ===========================================================================
 function OnUpdateUI(type)
-	m_kSlideAnimator.OnUpdateUI();	
+	m_kSlideAnimator.OnUpdateUI();
 	if type == SystemUpdateUI.ScreenResize then
 		RealizeSize();
 	end
@@ -314,7 +323,7 @@ function OnLocalPlayerTurnBegin()
 	local localPlayer:number = Game.GetLocalPlayer();
 	if localPlayer >= 0 then
 		local pPlayerTechs :table = Players[localPlayer]:GetTechs();
-		m_currentID = pPlayerTechs:GetResearchingTech();			
+		m_currentID = pPlayerTechs:GetResearchingTech();
 
 		m_needsRefresh = true;
 	end
@@ -337,9 +346,9 @@ function OnResearchChanged( ePlayer:number, eTech:number )
 	local localPlayer = Game.GetLocalPlayer();
 	if localPlayer ~= -1 and localPlayer == ePlayer then
 		local pPlayerTechs :table = Players[localPlayer]:GetTechs();
-		m_currentID			= pPlayerTechs:GetResearchingTech();		
+		m_currentID			= pPlayerTechs:GetResearchingTech();
 		m_lastCompletedID	= -1;
-		
+
 		m_needsRefresh = true;
 	end
 end
@@ -367,7 +376,7 @@ end
 -- ===========================================================================
 function FlushChanges()
 	if m_needsRefresh then
-		Refresh();	
+		Refresh();
 	end
 end
 
@@ -383,7 +392,7 @@ end
 -- ===========================================================================
 --
 --	Init/Uninit/Hot-Loading Events
---    
+--
 -- ===========================================================================
 function OnInit( isReload:boolean )
 	if isReload then
@@ -392,7 +401,7 @@ function OnInit( isReload:boolean )
 		local localPlayer	:number = Game.GetLocalPlayer();
 		if (localPlayer >= 0) then
 			local pPlayerTechs	:table = Players[localPlayer]:GetTechs();
-			m_currentID = pPlayerTechs:GetResearchingTech();			
+			m_currentID = pPlayerTechs:GetResearchingTech();
 			Refresh();
 		end
 	end
@@ -404,17 +413,21 @@ function OnShutdown()
 	LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID, "m_lastCompletedID", m_lastCompletedID);
 end
 -- ===========================================================================
-function OnGameDebugReturn(context:string, contextTable:table)	
+function OnGameDebugReturn(context:string, contextTable:table)
 	if context == RELOAD_CACHE_ID then
 		m_currentID			= contextTable["m_currentID"];
 		m_lastCompletedID	= contextTable["m_lastCompletedID"];
 		Refresh();
 		if contextTable["m_isExpanded"] ~= nil and contextTable["m_isExpanded"] then
-			OnOpenPanel();			
+			OnOpenPanel();
 		else
 			LuaEvents.ResearchChooser_RestoreWorldTracker();
-		end	
+		end
 	end
+end
+
+function CQUI_OnSettingsUpdate()
+  CQUI_AlwaysOpenTechTrees = GameConfiguration.GetValue("CQUI_AlwaysOpenTechTrees");
 end
 
 -- ===========================================================================
@@ -434,7 +447,7 @@ function Initialize()
 	LuaEvents.Tutorial_ResearchOpen.Add(OnOpenPanel);
 	LuaEvents.ActionPanel_OpenChooseResearch.Add(OnOpenPanel);
 	LuaEvents.WorldTracker_OpenChooseResearch.Add(OnOpenPanel);
-	
+
 	-- Game events
 	Events.CityInitialized.Add(			OnCityInitialized );
 	Events.LocalPlayerTurnBegin.Add(	OnLocalPlayerTurnBegin );
@@ -445,7 +458,7 @@ function Initialize()
 	Events.ResearchYieldChanged.Add(	OnResearchYieldChanged );
 	Events.SystemUpdateUI.Add(			OnUpdateUI );
 	Events.GameCoreEventPublishComplete.Add( FlushChanges ); --This event is raised directly after a series of gamecore events.
-	
+
 	-- UI Event / Callbacks
 	ContextPtr:SetInputHandler( OnInputHandler, true);
 	Controls.CloseButton:RegisterCallback(Mouse.eLClick, OnClosePanel);
@@ -455,6 +468,9 @@ function Initialize()
 	Controls.IconButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 	Controls.OpenTreeButton:RegisterCallback(Mouse.eLClick, function() LuaEvents.ResearchChooser_RaiseTechTree(); OnClosePanel(); end);
 	Controls.OpenTreeButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+
+  -- CQUI events
+  LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
 
 	-- Populate static controls
 	Controls.Title:SetText(Locale.Lookup(Locale.ToUpper("LOC_RESEARCH_CHOOSER_CHOOSE_RESEARCH")));

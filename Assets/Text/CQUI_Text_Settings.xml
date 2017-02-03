@@ -109,6 +109,9 @@
     <Row Tag="LOC_CQUI_POPUPS" Language="en_US">
       <Text>Popups</Text>
     </Row>
+    <Row Tag="LOC_CQUI_POPUPS_ALWAYSOPENTECHTREES" Language="en_US">
+      <Text>Always open full tree instead of popups</Text>
+    </Row>
     <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="en_US">
       <Text>Tech/Civic popup visual</Text>
     </Row>

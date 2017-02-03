@@ -20,7 +20,8 @@
 */
 
 INSERT INTO CQUI_Settings -- Don't touch this line!
-  VALUES  ("CQUI_AutoapplyArchaeologistLens", 1), -- Automatically activates the archaeologist lens when selecting a archaeologist
+  VALUES  ("CQUI_AlwaysOpenTechTrees", 0), -- Always opens the full tech trees instead of the civic/research picker panels
+      ("CQUI_AutoapplyArchaeologistLens", 1), -- Automatically activates the archaeologist lens when selecting a archaeologist
       ("CQUI_AutoapplyBuilderLens", 1), -- Automatically activates the builder lens when selecting a builder
       ("CQUI_AutoapplyScoutLens", 1), -- Automatically activates the scout lens when selecting a scout
       ("CQUI_AutoExpandUnitActions", 1), -- Automatically reveals the secondary unit actions normally hidden inside an expando
