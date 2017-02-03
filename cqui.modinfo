@@ -17,6 +17,7 @@
       <pl_PL>Zmniejsz ilość kliknięć i spraw by zarządzanie imperium było łatwiejsze</pl_PL>
       <ru_RU>Убирает лишние клики и облегчает управление империей</ru_RU>
       <de_DE>Reduziert die Anzahl der Klicks und macht das CIV-Management einfach</de_DE>
+      <it_IT>Riduce i click e facilita la gestione dell'impero</it_IT>
     </Text>
     <Text id="CQUI_STABILITY_ALPHA">
       <en_US>Alpha</en_US>
@@ -24,6 +25,7 @@
       <pl_PL>Alpha</pl_PL>
       <ru_RU>Альфа</ru_RU>
       <de_DE>Alpha</de_DE>
+      <it_IT>Alfa</it_IT>
     </Text>
     <Text id="CQUI_STABILITY_BETA">
       <en_US>Beta</en_US>
@@ -31,6 +33,7 @@
       <pl_PL>Beta</pl_PL>
       <ru_RU>Бета</ru_RU>
       <de_DE>Beta</de_DE>
+      <it_IT>Beta</it_IT>
     </Text>
     <Text id="CQUI_STABILITY_RELEASECANDIDATE">
       <en_US>Release Candidate</en_US>
@@ -38,6 +41,7 @@
       <pl_PL>Kandydat do wydania</pl_PL>
       <ru_RU>Релиз-кандидат</ru_RU>
       <de_DE>Release Candidate</de_DE>
+      <it_IT>Release Candidate</it_IT>
     </Text>
     <Text id="CQUI_STABILITY_RELEASE">
       <en_US>Release</en_US>
@@ -45,6 +49,7 @@
       <pl_PL>Wersa stabilna</pl_PL>
       <ru_RU>Релиз</ru_RU>
       <de_DE>Release</de_DE>
+      <it_IT>Release</it_IT>
     </Text>
     <Text id="CQUI_STABILITY_NIGHTLY">
       <en_US>Nightly</en_US>
@@ -52,6 +57,7 @@
       <pl_PL>Wersja testowa</pl_PL>
       <ru_RU>Ночная сборка</ru_RU>
       <de_DE>Nightly</de_DE>
+      <it_IT>Nightly</it_IT>
     </Text>
   </LocalizedText>
 

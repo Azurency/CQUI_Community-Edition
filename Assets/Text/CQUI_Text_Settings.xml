@@ -259,6 +259,7 @@
     <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="zh_Hans_CN">
       <Text>自动展开单位的指令面板</Text>
     </Row>
+    
     <!-- ITALIAN -->
 
     <Row Tag="LOC_CQUI_BINDINGS" Language="it_IT">
@@ -300,17 +301,35 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="it_IT">
       <Text>Mostra la gestione dei cittadini, la resa delle caselle e la crescita dei confini al passaggio del mouse</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_HEADER" Language="it_IT">
+      <Text>Banner Smart</Text>
+    </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="it_IT">
       <Text>Abilita banner smart</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="it_IT">
-      <Text>Mostra nuove icone nel banner cittadino. Un [ICON_EXCLAMATION] appare quando il governatore assegna automaticamente cittadini alle caselle della città. Le icone distretto indicano i distretti costruiti.</Text>
+      <Text>Mostra nuove icone nel banner cittadino.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="it_IT">
+      <Text>Un [ICON_EXCLAMATION] appare quando il Governatore assegna automaticamente cittadini alle caselle della città.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_DISTRICTS_TOOLTIP" Language="it_IT">
+      <Text>Le icone distretto indicano i distretti costruiti</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_POPULATION_TOOLTIP" Language="it_IT">
+      <Text>Mostra il numero di turni alla crescita della popolazione[NEWLINE]ed il rapporto [popolazione/abitazioni].</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="it_IT">
+      <Text>Mostra il numero di turni alla crescita culturale.</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL" Language="it_IT">
       <Text>Generali</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="it_IT">
       <Text>Nascosto</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_MINIMAPSIZE" Language="it_IT">
+      <Text>Dimensione Minimappa</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="it_IT">
       <Text>Stile icone risorse migliorato</Text>
@@ -354,6 +373,9 @@
     <Row Tag="LOC_CQUI_POPUPS" Language="it_IT">
       <Text>Popup</Text>
     </Row>
+    <Row Tag="LOC_CQUI_POPUPS_ALWAYSOPENTECHTREES" Language="it_IT">
+      <Text>Apri sempre l'albero completo piuttosto che i popup</Text>
+    </Row>
     <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="it_IT">
       <Text>Popup Scienza/Progressi Civici</Text>
     </Row>
@@ -369,8 +391,14 @@
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="it_IT">
       <Text>Ricorda: le impostazioni CQUI sono legate ai singoli salvataggi![NEWLINE]Se vuoi impostare un parametro di default puoi modificare il file CQUI_Settings.sql all'interno della cartella [MOD INSTALL DIRECTORY]/CQUI/Assets</Text>
     </Row>
+    <Row Tag="LOC_CQUI_UNITS" Language="it_IT">
+      <Text>Unità</Text>
+    </Row>
     <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="it_IT">
       <Text>Percorso dell'unità visibile</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="it_IT">
+      <Text>Espandi automaticamente tutte le azioni del pannello unità</Text>
     </Row>
 
     <!-- RUSSIAN -->

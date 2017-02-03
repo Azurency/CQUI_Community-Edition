@@ -264,6 +264,14 @@
     <!-- ITALIAN -->
 
     <!-- Common Text -->
+    <Replace Tag="LOC_TRADE_GROUP_SETTINGS" Language="it_IT">
+        <Text>Impostazioni gruppo</Text>
+    </Replace>
+    
+    <Replace Tag="LOC_TRADE_FILTER_SETTINGS" Language="it_IT">
+        <Text>Impostazioni filtro</Text>
+    </Replace>
+    
     <Replace Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="it_IT">
         <Text>Ordina per [ICON_Food]Cibo.</Text>
     </Replace>
@@ -310,11 +318,11 @@
     </Replace>
 
     <Replace Tag="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT" Language="it_IT">
-        <Text>Espandi tutto:</Text>
+        <Text>Esp:</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_COLLAPSE_ALL_BUTTON_TEXT" Language="it_IT">
-        <Text>Comprimi tutto:</Text>
+        <Text>Com:</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP" Language="it_IT">

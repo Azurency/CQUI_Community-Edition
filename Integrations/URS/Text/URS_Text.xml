@@ -64,8 +64,32 @@
         <!-- ITALIAN -->
 
         <!-- HUD Common Text -->
+        <Replace Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="it_IT">
+            <Text>Scambi correnti</Text>
+        </Replace>
+        <Replace Tag="LOC_HUD_REPORTS_TAB_HIDE_CITY_BUILDINGS" Language="it_IT">
+            <Text>Nascondi edifici cittadini</Text>
+        </Replace>
         <!-- Current Deals -->
+        <Replace Tag="LOC_CURRENT_DEALS_OUTGOING" Language="it_IT">
+            <Text>In uscita</Text>
+        </Replace>
+        <Replace Tag="LOC_CURRENT_DEALS_INCOMING" Language="it_IT">
+            <Text>In entrata</Text>
+        </Replace>
         <!-- Units Overview -->
+        <Replace Tag="LOC_UNITS_MILITARY_LAND" Language="it_IT">
+            <Text>Militari (terrestri)</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITS_MILITARY_AIR" Language="it_IT">
+            <Text>Militari (aeree)</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITS_MILITARY_SEA" Language="it_IT">
+            <Text>Militari (navali)</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="it_IT">
+            <Text>Trova l'unità sulla mappa.</Text>
+        </Replace>
 
         <!-- RUSSIAN -->
 
