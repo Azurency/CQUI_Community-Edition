@@ -30,7 +30,36 @@
         </Row>
     </BaseGameText>
     <LocalizedText>
-        
+        <!-- FRENCH -->
+
+        <!-- HUD Common Text -->
+        <Replace Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="fr_FR">
+            <Text>Transactions actuelles</Text>
+        </Replace>
+        <Replace Tag="LOC_HUD_REPORTS_TAB_HIDE_CITY_BUILDINGS" Language="fr_FR">
+            <Text>Masquer les bâtiments de la ville</Text>
+        </Replace>
+        <!-- Current Deals -->
+        <Replace Tag="LOC_CURRENT_DEALS_OUTGOING" Language="fr_FR">
+            <Text>Sortant</Text>
+        </Replace>
+        <Replace Tag="LOC_CURRENT_DEALS_INCOMING" Language="fr_FR">
+            <Text>Entrant</Text>
+        </Replace>
+        <!-- Units Overview -->
+        <Replace Tag="LOC_UNITS_MILITARY_LAND" Language="fr_FR">
+            <Text>Militaire (Terre)</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITS_MILITARY_AIR" Language="fr_FR">
+            <Text>Militaire (Air)</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITS_MILITARY_SEA" Language="fr_FR">
+            <Text>Militaire (Mer)</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="fr_FR">
+            <Text>Afficher cet unité sur la carte.</Text>
+        </Replace>
+
         <!-- SIMPLIFY-CHINESE -->
 
         <!-- HUD Common Text -->
