@@ -770,6 +770,9 @@
     <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="pl_PL">
       <Text>Ukryte</Text>
     </Row>
+    <Row Tag="LOC_CQUI_GENERAL_MINIMAPSIZE" Language="pl_PL">
+      <Text>Rozmiar Minimapy</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="pl_PL">
       <Text>Styl ikon ulepszonych zasobów</Text>
     </Row>
@@ -811,6 +814,9 @@
     </Row>
     <Row Tag="LOC_CQUI_POPUPS" Language="pl_PL">
       <Text>Popup'y</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_ALWAYSOPENTECHTREES" Language="pl_PL">
+      <Text>Zawsze otwieraj pełne drzewo zamiast popup'u</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="pl_PL">
       <Text>Popup zakończenia Badania/Kodeksu</Text>
@@ -976,6 +982,15 @@
     </Row>
     <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="de_DE">
       <Text>Ansicht aller Befehle im Einheiten-Panel</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS" Language="pl_PL">
+      <Text>Jednostki</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="pl_PL">
+      <Text>Pokazuj drogę jednostki po zaznaczeniu bądź najechaniu myszką</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="pl_PL">
+      <Text>Automatycznie rozwijaj listę akcji w panelu jednostki</Text>
     </Row>
   </LocalizedText>
 </GameData>

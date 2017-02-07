@@ -30,8 +30,7 @@
         </Row>
     </BaseGameText>
     <LocalizedText>
-        <!-- FRENCH -->
-
+      
         <!-- HUD Common Text -->
         <Replace Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="fr_FR">
             <Text>Transactions actuelles</Text>
@@ -59,7 +58,7 @@
         <Replace Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="fr_FR">
             <Text>Afficher cet unité sur la carte.</Text>
         </Replace>
-
+      
         <!-- SIMPLIFY-CHINESE -->
 
         <!-- HUD Common Text -->
