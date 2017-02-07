@@ -181,17 +181,35 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="zh_Hans_CN">
       <Text>鼠标指向时显示市民分配，顶部显示，以及边境增长</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_HEADER" Language="zh_Hans_CN">
+      <Text>智能城市横幅</Text>
+    </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="zh_Hans_CN">
       <Text>开启智能横幅</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="zh_Hans_CN">
-      <Text>在城市横幅上显示新的图标，每当有未锁公民自动安置时会显示食物图标，区域图标表示建造区域</Text>
+      <Text>在城市横幅上显示新的图标</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="zh_Hans_CN">
+      <Text>当有未锁公民自动安置时会显示[ICON_EXCLAMATION]图标。</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_DISTRICTS_TOOLTIP" Language="zh_Hans_CN">
+      <Text>显示区域图标表示已建造的区域</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_POPULATION_TOOLTIP" Language="zh_Hans_CN">
+      <Text>显示下一人口增长剩余回合[NEWLINE]以及多余住房数量。</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="zh_Hans_CN">
+      <Text>显示文化增长剩余回合。</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL" Language="zh_Hans_CN">
       <Text>通用</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="zh_Hans_CN">
       <Text>隐藏</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_MINIMAPSIZE" Language="zh_Hans_CN">
+      <Text>小地图尺寸</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="zh_Hans_CN">
       <Text>已开发过的资源图标</Text>
@@ -234,6 +252,9 @@
     </Row>
     <Row Tag="LOC_CQUI_POPUPS" Language="zh_Hans_CN">
       <Text>弹窗</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_ALWAYSOPENTECHTREES" Language="zh_Hans_CN">
+      <Text>科技完成时弹出科技树</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="zh_Hans_CN">
       <Text>开启科技/市政弹窗</Text>
