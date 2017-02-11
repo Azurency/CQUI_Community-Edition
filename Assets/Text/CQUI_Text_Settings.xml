@@ -623,17 +623,35 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="ru_RU">
       <Text>Расстановка горожан, урожайность клеток, и рост границ при наведении</Text>
     </Row>
-    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="ru_RU">
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_HEADER" Language="ru_RU">
       <Text>Умные баннеры</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="ru_RU">
+      <Text>Включить баннеры</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="ru_RU">
+      <Text>[ICON_EXCLAMATION] отображается пока в городе есть незаблокированные горожане, распределенные ИИ.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_DISTRICTS_TOOLTIP" Language="ru_RU">
+      <Text>Иконки районов отображают построенные на территории города районы.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_POPULATION_TOOLTIP" Language="ru_RU">
+      <Text>Показывает количество ходов до увеличения населения [NEWLINE] и [текущее население/максимум жилья].</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="ru_RU">
+      <Text>Показывает количество ходов до культурного роста.</Text>
+    </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="ru_RU">
-        <Text>Отображает новые иконки на баннере города. [ICON_EXCLAMATION] отображается пока в городе есть незаблокированные горожане, распределенные ИИ. Иконки районов отображают построенные на территории города районы</Text>
+        <Text>Отображает новые иконки на баннере города.</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL" Language="ru_RU">
       <Text>Основные</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="ru_RU">
       <Text>Скрытый</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_MINIMAPSIZE" Language="ru_RU">
+      <Text>Размер мини-карты</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="ru_RU">
       <Text>Отображение иконок ресурсов</Text>
@@ -676,6 +694,9 @@
     </Row>
     <Row Tag="LOC_CQUI_POPUPS" Language="ru_RU">
       <Text>Попапы</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_ALWAYSOPENTECHTREES" Language="ru_RU">
+      <Text>Всегда открывает дерево вместо попапа</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="ru_RU">
       <Text>Попапы Исследований/Институтов</Text>
