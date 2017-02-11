@@ -854,12 +854,17 @@ function PopulateList(data, listIM)
         end
 
         unitListing.CorpsLabelIcon:SetText(item.CorpsName);
-
         unitListing.TrainCorpsButton:SetToolTipString(item.CorpsTooltip);
         unitListing.CorpsDisabled:SetToolTipString(item.CorpsTooltip);
         unitListing.TrainCorpsButton:RegisterCallback( Mouse.eLClick, function()
-          BuildUnitCorps(data.City, item);
+          QueueUnitCorps(data.City, item, not CQUI_ProductionQueue);
         end);
+
+        unitListing.TrainCorpsButton:RegisterCallback( Mouse.eMClick, function()
+          QueueUnitCorps(data.City, item, true);
+          RecenterCameraToSelectedCity();
+        end)
+
         unitListing.CorpsPurchaseButton:RegisterCallback( Mouse.eLClick, function()
           PurchaseUnitCorps(data.City, item, GameInfo.Yields["YIELD_GOLD"].Index)
         end);
@@ -1750,20 +1755,20 @@ function ComposeUnitForPurchase( row:table, pCity:table, sYield:string, pYieldSo
     sToolTip = sToolTip .. ComposeProductionCostString( nProductionProgress, nProductionCost );
 
     local kUnit  :table = {
-      Type      = row.UnitType;
-      Name      = row.Name;
-      ToolTip     = sToolTip;
-      Hash      = row.Hash;
-      Kind      = row.Kind;
-      Civilian    = row.FormationClass == "FORMATION_CLASS_CIVILIAN";
-      Disabled    = isDisabled;
-      CantAfford    = isCantAfford,
-      Yield     = sYield;
-      Cost      = pCityGold:GetPurchaseCost( YIELD_TYPE, row.Hash, MilitaryFormationTypes.STANDARD_MILITARY_FORMATION );
+      Type       = row.UnitType;
+      Name       = row.Name;
+      ToolTip    = sToolTip;
+      Hash       = row.Hash;
+      Kind       = row.Kind;
+      Civilian   = row.FormationClass == "FORMATION_CLASS_CIVILIAN";
+      Disabled   = isDisabled;
+      CantAfford = isCantAfford,
+      Yield      = sYield;
+      Cost       = pCityGold:GetPurchaseCost( YIELD_TYPE, row.Hash, MilitaryFormationTypes.STANDARD_MILITARY_FORMATION );
 
-      CorpsTurnsLeft  = 0;
-      ArmyTurnsLeft = 0;
-      Progress    = 0;
+      CorpsTurnsLeft = 0;
+      ArmyTurnsLeft  = 0;
+      Progress       = 0;
     };
 
     -- Should we present options for building Corps or Army versions?
