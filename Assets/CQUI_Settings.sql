@@ -35,6 +35,7 @@ INSERT INTO CQUI_Settings -- Don't touch this line!
       ("CQUI_Smartbanner_Districts", 1), -- Shows city districts in the banner
       ("CQUI_Smartbanner_Population", 1), -- Shows turns to city population growth in the banner
       ("CQUI_Smartbanner_Cultural", 1), -- Shows turns to city cultural growth in the banner
+      ("CQUI_SmartWorkIcon", 1), -- Applies a different size/transparency to citizen icons if they're currently being worked
       ("CQUI_TechPopupVisual", 0), -- Popups will be displayed when you discover a new tech or civic (this is the normal behavior for the unmoded game)
       ("CQUI_TechPopupAudio", 1), -- Play the voiceovers when you discover a new tech or civic (this is the normal behavior for the unmoded game)
       ("CQUI_ToggleYieldsOnLoad", 1); -- Toggles yields immediately on load
@@ -65,7 +66,11 @@ INSERT INTO CQUI_Settings -- Don't touch this line!
 
 INSERT INTO CQUI_Settings -- Don't touch this line!
   VALUES  ("CQUI_MinimapSize", 512), -- Factor used for setting minimap size (ex: 512 = 512x256). Recommended values fall between 224 and 768, though any positive could work
-  ("CQUI_ProductionItemHeight", 32); -- Height used for individual items in the production queue. Recommended values fall between 24 and 128, though any positive could work
+  ("CQUI_ProductionItemHeight", 32), -- Height used for individual items in the production queue. Recommended values fall between 24 and 128, though any positive could work
+  ("CQUI_SmartWorkIconSize", 88), -- Size used for "smart" work icons. This size is applied to work icons that are currently locked if the smart work icon option is enabled. Recommended values fall between 48 and 128, though any positive multiple of 8 could work (non-multiples are rounded down)
+  ("CQUI_SmartWorkIconAlpha", 40), -- Transparency percent used for "smart" work icons. This alpha is applied to work icons that are currently locked if the smart work icon option is enabled. Recommended values fall between 10 and 100, though any value between 0 and 100 could work
+  ("CQUI_WorkIconSize", 64), -- Size used for work icons. Applies to all icons that aren't flagged using the "smart" work icon feature. Recommended values fall between 48 and 128, though any positive multiple of 8 could work (non-multiples are rounded down)
+  ("CQUI_WorkIconAlpha", 75); -- Size used for work icons. Applies to all icons that aren't flagged using the "smart" work icon feature. Recommended values fall between 10 and 100, though any value between 0 and 100 could work
 
 /*
     ┌────────────────────────────────────────────────────────────────────────────────────────────┐

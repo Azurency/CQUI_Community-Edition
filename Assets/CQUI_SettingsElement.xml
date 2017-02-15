@@ -61,7 +61,7 @@
         </Stack>
       </Container>
       <Container ID="CityviewOptions" Size="parent,parent" Hidden="1">
-        <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
+        <Stack ID="CityViewStack" Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <GridButton ID="ProductionQueueCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" />
           </Stack>
@@ -98,6 +98,35 @@
             <Stack Anchor="R,T" StackGrowth="Left" Offset="0,5">
               <GridButton ID="SmartbannerCulturalCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_PEDIA_CITYSTATES_PAGEGROUP_CULTURAL_NAME" />
             </Stack>
+          </Stack>
+          <Stack Anchor="C,C" StackGrowth="Left">
+            <Label Anchor="C,C" Style="ShellOptionText" String="LOC_CQUI_CITYVIEW_WORKICONS_HEADER" Offset="0,10"/>
+          </Stack>
+          <Stack Anchor="C,T" StackGrowth="Right" Padding="5">
+            <Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_CITYVIEW_WORKICONSIZE"/>
+            <Label String="0" Style="ShellOptionText" Anchor="L,C" ID="WorkIconSizeText" Offset="3,0" />
+          </Stack>
+          <Slider Style="SliderControl" Anchor="C,B" Size="300,13" SpaceForScroll="0" ID="WorkIconSizeSlider" Steps="10" />
+          <Stack Anchor="C,T" StackGrowth="Right" Padding="5">
+            <Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_CITYVIEW_WORKICONALPHA"/>
+            <Label String="0" Style="ShellOptionText" Anchor="L,C" ID="WorkIconAlphaText" Offset="3,0" />
+          </Stack>
+          <Slider Style="SliderControl" Anchor="C,B" Size="300,13" SpaceForScroll="0" ID="WorkIconAlphaSlider" Steps="90" />
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <GridButton ID="SmartWorkIconCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_CITYVIEW_SMARTWORKICON" />
+          </Stack>
+          <Stack ID="SmartWorkIconSettings" Anchor="R,T" StackGrowth="Down">
+            <Line Start="0,0" End="300,0" Width="2" Color="84,77,66,255" />
+            <Stack Anchor="C,T" StackGrowth="Right" Padding="5">
+              <Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_CITYVIEW_SMARTWORKICONSIZE"/>
+              <Label String="0" Style="ShellOptionText" Anchor="L,C" ID="SmartWorkIconSizeText" Offset="3,0" />
+            </Stack>
+            <Slider Style="SliderControl" Anchor="C,B" Size="300,13" SpaceForScroll="0" ID="SmartWorkIconSizeSlider" Steps="10" />
+            <Stack Anchor="C,T" StackGrowth="Right" Padding="5">
+              <Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_CITYVIEW_SMARTWORKICONALPHA"/>
+              <Label String="0" Style="ShellOptionText" Anchor="L,C" ID="SmartWorkIconAlphaText" Offset="3,0" />
+            </Stack>
+            <Slider Style="SliderControl" Anchor="C,B" Size="300,13" SpaceForScroll="0" ID="SmartWorkIconAlphaSlider" Steps="68" />
           </Stack>
         </Stack>
       </Container>

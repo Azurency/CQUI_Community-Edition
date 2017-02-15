@@ -61,6 +61,27 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="en_US">
       <Text>Show the number of turns left to cultural growth.</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON" Language="en_US">
+      <Text>Smart Work Icons</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON_TOOLTIP" Language="en_US">
+      <Text>Gives a special size/transparency to worked citizen buttons</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONALPHA" Language="en_US">
+      <Text>Smart Work Icon Transparency</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONSIZE" Language="en_US">
+      <Text>Smart Work Icon Size</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONS_HEADER" Language="en_US">
+      <Text>Work Icons</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONALPHA" Language="en_US">
+      <Text>Work Icon Transparency</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONSIZE" Language="en_US">
+      <Text>Work Icon Size</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL" Language="en_US">
       <Text>General</Text>
     </Row>
@@ -139,7 +160,7 @@
     <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="en_US">
       <Text>Autoexpand all actions in the unit panel</Text>
     </Row>
-    
+
     <!-- FRENCH -->
 
     <Row Tag="LOC_CQUI_BINDINGS" Language="fr_FR">
@@ -440,7 +461,7 @@
     <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="zh_Hans_CN">
       <Text>自动展开单位的指令面板</Text>
     </Row>
-    
+
     <!-- ITALIAN -->
 
     <Row Tag="LOC_CQUI_BINDINGS" Language="it_IT">

@@ -227,6 +227,38 @@ local MinimapSizeConverter = {
   end
 };
 
+--Minimum value is 48, maximum is 128, but only multiples of 8 are allowed. This translates to 10 steps, or 0th step to the 9th
+local WorkIconSizeConverter = {
+  ToSteps = function(value)
+    local out = math.floor((value - 48) / 8);
+    if(out < 0) then out = 0; end
+    return out;
+  end,
+  ToValue = function(steps)
+    local out = (steps) * 8 + 48;
+    if(out > 128) then out = 128; end
+    return out;
+  end
+};
+
+--Minimum value is 10, maximum is 100. This translates to 91 steps, or 0th step to 90th
+local WorkIconAlphaConverter = {
+  ToSteps = function(value)
+    local out = value - 10;
+    if(out < 0) then out = 0; end
+    return out;
+  end,
+  ToValue = function(steps)
+    local out = steps + 10;
+    if(out > 100) then out = 100; end
+    return out;
+  end,
+  ToString = function(value)
+    local out = tostring(value) .. "%"
+    return out;
+  end
+};
+
 function Initialize()
   ContextPtr:SetHide(true);
   --Adding/binding tabs...
@@ -271,9 +303,14 @@ function Initialize()
   PopulateCheckBox(Controls.ShowUnitPathsCheckbox, "CQUI_ShowUnitPaths");
   PopulateCheckBox(Controls.AutoExpandUnitActionsCheckbox, "CQUI_AutoExpandUnitActions");
   PopulateCheckBox(Controls.AlwaysOpenTechTreesCheckbox, "CQUI_AlwaysOpenTechTrees");
+  PopulateCheckBox(Controls.SmartWorkIconCheckbox, "CQUI_SmartWorkIcon", Locale.Lookup("LOC_CQUI_CITYVIEW_SMARTWORKICON_TOOLTIP"));
 
   PopulateSlider(Controls.ProductionItemHeightSlider, Controls.ProductionItemHeightText, "CQUI_ProductionItemHeight", ProductionItemHeightConverter);
   PopulateSlider(Controls.MinimapSizeSlider, Controls.MinimapSizeText, "CQUI_MinimapSize", MinimapSizeConverter);
+  PopulateSlider(Controls.WorkIconSizeSlider, Controls.WorkIconSizeText, "CQUI_WorkIconSize", WorkIconSizeConverter);
+  PopulateSlider(Controls.SmartWorkIconSizeSlider, Controls.SmartWorkIconSizeText, "CQUI_SmartWorkIconSize", WorkIconSizeConverter);
+  PopulateSlider(Controls.WorkIconAlphaSlider, Controls.WorkIconAlphaText, "CQUI_WorkIconAlpha", WorkIconAlphaConverter);
+  PopulateSlider(Controls.SmartWorkIconAlphaSlider, Controls.SmartWorkIconAlphaText, "CQUI_SmartWorkIconAlpha", WorkIconAlphaConverter);
 
   InitializeGossipCheckboxes();
 
@@ -284,6 +321,7 @@ function Initialize()
   --Bind CQUI events
   LuaEvents.CQUI_ToggleSettings.Add(function() ContextPtr:SetHide(not ContextPtr:IsHidden()); end);
   LuaEvents.CQUI_SettingsUpdate.Add(ToggleSmartbannerCheckboxes);
+  LuaEvents.CQUI_SettingsUpdate.Add(ToggleSmartWorkIconSettings);
 
   LuaEvents.CQUI_SettingsInitialized(); --Tell other elements that the settings have been initialized and it's safe to try accessing settings now
 end
@@ -291,6 +329,12 @@ end
 function ToggleSmartbannerCheckboxes()
     local selected = Controls.SmartbannerCheckbox:IsSelected();
     Controls.SmartbannerCheckboxes:SetHide(not selected);
+    Controls.CityViewStack:ReprocessAnchoring();
+end
+function ToggleSmartWorkIconSettings()
+    local selected = Controls.SmartWorkIconCheckbox:IsSelected();
+    Controls.SmartWorkIconSettings:SetHide(not selected);
+    Controls.CityViewStack:ReprocessAnchoring();
 end
 
 Initialize();
