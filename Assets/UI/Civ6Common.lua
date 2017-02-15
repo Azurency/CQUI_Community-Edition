@@ -36,8 +36,8 @@ function GetYieldTextIcon( yieldType:string )
   elseif  GameInfo.Yields[yieldType] ~= nil and GameInfo.Yields[yieldType].IconString ~= nil and GameInfo.Yields[yieldType].IconString ~= "" then
     iconString=GameInfo.Yields[yieldType].IconString;
   else
-    iconString = "Unknown:"..yieldType; 
-  end     
+    iconString = "Unknown:"..yieldType;
+  end
   return iconString;
 end
 
@@ -54,7 +54,7 @@ function GetYieldTextColor( yieldType:string )
   elseif  yieldType == "YIELD_CULTURE"    then return "[COLOR:ResCultureLabelCS]";
   elseif  yieldType == "YIELD_FAITH"      then return "[COLOR:ResFaithLabelCS]";
   else                       return "[COLOR:255,255,255,0]ERROR ";
-  end       
+  end
 end
 
 -- ===========================================================================
@@ -94,8 +94,8 @@ function MoveUnitToPlot( kUnit:table, plotX:number, plotY:number )
   if kUnit ~= nil then
     local tParameters:table = {};
     tParameters[UnitOperationTypes.PARAM_X] = plotX;
-    tParameters[UnitOperationTypes.PARAM_Y] = plotY;    
-    
+    tParameters[UnitOperationTypes.PARAM_Y] = plotY;
+
     -- Will this start a war?  Note, we are ignoring destinations in the for that will start a war, the unit will be allowed to move until they are adjacent.
     -- We may want to also skip the war check if the move will take more than one turn to get to the destination.
     local eAttackingPlayer:number = kUnit:GetOwner();
@@ -107,14 +107,14 @@ function MoveUnitToPlot( kUnit:table, plotX:number, plotY:number )
         local pPlot = Map.GetPlot(plotX, plotY);
         eDefendingPlayer = pPlot:GetOwner();
       end
-      -- Create the action specific parameters 
+      -- Create the action specific parameters
       if (eDefendingPlayer ~= nil and eDefendingPlayer ~= -1) then
         LuaEvents.Civ6Common_ConfirmWarDialog(eAttackingPlayer, eDefendingPlayer, WarTypes.SURPRISE_WAR);
       end
     else
       RequestMoveOperation(kUnit, tParameters, plotX, plotY);
     end
-  end     
+  end
 end
 
 -- ===========================================================================
@@ -155,7 +155,7 @@ function RequestMoveOperation( kUnit:table, tParameters:table, plotX:number, plo
 end
 
 -- ===========================================================================
---  Multiplier value 
+--  Multiplier value
 --  Return a string with a colorized # and a +/- based on 1.0 based percent.
 -- ===========================================================================
 function GetColorPercentString( multiplier:number )
@@ -271,7 +271,7 @@ function GetProductionInfoOfCity( pCity:table, productionHash:number )
     UI.DataError("No production queue in city!");
     return nil;
   end
-  
+
   local hash            = productionHash;
   local progress          :number = 0;
   local cost            :number = 0;
@@ -289,11 +289,11 @@ function GetProductionInfoOfCity( pCity:table, productionHash:number )
   if hash == 0 then
     return {
       Name          = Locale.Lookup("LOC_HUD_CITY_NOTHING_PRODUCED"),
-      Description       = "", 
+      Description       = "",
       Texture         = "CityPanel_CitizenIcon",  -- Default texture
       u           = 0,
       v           = 0,
-      PercentComplete     = 0, 
+      PercentComplete     = 0,
       PercentCompleteNextTurn = 0,
       Turns         = 0,
       Progress        = 0,
@@ -334,14 +334,14 @@ function GetProductionInfoOfCity( pCity:table, productionHash:number )
     productionName  = Locale.Lookup(unitDef.Name);
     description   = unitDef.Description;
     progress    = pBuildQueue:GetUnitProgress(unitDef.Index);
-    prodTurnsLeft = pBuildQueue:GetTurnsLeft(unitDef.UnitType, eMilitaryFormationType);   
+    prodTurnsLeft = pBuildQueue:GetTurnsLeft(unitDef.UnitType, eMilitaryFormationType);
     iconName    = "ICON_"..unitDef.UnitType.."_PORTRAIT";
     statString    = GetFilteredUnitStatString(FilterUnitStats(hash));
     type      = ProductionType.UNIT;
 
     --Units need some additional information to represent the Standard, Corps, and Army versions. This is determined by the MilitaryFormationType
     if (eMilitaryFormationType == MilitaryFormationTypes.STANDARD_FORMATION) then
-      percentComplete = progress / pBuildQueue:GetUnitCost(unitDef.Index);  
+      percentComplete = progress / pBuildQueue:GetUnitCost(unitDef.Index);
       cost      = pBuildQueue:GetUnitCost(unitDef.Index);
     elseif (eMilitaryFormationType == MilitaryFormationTypes.CORPS_FORMATION) then
       percentComplete = progress / pBuildQueue:GetUnitCorpsCost(unitDef.Index);
@@ -389,15 +389,15 @@ function GetProductionInfoOfCity( pCity:table, productionHash:number )
 
   return {
     Name          = productionName,
-    Description       = description, 
+    Description       = description,
     Type          = type;
     Icon          = iconName,
-    PercentComplete     = percentComplete, 
+    PercentComplete     = percentComplete,
     PercentCompleteNextTurn = percentCompleteNextTurn,
     Turns         = prodTurnsLeft,
     StatString        = statString;
     Progress        = progress;
-    Cost          = cost;   
+    Cost          = cost;
   };
 end
 
@@ -425,10 +425,10 @@ end
 --  RETURN 1: iconInfo - table containing textureSheet, textureOffsetX, and textureOffsetY
 --  RETURN 2: iconShadowInfo - table containing textureSheetShadow, textureOffsetShadowX, and textureOffsetShadowY
 -- ===========================================================================
-function GetUnitIconAndIconShadow( pUnit:table, iconSize:number, isIgnoreShadow:boolean ) 
-  
+function GetUnitIconAndIconShadow( pUnit:table, iconSize:number, isIgnoreShadow:boolean )
+
   if isIgnoreShadow == nil then isIgnoreShadow = false; end -- Default parameter.
-  
+
   local iconInfo    :table = {};
   local iconShadowInfo:table = {};
   if pUnit then
@@ -445,11 +445,11 @@ function GetUnitIconAndIconShadow( pUnit:table, iconSize:number, isIgnoreShadow:
       -- Get icon shadow info, use explicit check because IconManager will Assert.
       if (not isIgnoreShadow) then
         local iconNameShadow:string = "ICON_" .. unitInfo.UnitType .. "_BLACK";
-        iconShadowInfo.textureOffsetShadowX, iconShadowInfo.textureOffsetShadowY, iconShadowInfo.textureSheetShadow = IconManager:FindIconAtlas(iconNameShadow, iconSize);  
+        iconShadowInfo.textureOffsetShadowX, iconShadowInfo.textureOffsetShadowY, iconShadowInfo.textureSheetShadow = IconManager:FindIconAtlas(iconNameShadow, iconSize);
         if iconShadowInfo.textureSheetShadow ~= nil then
           iconShadowInfo.textureOffsetX, iconShadowInfo.textureOffsetY, iconShadowInfo.textureSheet = IconManager:FindIconAtlas("ICON_UNIT_UNKNOWN_BLACK", iconSize);
         end
-      end     
+      end
     end
   end
   return iconInfo, iconShadowInfo;
@@ -494,7 +494,7 @@ function GetLeaderUniqueTraits( leaderType:string )
     local base_leader = GameInfo.Leaders[leaderType];
     if(base_leader == nil) then
         return;
-    end           
+    end
 
   function AddInheritedLeaders(leaders, leader)
     local inherit = leader.InheritFrom;
@@ -518,9 +518,9 @@ function GetLeaderUniqueTraits( leaderType:string )
   end
 
   -- Unique Abilities
-  -- We're considering a unique ability to be a trait which does 
+  -- We're considering a unique ability to be a trait which does
   -- not have a unique unit, building, district, or improvement associated with it.
-  -- While we scrub for unique units and infrastructure, mark traits that match 
+  -- While we scrub for unique units and infrastructure, mark traits that match
   -- so we can filter them later.
     local traits = {};
   local has_trait = {};
@@ -529,7 +529,7 @@ function GetLeaderUniqueTraits( leaderType:string )
         if(has_leader[row.LeaderType] == true) then
       local trait = GameInfo.Traits[row.TraitType];
       if(trait) then
-        table.insert(traits, trait);      
+        table.insert(traits, trait);
       end
       has_trait[row.TraitType] = true;
         end
@@ -550,7 +550,7 @@ function GetLeaderUniqueTraits( leaderType:string )
       end
         end
     end
-    
+
     -- Unique Buildings/Districts/Improvements
     local ub = {};
     for row in GameInfo.Buildings() do
@@ -559,9 +559,9 @@ function GetLeaderUniqueTraits( leaderType:string )
       not_ability[trait] = true;
       if(has_trait[trait] == true) then
         local districtName:string = Locale.Lookup(GameInfo.Districts[row.PrereqDistrict].Name);
-        local description :string = Locale.Lookup("LOC_LOADING_DISTRICT_BUILDING", districtName); 
+        local description :string = Locale.Lookup("LOC_LOADING_DISTRICT_BUILDING", districtName);
         if m_isTraitsFullDescriptions then
-          description = Locale.Lookup(GameInfo.Buildings[row.BuildingType].Description); 
+          description = Locale.Lookup(GameInfo.Buildings[row.BuildingType].Description);
         end
         table.insert(ub, {Type = row.BuildingType, Name = row.Name, Description = description});
       end
@@ -575,7 +575,7 @@ function GetLeaderUniqueTraits( leaderType:string )
       if(has_trait[trait] == true) then
         local description :string = Locale.Lookup("LOC_LOADING_UNIQUE_DISTRICT");
         if m_isTraitsFullDescriptions then
-          description = Locale.Lookup(GameInfo.Districts[row.DistrictType].Description); 
+          description = Locale.Lookup(GameInfo.Districts[row.DistrictType].Description);
         end
         table.insert(ub, {Type = row.DistrictType, Name = row.Name, Description = description});
       end
@@ -589,7 +589,7 @@ function GetLeaderUniqueTraits( leaderType:string )
       if(has_trait[trait] == true) then
         local description :string = Locale.Lookup("LOC_LOADING_UNIQUE_IMPROVEMENT");
         if m_isTraitsFullDescriptions then
-          description = Locale.Lookup(GameInfo.Improvements[row.ImprovementType].Description); 
+          description = Locale.Lookup(GameInfo.Improvements[row.ImprovementType].Description);
         end
         table.insert(ub, {Type = row.ImprovementType, Name = row.Name, Description = description});
       end
@@ -610,7 +610,7 @@ end
 
 -- ===========================================================================
 function GetCivilizationUniqueTraits( civType:string )
-    
+
   local traits = {};
     for row in GameInfo.CivilizationTraits() do
         if(row.CivilizationType == civType) then
@@ -619,12 +619,12 @@ function GetCivilizationUniqueTraits( civType:string )
     end
 
   -- Unique Abilities
-  -- We're considering a unique ability to be a trait which does 
+  -- We're considering a unique ability to be a trait which does
   -- not have a unique unit, building, district, or improvement associated with it.
-  -- While we scrub for unique units and infrastructure, mark traits that match 
+  -- While we scrub for unique units and infrastructure, mark traits that match
   -- so we can filter them later.
   local not_abilities = {};
-  
+
     -- Unique Units
     local uu = {};
     for row in GameInfo.Units() do
@@ -640,7 +640,7 @@ function GetCivilizationUniqueTraits( civType:string )
       end
         end
     end
-    
+
     -- Unique Buildings/Districts/Improvements
     local ub = {};
     for row in GameInfo.Buildings() do
@@ -656,8 +656,8 @@ function GetCivilizationUniqueTraits( civType:string )
           elseif building.Description == nil then
             UI.DataError("Could not get CIV trait description for GameInfo.Buildings["..row.BuildingType.."].  None supplied.");
           else
-            description = Locale.Lookup(building.Description); 
-          end       
+            description = Locale.Lookup(building.Description);
+          end
         end
         table.insert(ub, {Type = row.BuildingType, Name = row.Name, Description = description});
       end
@@ -671,7 +671,7 @@ function GetCivilizationUniqueTraits( civType:string )
       if(traits[trait] == true) then
         local description :string = Locale.Lookup("LOC_LOADING_UNIQUE_DISTRICT");
         if m_isTraitsFullDescriptions then
-          description = Locale.Lookup(GameInfo.Districts[row.DistrictType].Description); 
+          description = Locale.Lookup(GameInfo.Districts[row.DistrictType].Description);
         end
         table.insert(ub, {Type = row.DistrictType, Name = row.Name, Description = description});
       end
@@ -685,7 +685,7 @@ function GetCivilizationUniqueTraits( civType:string )
       if(traits[trait] == true) then
         local description :string = Locale.Lookup("LOC_LOADING_UNIQUE_IMPROVEMENT");
         if m_isTraitsFullDescriptions then
-          description = Locale.Lookup(GameInfo.Improvements[row.ImprovementType].Description); 
+          description = Locale.Lookup(GameInfo.Improvements[row.ImprovementType].Description);
         end
         table.insert(ub, {Type = row.ImprovementType, Name = row.Name, Description = description});
       end
@@ -698,13 +698,13 @@ function GetCivilizationUniqueTraits( civType:string )
       local trait = GameInfo.Traits[row.TraitType];
       if(trait) then
         table.insert(unique_abilities, trait);
-      end     
+      end
     end
   end
 
   return unique_abilities, uu, ub;
 end
-    
+
 
 -- ===========================================================================
 --  Is the on-rails tutorial active?
@@ -725,7 +725,7 @@ end
 
 -- ===========================================================================
 --  DifferentiateCiv
--- ===========================================================================  
+-- ===========================================================================
 --  This is a fix for duplicate civs.  If you feed it a control, it will generate a tooltip which lists the cities for that civ, to help differentiate which civ you are currently viewing.
 --  Note: This function does NOT contain the IsDuplicate? check.  Use this function once you have already determined whether or not you wish to differentiate the civ.
 --  Additionally, you can pass icon backing/icon controls to be colored with the civ's colors.
@@ -735,13 +735,13 @@ end
 --  ARG4 iconBacking (table)      OPTIONAL  The image behind the icon which will receive the background color for the civ
 --  ARG5 iconBackingDarker (table)    OPTIONAL  If you are making a fancy icon with more depth, you can additionally pass the layer to be darkened
 --  ARG6 iconBackingLighter (table)   OPTIONAL  .. and also the layer to be lightened
---  ARG7 observerPlayerID (number)    OPTIONAL  Checks if the players met 
+--  ARG7 observerPlayerID (number)    OPTIONAL  Checks if the players met
 --  RETURNS (string)                String to be used as a tooltip which lists Civ name, Leader/Player name, list of cities
 function DifferentiateCiv(playerID:number, tooltipControl:table, icon:table, iconBacking:table, iconBackingDarker:table, iconBackingLighter:table, observerPlayerID:number)
-  
+
   local player:table = Players[playerID];
   local playerConfig:table = PlayerConfigurations[playerID];
-  
+
   local hasMet:boolean = true;
   if player ~= nil and observerPlayerID ~= nil and playerID ~= observerPlayerID then
     hasMet = player:GetDiplomacy():HasMet(observerPlayerID);
@@ -778,7 +778,7 @@ function DifferentiateCiv(playerID:number, tooltipControl:table, icon:table, ico
         end
 
         civIcon = "ICON_"..civTypeName;
-        
+
         --Create a tooltip which shows a list of this Civ's cities
         civTooltip = civName .. "[NEWLINE]".. leaderName;
         local playerCities = player:GetCities();
@@ -795,9 +795,9 @@ function DifferentiateCiv(playerID:number, tooltipControl:table, icon:table, ico
           local playerName = playerConfig:GetPlayerName();
           civTooltip = civTooltip .. " ("..Locale.ToUpper(playerName)..")";
         end
-        
+
       end
-      
+
       if (icon ~= nil) then
         icon:SetIcon(civIcon);
       end
@@ -873,7 +873,7 @@ function DarkenLightenColor( hexColor:number, amt:number, alpha:number )
     end
   end
 
-  hexString = a..b..g..r; 
+  hexString = a..b..g..r;
   return tonumber(hexString,16);
 end
 
@@ -958,7 +958,7 @@ function PopulateCheckBox(control, setting_name, tooltip)
   else
     control:SetSelected(true);
   end
-  control:RegisterCallback(Mouse.eLClick, 
+  control:RegisterCallback(Mouse.eLClick,
     function()
       local selected = not control:IsSelected();
       control:SetSelected(selected);
@@ -972,6 +972,7 @@ function PopulateCheckBox(control, setting_name, tooltip)
 end
 
 --Used to populate sliders. data_converter is a table containing two functions: ToStep and ToValue, which describe how to hanlde converting from the incremental slider steps to a setting value, think of it as a less elegant inner class
+--Optional third function: ToString. When included, this function will handle how the value is converted to a display value, otherwise this defaults to using the value from ToValue
 function PopulateSlider(control, label, setting_name, data_converter, tooltip)
   local hasScrolled = false; --Necessary because RegisterSliderCallback fires twice when releasing the mouse cursor for some reason
   local current_value = GameConfiguration.GetValue(setting_name);
@@ -980,14 +981,21 @@ function PopulateSlider(control, label, setting_name, data_converter, tooltip)
       current_value = GameInfo.CQUI_Settings[setting_name].Value;
     else current_value = 0; end
     GameConfiguration.SetValue(setting_name, current_value); --/LY
-    label:SetText(current_value);
   end
   control:SetStep(data_converter.ToSteps(current_value));
-  label:SetText(current_value);
+  if(data_converter.ToString) then
+    label:SetText(data_converter.ToString(current_value));
+  else
+    label:SetText(current_value);
+  end
   control:RegisterSliderCallback(
     function()
       local value = data_converter.ToValue(control:GetStep());
-      label:SetText(value);
+      if(data_converter.ToString) then
+        label:SetText(data_converter.ToString(value));
+      else
+        label:SetText(value);
+      end
       if(not control:IsTrackingLeftMouseButton() and hasScrolled == true) then
         GameConfiguration.SetValue(setting_name, value);
         LuaEvents.CQUI_SettingsUpdate();
