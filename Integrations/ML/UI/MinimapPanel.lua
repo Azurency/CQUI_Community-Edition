@@ -94,24 +94,7 @@ function CQUI_OnToggleBindings(mode: number)
   end
 end
 
---CQUI Minimap size toggling logic
-function CQUI_ToggleMinimapSize()
-  CQUI_bigMinimap = not CQUI_bigMinimap;
-  if(CQUI_bigMinimap) then
-    Controls.MinimapImage:SetSizeVal(512, 256);
-    Controls.MinimapBacking:SetSizeVal(555,340);
-    Controls.MinimapBacking:SetOffsetVal(-17,-125);
-  else
-    Controls.MinimapImage:SetSizeVal(256, 128);
-    Controls.MinimapBacking:SetSizeVal(282,201);
-    Controls.MinimapBacking:SetOffsetVal(-5,7);
-  end
-end
-
-function CQUI_OnSettingsUpdate()
-  AUTO_APPLY_ARCHEOLOGIST_LENS = GameConfiguration.GetValue("CQUI_AutoapplyArchaeologistLens");
-  AUTO_APPLY_BUILDER_LENS = GameConfiguration.GetValue("CQUI_AutoapplyBuilderLens");
-  AUTO_APPLY_SCOUT_LENS = GameConfiguration.GetValue("CQUI_AutoapplyScoutLens");
+function CQUI_UpdateMinimapSize()
   CQUI_MapSize = GameConfiguration.GetValue("CQUI_MinimapSize");
 
   --Cycles the minimap after resizing
@@ -128,6 +111,15 @@ function CQUI_OnSettingsUpdate()
       Controls.OptionsStack:SetPadding(-3);
     end
   end
+end
+
+function CQUI_OnSettingsUpdate()
+  AUTO_APPLY_ARCHEOLOGIST_LENS = GameConfiguration.GetValue("CQUI_AutoapplyArchaeologistLens");
+  AUTO_APPLY_BUILDER_LENS = GameConfiguration.GetValue("CQUI_AutoapplyBuilderLens");
+  AUTO_APPLY_SCOUT_LENS = GameConfiguration.GetValue("CQUI_AutoapplyScoutLens");
+
+  --Cycles the minimap after resizing
+  CQUI_UpdateMinimapSize();
 end
 -- ===========================================================================
 function GetContinentsCache()
@@ -2523,6 +2515,7 @@ function Initialize()
   LuaEvents.CQUI_Option_ToggleBindings.Add( CQUI_OnToggleBindings );
   LuaEvents.CQUI_Option_ToggleYields.Add( ToggleYieldIcons );
   LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
+  LuaEvents.CQUI_SettingsInitialized.Add( CQUI_UpdateMinimapSize );
 
   -- CQUI: Toggle yield icons if option is enabled
   if(GameConfiguration.GetValue("CQUI_ToggleYieldsOnLoad")) then
