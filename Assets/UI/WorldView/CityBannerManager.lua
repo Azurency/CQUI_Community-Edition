@@ -120,6 +120,7 @@ local CQUI_ShowYieldsOnCityHover = false;
 local CQUI_PlotIM        :table = InstanceManager:new( "CQUI_WorkedPlotInstance", "Anchor", Controls.CQUI_WorkedPlotContainer );
 local CQUI_uiWorldMap    :table = {};
 local CQUI_yieldsOn    :boolean = false;
+local CQUI_Hovering :boolean = false;
 
 
 local m_CityCenterTeamIM  :table  = InstanceManager:new( "TeamCityBanner",  "Anchor", Controls.CityBanners );
@@ -251,6 +252,8 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
 
   if(CQUI_ShowYieldsOnCityHover) then
 
+    CQUI_Hovering = true;
+
     local kPlayer = Players[playerID];
     local kCities = kPlayer:GetCities();
     local kCity = kCities:FindID(cityID);
@@ -363,6 +366,8 @@ end
 -- ===========================================================================
 -- CQUI -- When a banner is moused over, and the mouse leaves the banner, remove display of the relevant yields and next culture plot
 function CQUI_OnBannerMouseExit(playerID: number, cityID: number)
+
+  if(not CQUI_Hovering) then return; end
 
   CQUI_yieldsOn = UserConfiguration.ShowMapYield();
 
@@ -3203,7 +3208,9 @@ function Initialize()
   Events.CityWorkerChanged.Add(           OnCityWorkerChanged );
 
   LuaEvents.GameDebug_Return.Add(OnGameDebugReturn);
+
   LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
+  Events.CitySelectionChanged.Add( CQUI_OnBannerMouseExit );
 end
 Initialize();
 
