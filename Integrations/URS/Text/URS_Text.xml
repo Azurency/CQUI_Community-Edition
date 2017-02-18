@@ -209,5 +209,35 @@
         <Replace Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="de_DE">
             <Text>Zeige Einheit auf der Karte.</Text>
         </Replace>
+
+        <!-- KOREAN -->
+
+        <!-- HUD Common Text -->
+        <Replace Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="ko_KR">
+            <Text>거래 현황</Text>
+        </Replace>
+        <Replace Tag="LOC_HUD_REPORTS_TAB_HIDE_CITY_BUILDINGS" Language="ko_KR">
+            <Text>도시 건물 숨기기</Text>
+        </Replace>
+        <!-- Current Deals -->
+        <Replace Tag="LOC_CURRENT_DEALS_OUTGOING" Language="ko_KR">
+            <Text>지출</Text>
+        </Replace>
+        <Replace Tag="LOC_CURRENT_DEALS_INCOMING" Language="ko_KR">
+            <Text>수입</Text>
+        </Replace>
+        <!-- Units Overview -->
+        <Replace Tag="LOC_UNITS_MILITARY_LAND" Language="ko_KR">
+            <Text>육군</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITS_MILITARY_AIR" Language="ko_KR">
+            <Text>공군</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITS_MILITARY_SEA" Language="ko_KR">
+            <Text>해군</Text>
+        </Replace>
+        <Replace Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="ko_KR">
+            <Text>이 유닛을 지도에서 봅니다.</Text>
+        </Replace>
     </LocalizedText>
 </GameData>
