@@ -806,6 +806,27 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="pl_PL">
       <Text>Wyświetla pozostałą liczbę tur do rozrostu kulturowego.</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON" Language="pl_PL">
+      <Text>Inteligentne ikony pracy</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON_TOOLTIP" Language="pl_PL">
+      <Text>Nadaje specjalny rozmiar/przeźroczystość ikonom pracujących obywateli</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONALPHA" Language="pl_PL">
+      <Text>Przeźroczystość inteligentnych ikon pracy</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONSIZE" Language="pl_PL">
+      <Text>Rozmiar inteligentnych ikon pracy</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONS_HEADER" Language="pl_PL">
+      <Text>Ikony pracy</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONALPHA" Language="pl_PL">
+      <Text>Przeźroczystość ikon pracy</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONSIZE" Language="pl_PL">
+      <Text>Rozmiar ikon pracy</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL" Language="pl_PL">
       <Text>Ogólne</Text>
     </Row>
