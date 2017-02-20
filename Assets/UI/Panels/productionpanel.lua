@@ -1041,6 +1041,7 @@ function PopulateList(data, listIM)
         districtList[BUILDING_DRAWER_PREFIX..type]:SetHide(true);
       end
     end
+    m_TypeNames = {};
 
     for i, item in ipairs(data.DistrictItems) do
       if(GameInfo.Districts[item.Hash].RequiresPopulation and cityData.DistrictsNum < cityData.DistrictsPossibleNum) then
