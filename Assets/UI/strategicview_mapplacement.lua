@@ -210,6 +210,7 @@ function ConfirmPlaceDistrict(pInputStruct:table)
 				local tProductionQueueParameters = { tParameters=tParameters, plotId=plotId, pSelectedCity=pSelectedCity, buildingHash=districtHash }
 				LuaEvents.StrageticView_MapPlacement_ProductionClose(tProductionQueueParameters);
 				ExitPlacementMode();
+				LuaEvents.CQUI_CityPanel_CityviewEnable();
 			end);
 			pPopupDialog:AddButton(Locale.Lookup("LOC_NO"), nil);
 			pPopupDialog:Open();
@@ -397,7 +398,6 @@ end
 
 function OnInterfaceModeLeave_DistrictPlacement( eNewMode:number )
 	LuaEvents.StrategicView_MapPlacement_ClearDistrictPlacementShadowHexes();
-	UI.SetFixedTiltMode( false );
 end
 
 -- ===========================================================================
