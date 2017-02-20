@@ -58,6 +58,23 @@ function OnLeaderClicked(playerID : number )
 	end
 end
 
+-- ===========================================================================
+function OnLeaderRightClicked(ms_SelectedPlayerID : number )
+
+	local ms_LocalPlayerID:number = Game.GetLocalPlayer();
+	local pPlayer = Players[ms_LocalPlayerID];
+	local iPlayerDiploState = pPlayer:GetDiplomaticAI():GetDiplomaticStateIndex(ms_SelectedPlayerID);
+	local relationshipHash = GameInfo.DiplomaticStates[iPlayerDiploState].Hash;
+	if (not (relationshipHash == DiplomaticStates.WAR)) then
+		if (not DealManager.HasPendingDeal(ms_LocalPlayerID, ms_SelectedPlayerID)) then
+			DealManager.ClearWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayerID, ms_SelectedPlayerID);
+		end
+		DiplomacyManager.RequestSession(ms_LocalPlayerID, ms_SelectedPlayerID, "MAKE_DEAL");
+	end
+	LuaEvents.QuickDealModeActivate();
+end
+
+-- ===========================================================================
 function IsValidRelationship(relationshipType:string)
 	for _:number, tmpType:string in ipairs(VALID_RELATIONSHIPS) do
 		if relationshipType == tmpType then
@@ -94,6 +111,7 @@ function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean
 	instance.Portrait:SetIcon(iconName);
 	-- Register the click handler
 	instance.Button:RegisterCallback( Mouse.eLClick, function() OnLeaderClicked(playerID); end );
+	instance.Button:RegisterCallback( Mouse.eRClick, function() OnLeaderRightClicked(playerID); end );
 
 	local bShowRelationshipIcon:boolean = false;
 	local localPlayerID:number = Game.GetLocalPlayer();
