@@ -75,83 +75,83 @@
 
   <!-- Complete File Manifest -->
   <Files>
-    <File>Assets/CQUI_DatabaseSchema.sql</File>
-    <File>Assets/CQUI_Settings.sql</File>
-    <File>Assets/CQUI_SettingsElement.lua</File>
-    <File>Assets/CQUI_SettingsElement.xml</File>
-    <File>Assets/CQUI_Main.lua</File>
-    <File>Assets/CQUI_TopLayer.xml</File>
-    <File>Assets/CQUI_TopLayer.lua</File>
-    <File>Assets/Text/CQUI_Text_General.xml</File>
-    <File>Assets/Text/CQUI_Text_Settings.xml</File>
-    <File>Assets/UI/ActionPanel.lua</File>
-    <File>Assets/UI/CitySupport.lua</File>
-    <File>Assets/UI/Civ6Common.lua</File>
-    <File>Assets/UI/DiplomacyActionView.xml</File>
-    <File>Assets/UI/DiplomacyDealView.lua</File>
-    <File>Assets/UI/DiplomacyRibbon.lua</File>
-    <File>Assets/UI/DiplomacyRibbon.xml</File>
-    <File>Assets/UI/InGame.lua</File>
-    <File>Assets/UI/MapPinManager.lua</File>
-    <File>Assets/UI/MinimapPanel.lua</File>
-    <File>Assets/UI/MinimapPanel.xml</File>
-    <File>Assets/UI/ProductionPanel.xml</File>
-    <File>Assets/UI/StrategicView_MapPlacement.lua</File>
-    <File>Assets/UI/SupportFunctions.lua</File>
-    <File>Assets/UI/TopPanel.lua</File>
-    <File>Assets/UI/UnitPanel.xml</File>
-    <File>Assets/UI/UnitFlagManager.lua</File>
-    <File>Assets/UI/WorldInput.lua</File>
-    <File>Assets/UI/WorldViewIconsManager.lua</File>
-    <File>Assets/UI/Choosers/CivicsChooser.lua</File>
-    <File>Assets/UI/Choosers/ResearchChooser.lua</File>
-    <File>Assets/UI/Civilopedia/CivilopediaSupport.lua</File>
-    <File>Assets/UI/Panels/CityPanel.lua</File>
-    <File>Assets/UI/Panels/CityPanel.xml</File>
-    <File>Assets/UI/Panels/CityPanelOverview.lua</File>
-    <File>Assets/UI/Panels/CityPanelOverview.xml</File>
-    <File>Assets/UI/Panels/NotificationPanel.lua</File>
-    <File>Assets/UI/Panels/ProductionPanel.lua</File>
-    <File>Assets/UI/Panels/StatusMessagePanel.lua</File>
-    <File>Assets/UI/Panels/StatusMessagePanel.xml</File>
-    <File>Assets/UI/Panels/UnitPanel.lua</File>
-    <File>Assets/UI/PartialScreens/CityStates.lua</File>
-    <File>Assets/UI/PartialScreens/CityStates.xml</File>
-    <File>Assets/UI/Popups/GreatPeoplePopup.lua</File>
-    <File>Assets/UI/Popups/GreatPeoplePopup.xml</File>
-    <File>Assets/UI/Popups/MapPinListPanel.lua</File>
-    <File>Assets/UI/Popups/MapPinListPanel.xml</File>
-    <File>Assets/UI/Popups/MapPinPopup.lua</File>
-    <File>Assets/UI/Popups/MapPinPopup.xml</File>
-    <File>Assets/UI/Popups/TechCivicCompletedPopup.lua</File>
-    <File>Assets/UI/Screens/CivicsTree.lua</File>
-    <File>Assets/UI/Screens/GovernmentScreen.lua</File>
-    <File>Assets/UI/Screens/GovernmentScreen.xml</File>
-    <File>Assets/UI/Screens/TechTree.lua</File>
-    <File>Assets/UI/ToolTips/PlotToolTip.lua</File>
-    <File>Assets/UI/ToolTips/PlotToolTip.xml</File>
-    <File>Assets/UI/WorldView/CityBannerManager.lua</File>
-    <File>Assets/UI/WorldView/CityBannerManager.xml</File>
-    <File>Assets/UI/WorldView/PlotInfo.lua</File>
-    <File>Assets/UI/WorldView/PlotInfo.xml</File>
-    <File>Integrations/BTS/UI/TradeOverview.xml</File>
-    <File>Integrations/BTS/UI/TradeOverview.lua</File>
-    <File>Integrations/BTS/UI/TradeSupport.lua</File>
-    <File>Integrations/BTS/UI/Choosers/TradeRouteChooser.xml</File>
-    <File>Integrations/BTS/UI/Choosers/TradeRouteChooser.lua</File>
-    <File>Integrations/BTS/UI/Choosers/TradeOriginChooser.xml</File>
-    <File>Integrations/BTS/UI/Choosers/TradeOriginChooser.lua</File>
-    <File>Integrations/BTS/Text/BTS_Text.xml</File>
-    <File>Integrations/URS/ReportScreen.lua</File>
-    <File>Integrations/URS/ReportScreen.xml</File>
-    <File>Integrations/URS/UnitPromotionPopup.lua</File>
-    <File>Integrations/URS/Text/URS_Text.xml</File>
-    <File>Integrations/ML/UI/MinimapPanel.lua</File>
-    <File>Integrations/ML/UI/MinimapPanel.xml</File>
-    <File>Integrations/ML/UI/Panels/ModalLensPanel.lua</File>
-    <File>Integrations/ML/UI/Panels/ModalLensPanel.xml</File>
-    <File>Integrations/ML/MoreLenses_Colors.sql</File>
-    <File>Integrations/ML/Text/MoreLenses_Text.xml</File>
+    <File>Assets/cqui_databaseschema.sql</File>
+    <File>Assets/cqui_settings.sql</File>
+    <File>Assets/cqui_settingselement.lua</File>
+    <File>Assets/cqui_settingselement.xml</File>
+    <File>Assets/cqui_main.lua</File>
+    <File>Assets/cqui_toplayer.xml</File>
+    <File>Assets/cqui_toplayer.lua</File>
+    <File>Assets/Text/cqui_text_general.xml</File>
+    <File>Assets/Text/cqui_text_settings.xml</File>
+    <File>Assets/UI/actionpanel.lua</File>
+    <File>Assets/UI/citysupport.lua</File>
+    <File>Assets/UI/civ6common.lua</File>
+    <File>Assets/UI/diplomacyactionview.xml</File>
+    <File>Assets/UI/diplomacydealview.lua</File>
+    <File>Assets/UI/diplomacyribbon.lua</File>
+    <File>Assets/UI/diplomacyribbon.xml</File>
+    <File>Assets/UI/ingame.lua</File>
+    <File>Assets/UI/mappinmanager.lua</File>
+    <File>Assets/UI/minimappanel.lua</File>
+    <File>Assets/UI/minimappanel.xml</File>
+    <File>Assets/UI/productionpanel.xml</File>
+    <File>Assets/UI/strategicview_mapplacement.lua</File>
+    <File>Assets/UI/supportfunctions.lua</File>
+    <File>Assets/UI/toppanel.lua</File>
+    <File>Assets/UI/unitpanel.xml</File>
+    <File>Assets/UI/unitflagmanager.lua</File>
+    <File>Assets/UI/worldinput.lua</File>
+    <File>Assets/UI/worldviewiconsmanager.lua</File>
+    <File>Assets/UI/Choosers/civicschooser.lua</File>
+    <File>Assets/UI/Choosers/researchchooser.lua</File>
+    <File>Assets/UI/Civilopedia/civilopediasupport.lua</File>
+    <File>Assets/UI/Panels/citypanel.lua</File>
+    <File>Assets/UI/Panels/citypanel.xml</File>
+    <File>Assets/UI/Panels/citypaneloverview.lua</File>
+    <File>Assets/UI/Panels/citypaneloverview.xml</File>
+    <File>Assets/UI/Panels/notificationpanel.lua</File>
+    <File>Assets/UI/Panels/productionpanel.lua</File>
+    <File>Assets/UI/Panels/statusmessagepanel.lua</File>
+    <File>Assets/UI/Panels/statusmessagepanel.xml</File>
+    <File>Assets/UI/Panels/unitpanel.lua</File>
+    <File>Assets/UI/PartialScreens/citystates.lua</File>
+    <File>Assets/UI/PartialScreens/citystates.xml</File>
+    <File>Assets/UI/Popups/greatpeoplepopup.lua</File>
+    <File>Assets/UI/Popups/greatpeoplepopup.xml</File>
+    <File>Assets/UI/Popups/mappinlistpanel.lua</File>
+    <File>Assets/UI/Popups/mappinlistpanel.xml</File>
+    <File>Assets/UI/Popups/mappinpopup.lua</File>
+    <File>Assets/UI/Popups/mappinpopup.xml</File>
+    <File>Assets/UI/Popups/techciviccompletedpopup.lua</File>
+    <File>Assets/UI/Screens/civicstree.lua</File>
+    <File>Assets/UI/Screens/governmentscreen.lua</File>
+    <File>Assets/UI/Screens/governmentscreen.xml</File>
+    <File>Assets/UI/Screens/techtree.lua</File>
+    <File>Assets/UI/ToolTips/plottooltip.lua</File>
+    <File>Assets/UI/ToolTips/plottooltip.xml</File>
+    <File>Assets/UI/WorldView/citybannermanager.lua</File>
+    <File>Assets/UI/WorldView/citybannermanager.xml</File>
+    <File>Assets/UI/WorldView/plotinfo.lua</File>
+    <File>Assets/UI/WorldView/plotinfo.xml</File>
+    <File>Integrations/BTS/UI/tradeoverview.xml</File>
+    <File>Integrations/BTS/UI/tradeoverview.lua</File>
+    <File>Integrations/BTS/UI/tradesupport.lua</File>
+    <File>Integrations/BTS/UI/Choosers/traderoutechooser.xml</File>
+    <File>Integrations/BTS/UI/Choosers/traderoutechooser.lua</File>
+    <File>Integrations/BTS/UI/Choosers/tradeoriginchooser.xml</File>
+    <File>Integrations/BTS/UI/Choosers/tradeoriginchooser.lua</File>
+    <File>Integrations/BTS/Text/bts_text.xml</File>
+    <File>Integrations/URS/reportscreen.lua</File>
+    <File>Integrations/URS/reportscreen.xml</File>
+    <File>Integrations/URS/unitpromotionpopup.lua</File>
+    <File>Integrations/URS/Text/urs_text.xml</File>
+    <File>Integrations/ML/UI/minimappanel.lua</File>
+    <File>Integrations/ML/UI/minimappanel.xml</File>
+    <File>Integrations/ML/UI/Panels/modallenspanel.lua</File>
+    <File>Integrations/ML/UI/Panels/modallenspanel.xml</File>
+    <File>Integrations/ML/morelenses_colors.sql</File>
+    <File>Integrations/ML/Text/morelenses_text.xml</File>
   </Files>
 
   <!-- Describes how each file is used -->
@@ -160,63 +160,63 @@
     <!-- CQUI changes that override the base game files -->
     <ImportFiles id="CQUI_IMPORT_FILES">
       <Items>
-        <File>Assets/UI/ActionPanel.lua</File>
-        <File>Assets/UI/CitySupport.lua</File>
-        <File>Assets/UI/Civ6Common.lua</File>
-        <File>Assets/UI/DiplomacyActionView.xml</File>
-        <File>Assets/UI/DiplomacyDealView.lua</File>
-        <File>Assets/UI/DiplomacyRibbon.lua</File>
-        <File>Assets/UI/DiplomacyRibbon.xml</File>
-        <File>Assets/UI/InGame.lua</File>
-        <File>Assets/UI/MapPinManager.lua</File>
-        <File>Assets/UI/MinimapPanel.lua</File>
-        <File>Assets/UI/MinimapPanel.xml</File>
-        <File>Assets/UI/ProductionPanel.xml</File>
-        <File>Assets/UI/StrategicView_MapPlacement.lua</File>
-        <File>Assets/UI/SupportFunctions.lua</File>
-        <File>Assets/UI/TopPanel.lua</File>
-        <File>Assets/UI/UnitPanel.xml</File>
-        <File>Assets/UI/UnitFlagManager.lua</File>
-        <File>Assets/UI/WorldInput.lua</File>
-        <File>Assets/UI/WorldViewIconsManager.lua</File>
-        <File>Assets/UI/Choosers/CivicsChooser.lua</File>
-        <File>Assets/UI/Choosers/ResearchChooser.lua</File>
-        <File>Assets/UI/Civilopedia/CivilopediaSupport.lua</File>
-        <File>Assets/UI/Panels/CityPanel.lua</File>
-        <File>Assets/UI/Panels/CityPanel.xml</File>
-        <File>Assets/UI/Panels/CityPanelOverview.lua</File>
-        <File>Assets/UI/Panels/CityPanelOverview.xml</File>
-        <File>Assets/UI/Panels/NotificationPanel.lua</File>
-        <File>Assets/UI/Panels/ProductionPanel.lua</File>
-        <File>Assets/UI/Panels/StatusMessagePanel.lua</File>
-        <File>Assets/UI/Panels/StatusMessagePanel.xml</File>
-        <File>Assets/UI/Panels/UnitPanel.lua</File>
-        <File>Assets/UI/PartialScreens/CityStates.lua</File>
-        <File>Assets/UI/PartialScreens/CityStates.xml</File>
-        <File>Assets/UI/Popups/GreatPeoplePopup.lua</File>
-        <File>Assets/UI/Popups/GreatPeoplePopup.xml</File>
-        <File>Assets/UI/Popups/MapPinListPanel.lua</File>
-        <File>Assets/UI/Popups/MapPinListPanel.xml</File>
-        <File>Assets/UI/Popups/MapPinPopup.lua</File>
-        <File>Assets/UI/Popups/MapPinPopup.xml</File>
-        <File>Assets/UI/Popups/TechCivicCompletedPopup.lua</File>
-        <File>Assets/UI/Screens/TechTree.lua</File>
-        <File>Assets/UI/Screens/CivicsTree.lua</File>
-        <File>Assets/UI/Screens/GovernmentScreen.lua</File>
-        <File>Assets/UI/Screens/GovernmentScreen.xml</File>
-        <File>Assets/UI/ToolTips/PlotToolTip.lua</File>
-        <File>Assets/UI/ToolTips/PlotToolTip.xml</File>
-        <File>Assets/UI/WorldView/CityBannerManager.lua</File>
-        <File>Assets/UI/WorldView/CityBannerManager.xml</File>
-        <File>Assets/UI/WorldView/PlotInfo.lua</File>
-        <File>Assets/UI/WorldView/PlotInfo.xml</File>
+        <File>Assets/UI/actionpanel.lua</File>
+        <File>Assets/UI/citysupport.lua</File>
+        <File>Assets/UI/civ6common.lua</File>
+        <File>Assets/UI/diplomacyactionview.xml</File>
+        <File>Assets/UI/diplomacydealview.lua</File>
+        <File>Assets/UI/diplomacyribbon.lua</File>
+        <File>Assets/UI/diplomacyribbon.xml</File>
+        <File>Assets/UI/ingame.lua</File>
+        <File>Assets/UI/mappinmanager.lua</File>
+        <File>Assets/UI/minimappanel.lua</File>
+        <File>Assets/UI/minimappanel.xml</File>
+        <File>Assets/UI/productionpanel.xml</File>
+        <File>Assets/UI/strategicview_mapplacement.lua</File>
+        <File>Assets/UI/supportfunctions.lua</File>
+        <File>Assets/UI/toppanel.lua</File>
+        <File>Assets/UI/unitpanel.xml</File>
+        <File>Assets/UI/unitflagmanager.lua</File>
+        <File>Assets/UI/worldinput.lua</File>
+        <File>Assets/UI/worldviewiconsmanager.lua</File>
+        <File>Assets/UI/Choosers/civicschooser.lua</File>
+        <File>Assets/UI/Choosers/researchchooser.lua</File>
+        <File>Assets/UI/Civilopedia/civilopediasupport.lua</File>
+        <File>Assets/UI/Panels/citypanel.lua</File>
+        <File>Assets/UI/Panels/citypanel.xml</File>
+        <File>Assets/UI/Panels/citypaneloverview.lua</File>
+        <File>Assets/UI/Panels/citypaneloverview.xml</File>
+        <File>Assets/UI/Panels/notificationpanel.lua</File>
+        <File>Assets/UI/Panels/productionpanel.lua</File>
+        <File>Assets/UI/Panels/statusmessagepanel.lua</File>
+        <File>Assets/UI/Panels/statusmessagepanel.xml</File>
+        <File>Assets/UI/Panels/unitpanel.lua</File>
+        <File>Assets/UI/PartialScreens/citystates.lua</File>
+        <File>Assets/UI/PartialScreens/citystates.xml</File>
+        <File>Assets/UI/Popups/greatpeoplepopup.lua</File>
+        <File>Assets/UI/Popups/greatpeoplepopup.xml</File>
+        <File>Assets/UI/Popups/mappinlistpanel.lua</File>
+        <File>Assets/UI/Popups/mappinlistpanel.xml</File>
+        <File>Assets/UI/Popups/mappinpopup.lua</File>
+        <File>Assets/UI/Popups/mappinpopup.xml</File>
+        <File>Assets/UI/Popups/techciviccompletedpopup.lua</File>
+        <File>Assets/UI/Screens/techtree.lua</File>
+        <File>Assets/UI/Screens/civicstree.lua</File>
+        <File>Assets/UI/Screens/governmentscreen.lua</File>
+        <File>Assets/UI/Screens/governmentscreen.xml</File>
+        <File>Assets/UI/ToolTips/plottooltip.lua</File>
+        <File>Assets/UI/ToolTips/plottooltip.xml</File>
+        <File>Assets/UI/WorldView/citybannermanager.lua</File>
+        <File>Assets/UI/WorldView/citybannermanager.xml</File>
+        <File>Assets/UI/WorldView/plotinfo.lua</File>
+        <File>Assets/UI/WorldView/plotinfo.xml</File>
       </Items>
     </ImportFiles>
     <!-- CQUI specific LOCs  -->
     <LocalizedText id="CQUI_TEXT">
       <Items>
-        <File>Assets/Text/CQUI_Text_General.xml</File>
-        <File>Assets/Text/CQUI_Text_Settings.xml</File>
+        <File>Assets/Text/cqui_text_general.xml</File>
+        <File>Assets/Text/cqui_text_settings.xml</File>
       </Items>
     </LocalizedText>
     <!-- CQUI specific settings -->
@@ -225,8 +225,8 @@
         <Name>CQUI Settings</Name>
       </Properties>
       <Items>
-        <File>Assets/CQUI_DatabaseSchema.sql</File>
-        <File>Assets/CQUI_Settings.sql</File>
+        <File>Assets/cqui_databaseschema.sql</File>
+        <File>Assets/cqui_settings.sql</File>
       </Items>
     </UpdateDatabase>
     <!-- CQUI specific UIs -->
@@ -235,63 +235,63 @@
         <Context>InGame</Context>
       </Properties>
       <Items>
-        <File>Assets/CQUI_SettingsElement.xml</File>
-        <File>Assets/CQUI_TopLayer.xml</File>
+        <File>Assets/cqui_settingselement.xml</File>
+        <File>Assets/cqui_toplayer.xml</File>
         <!--the lua files are taken as implied-->
       </Items>
     </UserInterface>
     <!-- CQUI specific scripts -->
     <GameplayScripts id="CQUI_SCRIPTS">
       <Items>
-        <File>Assets/CQUI_Main.lua</File>
+        <File>Assets/cqui_main.lua</File>
       </Items>
     </GameplayScripts>
 
     <!-- Mod integrations -->
     <ImportFiles id="BTS_IMPORT_FILES">
       <Items>
-        <File>Integrations/BTS/UI/TradeOverview.xml</File>
-        <File>Integrations/BTS/UI/TradeOverview.lua</File>
-        <File>Integrations/BTS/UI/TradeSupport.lua</File>
-        <File>Integrations/BTS/UI/Choosers/TradeRouteChooser.xml</File>
-        <File>Integrations/BTS/UI/Choosers/TradeRouteChooser.lua</File>
-        <File>Integrations/BTS/UI/Choosers/TradeOriginChooser.xml</File>
-        <File>Integrations/BTS/UI/Choosers/TradeOriginChooser.lua</File>
+        <File>Integrations/BTS/UI/tradeoverview.xml</File>
+        <File>Integrations/BTS/UI/tradeoverview.lua</File>
+        <File>Integrations/BTS/UI/tradesupport.lua</File>
+        <File>Integrations/BTS/UI/Choosers/traderoutechooser.xml</File>
+        <File>Integrations/BTS/UI/Choosers/traderoutechooser.lua</File>
+        <File>Integrations/BTS/UI/Choosers/tradeoriginchooser.xml</File>
+        <File>Integrations/BTS/UI/Choosers/tradeoriginchooser.lua</File>
       </Items>
     </ImportFiles>
     <LocalizedText id="BTS_TEXT">
       <Items>
-        <File>Integrations/BTS/Text/BTS_Text.xml</File>
+        <File>Integrations/BTS/Text/bts_text.xml</File>
       </Items>
     </LocalizedText>
     <ImportFiles id="UNITREPORT_IMPORT_FILES">
       <Items>
-        <File>Integrations/URS/ReportScreen.lua</File>
-        <File>Integrations/URS/ReportScreen.xml</File>
-        <File>Integrations/URS/UnitPromotionPopup.lua</File>
+        <File>Integrations/URS/reportscreen.lua</File>
+        <File>Integrations/URS/reportscreen.xml</File>
+        <File>Integrations/URS/unitpromotionpopup.lua</File>
       </Items>
     </ImportFiles>
     <LocalizedText id="UNITREPORT_TEXT">
       <Items>
-        <File>Integrations/URS/Text/URS_Text.xml</File>
+        <File>Integrations/URS/Text/urs_text.xml</File>
       </Items>
     </LocalizedText>
     <ImportFiles id="MORELENSES_IMPORT_FILES">
       <Items>
-        <File>Integrations/ML/UI/MinimapPanel.lua</File>
-        <File>Integrations/ML/UI/MinimapPanel.xml</File>
-        <File>Integrations/ML/UI/Panels/ModalLensPanel.lua</File>
-        <File>Integrations/ML/UI/Panels/ModalLensPanel.xml</File>
+        <File>Integrations/ML/UI/minimappanel.lua</File>
+        <File>Integrations/ML/UI/minimappanel.xml</File>
+        <File>Integrations/ML/UI/Panels/modallenspanel.lua</File>
+        <File>Integrations/ML/UI/Panels/modallenspanel.xml</File>
       </Items>
     </ImportFiles>
     <UpdateDatabase id="MORELENSES_DATABASE">
       <Items>
-        <File>Integrations/ML/MoreLenses_Colors.sql</File>
+        <File>Integrations/ML/morelenses_colors.sql</File>
       </Items>
     </UpdateDatabase>
     <LocalizedText id="MORELENSES_TEXT">
       <Items>
-        <File>Integrations/ML/Text/MoreLenses_Text.xml</File>
+        <File>Integrations/ML/Text/morelenses_text.xml</File>
       </Items>
     </LocalizedText>
   </Components>
