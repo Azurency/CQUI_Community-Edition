@@ -1003,6 +1003,16 @@ end
 function DefaultKeyUpHandler( uiKey:number )
   local keyPanChanged :boolean = false;
 
+  --print("Key Up: " .. uiKey);
+  local selectedUnit = UI.GetHeadSelectedUnit();
+  local unitType = nil;
+  local formationClass = nil;
+  if selectedUnit then
+    unitType = GameInfo.Units[selectedUnit:GetUnitType()].UnitType;
+    formationClass = GameInfo.Units[selectedUnit:GetUnitType()].FormationClass;
+    --print("Unit Type: " .. unitType .. " Formation Class: " .. formationClass);
+  end
+
   --CQUI Keybinds
   if CQUI_hotkeyMode ~= 0 then
     if CQUI_hotkeyMode == 2 then
@@ -1046,7 +1056,9 @@ function DefaultKeyUpHandler( uiKey:number )
       end
     else --Classic binds that would overlap with the enhanced binds
       if( uiKey == Keys.Q ) then
+        if (unitType == "UNIT_BUILDER") then
         CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), -80493497); --Quarry
+        end
       end
       if( uiKey == Keys.S ) then
         UnitManager.RequestCommand(UI.GetHeadSelectedUnit(), UnitOperationTypes.AIR_ATTACK);
@@ -1054,7 +1066,9 @@ function DefaultKeyUpHandler( uiKey:number )
     end
     -- Fortify until healed hotkey
     if( uiKey == Keys.H ) then
-      UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), 2126026491); -- OH MY GOD IT WAS SO HARD TO FIND THAT ID. WHAT WAS FIRAXIS THINKING
+      if (unitType ~= nil) then -- OPTIMIZATION -- if unit health 100% alert not heal
+        UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), 2126026491); -- OH MY GOD IT WAS SO HARD TO FIND THAT ID. WHAT WAS FIRAXIS THINKING
+      end
       return;
     end
     -- Focus Capital hotkey
@@ -1062,52 +1076,82 @@ function DefaultKeyUpHandler( uiKey:number )
       UI.SelectCity(Players[Game.GetLocalPlayer()]:GetCities():GetCapitalCity());
     end
     if( uiKey == Keys.VK_BACK ) then
-      UnitManager.RequestCommand(UI.GetHeadSelectedUnit(), UnitCommandTypes.CANCEL);
+      if (unitType ~= nill) then
+        UnitManager.RequestCommand(UI.GetHeadSelectedUnit(), UnitCommandTypes.CANCEL);
+      end
     end
     if( uiKey == Keys.I ) then
-      CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 168372657); --Farm
+      if (unitType == "UNIT_BUILDER") then
+        CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 168372657); --Farm
+      end
     end
     if( uiKey == Keys.P ) then
       if ( CQUI_isShiftDown) then
+        CQUI_isShiftDown = false;
         PlaceMapPin();
       else
-        CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 154488225); --Pasture
-        CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 1523996587); --Plantation
+        if (unitType == "UNIT_BUILDER") then
+          CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 154488225); --Pasture
+          CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 1523996587); --Plantation
+        end
       end
     end
     if( uiKey == Keys.N ) then
-      CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 1001859687); --Mine
-      UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), UnitOperationTypes.WMD_STRIKE);
+      if (unitType == "UNIT_BUILDER") then
+        CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 1001859687); --Mine
+      else
+        UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), UnitOperationTypes.WMD_STRIKE);
+      end
     end
     if( uiKey == Keys.H ) then
-      CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), -1819558972); --Camp
+      if (unitType == "UNIT_BUILDER") then
+        CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), -1819558972); --Camp
+      end
     end
-    if( uiKey == Keys.H ) then
+    if( uiKey == Keys.L ) then
       CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 2048582848); --Lumber Mill
     end
     if( uiKey == Keys.R ) then
-      CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 115772143); --Road
-      UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), UnitOperationTypes.REBASE);
+      if (unitType == "UNIT_MILITARY_ENGINEER") then
+        CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 115772143); --Road
+      elseif (formationClass == "FORMATION_CLASS_AIR") then
+        UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), UnitOperationTypes.REBASE);
+      else
+        UserConfiguration.ShowMapResources( not UserConfiguration.ShowMapResources() ); -- toggle the resource icon
+      end
     end
     if( uiKey == Keys.F ) then
-      CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 578093457); --Fishing Boats
-      CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 1694280827); --Fort
+      if (unitType == "UNIT_BUILDER") then
+        CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 578093457); --Fishing Boats
+      elseif (unitType == "UNIT_MILITARY_ENGINEER") then
+        CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), 1694280827); --Fort
+      else
+        UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), -744032280); --Sleep
+      end
+    end
+    if( uiKey == Keys.Z ) then
       UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), -41338758); --Sleep
     end
     if( uiKey == Keys.O ) then
-      CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), -1355513600); --Oil Well
-      CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), -396628467); --Offshore Platform
+      if (unitType == "UNIT_BUILDER") then
+        CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), -1355513600); --Oil Well
+        CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), -396628467); --Offshore Platform
+      end
     end
     if( m_isALTDown ) then --Overridden classic binds get an alt-version as well as the normal alt-shortcuts
       if( uiKey == Keys.C ) then
-        UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), UnitOperationTypes.HARVEST_RESOURCE);
-        UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), UnitOperationTypes.REMOVE_FEATURE);
+        if (unitType == "UNIT_BUILDER") or (unitType == "UNIT_MILITARY_ENGINEER") then
+          UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), UnitOperationTypes.HARVEST_RESOURCE);
+          UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), UnitOperationTypes.REMOVE_FEATURE);
+        end
       end
       if( uiKey == Keys.Q ) then
         CQUI_BuildImprovement(UI.GetHeadSelectedUnit(), -80493497); --Quarry
       end
       if( uiKey == Keys.S ) then
-        UnitManager.RequestCommand(UI.GetHeadSelectedUnit(), UnitOperationTypes.AIR_ATTACK);
+        if (formationClass == "FORMATION_CLASS_AIR") then
+          UnitManager.RequestCommand(UI.GetHeadSelectedUnit(), UnitOperationTypes.AIR_ATTACK);
+        end
       end
     end
   end
@@ -1484,7 +1528,8 @@ end
 -- ===========================================================================
 function OnMouseBuildingPlacementCancel( pInputStruct:table )
   if IsCancelAllowed() then
-    ExitPlacementMode( true );
+    LuaEvents.CQUI_CityviewEnable();
+    --ExitPlacementMode( true );
   end
 end
 
@@ -1512,7 +1557,9 @@ end
 -- ===========================================================================
 function OnMouseDistrictPlacementCancel( pInputStruct:table )
   if IsCancelAllowed() then
-    ExitPlacementMode( true );
+    LuaEvents.StoreHash(0);
+    LuaEvents.CQUI_CityviewEnable();
+    --ExitPlacementMode( true );
   end
 end
 
@@ -2673,10 +2720,10 @@ function OnMouseEnd_WBSelectPlot( pInputStruct:table )
   -- If a drag was occurring, end it; otherwise attempt selection of whatever
   -- is in the plot the mouse is currently at.
   if m_isMouseDragging then
-    print("Stopping drag");
+    --print("Stopping drag");
     m_isMouseDragging = false;
   else
-    print("World Builder Placement");
+    --print("World Builder Placement");
     if (Map.IsPlot(UI.GetCursorPlotID())) then
       LuaEvents.WorldInput_WBSelectPlot(UI.GetCursorPlotID(), UI.GetCursorNearestPlotEdge(), true);
     end
@@ -2939,7 +2986,7 @@ function OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
     end
   else
     local msg:string = string.format("Change requested an unhandled interface mode of value '0x%x'.  (Previous mode '0x%x')",eNewMode,eOldMode);
-    print(msg);
+    --print(msg);
     UIManager:SetUICursor(CursorTypes.NORMAL);
     UILens.SetActive("Default");
   end
