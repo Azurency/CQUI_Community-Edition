@@ -25,6 +25,7 @@ local UV_CITIZEN_GROWTH_STATUS    :table  = {};
     UV_CITIZEN_GROWTH_STATUS[4] = {u=0, v=100};   -- content (normal)
     UV_CITIZEN_GROWTH_STATUS[5] = {u=0, v=150};   -- happy
     UV_CITIZEN_GROWTH_STATUS[6] = {u=0, v=200};   -- ecstatic
+    UV_CITIZEN_GROWTH_STATUS[7] = {u=0, v=200};   -- jubilant
 
 local UV_HOUSING_GROWTH_STATUS    :table = {};
     UV_HOUSING_GROWTH_STATUS[0] = {u=0, v=0};   -- halted
