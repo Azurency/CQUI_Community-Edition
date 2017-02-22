@@ -760,6 +760,11 @@ function PopulateList(data, listIM)
         unitListing.PurchaseButton:SetText(CQUI_ProdTable[item.Hash]["gold"] .. "[ICON_GOLD]");
         unitListing.PurchaseButton:SetHide(false);
         unitListing.PurchaseButton:SetDisabled(CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["gold"]);
+        if (CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["gold"]) then
+          unitListing.PurchaseButton:SetColor(0xDD3366FF);
+        else
+          unitListing.PurchaseButton:SetColor(0xFFF38FFF);
+        end
       else
         unitListing.PurchaseButton:SetHide(true);
       end
@@ -770,6 +775,11 @@ function PopulateList(data, listIM)
         unitListing.FaithPurchaseButton:SetText(CQUI_ProdTable[item.Hash]["faith"] .. "[ICON_FAITH]");
         unitListing.FaithPurchaseButton:SetHide(false);
         unitListing.FaithPurchaseButton:SetDisabled(CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["faith"]);
+        if (CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["faith"]) then
+          unitListing.FaithPurchaseButton:SetColor(0xDD3366FF);
+        else
+          unitListing.FaithPurchaseButton:SetColor(0xFFF38FFF);
+        end
       else
         unitListing.FaithPurchaseButton:SetHide(true);
       end
@@ -842,6 +852,11 @@ function PopulateList(data, listIM)
           unitListing.CorpsPurchaseButton:SetText(CQUI_ProdTable[item.Hash]["corpsGold"] .. "[ICON_GOLD]");
           unitListing.CorpsPurchaseButton:SetHide(false);
           unitListing.CorpsPurchaseButton:SetDisabled(CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["corpsGold"]);
+          if (CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["corpsGold"]) then
+            unitListing.CorpsPurchaseButton:SetColor(0xDD3366FF);
+          else
+            unitListing.CorpsPurchaseButton:SetColor(0xFFF38FFF);
+          end
         else
           unitListing.CorpsPurchaseButton:SetHide(true);
         end
@@ -849,6 +864,11 @@ function PopulateList(data, listIM)
           unitListing.CorpsFaithPurchaseButton:SetText(CQUI_ProdTable[item.Hash]["corpsFaith"] .. "[ICON_FAITH]");
           unitListing.CorpsFaithPurchaseButton:SetHide(false);
           unitListing.CorpsFaithPurchaseButton:SetDisabled(CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["corpsFaith"]);
+          if (CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["corpsFaith"]) then
+            unitListing.CorpsFaithPurchaseButton:SetColor(0xDD3366FF);
+          else
+            unitListing.CorpsFaithPurchaseButton:SetColor(0xFFF38FFF);
+          end
         else
           unitListing.CorpsFaithPurchaseButton:SetHide(true);
         end
@@ -908,6 +928,11 @@ function PopulateList(data, listIM)
           unitListing.ArmyPurchaseButton:SetText(CQUI_ProdTable[item.Hash]["armyGold"] .. "[ICON_GOLD]");
           unitListing.ArmyPurchaseButton:SetHide(false);
           unitListing.ArmyPurchaseButton:SetDisabled(CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["armyGold"]);
+          if (CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["armyGold"]) then
+            unitListing.ArmyPurchaseButton:SetColor(0xDD3366FF);
+          else
+            unitListing.ArmyPurchaseButton:SetColor(0xFFF38FFF);
+          end
         else
           unitListing.ArmyPurchaseButton:SetHide(true);
         end
@@ -915,6 +940,11 @@ function PopulateList(data, listIM)
           unitListing.ArmyFaithPurchaseButton:SetText(CQUI_ProdTable[item.Hash]["armyFaith"] .. "[ICON_FAITH]");
           unitListing.ArmyFaithPurchaseButton:SetHide(false);
           unitListing.ArmyFaithPurchaseButton:SetDisabled(CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["armyFaith"]);
+          if (CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["armyFaith"]) then
+            unitListing.ArmyFaithPurchaseButton:SetColor(0xDD3366FF);
+          else
+            unitListing.ArmyFaithPurchaseButton:SetColor(0xFFF38FFF);
+          end
         else
           unitListing.ArmyFaithPurchaseButton:SetHide(true);
         end
@@ -1284,6 +1314,11 @@ function PopulateList(data, listIM)
             buildingListing.PurchaseButton:SetText(CQUI_ProdTable[buildingItem.Hash]["gold"] .. "[ICON_GOLD]");
             buildingListing.PurchaseButton:SetHide(false);
             buildingListing.PurchaseButton:SetDisabled(CQUI_PlayerGold < CQUI_ProdTable[buildingItem.Hash]["gold"]);
+            if (CQUI_PlayerGold < CQUI_ProdTable[buildingItem.Hash]["gold"]) then
+              buildingListing.PurchaseButton:SetColor(0xDD3366FF);
+            else
+              buildingListing.PurchaseButton:SetColor(0xFFF38FFF);
+            end
           else
             buildingListing.PurchaseButton:SetHide(true);
           end
@@ -1294,6 +1329,11 @@ function PopulateList(data, listIM)
             buildingListing.FaithPurchaseButton:SetText(CQUI_ProdTable[buildingItem.Hash]["faith"] .. "[ICON_FAITH]");
             buildingListing.FaithPurchaseButton:SetHide(false);
             buildingListing.FaithPurchaseButton:SetDisabled(CQUI_PlayerFaith < CQUI_ProdTable[buildingItem.Hash]["faith"]);
+            if (CQUI_PlayerFaith < CQUI_ProdTable[buildingItem.Hash]["faith"]) then
+              buildingListing.FaithPurchaseButton:SetColor(0xDD3366FF);
+            else
+              buildingListing.FaithPurchaseButton:SetColor(0xFFF38FFF);
+            end
           else
             buildingListing.FaithPurchaseButton:SetHide(true);
           end
