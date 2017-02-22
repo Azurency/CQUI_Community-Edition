@@ -778,14 +778,117 @@ function Refresh()
     -- more effecient than recomputing the entire set of yields a second time,
     -- despite the large size.
     LuaEvents.CityPanel_LiveCityDataChanged( m_kData, true );
+    LuaEvents.UpdateBanner(Game.GetLocalPlayer(), m_pCity:GetID());
   end
 end
 
+function RefreshOnTurnRoll()
+  --print("Turn Roll City Panel Update");
+  local pPlayer = Game.GetLocalPlayer();
+
+  m_pCity  = UI.GetHeadSelectedCity();
+
+  if m_pCity ~= nil then
+    local pCitizens   :table = m_pCity:GetCitizens();
+    local tParameters :table = {};
+
+    if pCitizens:IsFavoredYield(YieldTypes.CULTURE) then
+      tParameters[CityCommandTypes.PARAM_FLAGS]   = 0;      -- Set favoured
+      tParameters[CityCommandTypes.PARAM_DATA0] = 1;          -- on
+    elseif pCitizens:IsDisfavoredYield(YieldTypes.CULTURE) then
+      tParameters[CityCommandTypes.PARAM_FLAGS]   = 1;      -- Set Ignored
+      tParameters[CityCommandTypes.PARAM_DATA0] = 1;          -- on
+    else
+      tParameters[CityCommandTypes.PARAM_FLAGS]   = 0;      -- Set favoured
+      tParameters[CityCommandTypes.PARAM_DATA0] = 0;          -- off
+
+    end
+
+    tParameters[CityCommandTypes.PARAM_YIELD_TYPE]= yieldType;  -- Yield type
+    CityManager.RequestCommand(m_pCity, CityCommandTypes.SET_FOCUS, tParameters);
+
+    m_kData = GetCityData( m_pCity );
+    if m_kData == nil then
+      return;
+    end
+    
+    --print("=============================================================");
+    --print("Updating City Panel Details Due To Turn Roll");
+    --print("=============================================================");
+
+    ViewMain( m_kData );
+
+    -- Tell others (e.g., CityPanelOverview) that the selected city data has changed.
+    -- Passing this large table across contexts via LuaEvent is *much*
+    -- more effecient than recomputing the entire set of yields a second time,
+    -- despite the large size.
+    LuaEvents.CityPanel_LiveCityDataChanged( m_kData, true );
+    LuaEvents.UpdateBanner(Game.GetLocalPlayer(), m_pCity:GetID());
+
+  end
+
+end
 
 -- ===========================================================================
 function RefreshIfMatch( ownerPlayerID:number, cityID:number )
   if m_pCity ~= nil and ownerPlayerID == m_pCity:GetOwner() and cityID == m_pCity:GetID() then
     Refresh();
+  end
+end
+
+-- ===========================================================================
+function OnTileImproved(x, y)
+  --print("A Tile Was Improved!");
+  local plot:table = Map.GetPlot(x,y);
+  local PlayerID = Game.GetLocalPlayer();
+  
+  m_pCity = Cities.GetPlotPurchaseCity(plot);
+
+  if (m_pCity ~= nil) then
+    
+    --print("Location: " .. x .."," .. y);
+    --print("Player: " .. PlayerID);
+    --print("City Owner: " .. m_pCity:GetOwner());
+    
+    if (PlayerID == m_pCity:GetOwner()) then
+      --print("City: " .. m_pCity:GetID());
+      
+      local pCitizens   :table = m_pCity:GetCitizens();
+      local tParameters :table = {};
+
+      if pCitizens:IsFavoredYield(YieldTypes.CULTURE) then
+        tParameters[CityCommandTypes.PARAM_FLAGS]   = 0;      -- Set favoured
+        tParameters[CityCommandTypes.PARAM_DATA0] = 1;          -- on
+      elseif pCitizens:IsDisfavoredYield(YieldTypes.CULTURE) then
+        tParameters[CityCommandTypes.PARAM_FLAGS]   = 1;      -- Set Ignored
+        tParameters[CityCommandTypes.PARAM_DATA0] = 1;          -- on
+      else
+        tParameters[CityCommandTypes.PARAM_FLAGS]   = 0;      -- Set favoured
+        tParameters[CityCommandTypes.PARAM_DATA0] = 0;          -- off
+      end
+      
+      tParameters[CityCommandTypes.PARAM_YIELD_TYPE]= yieldType;  -- Yield type
+      CityManager.RequestCommand(m_pCity, CityCommandTypes.SET_FOCUS, tParameters);
+
+      m_kData = GetCityData( m_pCity );
+      --m_kData = GetCityData( m_pCity );
+      if m_kData == nil then
+        return;
+      end
+      
+      --print("=============================================================");
+      --print("Updating City Panel Details Due To Yield Change");
+      --print("=============================================================");
+
+      --ViewMain( m_kData );
+
+      -- Tell others (e.g., CityPanelOverview) that the selected city data has changed.
+      -- Passing this large table across contexts via LuaEvent is *much*
+      -- more effecient than recomputing the entire set of yields a second time,
+      -- despite the large size.
+      LuaEvents.CityPanel_LiveCityDataChanged( m_kData, true );
+      --LuaEvents.UpdateBanner(Game.GetLocalPlayer(), m_pCity:GetID());
+    end
   end
 end
 
@@ -1286,6 +1389,8 @@ function Initialize()
   Events.UnitSelectionChanged.Add(  OnUnitSelectionChanged );
   Events.PlayerResourceChanged.Add( OnPlayerResourceChanged );
   Events.LoadScreenClose.Add( CQUI_OnLoadScreenClose );
+  Events.PlotYieldChanged.Add(        OnTileImproved );
+  Events.PlayerTurnActivated.Add(   RefreshOnTurnRoll );
 
   -- LUA Events
   LuaEvents.CityPanelOverview_CloseButton.Add( OnCloseOverviewPanel );
@@ -1297,6 +1402,7 @@ function Initialize()
   LuaEvents.CQUI_GoPrevCity.Add( CQUI_OnPreviousCity );
   LuaEvents.CQUI_ToggleGrowthTile.Add( CQUI_ToggleGrowthTile );
   LuaEvents.CQUI_SettingsUpdate.Add( CQUI_SettingsUpdate );
+  LuaEvents.RefreshCityPanel.Add(Refresh);
 
   -- Truncate possible static text overflows
   TruncateStringWithTooltip(Controls.BreakdownLabel,  MAX_BEFORE_TRUNC_STATIC_LABELS, Controls.BreakdownLabel:GetText());
