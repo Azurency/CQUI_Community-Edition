@@ -524,6 +524,27 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="it_IT">
       <Text>Mostra il numero di turni alla crescita culturale.</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON" Language="it_IT">
+      <Text>Icone Caselle Lavorate Smart</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON_TOOLTIP" Language="it_IT">
+      <Text>Personalizza dimensione e trasparenza delle icone cittadino delle caselle lavorate</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONALPHA" Language="it_IT">
+      <Text>Trasparenza Icone Caselle Lavorate Smart</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONSIZE" Language="it_IT">
+      <Text>Dimensione Icone Caselle Lavorate Smart</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONS_HEADER" Language="it_IT">
+      <Text>Icone Caselle Lavorate</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONALPHA" Language="it_IT">
+      <Text>Trasparenza Icone Caselle Lavorate</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONSIZE" Language="it_IT">
+      <Text>Dimensione Icone Caselle Lavorate</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL" Language="it_IT">
       <Text>Generali</Text>
     </Row>
