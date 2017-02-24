@@ -5,8 +5,8 @@
     <Name>Chao's Quick UI</Name>
     <Teaser>CQUI_TEASER</Teaser>
     <Description>CQUI_TEASER</Description>
-    <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek, zeyangl, velit, the-m4a, Frozen-In-Ice, Remolten, bestekov</Authors>
-    <SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod + More Lenses mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod. Greg Miller for his Unit Report Screen mod. Lozenged/kblease for his Production Queue mod. ZhouYzzz for providing the Chinese translation of CQUI. Simone1974 for providing the Italian translation of CQUI. e1ectron for providing the Russian translation of CQUI. sejbr for providing the Polish translation of CQUI</SpecialThanks>
+    <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek, zeyangl, velit, the-m4a, Frozen-In-Ice, Remolten, bestekov, bolbass, SpaceOgre, cpinter</Authors>
+    <SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod + More Lenses mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod. Greg Miller for his Unit Report Screen mod. Lozenged/kblease for his Production Queue mod. ZhouYzzz for providing the Chinese translation of CQUI. Simone1974 for providing the Italian translation of CQUI. e1ectron for providing the Russian translation of CQUI. sejbr for providing the Polish translation of CQUI. frytom for providing the German translation of CQUI. lctrs for providing a partial French translation of CQUI. wbqd for providing the Korean translation of CQUI</SpecialThanks>
     <Stability>CQUI_STABILITY_NIGHTLY</Stability>
   </Properties>
   <Dependencies />

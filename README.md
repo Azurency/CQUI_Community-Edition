@@ -4,6 +4,8 @@
 
 # Civilization 6 - Chao's Quick UI
 
+## The below featurelist and screenshots are outdated! Expect this page to get updated with the next release
+
 # Features:
 
 ### CQUI Features:
@@ -144,7 +146,7 @@ Contents/Assets/DLC
 
 * Visit https://github.com/chaorace/cqui occasionally or follow https://twitter.com/realchaorace to be the first to know about new releases and feature additions!
 
-* NOTE: Until this mod is in a less experimental state, the mod will not remember its "enabled" status after restarting the game. This means that every time you plan to start a new game using CQUI, you'll need to explicitly enable it in the "Additional Content" menu first. Once you've created the game using the mod, it will always load when you start the save, regardless of its current status in the "Additional Content Menu" 
+* NOTE: Until this mod is in a less experimental state, the mod will not remember its "enabled" status after restarting the game. This means that every time you plan to start a new game using CQUI, you'll need to explicitly enable it in the "Additional Content" menu first. Once you've created the game using the mod, it will always load when you start the save, regardless of its current status in the "Additional Content Menu"
 
 ### KNOWN ISSUES / SUPPORT:
 
@@ -164,6 +166,9 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
 * @deggesim (Simone1974 on Civfanatics) for providing the Italian localization in #250
 * @e1ectron for providing the Russian localization in #251
 * @sejbr for providing the Polish localization in #253
+* @frytom for providing the German localization in #283
+* @lctrs for providing a partial French localization in #273
+* @wbqd for providing a Korean translation in #309
 * @jacks0nX for:
   * localization in #20
   * map pin enhancements in PR #21 and #55
@@ -194,13 +199,22 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
 * @kblease for:
   * fortify until healed hotkey bugfix in #73
   * unit purchasing fix in #80
+* @bolbass for:
+  * binding recentering functionality to the citypanel emblem in #279
+  * fixing governor not updating on tile changes in the same turn #257
+* @SpaceOgre for:
+  * adding toggles for each individual smartbanner component #280
+  * changing housing to show as a simple difference in the smartbanner #289
+  * fixing a bug that caused Corps to not queue correctly #302
 * @OfekA for providing the improved resource dimming feature in #54
 * @zeyangl for adding new options to the resource dimming feature in #146
 * @Remolten for adding the 2nd highest envoy holder info to the main Citystate screen in #208
 * @bestekov for adding score displays to the diplomacy ribbon in #221
+* @cpinter for speeding up the diplomacy scene fadeout in #277
 * @perseghini for providing the fix for issue #33
 * @benjaminjackman for fixing a hotkey conflict in #127
 * @velit for a UI bugfix in #138
 * @the-m4a for a patch incompatibility bugfix in #181
+* Firaxis for eventually delivering mod tools and steam workshop ;)
 * The lovely folks over at Civfanatics for their guides, knowledge, tools, and resources
 * The even lovelier folks over at /r/civ for their input and testing
