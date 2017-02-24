@@ -989,6 +989,27 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="de_DE">
       <Text>Zeige die Rundenzahl bis zur Grenzausdehnung an.</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON" Language="de_DE">
+      <Text>Smart BürgerIcons</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON_TOOLTIP" Language="de_DE">
+      <Text>Transparenz und Größe der BürgerIcons einstellen</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONALPHA" Language="de_DE">
+      <Text>Smart BürgerIcon Transparenz</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONSIZE" Language="de_DE">
+      <Text>Smart BürgerIcon Größe</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONS_HEADER" Language="de_DE">
+      <Text>BürgerIcons</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONALPHA" Language="de_DE">
+      <Text>BürgerIcon Transparenz</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONSIZE" Language="de_DE">
+      <Text>BürgerIcon Größe</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL" Language="de_DE">
       <Text>Allgemein</Text>
     </Row>
