@@ -4,11 +4,28 @@
   <Properties>
     <Name>Chao's Quick UI</Name>
     <Teaser>CQUI_TEASER</Teaser>
+    <Description>CQUI_TEASER</Description>
     <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek, zeyangl, velit, the-m4a, Frozen-In-Ice, Remolten, bestekov</Authors>
     <SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod + More Lenses mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod. Greg Miller for his Unit Report Screen mod. Lozenged/kblease for his Production Queue mod. ZhouYzzz for providing the Chinese translation of CQUI. Simone1974 for providing the Italian translation of CQUI. e1ectron for providing the Russian translation of CQUI. sejbr for providing the Polish translation of CQUI</SpecialThanks>
     <Stability>CQUI_STABILITY_NIGHTLY</Stability>
   </Properties>
-
+  <Dependencies />
+  <References />
+  <!--Incompatible mods.-->
+  <Blocks>
+    <!-- Divine Yuri's Citypanel mod: Integrated already, doubling up on installed mods is bad! -->
+    <Mod id="37b5fdca-2690-96ff-ea23-d8612ae7a757" title="Divine Yuri's Custom City Panel" />
+    <!-- Next City Plot: Integrated already, doubling up on installed mods is bad! -->
+    <Mod id="37b5fdca-2690-96ff-ea23-d8612ae7a758" title="Next City Plot by Ace" />
+    <!-- Unit Report Screen: Integrated already, doubling up on installed mods is bad! -->
+    <Mod id="4becac48-4a0c-379a-5dd1-33d0c65a471d" title="Unit Report Screen" />
+    <!-- Production Queue: Integrated already, doubling up on installed mods is bad! -->
+    <Mod id="2027E5A2-A48D-E606-031F-141E1196975A" title="Production Queue" />
+    <!-- More Lenses: Integrated already, doubling up on installed mods is bad! -->
+    <Mod id="35f33319-ad93-4d6b-bf27-406fac382d06" title="More Lenses" />
+    <!-- YnAMP: Breaks CQUI for some reason... see issue #207 on the Github tracker and issue #43 on the YnAMP Github tracker for more details -->
+    <Mod id="36e88483-48fe-4545-b85f-bafc50dde315" title="Yet (not) Another Maps Pack" />
+  </Blocks>
   <!-- Modinfo Specific LOC -->
   <LocalizedText>
     <Text id="CQUI_TEASER">
@@ -250,6 +267,11 @@
     </GameplayScripts>
 
     <!-- Mod integrations -->
+    <LocalizedText id="BTS_TEXT">
+      <Items>
+        <File>Integrations/BTS/Text/bts_text.xml</File>
+      </Items>
+    </LocalizedText>
     <ImportFiles id="BTS_IMPORT_FILES">
       <Items>
         <File>Integrations/BTS/UI/tradeoverview.xml</File>
@@ -261,9 +283,9 @@
         <File>Integrations/BTS/UI/Choosers/tradeoriginchooser.lua</File>
       </Items>
     </ImportFiles>
-    <LocalizedText id="BTS_TEXT">
+    <LocalizedText id="UNITREPORT_TEXT">
       <Items>
-        <File>Integrations/BTS/Text/bts_text.xml</File>
+        <File>Integrations/URS/Text/urs_text.xml</File>
       </Items>
     </LocalizedText>
     <ImportFiles id="UNITREPORT_IMPORT_FILES">
@@ -273,11 +295,6 @@
         <File>Integrations/URS/unitpromotionpopup.lua</File>
       </Items>
     </ImportFiles>
-    <LocalizedText id="UNITREPORT_TEXT">
-      <Items>
-        <File>Integrations/URS/Text/urs_text.xml</File>
-      </Items>
-    </LocalizedText>
     <ImportFiles id="MORELENSES_IMPORT_FILES">
       <Items>
         <File>Integrations/ML/UI/minimappanel.lua</File>
@@ -286,31 +303,18 @@
         <File>Integrations/ML/UI/Panels/modallenspanel.xml</File>
       </Items>
     </ImportFiles>
-    <UpdateDatabase id="MORELENSES_DATABASE">
-      <Items>
-        <File>Integrations/ML/morelenses_colors.sql</File>
-      </Items>
-    </UpdateDatabase>
     <LocalizedText id="MORELENSES_TEXT">
       <Items>
         <File>Integrations/ML/Text/morelenses_text.xml</File>
       </Items>
     </LocalizedText>
+    <UpdateDatabase id="MORELENSES_DATABASE">
+      <Items>
+        <File>Integrations/ML/morelenses_colors.sql</File>
+      </Items>
+    </UpdateDatabase>
   </Components>
 
-  <!--Incompatible mods.-->
-  <Blocks>
-    <!-- Divine Yuri's Citypanel mod: Integrated already, doubling up on installed mods is bad! -->
-    <Mod id="37b5fdca-2690-96ff-ea23-d8612ae7a757" title="Divine Yuri's Custom City Panel" />
-    <!-- Next City Plot: Integrated already, doubling up on installed mods is bad! -->
-    <Mod id="37b5fdca-2690-96ff-ea23-d8612ae7a758" title="Next City Plot by Ace" />
-    <!-- Unit Report Screen: Integrated already, doubling up on installed mods is bad! -->
-    <Mod id="4becac48-4a0c-379a-5dd1-33d0c65a471d" title="Unit Report Screen" />
-    <!-- Production Queue: Integrated already, doubling up on installed mods is bad! -->
-    <Mod id="2027E5A2-A48D-E606-031F-141E1196975A" title="Production Queue" />
-    <!-- More Lenses: Integrated already, doubling up on installed mods is bad! -->
-    <Mod id="35f33319-ad93-4d6b-bf27-406fac382d06" title="More Lenses" />
-    <!-- YnAMP: Breaks CQUI for some reason... see issue #207 on the Github tracker and issue #43 on the YnAMP Github tracker for more details -->
-    <Mod id="36e88483-48fe-4545-b85f-bafc50dde315" title="Yet (not) Another Maps Pack" />
-  </Blocks>
+  <Settings />
+
 </Mod>
