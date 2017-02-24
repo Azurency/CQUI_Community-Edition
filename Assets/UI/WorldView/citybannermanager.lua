@@ -1050,7 +1050,6 @@ function CityBanner.UpdateStats( self : CityBanner)
           self.m_Instance.CityPopTurnsLeft:SetHide(true);
         end
       end
-      self.m_Instance.CQUI_SmartbannerStack:ReprocessAnchoring();
 
       local food             :number = pCityGrowth:GetFood();
       local growthThreshold  :number = pCityGrowth:GetGrowthThreshold();
