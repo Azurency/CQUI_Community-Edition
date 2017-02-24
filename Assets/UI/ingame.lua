@@ -52,10 +52,10 @@ end
 -- ===========================================================================
 DefaultMessageHandler[KeyEvents.KeyUp] =
 	function( pInputStruct:table )
-	
+
 		local uiKey = pInputStruct:GetKey();
 
-        if( uiKey == Keys.VK_ESCAPE ) then		
+        if( uiKey == Keys.VK_ESCAPE ) then
 			if( Controls.TopOptionsMenu:IsHidden() ) then
 				OpenInGameOptionsMenu();
 				return true;
@@ -80,19 +80,19 @@ DefaultMessageHandler[KeyEvents.KeyUp] =
 		return false;
 	end
 
-----------------------------------------------------------------        
+----------------------------------------------------------------
 -- LoadGameViewStateDone Event Handler
-----------------------------------------------------------------    
+----------------------------------------------------------------
 function OnLoadGameViewStateDone()
 	-- show HUD elements that relay on the gamecache being fully initialized.
 	if(GameConfiguration.IsNetworkMultiplayer()) then
-		Controls.MultiplayerTurnManager:SetHide(false);  
-	end     
+		Controls.MultiplayerTurnManager:SetHide(false);
+	end
 end
 
-----------------------------------------------------------------        
+----------------------------------------------------------------
 -- Input handling
-----------------------------------------------------------------        
+----------------------------------------------------------------
 function OnInputHandler( pInputStruct )
 	local uiMsg = pInputStruct:GetMessageType();
 
@@ -102,7 +102,7 @@ function OnInputHandler( pInputStruct )
 	return false;
 end
 
-----------------------------------------------------------------        
+----------------------------------------------------------------
 function OnShow()
 	Controls.WorldViewControls:SetHide( false );
 
@@ -127,17 +127,17 @@ end
 -- ===========================================================================
 function BulkHide( isHide:boolean, debugWho:string )
 
-	-- Tracking for debugging:	
+	-- Tracking for debugging:
 	m_bulkHideTracker = m_bulkHideTracker + (isHide and 1 or -1);
 	print("Request to BulkHide( "..tostring(isHide)..", "..debugWho.." ), Show on 0 = "..tostring(m_bulkHideTracker));
-	
+
 	if m_bulkHideTracker < 0 then
 		UI.DataError("Request to bulk show past limit by "..debugWho..". Last bulk shown by "..m_lastBulkHider);
 		m_bulkHideTracker = 0;
 	end
 	m_lastBulkHider = debugWho;
-	
-	-- Do the bulk hiding/showing	
+
+	-- Do the bulk hiding/showing
 	local kGroups:table = {"WorldViewControls", "HUD", "PartialScreens", "Screens", "TopLevelHUD" };
 	for i,group in ipairs(kGroups) do
 		local pContext :table = ContextPtr:LookUpControl("/InGame/"..group);
@@ -166,7 +166,7 @@ function OnInputActionTriggered( actionId )
             return true;
         end
     elseif actionId == m_QuicksaveId then
-        -- Quick save                
+        -- Quick save
         if CanLocalPlayerSaveGame() then
             local gameFile = {};
             gameFile.Name = "quicksave";
@@ -209,7 +209,7 @@ function Initialize()
 	Events.BeginWonderReveal.Add(		OnBeginWonderReveal );
 	Events.EndWonderReveal.Add(			OnEndWonderReveal );
 	Events.LoadGameViewStateDone.Add(	OnLoadGameViewStateDone );
-		
+
     m_PauseId = Input.GetActionId("PauseMenu");
     m_QuicksaveId = Input.GetActionId("QuickSave");
     Events.InputActionTriggered.Add( OnInputActionTriggered );
@@ -227,6 +227,13 @@ function Initialize()
 	LuaEvents.Tutorial_TutorialEndHideBulkUI.Add( OnTutorialEndHide );
 	--CQUI event handling
 	LuaEvents.CQUI_RequestUIAddin.Add(function(request: string, requester: string) LuaEvents.CQUI_PushUIAddIn(CQUI_RequestUIAddin(request), recipient); end); --Responds to an addin request with a PushUIAddIn event containing the requested context. Can return nil
-	
+
+	-- The End Game screen is different for the demo
+	if (UI.HasFeature("Demo")) then
+		ContextPtr:LoadNewContext("EndDemo", Controls.EndGame, true);
+	else
+		ContextPtr:LoadNewContext("EndGameMenu", Controls.EndGame, true);
+	end
+
 end
 Initialize();

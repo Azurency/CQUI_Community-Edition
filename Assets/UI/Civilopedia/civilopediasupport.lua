@@ -36,6 +36,7 @@ local _RightColumnStatIconLabelManager = InstanceManager:new("RightColumnStatIco
 local _RightColumnStatIconNumberLabelManager = InstanceManager:new("RightColumnStatIconNumberLabel", "Root", nil);
 local _RightColumnStatIconListManager = InstanceManager:new("RightColumnStatIconList", "Root", nil);
 
+_HasSection = {};
 _Sections = {};
 _PagesBySection = {};
 _PageGroupsBySection = {};
@@ -55,38 +56,72 @@ local _LastPage = nil;
 --
 -------------------------------------------------------------------------------
 function CacheData_FetchData()
-  -- Cache Sections
+
+  local exclude = {};
+
+  if(GameInfo.CivilopediaSectionExcludes) then
+    for row in GameInfo.CivilopediaSectionExcludes() do
+      exclude[row.SectionId] = true;
+    end
+  end
+
+  if(GameInfo.CivilopediaPageExcludes) then
+    for row in GameInfo.CivilopediaPageExcludes() do
+      exclude[row.SectionId .. "::" .. row.PageId] = true;
+    end
+  end
+     if(GameInfo.CivilopediaPageGroupExcludes) then
+    for row in GameInfo.CivilopediaPageGroupExcludes() do
+      exclude[row.SectionId .. "|:" .. row.PageGroupId] = true;
+    end
+  end
+
+   -- Cache Sections
   if(GameInfo.CivilopediaSections) then
     for row in GameInfo.CivilopediaSections() do
-      local section = {
-        SectionId = row.SectionId,
-        Name = row.Name,
-        Tooltip = row.Tooltip,
-        Icon = row.Icon,
-        SortIndex = row.SortIndex
-      };
-      table.insert(_Sections, section);
+      if(exclude[row.SectionId] ~= true) then
+        local section = {
+          SectionId = row.SectionId,
+          Name = row.Name,
+          Tooltip = row.Tooltip,
+          Icon = row.Icon,
+          SortIndex = row.SortIndex
+        };
+        _HasSection[row.SectionId] = true;
+        table.insert(_Sections, section);
+      end
     end
   end
-  
+
   function AddPage(page)
-    local sectionId = page.SectionId;
-    if(_PagesBySection[sectionId] == nil) then
-      _PagesBySection[sectionId] = {};
+    if( exclude[page.SectionId] ~= true and
+      exclude[page.SectionId .. "::" .. page.PageId] ~= true and
+      (page.PageGroupId == nil or exclude[page.SectionId .. "|:" .. page.PageGroupId] ~= true)) then
+      local sectionId = page.SectionId;
+      if(_HasSection[sectionId]) then
+        if(_PagesBySection[sectionId] == nil) then
+          _PagesBySection[sectionId] = {};
+        end
+
+       table.insert(_PagesBySection[sectionId], page);
+      end
     end
-      
-    table.insert(_PagesBySection[sectionId], page);
   end
-  
+
   function AddPageGroup(page_group)
-    local sectionId = page_group.SectionId;
-    if(_PageGroupsBySection[sectionId] == nil) then
-      _PageGroupsBySection[sectionId] = {};
+    if( exclude[page_group.SectionId] ~= true and
+      (page_group.PageGroupId == nil or exclude[page_group.SectionId .. "|:" .. page_group.PageGroupId] ~= true)) then
+      local sectionId = page_group.SectionId;
+      if(_HasSection[sectionId]) then
+        if(_PageGroupsBySection[sectionId] == nil) then
+          _PageGroupsBySection[sectionId] = {};
+        end
+
+        table.insert(_PageGroupsBySection[sectionId], page_group);
+      end
     end
-      
-    table.insert(_PageGroupsBySection[sectionId], page_group);
   end
-  
+
   -- Cache PageGroups and Pages.
   if(GameInfo.CivilopediaPageGroups) then
     for row in GameInfo.CivilopediaPageGroups() do
@@ -103,7 +138,7 @@ function CacheData_FetchData()
   end
 
   if(GameInfo.CivilopediaPages) then
-    for row in GameInfo.CivilopediaPages() do 
+    for row in GameInfo.CivilopediaPages() do
       local page = {
         SectionId = row.SectionId,
         PageId = row.PageId,
@@ -116,7 +151,7 @@ function CacheData_FetchData()
       AddPage(page);
     end
   end
-  
+
   if(GameInfo.CivilopediaPageGroupQueries) then
     for q in GameInfo.CivilopediaPageGroupQueries() do
       for i, row in ipairs(DB.Query(q.SQL)) do
@@ -134,7 +169,7 @@ function CacheData_FetchData()
   end
 
   if(GameInfo.CivilopediaPageQueries) then
-    for q in GameInfo.CivilopediaPageQueries() do          
+    for q in GameInfo.CivilopediaPageQueries() do
       for i, row in ipairs(DB.Query(q.SQL)) do
         local page = {
           SectionId = q.SectionId,
@@ -149,7 +184,7 @@ function CacheData_FetchData()
       end
     end
   end
-  
+
   -- Cache Chapters
   if(GameInfo.CivilopediaPageLayoutChapters) then
     for q in GameInfo.CivilopediaPageLayoutChapters() do
@@ -158,19 +193,19 @@ function CacheData_FetchData()
         ChapterId = q.ChapterId,
         SortIndex = q.SortIndex,
       }
-      
+
       if(_ChaptersByPageLayout[q.PageLayoutId] == nil) then
         _ChaptersByPageLayout[q.PageLayoutId] = {};
       end
       table.insert(_ChaptersByPageLayout[q.PageLayoutId], page_layout);
-    end             
+    end
   end
-  
+
   -- Cache Layouts
   if(GameInfo.CivilopediaPageLayouts) then
     for q in GameInfo.CivilopediaPageLayouts() do
       _PageLayoutScriptTemplates[q.PageLayoutId] = q.ScriptTemplate;
-    end    
+    end
   end
 end
 
@@ -181,46 +216,46 @@ end
 function CacheData_ProcessData()
   for i, section in ipairs(_Sections) do
     local sectionId = section.SectionId;
-    local tab_key = FindSectionTextKey(sectionId, "TAB_NAME");          
-    
+    local tab_key = FindSectionTextKey(sectionId, "TAB_NAME");
+
     tab_key = tab_key or section.Name;
     tab_key = tab_key or section.PageId;
-    
+
     section.TabName = Locale.Lookup(tab_key);
   end
 
    -- Populate Additional Data
   for sectionId, pages in pairs(_PagesBySection) do
     for i, page in ipairs(pages) do
-      
+
       local sectionId = page.SectionId;
       local pageId = page.PageId;
-      
-      local tab_key = FindPageTextKey(sectionId, pageId, "TAB_NAME");          
+
+      local tab_key = FindPageTextKey(sectionId, pageId, "TAB_NAME");
       local title_key = FindPageTextKey(sectionId, pageId, "TITLE");
       local subtitle_key = FindPageTextKey(sectionId, pageId, "SUBTITLE");
-      
+
       tab_key = tab_key or page.Name;
       tab_key = tab_key or page.PageId;
-           
+
       title_key = title_key or page.Name;
       title_key = title_key or page.PageId;
-      
+
       page.TabName = Locale.Lookup(tab_key);
       page.Title = Locale.Lookup(title_key);
-            
+
       if(subtitle_key) then
         page.SubTitle = Locale.Lookup(subtitle_key);
       end
     end
   end
-  
+
   for sectionId, groups in pairs(_PageGroupsBySection) do
     for i, group in ipairs(groups) do
-      local tab_key = FindPageTextKey(sectionId, group.PageGroupId, "TAB_NAME");          
+      local tab_key = FindPageTextKey(sectionId, group.PageGroupId, "TAB_NAME");
       tab_key = tab_key or group.Name;
       tab_key = tab_key or group.PageGroupId;
-           
+
       group.TabName = Locale.Lookup(tab_key);
     end
   end
@@ -231,7 +266,7 @@ end
 --
 -------------------------------------------------------------------------------
 function CacheData_SortData()
-  -- Sort Cached Data    
+  -- Sort Cached Data
   function SortNumberOrNil(a, b)
     if(a == nil and b ~= nil) then
       return true;
@@ -241,7 +276,7 @@ function CacheData_SortData()
       return a < b;
     end
   end
-  
+
   function SortPageGroups(a, b)
     if(a == nil and b ~= nil) then
       return true;
@@ -250,10 +285,10 @@ function CacheData_SortData()
     elseif(a.SortIndex ~= b.SortIndex) then
       return SortNumberOrNil(a.SortIndex, b.SortIndex);
     else
-       return Locale.Compare(a.TabName, b.TabName) == -1;    
+       return Locale.Compare(a.TabName, b.TabName) == -1;
     end
   end
-  
+
   -- Sort pages
   function SortPages(sectionId, a, b)
     if(a.PageGroupId ~= b.PageGroupId) then
@@ -269,23 +304,23 @@ function CacheData_SortData()
           bGroup = group;
         end
       end
-    
+
       return SortPageGroups(aGroup, bGroup);
     elseif(a.SortIndex ~= b.SortIndex) then
       return SortNumberOrNil(a.SortIndex, b.SortIndex);
-    else 
-      return Locale.Compare(a.TabName, b.TabName) == -1;        
+    else
+      return Locale.Compare(a.TabName, b.TabName) == -1;
     end
-  
+
   end
-  
+
     -- Sort sections.
   table.sort(_Sections, function(a, b) return SortNumberOrNil(a.SortIndex,b.SortIndex); end);
-  
+
   for sectionId, v in pairs(_PagesBySection) do
     table.sort(v, function(a, b) return SortPages(sectionId, a, b); end);
   end
-  
+
    -- Sort chapters.
   for _, v in pairs(_ChaptersByPageLayout) do
     table.sort(v, function(a, b) return SortNumberOrNil(a.SortIndex,b.SortIndex); end);
@@ -294,16 +329,17 @@ end
 
 
 -------------------------------------------------------------------------------
--- Caches all data from the database.  This need only be called once at 
+-- Caches all data from the database.  This need only be called once at
 -- initialization time.
 -------------------------------------------------------------------------------
 function CacheData()
+  _HasSection = {};
   _Sections = {};
   _PagesBySection = {};
   _PageGroupsBySection = {};
   _ChaptersByPageLayout = {};
   _PageLayoutScriptTemplates ={};
-  
+
   CacheData_FetchData();
   CacheData_ProcessData();
   CacheData_SortData();
@@ -326,7 +362,7 @@ function PopulateSearchData()
     Search.Optimize(searchContext);
   end
 end
-     
+
 -------------------------------------------------------------------------------
 -- Returns left-to-right list of sections w/ information.
 -- Returns [SectionId, Name, Tooltip, Icon]
@@ -341,7 +377,7 @@ end
 -- Returns [PageGroupId, PageId, Name, ToolTip]
 -- NOTE: If PageId is nil, then this is a group separator.
 -------------------------------------------------------------------------------
-function GetPages(SectionId)   
+function GetPages(SectionId)
   return _PagesBySection[SectionId];
 end
 
@@ -360,7 +396,7 @@ end
 
 
 -------------------------------------------------------------------------------
--- Returns the first page group structure with the specified section id and 
+-- Returns the first page group structure with the specified section id and
 -- page group id.
 -------------------------------------------------------------------------------
 function GetPageGroup(SectionId, PageGroupId)
@@ -401,7 +437,7 @@ function GetChapterBody(SectionId, PageId, ChapterId)
   if(body_key ~= nil) then
     return {body_key};
   end
-  
+
   local keys = {};
   local i = 1;
   repeat
@@ -410,9 +446,9 @@ function GetChapterBody(SectionId, PageId, ChapterId)
       table.insert(keys, key);
     end
     i = i + 1;
-    
+
   until(key == nil);
-  
+
   if(#keys > 0) then
     return keys;
   end
@@ -426,7 +462,7 @@ function FindSectionTextKey(SectionId, Tag)
   local keys = {
     "LOC_PEDIA_" .. SectionId .. "_" .. Tag,
   };
-  
+
   for i, key in ipairs(keys) do
     if(Locale.HasTextKey(key)) then
       return key;
@@ -443,7 +479,7 @@ function FindPageTextKey(SectionId, PageId, Tag)
     "LOC_PEDIA_" .. SectionId .. "_PAGE_" .. PageId .. "_" .. Tag,
     "LOC_PEDIA_PAGE_" .. PageId .. "_" .. Tag,
   };
-  
+
   for i, key in ipairs(keys) do
     if(Locale.HasTextKey(key)) then
       return key;
@@ -453,7 +489,7 @@ end
 
 
 -------------------------------------------------------------------------------
--- Returns the first found text key that conforms to the chapter search 
+-- Returns the first found text key that conforms to the chapter search
 -- patterns.
 -------------------------------------------------------------------------------
 function FindChapterTextKey(SectionId, PageId, ChapterId, Tag)
@@ -463,7 +499,7 @@ function FindChapterTextKey(SectionId, PageId, ChapterId, Tag)
       "LOC_PEDIA_" .. SectionId .. "_PAGE_CHAPTER_" .. ChapterId .. "_" .. Tag,
       "LOC_PEDIA_" .. "PAGE_CHAPTER_" .. ChapterId .. "_" .. Tag,
     };
-    
+
     for i, key in ipairs(keys) do
       if(Locale.HasTextKey(key)) then
         return key;
@@ -492,12 +528,12 @@ function RefreshSections()
   local sections = GetSections();
   for i, section in ipairs(sections) do
     local instance = _SectionTabManager:GetInstance();
-    
+
     local sectionId = section.SectionId;
     local pageId = GetPages(sectionId)[1].PageId;
 
     section.Instance = instance;
-    
+
     instance.CivilopediaSectionTabButton:SetToolTipString(section.TabName);
         instance.CivilopediaSectionTabButton:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
     instance.Icon:SetIcon(section.Icon);
@@ -524,9 +560,9 @@ end
 function RefreshPageTabs(SectionId, resetScroll)
   _PageTabManager:ResetInstances();
   local pages = GetPages(SectionId);
-  
+
   local previousPageGroupId;
-  
+
   local group;
   for i, page in ipairs(pages) do
     if(page.PageGroupId ~= previousPageGroupId) then
@@ -536,7 +572,7 @@ function RefreshPageTabs(SectionId, resetScroll)
         group.Tab = instance;
         local g = group;
         instance.Caption:LocalizeAndSetText(group.TabName);
-        instance.Button:SetSelected(false);       
+        instance.Button:SetSelected(false);
         instance.Button:SetDisabled(false);
 
         instance.Header:SetHide(false);
@@ -554,12 +590,12 @@ function RefreshPageTabs(SectionId, resetScroll)
 
       end
     end
-    
+
     if(not group or not group.Collapsed) then
       local instance = _PageTabManager:GetInstance();
       local pageId = page.PageId;
       page.Tab = instance;
-      instance.Caption:LocalizeAndSetText(page.TabName);       
+      instance.Caption:LocalizeAndSetText(page.TabName);
       instance.Header:SetHide(true);
       instance.Expand:SetHide(true);
             instance.Button:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
@@ -567,7 +603,7 @@ function RefreshPageTabs(SectionId, resetScroll)
         instance.Button:RegisterCallback(Mouse.eLClick, function()
           NavigateTo(SectionId, pageId);
         end);
-        instance.Button:SetSelected(false);       
+        instance.Button:SetSelected(false);
         instance.Button:SetDisabled(false);
       else
         instance.Button:ClearCallback(Mouse.eLClick);
@@ -575,10 +611,10 @@ function RefreshPageTabs(SectionId, resetScroll)
 
         instance.Button:SetDisabled(true);
         instance.Button:SetVisState(2);
-      end   
+      end
     end
   end
-  
+
   Controls.CivilopediaPageTabStack:CalculateSize();
   Controls.CivilopediaPageTabStack:ReprocessAnchoring();
   Controls.PageScrollPanel:CalculateInternalSize();
@@ -593,19 +629,19 @@ end
 --
 -------------------------------------------------------------------------------
 function RefreshPageContent(page)
-  
+
   -- Clean the page
   ResetPageContent();
-  
+
   local layoutId = page.PageLayoutId;
   local template = _PageLayoutScriptTemplates[layoutId]
-  
+
   -- Draw the page
   local view = PageLayouts[template];
   if(view) then
     view(page);
   end
-  
+
   -- Reset the stuff we know about.
   Controls.LeftColumnStack:CalculateSize();
   Controls.LeftColumnStack:ReprocessAnchoring();
@@ -616,7 +652,7 @@ function RefreshPageContent(page)
   Controls.RightColumn:SetSizeY(Controls.RightColumnStack:GetSizeY());
 
   Controls.TwoColumn:SetSizeY(math.max(Controls.LeftColumn:GetSizeY(), Controls.RightColumn:GetSizeY()));
-  
+
   Controls.PageChaptersStack:CalculateSize();
   Controls.PageChaptersStack:ReprocessAnchoring();
   Controls.PageContentStack:CalculateSize();
@@ -667,11 +703,11 @@ end
 -- Returns [SectionId, PageId]
 -------------------------------------------------------------------------------
 function CivilopediaSearch(term, max_results)
-  
+
   local results = {};
-  
+
   local sections = GetSections();
-  
+
   -- If the search term matches a specific page id, return that section/page.
   -- If the search term matches a specific section id, return the first page
   -- in that section.
@@ -725,7 +761,7 @@ function NavigateTo(SectionId, PageId)
   local prevPageId = _CurrentPageId;
 
   _CurrentSectionId = SectionId;
-  _CurrentPageId = PageId;   
+  _CurrentPageId = PageId;
 
   RefreshSections();
   RefreshPageTabs(SectionId, (SectionId ~= prevSectionId));
@@ -740,7 +776,7 @@ function NavigateTo(SectionId, PageId)
         SaveCurrentPage();
         RefreshPageContent(page);
       end
-    end  
+    end
   end
 end
 
@@ -792,7 +828,7 @@ function OnOpenCivilopedia(sectionId_or_search, pageId)
     NavigateTo(page.SectionId, page.PageId);
   end
 
-  UIManager:QueuePopup(ContextPtr, PopupPriority.Current);  
+  UIManager:QueuePopup(ContextPtr, PopupPriority.Current);
   UI.PlaySound("Civilopedia_Open");
   Controls.SearchEditBox:TakeFocus();
 end
@@ -815,7 +851,7 @@ end
 -- ===========================================================================
 function OnInputActionTriggered( actionId )
   if (actionId == m_OpenPediaId) then
-    if(ContextPtr:IsHidden()) then 
+    if(ContextPtr:IsHidden()) then
       OnOpenCivilopedia();
     else
       OnClose();
@@ -842,18 +878,18 @@ function OnSearchCharCallback()
           -- v[2] Page Name
           -- v[3] Page Content (NYI)
           local instance = _SearchResultsManager:GetInstance();
-          
+
           local sectionId, pageId = string.match(v[1], "([^|]+)|([^|]+)");
-          
+
           -- Search results already localized.
-          instance.Name:SetText(v[2]);  
-          instance.Button:RegisterCallback(Mouse.eLClick, function() 
+          instance.Name:SetText(v[2]);
+          instance.Button:RegisterCallback(Mouse.eLClick, function()
             Controls.SearchResultsPanelContainer:SetHide(true);
-            NavigateTo(sectionId, pageId);  
+            NavigateTo(sectionId, pageId);
             _SearchQuery = nil;
           end );
 
-          
+
           has_found[v[1]] = true;
         end
       end
@@ -892,7 +928,7 @@ function Initialize()
   Controls.WindowCloseButton:RegisterCallback(Mouse.eLClick, OnClose);
   Controls.WindowCloseButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   LuaEvents.OpenCivilopedia.Add(OnOpenCivilopedia);
-  
+
   -- Hotkey support
   ContextPtr:SetInputHandler( OnInputHandler, true );
   m_OpenPediaId = Input.GetActionId("OpenCivilopedia");
@@ -913,39 +949,39 @@ end
 -- Layout Utility Methods
 -------------------------------------------------------------------------------------
 function Do_AddChapterWithParagraphs(chapter_manager, chapter_para_manager, header, paragraphs)
-  if(header ~= nil and paragraphs ~= nil) then     
+  if(header ~= nil and paragraphs ~= nil) then
     local t = type(paragraphs);
-    if(t == "table" and #t > 0) then   
-      local instance = chapter_manager:GetInstance();       
+    if(t == "table" and #t > 0) then
+      local instance = chapter_manager:GetInstance();
       instance.Caption:LocalizeAndSetText(header);
-      
+
       for _, para in ipairs(paragraphs) do
         local para_instance = chapter_para_manager:GetInstance();
         para_instance.Paragraph:LocalizeAndSetText(para);
       end
     elseif(t == "string") then
-      local instance = chapter_manager:GetInstance();       
+      local instance = chapter_manager:GetInstance();
       instance.Caption:LocalizeAndSetText(header);
 
       local para_instance = chapter_para_manager:GetInstance();
       para_instance.Paragraph:LocalizeAndSetText(paragraphs);
     end
-  end     
+  end
 end
 
 function Do_AddHeader(manager, caption)
-  local c = manager:GetInstance();       
+  local c = manager:GetInstance();
   c.Caption:LocalizeAndSetText(caption);
 end
 
 function Do_AddParagraph(manager, paragraph)
-  local c = manager:GetInstance();       
+  local c = manager:GetInstance();
   c.Paragraph:LocalizeAndSetText(paragraph);
 end
 
 function Do_AddParagraphs(manager, paragraphs)
   local t = type(paragraphs);
-  if(t == "table" and #t > 0) then   
+  if(t == "table" and #t > 0) then
     for _, para in ipairs(paragraphs) do
       Do_AddParagraph(manager, para);
     end
@@ -956,7 +992,7 @@ end
 
 function Do_AddHeaderBody(manager, header, body)
   local c = manager:GetInstance();
-  
+
   if(header ~= nil) then
     c.Header:LocalizeAndSetText(header);
     c.Header:SetHide(false);
@@ -973,13 +1009,13 @@ function Do_AddHeaderBody(manager, header, body)
 
   c.TextStack:CalculateSize();
   c.TextStack:ReprocessAnchoring();
-  
+
   c.Root:SetSizeY(c.TextStack:GetSizeY());
 end
 
 function Do_AddIconHeaderBody(manager, icon, header, body)
   local c = manager:GetInstance();
-  
+
   HookupIcon(icon, c.Icon, c.Button);
 
   if(header ~= nil) then
@@ -1222,8 +1258,8 @@ function AddQuote(quote, audio)
 
     if(audio and #audio > 0) then
       instance.PlayQuote:SetHide(false);
-      
-      instance.PlayQuote:RegisterCallback(Mouse.eLClick, function() 
+
+      instance.PlayQuote:RegisterCallback(Mouse.eLClick, function()
         UI.PlaySound(audio);
       end);
     else
@@ -1378,7 +1414,7 @@ function AddRightColumnStatBox(title, populate_method)
   instance.Content:CalculateSize();
   instance.Content:ReprocessAnchoring();
 
-  -- Explicitly pad the height. 
+  -- Explicitly pad the height.
   -- This could be done via auto-size but at the moment auto-size handles both width and height and we need the width to remain fixed.
   local new_height = instance.Content:GetSizeY() + 15;
   instance.Root:SetSizeY(new_height);

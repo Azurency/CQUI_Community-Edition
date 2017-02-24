@@ -79,6 +79,7 @@ local cityRangedAttackTip     :string = Locale.Lookup("LOC_ACTION_PANEL_CITY_RAN
 local yourTurnToolStr       :string = Locale.Lookup("LOC_KEY_YOUR_TURN_TIME_TOOLTIP");
 local estTilTurnToolStr       :string = Locale.Lookup("LOC_KEY_ESTIMATED_TIME_TIL_YOUR_TURN_TIME_TOOLTIP");
 local estTimeElapsedToolStr     :string = Locale.Lookup("LOC_KEY_ESTIMATED_TIME_ELAPSED_TOOLTIP");
+local canUnreadyTurnTip       :string = Locale.Lookup("LOC_ACTION_PANEL_CAN_UNREADY_TOOLTIP");
 
 -- ===========================================================================
 local m_kMessageInfo :table = {};
@@ -132,7 +133,7 @@ function OnRefresh()
   end
 
   Controls.EndTurnButton:SetDisabled( false );
-  Controls.EndTurnButtonLabel:SetDisabled( false ); 
+  Controls.EndTurnButtonLabel:SetDisabled( false );
 
   if not pPlayer:IsTurnActiveComplete() or UI.IsProcessingMessages() then
     SetEndTurnWaiting();
@@ -189,6 +190,7 @@ function OnRefresh()
     -- Special "City Ranged Attack" state for when there are no end turn blockers but
     -- there is a city can that perform a ranged attack in 'auto end turn mode'.
     message     = cityRangedAttackString;
+    icon            = "ICON_NOTIFICATION_CITY_RANGED_STRIKE";
     toolTipString = cityRangedAttackTip;
     iFlashingState  = FLASHING_END_TURN;
   else
@@ -650,7 +652,7 @@ function SetEndTurnWaiting()
       local pPlayer:table = Players[iPlayer];
       local pPlayerConfig = PlayerConfigurations[iPlayer];
       if(pPlayerConfig ~= nil) then
-        local playerName = pPlayerConfig:GetPlayerName();
+        local playerName = Locale.Lookup(pPlayerConfig:GetPlayerName());
 
         if GameConfiguration.IsAnyMultiplayer() and pPlayer:IsHuman() then
           if(iPlayer ~= iActivePlayer and not Players[iActivePlayer]:GetDiplomacy():HasMet(iPlayer)) then
@@ -671,6 +673,12 @@ function SetEndTurnWaiting()
         end
       end
     end
+  end
+
+  -- If players can unready their turn, indicate that in the tooltip.
+  local pLocalPlayer = Players[Game.GetLocalPlayer()];
+  if (pLocalPlayer ~= nil and pLocalPlayer:CanUnreadyTurn()) then
+    endButtonTooltip = endButtonTooltip .. "[NEWLINE]" .. canUnreadyTurnTip;
   end
 
   Controls.CurrentTurnBlockerIcon:SetHide(true);
@@ -895,7 +903,7 @@ end
 
 -- ===========================================================================
 --  LUA Event
---  An additional input shield to prevent click-spamming which, can 
+--  An additional input shield to prevent click-spamming which, can
 --  potentially skip to the next item before the tutorial manager has sent
 --  the event to it's handler.
 -- ===========================================================================
@@ -1083,7 +1091,7 @@ function Initialize()
 
   -- Engine Events
   Events.CityCommandStarted.Add(      OnCityCommandStarted);
-  Events.CityProductionChanged.Add(   OnCityProductionChanged );  
+  Events.CityProductionChanged.Add(   OnCityProductionChanged );
   Events.EndTurnBlockingChanged.Add(    OnEndTurnBlockingChanged );
   Events.EndTurnDirty.Add(        OnEndTurnDirty );
   Events.InputActionTriggered.Add(    OnInputActionTriggered );
@@ -1098,12 +1106,12 @@ function Initialize()
   Events.TurnTimerUpdated.Add(      OnTurnTimerUpdated );
   Events.UnitOperationSegmentComplete.Add(OnUnitOperationSegmentComplete);
   Events.UnitOperationsCleared.Add(   OnUnitOperationsCleared);
-  Events.UserOptionChanged.Add(     OnUserOptionChanged); 
+  Events.UserOptionChanged.Add(     OnUserOptionChanged);
 
 
   -- LUA Events
   LuaEvents.AutoPlayStart.Add(        OnAutoPlayStart );    -- Raised by engine AutoPlay_Manager!
-  LuaEvents.AutoPlayEnd.Add(          OnAutoPlayEnd );    -- Raised by engine AutoPlay_Manager! 
+  LuaEvents.AutoPlayEnd.Add(          OnAutoPlayEnd );    -- Raised by engine AutoPlay_Manager!
   LuaEvents.Tutorial_SlowNextTurnEnable.Add(  OnTutorialSlowTurnEnable );
 end
 Initialize();

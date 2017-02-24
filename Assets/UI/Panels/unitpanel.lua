@@ -391,7 +391,20 @@ function GetUnitActionsTable( pUnit )
           local bCanStartNow, tResults = UnitManager.CanStartCommand( pUnit, actionHash, false, true);
           local bDisabled = not bCanStartNow;
           local toolTipString:string;
-          if (actionHash == UnitCommandTypes.FORM_CORPS) then
+          if (actionHash == UnitCommandTypes.UPGRADE) then
+            -- if it's a unit upgrade action, add the unit it will upgrade to in the tooltip as well as the upgrade cost
+            if (tResults ~= nil) then
+              if (tResults[UnitCommandResults.UNIT_TYPE] ~= nil) then
+                local upgradeUnitName = GameInfo.Units[tResults[UnitCommandResults.UNIT_TYPE]].Name;
+                toolTipString = Locale.Lookup(upgradeUnitName);
+                local upgradeCost = pUnit:GetUpgradeCost();
+                if (upgradeCost ~= nil) then
+                  toolTipString = toolTipString .. ": " .. upgradeCost .. " " .. Locale.Lookup("LOC_TOP_PANEL_GOLD");
+                end
+                toolTipString = Locale.Lookup("LOC_UNITOPERATION_UPGRADE_INFO", upgradeUnitName, upgradeCost);
+              end
+            end
+          elseif (actionHash == UnitCommandTypes.FORM_CORPS) then
             if (GameInfo.Units[unitType].Domain == "DOMAIN_SEA") then
               toolTipString = Locale.Lookup("LOC_UNITCOMMAND_FORM_FLEET_DESCRIPTION");
             else
@@ -570,24 +583,6 @@ function GetUnitActionsTable( pUnit )
             bCanStart, tResults = UnitManager.CanStartOperation(pUnit, actionHash, nil, false, true);
             local bDisabled = not bCanStart;
             local toolTipString = Locale.Lookup(operationRow.Description);
-
-            -- if it's a unit upgrade action, add the unit it will upgrade to in the tooltip as well as the upgrade cost
-            if (actionHash == UnitOperationTypes.UPGRADE) then
-              if (tResults ~= nil) then
-                if (tResults[UnitOperationResults.UNIT_TYPE] ~= nil) then
-                  local upgradeUnitName = GameInfo.Units[tResults[UnitOperationResults.UNIT_TYPE]].Name;
-                  toolTipString = toolTipString .. " " .. Locale.Lookup(upgradeUnitName);
-
-                  local upgradeCost = pUnit:GetUpgradeCost();
-                  if (upgradeCost ~= nil) then
-                    toolTipString = toolTipString .. ": " .. upgradeCost .. " " .. Locale.Lookup("LOC_TOP_PANEL_GOLD");
-                  end
-
-                  toolTipString = Locale.Lookup("LOC_UNITOPERATION_UPGRADE_INFO", upgradeUnitName, upgradeCost);
-                end
-              end
-
-            end
 
             if (tResults ~= nil) then
               if (tResults[UnitOperationResults.ACTION_NAME] ~= nil and tResults[UnitOperationResults.ACTION_NAME] ~= "") then

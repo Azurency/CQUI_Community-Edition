@@ -2,7 +2,7 @@
 <Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd">
 
 	<AlphaAnim ID="ChatIndicatorWaitTimer" Cycle="Once" Speed="0.5" AlphaBegin="0.0" AlphaEnd="1.0" Stopped="1"/>
-	
+
   <Container ID="RibbonContainer" Size="500,150" Anchor="R,T" Offset="0,27" AutoSize="H">
     <ScrollPanel ID="LeaderBGClip" Anchor="R,T" Size="full,80" Disabled="1" Offset="-20,5" FullClip="1">
       <Grid ID="LeaderBG" Anchor="R,T" Size="500,100" Style="DropShadow2" Offset="0,-30" Color="255,255,255,150"/>
@@ -15,11 +15,11 @@
       <Container ID="PreviousButtonContainer" Offset="-32,-45" Size="40,37" Anchor="L,B" AnchorSide="O,O">
         <Image Texture="DiploRibbon_Separator" Size="62,34" Offset="-22,-29"/>
         <Image     Texture="ActionPanel_Badge" Size="40,37" FlipX="1">
-          <Button ID="PreviousButton" Anchor="L,B" Offset="4,2" Style="ArrowButtonLeft"/>        
+          <Button ID="PreviousButton" Anchor="L,B" Offset="4,2" Style="ArrowButtonLeft"/>
         </Image>
       </Container>
     </ScrollPanel>
-	  
+
 	<Tutorial   			ID="TutDiploRibbon"	Style="TutorialContainer"	Offset="80,90" Anchor="R,T" TriggerBy="TutorialDiploRibbon">
 		<SlideAnim				Anchor="R,T" Start="0,0"	EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" >
 			<Image				Offset="0,0"	Size="44,58"		Texture="Tutorial_ArrowV" FlipY="1" />
@@ -35,7 +35,7 @@
 			<Image				Offset="0,0"	Size="58,44"		Texture="Tutorial_ArrowH" />
 		</SlideAnim>
 	</Tutorial>
-	  
+
   </Container>
 
   <!-- ==================================================================	-->
@@ -49,6 +49,7 @@
               <Image Texture="Controls_CircleBacking45" Size="51,51" Anchor="C,C" Offset="0,1"/>
               <Image Anchor="C,C" ID="YouIndicator" Hidden="1" Size="55,53" Texture="Diplomacy_YouIndicator45"/>
               <Image ID="Portrait" Anchor="C,C" Size="45,45" Texture="Leaders45" />
+              <Image ID="TeamRibbon" Anchor="C,B" Offset="0,-8" Texture="TeamRibbon53" Size="53,53"/>
               <Button ID="Relationship" StretchMode="None" Style="DiplomacyRelationshipPips" Anchor="L,B" Disabled="1" ConsumeMouse="0"/>
             </Button>
             <Label  ID="CQUI_ScoreOverall"                Anchor="L,B" Offset="0,0"     Style="CityPanelNumSmall"   String="-" />
@@ -64,5 +65,5 @@
         </Grid>
       </SlideAnim>
   </Instance>
-  
+
 </Context>

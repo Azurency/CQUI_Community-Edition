@@ -843,7 +843,7 @@ function UnitFlag.UpdateName( self )
 		local pPlayerCfg = PlayerConfigurations[ self.m_Player:GetID() ];
 		local nameString : string;
 		if(GameConfiguration.IsAnyMultiplayer() and pPlayerCfg:IsHuman()) then
-			nameString = Locale.Lookup( pPlayerCfg:GetCivilizationShortDescription() ) .. " (" .. pPlayerCfg:GetPlayerName() .. ") - " .. Locale.Lookup( unitName );
+			nameString = Locale.Lookup( pPlayerCfg:GetCivilizationShortDescription() ) .. " (" .. Locale.Lookup(pPlayerCfg:GetPlayerName()) .. ") - " .. Locale.Lookup( unitName );
 		else
 			nameString = Locale.Lookup( pPlayerCfg:GetCivilizationShortDescription() ) .. " - " .. Locale.Lookup( unitName );
 		end

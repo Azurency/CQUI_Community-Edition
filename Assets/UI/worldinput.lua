@@ -30,6 +30,7 @@ local m_isDebuging        :boolean = false; -- Turn on local debug systems
 local INTERFACEMODE_ENTER   :string = "InterfaceModeEnter";
 local INTERFACEMODE_LEAVE   :string = "InterfaceModeLeave";
 local NORMALIZED_DRAG_THRESHOLD :number = 0.035;      -- How much movement to kick off a drag
+local NORMALIZED_DRAG_THRESHOLD_SQR :number = NORMALIZED_DRAG_THRESHOLD*NORMALIZED_DRAG_THRESHOLD;
 local MOUSE_SCALAR        :number = 6.0;
 local PAN_SPEED         :number = 1;
 local ZOOM_SPEED        :number = 0.1;
@@ -83,6 +84,7 @@ local DefaultMessageHandler   :table  = {};
 local m_actionHotkeyToggleGrid  :number = Input.GetActionId("ToggleGrid");    --  Hot Key Handling
 local m_actionHotkeyOnlinePause :number = Input.GetActionId("OnlinePause");   --  Hot Key Handling
 local m_actionHotkeyToggleYield :number = Input.GetActionId("ToggleYield");   --  Hot Key Handling
+local m_actionHotkeyToggleRes :number = Input.GetActionId("ToggleResources"); --  Hot Key Handling
 local m_actionHotkeyPrevUnit  :number = Input.GetActionId("PrevUnit");    --  Hot Key Handling
 local m_actionHotkeyNextUnit  :number = Input.GetActionId("NextUnit");    --  Hot Key Handling
 local m_actionHotkeyPrevCity  :number = Input.GetActionId("PrevCity");    --  Hot Key Handling
@@ -387,10 +389,12 @@ end
 --  RETURNS: true if a drag is occurring.
 -- ===========================================================================
 function IsDragThreshholdMet()
-  local normalizedX   :number, normalizedY:number = UIManager:GetNormalizedMousePos();
-  return
-    math.abs(normalizedX - m_dragStartX) > NORMALIZED_DRAG_THRESHOLD or
-    math.abs(normalizedY - m_dragStartY) > NORMALIZED_DRAG_THRESHOLD;
+  local normalizedX:number, normalizedY:number = UIManager:GetNormalizedMousePos();
+
+  local diffX:number = normalizedX - m_dragStartX;
+  local diffY:number = normalizedY - m_dragStartY;
+
+  return ( diffX*diffX + diffY*diffY) > NORMALIZED_DRAG_THRESHOLD_SQR;
 end
 
 -- ===========================================================================
@@ -403,6 +407,16 @@ function ReadyForDragMap()
   m_dragX = m_dragStartX;
   m_dragY = m_dragStartY;
   LuaEvents.WorldInput_DragMapBegin();
+end
+
+function StartDragMap()
+
+  --Don't override m_dragStartX/Y because it is used in rotation, and we ony
+  local dragStartX:number, dragStartY:number = UIManager:GetNormalizedMousePos();
+  m_dragStartFocusWorldX, m_dragStartFocusWorldY  = UI.GetMapLookAtWorldTarget();
+  m_dragStartWorldX, m_dragStartWorldY      = UI.GetWorldFromNormalizedScreenPos_NoWrap( dragStartX, dragStartY );
+  m_dragX = dragStartX;
+  m_dragY = dragStartY;
 end
 
 -- ===========================================================================
@@ -1338,7 +1352,10 @@ function OnMouseSelectionMove( pInputStruct:table )
       -- A mouse button is down but isn't currently marked for "dragging",
       -- do some maths to see if this is actually a drag state.
       if not m_isMouseDragging then
-        m_isMouseDragging = IsDragThreshholdMet();
+        if IsDragThreshholdMet() then
+          m_isMouseDragging = true;
+          StartDragMap();
+        end
       end
     end
 
@@ -1400,7 +1417,10 @@ function OnMouseMove( pInputStruct:table )
     if m_isMouseButtonLDown then
       -- A mouse button is down but isn't currently marked for "dragging".
       if not m_isMouseDragging then
-        m_isMouseDragging = IsDragThreshholdMet();
+        if IsDragThreshholdMet() then
+          m_isMouseDragging = true;
+          StartDragMap();
+        end
       end
     end
   end
@@ -1652,7 +1672,10 @@ function OnMouseMoveToUpdate( pInputStruct:table )
         -- A mouse button is down but isn't currently marked for "dragging",
         -- do some maths to see if this is actually a drag state.
         if not m_isMouseDragging then
-          m_isMouseDragging = IsDragThreshholdMet();
+          if IsDragThreshholdMet() then
+            m_isMouseDragging = true;
+            StartDragMap();
+          end
         end
       end
     end
@@ -1753,7 +1776,10 @@ function OnTouchSelectionUpdate( pInputStruct:table )
     if m_isTouchDragging then
       UpdateDragMap();
     else
-      m_isTouchDragging = IsDragThreshholdMet();
+      if IsDragThreshholdMet() then
+        m_isMouseDragging = true;
+        StartDragMap();
+      end
     end
   end
   return true;
@@ -1843,7 +1869,10 @@ function OnTouchUpdate( pInputStruct:table )
   if m_isTouchDragging then
     UpdateDragMap();
   else
-    m_isTouchDragging = IsDragThreshholdMet();
+    if IsDragThreshholdMet() then
+      m_isMouseDragging = true;
+      StartDragMap();
+    end
   end
   return true;
 end
@@ -3373,6 +3402,16 @@ end
 function OnInputActionTriggered( actionId )
     if actionId == m_actionHotkeyToggleGrid then
         LuaEvents.MinimapPanel_ToggleGrid();
+        LuaEvents.MinimapPanel_RefreshMinimapOptions();
+        UI.PlaySound("Play_UI_Click");
+
+    elseif actionId == m_actionHotkeyToggleRes then
+        if UserConfiguration.ShowMapResources() then
+            UserConfiguration.ShowMapResources( false );
+        else
+            UserConfiguration.ShowMapResources( true );
+        end
+        UI.PlaySound("Play_UI_Click");
         LuaEvents.MinimapPanel_RefreshMinimapOptions();
 
     elseif actionId == m_actionHotkeyToggleYield then

@@ -136,6 +136,7 @@ local m_height        :number= SIZE_MIN_SPEC_Y; -- Screen Height (default / min 
 local m_previousHeight    :number= SIZE_MIN_SPEC_Y; -- Screen Height (default / min spec)
 local m_scrollWidth     :number= SIZE_MIN_SPEC_X; -- Width of the scroll bar
 local m_kEras       :table = {};        -- type to costs
+local m_kEraCounter     :table = {};        -- counter to determine which eras have techs
 local m_maxColumns      :number= 0;         -- # of columns (highest column #)
 local m_ePlayer       :number= -1;
 local m_kAllPlayersTechData :table = {};        -- All data for local players.
@@ -300,20 +301,20 @@ function AllocateUI()
   end
 
   -- Determine total # of columns prior to a given era, and max columns overall.
+  local index = 1;
   local priorColumns:number = 0;
   m_maxColumns = 0;
-  for i=1,table.count(m_kEras),1 do
+  for row:table in GameInfo.Eras() do
     for era,eraData in pairs(m_kEras) do
-      if eraData.Index == i then                  -- Ensure indexed order
+      if eraData.Index == index then
         eraData.PriorColumns = priorColumns;
         priorColumns = priorColumns + eraData.NumColumns + 1; -- Add one for era art between
-        if i==table.count(m_kEras) then             -- Last era determins total # of columns in tree
-          m_maxColumns = priorColumns;
-        end
         break;
       end
     end
+    index = index + 1;
   end
+  m_maxColumns = priorColumns;
 
 
   -- Set nodes in the rows specified and columns computed above.
@@ -1240,10 +1241,15 @@ function PopulateItemData( tableName:string, tableColumn:string, prereqTableName
     end
 
     -- Only build up a limited number of eras if debug information is forcing a subset.
-    if m_debugFilterEraMaxIndex < 1 or ( m_debugFilterEraMaxIndex ~= -1 and m_kEras[entry.EraType] ~= nil ) then
+    if m_debugFilterEraMaxIndex < 1 or m_debugFilterEraMaxIndex ~= -1 then
       m_kItemDefaults[entry.Type] = entry;
       index = index + 1;
     end
+
+    if m_kEraCounter[entry.EraType] == nil then
+      m_kEraCounter[entry.EraType] = 0;
+    end
+    m_kEraCounter[entry.EraType] = m_kEraCounter[entry.EraType] + 1;
   end
 end
 
@@ -1254,7 +1260,7 @@ end
 function PopulateEraData()
   m_kEras = {};
   for row:table in GameInfo.Eras() do
-    if m_debugFilterEraMaxIndex < 1 or row.ChronologyIndex <= m_debugFilterEraMaxIndex then
+    if m_kEraCounter[row.EraType] and m_kEraCounter[row.EraType] > 0 and m_debugFilterEraMaxIndex < 1 or row.ChronologyIndex <= m_debugFilterEraMaxIndex then
       m_kEras[row.EraType] = {
         BGTexture = row.EraTechBackgroundTexture,
         NumColumns  = 0,
@@ -1645,8 +1651,8 @@ function Initialize()
 
   --profile.runtime("start");
 
-  PopulateEraData();
   PopulateItemData("Technologies","TechnologyType","TechnologyPrereqs","Technology","PrereqTech");
+  PopulateEraData();
   PopulateFilterData();
   PopulateSearchData();
 

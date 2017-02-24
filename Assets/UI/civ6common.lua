@@ -773,7 +773,7 @@ function DifferentiateCiv(playerID:number, tooltipControl:table, icon:table, ico
         local civName = Locale.Lookup(GameInfo.Civilizations[civTypeName].Name);
         local leaderName = Locale.Lookup(GameInfo.Leaders[leader].Name);
         if GameConfiguration.IsAnyMultiplayer() and player:IsHuman() then
-          local playerName = playerConfig:GetPlayerName();
+          local playerName = Locale.Lookup(playerConfig:GetPlayerName());
           leaderName = leaderName .. " ("..Locale.ToUpper(playerName)..")"
         end
 
@@ -792,7 +792,7 @@ function DifferentiateCiv(playerID:number, tooltipControl:table, icon:table, ico
         civIcon = "ICON_LEADER_DEFAULT";
         civTooltip = Locale.Lookup("LOC_DIPLOPANEL_UNMET_PLAYER");
         if GameConfiguration.IsAnyMultiplayer() and player:IsHuman() then
-          local playerName = playerConfig:GetPlayerName();
+          local playerName = Locale.Lookup(playerConfig:GetPlayerName());
           civTooltip = civTooltip .. " ("..Locale.ToUpper(playerName)..")";
         end
 

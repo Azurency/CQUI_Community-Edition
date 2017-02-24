@@ -23,9 +23,9 @@ local m_isForceOff      :boolean = false; -- Force always off
 --  CONSTANTS
 -- ===========================================================================
 local MIN_Y_POSITION    :number = 50; -- roughly where top panel starts
-local OFFSET_SHOW_AT_MOUSE_X:number = 40; 
-local OFFSET_SHOW_AT_MOUSE_Y:number = 20; 
-local OFFSET_SHOW_AT_TOUCH_X:number = -30; 
+local OFFSET_SHOW_AT_MOUSE_X:number = 40;
+local OFFSET_SHOW_AT_MOUSE_Y:number = 20;
+local OFFSET_SHOW_AT_TOUCH_X:number = -30;
 local OFFSET_SHOW_AT_TOUCH_Y:number = -35;
 local SIZE_WIDTH_MARGIN   :number = 20;
 local SIZE_HEIGHT_PADDING :number = 20;
@@ -119,7 +119,7 @@ end
 --  Clear the tooltip since over a plot that isn't visible
 -- ===========================================================================
 function ClearView()
-  Controls.TooltipMain:SetHide(true); 
+  Controls.TooltipMain:SetHide(true);
 end
 
 
@@ -136,11 +136,11 @@ function RealizePositionAt( x:number, y:number )
   if UserConfiguration.GetValue("PlotToolTipFollowsMouse") == 1 then
     -- If tool tip manager is showing a *real* tooltip, don't show this plot tooltip to avoid potential overlap.
     if TTManager:IsTooltipShowing() then
-      Controls.TooltipMain:SetHide(true); 
+      Controls.TooltipMain:SetHide(true);
     else
       if m_isValidPlot then
-        Controls.TooltipMain:SetHide(false);  
-    
+        Controls.TooltipMain:SetHide(false);
+
         local offsetx:number = x + m_offsetX;
         local offsety:number = m_screenHeight - y - m_offsetY;
 
@@ -168,13 +168,13 @@ function TooltipOn()
   m_isOff = false;
 
   -- If the whole system is not active, leave before actually displaying tooltip.
-  if not m_isActive then    
+  if not m_isActive then
     return;
   end
 
   Controls.TooltipMain:SetToBeginning();
   Controls.TooltipMain:Play();
-  
+
   if m_isUsingMouse then
     RealizeNewPlotTooltipMouse();
   end
@@ -185,7 +185,7 @@ end
 -- ===========================================================================
 function TooltipOff()
   m_isOff = true;
-  Controls.TooltipMain:SetToBeginning();  
+  Controls.TooltipMain:SetToBeginning();
   Controls.TooltipMain:SetHide(true);
 end
 
@@ -214,9 +214,9 @@ function View(data:table, bIsUpdate:boolean)
 
     local pPlayer = Players[data.Owner];
     if(GameConfiguration:IsAnyMultiplayer() and pPlayer:IsHuman()) then
-      szOwnerString = szOwnerString .. " (" .. pPlayerConfig:GetPlayerName() .. ")";
+      szOwnerString = szOwnerString .. " (" .. Locale.Lookup(pPlayerConfig:GetPlayerName()) .. ")";
     end
-    
+
     --CQUI Remove City Owner if it's a city state as civ name is the same as city owner name
     local szOwnerString2 = Locale.Lookup("LOC_TOOLTIP_CITY_OWNER",szOwnerString, data.OwningCityName);
     if (pPlayer:IsMajor() == false) then
@@ -232,7 +232,7 @@ function View(data:table, bIsUpdate:boolean)
   else
     szTerrainString = Locale.Lookup(data.TerrainTypeName);
   end
-  
+
   if(data.FeatureType ~= nil) then
     local szFeatureString = Locale.Lookup(GameInfo.Features[data.FeatureType].Name);
     local localPlayer = Players[Game.GetLocalPlayer()];
@@ -252,13 +252,13 @@ function View(data:table, bIsUpdate:boolean)
     szTerrainString = szTerrainString.."/ ".. szFeatureString;
     --table.insert(details, szFeatureString);
   end
-  
+
   if (data.IsRiver == true) then
     szTerrainString = szTerrainString.."/ "..Locale.Lookup("LOC_TOOLTIP_RIVER");
   end
   table.insert(details, szTerrainString);
-  
-  
+
+
   if(data.NationalPark ~= "") then
     table.insert(details, data.NationalPark);
   end
@@ -284,7 +284,7 @@ function View(data:table, bIsUpdate:boolean)
     else
       resourceString = "[ICON_"..resourceType.. "] " .. Locale.Lookup(resource.Name);
     end
-    
+
     local resourceTechType;
     local terrainType = data.TerrainType;
     local featureType = data.FeatureType;
@@ -336,16 +336,16 @@ function View(data:table, bIsUpdate:boolean)
     end
     table.insert(details, resourceString)
   end
-  
+
   table.insert(details, "------------------");
 
-  --[[ 
+  --[[
   -- Movement cost
   if (not data.Impassable and data.MovementCost > 0) then
     table.insert(details, Locale.Lookup("LOC_TOOLTIP_MOVEMENT_COST", data.MovementCost));
   end
   ]]
-  
+
   -- ROUTE TILE - CQUI Modified Doesn't display movement cost if route movement exists
   local szMoveString: string;
   if (data.IsRoute) then
@@ -366,7 +366,7 @@ function View(data:table, bIsUpdate:boolean)
     --szMoveString = szMoveString:gsub("%d+%s",": [ICON_Movement]",1);
     table.insert(details,szMoveString);
   end
-  
+
   -- Defense modifier
   if (data.DefenseModifier ~= 0) then
     table.insert(details, Locale.Lookup("LOC_TOOLTIP_DEFENSE_MODIFIER", data.DefenseModifier).. " [ICON_STRENGTH]");
@@ -398,9 +398,9 @@ function View(data:table, bIsUpdate:boolean)
 
   -- WONDER TILE
   if(data.WonderType ~= nil) then
-    
+
     table.insert(details, "------------------");
-    
+
     if (data.WonderComplete == true) then
       table.insert(details, Locale.Lookup(GameInfo.Buildings[data.WonderType].Name));
 
@@ -412,14 +412,14 @@ function View(data:table, bIsUpdate:boolean)
 
   --CQUI Use this table to set up a better order of listing the yields... ie Food before Production
   local CQUIYields = {};
-  
+
   -- CITY TILE
   if(data.IsCity == true) then
-    
+
     table.insert(details, "------------------");
-    
+
     table.insert(details, Locale.Lookup(GameInfo.Districts[data.DistrictType].Name))
-    
+
     for yieldType, v in pairs(data.Yields) do
       local yield = GameInfo.Yields[yieldType].Name;
       local yieldicon = GameInfo.Yields[yieldType].IconString;
@@ -432,16 +432,16 @@ function View(data:table, bIsUpdate:boolean)
     end
     --if(data.Buildings ~= nil and table.count(data.Buildings) > 0) then
     --  table.insert(details, "Buildings: ");
-      
-    --  for i, v in ipairs(data.Buildings) do 
+
+    --  for i, v in ipairs(data.Buildings) do
     --    table.insert(details, "  " .. Locale.Lookup(v));
     --  end
     --end
 
     --if(data.Constructions ~= nil and table.count(data.Constructions) > 0) then
     --  table.insert(details, "UnderConstruction: ");
-    --  
-    --  for i, v in ipairs(data.Constructions) do 
+    --
+    --  for i, v in ipairs(data.Constructions) do
     --    table.insert(details, "  " .. Locale.Lookup(v));
     --  end
     --end
@@ -479,7 +479,7 @@ function View(data:table, bIsUpdate:boolean)
         end
       end
     end
-        
+
   -- IMPASSABLE TILE
   elseif(data.Impassable == true) then
     table.insert(details, Locale.Lookup("LOC_TOOLTIP_PLOT_IMPASSABLE_TEXT"));
@@ -494,7 +494,7 @@ function View(data:table, bIsUpdate:boolean)
       end
       table.insert(details, improvementStr)
     end
-    
+
     for yieldType, v in pairs(data.Yields) do
       local yield = GameInfo.Yields[yieldType].Name;
       local yieldicon = GameInfo.Yields[yieldType].IconString;
@@ -519,7 +519,7 @@ function View(data:table, bIsUpdate:boolean)
       table.insert(details, Locale.Lookup(feature.Description));
     end
   end
-  
+
   -- For districts, city center show all building info including Great Works
   -- For wonders, just show Great Work info
   if (data.IsCity or data.WonderType ~= nil or data.DistrictID ~= -1) then
@@ -528,7 +528,7 @@ function View(data:table, bIsUpdate:boolean)
       if (data.WonderType == nil) then
         table.insert(details, Locale.Lookup("LOC_TOOLTIP_PLOT_BUILDINGS_TEXT"));
       end
-      for i, v in ipairs(data.BuildingNames) do 
+      for i, v in ipairs(data.BuildingNames) do
           if (data.WonderType == nil) then
           if (data.BuildingsPillaged[i]) then
             table.insert(details, "- " .. Locale.Lookup(v) .. " " .. Locale.Lookup("LOC_TOOLTIP_PLOT_PILLAGED_TEXT"));
@@ -568,18 +568,18 @@ function View(data:table, bIsUpdate:boolean)
       end
     end
     table.insert(debugInfo, "Plot #:" .. tostring(data.Index) .. " @("..tostring(data.X) .. ", " .. tostring(data.Y) .. "), vis:" .. tostring(iVisCount));
-      
+
   end
 
-  
+
   -- Set the control values
-  
+
   Controls.PlotDetails:SetText(table.concat(details, "[NEWLINE]"));
 
   if m_isShowDebug then
     Controls.DebugTxt:SetText(table.concat(debugInfo, "[NEWLINE]"));
   end
-      
+
   -- Some conditions, jump past "pause" and show immediately
   if m_isShiftDown or UserConfiguration.GetValue("PlotToolTipFollowsMouse") == 0 then
     Controls.TooltipMain:SetPauseTime( 0 );
@@ -595,19 +595,19 @@ function View(data:table, bIsUpdate:boolean)
     Controls.TooltipMain:Play();
   end
 
-  -- Resize the background to wrap the content 
+  -- Resize the background to wrap the content
   local plotName_width :number, plotName_height :number   = Controls.PlotName:GetSizeVal();
   local nameHeight :number                  = Controls.PlotName:GetSizeY();
   local plotDetails_width :number, plotDetails_height :number = Controls.PlotDetails:GetSizeVal();
   local debugInfoHeight :number               = Controls.DebugTxt:GetSizeY();
-  
+
   local max_width :number = math.max(plotName_width, plotDetails_width);
-  
+
   Controls.InfoStack:CalculateSize();
   local stackHeight = Controls.InfoStack:GetSizeY();
 
-  Controls.PlotInfo:SetSizeVal(max_width + SIZE_WIDTH_MARGIN, stackHeight + SIZE_HEIGHT_PADDING); 
-  
+  Controls.PlotInfo:SetSizeVal(max_width + SIZE_WIDTH_MARGIN, stackHeight + SIZE_HEIGHT_PADDING);
+
   m_ttWidth, m_ttHeight = Controls.InfoStack:GetSizeVal();
   Controls.TooltipMain:SetSizeVal(m_ttWidth, m_ttHeight);
 end
@@ -654,7 +654,7 @@ function ShowPlotInfo( plotId:number, bIsUpdate:boolean )
     end
 
     local kFalloutManager = Game:GetFalloutManager();
-          
+
     if (not m_isValidPlot) then
       ClearView();
     else
@@ -676,7 +676,7 @@ function ShowPlotInfo( plotId:number, bIsUpdate:boolean )
         ImprovementPillaged = plot:IsImprovementPillaged(),
         IsCity        = plot:IsCity(),
         IsLake        = plot:IsLake(),
-        IsRiver       = plot:IsRiver(),       
+        IsRiver       = plot:IsRiver(),
         IsRoute       = plot:IsRoute(),
         IsWater       = plot:IsWater(),
         MovementCost    = plot:GetMovementCost(),
@@ -693,7 +693,7 @@ function ShowPlotInfo( plotId:number, bIsUpdate:boolean )
         Workers       = plot:GetWorkerCount();
 
         -- Remove these once we have a visualization of cliffs
-        IsNWOfCliff     = plot:IsNWOfCliff(),  
+        IsNWOfCliff     = plot:IsNWOfCliff(),
         IsWOfCliff      = plot:IsWOfCliff(),
         IsNEOfCliff     = plot:IsNEOfCliff(),
         ---- END REMOVE
@@ -711,7 +711,7 @@ function ShowPlotInfo( plotId:number, bIsUpdate:boolean )
       else
         new_data.NationalPark = "";
       end
-        
+
       if (new_data.OwnerCity) then
         new_data.OwningCityName = new_data.OwnerCity:GetName();
 
@@ -757,7 +757,7 @@ function ShowPlotInfo( plotId:number, bIsUpdate:boolean )
           if (yield > 0) then
             new_data.Yields[row.YieldType] = yield;
           end
-        end 
+        end
       else
         local plotOwner = plot:GetOwner();
         local plotPlayer = Players[plotOwner];
@@ -775,7 +775,7 @@ function ShowPlotInfo( plotId:number, bIsUpdate:boolean )
             new_data.DistrictYields[row.YieldType] = districtYield;
           end
 
-        end                 
+        end
       end
 
       View(new_data, bIsUpdate);
@@ -788,7 +788,7 @@ end
 function RealizeNewPlotTooltipMouse( bIsUpdate:boolean )
   local plotId :number = UI.GetCursorPlotID();
   ShowPlotInfo( plotId, bIsUpdate );
-  
+
   RealizePositionAt( UIManager:GetMousePos() );
 end
 
@@ -800,7 +800,7 @@ function RealizeNewPlotTooltipTouch( pInputStruct:table )
   local normalizedX :number = ((touchX / m_screenWidth) - 0.5) * 2;
   local normalizedY :number = ((1 - (touchY / m_screenHeight)) - 0.5) * 2;  -- also flip axis for Y
   local x:number,y:number = UI.GetPlotCoordFromNormalizedScreenPos(normalizedX, normalizedY);
-  local pPlot :table = Map.GetPlot(x, y); 
+  local pPlot :table = Map.GetPlot(x, y);
   ShowPlotInfo( pPlot:GetIndex() );
 
   RealizePositionAt(touchX, touchY);
@@ -837,7 +837,7 @@ function OnInputHandler( pInputStruct:table )
     m_offsetY   = OFFSET_SHOW_AT_MOUSE_Y;
     RealizeNewPlotTooltipMouse();
 
-  elseif uiMsg == MouseEvents.PointerUpdate and m_touchIdForPoint ~= -1 then     
+  elseif uiMsg == MouseEvents.PointerUpdate and m_touchIdForPoint ~= -1 then
     m_isUsingMouse  = false;
     m_offsetX   = OFFSET_SHOW_AT_TOUCH_X;
     m_offsetY   = OFFSET_SHOW_AT_TOUCH_Y;
@@ -845,11 +845,11 @@ function OnInputHandler( pInputStruct:table )
     if m_touchIdForPoint == pInputStruct:GetTouchID() then
       if m_isOff then
         TooltipOn();
-      end   
+      end
       RealizeNewPlotTooltipTouch( pInputStruct );
     end
   end
-  
+
 
     return false; -- Don't consume, let whatever is after this get crack at input.
 end
@@ -928,20 +928,20 @@ end
 -- ===========================================================================
 function OnDragMapEnd()
   if m_isOff and m_isUsingMouse then
-    TooltipOn();  
+    TooltipOn();
   end
 end
 
 -- ===========================================================================
 function OnTouchPlotTooltipShow( touchId:number )
   m_touchIdForPoint = touchId;
-  Controls.TooltipMain:SetHide(false);  
+  Controls.TooltipMain:SetHide(false);
 end
 
 -- ===========================================================================
 function OnTouchPlotTooltipHide()
   m_touchIdForPoint = -1;
-  Controls.TooltipMain:SetHide(true); 
+  Controls.TooltipMain:SetHide(true);
 end
 
 -- ===========================================================================
@@ -950,7 +950,7 @@ end
 -- ===========================================================================
 function OnTutorialTipsOn()
   m_isActive = true;
-  TooltipOn();  
+  TooltipOn();
 end
 
 -- ===========================================================================
@@ -966,11 +966,11 @@ end
 --  UI Event
 --  Raised when ANY tooltip being raised.
 --
---  Handles case where a tool tip start to raise and then the cursor moved 
+--  Handles case where a tool tip start to raise and then the cursor moved
 --  over a piece of 2D UI.
 -- ===========================================================================
 function OnToolTipShow( pToolTip:table )
-  Controls.TooltipMain:SetHide(true);   
+  Controls.TooltipMain:SetHide(true);
 end
 
 -- ===========================================================================
@@ -981,7 +981,7 @@ function Initialize()
   end
 
   m_isShowDebug = (Options.GetAppOption("Debug", "EnableDebugPlotInfo") == 1);
-  
+
   m_isActive = true;
   m_lastMouseMoveTime = nil;
 
@@ -992,13 +992,13 @@ function Initialize()
   ContextPtr:SetInputHandler( OnInputHandler, true );
   ContextPtr:SetShutdown( OnShutdown );
   TTManager:AddToolTipDisplayCallback( OnToolTipShow );
-  
-  -- Game Core Events 
+
+  -- Game Core Events
   Events.BeginWonderReveal.Add( OnBeginWonderReveal );
-  Events.HideLeaderScreen.Add( OnHideLeaderScreen );  
+  Events.HideLeaderScreen.Add( OnHideLeaderScreen );
   Events.ShowLeaderScreen.Add( OnShowLeaderScreen );
   Events.SystemUpdateUI.Add( OnUpdateUI );
-  
+
   -- LUA Events
   LuaEvents.GameDebug_Return.Add( OnGameDebugReturn );      -- hotloading help
   LuaEvents.Tutorial_PlotToolTipsOn.Add( OnTutorialTipsOn );
@@ -1007,6 +1007,6 @@ function Initialize()
   LuaEvents.WorldInput_DragMapEnd.Add( OnDragMapEnd );
   LuaEvents.WorldInput_TouchPlotTooltipShow.Add( OnTouchPlotTooltipShow );
   LuaEvents.WorldInput_TouchPlotTooltipHide.Add( OnTouchPlotTooltipHide );
-  LuaEvents.PlotInfo_UpdatePlotTooltip.Add( RealizeNewPlotTooltipMouse );  
+  LuaEvents.PlotInfo_UpdatePlotTooltip.Add( RealizeNewPlotTooltipMouse );
 end
 Initialize();
