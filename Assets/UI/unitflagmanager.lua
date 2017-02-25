@@ -162,32 +162,36 @@ local CQUI_ShowPaths = true; --Toggle for showing the paths
 function CQUI_ShowPath(unitID)
 	if(CQUI_ShowPaths) then
 		local unit = Players[Game.GetLocalPlayer()]:GetUnits():FindID(unitID);
-		if (GameInfo.Units[unit:GetUnitType()].UnitType ~= "UNIT_TRADER") then --Since this hijacks the trade layer, be sure to NOT touch it when the game actually needs the trade layer!
-			local dest = UnitManager.GetQueuedDestination(unit);
-			local pathPlots, turnsToReach, _ = UnitManager.GetMoveToPath(unit, dest); --pathPlots holds the tileIDs for each tile in the path in order. turnsToReach describes how many turns it takes to reach each given tile, also in order
-			local last = 1; --The number of turns it takes to reach the last given tile
-			for i,v in pairs(turnsToReach) do --Show numbers, but only once for each turn incrememnt
-				if(v > last) then
-					 UI.AddNumberToPath(last, pathPlots[i - 1]);
-				end
-				last = v;
-			end
-			UI.AddNumberToPath(last, dest); --Show a number on the destination plot unconditionally
-			local variations:table = {};
-			table.insert(variations, {"TradeRoute_Destination", dest} );
-			UILens.SetLayerHexesPath( LensLayers.TRADE_ROUTE, Game.GetLocalPlayer(), pathPlots, variations );
-			CQUI_ShowingPath = unitID;
-		end
+    if (unit ~= nil) then
+      if (GameInfo.Units[unit:GetUnitType()].UnitType ~= "UNIT_TRADER") then --Since this hijacks the trade layer, be sure to NOT touch it when the game actually needs the trade layer!
+          local dest = UnitManager.GetQueuedDestination(unit);
+          local pathPlots, turnsToReach, _ = UnitManager.GetMoveToPath(unit, dest); --pathPlots holds the tileIDs for each tile in the path in order. turnsToReach describes how many turns it takes to reach each given tile, also in order
+          local last = 1; --The number of turns it takes to reach the last given tile
+          for i,v in pairs(turnsToReach) do --Show numbers, but only once for each turn incrememnt
+              if(v > last) then
+                   UI.AddNumberToPath(last, pathPlots[i - 1]);
+              end
+              last = v;
+          end
+          UI.AddNumberToPath(last, dest); --Show a number on the destination plot unconditionally
+          local variations:table = {};
+          table.insert(variations, {"TradeRoute_Destination", dest} );
+          UILens.SetLayerHexesPath( LensLayers.TRADE_ROUTE, Game.GetLocalPlayer(), pathPlots, variations );
+          CQUI_ShowingPath = unitID;
+      end
+    end
 	end
 end
 --Hides any currently drawn paths.
 function CQUI_HidePath(unitID)
 	if(CQUI_ShowPaths) then
 		local unit = Players[Game.GetLocalPlayer()]:GetUnits():FindID(unitID);
-		if (unitID == nil or GameInfo.Units[unit:GetUnitType()].UnitType ~= "UNIT_TRADER") then
-			UILens.ClearLayerHexes(LensLayers.TRADE_ROUTE); --Hide path
-			UILens.ClearLayerHexes(LensLayers.NUMBERS); --Hide numbers
-		end
+    if (unit ~= nil) then
+      if (unitID == nil or GameInfo.Units[unit:GetUnitType()].UnitType ~= "UNIT_TRADER") then
+          UILens.ClearLayerHexes(LensLayers.TRADE_ROUTE); --Hide path
+          UILens.ClearLayerHexes(LensLayers.NUMBERS); --Hide numbers
+      end
+    end
 	end
 end
 
@@ -1181,15 +1185,21 @@ function OnUnitSelectionChanged( playerID : number, unitID : number, hexI : numb
 		end
 		--]]
 		UpdateIconStack(hexI, hexJ);
-		--CQUI modifications for tracking unit selection and displaying unit paths
-		CQUI_SelectionMade = true;
-		if(CQUI_ShowingPath ~= unitID) then
-			if(CQUI_ShowingPath ~= nil) then
-				CQUI_HidePath(unitID);
-			end
-			CQUI_ShowPath(unitID);
-			CQUI_ShowingPath = unitID;
-		end
+		-- CQUI modifications for tracking unit selection and displaying unit paths
+    -- unitID could be nil, if unit is consumed (f.e. settler, worker)
+    if (unitID ~= nil) then
+      CQUI_SelectionMade = true;
+      if(CQUI_ShowingPath ~= unitID) then
+        if(CQUI_ShowingPath ~= nil) then
+            CQUI_HidePath(unitID);
+        end
+        CQUI_ShowPath(unitID);
+        CQUI_ShowingPath = unitID;
+      end
+    else
+      CQUI_SelectionMade = false;
+      CQUI_ShowingPath = nil;
+    end
 	else
 		CQUI_SelectionMade = false;
 		CQUI_HidePath(unitID);
