@@ -1088,16 +1088,6 @@
     <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="de_DE">
       <Text>Ansicht aller Befehle im Einheiten-Panel</Text>
     </Row>
-    <Row Tag="LOC_CQUI_UNITS" Language="pl_PL">
-      <Text>Jednostki</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="pl_PL">
-      <Text>Pokazuj drogę jednostki po zaznaczeniu bądź najechaniu myszką</Text>
-    </Row>
-    <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="pl_PL">
-      <Text>Automatycznie rozwijaj listę akcji w panelu jednostki</Text>
-    </Row>
-
 
     <!-- KOREAN -->
 
