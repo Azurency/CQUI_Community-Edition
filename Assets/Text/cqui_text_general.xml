@@ -35,7 +35,7 @@
       <Text>CQUI</Text>
     </Replace>
     <Replace Tag="LOC_CQUI_CIVIC_MESSAGE_S" Language="fr_FR">
-      <Text>La Civilisation actuelle, </Text>
+      <Text>Le Dogme actuel, </Text>
     </Replace>
     <Replace Tag="LOC_CQUI_TECH_MESSAGE_S" Language="fr_FR">
       <Text>La Technologie actuelle, </Text>

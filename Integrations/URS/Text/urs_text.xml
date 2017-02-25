@@ -30,6 +30,7 @@
         </Row>
     </BaseGameText>
     <LocalizedText>
+    	<!-- FRENCH -->
       
         <!-- HUD Common Text -->
         <Replace Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="fr_FR">
