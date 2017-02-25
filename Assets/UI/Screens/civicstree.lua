@@ -143,7 +143,6 @@ local m_width       :number= 1024;    -- Screen Width (default / min spec)
 local m_height        :number= 768;   -- Screen Height (default / min spec)
 local m_scrollWidth     :number= 1024;    -- Width of the scroll bar (default to screen min_spec until set)
 local m_kEras       :table = {};    -- type to costs
-local m_kEraCounter     :table = {};    -- counter to determine which eras have techs
 local m_maxColumns      :number= 0;     -- # of columns (highest column #)
 local m_ePlayer       :number= -1;
 local m_kAllPlayersTechData :table = {};    -- All data for local players.
@@ -345,20 +344,20 @@ function AllocateUI()
   end
 
   -- Determine total # of columns prior to a given era, and max columns overall.
-  local index = 1;
   local priorColumns:number = 0;
   m_maxColumns = 0;
-  for row:table in GameInfo.Eras() do
+  for i=1,table.count(m_kEras),1 do
     for era,eraData in pairs(m_kEras) do
-      if eraData.Index == index then                  -- Ensure indexed order
+      if eraData.Index == i then                  -- Ensure indexed order
         eraData.PriorColumns = priorColumns;
         priorColumns = priorColumns + eraData.NumColumns + 1; -- Add one for era art between
+        if i==table.count(m_kEras) then             -- Last era determins total # of columns in tree
+          m_maxColumns = priorColumns;
+        end
         break;
       end
     end
-    index = index + 1;
   end
-  m_maxColumns = priorColumns;
 
 
   -- Create grid used to route lines, determine maximum number of columns.
@@ -431,11 +430,6 @@ function AllocateUI()
       end
     end
 
-    -- Determine if we award envoys and add to numUnlocks to ensure proper sizing
-    if item.ModifierType == "MODIFIER_PLAYER_GRANT_INFLUENCE_TOKEN" then
-      numUnlocks = numUnlocks + 1;
-    end
-
     -- Create node based on # of unlocks for this civic.
     if numUnlocks <= 8 then
       node = m_kNodeIM:GetInstance();
@@ -466,20 +460,6 @@ function AllocateUI()
     node["unlockGOV"] = InstanceManager:new( "GovernmentIcon", "GovernmentInstanceGrid", node.UnlockStack );
 
     PopulateUnlockablesForCivic(playerId, item.Index, node["unlockIM"], node["unlockGOV"], function() SetCurrentNode(item.Hash); end);
-
-    -- Create or clear envoy unlocked instance manager
-    if node["unlockEnvoy"] == nil then
-      node["unlockEnvoy"] = InstanceManager:new( "EnvoyAwardedInstance", "EnvoyAwardedGrid", node.UnlockStack );
-    else
-      node["unlockEnvoy"]:DestroyInstances()
-    end
-
-    -- Create envoy unlocked instnace if this civic awards it
-    if item.ModifierType == "MODIFIER_PLAYER_GRANT_INFLUENCE_TOKEN" then
-      local envoyInstance:table = node["unlockEnvoy"]:GetInstance();
-      envoyInstance.EnvoyAwardedLabel:SetText(item.ModifierValue);
-      envoyInstance.EnvoyAwardedGrid:SetToolTipString(Locale.Lookup("LOC_CIVIC_ENVOY_AWARDED_TOOLTIP", tonumber(item.ModifierValue)));
-    end
 
     -- What happens when clicked
     function OpenPedia()
@@ -1287,8 +1267,10 @@ function Resize()
   Controls.ArtCornerGrungeBR:ReprocessAnchoring();
 
 
-  Controls.Background:SetSizeX( artAndEraScrollWidth + 100 );
-  Controls.Background:SetSizeY( SIZE_WIDESCREEN_HEIGHT - (SIZE_TIMELINE_AREA_Y - 8) );
+  local PADDING_DUE_TO_LAST_BACKGROUND_ART_IMAGE:number = 100;
+  local backArtScrollWidth:number = scrollPanelX * (1/PARALLAX_ART_SPEED);
+  Controls.Background:SetSizeX( backArtScrollWidth + PADDING_DUE_TO_LAST_BACKGROUND_ART_IMAGE );
+  Controls.Background:SetSizeY( SIZE_WIDESCREEN_HEIGHT - (SIZE_TIMELINE_AREA_Y-8) );
   Controls.FarBackArtScroller:CalculateSize();
 
   Controls.KeyScroll:CalculateSize();
@@ -1336,22 +1318,6 @@ function PopulateItemData( tableName:string, tableColumn:string, prereqTableName
     entry.UITreeRow   = row.UITreeRow;
     entry.Unlocks   = {};       -- Each unlock has: unlockType, iconUnavail, iconAvail, tooltip
 
-    -- Look up and cache any civic modifiers we reward like envoys awarded
-    for civicModifier in GameInfo.CivicModifiers() do
-      if (entry.Type == civicModifier.CivicType) then
-        for modifierType in GameInfo.Modifiers() do
-          if civicModifier.ModifierId == modifierType.ModifierId then
-            entry.ModifierType  = modifierType.ModifierType;
-          end
-        end
-        for modifierArguments in GameInfo.ModifierArguments() do
-          if civicModifier.ModifierId == modifierArguments.ModifierId then
-            entry.ModifierValue = modifierArguments.Value;
-          end
-        end
-      end
-    end
-
     -- Boost?
     for boostRow in GameInfo.Boosts() do
       if boostRow.CivicType == entry.Type then
@@ -1378,15 +1344,10 @@ function PopulateItemData( tableName:string, tableColumn:string, prereqTableName
     end
 
     -- Only build up a limited number of eras if debug information is forcing a subset.
-    if m_debugFilterEraMaxIndex < 1 or m_debugFilterEraMaxIndex ~= -1 then
+    if m_debugFilterEraMaxIndex < 1 or ( m_debugFilterEraMaxIndex ~= -1 and m_kEras[entry.EraType] ~= nil ) then
       m_kItemDefaults[entry.Type] = entry;
       index = index + 1;
     end
-
-    if m_kEraCounter[entry.EraType] == nil then
-      m_kEraCounter[entry.EraType] = 0;
-    end
-    m_kEraCounter[entry.EraType] = m_kEraCounter[entry.EraType] + 1;
   end
 end
 
@@ -1397,7 +1358,7 @@ end
 function PopulateEraData()
   m_kEras = {};
   for row:table in GameInfo.Eras() do
-    if m_kEraCounter[row.EraType] and m_kEraCounter[row.EraType] > 0 and m_debugFilterEraMaxIndex < 1 or row.ChronologyIndex <= m_debugFilterEraMaxIndex then
+    if m_debugFilterEraMaxIndex < 1 or row.ChronologyIndex <= m_debugFilterEraMaxIndex then
       m_kEras[row.EraType] = {
         BGTexture = row.EraCivicBackgroundTexture,
         NumColumns  = 0,
@@ -1955,8 +1916,8 @@ end
 function Initialize()
 
   PopulateStaticData();
-  PopulateItemData("Civics","CivicType","CivicPrereqs","Civic","PrereqCivic");
   PopulateEraData();
+  PopulateItemData("Civics","CivicType","CivicPrereqs","Civic","PrereqCivic");
   PopulateFilterData();
   PopulateSearchData();
 
