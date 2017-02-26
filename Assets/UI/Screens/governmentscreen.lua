@@ -220,8 +220,15 @@ function Resize()
   
   textControl = Controls.ButtonMyGovernment:GetTextControl();
   sizeX = textControl:GetSizeX();
-  Controls.ButtonMyGovernment:SetSizeX( 0 );
-  Controls.SelectMyGovernment:SetSizeX( 0 );
+  
+  -- if MyGovernment is shown in Policy then don't show tab MyGovernment
+  if (m_showGovernmentInPolicySelect) then
+    Controls.ButtonMyGovernment:SetSizeX( 0 );
+    Controls.SelectMyGovernment:SetSizeX( 0 );
+  else
+    Controls.ButtonMyGovernment:SetSizeX( sizeX + SIZE_TAB_BUTTON_TEXT_PADDING );
+    Controls.SelectMyGovernment:SetSizeX( sizeX + SIZE_TAB_BUTTON_TEXT_PADDING + 4 );
+  end
 end
 
 
@@ -821,7 +828,12 @@ function RealizeTabs()
   end
 
   Controls.ButtonPolicies:SetHide(m_kCurrentGovernment == nil);
-  Controls.ButtonMyGovernment:SetHide(true);
+  -- if MyGovernment is shown in Policy then don't show tab MyGovernment
+  if (m_showGovernmentInPolicySelect) then
+    Controls.ButtonMyGovernment:SetHide(true);
+  else
+    Controls.ButtonMyGovernment:SetHide(m_kCurrentGovernment == nil);
+  end
   if m_kCurrentGovernment ~= nil then
     m_tabs.AddTab( Controls.ButtonMyGovernment, OnMyGovernmentClick );
     m_tabs.AddTab( Controls.ButtonPolicies,   OnPoliciesClick );
@@ -1362,7 +1374,12 @@ function OnOpenGovernmentScreenMyGovernment()
   if not m_kCurrentGovernment then
     OnOpenGovernmentScreenGovernments();
   else
-    OnOpenGovernmentScreen( SCREEN_ENUMS.POLICIES );
+    -- if MyGovernment is shown in Policy then open Policies
+    if (m_showGovernmentInPolicySelect) then
+      OnOpenGovernmentScreen( SCREEN_ENUMS.POLICIES );
+    else
+      OnOpenGovernmentScreen( SCREEN_ENUMS.MY_GOVERNMENT );
+    end
   end
 end
 
@@ -1381,7 +1398,11 @@ end
 -- ===========================================================================
 function OnOpenGovernmentScreenPolicies()
   RefreshAllData();
-  OnOpenGovernmentScreen( SCREEN_ENUMS.POLICIES );
+	if not m_kCurrentGovernment then
+		OnOpenGovernmentScreenGovernments();
+	else
+    OnOpenGovernmentScreen( SCREEN_ENUMS.POLICIES );
+  end
 end
 
 
@@ -1420,7 +1441,12 @@ function OnOpenGovernmentScreen( screenEnum:number )
           screenEnum = SCREEN_ENUMS.POLICIES;
         end
       else
-        screenEnum = SCREEN_ENUMS.SCREEN_ENUMS.POLICIES;
+        -- if MyGovernment is shown in Policy then open Policies
+        if (m_showGovernmentInPolicySelect) then
+          screenEnum = SCREEN_ENUMS.SCREEN_ENUMS.POLICIES;
+        else
+          screenEnum = SCREEN_ENUMS.MY_GOVERNMENT;
+        end
       end
     end
 
