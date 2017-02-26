@@ -5,8 +5,8 @@
     <Name>Chao's Quick UI</Name>
     <Teaser>CQUI_TEASER</Teaser>
     <Description>CQUI_TEASER</Description>
-    <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek, zeyangl, velit, the-m4a, Frozen-In-Ice, Remolten, bestekov, bolbass, SpaceOgre, cpinter</Authors>
-    <SpecialThanks>vans163 for his original qui mod. astog for his Better Trade Screen mod + More Lenses mod. Ace for his Next City Plot mod. Divine Yuri for his Custom City Panel mod. Greg Miller for his Unit Report Screen mod. Lozenged/kblease for his Production Queue mod. ZhouYzzz for providing the Chinese translation of CQUI. Simone1974 for providing the Italian translation of CQUI. e1ectron for providing the Russian translation of CQUI. sejbr for providing the Polish translation of CQUI. frytom for providing the German translation of CQUI. lctrs for providing a partial French translation of CQUI. wbqd for providing the Korean translation of CQUI</SpecialThanks>
+    <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, [NEWLINE]Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek, [NEWLINE]zeyangl, velit, the-m4a, Frozen-In-Ice, Remolten, bestekov, [NEWLINE]bolbass, SpaceOgre, cpinter</Authors>
+    <SpecialThanks>vans163 for his original qui mod. [NEWLINE]astog for his Better Trade Screen mod + More Lenses mod. [NEWLINE]Ace for his Next City Plot mod. [NEWLINE]Divine Yuri for his Custom City Panel mod. [NEWLINE]Greg Miller for his Unit Report Screen mod. [NEWLINE]Lozenged/kblease for his Production Queue mod. [NEWLINE]ZhouYzzz for providing the Chinese translation of CQUI. [NEWLINE]Simone1974 for providing the Italian translation of CQUI. [NEWLINE]e1ectron for providing the Russian translation of CQUI. [NEWLINE]sejbr for providing the Polish translation of CQUI. [NEWLINE]frytom for providing the German translation of CQUI. [NEWLINE]lctrs for providing a partial French translation of CQUI. [NEWLINE]wbqd for providing the Korean translation of CQUI.</SpecialThanks>
     <Stability>CQUI_STABILITY_NIGHTLY</Stability>
   </Properties>
   <Dependencies />
@@ -29,13 +29,13 @@
   <!-- Modinfo Specific LOC -->
   <LocalizedText>
     <Text id="CQUI_TEASER">
-      <en_US>Reduce clicks and make empire management easy</en_US>
-      <fr_FR>Réduit les clics et rend la gestion de l'empire facile</fr_FR>
+      <en_US>Reduce clicks and make empire management easy.</en_US>
+      <fr_FR>Réduit les clics et rend la gestion de l'empire facile.</fr_FR>
       <zh_Hans_CN>一键化操作，轻松管理您的帝国</zh_Hans_CN>
-      <pl_PL>Zmniejsz ilość kliknięć i spraw by zarządzanie imperium było łatwiejsze</pl_PL>
+      <pl_PL>Zmniejsz ilość kliknięć i spraw by zarządzanie imperium było łatwiejsze.</pl_PL>
       <ru_RU>Убирает лишние клики и облегчает управление империей</ru_RU>
-      <de_DE>Reduziert die Anzahl der Klicks und macht das CIV-Management einfach</de_DE>
-      <it_IT>Riduce i click e facilita la gestione dell'impero</it_IT>
+      <de_DE>Reduziert die Anzahl der Klicks und macht das CIV-Management einfach.</de_DE>
+      <it_IT>Riduce i click e facilita la gestione dell'impero.</it_IT>
       <ko_KR>문명 게임 플레이를 더욱 간편하게 해주는 CQUI 모드입니다</ko_KR>
     </Text>
     <Text id="CQUI_STABILITY_ALPHA">
