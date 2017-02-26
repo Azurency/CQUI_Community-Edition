@@ -673,6 +673,7 @@
     <!-- City Overlap Lens -->
     <Replace Tag="LOC_HUD_CITYOVERLAP6_LENS" Language="pl_PL">
       <Text>Miasta w zasięgu 6 pól</Text>
+      <Text>Miasta w zasięgu 6</Text>
     </Replace>
     <Replace Tag="LOC_HUD_CITYOVERLAP6_LENS_TOOLTIP" Language="pl_PL">
       <Text>Pokazuje ile miast znajduje się w zasięgu 6 pól od danego pola</Text>
@@ -681,6 +682,7 @@
     <!-- City Overlap Lens -->
     <Replace Tag="LOC_HUD_CITYOVERLAP9_LENS" Language="pl_PL">
       <Text>Miasta w zasięgu 9 pól</Text>
+      <Text>Miasta w zasięgu 9</Text>
     </Replace>
     <Replace Tag="LOC_HUD_CITYOVERLAP9_LENS_TOOLTIP" Language="pl_PL">
       <Text>Pokazuje ile miast znajduje się w zasięgu 9 pól od danego pola</Text>
@@ -755,8 +757,6 @@
     <Replace Tag="LOC_TOOLTIP_SCOUT_LENS_GHUT" Language="pl_PL">
       <Text>Wioska plemienna</Text>
     </Replace>
-    
-    
     <!-- GERMAN -->
 
     <!-- Builder Lens -->

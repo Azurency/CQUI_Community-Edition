@@ -365,11 +365,9 @@
     <Replace Tag="LOC_TRADE_GROUP_SETTINGS" Language="it_IT">
         <Text>Impostazioni gruppo</Text>
     </Replace>
-    
     <Replace Tag="LOC_TRADE_FILTER_SETTINGS" Language="it_IT">
         <Text>Impostazioni filtro</Text>
     </Replace>
-    
     <Replace Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="it_IT">
       <Text>Ordina per [ICON_Food]Cibo.</Text>
     </Replace>
@@ -657,6 +655,7 @@
 
     <Replace Tag="LOC_TRADE_FILTER_CS_WITH_QUEST_TOOLTIP" Language="pl_PL">
       <Text>Miasta-państwa z zadaniami handlowymi</Text>
+      <Text>Miasta-państwa z zadaniami</Text>
     </Replace>
 
     <!-- Trade Overview -->
@@ -670,10 +669,12 @@
 
     <Replace Tag="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT" Language="pl_PL">
         <Text>Rozw:</Text>
+        <Text>Rw:</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_COLLAPSE_ALL_BUTTON_TEXT" Language="pl_PL">
         <Text>Zwiń:</Text>
+        <Text>Zw:</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP" Language="pl_PL">
@@ -711,6 +712,7 @@
     <!-- Make Trade Route -->
     <Replace Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_LABEL" Language="pl_PL">
       <Text>Powtarzaj szlak:</Text>
+      <Text>Powtarzaj:</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_TOOLTIP" Language="pl_PL">
@@ -719,6 +721,7 @@
 
     <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_LABEL" Language="pl_PL">
       <Text>Powtarzaj szlak według sortowania:</Text>
+      <Text>Powtarzaj według sortowania:</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_TOOLTIP" Language="pl_PL">
@@ -737,7 +740,6 @@
     <Replace Tag="LOC_ORIGIN_CHOOSER_CHANGE_DESTINATION_BUTTON" Language="pl_PL">
       <Text>POTWIERDŹ</Text>
     </Replace>
-    
    <!-- GERMAN -->
 
    <!-- Common Text -->
@@ -809,7 +811,6 @@
     <Replace Tag="LOC_TRADE_TURNS_REMAINING_ALT_HELP_TOOLTIP" Language="de_DE">
         <Text>Diese Route benötigt {1_TurnsRemaining}[Icon_Turn] bis zur Fertigstellung.</Text>
     </Replace>
-   
     <Replace Tag="LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER" Language="de_DE">
         <Text>----------------------------</Text>
     </Replace>
