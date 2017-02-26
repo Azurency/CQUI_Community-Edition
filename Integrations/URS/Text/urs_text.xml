@@ -199,7 +199,7 @@
         </Replace>
         <!-- Units Overview -->
         <Replace Tag="LOC_UNITS_MILITARY_LAND" Language="de_DE">
-            <Text>Miliär (Heer)</Text>
+            <Text>Militär (Heer)</Text>
         </Replace>
         <Replace Tag="LOC_UNITS_MILITARY_AIR" Language="de_DE">
             <Text>Militär (Luftwaffe)</Text>
