@@ -1077,7 +1077,7 @@
       <Text>Spiele das Popup-Audio ab, das erfolgt, wenn eine neue Tech oder Ausrichtung abgeschlossen wurde. Kann völlig unabhängig von der visuellen Popup-Komponente ein- und ausgeschaltet werden</Text>
     </Row>
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="de_DE">
-      <Text>Denk dran: CQUI Einstellungen werden mit dem individuellen Savegame gespeichert![NEWLINE]Wenn Du die Voreinstellungen generell ändern willst, bitte editiere die CQUI_Settings.sql Datei innerhalb des [MOD INSTALL DIRECTORY]/CQUI/Assets Verzeichnisses</Text>
+      <Text>Denk dran: CQUI Einstellungen werden im individuellen Savegame gespeichert![NEWLINE]Wenn Du die Voreinstellungen generell ändern willst, dann editiere bitte die Datei [NEWLINE]CQUI_Settings.sql im Verzeichnis[MOD INSTALL DIRECTORY]/CQUI/Assets.</Text>
     </Row>
     <Row Tag="LOC_CQUI_UNITS" Language="de_DE">
       <Text>Einheiten</Text>
