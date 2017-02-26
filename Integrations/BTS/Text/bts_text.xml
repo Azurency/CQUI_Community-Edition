@@ -742,27 +742,27 @@
 
    <!-- Common Text -->
      <Replace Tag="LOC_TRADE_GROUP_SETTINGS" Language="de_DE">
-        <Text>Gruppen-Einstellungen</Text>
+        <Text>Gruppeneinstellungen</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_FILTER_SETTINGS" Language="de_DE">
-        <Text>Filter-Einstellungen</Text>
+        <Text>Filtereinstellungen</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="de_DE">
-        <Text>Sort.n. [ICON_Food] Nahrung</Text>
+        <Text>Sort. n. [ICON_Food] Nahrung</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_SORT_BY_PRODUCTION_TOOLTIP" Language="de_DE">
-        <Text>Sort.n. [ICON_Production] Produktion</Text>
+        <Text>Sort. n. [ICON_Production] Produktion</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_SORT_BY_GOLD_TOOLTIP" Language="de_DE">
-        <Text>Sort.n. [ICON_Gold] Gold</Text>
+        <Text>Sort. n. [ICON_Gold] Gold</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_SORT_BY_SCIENCE_TOOLTIP" Language="de_DE">
-        <Text>Sort.n. [ICON_Science] Forschung</Text>
+        <Text>Sort. n. [ICON_Science] Forschung</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_SORT_BY_CULTURE_TOOLTIP" Language="de_DE">
@@ -770,11 +770,11 @@
     </Replace>
 
     <Replace Tag="LOC_TRADE_SORT_BY_FAITH_TOOLTIP" Language="de_DE">
-        <Text>Sort.n. [ICON_Faith] Glaube</Text>
+        <Text>Sort. n. [ICON_Faith] Glaube</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_SORT_BY_TURNS_REMAINING_TOOLTIP" Language="de_DE">
-        <Text>Sort.n. [ICON_Turn] Runden bis Route fertig ist</Text>
+        <Text>Sort. n. [ICON_Turn] Runden bis Route fertig ist</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_FILTER_INTERNATIONAL_ROUTES_TEXT" Language="de_DE">
@@ -791,7 +791,7 @@
     </Replace>
 
     <Replace Tag="LOC_TRADE_SORT_BY_TEXT" Language="de_DE">
-        <Text>Sort.n.</Text>
+        <Text>Sort. nach</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT" Language="de_DE">
@@ -807,7 +807,7 @@
     </Replace>
 
     <Replace Tag="LOC_TRADE_TURNS_REMAINING_ALT_HELP_TOOLTIP" Language="de_DE">
-        <Text>Diese Route benötigt {1_TurnsRemaining}[Icon_Turn] bis zu Fertigstellung.</Text>
+        <Text>Diese Route benötigt {1_TurnsRemaining}[Icon_Turn] bis zur Fertigstellung.</Text>
     </Replace>
    
     <Replace Tag="LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER" Language="de_DE">
@@ -831,7 +831,7 @@
     </Replace>
 
     <Replace Tag="LOC_TRADE_CANCEL_AUTOMATION_TOOLTIP" Language="de_DE">
-        <Text>Abbruch der automatisierten Handelsroute. Der Händler wird verfügbar sein, wenn seine Route abgeschlossen ist.</Text>
+        <Text>Abbruch der automatisierten Handelsroute. Der Händler wird verfügbar sein, sobald seine Route abgeschlossen ist.</Text>
     </Replace>
 
     <!-- Make Trade Route -->
@@ -840,7 +840,7 @@
     </Replace>
 
     <Replace Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_TOOLTIP" Language="de_DE">
-        <Text>Aktiviere, damit der Händler diese Route widerholt. Standardmäßig ist die wiederholte Route die letzte genommene Route des Händlers.</Text>
+        <Text>Aktiviere, damit der Händler diese Route wiederholt. Standardmäßig ist die wiederholte Route die letzte Route des Händlers.</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_LABEL" Language="de_DE">
@@ -848,7 +848,7 @@
     </Replace>
 
     <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_TOOLTIP" Language="de_DE">
-        <Text>Die wiederholte Route ist die oberste Route in der Sortierliste. Die Route wird gewählt, wenn der Händler die vorige abgeschlossen hat.</Text>
+        <Text>Die wiederholte Route ist die oberste Route in der Sortierliste. Die Route wird gewählt, sobald der Händler die Vorige abgeschlossen hat.</Text>
     </Replace>
 
     <!-- Trade Origin Chooser -->
