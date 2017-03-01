@@ -519,7 +519,9 @@ function UnitFlag.SetColor( self )
 	local ownerPlayer = pUnit:GetOwner();
 
 	local isAtWar = localPlayer:GetDiplomacy():IsAtWarWith( ownerPlayer );
-	if(isAtWar) then
+  local CQUI_isBarb = pUnit:GetBarbarianTribeIndex() ~= -1
+
+	if(isAtWar and (not CQUI_isBarb)) then
 		self.m_Instance.FlagBaseDarken:SetColor( RGBAValuesToABGRHex(255,0,0,255) );
 	else
 		self.m_Instance.FlagBaseDarken:SetColor( darkerFlagColor );
