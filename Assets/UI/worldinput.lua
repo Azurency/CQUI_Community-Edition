@@ -1131,7 +1131,7 @@ function DefaultKeyUpHandler( uiKey:number )
       elseif (formationClass == "FORMATION_CLASS_AIR") then
         UnitManager.RequestOperation(UI.GetHeadSelectedUnit(), UnitOperationTypes.REBASE);
       else
-        UserConfiguration.ShowMapResources( not UserConfiguration.ShowMapResources() ); -- toggle the resource icon
+        return false;
       end
     end
     if( uiKey == Keys.F ) then
@@ -1170,13 +1170,13 @@ function DefaultKeyUpHandler( uiKey:number )
     end
   end
 
-    if uiKey == Keys.VK_ALT then
+  if uiKey == Keys.VK_ALT then
     if m_isALTDown == true then
       m_isALTDown = false;
       EndDragMap();
       ReadyForDragMap();
     end
-    end
+  end
 
   if uiKey == Keys.VK_SHIFT then
     CQUI_isShiftDown = false;
@@ -3404,7 +3404,6 @@ function OnInputActionTriggered( actionId )
         LuaEvents.MinimapPanel_ToggleGrid();
         LuaEvents.MinimapPanel_RefreshMinimapOptions();
         UI.PlaySound("Play_UI_Click");
-
     elseif actionId == m_actionHotkeyToggleRes then
         if UserConfiguration.ShowMapResources() then
             UserConfiguration.ShowMapResources( false );
@@ -3413,7 +3412,6 @@ function OnInputActionTriggered( actionId )
         end
         UI.PlaySound("Play_UI_Click");
         LuaEvents.MinimapPanel_RefreshMinimapOptions();
-
     elseif actionId == m_actionHotkeyToggleYield then
         if UserConfiguration.ShowMapYield() then    -- yield already visible, hide
             LuaEvents.MinimapPanel_HideYieldIcons();
@@ -3422,27 +3420,22 @@ function OnInputActionTriggered( actionId )
             LuaEvents.MinimapPanel_ShowYieldIcons();
             UserConfiguration.ShowMapYield( true );
         end
-
         LuaEvents.MinimapPanel_RefreshMinimapOptions();
         UI.PlaySound("Play_UI_Click");
     elseif actionId == m_actionHotkeyPrevUnit then
         UI.SelectPrevReadyUnit();
         UI.PlaySound("Play_UI_Click");
-
     elseif actionId == m_actionHotkeyNextUnit then
         UI.SelectNextReadyUnit();
         UI.PlaySound("Play_UI_Click");
-
     elseif actionId == m_actionHotkeyPrevCity then
         LuaEvents.CQUI_GoPrevCity();
         UI.PlaySound("Play_UI_Click");
         CQUI_UpdateSelectedCityCitizens();
-
     elseif actionId == m_actionHotkeyNextCity then
         LuaEvents.CQUI_GoNextCity();
         UI.PlaySound("Play_UI_Click");
         CQUI_UpdateSelectedCityCitizens();
-
     elseif actionId == m_actionHotkeyOnlinePause then
         if GameConfiguration.IsNetworkMultiplayer() then
             TogglePause();
@@ -3638,7 +3631,7 @@ function Initialize()
   -- Game Engine Events
   Events.CityMadePurchase.Add( OnCityMadePurchase_StrategicView_MapPlacement );
   Events.CycleUnitSelectionRequest.Add( OnCycleUnitSelectionRequest );
-    Events.InputActionTriggered.Add( OnInputActionTriggered );
+  Events.InputActionTriggered.Add( OnInputActionTriggered );
   Events.InterfaceModeChanged.Add(OnInterfaceModeChanged);
   Events.MultiplayerGameLastPlayer.Add(OnMultiplayerGameLastPlayer);
   Events.MultiplayerGameAbandoned.Add(OnMultiplayerGameAbandoned);

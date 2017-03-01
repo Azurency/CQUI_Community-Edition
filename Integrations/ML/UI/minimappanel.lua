@@ -186,14 +186,18 @@ function RealizeFlyouts( pControl:table )
   end
 end
 
+-- ===========================================================================
 function RefreshMinimapOptions()
-  Controls.ToggleYieldsButton:SetCheck(UserConfiguration.ShowMapYield());
-  Controls.ToggleGridButton:SetCheck(bGridOn);
-  Controls.ToggleResourcesButton:SetCheck(UserConfiguration.ShowMapResources());
+    Controls.ToggleYieldsButton:SetCheck(UserConfiguration.ShowMapYield());
+    Controls.ToggleResourcesButton:SetCheck(UserConfiguration.ShowMapResources());
+    Controls.ToggleGridButton:SetCheck(bGridOn);
 end
 
 -- ===========================================================================
 function ToggleMapOptionsList()
+    if Controls.MapOptionsPanel:IsHidden() then
+        RefreshMinimapOptions();
+    end
   Controls.MapOptionsPanel:SetHide( not Controls.MapOptionsPanel:IsHidden() );
   RealizeFlyouts(Controls.MapOptionsPanel);
   Controls.MapOptionsButton:SetSelected( not Controls.MapOptionsPanel:IsHidden() );
@@ -248,10 +252,8 @@ function ToggleYieldIcons()
   UserConfiguration.ShowMapYield( showMapYield );
   if showMapYield then
     LuaEvents.MinimapPanel_ShowYieldIcons();
-    Controls.ToggleYieldsButton:SetCheck(true);
   else
     LuaEvents.MinimapPanel_HideYieldIcons();
-    Controls.ToggleYieldsButton:SetCheck(false);
   end
 end
 
@@ -272,8 +274,8 @@ end
 function ToggleContinentLens()
   if Controls.ContinentLensButton:IsChecked() then
     UILens.SetActive("Continent");
-    RefreshInterfaceMode();
   else
+    RefreshInterfaceMode();
     m_shouldCloseLensMenu = false;
     if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
       UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
@@ -672,6 +674,7 @@ end
 function OnLensLayerOff( layerNum:number )
   if (layerNum == LensLayers.HEX_COLORING_RELIGION or
       layerNum == LensLayers.HEX_COLORING_CONTINENT or
+			layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL	or
       layerNum == LensLayers.HEX_COLORING_GOVERNMENT or
       layerNum == LensLayers.HEX_COLORING_OWING_CIV) then
     UI.PlaySound("UI_Lens_Overlay_Off");
@@ -775,9 +778,9 @@ function SetGovernmentHexes()
   local localPlayerVis:table = PlayersVisibility[localPlayer];
   if (localPlayerVis ~= nil) then
     local players = Game.GetPlayers();
-    for i in pairs(players) do
+		for i, player in ipairs(players) do
       local cities = players[i]:GetCities();
-      local culture = players[i]:GetCulture();
+			local culture = player:GetCulture();
       local governmentId :number = culture:GetCurrentGovernment();
       local GovernmentColor;
       if(governmentId < 0) or GameInfo.Governments[governmentId] == nil then
@@ -790,7 +793,7 @@ function SetGovernmentHexes()
 
       -- print(GovernmentColor)
 
-      for i, pCity in cities:Members() do
+			for _, pCity in cities:Members() do
         local visibleCityPlots:table = Map.GetCityPlots():GetVisiblePurchasedPlots(pCity);
 
         if table.count(visibleCityPlots) > 0 then
@@ -2153,6 +2156,10 @@ end
 --  Input Hotkey Event
 -- ===========================================================================
 function OnInputActionTriggered( actionId )
+    -- dont show panel if there is no local player
+  if (Game.GetLocalPlayer() == -1) then
+    return;
+  end
   if m_ToggleReligionLensId ~= nil and (actionId == m_ToggleReligionLensId) then
     LensPanelHotkeyControl( Controls.ReligionLensButton );
     ToggleReligionLens();
@@ -2515,6 +2522,8 @@ function Initialize()
   LuaEvents.NotificationPanel_ShowContinentLens.Add(OnToggleContinentLensExternal);
   LuaEvents.Tutorial_DisableMapDrag.Add( OnTutorial_DisableMapDrag );
   LuaEvents.Tutorial_SwitchToWorldView.Add( OnTutorial_SwitchToWorldView );
+  LuaEvents.MinimapPanel_ToggleGrid.Add( ToggleGrid );
+  LuaEvents.MinimapPanel_RefreshMinimapOptions.Add( RefreshMinimapOptions );
 
   -- For modded lenses
   Events.UnitSelectionChanged.Add( OnUnitSelectionChanged );
@@ -2531,7 +2540,6 @@ function Initialize()
 
   -- CQUI: Toggle yield icons if option is enabled
   if(GameConfiguration.GetValue("CQUI_ToggleYieldsOnLoad")) then
-    print("test");
     ToggleYieldIcons();
   end
 end
