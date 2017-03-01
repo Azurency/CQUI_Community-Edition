@@ -63,7 +63,7 @@
 
           </Image>
           <!-- Promotion Indicator -->
-          <Image ID="Promotion_Flag" Anchor="R,C" Alpha="1.65" Size="20,25" Offset="-8,0" Texture="UnitFlag_Promo.dds" Hidden="1">
+          <Image ID="Promotion_Flag" Anchor="R,C" Alpha="1.35" Size="20,25" Offset="-8,0" Texture="UnitFlag_Promo.dds" Hidden="1">
             <AlphaAnim ID="UnitXPAnim" Cycle="Bounce" Speed="3" AlphaStart="0.3" AlphaEnd="0" Stopped="0">
               <Image ID="New_Promotion_Flag" Size="20,25" Texture="UnitFlag_Promo.dds" Hidden="1" Color="255,255,0,255" />
             </AlphaAnim>
