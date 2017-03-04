@@ -1170,22 +1170,28 @@ function ViewYieldsPage()
 		-- Tooltip shows districts have a -1 gpt cost, not sure if this goes up or if its different for other districts or
 		-- later eras
 
+		local iNumDistricts : number = 0
+
 		-- Can't find/figure out how to find district type, so i'll do it myself
 		-- this goes through the districts and adds the maintenance if not pillaged/being built
 		for _,kBuilding in ipairs(kCityData.BuildingsAndDistricts) do
 			if kBuilding.isBuilt then
 				for i = 1, #GameInfo.Districts do
-					if kBuilding.Name == Locale.Lookup( GameInfo.Districts[i].Name ) and GameInfo.Districts[i].Maintenance > 0 then
-						local pBuildingInstance:table = {};
-						ContextPtr:BuildInstanceForControl( "BuildingExpensesEntryInstance", pBuildingInstance, instance.ContentStack );
-						pBuildingInstance.CityName:SetText( Locale.Lookup(cityName) );
-						pBuildingInstance.BuildingName:SetText( Locale.Lookup( GameInfo.Districts[i].Name ) );
-						pBuildingInstance.Gold:SetText( "-" .. tostring( GameInfo.Districts[i].Maintenance ) );
-						iTotalBuildingMaintenance = iTotalBuildingMaintenance - GameInfo.Districts[i].Maintenance;
-						break;
+					if kBuilding.Name == Locale.Lookup( GameInfo.Districts[i].Name ) then
+						iNumDistricts = iNumDistricts + GameInfo.Districts[i].Maintenance
+						break
 					end
 				end
 			end
+		end
+
+		if ( iNumDistricts > 0 ) then
+			local pBuildingInstance:table = {}
+			ContextPtr:BuildInstanceForControl( "BuildingExpensesEntryInstance", pBuildingInstance, instance.ContentStack )
+			pBuildingInstance.CityName:SetText( Locale.Lookup(cityName) )
+			pBuildingInstance.BuildingName:SetText( "Districts" )
+			pBuildingInstance.Gold:SetText( "-" .. tostring( iNumDistricts ) )
+			iTotalBuildingMaintenance = iTotalBuildingMaintenance - iNumDistricts
 		end
 
 		for i,kBuilding in ipairs(kCityData.Buildings) do
@@ -1731,14 +1737,12 @@ function group_military( unit, unitInstance, group, parent, type )
 	end
 
 	unitInstance.UnitHealth:SetText( tostring( unit:GetMaxDamage() - unit:GetDamage() ) .. "/" .. tostring( unit:GetMaxDamage() ) )
-
-	local bCanStart, tResults = UnitManager.CanStartOperation( unit, UnitOperationTypes.UPGRADE, nil, true );
+			
+	local bCanStart, tResults = UnitManager.CanStartCommand( unit, UnitCommandTypes.UPGRADE, false, true);
 
 	if ( bCanStart ) then
-		local bCanStart, tResults = UnitManager.CanStartOperation( unit, UnitOperationTypes.UPGRADE, nil, false, true )
-
 		unitInstance.Upgrade:SetHide( false )
-		unitInstance.Upgrade:RegisterCallback( Mouse.eLClick, function() bUnits.group = group; bUnits.parent = parent; bUnits.type = type; UnitManager.RequestOperation( unit, UnitOperationTypes.UPGRADE ); end )
+		unitInstance.Upgrade:RegisterCallback( Mouse.eLClick, function() bUnits.group = group; bUnits.parent = parent; bUnits.type = type; UnitManager.RequestCommand( unit, UnitCommandTypes.UPGRADE ); end )
 		local upgradeUnitName = GameInfo.Units[tResults[UnitOperationResults.UNIT_TYPE]].Name;
 		local toolTipString	= Locale.Lookup( "LOC_UNITOPERATION_UPGRADE_DESCRIPTION" );
 		toolTipString = toolTipString .. " " .. Locale.Lookup(upgradeUnitName);
