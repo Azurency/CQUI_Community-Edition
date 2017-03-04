@@ -674,7 +674,6 @@ end
 function OnLensLayerOff( layerNum:number )
   if (layerNum == LensLayers.HEX_COLORING_RELIGION or
       layerNum == LensLayers.HEX_COLORING_CONTINENT or
-			layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL	or
       layerNum == LensLayers.HEX_COLORING_GOVERNMENT or
       layerNum == LensLayers.HEX_COLORING_OWING_CIV) then
     UI.PlaySound("UI_Lens_Overlay_Off");
