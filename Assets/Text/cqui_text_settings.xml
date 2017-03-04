@@ -801,7 +801,6 @@
       <Text>Możesz to także przełączać klikając na emblemat wzrostu w widoku miasta</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" Language="pl_PL">
-      <Text>Wyświetlaj informacje o mieście po najechaniu myszką</Text>
       <Text>Informacje o mieście po najechaniu</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="pl_PL">
@@ -865,7 +864,6 @@
       <Text>Pełny: zawsze rysuj ikony zasobów[NEWLINE]Przeźroczysty: ikony ulepszonych zasobów są przeźroczyste[NEWLINE]Ukryty: ikony ulepszonych zasobów są ukryte</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="pl_PL">
-      <Text>Wyświetlaj zasoby luksusowe w górnym panelu</Text>
       <Text>Zasoby luksusowe w górnym panelu</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="pl_PL">
@@ -890,22 +888,18 @@
       <Text>Filtry</Text>
     </Row>
     <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="pl_PL">
-      <Text>Automatycznie włączaj filtr archeologa</Text>
       <Text>Automatycznie włącz filtr archeologa</Text>
     </Row>
     <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="pl_PL">
-      <Text>Automatycznie włączaj filtr budowniczego</Text>
       <Text>Automatycznie włącz filtr budowniczego</Text>
     </Row>
     <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="pl_PL">
-      <Text>Automatycznie włączaj filtr zwiadowcy</Text>
       <Text>Automatycznie włącz filtr zwiadowcy</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS" Language="pl_PL">
       <Text>Popup'y</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS_ALWAYSOPENTECHTREES" Language="pl_PL">
-      <Text>Zawsze otwieraj pełne drzewo zamiast popup'u</Text>
       <Text>Zawsze otwieraj drzewo technologii</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="pl_PL">
@@ -921,18 +915,15 @@
       <Text>Przełącza odtwarzanie dzwięku po zakończeniu badania bądź kodeksu prawnego. Jest całkowicie niezależny od popup'u i może być odtwarzany nawet gdy wizualny popup jest wyłączony</Text>
     </Row>
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="pl_PL">
-      <Text>Pamiętaj: Ustawienia CQUI są przypisane do poszczególnych zapisów gry![NEWLINE]Jeśli chcesz zmienić ustawienia na stałe, zmień je w pliku CQUI_Settings.sql znajdującym się w katalogu [KATALOG INSTALACJI MODU]/CQUI/Assets</Text>
       <Text>Pamiętaj: Ustawienia CQUI są przypisane do poszczególnych zapisów gry![NEWLINE]Jeśli chcesz zmienić ustawienia na stałe, zmień je w pliku[NEWLINE] CQUI_Settings.sql znajdującym się w katalogu [KATALOG INSTALACJI MODU]/CQUI/Assets</Text>
     </Row>
     <Row Tag="LOC_CQUI_UNITS" Language="pl_PL">
       <Text>Jednostki</Text>
     </Row>
     <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="pl_PL">
-      <Text>Pokazuj drogę jednostki po zaznaczeniu bądź najechaniu myszką</Text>
       <Text>Pokazuj drogę jednostki</Text>
     </Row>
     <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="pl_PL">
-      <Text>Automatycznie rozwijaj listę akcji w panelu jednostki</Text>
       <Text>Rozwijaj listę akcji w panelu jednostki</Text>
     </Row>
 
