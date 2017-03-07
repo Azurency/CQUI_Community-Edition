@@ -2074,7 +2074,7 @@ function Initialize()
 	AddTabSection( "LOC_HUD_REPORTS_TAB_CURRENT_DEALS", ViewDealsPage );
 	AddTabSection( "LOC_UNIT_NAME",						ViewUnitsPage );
 
-	m_tabs.SameSizedTabs(50);
+	m_tabs.SameSizedTabs(0);
 	m_tabs.CenterAlignTabs(-10);
 
 	-- UI Callbacks
