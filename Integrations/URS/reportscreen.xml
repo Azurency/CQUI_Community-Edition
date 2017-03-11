@@ -557,7 +557,7 @@
 				</Container>
 				<Box															Anchor="C,C"								Size="2,19"	Color="46,70,95,255" />
 				<Container																										Size="100,parent">
-					<Label			ID="Duration"				Style="ReportValueLeftName"	String="LOC_HUD_REPORTS_HEADER_BUILDING" />
+					<Label			ID="Duration"				Style="ReportValueText"	String="LOC_HUD_REPORTS_HEADER_BUILDING" />
 				</Container>
 				<Box															Anchor="C,C"								Size="2,19"	Color="46,70,95,255" />
 				<Container																										Size="100,parent">

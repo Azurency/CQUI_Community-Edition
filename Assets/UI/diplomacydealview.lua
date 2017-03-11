@@ -86,7 +86,8 @@ local YIELD_FONT_ICONS:table = {
         YIELD_FAITH				= "[ICON_FaithLarge]",
         TourismYield			= "[ICON_TourismLarge]"
         };
-
+local ms_HBUI_LocalPlayerRes =  {};
+local ms_HBUI_OtherPlayerRes =  {};
 -- ===========================================================================
 function SetIconToSize(icon, iconName, iconSize)
 	if iconSize == nil then
@@ -1237,6 +1238,7 @@ function PopulateAvailableGold(player : table, iconList : table)
 					-- One time gold
 					local icon = ms_IconOnlyIM:GetInstance(iconList.ListStack);
 					icon.AmountText:SetText(goldBalance);
+					icon.Icon:SetColor(0xFFFFFFFF);
 					icon.SelectButton:SetToolTipString(nil);		-- We recycle the entries, so make sure this is clear.
 					SetIconToSize(icon, "ICON_YIELD_GOLD_5");
 					icon.SelectButton:RegisterCallback( Mouse.eLClick, function() OnClickAvailableOneTimeGold(player, ms_DefaultOneTimeGoldAmount); end );
@@ -1245,8 +1247,14 @@ function PopulateAvailableGold(player : table, iconList : table)
 					iAvailableItemCount = iAvailableItemCount + 1;
 				end
 			else
+
+				local playerTreasury:table	= player:GetTreasury();
+				local goldYield		:number = math.floor((playerTreasury:GetGoldYield() - playerTreasury:GetTotalMaintenance()));
+				print("Gold Yield: " .. goldYield);
 				-- Multi-turn gold
 				icon = ms_IconAndTextIM:GetInstance(iconList.ListStack);
+				icon.AmountText:SetText(FormatValuePerTurn(goldYield));
+				icon.AmountText:SetHide(false);
 				SetIconToSize(icon, "ICON_YIELD_GOLD_5");
 				icon.IconText:LocalizeAndSetText("LOC_DIPLOMACY_DEAL_GOLD_PER_TURN");
 				icon.SelectButton:SetToolTipString(nil);		-- We recycle the entries, so make sure this is clear.
@@ -1435,7 +1443,26 @@ function PopulateAvailableResources(player : table, iconList : table, className 
 					SetIconToSize(icon, "ICON_" .. resourceDesc.ResourceType);
 					icon.AmountText:SetText(tostring(entry.MaxAmount));
 					icon.AmountText:SetHide(false);
-
+					icon.Icon:SetColor(0xFFFFFFFF);
+					if (className == "RESOURCECLASS_LUXURY") then
+						print("Adding Luxury For Player: " .. player:GetID());
+						print("Luxury Type: " .. resourceDesc.ResourceType);
+						if (player:GetID() == Game.GetLocalPlayer()) then
+							--check if other player has this lux
+							if (ms_HBUI_OtherPlayerRes[resourceDesc.ResourceType] == true) then
+								--the other player already has this lux
+								print("Player ID: " .. GetOtherPlayer(player):GetID() .. " Already has " .. resourceDesc.ResourceType);
+								icon.Icon:SetColor(0xC83232FF);
+							end
+						else
+							--check if local player has this lux
+							if (ms_HBUI_LocalPlayerRes[resourceDesc.ResourceType] == true) then
+								--the other player already has this lux
+								print("Player ID: " .. GetOtherPlayer(player):GetID() .. " Already has " .. resourceDesc.ResourceType);
+								icon.Icon:SetColor(0xC83232FF);
+							end
+						end
+					end
 					icon.SelectButton:SetDisabled( not entry.IsValid );
 					local resourceType = entry.ForType;
 					-- What to do when double clicked/tapped.
@@ -2259,6 +2286,33 @@ function OnShow()
 
 	local iAvailableItemCount = 0;
 	-- Available content to trade.  Shouldn't change during the session, but it might, especially in multiplayer.
+	-- populate the tables of players avaliable resources
+	ms_HBUI_LocalPlayerRes = {};
+	ms_HBUI_OtherPlayerRes = {};
+	
+	local pPlayerResources	=  Players[ms_LocalPlayer:GetID()]:GetResources();
+	local pOtherPlayerResources	=  Players[ms_OtherPlayer:GetID()]:GetResources();
+	
+	for resource in GameInfo.Resources() do
+		if (resource.ResourceClassType ~= nil and resource.ResourceClassType == "RESOURCECLASS_LUXURY") then
+			local amount = pPlayerResources:GetResourceAmount(resource.ResourceType);
+			local amountOther = pOtherPlayerResources:GetResourceAmount(resource.ResourceType);
+
+			if (amount > 0) then
+				print("Player ID: " .. ms_LocalPlayer:GetID() .. " Has " .. resource.ResourceType);
+				ms_HBUI_LocalPlayerRes[resource.ResourceType] = true;
+			else
+				ms_HBUI_LocalPlayerRes[resource.ResourceType] = false;
+			end
+
+			if (amountOther > 0) then
+				print("Player ID: " .. ms_OtherPlayer:GetID() .. " Has " .. resource.ResourceType);
+				ms_HBUI_OtherPlayerRes[resource.ResourceType] = true;
+			else
+				ms_HBUI_OtherPlayerRes[resource.ResourceType] = false;
+			end
+		end
+	end
 	iAvailableItemCount = iAvailableItemCount + PopulatePlayerAvailablePanel(Controls.MyInventoryStack, ms_LocalPlayer);
 	iAvailableItemCount = iAvailableItemCount + PopulatePlayerAvailablePanel(Controls.TheirInventoryStack, ms_OtherPlayer);
 

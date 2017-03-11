@@ -84,6 +84,10 @@ local m_kCultureData	:table = nil;
 local m_kCurrentDeals	:table = nil;
 -- !!
 
+-- Remember last tab variable: ARISTOS
+local m_kCurrentTab = 1
+-- !!
+
 -- ===========================================================================
 --	Single exit point for display
 -- ===========================================================================
@@ -113,7 +117,8 @@ function Open()
 	-- m_kCityData, m_kCityTotalData, m_kResourceData, m_kUnitData, m_kDealData = GetData();
 	m_kCityData, m_kCityTotalData, m_kResourceData, m_kUnitData, m_kDealData, m_kCultureData, m_kCurrentDeals = GetData();
 
-	m_tabs.SelectTab( 1 );
+	-- To remember the last opened tab when the report is re-opened: ARISTOS
+	m_tabs.SelectTab( m_kCurrentTab );
 end
 
 -- ===========================================================================
@@ -393,6 +398,9 @@ function GetData()
 							elseif pReceivingName == "Gold" then
 								deal.Name = deal.Amount .. Locale.Lookup("LOC_DIPLOMACY_DEAL_GOLD_PER_TURN")
 								deal.Icon = "[ICON_GOLD]"
+								--!! ARISTOS: To add Diplo Deal Amounts to the total tally of Gold!
+								kCityTotalData.Income[YieldTypes.GOLD] = kCityTotalData.Income[YieldTypes.GOLD] + deal.Amount;
+								kCityTotalData.Net[YieldTypes.GOLD] = kCityTotalData.Net[YieldTypes.GOLD] + deal.Amount;
 							else
 								if deal.Amount > 1 then
 									deal.Name = pDealItem:GetValueTypeNameID() .. "(" .. deal.Amount .. ")"
@@ -423,6 +431,9 @@ function GetData()
 							elseif pSendingName == "Gold" then
 								deal.Name = deal.Amount .. Locale.Lookup("LOC_DIPLOMACY_DEAL_GOLD_PER_TURN")
 								deal.Icon = "[ICON_GOLD]"
+								--!! ARISTOS: To add Diplo Deal Amounts to the total tally of Gold!
+								--!! Diplo deal expenses are already calculated in total maintenance!! Gotta love Firaxis... :]
+								-- kCityTotalData.Net[YieldTypes.GOLD] = kCityTotalData.Net[YieldTypes.GOLD] - deal.Amount;
 							else
 								if deal.Amount > 1 then
 									deal.Name = pDealItem:GetValueTypeNameID() .. "(" .. deal.Amount .. ")"
@@ -946,6 +957,9 @@ end
 function ViewYieldsPage()
 
 	ResetTabForNewPageContent();
+	
+	-- Remember this tab when report is next opened: ARISTOS
+	m_kCurrentTab = 1;
 
 	Controls.CityBuildingsCheckbox:SetHide( false )
 	local pPlayer:table = Players[Game.GetLocalPlayer()];
@@ -953,6 +967,7 @@ function ViewYieldsPage()
 	local instance:table = nil;
 	instance = NewCollapsibleGroupInstance();
 	instance.RowHeaderButton:SetText( Locale.Lookup("LOC_HUD_REPORTS_ROW_CITY_INCOME") );
+	instance.RowHeaderLabel:SetHide( true )
 
 	local pHeaderInstance:table = {}
 	ContextPtr:BuildInstanceForControl( "CityIncomeHeaderInstance", pHeaderInstance, instance.ContentStack ) ;
@@ -1156,6 +1171,7 @@ function ViewYieldsPage()
 
 	instance = NewCollapsibleGroupInstance();
 	instance.RowHeaderButton:SetText( Locale.Lookup("LOC_HUD_REPORTS_ROW_BUILDING_EXPENSES") );
+	instance.RowHeaderLabel:SetHide( true )
 
 	local pHeader:table = {};
 	ContextPtr:BuildInstanceForControl( "BuildingExpensesHeaderInstance", pHeader, instance.ContentStack ) ;
@@ -1212,42 +1228,12 @@ function ViewYieldsPage()
 	SetGroupCollapsePadding(instance, pBuildingFooterInstance.Top:GetSizeY() );
 	RealizeGroup( instance );
 
-	-- ========== Diplomatic Deals Expenses ==========
-
-	instance = NewCollapsibleGroupInstance();
-	instance.RowHeaderButton:SetText( Locale.Lookup("LOC_HUD_REPORTS_ROW_DIPLOMATIC_DEALS") );
-
-	local pHeader:table = {};
-	ContextPtr:BuildInstanceForControl( "DealHeaderInstance", pHeader, instance.ContentStack ) ;
-
-	local iTotalDealGold :number = 0;
-
-	for i,kDeal in ipairs(m_kDealData) do
-		local pDealInstance:table = {};
-		ContextPtr:BuildInstanceForControl( "DealEntryInstance", pDealInstance, instance.ContentStack ) ;
-
-		pDealInstance.Civilization:SetText( kDeal.Name );
-		pDealInstance.Duration:SetText( kDeal.Duration );
-		if kDeal.IsOutgoing then
-			pDealInstance.Gold:SetText( "-"..tostring(kDeal.Amount) );
-			iTotalDealGold = iTotalDealGold - kDeal.Amount;
-		else
-			pDealInstance.Gold:SetText( "+"..tostring(kDeal.Amount) );
-			iTotalDealGold = iTotalDealGold + kDeal.Amount;
-		end
-	end
-	local pDealFooterInstance:table = {};
-	ContextPtr:BuildInstanceForControl( "GoldFooterInstance", pDealFooterInstance, instance.ContentStack ) ;
-	pDealFooterInstance.Gold:SetText("[ICON_Gold]"..tostring(iTotalDealGold) );
-
-	SetGroupCollapsePadding(instance, pDealFooterInstance.Top:GetSizeY() );
-	RealizeGroup( instance );
-
 	-- ========== !! Unit Expenses ==========
 
 	instance = NewCollapsibleGroupInstance();
 	instance.RowHeaderButton:SetText( Locale.Lookup( Locale.Lookup("LOC_HUD_REPORTS_ROW_UNIT_EXPENSES") ) );
-
+	instance.RowHeaderLabel:SetHide( true )
+	
 	local pHeader:table = {};
 	ContextPtr:BuildInstanceForControl( "UnitExpensesHeaderInstance", pHeader, instance.ContentStack ) ;
 
@@ -1287,38 +1273,57 @@ function ViewYieldsPage()
 	RealizeGroup( instance );
 
 	-- Unit Expense END!!
-
-	-- ========== Diplomatic Deals Expenses ==========
-
+	
+	
+	-- ========== Diplomatic Deals Income and Expenses ==========
+	-- ARISTOS: A precise Diplomatic Deals Gold Yields report
+	
+	
 	instance = NewCollapsibleGroupInstance();
 	instance.RowHeaderButton:SetText( Locale.Lookup("LOC_HUD_REPORTS_ROW_DIPLOMATIC_DEALS") );
+	instance.RowHeaderLabel:SetHide( true )
 
 	local pHeader:table = {};
 	ContextPtr:BuildInstanceForControl( "DealHeaderInstance", pHeader, instance.ContentStack ) ;
 
 	local iTotalDealGold :number = 0;
-	for i,kDeal in ipairs(m_kDealData) do
-		if kDeal.Type == DealItemTypes.GOLD then
-			local pDealInstance:table = {};
-			ContextPtr:BuildInstanceForControl( "DealEntryInstance", pDealInstance, instance.ContentStack ) ;
+	for i,kDeal in ipairs(m_kCurrentDeals) do
+		local ending = kDeal.EndTurn - Game.GetCurrentGameTurn()
+		
+		for i, pDealItem in pairs( kDeal.Sending ) do
+			if pDealItem.Icon == "[ICON_GOLD]" then
+				local pDealInstance:table = {};
+				ContextPtr:BuildInstanceForControl( "DealEntryInstance", pDealInstance, instance.ContentStack ) ;
 
-			pDealInstance.Civilization:SetText( kDeal.Name );
-			pDealInstance.Duration:SetText( kDeal.Duration );
-			if kDeal.IsOutgoing then
-				pDealInstance.Gold:SetText( "-"..tostring(kDeal.Amount) );
-				iTotalDealGold = iTotalDealGold - kDeal.Amount;
-			else
-				pDealInstance.Gold:SetText( "+"..tostring(kDeal.Amount) );
-				iTotalDealGold = iTotalDealGold + kDeal.Amount;
+				pDealInstance.Civilization:SetText( kDeal.WithCivilization );
+				pDealInstance.Duration:SetText( tostring(ending) .. "[ICON_Turn]" );
+				pDealInstance.Gold:SetText( "-"..tostring(pDealItem.Amount) );
+				iTotalDealGold = iTotalDealGold - pDealItem.Amount;
 			end
 		end
+		
+		for i, pDealItem in pairs( kDeal.Receiving ) do
+			if pDealItem.Icon == "[ICON_GOLD]" then
+				local pDealInstance:table = {};
+				ContextPtr:BuildInstanceForControl( "DealEntryInstance", pDealInstance, instance.ContentStack ) ;
+
+				pDealInstance.Civilization:SetText( kDeal.WithCivilization );
+				pDealInstance.Duration:SetText( tostring(ending) .. "[ICON_Turn]" );
+				pDealInstance.Gold:SetText( "+"..tostring(pDealItem.Amount) );
+				iTotalDealGold = iTotalDealGold + pDealItem.Amount;
+			end
+		end
+		
 	end
+	
 	local pDealFooterInstance:table = {};
 	ContextPtr:BuildInstanceForControl( "GoldFooterInstance", pDealFooterInstance, instance.ContentStack ) ;
 	pDealFooterInstance.Gold:SetText("[ICON_Gold]"..tostring(iTotalDealGold) );
 
 	SetGroupCollapsePadding(instance, pDealFooterInstance.Top:GetSizeY() );
 	RealizeGroup( instance );
+	
+	-- END ARISTOS Diplomatic Deals
 
 
 	-- ========== TOTALS ==========
@@ -1355,6 +1360,9 @@ end
 function ViewResourcesPage()
 
 	ResetTabForNewPageContent();
+	
+	-- Remember this tab when report is next opened: ARISTOS
+	m_kCurrentTab = 2;
 
 	local strategicResources:string = "";
 	local luxuryResources	:string = "";
@@ -1369,6 +1377,7 @@ function ViewResourcesPage()
 
 		local kResource :table = GameInfo.Resources[eResourceType];
 		instance.RowHeaderButton:SetText(  kSingleResourceData.Icon..Locale.Lookup( kResource.Name ) );
+		instance.RowHeaderLabel:SetHide( true )
 
 		local pHeaderInstance:table = {};
 		ContextPtr:BuildInstanceForControl( "ResourcesHeaderInstance", pHeaderInstance, instance.ContentStack ) ;
@@ -1493,6 +1502,9 @@ end
 function ViewCityStatusPage()
 
 	ResetTabForNewPageContent()
+	
+	-- Remember this tab when report is next opened: ARISTOS
+	m_kCurrentTab = 3;
 
 	local instance:table = m_simpleIM:GetInstance()
 	instance.Top:DestroyAllChildren()
@@ -1865,6 +1877,9 @@ end
 function ViewDealsPage()
 
 	ResetTabForNewPageContent();
+	
+	-- Remember this tab when report is next opened: ARISTOS
+	m_kCurrentTab = 4;
 
 	for j, pDeal in spairs( m_kCurrentDeals, function( t, a, b ) return t[b].EndTurn > t[a].EndTurn end ) do
 		local ending = pDeal.EndTurn - Game.GetCurrentGameTurn()
@@ -1874,7 +1889,7 @@ function ViewDealsPage()
 		local instance : table = NewCollapsibleGroupInstance()
 
 		instance.RowHeaderButton:SetText( Locale.Lookup("LOC_HUD_REPORTS_TRADE_DEAL_WITH", pDeal.WithCivilization) )
-		instance.RowHeaderLabel:SetText(  Locale.Lookup("LOC_ESPIONAGEPANEL_PANEL_TURNS") .. ending .. "[ICON_Turn]" .. " (" .. pDeal.EndTurn .. ")" )
+		instance.RowHeaderLabel:SetText(  Locale.Lookup("LOC_ESPIONAGEPANEL_PANEL_TURNS") .. ": " .. ending .. "[ICON_Turn]" .. " (" .. pDeal.EndTurn .. ")" )
 		instance.RowHeaderLabel:SetHide( false )
 
 		local dealHeaderInstance : table = {}
@@ -1930,11 +1945,15 @@ end
 function ViewUnitsPage()
 
 	ResetTabForNewPageContent();
+	
+	-- Remember this tab when report is next opened: ARISTOS
+	m_kCurrentTab = 5;
 
 	for iUnitGroup, kUnitGroup in spairs( m_kUnitData["Unit_Report"], function( t, a, b ) return t[b].ID > t[a].ID end ) do
 		local instance : table = NewCollapsibleGroupInstance()
 
 		instance.RowHeaderButton:SetText( kUnitGroup.Name )
+		instance.RowHeaderLabel:SetHide( true )
 
 		local pHeaderInstance:table = {}
 		ContextPtr:BuildInstanceForControl( kUnitGroup.Header, pHeaderInstance, instance.ContentStack )
@@ -2102,3 +2121,4 @@ function Initialize()
 	LuaEvents.TopPanel_CloseReportsScreen.Add( OnTopCloseReportsScreen );
 end
 Initialize();
+
