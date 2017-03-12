@@ -345,13 +345,13 @@
       <Text>城市视图</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="zh_Hans_CN">
-      <Text>高亮生产中的单位</Text>
+      <Text>生产项目横幅的高度</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="zh_Hans_CN">
       <Text>启用生产队列</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="zh_Hans_CN">
-      <Text>显示边境拓展的高亮</Text>
+      <Text>显示边境拓展的地块</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="zh_Hans_CN">
       <Text>点击城市视图中的成长按钮也可切换显示/隐藏</Text>
@@ -382,6 +382,27 @@
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="zh_Hans_CN">
       <Text>显示文化增长剩余回合。</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON" Language="zh_Hans_CN">
+      <Text>工作中的市民头像</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON_TOOLTIP" Language="zh_Hans_CN">
+      <Text>使工作中的市民头像有不同的大小/透明度</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONALPHA" Language="zh_Hans_CN">
+      <Text>头像透明度</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONSIZE" Language="zh_Hans_CN">
+      <Text>头像大小</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONS_HEADER" Language="zh_Hans_CN">
+      <Text>市民头像</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONALPHA" Language="zh_Hans_CN">
+      <Text>头像透明度</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONSIZE" Language="zh_Hans_CN">
+      <Text>头像大小</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL" Language="zh_Hans_CN">
       <Text>通用</Text>

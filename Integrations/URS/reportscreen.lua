@@ -957,7 +957,7 @@ end
 function ViewYieldsPage()
 
 	ResetTabForNewPageContent();
-	
+
 	-- Remember this tab when report is next opened: ARISTOS
 	m_kCurrentTab = 1;
 
@@ -1193,21 +1193,17 @@ function ViewYieldsPage()
 		for _,kBuilding in ipairs(kCityData.BuildingsAndDistricts) do
 			if kBuilding.isBuilt then
 				for i = 1, #GameInfo.Districts do
-					if kBuilding.Name == Locale.Lookup( GameInfo.Districts[i].Name ) then
-						iNumDistricts = iNumDistricts + GameInfo.Districts[i].Maintenance
-						break
+          if kBuilding.Name == Locale.Lookup( GameInfo.Districts[i].Name ) and GameInfo.Districts[i].Maintenance > 0 then
+            local pBuildingInstance:table = {};
+            ContextPtr:BuildInstanceForControl( "BuildingExpensesEntryInstance", pBuildingInstance, instance.ContentStack );
+            pBuildingInstance.CityName:SetText( Locale.Lookup(cityName) );
+            pBuildingInstance.BuildingName:SetText( Locale.Lookup( GameInfo.Districts[i].Name ) );
+            pBuildingInstance.Gold:SetText( "-" .. tostring( GameInfo.Districts[i].Maintenance ) );
+            iTotalBuildingMaintenance = iTotalBuildingMaintenance - GameInfo.Districts[i].Maintenance;
+						break;
 					end
 				end
 			end
-		end
-
-		if ( iNumDistricts > 0 ) then
-			local pBuildingInstance:table = {}
-			ContextPtr:BuildInstanceForControl( "BuildingExpensesEntryInstance", pBuildingInstance, instance.ContentStack )
-			pBuildingInstance.CityName:SetText( Locale.Lookup(cityName) )
-			pBuildingInstance.BuildingName:SetText( "Districts" )
-			pBuildingInstance.Gold:SetText( "-" .. tostring( iNumDistricts ) )
-			iTotalBuildingMaintenance = iTotalBuildingMaintenance - iNumDistricts
 		end
 
 		for i,kBuilding in ipairs(kCityData.Buildings) do
@@ -1233,7 +1229,7 @@ function ViewYieldsPage()
 	instance = NewCollapsibleGroupInstance();
 	instance.RowHeaderButton:SetText( Locale.Lookup( Locale.Lookup("LOC_HUD_REPORTS_ROW_UNIT_EXPENSES") ) );
 	instance.RowHeaderLabel:SetHide( true )
-	
+
 	local pHeader:table = {};
 	ContextPtr:BuildInstanceForControl( "UnitExpensesHeaderInstance", pHeader, instance.ContentStack ) ;
 
@@ -1273,12 +1269,12 @@ function ViewYieldsPage()
 	RealizeGroup( instance );
 
 	-- Unit Expense END!!
-	
-	
+
+
 	-- ========== Diplomatic Deals Income and Expenses ==========
 	-- ARISTOS: A precise Diplomatic Deals Gold Yields report
-	
-	
+
+
 	instance = NewCollapsibleGroupInstance();
 	instance.RowHeaderButton:SetText( Locale.Lookup("LOC_HUD_REPORTS_ROW_DIPLOMATIC_DEALS") );
 	instance.RowHeaderLabel:SetHide( true )
@@ -1289,7 +1285,7 @@ function ViewYieldsPage()
 	local iTotalDealGold :number = 0;
 	for i,kDeal in ipairs(m_kCurrentDeals) do
 		local ending = kDeal.EndTurn - Game.GetCurrentGameTurn()
-		
+
 		for i, pDealItem in pairs( kDeal.Sending ) do
 			if pDealItem.Icon == "[ICON_GOLD]" then
 				local pDealInstance:table = {};
@@ -1301,7 +1297,7 @@ function ViewYieldsPage()
 				iTotalDealGold = iTotalDealGold - pDealItem.Amount;
 			end
 		end
-		
+
 		for i, pDealItem in pairs( kDeal.Receiving ) do
 			if pDealItem.Icon == "[ICON_GOLD]" then
 				local pDealInstance:table = {};
@@ -1313,16 +1309,16 @@ function ViewYieldsPage()
 				iTotalDealGold = iTotalDealGold + pDealItem.Amount;
 			end
 		end
-		
+
 	end
-	
+
 	local pDealFooterInstance:table = {};
 	ContextPtr:BuildInstanceForControl( "GoldFooterInstance", pDealFooterInstance, instance.ContentStack ) ;
 	pDealFooterInstance.Gold:SetText("[ICON_Gold]"..tostring(iTotalDealGold) );
 
 	SetGroupCollapsePadding(instance, pDealFooterInstance.Top:GetSizeY() );
 	RealizeGroup( instance );
-	
+
 	-- END ARISTOS Diplomatic Deals
 
 
@@ -1360,7 +1356,7 @@ end
 function ViewResourcesPage()
 
 	ResetTabForNewPageContent();
-	
+
 	-- Remember this tab when report is next opened: ARISTOS
 	m_kCurrentTab = 2;
 
@@ -1502,7 +1498,7 @@ end
 function ViewCityStatusPage()
 
 	ResetTabForNewPageContent()
-	
+
 	-- Remember this tab when report is next opened: ARISTOS
 	m_kCurrentTab = 3;
 
@@ -1749,7 +1745,7 @@ function group_military( unit, unitInstance, group, parent, type )
 	end
 
 	unitInstance.UnitHealth:SetText( tostring( unit:GetMaxDamage() - unit:GetDamage() ) .. "/" .. tostring( unit:GetMaxDamage() ) )
-			
+
 	local bCanStart, tResults = UnitManager.CanStartCommand( unit, UnitCommandTypes.UPGRADE, false, true);
 
 	if ( bCanStart ) then
@@ -1877,7 +1873,7 @@ end
 function ViewDealsPage()
 
 	ResetTabForNewPageContent();
-	
+
 	-- Remember this tab when report is next opened: ARISTOS
 	m_kCurrentTab = 4;
 
@@ -1945,7 +1941,7 @@ end
 function ViewUnitsPage()
 
 	ResetTabForNewPageContent();
-	
+
 	-- Remember this tab when report is next opened: ARISTOS
 	m_kCurrentTab = 5;
 
