@@ -130,9 +130,12 @@ function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean
 			local relationshipState:table = GameInfo.DiplomaticStates[relationshipStateID];
 			-- Always show relationship icon for AIs, only show player triggered states for humans
 			if not isHuman or IsValidRelationship(relationshipState.StateType) then
+				--!! ARISTOS: to extend relationship tooltip to include diplo modifiers!
+				local extendedRelationshipTooltip:string = Locale.Lookup(relationshipState.Name)
+				.. "[NEWLINE][NEWLINE]" .. RelationshipGet(playerID);
 				-- KWG: This is bad, there is a piece of art that is tied to the order of a database entry.  Please fix!
 				instance.Relationship:SetVisState(relationshipStateID);
-				instance.Relationship:SetToolTipString(Locale.Lookup(relationshipState.Name));
+				instance.Relationship:SetToolTipString(extendedRelationshipTooltip);
 				bShowRelationshipIcon = true;
 			end
 		end
@@ -183,6 +186,58 @@ function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean
 	end
 end
 
+-- Extended Relationship Tooltip creator
+-- Aristos and atggta
+function RelationshipGet(nPlayerID :number)
+	local tPlayer :table = Players[nPlayerID];
+	local nLocalPlayerID :number = Game.GetLocalPlayer();
+	local tTooltips :table = tPlayer:GetDiplomaticAI():GetDiplomaticModifiers(nLocalPlayerID);
+
+	if not tTooltips then return ""; end
+
+	local tRelationship :table = {};
+	local nRelationshipSum :number = 0;
+	local sTextColor :string = "";
+
+	for i, tTooltip in ipairs(tTooltips) do
+		local nScore :number = tTooltip.Score;
+		local sText :string = tTooltip.Text;
+
+		if(nScore ~= 0) then
+			if(nScore > 0) then
+				sTextColor = "[COLOR_Civ6Green]";
+			else
+				sTextColor = "[COLOR_Civ6Red]";
+			end
+			table.insert(tRelationship, {nScore, sTextColor .. nScore .. "[ENDCOLOR] - " .. sText .. "[NEWLINE]"});
+			nRelationshipSum = nRelationshipSum + nScore;
+		end
+	end
+
+	table.sort(
+		tRelationship,
+		function(a, b)
+			return a[1] > b[1];
+		end
+	);
+
+	local sRelationshipSum :string = "";
+	local sRelationship :string = "";
+	if(nRelationshipSum >= 0) then
+		sRelationshipSum = "[COLOR_Civ6Green]";
+	else
+		sRelationshipSum = "[COLOR_Civ6Red]";
+	end
+	sRelationshipSum = sRelationshipSum .. nRelationshipSum .. "[ENDCOLOR]"
+	for nKey, tValue in pairs(tRelationship) do
+		sRelationship = sRelationship .. tValue[2];
+	end
+	if sRelationship ~= "" then
+		sRelationship = Locale.Lookup("LOC_DIPLOMACY_INTEL_RELATIONSHIPS") .. " " .. sRelationshipSum .. "[NEWLINE]" .. sRelationship:sub(1, #sRelationship - #"[NEWLINE]");
+	end
+
+	return sRelationship;
+end
 
 -- ===========================================================================
 --	Clears leaders and re-adds them to the stack
