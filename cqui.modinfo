@@ -121,6 +121,7 @@
     <File>Assets/UI/unitflagmanager.xml</File>
     <File>Assets/UI/worldinput.lua</File>
     <File>Assets/UI/worldviewiconsmanager.lua</File>
+	  <File>Assets/UI/worldtracker.lua</File>
     <File>Assets/UI/Choosers/civicschooser.lua</File>
     <File>Assets/UI/Choosers/researchchooser.lua</File>
     <File>Assets/UI/Civilopedia/civilopediasupport.lua</File>
@@ -198,6 +199,7 @@
         <File>Assets/UI/unitflagmanager.xml</File>
         <File>Assets/UI/worldinput.lua</File>
         <File>Assets/UI/worldviewiconsmanager.lua</File>
+		    <File>Assets/UI/worldtracker.lua</File>
         <File>Assets/UI/Choosers/civicschooser.lua</File>
         <File>Assets/UI/Choosers/researchchooser.lua</File>
         <File>Assets/UI/Civilopedia/civilopediasupport.lua</File>
