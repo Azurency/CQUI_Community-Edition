@@ -104,6 +104,7 @@
     <File>Assets/UI/actionpanel.lua</File>
     <File>Assets/UI/citysupport.lua</File>
     <File>Assets/UI/civ6common.lua</File>
+    <File>Assets/UI/diplomacyactionview.lua</File>
     <File>Assets/UI/diplomacyactionview.xml</File>
     <File>Assets/UI/diplomacydealview.lua</File>
     <File>Assets/UI/diplomacyribbon.lua</File>
@@ -121,7 +122,7 @@
     <File>Assets/UI/unitflagmanager.xml</File>
     <File>Assets/UI/worldinput.lua</File>
     <File>Assets/UI/worldviewiconsmanager.lua</File>
-	  <File>Assets/UI/worldtracker.lua</File>
+    <File>Assets/UI/worldtracker.lua</File>
     <File>Assets/UI/Choosers/civicschooser.lua</File>
     <File>Assets/UI/Choosers/researchchooser.lua</File>
     <File>Assets/UI/Civilopedia/civilopediasupport.lua</File>
@@ -182,6 +183,7 @@
         <File>Assets/UI/actionpanel.lua</File>
         <File>Assets/UI/citysupport.lua</File>
         <File>Assets/UI/civ6common.lua</File>
+        <File>Assets/UI/diplomacyactionview.lua</File>
         <File>Assets/UI/diplomacyactionview.xml</File>
         <File>Assets/UI/diplomacydealview.lua</File>
         <File>Assets/UI/diplomacyribbon.lua</File>
@@ -199,7 +201,7 @@
         <File>Assets/UI/unitflagmanager.xml</File>
         <File>Assets/UI/worldinput.lua</File>
         <File>Assets/UI/worldviewiconsmanager.lua</File>
-		    <File>Assets/UI/worldtracker.lua</File>
+        <File>Assets/UI/worldtracker.lua</File>
         <File>Assets/UI/Choosers/civicschooser.lua</File>
         <File>Assets/UI/Choosers/researchchooser.lua</File>
         <File>Assets/UI/Civilopedia/civilopediasupport.lua</File>
