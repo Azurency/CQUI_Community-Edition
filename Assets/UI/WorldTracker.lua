@@ -159,6 +159,10 @@ function UpdateResearchPanel( isHideResearch:boolean )
 	if kResearchData == nil then
 		m_researchInstance.TitleButton:SetHide( false );
 		TruncateStringWithTooltip(m_researchInstance.TitleButton, MAX_BEFORE_TRUNC_TITLE, Locale.ToUpper(Locale.Lookup("LOC_WORLD_TRACKER_CHOOSE_RESEARCH")) );
+		m_researchInstance.MainPanel:LocalizeAndSetToolTip(nil); --ARISTOS: to avoid showing last tech tooltip when no tech chosen yet
+	else
+		-- ARISTOS: to show full tooltip in research panel
+		m_researchInstance.MainPanel:LocalizeAndSetToolTip(kResearchData.ToolTip);
 	end
 end
 
@@ -199,8 +203,11 @@ function UpdateCivicsPanel(hideCivics:boolean)
 	if kCivicData == nil then
 		m_civicsInstance.TitleButton:SetHide( false );
 		TruncateStringWithTooltip(m_civicsInstance.TitleButton, MAX_BEFORE_TRUNC_TITLE, Locale.ToUpper(Locale.Lookup("LOC_WORLD_TRACKER_CHOOSE_CIVIC")) );
+		m_civicsInstance.MainPanel:LocalizeAndSetToolTip(nil); --ARISTOS: to avoid showing last civic tooltip when no civic chosen yet
 	else
-		TruncateStringWithTooltip(m_civicsInstance.TitleButton, MAX_BEFORE_TRUNC_TITLE, m_civicsInstance.TitleButton:GetText() );
+		--TruncateStringWithTooltip(m_civicsInstance.TitleButton, MAX_BEFORE_TRUNC_TITLE, m_civicsInstance.TitleButton:GetText() );
+		-- ARISTOS: to show full tooltip in civics panel
+		m_civicsInstance.MainPanel:LocalizeAndSetToolTip(kCivicData.ToolTip);
 	end
 end
 
