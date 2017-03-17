@@ -274,7 +274,12 @@ function RefreshTime()
   if(format == 1) then
     strTime = os.date("%H:%M");
   else
-    strTime = os.date("%#I:%M %p");
+    strTime = os.date("%I:%M %p");
+
+		-- Remove the leading zero (if any) from 12-hour clock format
+		if(string.sub(strTime, 1, 1) == "0") then
+			strTime = string.sub(strTime, 2);
+		end
   end
 
   Controls.Time:SetText( strTime );

@@ -1629,6 +1629,27 @@ function PopulateAvailableOtherPlayers(player : table, iconList : table)
 end
 
 -- ===========================================================================
+function GetGreatWorkTooltipString(greatWorkTypeID)
+	local greatWorkDesc = GameInfo.GreatWorks[greatWorkTypeID];
+	if (greatWorkDesc ~= nil) then
+					
+		local greatWorkName = Locale.Lookup(greatWorkDesc.Name);
+
+		local greatWorkType = GameInfo.GreatWorkObjectTypes[greatWorkDesc.GreatWorkObjectType];
+		if (greatWorkType ~= nil) then
+			greatWorkName = greatWorkName .. "[newline]" .. Locale.Lookup(greatWorkType.Name);
+		end
+		local greatWorkArtist = GameInfo.GreatPersonIndividuals[greatWorkDesc.GreatPersonIndividualType];
+		if (greatWorkArtist ~= nil) then
+			greatWorkName = greatWorkName .. "[newline]" .. Locale.Lookup(greatWorkArtist.Name);
+		end
+
+		return greatWorkName;
+	end
+	return nil;
+end
+
+-- ===========================================================================
 function PopulateAvailableGreatWorks(player : table, iconList : table)
 
 	local iAvailableItemCount = 0;
@@ -1649,7 +1670,6 @@ function PopulateAvailableGreatWorks(player : table, iconList : table)
 				-- What to do when double clicked/tapped.
 				icon.SelectButton:RegisterCallback( Mouse.eLClick, function() OnClickAvailableGreatWork(player, type); end );
 				-- Set a tool tip
-				--icon.SelectButton:LocalizeAndSetToolTip(greatWorkDesc.Name);
 				
         --CQUI Changes
         local yieldType:string = GameInfo.GreatWork_YieldChanges[greatWorkDesc.GreatWorkType].YieldType;
@@ -1947,7 +1967,12 @@ function PopulateDealGreatWorks(player : table, iconList : table)
 					local typeName = pDealItem:GetValueTypeNameID();
 					if (typeName ~= nil) then
 						icon.IconText:LocalizeAndSetText(typeName);
-						icon.SelectButton:LocalizeAndSetToolTip(typeName);
+						local greatWorkDesc = GetGreatWorkTooltipString(typeID);
+						if (greatWorkDesc ~= nil) then
+							icon.SelectButton:LocalizeAndSetToolTip(greatWorkDesc);
+						else
+						  icon.SelectButton:LocalizeAndSetToolTip(typeName);
+						end
 					else
 						icon.IconText:SetText(nil);
 						icon.SelectButton:SetToolTipString(nil);
