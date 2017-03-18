@@ -464,7 +464,7 @@ function GetData()
 
 			if pDeals ~= nil then
 				for i,pDeal in ipairs(pDeals) do
-					if pDeal:IsValid() then
+					--if pDeal:IsValid() then --!! ARISTOS: Bug??? deal:IsValid() not always returns true even if the deal IS valid!!!
 						-- Add outgoing gold deals
 						local pOutgoingDeal :table	= pDeal:FindItemsByType(DealItemTypes.GOLD, DealItemSubTypes.NONE, playerID);
 						if pOutgoingDeal ~= nil then
@@ -550,7 +550,7 @@ function GetData()
 								end
 							end
 						end
-					end
+					--end --!! ARISTOS: Bug??? deal:IsValid() not always returns true even if the deal IS valid!!!
 				end
 			end
 
