@@ -166,8 +166,8 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
 * @deggesim (Simone1974 on Civfanatics) for providing the Italian localization in #250
 * @e1ectron for providing the Russian localization in #251
 * @sejbr for providing the Polish localization in #253
-* @frytom for providing the German localization in #283
-* @lctrs for providing a partial French localization in #273
+* @frytom/@maxap/@JHCD for providing the German localization in #283/#348
+* @lctrs for providing a partial French localization in #273/#339
 * @wbqd for providing a Korean translation in #309
 * @jacks0nX for:
   * localization in #20
@@ -190,6 +190,23 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
   * adding faster diplomacy fadeouts in #217
   * adding type/yields to the GW trade tooltip in #217
   * cleaning up the plot tooltip in #232
+* @JHCD for:
+  * fixing a runtime error in #338
+  * fixing missing gov info with upscaling enabled (#96) in #345
+  * fixing the mod's display in the in-game mod menu (#326) in #351
+  * updating URS to version 1.7.3 (#340) in #369
+  * fixing oversized URS tab buttons (#366) in #375
+  * porting some missing Australian patch changes in #402
+* Aristos / @ricanuck for:
+  * porting GPT + mutually-owned resource highlighting from HB UI in #374
+  * fixing doubled yield expenses in URS yield tab
+  * fixing duplicate row headers in multiple URS tabs
+  * fixing the vanilla civ bug where the World Tracker checkboxes could fail to persist their states
+  * changing URS so that it properly remembers the last-used tab
+  * adding detailed tooltips to the relationship icons in the diplomacy ribbon (in #391) and diplomatic view (in #393)
+  * fixing negative 0 values appearing in the happiness breakdown
+  * fixing an issue where URS tabs could desynchronise (#321) in #397
+  * adding detailed tooltips to the worldtracker science/civics items (#191) in #398
 * @zgavin for UI bugfixes in #1 and #2
 * @olegbl for the Amenities overview overhaul in #4 and multiple UI bugfixes ( #9 and #12 )
   * Additional kudos to /u/mateusarc from the Civilization subreddit for his original concept art
@@ -211,6 +228,7 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
 * @Remolten for adding the 2nd highest envoy holder info to the main Citystate screen in #208
 * @bestekov for adding score displays to the diplomacy ribbon in #221
 * @cpinter for speeding up the diplomacy scene fadeout in #277
+* @paavohuhtala for a tooltip improvement in #357
 * @perseghini for providing the fix for issue #33
 * @benjaminjackman for fixing a hotkey conflict in #127
 * @velit for a UI bugfix in #138
@@ -218,3 +236,4 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
 * Firaxis for eventually delivering mod tools and steam workshop ;)
 * The lovely folks over at Civfanatics for their guides, knowledge, tools, and resources
 * The even lovelier folks over at /r/civ for their input and testing
+* The, arguably, lovely folks back at the Steam Workshop :p
