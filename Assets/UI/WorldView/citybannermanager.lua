@@ -1425,25 +1425,30 @@ function CityBanner.UpdateName( self : CityBanner )
 
       -- Update district icons
       -- districtType:number == Index
-      local iAquaduct = GameInfo.Districts["DISTRICT_AQUEDUCT"].Index;
-      local iBath = GameInfo.Districts["DISTRICT_BATH"].Index;
-      local iNeighborhood = GameInfo.Districts["DISTRICT_NEIGHBORHOOD"].Index;
-      local iMbanza = GameInfo.Districts["DISTRICT_MBANZA"].Index;
-      local iCampus = GameInfo.Districts["DISTRICT_CAMPUS"].Index;
-      local iTheater = GameInfo.Districts["DISTRICT_THEATER"].Index;
-      local iAcropolis = GameInfo.Districts["DISTRICT_ACROPOLIS"].Index;
-      local iIndustrial = GameInfo.Districts["DISTRICT_INDUSTRIAL_ZONE"].Index;
-      local iHansa = GameInfo.Districts["DISTRICT_HANSA"].Index;
-      local iCommerce = GameInfo.Districts["DISTRICT_COMMERCIAL_HUB"].Index;
-      local iEncampment = GameInfo.Districts["DISTRICT_ENCAMPMENT"].Index;
-      local iHarbor = GameInfo.Districts["DISTRICT_HARBOR"].Index;
-      local iRoyalNavy = GameInfo.Districts["DISTRICT_ROYAL_NAVY_DOCKYARD"].Index;
-      local iSpaceport = GameInfo.Districts["DISTRICT_SPACEPORT"].Index;
-      local iEntertainmentComplex = GameInfo.Districts["DISTRICT_ENTERTAINMENT_COMPLEX"].Index;
-      local iHolySite = GameInfo.Districts["DISTRICT_HOLY_SITE"].Index;
-      local iAerodrome = GameInfo.Districts["DISTRICT_AERODROME"].Index;
-      local iStreetCarnival = GameInfo.Districts["DISTRICT_STREET_CARNIVAL"].Index;
-      local iLavra = GameInfo.Districts["DISTRICT_LAVRA"].Index;
+      function GetDistrictIndexSafe(sDistrict)
+        if GameInfo.Districts[sDistrict] == nil then return -1;
+        else return GameInfo.Districts[sDistrict].Index; end
+      end
+
+      local iAquaduct = GetDistrictIndexSafe("DISTRICT_AQUEDUCT");
+      local iBath = GetDistrictIndexSafe("DISTRICT_BATH");
+      local iNeighborhood = GetDistrictIndexSafe("DISTRICT_NEIGHBORHOOD");
+      local iMbanza = GetDistrictIndexSafe("DISTRICT_MBANZA");
+      local iCampus = GetDistrictIndexSafe("DISTRICT_CAMPUS");
+      local iTheater = GetDistrictIndexSafe("DISTRICT_THEATER");
+      local iAcropolis = GetDistrictIndexSafe("DISTRICT_ACROPOLIS");
+      local iIndustrial = GetDistrictIndexSafe("DISTRICT_INDUSTRIAL_ZONE");
+      local iHansa = GetDistrictIndexSafe("DISTRICT_HANSA");
+      local iCommerce = GetDistrictIndexSafe("DISTRICT_COMMERCIAL_HUB");
+      local iEncampment = GetDistrictIndexSafe("DISTRICT_ENCAMPMENT");
+      local iHarbor = GetDistrictIndexSafe("DISTRICT_HARBOR");
+      local iRoyalNavy = GetDistrictIndexSafe("DISTRICT_ROYAL_NAVY_DOCKYARD");
+      local iSpaceport = GetDistrictIndexSafe("DISTRICT_SPACEPORT");
+      local iEntertainmentComplex = GetDistrictIndexSafe("DISTRICT_ENTERTAINMENT_COMPLEX");
+      local iHolySite = GetDistrictIndexSafe("DISTRICT_HOLY_SITE");
+      local iAerodrome = GetDistrictIndexSafe("DISTRICT_AERODROME");
+      local iStreetCarnival = GetDistrictIndexSafe("DISTRICT_STREET_CARNIVAL");
+      local iLavra = GetDistrictIndexSafe("DISTRICT_LAVRA");
 
       if self.m_Instance.CityBuiltDistrictAquaduct ~= nil then
         self.m_Instance.CityUnlockedCitizen:SetHide(true);
