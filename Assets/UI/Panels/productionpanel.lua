@@ -2179,7 +2179,8 @@ function Refresh()
         end
 
         -- Check for wall obsolescence
-        if(row.OuterDefenseHitPoints and pPlayer:GetCulture():HasCivic(GameInfo.Civics["CIVIC_CIVIL_ENGINEERING"].Index)) then
+        -- CQUI change: checks if the civil engineering civic exists at all before checking against it. We assume that walls never become obsolete if the civil engineering tech doesn't exist
+        if(row.OuterDefenseHitPoints and GameInfo.Civics["CIVIC_CIVIL_ENGINEERING"].Index and pPlayer:GetCulture():HasCivic(GameInfo.Civics["CIVIC_CIVIL_ENGINEERING"].Index)) then
           doShow = false;
         end
 
