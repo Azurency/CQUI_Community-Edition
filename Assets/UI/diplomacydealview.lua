@@ -2,6 +2,7 @@
 -- Diplomacy Trade View Manager
 -- ===========================================================================
 include( "InstanceManager" );
+include( "CitySupport" );
 include( "Civ6Common" ); -- AutoSizeGridButton
 include( "SupportFunctions" ); -- DarkenLightenColor
 include( "PopupDialogSupport" );
@@ -12,7 +13,12 @@ include( "ToolTipHelper_PlayerYields" );
 -- ===========================================================================
 local ms_PlayerPanelIM		:table		= InstanceManager:new( "PlayerAvailablePanel",  "Root" );
 local ms_IconOnlyIM			:table		= InstanceManager:new( "IconOnly",  "SelectButton", Controls.IconOnlyContainer );
+local ms_IconOnly_3IM 		:table		= InstanceManager:new( "IconOnly_3",  "SelectButton", Controls.IconOnlyContainer );
+local ms_IconOnly_Resource_ScarceIM			:table		= InstanceManager:new( "IconOnly_Resource_Scarce",  "SelectButton", Controls.IconOnlyContainer );
+local ms_IconOnly_Resource_DuplicateIM		:table		= InstanceManager:new( "IconOnly_Resource_Duplicate",  "SelectButton", Controls.IconOnlyContainer );
+local ms_IconOnly_Resource_UntradeableIM	:table		= InstanceManager:new( "IconOnly_Resource_Untradeable",  "SelectButton", Controls.IconOnlyContainer );
 local ms_IconAndTextIM		:table		= InstanceManager:new( "IconAndText",  "SelectButton", Controls.IconAndTextContainer );
+local ms_IconAndTextWithDetailsIM			:table		= InstanceManager:new( "IconAndTextWithDetails",  "SelectButton", Controls.IconAndTextContainer );
 local ms_LeftRightListIM	:table		= InstanceManager:new( "LeftRightList",  "List", Controls.LeftRightListContainer );
 local ms_TopDownListIM		:table		= InstanceManager:new( "TopDownList",  "List", Controls.TopDownListContainer );
 
@@ -57,13 +63,15 @@ local ms_AvailableGroups = {};
 
 local DealItemGroupTypes = {};
 DealItemGroupTypes.GOLD			= 1;
-DealItemGroupTypes.RESOURCES	= 2;
-DealItemGroupTypes.AGREEMENTS	= 3;
-DealItemGroupTypes.CITIES		= 4;
-DealItemGroupTypes.GREAT_WORKS	= 5;
-DealItemGroupTypes.CAPTIVES		= 6;
+DealItemGroupTypes.LUXURY_RESOURCES	= 2;
+DealItemGroupTypes.STRATEGIC_RESOURCES	= 3;
+DealItemGroupTypes.AGREEMENTS	= 4;
+DealItemGroupTypes.CITIES		= 5;
+DealItemGroupTypes.GREAT_WORKS	= 6;
+DealItemGroupTypes.CAPTIVES		= 7;
 
-DealItemGroupTypes.COUNT		= 6;
+DealItemGroupTypes.COUNT		= 7;
+
 
 local ms_DealGroups = {};
 
@@ -86,17 +94,24 @@ local YIELD_FONT_ICONS:table = {
         YIELD_FAITH				= "[ICON_FaithLarge]",
         TourismYield			= "[ICON_TourismLarge]"
         };
-local ms_HBUI_LocalPlayerRes =  {};
-local ms_HBUI_OtherPlayerRes =  {};
 -- ===========================================================================
 function SetIconToSize(icon, iconName, iconSize)
-	if iconSize == nil then
-		iconSize = 50;
-	end
-	local x, y, szIconName, iconSize = IconManager:FindIconAtlasNearestSize(iconName, iconSize, true);
-	icon.Icon:SetTexture(x, y, szIconName);
-	icon.Icon:SetSizeVal(iconSize, iconSize);
+	SetSpecifiedIconToSize(icon.Icon, iconName, iconSize);
 end
+
+-- ===========================================================================
+function SetSpecifiedIconToSize(specificIcon, iconName, iconSize)
+	if iconSize == nil then
+		iconSize = 64;
+	end
+
+	local iconSizeTemp = iconSize;
+
+	local x, y, szIconName, iconSize = IconManager:FindIconAtlasNearestSize(iconName, iconSize, true);
+	specificIcon:SetTexture(x, y, szIconName);
+	specificIcon:SetSizeVal(iconSizeTemp, iconSizeTemp);
+end
+
 
 -- ===========================================================================
 function InitializeDealGroups()
@@ -110,6 +125,7 @@ function InitializeDealGroups()
 	end
 
 end
+
 InitializeDealGroups();
 
 -- ===========================================================================
@@ -141,11 +157,11 @@ end
 
 -- ===========================================================================
 function SetDefaultLeaderDialogText()
-	if (ms_bIsDemand == true and ms_InitiatedByPlayerID == ms_OtherPlayerID) then
-		Controls.LeaderDialog:LocalizeAndSetText("LOC_DIPLO_DEMAND_INTRO");
-	else
-		Controls.LeaderDialog:LocalizeAndSetText("LOC_DIPLO_DEAL_INTRO");
-	end
+	-- if (ms_bIsDemand == true and ms_InitiatedByPlayerID == ms_OtherPlayerID) then
+	-- 	Controls.LeaderDialog:LocalizeAndSetText("LOC_DIPLO_DEMAND_INTRO");
+	-- else
+	-- 	Controls.LeaderDialog:LocalizeAndSetText("LOC_DIPLO_DEAL_INTRO");
+	-- end
 end
 
 -- ===========================================================================
@@ -203,19 +219,35 @@ function UpdateProposedWorkingDeal()
 	end
 end
 
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 --	Displays the leader's name (with screen name if you are a human in a multiplayer game), along with the civ name,
 --	and the icon of the civ with civ colors.  When you mouse over the civ icon, you should see a full list of all cities.
 --	This should help players differentiate between duplicate civs.
 function PopulateSignatureArea(player:table)
-	-- Set colors for the Civ icon
+-- Set colors for the Civ icon
 	if (player ~= nil) then
 		m_primaryColor, m_secondaryColor  = UI.GetPlayerColors( player:GetID() );
 		local darkerBackColor = DarkenLightenColor(m_primaryColor,(-85),100);
 		local brighterBackColor = DarkenLightenColor(m_primaryColor,90,255);
-		Controls.CivBacking_Base:SetColor(m_primaryColor);
-		Controls.CivBacking_Lighter:SetColor(brighterBackColor);
-		Controls.CivBacking_Darker:SetColor(darkerBackColor);
-		Controls.CivIcon:SetColor(m_secondaryColor);
+		local panelBannerBackColor = DarkenLightenColor(m_primaryColor,0,245);
+
+		if(player == ms_LocalPlayer) then
+			Controls.PlayerCivBacking_Base:SetColor(m_primaryColor);
+			Controls.PlayerCivBacking_Lighter:SetColor(brighterBackColor);
+			Controls.PlayerCivBacking_Darker:SetColor(darkerBackColor);
+			Controls.PlayerCivIcon:SetColor(m_secondaryColor);
+			Controls.PlayerBackground:SetColor(panelBannerBackColor);
+			Controls.PlayerBackgroundBarRight:SetColor(panelBannerBackColor);
+			Controls.MyOfferLabel:SetColor(brighterBackColor);
+		else
+			Controls.PartnerCivBacking_Base:SetColor(m_primaryColor);
+			Controls.PartnerCivBacking_Lighter:SetColor(brighterBackColor);
+			Controls.PartnerCivBacking_Darker:SetColor(darkerBackColor);
+			Controls.PartnerCivIcon:SetColor(m_secondaryColor);
+			Controls.PartnerBackground:SetColor(panelBannerBackColor);
+			Controls.PartnerBackgroundBarRight:SetColor(panelBannerBackColor);
+			Controls.TheirOfferLabel:SetColor(brighterBackColor);
+		end
 	end
 
 	-- Set the leader name, civ name, and civ icon data
@@ -226,14 +258,12 @@ function PopulateSignatureArea(player:table)
 		if(GameInfo.CivilizationLeaders[leader].CivilizationType ~= nil) then
 			local civTypeName = GameInfo.CivilizationLeaders[leader].CivilizationType
 			local civIconName = "ICON_"..civTypeName;
-			Controls.CivIcon:SetIcon(civIconName);
-			Controls.CivName:SetText(Locale.ToUpper(Locale.Lookup(GameInfo.Civilizations[civTypeName].Name)));
+			
 			local leaderName = Locale.ToUpper(Locale.Lookup(GameInfo.Leaders[leader].Name))
 			local playerName = PlayerConfigurations[player:GetID()]:GetPlayerName();
 			if GameConfiguration.IsAnyMultiplayer() and player:IsHuman() then
 				leaderName = leaderName .. " ("..Locale.ToUpper(playerName)..")"
 			end
-			Controls.LeaderName:SetText(leaderName);
 
 			--Create a tooltip which shows a list of this Civ's cities
 			local civTooltip = Locale.Lookup(GameInfo.Civilizations[civTypeName].Name);
@@ -246,11 +276,36 @@ function PopulateSignatureArea(player:table)
 					civTooltip = civTooltip.. "[NEWLINE]".. Locale.Lookup(city:GetName());
 				end
 			end
-			Controls.CivIcon:SetToolTipString(Locale.Lookup(civTooltip));
+			
+
+			-- Populate relevant controls
+			if(player == ms_LocalPlayer) then
+
+				Controls.PlayerCivIcon:SetIcon(civIconName);
+				Controls.PlayerCivName:SetText(Locale.ToUpper(Locale.Lookup(GameInfo.Civilizations[civTypeName].Name)));
+				Controls.PlayerCivName:SetColor(m_primaryColor);
+				Controls.PlayerLeaderName:SetText(leaderName);
+				Controls.PlayerLeaderName:SetColor(m_secondaryColor);
+
+				Controls.PlayerCivIcon:SetToolTipString(Locale.Lookup(civTooltip));
+				Controls.PlayerSignatureStack:CalculateSize();
+				Controls.PlayerSignatureStack:ReprocessAnchoring();
+			else
+				
+
+				Controls.PartnerCivIcon:SetIcon(civIconName);
+				Controls.PartnerCivName:SetText(Locale.ToUpper(Locale.Lookup(GameInfo.Civilizations[civTypeName].Name)));
+				Controls.PartnerCivName:SetColor(m_primaryColor);
+				Controls.PartnerLeaderName:SetText(leaderName);
+				Controls.PartnerLeaderName:SetColor(m_secondaryColor);
+
+				Controls.PartnerCivIcon:SetToolTipString(Locale.Lookup(civTooltip));
+				Controls.PartnerSignatureStack:CalculateSize();
+				Controls.PartnerSignatureStack:ReprocessAnchoring();
+			end
 		end
 	end
-	Controls.SignatureStack:CalculateSize();
-	Controls.SignatureStack:ReprocessAnchoring();
+	
 end
 
 -- ===========================================================================
@@ -261,7 +316,7 @@ function UpdateOtherPlayerText(otherPlayerSays)
 		if (playerConfig ~= nil) then
 			-- Set the leader name
 			local leaderDesc = playerConfig:GetLeaderName();
-			Controls.OtherPlayerBubbleName:SetText(Locale.ToUpper(Locale.Lookup("LOC_DIPLOMACY_DEAL_OTHER_PLAYER_SAYS", leaderDesc)));
+			Controls.PartnerLeaderName:SetText(Locale.ToUpper(Locale.Lookup("LOC_DIPLOMACY_DEAL_OTHER_PLAYER_SAYS", leaderDesc)));
 		end
 	end
 	-- When we get dialog for what the leaders say during a trade, we can add it here!
@@ -312,7 +367,7 @@ function CreatePlayerAvailablePanel(playerType : number, rootControl : table)
 
 	--local playerPanel = ms_PlayerPanelIM:GetInstance(rootControl);
 
-	ms_AvailableGroups[AvailableDealItemGroupTypes.GOLD][playerType]				= CreateHorizontalGroup(rootControl);
+	ms_AvailableGroups[AvailableDealItemGroupTypes.GOLD][playerType]				= CreateHorizontalGroup(rootControl, "");
 	ms_AvailableGroups[AvailableDealItemGroupTypes.LUXURY_RESOURCES][playerType]	= CreateHorizontalGroup(rootControl, "LOC_DIPLOMACY_DEAL_LUXURY_RESOURCES");
 	ms_AvailableGroups[AvailableDealItemGroupTypes.STRATEGIC_RESOURCES][playerType] = CreateHorizontalGroup(rootControl, "LOC_DIPLOMACY_DEAL_STRATEGIC_RESOURCES");
 	ms_AvailableGroups[AvailableDealItemGroupTypes.AGREEMENTS][playerType]			= CreateVerticalGroup(rootControl, "LOC_DIPLOMACY_DEAL_AGREEMENTS");
@@ -330,15 +385,22 @@ end
 -- ===========================================================================
 function CreatePlayerDealPanel(playerType : number, rootControl : table)
 --This creates the containers for the offer area...
-	--ms_DealGroups[DealItemGroupTypes.RESOURCES][playerType]	= CreateHorizontalGroup(rootControl);
-	--ms_DealGroups[DealItemGroupTypes.AGREEMENTS][playerType]	= CreateVerticalGroup(rootControl);
+	ms_DealGroups[DealItemGroupTypes.GOLD][playerType]	= CreateHorizontalGroup(rootControl);
+	ms_DealGroups[DealItemGroupTypes.LUXURY_RESOURCES][playerType]	= CreateHorizontalGroup(rootControl);
+	ms_DealGroups[DealItemGroupTypes.STRATEGIC_RESOURCES][playerType]	= CreateHorizontalGroup(rootControl);
+	ms_DealGroups[DealItemGroupTypes.AGREEMENTS][playerType] = CreateVerticalGroup(rootControl);
+	ms_DealGroups[DealItemGroupTypes.CITIES][playerType] = CreateVerticalGroup(rootControl);
+	ms_DealGroups[DealItemGroupTypes.GREAT_WORKS][playerType] = CreateVerticalGroup(rootControl);
+	ms_DealGroups[DealItemGroupTypes.CAPTIVES][playerType] = CreateVerticalGroup(rootControl);
+	
 	--**********************************************************************
 	-- Currently putting them all in the same control.
+	--[[ms_DealGroups[DealItemGroupTypes.GOLD][playerType] = rootControl;
 	ms_DealGroups[DealItemGroupTypes.RESOURCES][playerType] = rootControl;
 	ms_DealGroups[DealItemGroupTypes.AGREEMENTS][playerType] = rootControl;
 	ms_DealGroups[DealItemGroupTypes.CITIES][playerType] = rootControl;
 	ms_DealGroups[DealItemGroupTypes.GREAT_WORKS][playerType] = rootControl;
-	ms_DealGroups[DealItemGroupTypes.CAPTIVES][playerType] = rootControl;
+	ms_DealGroups[DealItemGroupTypes.CAPTIVES][playerType] = rootControl;]]--
 
 end
 
@@ -435,7 +497,6 @@ end
 function CreatePanels()
 
 	CreateValueAmountEditOverlay();
-
 	-- Create the Other Player Panels
 	CreatePlayerAvailablePanel(OTHER_PLAYER, Controls.TheirInventoryStack);
 
@@ -462,19 +523,46 @@ function CreatePanels()
 
 end
 
--- ===========================================================================
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- Find the 'instance' table from the control
 function FindIconInstanceFromControl(rootControl : table)
-
 	if (rootControl ~= nil) then
+		-- Should just pass the appropriate control into the function rather than groping around for one that exists, but I don't want to go back and change all these references
 		local controlTable = ms_IconOnlyIM:FindInstanceByControl(rootControl);
-		if (controlTable == nil) then
-			controlTable = ms_IconAndTextIM:FindInstanceByControl(rootControl);
+		if (controlTable ~= nil) then
+			return controlTable;
 		end
 
-		return controlTable;
-	end
+		controlTable = ms_IconAndTextIM:FindInstanceByControl(rootControl);
+		if (controlTable ~= nil) then
+			return controlTable;
+		end
 
+		controlTable = ms_IconOnly_3IM:FindInstanceByControl(rootControl);
+		if (controlTable ~= nil) then
+			return controlTable;
+		end
+
+		controlTable = ms_IconAndTextWithDetailsIM:FindInstanceByControl(rootControl);
+		if (controlTable ~= nil) then
+			return controlTable;
+		end
+
+		controlTable = ms_IconOnly_Resource_ScarceIM:FindInstanceByControl(rootControl);
+		if (controlTable ~= nil) then
+			return controlTable; 
+		end
+
+		controlTable = ms_IconOnly_Resource_DuplicateIM:FindInstanceByControl(rootControl);
+		if (controlTable ~= nil) then
+			return controlTable;
+		end
+
+		controlTable = ms_IconOnly_Resource_UntradeableIM:FindInstanceByControl(rootControl);
+		if (controlTable ~= nil) then
+			return controlTable;
+		end
+	end
 	return nil;
 end
 
@@ -694,14 +782,14 @@ end
 
 -- ===========================================================================
 function OnExitFadeComplete()
-	if(Controls.TradePanelFade:IsReversing()) then
-		Controls.TradePanelFade:SetSpeed(2);
-		Controls.TradePanelSlide:SetSpeed(2);
+	-- if(Controls.TradePanelFade:IsReversing()) then
+	-- 	Controls.TradePanelFade:SetSpeed(2);
+	-- 	Controls.TradePanelSlide:SetSpeed(2);
 
-		OnContinue();
-	end
+	-- 	OnContinue();
+	-- end
 end
-Controls.TradePanelFade:RegisterEndCallback(OnExitFadeComplete);
+--Controls.TradePanelFade:RegisterEndCallback(OnExitFadeComplete);
 -- ===========================================================================
 -- Change the value number edit by a delta
 function OnValueAmountEditDelta(delta : number)
@@ -1042,7 +1130,7 @@ function UpdateProposalButtons(bDealValid)
 						Controls.AcceptDeal:SetHide(false);
 						Controls.AcceptDeal:LocalizeAndSetText("LOC_DIPLOMACY_DEAL_GIFT_DEAL");
 						-- Make sure the leader text is set to something appropriate.
-						SetDefaultLeaderDialogText();
+						--SetDefaultLeaderDialogText();
 					else
 						if (iItemsFromLocal == 0 and iItemsFromOther > 0) then
 							Controls.MyDirections:SetHide(false);
@@ -1051,7 +1139,7 @@ function UpdateProposalButtons(bDealValid)
 							Controls.WhatWouldItTakeButton:SetHide(false);
 							Controls.AcceptDeal:SetHide(true);				--If either of the above buttons are showing, disable the main accept button
 							-- Make sure the leader text is set to something appropriate.
-							SetDefaultLeaderDialogText();
+							--SetDefaultLeaderDialogText();
 						else												--Something is being offered on both sides
 							Controls.MyDirections:SetHide(true);
 							Controls.TheirDirections:SetHide(true);
@@ -1084,7 +1172,7 @@ function UpdateProposalButtons(bDealValid)
 							Controls.AcceptDeal:LocalizeAndSetText("LOC_DIPLOMACY_DEAL_PROPOSE_DEAL");
 						end
 						-- Make sure the leader text is set to something appropriate.
-						SetDefaultLeaderDialogText();
+						--SetDefaultLeaderDialogText();
 					else
 						Controls.MyDirections:SetHide(true);
 						Controls.TheirDirections:SetHide(true);
@@ -1113,11 +1201,11 @@ function UpdateProposalButtons(bDealValid)
 				Controls.WhatWouldYouGiveMe:SetHide(true);
 				Controls.WhatWouldItTakeButton:SetHide(true);
 				-- Make sure the leader text is set to something appropriate.
-				SetDefaultLeaderDialogText();
+				--SetDefaultLeaderDialogText();
 			end
 		else
 			-- Make sure the leader text is set to something appropriate.
-			SetDefaultLeaderDialogText();
+			--SetDefaultLeaderDialogText();
 		end
 	else															
 		--There isn't a valid deal, or we are just viewing a pending deal.
@@ -1142,9 +1230,9 @@ function UpdateProposalButtons(bDealValid)
 
 		if (not DealIsEmpty() and not bDealValid) then
 			-- Set have the other leader tell them that the deal has invalid items.
-			Controls.LeaderDialog:LocalizeAndSetText("LOC_DIPLOMACY_DEAL_INVALID");
+			--Controls.LeaderDialog:LocalizeAndSetText("LOC_DIPLOMACY_DEAL_INVALID");
 		else
-			SetDefaultLeaderDialogText();
+			--SetDefaultLeaderDialogText();
 		end
 			
 		Controls.ResumeGame:SetHide(not bIsViewing);
@@ -1206,15 +1294,15 @@ function UpdateProposalButtons(bDealValid)
 	Controls.TheirOfferStack:ReprocessAnchoring();
 	Controls.TheirOfferBracket:DoAutoSize();
 	Controls.TheirOfferBracket:ReprocessAnchoring();
-	Controls.TheirOfferScroll:CalculateSize();
-	Controls.TheirOfferBracket:ReprocessAnchoring();	-- Because the bracket is centered inside the scroll box, we have to reprocess this again.
+	--Controls.TheirOfferScroll:CalculateSize();
+	--Controls.TheirOfferBracket:ReprocessAnchoring();	-- Because the bracket is centered inside the scroll box, we have to reprocess this again.
 
 	Controls.MyOfferStack:CalculateSize();
 	Controls.MyOfferStack:ReprocessAnchoring();
 	Controls.MyOfferBracket:DoAutoSize();
 	Controls.MyOfferBracket:ReprocessAnchoring();
-	Controls.MyOfferScroll:CalculateSize();
-	Controls.MyOfferBracket:ReprocessAnchoring();		-- Because the bracket is centered inside the scroll box, we have to reprocess this again.
+	--Controls.MyOfferScroll:CalculateSize();
+	--Controls.MyOfferBracket:ReprocessAnchoring();		-- Because the bracket is centered inside the scroll box, we have to reprocess this again.
 
 end
 
@@ -1238,31 +1326,30 @@ function PopulateAvailableGold(player : table, iconList : table)
 					-- One time gold
 					local icon = ms_IconOnlyIM:GetInstance(iconList.ListStack);
 					icon.AmountText:SetText(goldBalance);
-					icon.Icon:SetColor(0xFFFFFFFF);
 					icon.SelectButton:SetToolTipString(nil);		-- We recycle the entries, so make sure this is clear.
 					SetIconToSize(icon, "ICON_YIELD_GOLD_5");
-					icon.SelectButton:RegisterCallback( Mouse.eLClick, function() OnClickAvailableOneTimeGold(player, ms_DefaultOneTimeGoldAmount); end );
 					icon.SelectButton:RegisterCallback( Mouse.eLClick, function() OnClickAvailableOneTimeGold(player, ms_DefaultOneTimeGoldAmount); end );
 
 					iAvailableItemCount = iAvailableItemCount + 1;
 				end
 			else
-
+				-- ARISTOS: to display available GPT on top of button
 				local playerTreasury:table	= player:GetTreasury();
 				local goldYield		:number = math.floor((playerTreasury:GetGoldYield() - playerTreasury:GetTotalMaintenance()));
-				print("Gold Yield: " .. goldYield);
 				-- Multi-turn gold
-				icon = ms_IconAndTextIM:GetInstance(iconList.ListStack);
+				icon = ms_IconOnly_3IM:GetInstance(iconList.ListStack);
 				icon.AmountText:SetText(FormatValuePerTurn(goldYield));
 				icon.AmountText:SetHide(false);
-				SetIconToSize(icon, "ICON_YIELD_GOLD_5");
-				icon.IconText:LocalizeAndSetText("LOC_DIPLOMACY_DEAL_GOLD_PER_TURN");
+				SetSpecifiedIconToSize(icon.Icon1, "ICON_YIELD_GOLD_1");
+				SetSpecifiedIconToSize(icon.Icon2, "ICON_YIELD_GOLD_1");
+				SetSpecifiedIconToSize(icon.Icon3, "ICON_YIELD_GOLD_1");
+				
 				icon.SelectButton:SetToolTipString(nil);		-- We recycle the entries, so make sure this is clear.
 				icon.SelectButton:RegisterCallback( Mouse.eLClick, function() OnClickAvailableMultiTurnGold(player, ms_DefaultMultiTurnGoldAmount, ms_DefaultMultiTurnGoldDuration); end );
-				icon.ValueText:SetHide(true);
+				--icon.ValueText:SetHide(true);
 
-				iconList.ListStack:CalculateSize();
-				iconList.List:ReprocessAnchoring();
+				--iconList.ListStack:CalculateSize();
+				--iconList.List:ReprocessAnchoring();
 
 				iAvailableItemCount = iAvailableItemCount + 1;
 			end
@@ -1294,7 +1381,6 @@ end
 
 -- ===========================================================================
 function OnClickAvailableResource(player, resourceType)
-
 	local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
 	if (pDeal ~= nil) then
 
@@ -1363,18 +1449,19 @@ end
 
 -- ===========================================================================
 function OnClickAvailableCity(player, valueType, subType)
-
 	local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
 	if (pDeal ~= nil) then
 
 		-- Already there?
 		local pDealItem = pDeal:FindItemByValueType(DealItemTypes.CITIES, subType, valueType, player:GetID());
 		if (pDealItem == nil) then
+			
 			-- No
 			pDealItem = pDeal:AddItemOfType(DealItemTypes.CITIES, player:GetID());
 			if (pDealItem ~= nil) then
 				pDealItem:SetSubType(subType);
 				pDealItem:SetValueType(valueType);
+
 				if (not pDealItem:IsValid(pDeal)) then
 					pDeal:RemoveItemByID(pDealItem:GetID());
 				end
@@ -1390,7 +1477,6 @@ end
 
 -- ===========================================================================
 function OnRemoveDealItem(player, itemID)
-
 	if (ms_bIsDemand == true and ms_InitiatedByPlayerID == ms_OtherPlayerID) then
 		-- Can't remove it
 		return;
@@ -1427,50 +1513,181 @@ function OnSelectValueDealItem(player, itemID, controlInstance)
 	end
 end
 
--- ===========================================================================
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+function getImportedResources(playerID)
+	local importedResources :table = {};
+	local kPlayers          :table = PlayerManager.GetAliveMajors();
+	
+	for _, pOtherPlayer in ipairs(kPlayers) do
+		local otherID:number = pOtherPlayer:GetID();
+		if ( otherID ~= playerID ) then
+			local pPlayerConfig :table = PlayerConfigurations[otherID];
+			local pDeals        :table = DealManager.GetPlayerDeals(playerID, otherID); -- ARISTOS: double filter Resources!
+
+			if ( pDeals ~= nil ) then
+				for i,pDeal in ipairs(pDeals) do
+					--if ( pDeal:IsValid() ) then --!! ARISTOS: Bug??? deal:IsValid() not always returns true even if the deal IS valid!!!
+						-- Add incoming resource deals
+						local pDealResources = pDeal:FindItemsByType(DealItemTypes.RESOURCES, DealItemSubTypes.NONE, otherID);
+						if ( pDealResources ~= nil ) then
+							for j,pDealResource in ipairs(pDealResources) do
+								local pClassType = GameInfo.Resources[pDealResource:GetValueType()].ResourceClassType;
+								local convertedResources = {
+									Name = tostring(pDealResource:GetValueType());
+									ForType = pDealResource:GetValueType();
+									MaxAmount = pDealResource:GetAmount();
+									ClassType = pClassType;
+									-- ARISTOS: Show the deal's other civ's identity only if it is the local player.
+									ImportString = "[COLOR_Red]Trade[ENDCOLOR] with " .. ((otherID == Game.GetLocalPlayer() or playerID == Game.GetLocalPlayer())
+										and Locale.Lookup(PlayerConfigurations[otherID]:GetPlayerName()) or "another civ") .. " : " .. pDealResource:GetAmount();
+								};
+								-- !!ARISTOS: To group resources imported from different sources into a single icon!!!
+								local isIncluded:boolean = false;
+								local isIndex:number = 0;
+								for k,impResource in ipairs(importedResources) do
+									if (impResource.Name == convertedResources.Name) then
+										isIncluded = true;
+										isIndex = k;
+										break;
+									end
+								end
+								if (isIncluded) then
+									local existingResource = importedResources[isIndex];
+									local newResource = {
+										Name = existingResource.Name;
+										ForType = existingResource.ForType;
+										MaxAmount  = existingResource.MaxAmount + convertedResources.MaxAmount;
+										ClassType = existingResource.ClassType;
+										ImportString = existingResource.ImportString .. "[NEWLINE]" .. convertedResources.ImportString;
+									};
+									importedResources[isIndex] = newResource;
+								else
+									table.insert(importedResources, convertedResources);
+								end
+								-- END ARISTOS grouping of imported resources
+								--table.insert(importedResources, convertedResources);
+							end
+						end
+					--end
+				end
+			end
+		end
+	end
+
+	-- Add resources provided by city states
+	for i, pMinorPlayer in ipairs(PlayerManager.GetAliveMinors()) do
+		local pMinorPlayerInfluence:table = pMinorPlayer:GetInfluence();		
+		if pMinorPlayerInfluence ~= nil then
+			local suzerainID:number = pMinorPlayerInfluence:GetSuzerain();
+			if suzerainID == playerID then
+				for row in GameInfo.Resources() do
+
+					local resourceAmount:number =  pMinorPlayer:GetResources():GetExportedResourceAmount(row.Index);
+
+					if resourceAmount > 0 then
+						local kResource :table = GameInfo.Resources[row.Index];
+						local cityStateResources = {
+							Name = tostring(row.Index);--kResource.ResourceType);
+							ForType = kResource.ResourceType;
+							MaxAmount = resourceAmount;
+							ClassType = kResource.ResourceClassType;
+							ImportString = "[COLOR_Civ6Blue]Suzerain[ENDCOLOR] of " .. Locale.Lookup(PlayerConfigurations[pMinorPlayer:GetID()]:GetPlayerName()) .. " : " .. resourceAmount;
+							};
+						-- !!ARISTOS: To group resources imported from different sources into a single icon!!!
+						local isIncluded:boolean = false;
+						local isIndex:number = 0;
+						for k,impResource in ipairs(importedResources) do
+							if (impResource.Name == cityStateResources.Name) then
+								isIncluded = true;
+								isIndex = k;
+								break;
+							end
+						end
+						if isIncluded then
+							local existingResource = importedResources[isIndex];
+							local newResource = {
+								Name = existingResource.Name;
+								ForType = existingResource.ForType;
+								MaxAmount  = existingResource.MaxAmount + cityStateResources.MaxAmount;
+								ClassType = existingResource.ClassType;
+								ImportString = existingResource.ImportString .. "[NEWLINE]" .. cityStateResources.ImportString;
+							};
+							importedResources[isIndex] = newResource;
+						else
+							table.insert(importedResources, cityStateResources);
+						end
+						-- END ARISTOS grouping of imported resources
+						--table.insert(importedResources, cityStateResources);
+					end
+				end
+			end
+		end
+	end
+
+	return importedResources;
+end
+
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+function MatchesPartnerResource(partnerResourceTable, targetResourceType)
+	for j, partnerEntry in ipairs(partnerResourceTable) do
+		local partnerResourceDesc =  GameInfo.Resources[partnerEntry.ForType];
+		if (partnerResourceDesc.ResourceType == targetResourceType) then
+			return j;
+		end
+	end
+
+	return -1;
+end
+
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 function PopulateAvailableResources(player : table, iconList : table, className : string)
 
 	local iAvailableItemCount = 0;
-	local possibleResources = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.RESOURCES);
-	if (possibleResources ~= nil) then
-		for i, entry in ipairs(possibleResources) do
-	
+
+	local playerResources = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.RESOURCES);
+	local playerDuplicateResources = {};
+	local playerUntradeableResources = {};
+	local playerImportedResources = getImportedResources(player:GetID());
+	local partnerResources = DealManager.GetPossibleDealItems(GetOtherPlayer(player):GetID(), player:GetID(), DealItemTypes.RESOURCES);
+	local partnerImportedResources = getImportedResources(GetOtherPlayer(player):GetID());
+	local icon;
+
+	if (playerResources ~= nil) then
+
+	-- sort by quantity
+	local sort_func = function( a,b ) return tonumber(a.MaxAmount) > tonumber(b.MaxAmount) end;
+	table.sort( playerResources, sort_func );
+
+		for i, entry in ipairs(playerResources) do
 			local resourceDesc = GameInfo.Resources[entry.ForType];
-			if (resourceDesc ~= nil) then
-				-- Do we have some and is it a luxury item?
-				if (entry.MaxAmount > 0 and resourceDesc.ResourceClassType == className ) then
-					local icon = ms_IconOnlyIM:GetInstance(iconList.ListStack);
-					SetIconToSize(icon, "ICON_" .. resourceDesc.ResourceType);
-					icon.AmountText:SetText(tostring(entry.MaxAmount));
-					icon.AmountText:SetHide(false);
-					icon.Icon:SetColor(0xFFFFFFFF);
-					if (className == "RESOURCECLASS_LUXURY") then
-						print("Adding Luxury For Player: " .. player:GetID());
-						print("Luxury Type: " .. resourceDesc.ResourceType);
-						if (player:GetID() == Game.GetLocalPlayer()) then
-							--check if other player has this lux
-							if (ms_HBUI_OtherPlayerRes[resourceDesc.ResourceType] == true) then
-								--the other player already has this lux
-								print("Player ID: " .. GetOtherPlayer(player):GetID() .. " Already has " .. resourceDesc.ResourceType);
-								icon.Icon:SetColor(0xC83232FF);
-							end
-						else
-							--check if local player has this lux
-							if (ms_HBUI_LocalPlayerRes[resourceDesc.ResourceType] == true) then
-								--the other player already has this lux
-								print("Player ID: " .. GetOtherPlayer(player):GetID() .. " Already has " .. resourceDesc.ResourceType);
-								icon.Icon:SetColor(0xC83232FF);
-							end
-						end
+			local resourceType = entry.ForType;
+
+			if (resourceDesc.ResourceClassType ~= className) then -- wrong resource type; null
+				playerResources[resourceType] = nil;
+			else
+				-- Check if all copies have been traded away
+				if (entry.MaxAmount == 0) then
+					table.insert(playerUntradeableResources, playerResources[i]);
+					playerResources[resourceType] = nil;
+
+				-- Check if partner already has the resource
+				elseif (MatchesPartnerResource(partnerResources, resourceDesc.ResourceType) > -1 or MatchesPartnerResource(partnerImportedResources, resourceDesc.ResourceType) > -1) then
+					table.insert(playerDuplicateResources, playerResources[i]);
+					playerResources[resourceType] = nil;
+
+				-- Tradeable item
+				else
+					local tradeableType;
+					if(entry.MaxAmount == 1) then
+						tradeableType = 'scarce';
+					else
+						tradeableType =	'default';
 					end
-					icon.SelectButton:SetDisabled( not entry.IsValid );
-					local resourceType = entry.ForType;
+
+					icon = RenderResourceButton(entry, tradeableType, iconList);
 					-- What to do when double clicked/tapped.
 					icon.SelectButton:RegisterCallback( Mouse.eLClick, function() OnClickAvailableResource(player, resourceType); end );
-					-- Set a tool tip
-					icon.SelectButton:LocalizeAndSetToolTip(resourceDesc.Name);
-					icon.SelectButton:ReprocessAnchoring();
-
 					iAvailableItemCount = iAvailableItemCount + 1;
 				end
 			end
@@ -1480,15 +1697,82 @@ function PopulateAvailableResources(player : table, iconList : table, className 
 		iconList.List:ReprocessAnchoring();
 	end
 
+	if (playerDuplicateResources ~= nil) then
+		for z, entry in ipairs(playerDuplicateResources) do
+			tradeableType = 'duplicate';
+			icon = RenderResourceButton(entry, tradeableType, iconList);
+			icon.SelectButton:RegisterCallback( Mouse.eLClick, function() OnClickAvailableResource(player, entry.ForType); end );
+			iAvailableItemCount = iAvailableItemCount + 1;
+		end
+	end
+
+	if (playerUntradeableResources ~= nil) then
+		for x, entry in ipairs(playerUntradeableResources) do
+			tradeableType = 'none';
+			icon = RenderResourceButton(entry, tradeableType, iconList, entry.ImportString);
+			icon.SelectButton:RegisterCallback( Mouse.eLClick, function() OnClickAvailableResource(player, entry.ForType); end );
+			iAvailableItemCount = iAvailableItemCount + 1;
+		end
+	end
+
+	if(playerImportedResources ~= nil) then
+		for y, entry in ipairs(playerImportedResources) do
+			if (entry.ClassType == className) then
+				tradeableType = 'imported';
+				icon = RenderResourceButton(entry, tradeableType, iconList, entry.ImportString);
+				icon.SelectButton:RegisterCallback( Mouse.eLClick, function() OnClickAvailableResource(player, entry.ForType); end );
+				iAvailableItemCount = iAvailableItemCount + 1;
+			end
+		end
+	end
+
+	iconList.ListStack:CalculateSize();
+	iconList.List:ReprocessAnchoring();
+
 	-- Hide if empty
 	iconList.GetTopControl():SetHide( iconList.ListStack:GetSizeX()==0 );
 
 	return iAvailableItemCount;
 end
 
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+function RenderResourceButton(resource, resourceCategory, iconList, howAcquired)
+	resourceDesc = GameInfo.Resources[resource.ForType];
+	local icon;
+	local tooltipAddedText = '';
+	local buttonDisabled = false;
+
+	if(resourceCategory == 'scarce') then
+		icon = ms_IconOnly_Resource_ScarceIM:GetInstance(iconList.ListStack);
+	elseif(resourceCategory == 'duplicate') then
+		icon = ms_IconOnly_Resource_DuplicateIM:GetInstance(iconList.ListStack);
+		tooltipAddedText = ' (Duplicate)';
+	elseif(resourceCategory == 'none' or resourceCategory == 'imported') then
+		icon = ms_IconOnly_Resource_UntradeableIM:GetInstance(iconList.ListStack);
+		tooltipAddedText = ' (Untradeable)';
+		buttonDisabled = true;
+	else
+		icon = ms_IconOnlyIM:GetInstance(iconList.ListStack);
+	end
+
+	SetIconToSize(icon, "ICON_" .. resourceDesc.ResourceType, icon.Icon:GetSizeX());
+	icon.AmountText:SetText(tostring(resource.MaxAmount));
+	icon.SelectButton:SetDisabled( buttonDisabled );
+	
+	local tooltipString = Locale.Lookup(resourceDesc.Name) .. tooltipAddedText;
+	if (howAcquired ~= nil) then
+		tooltipString = tooltipString .. '[NEWLINE]' .. howAcquired;
+	end
+
+	icon.SelectButton:SetToolTipString(tooltipString);
+	icon.SelectButton:ReprocessAnchoring();
+
+	return icon;
+
+end
+
 -- ===========================================================================
 function PopulateAvailableLuxuryResources(player : table, iconList : table)
-
 	local iAvailableItemCount = 0;
 	iAvailableItemCount = iAvailableItemCount + PopulateAvailableResources(player, iconList, "RESOURCECLASS_LUXURY");
 	return iAvailableItemCount;
@@ -1507,6 +1791,11 @@ function PopulateAvailableAgreements(player : table, iconList : table)
 
 	local iAvailableItemCount = 0;
 	local possibleAgreements = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.AGREEMENTS);
+
+	-- sort alpha
+	local sort_func = function( a,b ) return a.SubTypeName < b.SubTypeName end;
+	table.sort( possibleAgreements, sort_func );
+
 	if (possibleAgreements ~= nil) then
 		for i, entry in ipairs(possibleAgreements) do
 			local agreementType = entry.SubType;
@@ -1549,11 +1838,20 @@ function PopulateAvailableAgreements(player : table, iconList : table)
 	return iAvailableItemCount;
 end
 
--- ===========================================================================
-function MakeCityToolTip(player : table, cityID : number)
-	local pCity = player:GetCities():FindID( cityID );
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+function MakeCityToolTip(pCity : table)
+	local cityData = GetCityData(pCity);
+
 	if (pCity ~= nil) then	
-		local szToolTip = Locale.Lookup("LOC_DEAL_CITY_POPULATION_TOOLTIP", pCity:GetPopulation());
+		local szToolTip = Locale.ToUpper( Locale.Lookup(cityData.CityName)) .. "[NEWLINE]";
+		szToolTip = szToolTip .. Locale.Lookup("LOC_DEAL_CITY_POPULATION_TOOLTIP", pCity:GetPopulation()) .. "[NEWLINE]";		
+		szToolTip = szToolTip .. "[ICON_Food]" .. toPlusMinusString(cityData.FoodPerTurn) .. " ";
+		szToolTip = szToolTip .. "[ICON_Production]" .. toPlusMinusString(cityData.ProductionPerTurn) .. " ";
+		szToolTip = szToolTip .. "[ICON_Science]" .. toPlusMinusString(cityData.SciencePerTurn) .. " ";
+		szToolTip = szToolTip .. "[ICON_Culture]" .. toPlusMinusString(cityData.CulturePerTurn) .. " ";
+		szToolTip = szToolTip .. "[ICON_Faith]" .. toPlusMinusString(cityData.FaithPerTurn) .. " ";
+		szToolTip = szToolTip .. "[ICON_Gold]" .. toPlusMinusString(cityData.GoldPerTurn);
+
 		local districtNames = {};
 		local pCityDistricts = pCity:GetDistricts();
 		if (pCityDistricts ~= nil) then
@@ -1582,30 +1880,104 @@ function MakeCityToolTip(player : table, cityID : number)
 	return "";
 end
 
--- ===========================================================================
-function PopulateAvailableCities(player : table, iconList : table)
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+function renderCity(pCity : table, player : table, targetContainer : table)
+	local button = ms_IconAndTextWithDetailsIM:GetInstance(targetContainer);
+	local cityData = GetCityData(pCity);
+	local otherPlayer = GetOtherPlayer(player);
 
+	SetIconToSize(button, "ICON_BUILDINGS", 30);
+	button.IconText:LocalizeAndSetText(cityData.CityName);
+	--button.SelectButton:SetDisabled( not entry.IsValid and entry.ValidationResult ~= DealValidationResult.MISSING_DEPENDENCY );	-- Hide if invalid, unless it is just missing a dependency, the user will update that when it is added to the deal.
+	
+	if pCity:IsOccupied() then
+		-- Cede
+		if pCity:GetOwner() == otherPlayer:GetID() then
+			button.IconText:SetText(button.IconText:GetText() .. '[COLOR_Civ6Green] - Cede[ENDCOLOR]');
+			button.SelectButton:SetTextureOffsetVal(0, 64);
+		-- Return
+		else 
+			if pCity:GetOriginalOwner() == otherPlayer:GetID() then
+				button.IconText:SetText(button.IconText:GetText() .. '[COLOR_Civ6Red] - Return[ENDCOLOR]');
+				button.SelectButton:SetTextureOffsetVal(0, 96);
+			end
+		end
+	else
+		button.SelectButton:SetTextureOffsetVal(0, 0);
+	end
+	
+	button.PopulationLabel:SetText(tostring(cityData.Population));
+	button.FoodLabel:SetText("[ICON_FOOD]" .. toPlusMinusString(cityData.FoodPerTurn));
+	button.ProductionLabel:SetText("[ICON_PRODUCTION]" .. toPlusMinusString(cityData.ProductionPerTurn));
+	button.ScienceLabel:SetText("[ICON_SCIENCE]" .. toPlusMinusString(cityData.SciencePerTurn));
+
+	button.SelectButton:SetToolTipString( MakeCityToolTip(pCity) );
+
+	return button;
+end
+
+-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+function PopulateAvailableCities(player : table, iconList : table)
 	local iAvailableItemCount = 0;
 	local possibleItems = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.CITIES);
+	local otherPlayer = GetOtherPlayer(player);
+	local occupiedCities = {};
+
 	if (possibleItems ~= nil) then
+		local sort_func = function( a,b ) return a.ForTypeName < b.ForTypeName end;
+		local sort_func_reverse = function( a,b ) return b.ForTypeName < a.ForTypeName end;
+
+	-- Sort items as follows: Occupied cities alphabetically, then non-occupied cities alphabetically
+		for i, entry in ipairs(possibleItems) do
+			local type = entry.ForType; 
+			local pCity = player:GetCities():FindID( type );
+			-- Handle occupied cities
+			if pCity == nil then
+				pCity = otherPlayer:GetCities():FindID( type );
+			end
+
+			-- Move occupied cities to their own table temporarily so they can be sorted alpha separately
+			if player:GetDiplomacy():IsAtWarWith(otherPlayer) or otherPlayer:GetDiplomacy():IsAtWarWith(player) then
+				if pCity:IsOccupied() then
+					table.insert(occupiedCities, possibleItems[i]);
+					possibleItems[i] = nil;
+				end
+			end
+		end
+
+		-- sort remaining (non-occupied) alpha
+		table.sort(possibleItems, sort_func);
+	
+		if occupiedCities ~= nil then
+			-- sort occupied reverse alpha, so when we resert at top of possible items, they are in correct order
+			table.sort(occupiedCities, sort_func_reverse);
+
+			-- re-insert occupied at top
+			for j, entry in ipairs(occupiedCities) do
+				table.insert(possibleItems, 1, occupiedCities[j]);
+			end
+
+			occupiedCities = nil;
+		end
+	-- End Sorting
+
 		for i, entry in ipairs(possibleItems) do
 
-			local type = entry.ForType;
+			local type = entry.ForType; 
 			local subType = entry.SubType;
-			local icon = ms_IconAndTextIM:GetInstance(iconList.ListStack);
-			SetIconToSize(icon, "ICON_BUILDINGS", 45);
-			icon.AmountText:SetHide(true);
-			icon.IconText:LocalizeAndSetText(entry.ForTypeName);
-			icon.SelectButton:SetDisabled( not entry.IsValid and entry.ValidationResult ~= DealValidationResult.MISSING_DEPENDENCY );	-- Hide if invalid, unless it is just missing a dependency, the user will update that when it is added to the deal.
-			icon.ValueText:SetHide(true);
+			local pCity = player:GetCities():FindID( type );
+			-- Handle occupied cities
+			if pCity == nil then
+				pCity = otherPlayer:GetCities():FindID( type );
+			end
+
+			local icon = renderCity(pCity, player, iconList.ListStack);
+
+			icon.SelectButton:ReprocessAnchoring();
+			iAvailableItemCount = iAvailableItemCount + 1;
 
 			-- What to do when double clicked/tapped.
 			icon.SelectButton:RegisterCallback( Mouse.eLClick, function() OnClickAvailableCity(player, type, subType); end );
-
-			icon.SelectButton:SetToolTipString( MakeCityToolTip(player, type) );
-			icon.SelectButton:ReprocessAnchoring();
-
-			iAvailableItemCount = iAvailableItemCount + 1;
 		end
 
 		iconList.ListStack:CalculateSize();
@@ -1655,39 +2027,44 @@ function PopulateAvailableGreatWorks(player : table, iconList : table)
 	local iAvailableItemCount = 0;
 	local possibleItems = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.GREATWORK);
 	if (possibleItems ~= nil) then
+		-- Sort by great work type
+		local sort_func = function( a,b ) return a.ForTypeDescriptionID < b.ForTypeDescriptionID end;
+		table.sort( possibleItems, sort_func );
+
 		for i, entry in ipairs(possibleItems) do
 
 			local greatWorkDesc = GameInfo.GreatWorks[entry.ForTypeDescriptionID];
 			if (greatWorkDesc ~= nil) then
 				local type = entry.ForType;
 				local icon = ms_IconAndTextIM:GetInstance(iconList.ListStack);
-				SetIconToSize(icon, "ICON_" .. greatWorkDesc.GreatWorkType);
+				SetIconToSize(icon, "ICON_" .. greatWorkDesc.GreatWorkType, 42);
 				icon.AmountText:SetHide(true);
 				icon.IconText:LocalizeAndSetText(entry.ForTypeName);
 				icon.SelectButton:SetDisabled( not entry.IsValid and entry.ValidationResult ~= DealValidationResult.MISSING_DEPENDENCY );	-- Hide if invalid, unless it is just missing a dependency, the user will update that when it is added to the deal.
 				icon.ValueText:SetHide(true);
-    
+
 				-- What to do when double clicked/tapped.
 				icon.SelectButton:RegisterCallback( Mouse.eLClick, function() OnClickAvailableGreatWork(player, type); end );
 				-- Set a tool tip
+
 				
-        --CQUI Changes
-        local yieldType:string = GameInfo.GreatWork_YieldChanges[greatWorkDesc.GreatWorkType].YieldType;
-        local yieldValue:number = GameInfo.GreatWork_YieldChanges[greatWorkDesc.GreatWorkType].YieldChange;
-        local greatWorkYields:string = YIELD_FONT_ICONS[yieldType] .. yieldValue .. " [ICON_TourismLarge]" .. greatWorkDesc.Tourism;
-        local tooltipText:string;
-        local greatWorkTypeName:string;
-        
-        if (greatWorkDesc.EraType ~= nil) then
-          greatWorkTypeName = Locale.Lookup("LOC_" .. greatWorkDesc.GreatWorkObjectType .. "_" .. greatWorkDesc.EraType);
-        else
-          greatWorkTypeName = Locale.Lookup("LOC_" .. greatWorkDesc.GreatWorkObjectType);
-        end
-        tooltipText = Locale.Lookup(greatWorkDesc.Name) .. " (" .. greatWorkTypeName .. ")[NEWLINE]" .. greatWorkYields;
-        icon.SelectButton:SetToolTipString(tooltipText);
-        --end CQUI Changes
-        
-        icon.SelectButton:ReprocessAnchoring();
+				--CQUI Changes
+				local yieldType:string = GameInfo.GreatWork_YieldChanges[greatWorkDesc.GreatWorkType].YieldType;
+				local yieldValue:number = GameInfo.GreatWork_YieldChanges[greatWorkDesc.GreatWorkType].YieldChange;
+				local greatWorkYields:string = YIELD_FONT_ICONS[yieldType] .. yieldValue .. " [ICON_TourismLarge]" .. greatWorkDesc.Tourism;
+				local tooltipText:string;
+				local greatWorkTypeName:string;
+				
+				if (greatWorkDesc.EraType ~= nil) then
+				  greatWorkTypeName = Locale.Lookup("LOC_" .. greatWorkDesc.GreatWorkObjectType .. "_" .. greatWorkDesc.EraType);
+				else
+				  greatWorkTypeName = Locale.Lookup("LOC_" .. greatWorkDesc.GreatWorkObjectType);
+				end
+				tooltipText = Locale.Lookup(greatWorkDesc.Name) .. " (" .. greatWorkTypeName .. ")[NEWLINE]" .. greatWorkYields;
+				icon.SelectButton:SetToolTipString(tooltipText);
+				--end CQUI Changes
+				
+				icon.SelectButton:ReprocessAnchoring();
 
 				iAvailableItemCount = iAvailableItemCount + 1;
 			end
@@ -1711,6 +2088,10 @@ function PopulateAvailableCaptives(player : table, iconList : table)
 
 	local possibleItems = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.CAPTIVE);
 	if (possibleItems ~= nil) then
+		-- Sort by cpative name
+		local sort_func = function( a,b ) return a.ForTypeName < b.ForTypeName end;
+		table.sort( possibleItems, sort_func );
+
 		for i, entry in ipairs(possibleItems) do
 
 			local type = entry.ForType;
@@ -1788,7 +2169,7 @@ end
 
 -- ===========================================================================
 function PopulateDealBasic(player : table, iconList : table, populateType : number, iconName : string)
-
+	
 	local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
 	local playerType = GetPlayerType(player);
 	if (pDeal ~= nil) then
@@ -1801,7 +2182,7 @@ function PopulateDealBasic(player : table, iconList : table, populateType : numb
 				local dealItemID = pDealItem:GetID();
 				
 				if (type == populateType) then
-					local icon = ms_IconAndTextIM:GetInstance(iconList);
+					local icon = ms_IconAndTextIM:GetInstance(iconList.ListStack);
 					SetIconToSize(icon, iconName);
 					icon.AmountText:SetHide(true);
 					local typeName = pDealItem:GetValueTypeNameID();
@@ -1817,20 +2198,20 @@ function PopulateDealBasic(player : table, iconList : table, populateType : numb
 			end
 		end
 
-		iconList:CalculateSize();
-		iconList:ReprocessAnchoring();
+		iconList.ListStack:CalculateSize();
+		iconList.ListStack:ReprocessAnchoring();
 
 	end
 
 end
 
--- ===========================================================================
-function PopulateDealResources(player : table, iconList : table)
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+function PopulateDealGold(player : table, iconList : table)
 	local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
 	local playerType = GetPlayerType(player);
 	if (pDeal ~= nil) then
-		ms_IconOnlyIM:ReleaseInstanceByParent(iconList);
-		ms_IconAndTextIM:ReleaseInstanceByParent(iconList);
+		ms_IconOnlyIM:ReleaseInstanceByParent(iconList.ListStack);
+		ms_IconOnly_3IM:ReleaseInstanceByParent(iconList.ListStack);
 
 		local pDealItem;
 		for pDealItem in pDeal:Items() do
@@ -1838,19 +2219,21 @@ function PopulateDealResources(player : table, iconList : table)
 			if (pDealItem:GetFromPlayerID() == player:GetID()) then
 				local iDuration = pDealItem:GetDuration();
 				local dealItemID = pDealItem:GetID();
-				-- Gold?
 				if (type == DealItemTypes.GOLD) then
 					local icon;
+
 					if (iDuration == 0) then
 						-- One time
-						icon = ms_IconOnlyIM:GetInstance(iconList);
+						icon = ms_IconOnlyIM:GetInstance(iconList.ListStack);
+						SetIconToSize(icon, "ICON_YIELD_GOLD_5");
 					else
 						-- Multi-turn
-						icon = ms_IconAndTextIM:GetInstance(iconList);
-						icon.IconText:LocalizeAndSetText("LOC_DIPLOMACY_DEAL_FOR_TURNS", iDuration);
-						icon.ValueText:SetHide(true);
+						icon = ms_IconOnly_3IM:GetInstance(iconList.ListStack);
+						SetSpecifiedIconToSize(icon.Icon1, "ICON_YIELD_GOLD_1");
+						SetSpecifiedIconToSize(icon.Icon2, "ICON_YIELD_GOLD_1");
+						SetSpecifiedIconToSize(icon.Icon3, "ICON_YIELD_GOLD_1");
 					end
-					SetIconToSize(icon, "ICON_YIELD_GOLD_5");
+					
 					icon.AmountText:SetText(tostring(pDealItem:GetAmount()));
 					icon.AmountText:SetHide(false);
 					icon.SelectButton:RegisterCallback(Mouse.eRClick, function(void1, void2, self) OnRemoveDealItem(player, dealItemID, self); end);
@@ -1859,21 +2242,42 @@ function PopulateDealResources(player : table, iconList : table)
 					if (dealItemID == ms_ValueEditDealItemID) then
 						ms_ValueEditDealItemControlTable = icon;
 					end
-				else
-					if (type == DealItemTypes.RESOURCES) then
+				end
+			end
+		end
 
-						local resourceType = pDealItem:GetValueType();
-						local icon;
-						if (iDuration == 0) then
-							-- One time
-							icon = ms_IconOnlyIM:GetInstance(iconList);
-						else
-							-- Multi-turn
-							icon = ms_IconAndTextIM:GetInstance(iconList);
-							icon.IconText:LocalizeAndSetText("LOC_DIPLOMACY_DEAL_FOR_TURNS", iDuration);
-							icon.ValueText:SetHide(true);
-						end
-						local resourceDesc = GameInfo.Resources[resourceType];
+		iconList.ListStack:CalculateSize();
+		iconList.ListStack:ReprocessAnchoring();
+
+		ReAttachValueEdit();
+	end
+end
+
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+function PopulateDealResources(player : table, iconList : table, className)
+	
+	local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+	local playerType = GetPlayerType(player);
+	if (pDeal ~= nil) then
+		ms_IconOnlyIM:ReleaseInstanceByParent(iconList.ListStack);
+		ms_IconOnly_Resource_ScarceIM:ReleaseInstanceByParent(iconList.ListStack);
+		ms_IconOnly_Resource_DuplicateIM:ReleaseInstanceByParent(iconList.ListStack);
+		ms_IconOnly_Resource_UntradeableIM:ReleaseInstanceByParent(iconList.ListStack);	
+		local pDealItem;
+		for pDealItem in pDeal:Items() do
+			local type = pDealItem:GetType();
+			if (pDealItem:GetFromPlayerID() == player:GetID()) then
+				local iDuration = pDealItem:GetDuration();
+				local dealItemID = pDealItem:GetID();
+
+				if (type == DealItemTypes.RESOURCES) then
+					local resourceType = pDealItem:GetValueType();
+					local resourceDesc = GameInfo.Resources[resourceType];
+
+					if (resourceDesc.ResourceClassType ~= className) then -- wrong resource type; null
+						pDeal[resourceType] = nil;
+					else
+						local icon = ms_IconOnlyIM:GetInstance(iconList.ListStack);
 						SetIconToSize(icon, "ICON_" .. resourceDesc.ResourceType);
 						icon.AmountText:SetText(tostring(pDealItem:GetAmount()));
 						icon.AmountText:SetHide(false);
@@ -1888,18 +2292,19 @@ function PopulateDealResources(player : table, iconList : table)
 						if (dealItemID == ms_ValueEditDealItemID) then
 							ms_ValueEditDealItemControlTable = icon;
 						end
-					end --end else if the item isn't gold
-				end -- end for each item in dael
-			end -- end if deal
-		end
+					end
+				end
+			end -- end for each item in dael
+		end -- end if deal
 
-		iconList:CalculateSize();
-		iconList:ReprocessAnchoring();
+		iconList.ListStack:CalculateSize();
+		iconList.ListStack:ReprocessAnchoring();
 
 		ReAttachValueEdit();
 	end
 
 end
+
 
 -- ===========================================================================
 function PopulateDealAgreements(player : table, iconList : table)
@@ -1907,7 +2312,8 @@ function PopulateDealAgreements(player : table, iconList : table)
 	local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
 	local playerType = GetPlayerType(player);
 	if (pDeal ~= nil) then
-		
+		ms_IconAndTextIM:ReleaseInstanceByParent(iconList.ListStack);
+
 		local pDealItem;
 		for pDealItem in pDeal:Items() do
 			local type = pDealItem:GetType();
@@ -1915,7 +2321,7 @@ function PopulateDealAgreements(player : table, iconList : table)
 				local dealItemID = pDealItem:GetID();
 				-- Agreement?
 				if (type == DealItemTypes.AGREEMENTS) then
-					local icon = ms_IconAndTextIM:GetInstance(iconList);
+					local icon = ms_IconAndTextIM:GetInstance(iconList.ListStack);
 					local info: table = GameInfo.DiplomaticActions[ pDealItem:GetSubType() ];
 					if (info ~= nil) then
 						SetIconToSize(icon, "ICON_".. info.DiplomaticActionType, 38);
@@ -1937,8 +2343,8 @@ function PopulateDealAgreements(player : table, iconList : table)
 			end
 		end
 
-		iconList:CalculateSize();
-		iconList:ReprocessAnchoring();
+		iconList.ListStack:CalculateSize();
+		iconList.ListStack:ReprocessAnchoring();
 
 	end
 
@@ -1950,7 +2356,8 @@ function PopulateDealGreatWorks(player : table, iconList : table)
 	local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
 	local playerType = GetPlayerType(player);
 	if (pDeal ~= nil) then
-		
+		ms_IconAndTextIM:ReleaseInstanceByParent(iconList.ListStack);
+
 		local pDealItem;
 		for pDealItem in pDeal:Items() do
 			local type = pDealItem:GetType();
@@ -1959,20 +2366,15 @@ function PopulateDealGreatWorks(player : table, iconList : table)
 				local dealItemID = pDealItem:GetID();
 				
 				if (type == DealItemTypes.GREATWORK) then
-					local icon = ms_IconAndTextIM:GetInstance(iconList);
+					local icon = ms_IconAndTextIM:GetInstance(iconList.ListStack);
 
 					local typeID = pDealItem:GetValueTypeID();
-					SetIconToSize(icon, "ICON_" .. typeID);
+					SetIconToSize(icon, "ICON_" .. typeID, 42);
 					icon.AmountText:SetHide(true);
 					local typeName = pDealItem:GetValueTypeNameID();
 					if (typeName ~= nil) then
 						icon.IconText:LocalizeAndSetText(typeName);
-						local greatWorkDesc = GetGreatWorkTooltipString(typeID);
-						if (greatWorkDesc ~= nil) then
-							icon.SelectButton:LocalizeAndSetToolTip(greatWorkDesc);
-						else
-						  icon.SelectButton:LocalizeAndSetToolTip(typeName);
-						end
+						icon.SelectButton:LocalizeAndSetToolTip(typeName);
 					else
 						icon.IconText:SetText(nil);
 						icon.SelectButton:SetToolTipString(nil);
@@ -1984,8 +2386,8 @@ function PopulateDealGreatWorks(player : table, iconList : table)
 			end
 		end
 
-		iconList:CalculateSize();
-		iconList:ReprocessAnchoring();
+		iconList.ListStack:CalculateSize();
+		iconList.ListStack:ReprocessAnchoring();
 
 	end
 
@@ -1993,7 +2395,7 @@ end
 
 -- ===========================================================================
 function PopulateDealCaptives(player : table, iconList : table)
-
+	ms_IconAndTextIM:ReleaseInstanceByParent(iconList.ListStack);
 	PopulateDealBasic(player, iconList, DealItemTypes.CAPTIVE, "ICON_UNIT_SPY");
 
 end
@@ -2003,8 +2405,10 @@ function PopulateDealCities(player : table, iconList : table)
 
 	local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
 	local playerType = GetPlayerType(player);
+	local otherPlayer = GetOtherPlayer(player);
 	if (pDeal ~= nil) then
-		
+		ms_IconAndTextWithDetailsIM:ReleaseInstanceByParent(iconList.ListStack);
+
 		local pDealItem;
 		for pDealItem in pDeal:Items() do
 			local type = pDealItem:GetType();
@@ -2012,24 +2416,23 @@ function PopulateDealCities(player : table, iconList : table)
 				local dealItemID = pDealItem:GetID();
 				
 				if (type == DealItemTypes.CITIES) then
-					local icon = ms_IconAndTextIM:GetInstance(iconList);
-					SetIconToSize(icon, "ICON_BUILDINGS");
-					icon.AmountText:SetHide(true);
-					local typeName = pDealItem:GetValueTypeNameID();
-					if (typeName ~= nil) then
-						icon.IconText:LocalizeAndSetText(typeName);
+					local pCity = player:GetCities():FindID(pDealItem:GetValueType());
+					-- Handle occupied cities
+					if pCity == nil then
+						pCity = otherPlayer:GetCities():FindID(pDealItem:GetValueType());
 					end
+
+					local icon = renderCity(pCity, player, iconList.ListStack);
 				
 					icon.SelectButton:RegisterCallback(Mouse.eRClick, function(void1, void2, self) OnRemoveDealItem(player, dealItemID, self); end);
 					icon.SelectButton:RegisterCallback( Mouse.eLClick, function(void1, void2, self) OnSelectValueDealItem(player, dealItemID, self); end );
 
-					icon.SelectButton:SetToolTipString( MakeCityToolTip(player, pDealItem:GetValueType() ) );
 				end
 			end
 		end
 
-		iconList:CalculateSize();
-		iconList:ReprocessAnchoring();
+		iconList.ListStack:CalculateSize();
+		iconList.ListStack:ReprocessAnchoring();
 
 	end
 
@@ -2040,9 +2443,10 @@ end
 function PopulatePlayerDealPanel(rootControl : table, player : table)
 
 	if (player ~= nil) then
-		
 		local playerType = GetPlayerType(player);
-		PopulateDealResources(player, ms_DealGroups[DealItemGroupTypes.RESOURCES][playerType]);
+		PopulateDealGold(player, ms_DealGroups[DealItemGroupTypes.GOLD][playerType]);
+		PopulateDealResources(player, ms_DealGroups[DealItemGroupTypes.LUXURY_RESOURCES][playerType], 'RESOURCECLASS_LUXURY');
+		PopulateDealResources(player, ms_DealGroups[DealItemGroupTypes.STRATEGIC_RESOURCES][playerType], 'RESOURCECLASS_STRATEGIC');
 		PopulateDealAgreements(player, ms_DealGroups[DealItemGroupTypes.AGREEMENTS][playerType]);
 		PopulateDealCaptives(player, ms_DealGroups[DealItemGroupTypes.CAPTIVES][playerType]);
 		PopulateDealGreatWorks(player, ms_DealGroups[DealItemGroupTypes.GREAT_WORKS][playerType]);
@@ -2166,14 +2570,14 @@ LuaEvents.DiploPopup_DealUpdated.Add(OnDealUpdated);
 function StartExitAnimation()
 	-- Start the exit animation, it will call OnContinue when complete
 	ms_bExiting = true;
-	Controls.Signature_Slide:Reverse();
-	Controls.Signature_Alpha:Reverse();
-	Controls.YieldSlide:Reverse();
-	Controls.YieldAlpha:Reverse();
-	Controls.TradePanelFade:Reverse();
-	Controls.TradePanelSlide:Reverse();
-	Controls.TradePanelFade:SetSpeed(5);
-	Controls.TradePanelSlide:SetSpeed(5);
+	-- Controls.Signature_Slide:Reverse();
+	-- Controls.Signature_Alpha:Reverse();
+	-- Controls.YieldSlide:Reverse();
+	-- Controls.YieldAlpha:Reverse();
+	-- Controls.TradePanelFade:Reverse();
+	-- Controls.TradePanelSlide:Reverse();
+	-- Controls.TradePanelFade:SetSpeed(5);
+	-- Controls.TradePanelSlide:SetSpeed(5);
 	UI.PlaySound("UI_Diplomacy_Menu_Change");
 end
 
@@ -2248,25 +2652,30 @@ end
 -- ===========================================================================
 function OnShow()
 	RefreshYields();
-	Controls.Signature_Slide:SetToBeginning();
-	Controls.Signature_Alpha:SetToBeginning();
-	Controls.Signature_Slide:Play();
-	Controls.Signature_Alpha:Play();
+	-- Controls.Signature_Slide:SetToBeginning();
+	-- Controls.Signature_Alpha:SetToBeginning();
+	-- Controls.Signature_Slide:Play();
+	-- Controls.Signature_Alpha:Play();
 	Controls.YieldAlpha:SetToBeginning();
 	Controls.YieldAlpha:Play();
-	Controls.YieldSlide:SetToBeginning();
-	Controls.YieldSlide:Play();
+	-- Controls.YieldSlide:SetToBeginning();
+	-- Controls.YieldSlide:Play();
 	Controls.TradePanelFade:SetToBeginning();
 	Controls.TradePanelFade:Play();
-	Controls.TradePanelSlide:SetToBeginning();
-	Controls.TradePanelSlide:Play();
-	Controls.LeaderDialogFade:SetToBeginning();
-	Controls.LeaderDialogFade:Play();
-	Controls.LeaderDialogSlide:SetToBeginning();
-	Controls.LeaderDialogSlide:Play();
+	-- Controls.TradePanelSlide:SetToBeginning();
+	-- Controls.TradePanelSlide:Play();
+	-- Controls.LeaderDialogFade:SetToBeginning();
+	-- Controls.LeaderDialogFade:Play();
+	-- Controls.LeaderDialogSlide:SetToBeginning();
+	-- Controls.LeaderDialogSlide:Play();
 
 	ms_IconOnlyIM:ResetInstances();
+	ms_IconOnly_3IM:ResetInstances();
 	ms_IconAndTextIM:ResetInstances();
+	ms_IconAndTextWithDetailsIM:ResetInstances();
+	ms_IconOnly_Resource_ScarceIM:ResetInstances();
+	ms_IconOnly_Resource_DuplicateIM:ResetInstances();
+	ms_IconOnly_Resource_UntradeableIM:ResetInstances();
 
 	ms_bExiting = false;
 
@@ -2305,39 +2714,13 @@ function OnShow()
 		-- We are NOT clearing the current outgoing deal. This allows other screens to pre-populate the deal.
 	end
 
-	UpdateOtherPlayerText(1);
+	--UpdateOtherPlayerText(1);
+	PopulateSignatureArea(ms_LocalPlayer);
 	PopulateSignatureArea(ms_OtherPlayer);
-	SetDefaultLeaderDialogText();
+	--SetDefaultLeaderDialogText();
 
 	local iAvailableItemCount = 0;
 	-- Available content to trade.  Shouldn't change during the session, but it might, especially in multiplayer.
-	-- populate the tables of players avaliable resources
-	ms_HBUI_LocalPlayerRes = {};
-	ms_HBUI_OtherPlayerRes = {};
-	
-	local pPlayerResources	=  Players[ms_LocalPlayer:GetID()]:GetResources();
-	local pOtherPlayerResources	=  Players[ms_OtherPlayer:GetID()]:GetResources();
-	
-	for resource in GameInfo.Resources() do
-		if (resource.ResourceClassType ~= nil and resource.ResourceClassType == "RESOURCECLASS_LUXURY") then
-			local amount = pPlayerResources:GetResourceAmount(resource.ResourceType);
-			local amountOther = pOtherPlayerResources:GetResourceAmount(resource.ResourceType);
-
-			if (amount > 0) then
-				print("Player ID: " .. ms_LocalPlayer:GetID() .. " Has " .. resource.ResourceType);
-				ms_HBUI_LocalPlayerRes[resource.ResourceType] = true;
-			else
-				ms_HBUI_LocalPlayerRes[resource.ResourceType] = false;
-			end
-
-			if (amountOther > 0) then
-				print("Player ID: " .. ms_OtherPlayer:GetID() .. " Has " .. resource.ResourceType);
-				ms_HBUI_OtherPlayerRes[resource.ResourceType] = true;
-			else
-				ms_HBUI_OtherPlayerRes[resource.ResourceType] = false;
-			end
-		end
-	end
 	iAvailableItemCount = iAvailableItemCount + PopulatePlayerAvailablePanel(Controls.MyInventoryStack, ms_LocalPlayer);
 	iAvailableItemCount = iAvailableItemCount + PopulatePlayerAvailablePanel(Controls.TheirInventoryStack, ms_OtherPlayer);
 
@@ -2368,8 +2751,8 @@ function OnShow()
 	PopulatePlayerDealPanel(Controls.MyOfferStack, ms_LocalPlayer);
 	UpdateDealStatus();
 
-	Controls.MyOfferScroll:CalculateSize();
-	Controls.TheirOfferScroll:CalculateSize();
+	--Controls.MyOfferScroll:CalculateSize();
+	--Controls.TheirOfferScroll:CalculateSize();
 
 	LuaEvents.DiploBasePopup_HideUI(true);
 	TTManager:ClearCurrent();	-- Clear any tool tips raised;
@@ -2426,7 +2809,7 @@ function Initialize()
 	Events.LocalPlayerTurnEnd.Add( OnLocalPlayerTurnEnd );
 
 	m_kPopupDialog = PopupDialogLogic:new( "DealConfirmDialog", Controls.PopupDialog, Controls.PopupStack );
-	m_kPopupDialog:SetOpenAnimationControls( Controls.PopupAlphaIn, Controls.PopupSlideIn );	
+	--m_kPopupDialog:SetOpenAnimationControls( Controls.PopupAlphaIn, Controls.PopupSlideIn );	
 	m_kPopupDialog:SetInstanceNames( nil, nil, "PopupTextInstance", "Text", "RowInstance", "Row");
 	m_kPopupDialog:SetSize(400,200);
 end
