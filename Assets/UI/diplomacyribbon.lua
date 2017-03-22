@@ -155,6 +155,8 @@ function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean
 			local leaderDesc:string = pPlayerConfig:GetLeaderName();
 			local civDesc:string = pPlayerConfig:GetCivilizationDescription();
 
+			local civData:string = GetExtendedTooltip(playerID);
+			
 			if GameConfiguration.IsAnyMultiplayer() and isHuman then
 				if(playerID ~= localPlayerID and not Players[localPlayerID]:GetDiplomacy():HasMet(playerID)) then
 					instance.Portrait:SetToolTipString(Locale.Lookup("LOC_DIPLOPANEL_UNMET_PLAYER") .. " (" .. pPlayerConfig:GetPlayerName() .. ")");
@@ -162,7 +164,7 @@ function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean
 					instance.Portrait:SetToolTipString(Locale.Lookup("LOC_DIPLOMACY_DEAL_PLAYER_PANEL_TITLE", leaderDesc, civDesc) .. " (" .. pPlayerConfig:GetPlayerName() .. ")");
 				end
 			else
-				instance.Portrait:LocalizeAndSetToolTip("LOC_DIPLOMACY_DEAL_PLAYER_PANEL_TITLE", leaderDesc, civDesc);
+				instance.Portrait:SetToolTipString(Locale.Lookup("LOC_DIPLOMACY_DEAL_PLAYER_PANEL_TITLE", leaderDesc, civDesc)..civData);
 			end
 		end
 	end
@@ -184,6 +186,34 @@ function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean
 		-- Hide team ribbon for civs we haven't met
 		instance.TeamRibbon:SetHide(true);
 	end
+end
+
+--ARISTOS: To display key information in leader tooltip inside Diplo Ribbon
+function GetExtendedTooltip(playerID:number)
+	local govType:string = "";
+	local eSelectePlayerGovernment :number = Players[playerID]:GetCulture():GetCurrentGovernment();
+	if eSelectePlayerGovernment ~= -1 then
+		govType = Locale.Lookup(GameInfo.Governments[eSelectePlayerGovernment].Name);
+	else
+		govType = Locale.Lookup("LOC_GOVERNMENT_ANARCHY_NAME" );
+	end
+	local cities = Players[playerID]:GetCities();
+	local numCities = 0;
+	for i,city in cities:Members() do
+		numCities = numCities + 1;
+	end
+	local civData:string = "[NEWLINE]"..Locale.Lookup("LOC_DIPLOMACY_INTEL_GOVERNMENT").." "..govType
+		.."[NEWLINE]"..Locale.Lookup("LOC_PEDIA_CONCEPTS_PAGEGROUP_CITIES_NAME").. ": "..numCities
+		.."[NEWLINE][ICON_Capital] "..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_DOMINATION_SCORE", Players[playerID]:GetScore())
+		.."[NEWLINE]"..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_SCIENCE_SCIENCE_RATE", Round(Players[playerID]:GetTechs():GetScienceYield(),1))
+		.."[NEWLINE][ICON_Science] "..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_SCIENCE_NUM_TECHS", Players[playerID]:GetStats():GetNumTechsResearched())
+		.."[NEWLINE]"..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_CULTURE_CULTURE_RATE", Round(Players[playerID]:GetCulture():GetCultureYield(),1))
+		.."[NEWLINE]"..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_CULTURE_TOURISM_RATE", Round(Players[playerID]:GetStats():GetTourism(),1))
+		.."[NEWLINE]"..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_RELIGION_FAITH_RATE", Round(Players[playerID]:GetReligion():GetFaithYield(),1))
+		.."[NEWLINE][ICON_Strength] "..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_DOMINATION_MILITARY_STRENGTH", Players[playerID]:GetStats():GetMilitaryStrength())
+		;
+
+	return civData;
 end
 
 -- Extended Relationship Tooltip creator
