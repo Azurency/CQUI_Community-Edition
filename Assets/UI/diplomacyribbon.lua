@@ -43,6 +43,9 @@ local m_kLeaderIM			:table = InstanceManager:new("LeaderInstance", "LeaderContai
 local m_PartialScreenHookBar: table;	-- = ContextPtr:LookUpControl( "/InGame/PartialScreenHooks/LaunchBacking" );
 local m_LaunchBar			: table;	-- = ContextPtr:LookUpControl( "/InGame/LaunchBar/LaunchBacking" );
 
+-- ARISTOS: Mouse over leader icon to show relations
+local m_isCTRLDown       :boolean= false;
+
 -- ===========================================================================
 --	Cleanup leaders
 -- ===========================================================================
@@ -66,6 +69,9 @@ end
 function OnLeaderRightClicked(ms_SelectedPlayerID : number )
 
 	local ms_LocalPlayerID:number = Game.GetLocalPlayer();
+	if ms_SelectedPlayerID == ms_LocalPlayerID then 
+		UpdateLeaders();
+	end
 	local pPlayer = Players[ms_LocalPlayerID];
 	local iPlayerDiploState = pPlayer:GetDiplomaticAI():GetDiplomaticStateIndex(ms_SelectedPlayerID);
 	local relationshipHash = GameInfo.DiplomaticStates[iPlayerDiploState].Hash;
@@ -76,6 +82,42 @@ function OnLeaderRightClicked(ms_SelectedPlayerID : number )
 		DiplomacyManager.RequestSession(ms_LocalPlayerID, ms_SelectedPlayerID, "MAKE_DEAL");
 	end
 	LuaEvents.QuickDealModeActivate();
+end
+
+-- ===========================================================================
+-- ARISTOS: To show relationship icon of other civs on hovering mouse over a given leader
+function OnLeaderMouseOver(playerID : number )
+	local localPlayerID:number = Game.GetLocalPlayer();
+	if m_isCTRLDown then
+		UI.PlaySound("Main_Menu_Mouse_Over");
+		for otherPlayerID, instance in pairs(m_uiLeadersByID) do
+			local pPlayer:table = Players[otherPlayerID];
+			local pPlayerConfig:table = PlayerConfigurations[otherPlayerID];
+			local isHuman:boolean = pPlayerConfig:IsHuman();
+			-- Set relationship status (for non-local players)
+			local diplomaticAI:table = pPlayer:GetDiplomaticAI();
+			local relationshipStateID:number = diplomaticAI:GetDiplomaticStateIndex(playerID);
+			if relationshipStateID ~= -1 then
+				local relationshipState:table = GameInfo.DiplomaticStates[relationshipStateID];
+				-- Always show relationship icon for AIs, only show player triggered states for humans
+				if not isHuman or IsValidRelationship(relationshipState.StateType) then
+					--!! ARISTOS: to extend relationship tooltip to include diplo modifiers!
+					local relationshipTooltip:string = Locale.Lookup(relationshipState.Name)
+					--!! Extend it only of the selected player is the local player!
+					.. (localPlayerID == playerID and ("[NEWLINE][NEWLINE]" .. RelationshipGet(otherPlayerID)) or "");
+					-- KWG: This is bad, there is a piece of art that is tied to the order of a database entry.  Please fix!
+					instance.Relationship:SetVisState(relationshipStateID);
+					instance.Relationship:SetToolTipString(relationshipTooltip);
+				end
+			end
+			if(playerID == otherPlayerID) then
+				instance.YouIndicator:SetHide(false);
+			else
+				instance.YouIndicator:SetHide(true);
+			end
+		end
+	end
+	
 end
 
 -- ===========================================================================
@@ -116,7 +158,9 @@ function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean
 	-- Register the click handler
 	instance.Button:RegisterCallback( Mouse.eLClick, function() OnLeaderClicked(playerID); end );
 	instance.Button:RegisterCallback( Mouse.eRClick, function() OnLeaderRightClicked(playerID); end );
-
+	instance.Button:RegisterCallback( Mouse.eMouseEnter, function() OnLeaderMouseOver(playerID); end ); --ARISTOS
+	instance.Button:RegisterCallback( Mouse.eMClick, function() OnLeaderMouseOver(playerID); end ); --ARISTOS
+	
 	local bShowRelationshipIcon:boolean = false;
 	local localPlayerID:number = Game.GetLocalPlayer();
 
@@ -139,6 +183,7 @@ function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean
 				bShowRelationshipIcon = true;
 			end
 		end
+		instance.YouIndicator:SetHide(true);
 	end
 
   -- CQUI: Set score values for DRS display
@@ -600,6 +645,41 @@ function OnChatPanelShown(fromPlayer:number, stayOnScreen:boolean)
 	end
 	chatIndicatorFade = {};
 end
+
+--ARISTOS: to manage mouse over leader icons to show relations
+function OnInputHandler( pInputStruct:table )
+	local uiKey :number = pInputStruct:GetKey();
+	local uiMsg :number = pInputStruct:GetMessageType();
+	if uiMsg == KeyEvents.KeyDown then
+		if uiKey == Keys.VK_CONTROL then
+			if m_isCTRLDown == false then
+				m_isCTRLDown = true;
+			end
+		end
+	end
+	if uiMsg == KeyEvents.KeyUp then
+		if uiKey == Keys.VK_CONTROL then
+			if m_isCTRLDown == true then
+				m_isCTRLDown = false;
+			end
+		end
+	end
+	if uiMsg == MouseEvents.MButtonDown then
+		if m_isCTRLDown == false then
+			m_isCTRLDown = true;
+		end
+		return true;
+	end
+	if uiMsg == MouseEvents.MButtonUp then
+		if m_isCTRLDown == true then
+			m_isCTRLDown = false;
+		end
+		return true;
+	end
+	
+end
+ContextPtr:SetInputHandler( OnInputHandler, true );
+--ARISTOS: End
 
 -- ===========================================================================
 --	INIT
