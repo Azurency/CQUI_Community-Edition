@@ -88,6 +88,7 @@ end
 -- ARISTOS: To show relationship icon of other civs on hovering mouse over a given leader
 function OnLeaderMouseOver(playerID : number )
 	local localPlayerID:number = Game.GetLocalPlayer();
+	local playerDiplomacy = Players[playerID]:GetDiplomacy();
 	if m_isCTRLDown then
 		UI.PlaySound("Main_Menu_Mouse_Over");
 		for otherPlayerID, instance in pairs(m_uiLeadersByID) do
@@ -107,7 +108,19 @@ function OnLeaderMouseOver(playerID : number )
 					.. (localPlayerID == playerID and ("[NEWLINE][NEWLINE]" .. RelationshipGet(otherPlayerID)) or "");
 					-- KWG: This is bad, there is a piece of art that is tied to the order of a database entry.  Please fix!
 					instance.Relationship:SetVisState(relationshipStateID);
-					instance.Relationship:SetToolTipString(relationshipTooltip);
+					--ARISTOS: this shows a ? mark instead of leader portrait if player is unknown to the selected leader
+					if (otherPlayerID == playerID or otherPlayerID == localPlayerID) then
+						instance.Relationship:SetHide(true);
+						instance.Portrait:SetIcon("ICON_"..PlayerConfigurations[otherPlayerID]:GetLeaderTypeName());
+					elseif playerDiplomacy:HasMet(otherPlayerID) then
+						instance.Relationship:SetToolTipString(relationshipTooltip);
+						instance.Relationship:SetHide(false);
+						instance.Portrait:SetIcon("ICON_"..PlayerConfigurations[otherPlayerID]:GetLeaderTypeName());
+					else
+						instance.Portrait:SetIcon("ICON_LEADER_DEFAULT");
+						instance.Relationship:LocalizeAndSetToolTip("LOC_DIPLOPANEL_UNMET_PLAYER");
+						instance.Relationship:SetHide(false);
+					end
 				end
 			end
 			if(playerID == otherPlayerID) then
