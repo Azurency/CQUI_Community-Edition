@@ -129,15 +129,18 @@
 			<Grid																	Anchor="C,T"	Offset="0,0"		Size="parent,8"							Style="Divider3Grid" />
 			<Image																Anchor="C,B"	Offset="0,2"		Size="parent,parent"				Texture="Controls_Gradient" Color="255,255,255,32">
 				<Grid			ID="StrategicGrid"											Offset="5,10"		Size="parent-515,40"				Style="SubContainer4"				Color="36,50,62,255" InnerPadding="2,2">
-					<Label																					Offset="5,0"																Style="ReportResourceText"	String="LOC_HUD_REPORTS_STRATEGICS" />
+					<!-- <Label																					Offset="5,0"																Style="ReportResourceText"	String="LOC_HUD_REPORTS_STRATEGICS" /> -->
+					<GridButton   ID="StrategicCheckbox"  Anchor="L,C" Style="CheckBoxControl" String="LOC_HUD_REPORTS_STRATEGICS" Size="120,25" Offset="5,0" Hidden="0" />
 					<Stack	ID="StrategicResources"		Anchor="L,C"	Offset="150,-9"	WrapWidth="340"	WrapGrowth="Down"	StackGrowth="Right" />
 				</Grid>				
 				<Grid			ID="BonusGrid"													Offset="510,10"	Size="parent-515,40"				Style="SubContainer4"				Color="36,50,62,255" InnerPadding="2,2">
-					<Label																					Offset="5,0"																Style="ReportResourceText"	String="LOC_HUD_REPORTS_BONUSES" />
+					<!-- <Label																					Offset="5,0"																Style="ReportResourceText"	String="LOC_HUD_REPORTS_BONUSES" /> -->
+					<GridButton   ID="BonusCheckbox"  Anchor="L,C" Style="CheckBoxControl" String="LOC_HUD_REPORTS_BONUSES" Size="120,25" Offset="5,0" Hidden="0" />
 					<Stack	ID="BonusResources"				Anchor="L,C"	Offset="150,-9"	WrapWidth="340"	WrapGrowth="Down"	StackGrowth="Right" />
 				</Grid>
 				<Grid			ID="LuxuryGrid"													Offset="5,55"		Size="parent-10,40"					Style="SubContainer4"				Color="36,50,62,255" InnerPadding="2,2">
-					<Label																					Offset="5,0"																Style="ReportResourceText"	String="LOC_HUD_REPORTS_LUXURIES" />
+					<!-- <Label																					Offset="5,0"																Style="ReportResourceText"	String="LOC_HUD_REPORTS_LUXURIES" /> -->
+					<GridButton   ID="LuxuryCheckbox"  Anchor="L,C" Style="CheckBoxControl" String="LOC_HUD_REPORTS_LUXURIES" Size="120,25" Offset="5,0" Hidden="0" />
 					<Stack	ID="LuxuryResources"			Anchor="L,C"	Offset="150,-9"	WrapWidth="840"	WrapGrowth="Down"	StackGrowth="Right" />
 				</Grid>
 			</Image>
