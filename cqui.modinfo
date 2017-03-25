@@ -106,8 +106,6 @@
     <File>Assets/UI/civ6common.lua</File>
     <File>Assets/UI/diplomacyactionview.lua</File>
     <File>Assets/UI/diplomacyactionview.xml</File>
-    <File>Assets/UI/diplomacydealview.lua</File>
-    <File>Assets/UI/diplomacydealview.xml</File>
     <File>Assets/UI/diplomacyribbon.lua</File>
     <File>Assets/UI/diplomacyribbon.xml</File>
     <File>Assets/UI/ingame.lua</File>
@@ -167,6 +165,9 @@
     <File>Integrations/URS/reportscreen.xml</File>
     <File>Integrations/URS/unitpromotionpopup.lua</File>
     <File>Integrations/URS/Text/urs_text.xml</File>
+    <File>Integrations/IDS/diplomacydealview.lua</File>
+    <File>Integrations/IDS/diplomacydealview.xml</File>
+    <File>Integrations/IDS/Text/ids_text.xml</File>
     <File>Integrations/ML/UI/minimappanel.lua</File>
     <File>Integrations/ML/UI/minimappanel.xml</File>
     <File>Integrations/ML/UI/Panels/modallenspanel.lua</File>
@@ -186,8 +187,6 @@
         <File>Assets/UI/civ6common.lua</File>
         <File>Assets/UI/diplomacyactionview.lua</File>
         <File>Assets/UI/diplomacyactionview.xml</File>
-        <File>Assets/UI/diplomacydealview.lua</File>
-        <File>Assets/UI/diplomacydealview.xml</File>
         <File>Assets/UI/diplomacyribbon.lua</File>
         <File>Assets/UI/diplomacyribbon.xml</File>
         <File>Assets/UI/ingame.lua</File>
@@ -301,6 +300,17 @@
         <File>Integrations/URS/unitpromotionpopup.lua</File>
       </Items>
     </ImportFiles>
+	<ImportFiles id="IDS_IMPORT_FILES">
+      <Items>
+        <File>Integrations/IDS/diplomacydealview.lua</File>
+        <File>Integrations/IDS/diplomacydealview.xml</File>
+      </Items>
+    </ImportFiles>
+	<LocalizedText id="IDS_TEXT">
+      <Items>
+        <File>Integrations/IDS/Text/ids_text.xml</File>
+      </Items>
+    </LocalizedText>
     <ImportFiles id="MORELENSES_IMPORT_FILES">
       <Items>
         <File>Integrations/ML/UI/minimappanel.lua</File>

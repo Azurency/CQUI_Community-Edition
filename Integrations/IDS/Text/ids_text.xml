@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ARISTOS: This is just the URS text file as initial model for IDS text file! -->
+<GameData>
+    <BaseGameText>
+        <!-- HUD Common Text -->
+        <Row Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS">
+            <Text>Current Deals</Text>
+        
+    </BaseGameText>
+    <LocalizedText>
+    	<!-- FRENCH -->
+      
+        <!-- HUD Common Text -->
+        <Replace Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="fr_FR">
+            <Text>Transactions actuelles</Text>
+        </Replace>
+        
+      
+        <!-- SIMPLIFY-CHINESE -->
+
+        <!-- HUD Common Text -->
+        <Replace Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="zh_Hans_CN">
+            <Text>交易记录</Text>
+        </Replace>
+        
+
+        <!-- ITALIAN -->
+
+        <!-- HUD Common Text -->
+        <Replace Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="it_IT">
+            <Text>Scambi correnti</Text>
+        </Replace>
+        
+
+        <!-- RUSSIAN -->
+
+        <!-- HUD Common Text -->
+        <Row Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="ru_RU">
+            <Text>Текущие Сделки</Text>
+        </Row>
+        
+
+        <!-- POLISH -->
+
+        <!-- HUD Common Text -->
+        <Replace Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="pl_PL">
+            <Text>Aktualne umowy handlowe</Text>
+        </Replace>
+        
+
+        
+        <!-- GERMAN -->
+
+        <!-- HUD Common Text -->
+        <Replace Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="de_DE">
+            <Text>Handelsübersicht</Text>
+        </Replace>
+        
+
+        <!-- KOREAN -->
+
+        <!-- HUD Common Text -->
+        <Replace Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="ko_KR">
+            <Text>거래 현황</Text>
+        </Replace>
+        
+    </LocalizedText>
+</GameData>
