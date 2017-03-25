@@ -1106,19 +1106,13 @@ function PopulateList(data, listIM)
       local turnsStrTT:string = "";
       local turnsStr:string = "";
 
-      if(item.HasBeenBuilt and GameInfo.Districts[item.Type].OnePerCity == true and not item.Repair and not item.Contaminated and not item.TurnsLeft) then
+      if(item.HasBeenBuilt and GameInfo.Districts[item.Type].OnePerCity == true and not item.Repair and not item.Contaminated) then
         turnsStrTT = Locale.Lookup("LOC_HUD_CITY_DISTRICT_BUILT_TT");
         turnsStr = "[ICON_Checkmark]";
         districtListing.RecommendedIcon:SetHide(true);
       else
-        if(item.TurnsLeft) then
-          turnsStrTT = item.TurnsLeft .. Locale.Lookup("LOC_HUD_CITY_TURNS_TO_COMPLETE", item.TurnsLeft);
-          turnsStr = item.TurnsLeft .. "[ICON_Turn]";
-        else
-          turnsStrTT = Locale.Lookup("LOC_HUD_CITY_DISTRICT_BUILT_TT");
-          turnsStr = "[ICON_Checkmark]";
-          districtListing.RecommendedIcon:SetHide(true);
-        end
+        turnsStrTT = item.TurnsLeft .. Locale.Lookup("LOC_HUD_CITY_TURNS_TO_COMPLETE", item.TurnsLeft);
+        turnsStr = item.TurnsLeft .. "[ICON_Turn]";
       end
 
       if(item.Progress > 0) then
