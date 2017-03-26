@@ -241,6 +241,9 @@ function MapPinFlag.SetColor( self : MapPinFlag )
   -- Only set the color if it's a default map pin icon
   if (isDefaultMapPinIcon) then
     self.m_Instance.UnitIcon:SetColor( brighterIconColor );
+  else
+  -- Set color to white for all other pin icons.
+    self.m_Instance.UnitIcon:SetColor( 0xFFFFFFFF );
   end
   
   self.m_Instance.FlagBase:SetColor( primaryColor );
