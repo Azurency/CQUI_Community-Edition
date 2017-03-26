@@ -122,6 +122,13 @@ function CQUI_OnSettingsUpdate()
   --Cycles the minimap after resizing
   CQUI_UpdateMinimapSize();
 end
+
+function CQUI_ToggleYieldIcons()
+-- CQUI: Toggle yield icons if option is enabled
+  if(GameConfiguration.GetValue("CQUI_ToggleYieldsOnLoad")) then
+    ToggleYieldIcons();
+  end
+end
 -- ===========================================================================
 function GetContinentsCache()
   if m_ContinentsCache == nil then
@@ -2536,10 +2543,6 @@ function Initialize()
   LuaEvents.CQUI_Option_ToggleYields.Add( ToggleYieldIcons );
   LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
   LuaEvents.CQUI_SettingsInitialized.Add( CQUI_UpdateMinimapSize );
-
-  -- CQUI: Toggle yield icons if option is enabled
-  if(GameConfiguration.GetValue("CQUI_ToggleYieldsOnLoad")) then
-    ToggleYieldIcons();
-  end
+  LuaEvents.CQUI_SettingsInitialized.Add( CQUI_ToggleYieldIcons );
 end
 Initialize();
