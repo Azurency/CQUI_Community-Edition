@@ -1940,7 +1940,7 @@ function PopulateAvailableCities(player : table, iconList : table)
 			if player:GetDiplomacy():IsAtWarWith(otherPlayer) or otherPlayer:GetDiplomacy():IsAtWarWith(player) then
 				if pCity:IsOccupied() then
 					table.insert(occupiedCities, possibleItems[i]);
-					possibleItems[i] = nil;
+					table.remove(possibleItems, i);
 				end
 			end
 		end
@@ -2096,7 +2096,7 @@ function PopulateAvailableCaptives(player : table, iconList : table)
 
 			local type = entry.ForType;
 			local icon = ms_IconAndTextIM:GetInstance(iconList.ListStack);
-			SetIconToSize(icon, "ICON_UNIT_SPY");
+			SetIconToSize(icon, "ICON_UNIT_SPY", 38);
 			icon.AmountText:SetHide(true);
 			icon.IconText:LocalizeAndSetText(entry.ForTypeName);
 			icon.SelectButton:SetDisabled( not entry.IsValid and entry.ValidationResult ~= DealValidationResult.MISSING_DEPENDENCY );	-- Hide if invalid, unless it is just missing a dependency, the user will update that when it is added to the deal.
@@ -2183,7 +2183,7 @@ function PopulateDealBasic(player : table, iconList : table, populateType : numb
 				
 				if (type == populateType) then
 					local icon = ms_IconAndTextIM:GetInstance(iconList.ListStack);
-					SetIconToSize(icon, iconName);
+					SetIconToSize(icon, iconName, 38);
 					icon.AmountText:SetHide(true);
 					local typeName = pDealItem:GetValueTypeNameID();
 					if (typeName ~= nil) then
