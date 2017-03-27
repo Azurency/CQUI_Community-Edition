@@ -809,14 +809,14 @@ function UnitFlag.UpdatePromotions( self )
 			self.m_Instance.Promotion_Flag:SetHide(false);
 			self.m_Instance.Promotion_Flag:SetOffsetX(-8);
 			self.m_Instance.Promotion_Flag:SetOffsetY(12);
-		elseif isLocalPlayerUnit then
+		else
 			local unitExperience = pUnit:GetExperience();
 			if (unitExperience ~= nil) then
 				local promotionList :table = unitExperience:GetPromotions();
 				local UnitXP = unitExperience:GetExperiencePoints();
 				local UnitMaxXP = unitExperience:GetExperienceForNextLevel();
 				self.m_Instance.New_Promotion_Flag:SetHide(true);
-				if (UnitXP/UnitMaxXP) == 1 then
+				if (UnitXP/UnitMaxXP) == 1 and isLocalPlayerUnit then
 					self.m_Instance.New_Promotion_Flag:SetHide(false);
 					self.m_Instance.UnitNumPromotions:SetText("[COLOR:StatBadCS]+[ENDCOLOR]");
 					self.m_Instance.Promotion_Flag:SetHide(false);
