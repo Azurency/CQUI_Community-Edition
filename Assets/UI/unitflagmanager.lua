@@ -813,16 +813,16 @@ function UnitFlag.UpdatePromotions( self )
 			local unitExperience = pUnit:GetExperience();
 			if (unitExperience ~= nil) then
 				local promotionList :table = unitExperience:GetPromotions();
-				local UnitXP = unitExperience:GetExperiencePoints();
-				local UnitMaxXP = unitExperience:GetExperienceForNextLevel();
 				self.m_Instance.New_Promotion_Flag:SetHide(true);
-				if (UnitXP/UnitMaxXP) == 1 and isLocalPlayerUnit then
+				--ARISTOS: to test for available promotions! Previous test using XPs was faulty (Firaxis... :rolleyes:)
+				local bCanStart, tResults = UnitManager.CanStartCommand( pUnit, UnitCommandTypes.PROMOTE, true, true);
+				if bCanStart and isLocalPlayerUnit then
 					self.m_Instance.New_Promotion_Flag:SetHide(false);
 					self.m_Instance.UnitNumPromotions:SetText("[COLOR:StatBadCS]+[ENDCOLOR]");
 					self.m_Instance.Promotion_Flag:SetHide(false);
-				end
-
-				if (#promotionList > 0) then
+				--end
+				--ARISTOS: if already promoted, or no promotion available, show # of proms
+				elseif (#promotionList > 0) then
 					--[[
 					local tooltipString :string = "";
 					for i, promotion in ipairs(promotionList) do
