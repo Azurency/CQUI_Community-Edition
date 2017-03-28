@@ -17,9 +17,3 @@ CREATE TABLE 'CQUI_Settings' (
   'Value' INTEGER NOT NULL,
   PRIMARY KEY('Setting')
 );
-
-CREATE TABLE 'CQUI_Settings_Temp' (
-  'Setting' TEXT NOT NULL,
-  'Value' INTEGER NOT NULL,
-  PRIMARY KEY('Setting')
-);

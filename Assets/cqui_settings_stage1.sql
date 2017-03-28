@@ -1,4 +1,0 @@
-INSERT INTO CQUI_Settings
-SELECT * FROM CQUI_Settings_Temp;
-
-DELETE FROM CQUI_Settings_Temp;

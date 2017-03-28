@@ -19,7 +19,7 @@
     └────────────────────────────────────────────────────────────────────────────────────────────┘
 */
 
-INSERT INTO CQUI_Settings_Temp -- Don't touch this line!
+INSERT OR REPLACE INTO CQUI_Settings -- Don't touch this line!
   VALUES  ("CQUI_AlwaysOpenTechTrees", 0), -- Always opens the full tech trees instead of the civic/research picker panels
       ("CQUI_AutoapplyArchaeologistLens", 1), -- Automatically activates the archaeologist lens when selecting a archaeologist
       ("CQUI_AutoapplyBuilderLens", 1), -- Automatically activates the builder lens when selecting a builder
@@ -50,7 +50,7 @@ INSERT INTO CQUI_Settings_Temp -- Don't touch this line!
     └────────────────────────────────────────────────────────────────────────────────────────────┘
 */
 
-INSERT INTO CQUI_Settings_Temp -- Don't touch this line!
+INSERT OR REPLACE INTO CQUI_Settings -- Don't touch this line!
   VALUES  ("CQUI_BindingsMode", 1), -- Set of keybindings used │ 0=Civ6 default │ 1=keybinds from Civ5 │ 2=Civ5 with additions such as WASD camera control |
       ("CQUI_ResourceDimmingStyle", 1); -- Affects the way resource icons look when they have been improved  | 0=No Change | 1=Transparent | 2=Hidden |
 
@@ -64,7 +64,7 @@ INSERT INTO CQUI_Settings_Temp -- Don't touch this line!
     └────────────────────────────────────────────────────────────────────────────────────────────┘
 */
 
-INSERT INTO CQUI_Settings_Temp -- Don't touch this line!
+INSERT OR REPLACE INTO CQUI_Settings -- Don't touch this line!
   VALUES  ("CQUI_MinimapSize", 512), -- Factor used for setting minimap size (ex: 512 = 512x256). Recommended values fall between 224 and 768, though any positive could work
   ("CQUI_ProductionItemHeight", 32), -- Height used for individual items in the production queue. Recommended values fall between 24 and 128, though any positive could work
   ("CQUI_SmartWorkIconSize", 88), -- Size used for "smart" work icons. This size is applied to work icons that are currently locked if the smart work icon option is enabled. Recommended values fall between 48 and 128, though any positive multiple of 8 could work (non-multiples are rounded down)
@@ -81,7 +81,7 @@ INSERT INTO CQUI_Settings_Temp -- Don't touch this line!
     └────────────────────────────────────────────────────────────────────────────────────────────┘
 */
 
-INSERT INTO CQUI_Settings_Temp -- Don't touch this line!
+INSERT OR REPLACE INTO CQUI_Settings -- Don't touch this line!
   VALUES  ("CQUI_TrimGossip", 1), --Trims the source from the start of gossip messages
     --Values controlling individual gossip messages
     ("CQUI_LOC_GOSSIP_AGENDA_KUDOS", 0),
