@@ -1111,8 +1111,10 @@ function PopulateList(data, listIM)
         turnsStr = "[ICON_Checkmark]";
         districtListing.RecommendedIcon:SetHide(true);
       else
-        turnsStrTT = item.TurnsLeft .. Locale.Lookup("LOC_HUD_CITY_TURNS_TO_COMPLETE", item.TurnsLeft);
-        turnsStr = item.TurnsLeft .. "[ICON_Turn]";
+        if(item.TurnsLeft) then
+          turnsStrTT = item.TurnsLeft .. Locale.Lookup("LOC_HUD_CITY_TURNS_TO_COMPLETE", item.TurnsLeft);
+          turnsStr = item.TurnsLeft .. "[ICON_Turn]";
+        end
       end
 
       if(item.Progress > 0) then
