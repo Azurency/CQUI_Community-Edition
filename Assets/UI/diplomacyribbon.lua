@@ -80,6 +80,22 @@ function OnLeaderRightClicked(ms_SelectedPlayerID : number )
 			DealManager.ClearWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayerID, ms_SelectedPlayerID);
 		end
 		DiplomacyManager.RequestSession(ms_LocalPlayerID, ms_SelectedPlayerID, "MAKE_DEAL");
+	--ARISTOS: To make Right Click on leader go directly to peace deal
+	else
+		if (not DealManager.HasPendingDeal(ms_LocalPlayerID, ms_SelectedPlayerID)) then
+			DealManager.ClearWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayerID, ms_SelectedPlayerID);
+			local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayerID, ms_SelectedPlayerID);
+			if (pDeal ~= nil) then
+				pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, ms_LocalPlayerID);
+				if (pDealItem ~= nil) then
+					pDealItem:SetSubType(DealAgreementTypes.MAKE_PEACE);
+					pDealItem:SetLocked(true);
+				end
+				-- Validate the deal, this will make sure peace is on both sides of the deal.
+				pDeal:Validate();
+			end							
+		end
+		DiplomacyManager.RequestSession(ms_LocalPlayerID, ms_SelectedPlayerID, "MAKE_DEAL");
 	end
 	LuaEvents.QuickDealModeActivate();
 end
