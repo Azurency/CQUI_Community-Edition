@@ -149,7 +149,7 @@
       <Text>Toggles the popup audio that plays whenever a new tech or civic is achieved. Is fully independent of the visual component and can play even when there is no visible popup</Text>
     </Row>
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="en_US">
-      <Text>Remember: CQUI settings are attached to individual saves![NEWLINE]If you'd like to change a setting by default, please edit the CQUI_Settings.sql file within the [MOD INSTALL DIRECTORY]/CQUI/Assets directory</Text>
+      <Text>Remember: CQUI settings are attached to individual saves![NEWLINE]If you'd like to change a setting by default, please read the info in cqui_settings.sql file within the [MOD INSTALL DIRECTORY]/CQUI/Assets directory</Text>
     </Row>
     <Row Tag="LOC_CQUI_UNITS" Language="en_US">
       <Text>Units</Text>
@@ -1098,7 +1098,7 @@
       <Text>Spiele das Popup-Audio ab, das erfolgt, wenn eine neue Tech oder Ausrichtung abgeschlossen wurde. Kann völlig unabhängig von der visuellen Popup-Komponente ein- und ausgeschaltet werden</Text>
     </Row>
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="de_DE">
-      <Text>Denk dran: CQUI Einstellungen werden im individuellen Savegame gespeichert![NEWLINE]Wenn Du die Voreinstellungen generell ändern willst, dann editiere bitte die Datei [NEWLINE]CQUI_Settings.sql im Verzeichnis[MOD INSTALL DIRECTORY]/CQUI/Assets.</Text>
+      <Text>Denk dran: CQUI Einstellungen werden im individuellen Savegame gespeichert![NEWLINE]Wenn Du die Einstellungen dauerhaft ändern möchtest, dann befolge bitte die Anweisungen [NEWLINE]in der Datei cqui_settings.sql im Verzeichnis[MOD INSTALL DIRECTORY]/CQUI/Assets.</Text>
     </Row>
     <Row Tag="LOC_CQUI_UNITS" Language="de_DE">
       <Text>Einheiten</Text>

@@ -94,7 +94,7 @@
   <Files>
     <File>Assets/cqui_databaseschema.sql</File>
     <File>Assets/cqui_settings.sql</File>
-    <File>Assets/cqui_settings_my.sql</File>
+    <File>Assets/cqui_settings_local.sql</File>
     <File>Assets/cqui_settingselement.lua</File>
     <File>Assets/cqui_settingselement.xml</File>
     <File>Assets/cqui_main.lua</File>
@@ -252,7 +252,7 @@
       <Items>
         <File>Assets/cqui_databaseschema.sql</File>
         <File>Assets/cqui_settings.sql</File>
-        <File>Assets/cqui_settings_my.sql</File>
+        <File>Assets/cqui_settings_local.sql</File>
       </Items>
     </UpdateDatabase>
     <!-- CQUI specific UIs -->
