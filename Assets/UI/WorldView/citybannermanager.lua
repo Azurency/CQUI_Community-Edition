@@ -2133,9 +2133,11 @@ function OnCityRangeStrikeButtonClick( playerID, cityID )
   if (pCity == nil) then
     return;
   end;
-
-  UI.SetInterfaceMode(InterfaceModeTypes.CITY_RANGE_ATTACK);
-  UI.SelectCity( pCity );
+	--ARISTOS: fix for the range strike not showing odds window
+	UI.DeselectAll();
+	UI.SelectCity( pCity );
+	UI.SetInterfaceMode(InterfaceModeTypes.CITY_RANGE_ATTACK);
+  
 end
 
 -- ===========================================================================
