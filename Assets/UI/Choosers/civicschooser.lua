@@ -435,6 +435,7 @@ function Initialize()
 	Controls.OpenTreeButton:RegisterCallback(	Mouse.eMouseEnter,	function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 
 -- CQUI events
+  LuaEvents.CQUI_SettingsInitialized.Add( CQUI_OnSettingsUpdate );
   LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
 
 	-- Populate static controls

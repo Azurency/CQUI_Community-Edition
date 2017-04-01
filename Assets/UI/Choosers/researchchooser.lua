@@ -271,7 +271,6 @@ end
 -- ===========================================================================
 function OnOpenPanel()
   --CQUI: ignores command and opens the tech tree instead if AlwaysShowTechTrees is true
-  print(CQUI_AlwaysOpenTechTrees);
   if(CQUI_AlwaysOpenTechTrees) then
     LuaEvents.ResearchChooser_RaiseTechTree();
   else
@@ -470,6 +469,7 @@ function Initialize()
 	Controls.OpenTreeButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 
   -- CQUI events
+  LuaEvents.CQUI_SettingsInitialized.Add( CQUI_OnSettingsUpdate );
   LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
 
 	-- Populate static controls
