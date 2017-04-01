@@ -7,6 +7,7 @@ include( "Civ6Common" );
 include( "LeaderSupport" );
 include( "DiplomacyStatementSupport" );
 include( "TeamSupport" );
+include( "GameCapabilities" );
 
 -- ===========================================================================
 --	CONSTANTS
@@ -643,9 +644,18 @@ function ApplyStatement(handler : table, statementTypeName : string, statementSu
 			local texth			:number	= math.max( instance.SelectionText:GetSizeY() + SELECTION_PADDING_Y, 45 );
 			instance.SelectionButton:SetSizeY( texth );
 			instance.SelectionText:ReprocessAnchoring();
-            instance.SelectionButton:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-			instance.SelectionButton:RegisterCallback( Mouse.eLClick, 
-				function() handler.OnSelectionButtonClicked(selection.Key); end );
+			if (selection.IsDisabled == nil or selection.IsDisabled == false) then
+				instance.SelectionButton:SetDisabled( false );
+				instance.SelectionButton:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+				instance.SelectionButton:RegisterCallback( Mouse.eLClick, 
+					function() handler.OnSelectionButtonClicked(selection.Key); end );
+			else
+				-- It is disabled
+				instance.SelectionButton:SetDisabled( true );
+				if (selection.FailureReasons ~= nil) then
+					instance.SelectionButton:SetToolTipString(Locale.Lookup(selection.FailureReasons[1]));
+				end
+			end
 		end
 	end
 	Controls.ConversationSelectionStack:CalculateSize();
@@ -784,10 +794,20 @@ function PopulateStatementList( options: table, rootControl: table, isSubList: b
 			end
 
 			instance.ButtonText:SetText( selectionText );
-            instance.Button:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-			instance.Button:RegisterCallback( Mouse.eLClick, callback );
+			if (selection.IsDisabled == nil or selection.IsDisabled == false) then
+				instance.Button:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+				instance.Button:RegisterCallback( Mouse.eLClick, callback );
+				instance.Button:SetDisabled( false );
+			else
+				instance.Button:SetDisabled( true );
+				if (selection.FailureReasons ~= nil) then
+					instance.Button:SetToolTipString(Locale.Lookup(selection.FailureReasons[1]));
+				end
+			end
+
 		else
 			callback = selection.Callback;
+			instance.Button:SetDisabled( false );
 			if ( selection.ToolTip ~= nil) then
 				tooltipString = Locale.Lookup(selection.ToolTip);
 				instance.Button:SetToolTipString(tooltipString);
@@ -1910,8 +1930,10 @@ function SetUniqueCivLeaderData()
 end
 -- ===========================================================================
 function OnPlayerSelected(playerID)
-	ResetPlayerPanel();
-	SelectPlayer(playerID);
+	if (HasCapability("CAPABILITY_DIPLOMACY") or (playerID == Game.GetLocalPlayer() and HasCapability("CAPABILITY_DIPLOMACY_VIEW_SELF"))) then
+		ResetPlayerPanel();
+		SelectPlayer(playerID);
+	end
 end
 
 -- ===========================================================================
@@ -2101,8 +2123,20 @@ function UninitializeView()
 		ms_LastDealResponseAnimation = nil;
 		ms_bLeaderShowRequested = false;
 		ms_bIsViewInitialized = false;
+		ms_bShowingDeal = false;
+		ms_ActiveSessionID = nil;
 		ms_currentViewMode = -1;
 		m_cinemaMode = false;
+
+		ms_OtherPlayer = nil;
+		ms_OtherPlayerID = -1;
+
+		ms_SelectedPlayer = nil;
+		ms_SelectedPlayerID	= -1;
+		ms_SelectedPlayerLeaderTypeName = nil;
+
+		ms_showingLeaderName = "";
+		ms_bLeaderShowRequested = false;
 
 		Controls.Signature_Alpha:SetToBeginning();
 		Controls.LeaderResponse_Alpha:SetToBeginning();
@@ -2110,8 +2144,8 @@ function UninitializeView()
 		Controls.Signature_Slide:SetToBeginning();
 		Controls.LeaderResponse_Slide:SetToBeginning();
 		Controls.ConversationSelection_Slide:SetToBeginning();
-		Controls.AlphaIn:SetSpeed(1);
-		Controls.SlideIn:SetSpeed(1);
+		Controls.AlphaIn:SetSpeed(2);
+		Controls.SlideIn:SetSpeed(2);
 		Controls.AlphaIn:SetPauseTime(.4);
 		Controls.SlideIn:SetPauseTime(.4);
 		Controls.SlideIn:SetBeginVal(-200,0);
@@ -2124,32 +2158,36 @@ end
 -- ===========================================================================
 
 function OnOpenDiplomacyActionView(otherPlayerID)
-	if (otherPlayerID ~= nil) then
-		ms_OtherPlayerID = otherPlayerID;
-		ms_SelectedPlayerID = otherPlayerID;
-	else
-		ms_OtherPlayerID = -1;
-		ms_SelectedPlayerID = -1;
+
+	if (HasCapability("CAPABILITY_DIPLOMACY") or (otherPlayerID == Game.GetLocalPlayer() and HasCapability("CAPABILITY_DIPLOMACY_VIEW_SELF"))) then
+
+		if (otherPlayerID ~= nil) then
+			ms_OtherPlayerID = otherPlayerID;
+			ms_SelectedPlayerID = otherPlayerID;
+		else
+			ms_OtherPlayerID = -1;
+			ms_SelectedPlayerID = -1;
+		end
+		InitializeView();	
+		m_firstOpened = true;
+
+		if (SetupPlayers()) then
+
+			PopulateDiplomacyRibbon(ms_DiplomacyRibbon);
+
+			if (ms_OtherPlayer ~= nil) then
+				SelectPlayer(ms_OtherPlayer:GetID(), OVERVIEW_MODE);
+			else
+				SelectPlayer(ms_LocalPlayer:GetID(), OVERVIEW_MODE);
+			end
+
+			if(ms_OtherPlayerID ~= 0) then
+				ScrollToNode(ms_OtherPlayerID);
+			else
+				ms_DiplomacyRibbon.LeaderRibbonScroll:SetScrollValue(0);	
+			end
+		end	
 	end
-	InitializeView();	
-	m_firstOpened = true;
-
-	if (SetupPlayers()) then
-
-		PopulateDiplomacyRibbon(ms_DiplomacyRibbon);
-
-		if (ms_OtherPlayer ~= nil) then
-			SelectPlayer(ms_OtherPlayer:GetID(), OVERVIEW_MODE);
-		else
-			SelectPlayer(ms_LocalPlayer:GetID(), OVERVIEW_MODE);
-		end
-
-		if(ms_OtherPlayerID ~= 0) then
-			ScrollToNode(ms_OtherPlayerID);
-		else
-			ms_DiplomacyRibbon.LeaderRibbonScroll:SetScrollValue(0);	
-		end
-	end	
 
 end
 
@@ -2622,6 +2660,12 @@ function OnDiplomacyStatement(fromPlayer : number, toPlayer : number, kVariants 
 
 	if (toPlayer == localPlayer or fromPlayer == localPlayer) then
 
+		-- No diplomacy active?  We shouldn't be getting statements if so, but if we do, ignore it.
+		if (not HasCapability("CAPABILITY_DIPLOMACY")) then
+			DiplomacyManager.CloseSession( kVariants.SessionID );
+			return;
+		end
+
 		local statementTypeName = DiplomacyManager.GetKeyName( kVariants.StatementType );
 		if (statementTypeName ~= nil) then
 			local statementSubTypeName = DiplomacyManager.GetKeyName( kVariants.StatementSubType );
@@ -2772,6 +2816,7 @@ function OnHide()
 
 	LuaEvents.DiploBasePopup_HideUI(false);
 	Controls.BlackFade:SetHide(true);
+	Controls.BlackFadeAnim:SetToBeginning();
 	-- Game Core Events	
 	Events.LeaderAnimationComplete.Remove( OnLeaderAnimationComplete );
 	Events.LeaderScreenFinishedLoading.Remove( OnLeaderLoaded );

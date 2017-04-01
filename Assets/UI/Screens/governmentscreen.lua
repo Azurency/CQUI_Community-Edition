@@ -13,6 +13,7 @@ include("TabSupport");
 include("Civ6Common");
 include("PopupDialogSupport");
 include("ModalScreen_PlayerYieldsHelper");
+include("GameCapabilities");
 
 -- ===========================================================================
 --  DEBUG
@@ -393,8 +394,10 @@ function RealizeGovernmentsPage()
     local government  :table = m_kGovernments[governmentType];
     local inst      :table = m_kGovernmentItemIM:GetInstance();
 
-    inst.Top:RegisterCallback(Mouse.eRClick, function() LuaEvents.OpenCivilopedia(governmentType); end);
-    inst.Selected:RegisterCallback(Mouse.eRClick, function() LuaEvents.OpenCivilopedia(governmentType); end);
+    if(not IsTutorialRunning()) then
+      inst.Top:RegisterCallback(Mouse.eRClick, function() LuaEvents.OpenCivilopedia(governmentType); end);
+      inst.Selected:RegisterCallback(Mouse.eRClick, function() LuaEvents.OpenCivilopedia(governmentType); end);
+    end
 
     local totalSlots  :number = 0;
     inst.SlotStack:DestroyAllChildren();
@@ -883,7 +886,11 @@ function RealizePolicyCatalog()
       cardInstance.Draggable:RegisterCallback( Drag.eDown, function(dragStruct) OnDownFromCatalog(dragStruct, cardInstance); end );
       cardInstance.Draggable:RegisterCallback( Drag.eDrop, function(dragStruct) OnDropFromCatalog(dragStruct, cardInstance); end );
       cardInstance.Button:RegisterCallback( Mouse.eLDblClick, function() AddToNextAvailRow(cardInstance); end );
-      cardInstance.Button:RegisterCallback( Mouse.eRClick, function() LuaEvents.OpenCivilopedia(policyType); end);
+
+      if(not IsTutorialRunning()) then
+        cardInstance.Button:RegisterCallback( Mouse.eRClick, function() LuaEvents.OpenCivilopedia(policyType); end);
+      end
+
       cardInstance.NewIcon:SetHide(not m_kNewPoliciesThisTurn[policyType]);
       RealizePolicyCard( cardInstance, policyType );
     end
@@ -2610,6 +2617,11 @@ end
 -- ===========================================================================
 function Initialize()
 
+  if (not HasCapability("CAPABILITY_GOVERNMENTS_VIEW")) then
+    -- Governments is off, just exit
+    return;
+  end
+	
   PopulateStaticData();     -- Obtain unchanging, static data from game core
   PopulatePolicyFilterData();   -- Filter support
   AllocateUI();         -- Allocate UI pieces

@@ -2740,15 +2740,20 @@ end
 
 -- ===========================================================================
 function OnUnitAddedOrUpgraded( playerID:number, unitID:number )
-  -- Update city and district garrison strength values if a melee unit has been added or upgraded.
-  -- This is done because the base city strength is calculated using the max melee strength for the player.
-  local localPlayer = Game.GetLocalPlayer();
-  if localPlayer == -1 or Players[localPlayer]:IsTurnActive() then -- Don't do this during end turn times
-    local pUnit = Players[ playerID ]:GetUnits():FindID(unitID);
-    if pUnit ~= nil and GameInfo.Units[pUnit:GetUnitType()].Combat > 0 then -- Only do this for melee units
-      RefreshPlayerBanners( playerID );
-    end
-  end
+	-- Update city and district garrison strength values if a melee unit has been added or upgraded.
+	-- This is done because the base city strength is calculated using the max melee strength for the player.
+	local localPlayer = Game.GetLocalPlayer();
+	if localPlayer == -1 or Players[localPlayer]:IsTurnActive() then -- Don't do this during end turn times
+		local pUnit = Players[ playerID ]:GetUnits():FindID(unitID);
+		if pUnit ~= nil then
+			local pUnitDef = GameInfo.Units[pUnit:GetUnitType()];
+			if pUnitDef ~= nil then
+				if pUnitDef.Combat > 0 then -- Only do this for melee units
+					RefreshPlayerBanners( playerID );
+				end
+			end
+		end
+	end
 end
 
 -- ===========================================================================

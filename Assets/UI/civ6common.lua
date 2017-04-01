@@ -427,32 +427,46 @@ end
 -- ===========================================================================
 function GetUnitIconAndIconShadow( pUnit:table, iconSize:number, isIgnoreShadow:boolean )
 
-  if isIgnoreShadow == nil then isIgnoreShadow = false; end -- Default parameter.
+	if isIgnoreShadow == nil then isIgnoreShadow = false; end -- Default parameter.
 
-  local iconInfo    :table = {};
-  local iconShadowInfo:table = {};
-  if pUnit then
-    local unitInfo:table = GameInfo.Units[pUnit:GetUnitType()];
-    if unitInfo then
-      -- Get icon info
-      local iconName:string = "ICON_" .. unitInfo.UnitType .. "_WHITE";
-      iconInfo.textureOffsetX, iconInfo.textureOffsetY, iconInfo.textureSheet = IconManager:FindIconAtlas(iconName, iconSize);
-      if (iconInfo.textureSheet == nil) then      --Check to see if the unit has an icon atlas index defined
-        print("UIWARNING: Could not find icon for " .. iconName);
-        iconInfo.textureOffsetX, iconInfo.textureOffsetY, iconInfo.textureSheet = IconManager:FindIconAtlas("ICON_UNIT_UNKNOWN_WHITE", iconSize);   --If not, resolve the index to be a generic unknown index
-      end
+	local iconInfo    :table = {};
+	local iconShadowInfo:table = {};
+	if pUnit then
 
-      -- Get icon shadow info, use explicit check because IconManager will Assert.
-      if (not isIgnoreShadow) then
-        local iconNameShadow:string = "ICON_" .. unitInfo.UnitType .. "_BLACK";
-        iconShadowInfo.textureOffsetShadowX, iconShadowInfo.textureOffsetShadowY, iconShadowInfo.textureSheetShadow = IconManager:FindIconAtlas(iconNameShadow, iconSize);
-        if iconShadowInfo.textureSheetShadow ~= nil then
-          iconShadowInfo.textureOffsetX, iconShadowInfo.textureOffsetY, iconShadowInfo.textureSheet = IconManager:FindIconAtlas("ICON_UNIT_UNKNOWN_BLACK", iconSize);
-        end
-      end
-    end
-  end
-  return iconInfo, iconShadowInfo;
+		local whiteIcon:string = nil;
+		local shadowIcon:string = nil;
+
+		local individual:number = pUnit:GetGreatPerson():GetIndividual();
+		if individual >= 0 then
+			local individualType:string = GameInfo.GreatPersonIndividuals[individual].GreatPersonIndividualType;
+			local iconModifier:table = GameInfo.GreatPersonIndividualIconModifiers[individualType];
+			if iconModifier then
+				whiteIcon = iconModifier.OverrideUnitIcon .. "_WHITE";
+				shadowIcon = iconModifier.OverrideUnitIcon .. "_BLACK";
+			end 
+		end
+
+		if not whiteIcon then
+			local unitInfo:table = GameInfo.Units[pUnit:GetUnitType()];
+			whiteIcon = "ICON_" .. unitInfo.UnitType .. "_WHITE";
+			shadowIcon = "ICON_" .. unitInfo.UnitType .. "_BLACK";
+		end
+		
+		iconInfo.textureOffsetX, iconInfo.textureOffsetY, iconInfo.textureSheet = IconManager:FindIconAtlas(whiteIcon, iconSize);
+		if (iconInfo.textureSheet == nil) then      --Check to see if the unit has an icon atlas index defined
+			print("UIWARNING: Could not find icon for " .. whiteIcon);
+			iconInfo.textureOffsetX, iconInfo.textureOffsetY, iconInfo.textureSheet = IconManager:FindIconAtlas("ICON_UNIT_UNKNOWN_WHITE", iconSize);   --If not, resolve the index to be a generic unknown index
+		end
+
+		-- Get icon shadow info, use explicit check because IconManager will Assert.
+		if (not isIgnoreShadow) then
+			iconShadowInfo.textureOffsetShadowX, iconShadowInfo.textureOffsetShadowY, iconShadowInfo.textureSheetShadow = IconManager:FindIconAtlas(shadowIcon, iconSize);	
+			if iconShadowInfo.textureSheetShadow ~= nil then
+				iconShadowInfo.textureOffsetX, iconShadowInfo.textureOffsetY, iconShadowInfo.textureSheet = IconManager:FindIconAtlas("ICON_UNIT_UNKNOWN_BLACK", iconSize);
+			end
+		end
+	end
+	return iconInfo, iconShadowInfo;
 end
 
 -- ===========================================================================

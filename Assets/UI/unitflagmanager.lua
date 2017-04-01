@@ -548,9 +548,20 @@ end
 ------------------------------------------------------------------
 -- Set the flag texture based on the unit's type
 function UnitFlag.SetFlagUnitEmblem( self )
-	local pUnit = self:GetUnit();
-	local iconInfo = "ICON_"..GameInfo.Units[pUnit:GetUnitType()].UnitType;
-	self.m_Instance.UnitIcon:SetIcon(iconInfo);
+	local icon:string = nil;
+	local pUnit:table = self:GetUnit();
+	local individual:number = pUnit:GetGreatPerson():GetIndividual();
+	if individual >= 0 then
+		local individualType:string = GameInfo.GreatPersonIndividuals[individual].GreatPersonIndividualType;
+		local iconModifier:table = GameInfo.GreatPersonIndividualIconModifiers[individualType];
+		if iconModifier then
+			icon = iconModifier.OverrideUnitIcon;
+		end 
+	end
+	if not icon then
+		icon = "ICON_"..GameInfo.Units[pUnit:GetUnitType()].UnitType;
+	end
+	self.m_Instance.UnitIcon:SetIcon(icon);
 end
 
 ------------------------------------------------------------------
@@ -1564,10 +1575,13 @@ function OnUnitAbilityGained( playerID : number, unitID : number, eAbilityType :
 				local flag = GetUnitFlag(playerID, pUnit:GetID());
 				if (flag ~= nil) then
 					if (flag.m_eVisibility == RevealedState.VISIBLE) then
-						local sAbilityName = GameInfo.UnitAbilities[eAbilityType].Name;
-						if (sAbilityName ~= nil) then
-							local floatText = Locale.Lookup(sAbilityName);
-							UI.AddWorldViewText(EventSubTypes.DAMAGE, floatText, pUnit:GetX(), pUnit:GetY(), 0);
+						local abilityInfo = GameInfo.UnitAbilities[eAbilityType];
+						if (abilityInfo ~= nil and abilityInfo.ShowFloatTextWhenEarned) then
+							local sAbilityName = GameInfo.UnitAbilities[eAbilityType].Name;
+							if (sAbilityName ~= nil) then
+								local floatText = Locale.Lookup(sAbilityName);
+								UI.AddWorldViewText(EventSubTypes.DAMAGE, floatText, pUnit:GetX(), pUnit:GetY(), 0);
+							end
 						end
 					end
 				end

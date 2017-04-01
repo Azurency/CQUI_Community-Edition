@@ -4,7 +4,6 @@
   <Container Style="FullScreenVignetteConsumer" />
 
   <Container              ID="PopupContainer"           Anchor="C,C"                  Size="full,768">
-
     <ScrollPanel          ID="PeopleScroller"                         Offset="0,0"    Size="parent,parent"  Vertical="0" AutoScrollBar="1">
       <Image              ID="WoodPaneling"                                           Size="full,768"       Texture="Wood_Pattern" StretchMode="Tile"/>
       <Stack              ID="PeopleStack"                            Offset="0,78"   StackGrowth="Right"   StackPadding="0" />

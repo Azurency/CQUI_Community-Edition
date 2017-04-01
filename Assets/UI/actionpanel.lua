@@ -966,6 +966,14 @@ function OnTurnTimerUpdated(elapsedTime :number, maxTurnTime :number)
       localPlayerID = Game.GetLocalPlayer();
     else
       localPlayerID = Network.GetLocalPlayerID();
+			if (localPlayerID == -1) then
+				localPlayerID = Game.GetLocalPlayer();
+			end
+		end
+
+		-- Make sure we have a valid local player.  The timer may have fired as the game was exiting.
+		if (localPlayerID == -1) then
+			return;
     end
     local pPlayer = Players[localPlayerID];
 

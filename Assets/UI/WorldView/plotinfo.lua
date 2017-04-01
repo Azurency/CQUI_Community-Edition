@@ -437,7 +437,12 @@ function UpdateYieldIcons(yields:table)
   for row in GameInfo.Yields() do
     for key, plots in pairs(yields) do
       if plots.yieldType == row.YieldType then
-        UILens.SetLayerHexesArea(LensLayers.YIELD_ICONS, Game.GetLocalPlayer(), plots.data, plots.variations, key);
+        -- When using the WorldBuilder playerID is -1 so pass in 0 as a valid playerID
+        if GameConfiguration.IsWorldBuilderEditor() then
+          UILens.SetLayerHexesArea(LensLayers.YIELD_ICONS, 0, plots.data, plots.variations, key);
+        else
+          UILens.SetLayerHexesArea(LensLayers.YIELD_ICONS, Game.GetLocalPlayer(), plots.data, plots.variations, key);
+        end
       end
     end
   end

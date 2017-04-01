@@ -7,7 +7,7 @@ include("TabSupport");
 include("SupportFunctions");
 include("Civ6Common"); --DifferentiateCivs
 include("ModalScreen_PlayerYieldsHelper");
-
+include("GameCapabilities");
 
 -- ===========================================================================
 --  CONSTANTS
@@ -33,6 +33,7 @@ local m_ToggleGreatPeopleId;
 local m_activeBiographyID :number = -1; -- Only allow one open at a time (or very quick exceed font allocation)
 local m_tabs        :table;
 local m_defaultPastRowHeight    :number = -1; -- Default/mix height (from XML) for a previously recruited row
+local m_screenWidth			:number = -1;
 
 
 -- ===========================================================================
@@ -218,7 +219,7 @@ function ViewCurrent( data:table )
     if kPerson.IndividualID ~= nil and kPerson.ClassID ~= nil then
 
       -- Buy via gold
-      if (not kPerson.CanRecruit and not kPerson.CanReject and kPerson.PatronizeWithGoldCost ~= nil and kPerson.PatronizeWithGoldCost < 1000000) then
+      if (HasCapability("CAPABILITY_GREAT_PEOPLE_RECRUIT_WITH_GOLD") and (not kPerson.CanRecruit and not kPerson.CanReject and kPerson.PatronizeWithGoldCost ~= nil and kPerson.PatronizeWithGoldCost < 1000000)) then
         local patronizeButtonText :string = kPerson.PatronizeWithGoldCost.."[ICON_Gold]";
         local patronizeDetailsText:string = Locale.Lookup("LOC_GREAT_PEOPLE_PATRONAGE_GOLD_DETAILS", kPerson.PatronizeWithGoldCost);
         instance.GoldButton:SetText(patronizeButtonText);
@@ -232,7 +233,7 @@ function ViewCurrent( data:table )
       end
 
       -- Buy via Faith
-      if (not kPerson.CanRecruit and not kPerson.CanReject and kPerson.PatronizeWithFaithCost ~= nil and kPerson.PatronizeWithFaithCost < 1000000) then
+      if (HasCapability("CAPABILITY_GREAT_PEOPLE_RECRUIT_WITH_FAITH") and (not kPerson.CanRecruit and not kPerson.CanReject and kPerson.PatronizeWithFaithCost ~= nil and kPerson.PatronizeWithFaithCost < 1000000)) then
         local patronizeButtonText :string = kPerson.PatronizeWithFaithCost.."[ICON_Faith]";
         local patronizeDetailsText  :string = Locale.Lookup("LOC_GREAT_PEOPLE_PATRONAGE_FAITH_DETAILS", kPerson.PatronizeWithFaithCost);
         instance.FaithButton:SetText(patronizeButtonText);
@@ -246,17 +247,22 @@ function ViewCurrent( data:table )
       end
 
       -- Recruiting
-      if (kPerson.CanRecruit and kPerson.RecruitCost ~= nil) then
+      if (HasCapability("CAPABILITY_GREAT_PEOPLE_CAN_RECRUIT") and kPerson.CanRecruit and kPerson.RecruitCost ~= nil) then
         instance.RecruitButton:SetToolTipString( Locale.Lookup("LOC_GREAT_PEOPLE_RECRUIT_DETAILS", kPerson.RecruitCost) );
         instance.RecruitButton:SetVoid1(kPerson.IndividualID);
         instance.RecruitButton:RegisterCallback(Mouse.eLClick, OnRecruitButtonClick);
         instance.RecruitButton:SetHide(false);
+
+        -- Auto scroll to first recruitable person.
+        if kInstanceToShow==nil then
+          kInstanceToShow = instance;
+        end
       else
         instance.RecruitButton:SetHide(true);
       end
 
       -- Rejecting
-      if (kPerson.CanReject and kPerson.RejectCost ~= nil) then
+      if (HasCapability("CAPABILITY_GREAT_PEOPLE_CAN_REJECT") and kPerson.CanReject and kPerson.RejectCost ~= nil) then
         instance.RejectButton:SetToolTipString( Locale.Lookup("LOC_GREAT_PEOPLE_PASS_DETAILS", kPerson.RejectCost ) );
         instance.RejectButton:SetVoid1(kPerson.IndividualID);
         instance.RejectButton:RegisterCallback(Mouse.eLClick, OnRejectButtonClick);
@@ -356,18 +362,29 @@ function ViewCurrent( data:table )
   Controls.PeopleStack:CalculateSize();
   Controls.PeopleScroller:CalculateSize();
 
-  local peopleAreaWidth:number = Controls.PeopleStack:GetSizeX();
-  Controls.WoodPaneling:SetSizeX( peopleAreaWidth );
+  m_screenWidth = math.max(Controls.PeopleStack:GetSizeX(), 1024);
+  Controls.WoodPaneling:SetSizeX( m_screenWidth );
 
   -- Clamp overall popup size to not be larger than contents (overspills in 4k and eyefinitiy rigs.)
   local screenX,_     :number = UIManager:GetScreenSizeVal();
-  local popupContainerX :number = screenX;
-  if peopleAreaWidth > 0 and peopleAreaWidth < screenX then
-    popupContainerX = peopleAreaWidth;
+  if m_screenWidth > screenX then	
+    m_screenWidth = screenX;
   end
 
-  Controls.PopupContainer:SetSizeX( popupContainerX );
-  Controls.ModalFrame:SetSizeX( popupContainerX );
+  Controls.PopupContainer:SetSizeX( m_screenWidth );
+  Controls.ModalFrame:SetSizeX( m_screenWidth );	
+
+  -- Has an instance been set to auto scroll to?
+  Controls.PeopleScroller:SetScrollValue( 0 );		-- Either way reset scroll first (mostly for hot seat)
+  if kInstanceToShow ~= nil then
+    local contentWidth		:number = kInstanceToShow.Content:GetSizeX();
+    local contentOffsetx	:number = kInstanceToShow.Content:GetScreenOffset();	-- Obtaining normal offset would yield 0, but since modal is as wide as the window, this works.
+    local offsetx			:number = contentOffsetx + (contentWidth * 0.5) + (m_screenWidth * 0.5);	-- Middle of screen
+    local totalWidth		:number = Controls.PeopleScroller:GetSizeX();
+    local scrollAmt			:number =  offsetx / totalWidth;
+    scrollAmt = math.clamp( scrollAmt, 0, 1);
+    Controls.PeopleScroller:SetScrollValue( scrollAmt );
+  end
 end
 
 
@@ -505,9 +522,8 @@ function ViewPast( data:table )
   end
 
   -- Scaling to screen width required for the previously recruited tab
-  local screenX,_     :number = UIManager:GetScreenSizeVal();
-  Controls.PopupContainer:SetSizeX( screenX );
-  Controls.ModalFrame:SetSizeX( screenX );
+  Controls.PopupContainer:SetSizeX( m_screenWidth );
+  Controls.ModalFrame:SetSizeX( m_screenWidth );	
 
   Controls.RecruitedStack:CalculateSize();
   Controls.RecruitedScroller:CalculateSize();
@@ -975,6 +991,11 @@ end
 --
 -- =======================================================================================
 function Initialize()
+
+  if (not HasCapability("CAPABILITY_GREAT_PEOPLE_VIEW")) then
+    -- Great People Viewing is off, just exit
+    return;
+  end
 
   -- Tab setup and setting of default tab.
   m_tabs = CreateTabs( Controls.TabContainer, 42, 34, 0xFF331D05 );

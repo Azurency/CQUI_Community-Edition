@@ -406,9 +406,23 @@ Controls.TimeCallback:RegisterEndCallback(OnRefreshTimeTick);
 
 -- ===========================================================================
 function RefreshTurnsRemaining()
-  -- Get turn text and break into first character and all the rest
+
+  local endTurn = Game.GetGameEndTurn();		-- This EXCLUSIVE, i.e. the turn AFTER the last playable turn.
   local turn = Game.GetCurrentGameTurn();
-  Controls.Turns:SetText(tostring(turn));
+
+  if GameCapabilities.HasCapability("CAPABILITY_DISPLAY_NORMALIZED_TURN") then
+    turn = (turn - GameConfiguration.GetStartTurn()) + 1; -- Keep turns starting at 1.
+    if endTurn > 0 then
+      endTurn = endTurn - GameConfiguration.GetStartTurn();
+    end
+  end
+
+  if endTurn > 0 then
+    -- We have a hard turn limit
+    Controls.Turns:SetText(tostring(turn) .. "/" .. tostring(endTurn - 1));
+  else
+    Controls.Turns:SetText(tostring(turn));
+  end
 
   local strDate = Calendar.MakeYearStr(turn);
   Controls.CurrentDate:SetText(strDate);

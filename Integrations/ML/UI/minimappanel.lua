@@ -2510,6 +2510,14 @@ function Initialize()
   Controls.ToggleYieldsButton:RegisterCallback( Mouse.eLClick, ToggleYieldIcons );
   Controls.WaterLensButton:RegisterCallback( Mouse.eLClick, ToggleWaterLens );
 
+  -- Hide buttons not needed for the world builder
+  if GameConfiguration.IsWorldBuilderEditor() then
+    Controls.LensButton:SetHide(true);
+    Controls.MapPinListButton:SetHide(true);
+    Controls.StrategicSwitcherButton:SetHide(true);
+    Controls.OptionsStack:ReprocessAnchoring();
+  end  
+  
   --CQUI Options Button
   Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_ToggleSettings() end);
   Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);

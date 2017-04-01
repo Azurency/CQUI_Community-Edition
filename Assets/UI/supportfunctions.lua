@@ -105,7 +105,7 @@ end
 -- ===========================================================================
 function TruncateStringByLength( textString, textLen )
 	if ( Locale.Length(textString) > textLen ) then
-		return Locale.SubString(textString, 1, textLen) .. Locale.Lookup("TXT_KEY_GENERIC_DOT_DOT_DOT");
+		return Locale.SubString(textString, 1, textLen) .. m_strEllipsis;
 	end
 	return textString;
 end

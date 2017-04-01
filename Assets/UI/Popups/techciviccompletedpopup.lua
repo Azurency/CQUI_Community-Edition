@@ -122,7 +122,7 @@ function ShowCivicCompletedPopup(player:number, civic:number, isCanceled:boolean
     
     -- Determine if we've unlocked a new government type
     for _,unlockItem in ipairs(unlockableTypes) do
-      local typeInfo = GameInfo.Types[unlockItem];
+			local typeInfo = GameInfo.Types[unlockItem[1]];
       if(typeInfo and typeInfo.Kind == "KIND_GOVERNMENT") then
         isCivicUnlockGovernmentType = true;
       end
@@ -130,7 +130,7 @@ function ShowCivicCompletedPopup(player:number, civic:number, isCanceled:boolean
 
     -- Update Government Button depending on if we unlocked a new government type
     if isCivicUnlockGovernmentType then
-      Controls.ChangeGovernmentButton:SetText(Locale.Lookup("LOC_GOVT_CHANGE_GOVERNMENTS"));
+			Controls.ChangeGovernmentButton:SetText(Locale.Lookup("LOC_GOVT_GOVERNMENT_UNLOCKED"));
       Controls.ChangeGovernmentButton:ClearCallback( eLClick );
       Controls.ChangeGovernmentButton:RegisterCallback( eLClick, OnChangeGovernment );
       Controls.ChangeGovernmentButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);

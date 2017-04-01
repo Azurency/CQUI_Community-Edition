@@ -478,8 +478,8 @@
 
   <!-- Controls for when the local player is overview mode or auction mode. -->
   <Container ID="OverviewContainer" Size="Full,Full" ConsumeAllMouse="1">
-    <AlphaAnim ID="AlphaIn" AlphaBegin="0" AlphaEnd="1" Speed="1" Cycle="Once" Function="Root" Pause=".4">
-      <SlideAnim ID="SlideIn" Begin="-200,0" End="0,0" Speed="1" Cycle="Once" Function="Root" Pause=".4">
+    <AlphaAnim ID="AlphaIn" AlphaBegin="0" AlphaEnd="1" Speed="2" Cycle="Once" Function="Root" Pause=".4">
+      <SlideAnim ID="SlideIn" Begin="-200,0" End="0,0" Speed="2" Cycle="Once" Function="Root" Pause=".4">
         <!-- The container for the diplo ribbon instance -->
         <Container ID="DiplomacyRibbonContainer" Size="200,Full"/>
         <!-- The container for the player panel instance -->

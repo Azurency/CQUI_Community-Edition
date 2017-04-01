@@ -228,12 +228,5 @@ function Initialize()
 	--CQUI event handling
 	LuaEvents.CQUI_RequestUIAddin.Add(function(request: string, requester: string) LuaEvents.CQUI_PushUIAddIn(CQUI_RequestUIAddin(request), recipient); end); --Responds to an addin request with a PushUIAddIn event containing the requested context. Can return nil
 
-	-- The End Game screen is different for the demo
-	if (UI.HasFeature("Demo")) then
-		ContextPtr:LoadNewContext("EndDemo", Controls.EndGame, true);
-	else
-		ContextPtr:LoadNewContext("EndGameMenu", Controls.EndGame, true);
-	end
-
 end
 Initialize();

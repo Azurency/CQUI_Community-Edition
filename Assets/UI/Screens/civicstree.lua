@@ -21,6 +21,7 @@ include( "Civ6Common" );      -- Tutorial check support
 include( "TechAndCivicSupport" );
 include( "TechFilterFunctions" );
 include( "ModalScreen_PlayerYieldsHelper" );
+include( "GameCapabilities" );
 
 -- ===========================================================================
 --  DEBUG
@@ -839,7 +840,12 @@ function View( playerTechData:table )
       end
 
       -- Different content in marker based on if there is just 1 player in the column, or more than 1
-      local tooltipString       :string = Locale.Lookup("LOC_TREE_ERA", Locale.Lookup(GameInfo.Eras[markerStat.HighestEra].Name) ).."[NEWLINE]";
+      local higestEraName = "";
+      if markerStat.HighestEra ~= nil and GameInfo.Eras[markerStat.HighestEra] ~= nil then
+        higestEraName = GameInfo.Eras[markerStat.HighestEra].Name;
+      end
+
+      local tooltipString				:string = Locale.Lookup("LOC_TREE_ERA", Locale.Lookup(higestEraName) ).."[NEWLINE]";
       local numOfPlayersAtThisColumn  :number = table.count(markerStat.PlayerNums);
       if numOfPlayersAtThisColumn < 2 then
         instance.Num:SetHide( true );
@@ -969,6 +975,15 @@ function GetLivePlayerData( ePlayer:number, eCompletedCivic:number )
     print("------------------------------ --- ---------- --------- --- ---------------- --------------------------");
   end
 
+  -- Get recommendations
+  local civicRecommendations:table = {};
+  local kGrandAI:table = kPlayer:GetGrandStrategicAI();
+  if kGrandAI then
+    for i,recommendation in pairs(kGrandAI:GetCivicsRecommendations()) do
+      civicRecommendations[recommendation.CivicHash] = recommendation.CivicScore;
+    end
+  end
+
   -- Loop through all items and place in appropriate buckets as well
   -- read in the associated information for it.
   for type,item in pairs(m_kItemDefaults) do
@@ -993,6 +1008,14 @@ function GetLivePlayerData( ePlayer:number, eCompletedCivic:number )
       Status    = status,
       Turns   = turnsLeft
     }
+
+    -- Determine if tech is recommended
+    if civicRecommendations[item.Hash] then
+      data[DATA_FIELD_LIVEDATA][type].AdvisorType = GameInfo.Civics[item.Type].AdvisorType;
+      data[DATA_FIELD_LIVEDATA][type].IsRecommended = true;
+    else
+      data[DATA_FIELD_LIVEDATA][type].IsRecommended = false;
+    end
 
     -- DEBUG: Output to console detailed information about the tech.
     if m_debugOutputTechInfo then
@@ -1076,7 +1099,9 @@ function GetLivePlayerData( ePlayer:number, eCompletedCivic:number )
             firstEra = era;
           end
         end
-        markerData.HighestEra = firstEra.Index;
+        if firstEra ~= nil then
+          markerData.HighestEra = firstEra.Index;
+        end
       end
 
       -- Traverse all the IDs and merge them with this one.
@@ -1986,8 +2011,10 @@ function Initialize()
   pullDownButton:RegisterCallback(Mouse.eLClick, OnClickToggleFilter);
 
   -- LUA Events
-  LuaEvents.CivicsChooser_RaiseCivicsTree.Add( OnOpen );
-  LuaEvents.LaunchBar_RaiseCivicsTree.Add( OnOpen );
+  if HasCapability("CAPABILITY_CIVICS_CHOOSER") then
+    LuaEvents.CivicsChooser_RaiseCivicsTree.Add( OnOpen );
+    LuaEvents.LaunchBar_RaiseCivicsTree.Add( OnOpen );
+  end
   LuaEvents.LaunchBar_CloseCivicsTree.Add( OnClose );
 
   -- Game engine Event
