@@ -193,10 +193,11 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
 * @JHCD for:
   * fixing a runtime error in #338
   * fixing missing gov info with upscaling enabled (#96) in #345
-  * fixing the mod's display in the in-game mod menu (#326) in #351
+  * fixing the mod's display in the in-game mod menu (#326) in #351 and again in #449
   * updating URS to version 1.7.3 (#340) in #369
   * fixing oversized URS tab buttons (#366) in #375
   * porting some missing Australian patch changes in #402
+  * documenting and advising in the creation of the new default settings method (#430) in #447
 * Aristos / @ricanuck for:
   * porting GPT + mutually-owned resource highlighting from HB UI in #374
   * fixing doubled yield expenses in URS yield tab
@@ -207,6 +208,14 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
   * fixing negative 0 values appearing in the happiness breakdown
   * fixing an issue where URS tabs could desynchronise (#321) in #397
   * adding detailed tooltips to the worldtracker science/civics items (#191) in #398
+  * integrating the Improved Deal Screen mod in #404
+  * fixing a deal miscategorization bug in $405
+  * considerably extending the leader portrait tooltips in the diplo ribbon in #414
+  * implementing previewing leader relationships (#269) using ctrl+mouseover in the diplo ribbon in #418
+  * fixing an issue with properly highlighting hostile units (#372) in #424
+  * fixing a vanilla bug that caused promotion indicators to not always be in sync with the XP meter in #442
+  * fixing a serious vanilla bug (!!) affecting the "Cede city" action (#439) in #443
+  * fixing deal view RMB shortcut not working if at war with target (#453) in #460
 * @zgavin for UI bugfixes in #1 and #2
 * @olegbl for the Amenities overview overhaul in #4 and multiple UI bugfixes ( #9 and #12 )
   * Additional kudos to /u/mateusarc from the Civilization subreddit for his original concept art
@@ -223,6 +232,9 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
   * adding toggles for each individual smartbanner component #280
   * changing housing to show as a simple difference in the smartbanner #289
   * fixing a bug that caused Corps to not queue correctly #302
+  * fixing a bug that broke the auto yield icon toggling setting
+  * fixing a bug causing custom map pins to be colored incorrectly (#154) in #428
+  * implementing a workshop-friendly method for creating custom default settings (#329) in #430
 * @OfekA for providing the improved resource dimming feature in #54
 * @zeyangl for adding new options to the resource dimming feature in #146
 * @Remolten for adding the 2nd highest envoy holder info to the main Citystate screen in #208
@@ -233,6 +245,7 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
 * @benjaminjackman for fixing a hotkey conflict in #127
 * @velit for a UI bugfix in #138
 * @the-m4a for a patch incompatibility bugfix in #181
+* @MarkusKV for fixing a bug concerning district completion checkboxes
 * Firaxis for eventually delivering mod tools and steam workshop ;)
 * The lovely folks over at Civfanatics for their guides, knowledge, tools, and resources
 * The even lovelier folks over at /r/civ for their input and testing
