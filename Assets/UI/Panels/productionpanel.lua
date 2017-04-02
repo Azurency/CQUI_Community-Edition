@@ -3483,10 +3483,11 @@ function CheckAndReplaceQueueForUpgrades(city)
             canUpgrade = false;
           end
 
+          local canBuildOldUnit = buildQueue:CanProduce( qi.entry.Hash, true );
           local canBuildNewUnit = buildQueue:CanProduce( upgradeUnit.Hash, false, true );
 
           -- Only auto replace if we CAN'T queue the old unit
-          if(not buildQueue:CanProduce( qi.entry.Hash, true ) and canUpgrade and canBuildNewUnit) then
+          if(not canBuildOldUnit and canUpgrade and canBuildNewUnit) then
             local isCanProduceExclusion, results   = buildQueue:CanProduce( upgradeUnit.Hash, false, true );
             local isDisabled        :boolean = not isCanProduceExclusion;
             local sAllReasons        :string = ComposeFailureReasonStrings( isDisabled, results );
@@ -3535,7 +3536,7 @@ function CheckAndReplaceQueueForUpgrades(city)
             end
 
             BuildFirstQueued(city);
-          elseif(canUpgrade and not canBuildNewUnit) then
+          elseif(not canBuildOldUnit and canUpgrade and not canBuildNewUnit) then
             -- Can't build the old or new unit. Probably missing a resource. Remove from queue.
             table.insert(removeUnits, i);
           end
@@ -3842,4 +3843,3 @@ function Initialize()
 
 end
 Initialize();
-
