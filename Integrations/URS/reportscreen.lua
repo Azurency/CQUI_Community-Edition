@@ -396,7 +396,7 @@ function GetData()
 							if pReceivingName == "Agreements" then
 								deal.Name = pDealItem:GetSubTypeNameID()
 							elseif pReceivingName == "Gold" then
-								deal.Name = deal.Amount .. Locale.Lookup("LOC_DIPLOMACY_DEAL_GOLD_PER_TURN")
+								deal.Name = deal.Amount .. " " .. Locale.Lookup("LOC_DIPLOMACY_DEAL_GOLD_PER_TURN")
 								deal.Icon = "[ICON_GOLD]"
 								--!! ARISTOS: To add Diplo Deal Amounts to the total tally of Gold!
 								kCityTotalData.Income[YieldTypes.GOLD] = kCityTotalData.Income[YieldTypes.GOLD] + deal.Amount;
@@ -429,7 +429,7 @@ function GetData()
 							if pSendingName == "Agreements" then
 								deal.Name = pDealItem:GetSubTypeNameID()
 							elseif pSendingName == "Gold" then
-								deal.Name = deal.Amount .. Locale.Lookup("LOC_DIPLOMACY_DEAL_GOLD_PER_TURN")
+								deal.Name = deal.Amount .. " " .. Locale.Lookup("LOC_DIPLOMACY_DEAL_GOLD_PER_TURN")
 								deal.Icon = "[ICON_GOLD]"
 								--!! ARISTOS: To add Diplo Deal Amounts to the total tally of Gold!
 								--!! Diplo deal expenses are already calculated in total maintenance!! Gotta love Firaxis... :]
@@ -492,6 +492,7 @@ function GetData()
 								if duration ~= 0 then
 									local amount		:number = pDealItem:GetAmount();
 									local resourceType	:number = pDealItem:GetValueType();
+									local ending		:number = pDealItem:GetEndTurn() - Game.GetCurrentGameTurn();
 									table.insert( kDealData, {
 										Type			= DealItemTypes.RESOURCES,
 										ResourceType	= resourceType,
@@ -502,7 +503,7 @@ function GetData()
 										Name			= Locale.Lookup( pPlayerConfig:GetCivilizationDescription() )
 									});
 
-									local entryString:string = Locale.Lookup("LOC_HUD_REPORTS_ROW_DIPLOMATIC_DEALS") .. " (" .. Locale.Lookup(pPlayerConfig:GetPlayerName()) .. ")";
+									local entryString:string = Locale.Lookup("LOC_HUD_REPORTS_ROW_DIPLOMATIC_DEALS") .. " (" .. Locale.Lookup(pPlayerConfig:GetPlayerName()) .. ") " .. tostring(ending) .. "[ICON_Turn]";
 									AddResourceData(kResources, resourceType, entryString, "LOC_HUD_REPORTS_TRADE_EXPORTED", -1 * amount);
 								end
 							end
@@ -535,6 +536,7 @@ function GetData()
 								if duration ~= 0 then
 									local amount		:number = pDealItem:GetAmount();
 									local resourceType	:number = pDealItem:GetValueType();
+									local ending		:number = pDealItem:GetEndTurn() - Game.GetCurrentGameTurn();
 									table.insert( kDealData, {
 										Type			= DealItemTypes.RESOURCES,
 										ResourceType	= resourceType,
@@ -545,7 +547,7 @@ function GetData()
 										Name			= Locale.Lookup( pPlayerConfig:GetCivilizationDescription() )
 									});
 
-									local entryString:string = Locale.Lookup("LOC_HUD_REPORTS_ROW_DIPLOMATIC_DEALS") .. " (" .. Locale.Lookup(pPlayerConfig:GetPlayerName()) .. ")";
+									local entryString:string = Locale.Lookup("LOC_HUD_REPORTS_ROW_DIPLOMATIC_DEALS") .. " (" .. Locale.Lookup(pPlayerConfig:GetPlayerName()) .. ") " .. tostring(ending) .. "[ICON_Turn]";
 									AddResourceData(kResources, resourceType, entryString, "LOC_HUD_REPORTS_TRADE_IMPORTED", amount);
 								end
 							end
