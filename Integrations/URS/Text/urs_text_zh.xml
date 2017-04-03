@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- SIMPLIFY-CHINESE -->
+
+    <!-- HUD Common Text -->
+    <Replace Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="zh_Hans_CN">
+      <Text>交易记录</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_REPORTS_TAB_HIDE_CITY_BUILDINGS" Language="zh_Hans_CN">
+      <Text>隐藏建筑</Text>
+    </Replace>
+    <!-- Current Deals -->
+    <Replace Tag="LOC_CURRENT_DEALS_OUTGOING" Language="zh_Hans_CN">
+      <Text>支出</Text>
+    </Replace>
+    <Replace Tag="LOC_CURRENT_DEALS_INCOMING" Language="zh_Hans_CN">
+      <Text>收入</Text>
+    </Replace>
+    <!-- Units Overview -->
+    <Replace Tag="LOC_UNITS_MILITARY_LAND" Language="zh_Hans_CN">
+      <Text>军队（陆军）</Text>
+    </Replace>
+    <Replace Tag="LOC_UNITS_MILITARY_AIR" Language="zh_Hans_CN">
+      <Text>军队（空军）</Text>
+    </Replace>
+    <Replace Tag="LOC_UNITS_MILITARY_SEA" Language="zh_Hans_CN">
+      <Text>军队（海军）</Text>
+    </Replace>
+    <Replace Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="zh_Hans_CN">
+      <Text>在地图上查看该单位。</Text>
+    </Replace>
+
+  </LocalizedText>
+</GameData>

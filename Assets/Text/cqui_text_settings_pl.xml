@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- POLISH -->
+
+    <Row Tag="LOC_CQUI_BINDINGS" Language="pl_PL">
+      <Text>Skróty klawiszowe</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="pl_PL">
+      <Text>Typ skrótów</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="pl_PL">
+      <Text>Standardowe: Niezmienione[NEWLINE]Klasyczne: Skróty z Civ V[NEWLINE]Ulepszone: Skróty z Civ V z następującymi zmianami[NEWLINE]  WASD poruszanie kamerą[NEWLINE]  Q/E zmiana jednostki/miasta na kolejną[NEWLINE]  Shift przełącza wybór miasta/jednostki[NEWLINE]  Kamieniołom/Nalot zostały przeniesione na skróty alt + Q/S[NEWLINE]  NOTKA:USUŃ PRZYPISANIE W/E W USTAWIENIACH GRY LUB NIEKTÓRZE RZECZY NIE BĘDĄ DZIAŁAĆ!</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="pl_PL">
+      <Text>Klasyczny</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="pl_PL">
+      <Text>Ulepszony</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="pl_PL">
+      <Text>Standardowy</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW" Language="pl_PL">
+      <Text>Widok miasta</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="pl_PL">
+      <Text>Wysokość elementu produkcji</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="pl_PL">
+      <Text>Włącz kolejkę budowania</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="pl_PL">
+      <Text>Pokaż nakładkę wzrostu naturalnego</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="pl_PL">
+      <Text>Możesz to także przełączać klikając na emblemat wzrostu w widoku miasta</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" Language="pl_PL">
+      <Text>Informacje o mieście po najechaniu</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="pl_PL">
+      <Text>Wyświetla ikony obywateli, ikony dochodu oraz rozrost granic po najechaniu myszką</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_HEADER" Language="pl_PL">
+      <Text>Inteligentne Banery</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="pl_PL">
+      <Text>Włącz inteligentne banery</Text>
+    </Row>
+   <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="pl_PL">
+      <Text>Wyświetla nowe ikony i informacje w banerze miasta.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="pl_PL">
+      <Text>Ikona [ICON_EXCLAMATION] jest wyświetlona gdy niezablokowani obywatele są automatycznie przypisywani przez AI zarządcy miasta.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_DISTRICTS_TOOLTIP" Language="pl_PL">
+      <Text>Ikony dystryktów wskazują zbydowane dystrykty</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_POPULATION_TOOLTIP" Language="pl_PL">
+      <Text>Wyświetla pozostałą liczbę tur do wzrostu populacji[NEWLINE]oraz [obecną populację/ilość wolnych miejsc populacji].</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="pl_PL">
+      <Text>Wyświetla pozostałą liczbę tur do rozrostu kulturowego.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON" Language="pl_PL">
+      <Text>Inteligentne ikony pracy</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON_TOOLTIP" Language="pl_PL">
+      <Text>Nadaje specjalny rozmiar/przeźroczystość ikonom pracujących obywateli</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONALPHA" Language="pl_PL">
+      <Text>Przeźroczystość inteligentnych ikon pracy</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONSIZE" Language="pl_PL">
+      <Text>Rozmiar inteligentnych ikon pracy</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONS_HEADER" Language="pl_PL">
+      <Text>Ikony pracy</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONALPHA" Language="pl_PL">
+      <Text>Przeźroczystość ikon pracy</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONSIZE" Language="pl_PL">
+      <Text>Rozmiar ikon pracy</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL" Language="pl_PL">
+      <Text>Ogólne</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="pl_PL">
+      <Text>Ukryte</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_MINIMAPSIZE" Language="pl_PL">
+      <Text>Rozmiar Minimapy</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="pl_PL">
+      <Text>Styl ikon ulepszonych zasobów</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="pl_PL">
+      <Text>Pełny: zawsze rysuj ikony zasobów[NEWLINE]Przeźroczysty: ikony ulepszonych zasobów są przeźroczyste[NEWLINE]Ukryty: ikony ulepszonych zasobów są ukryte</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="pl_PL">
+      <Text>Zasoby luksusowe w górnym panelu</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="pl_PL">
+      <Text>Pełny</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="pl_PL">
+      <Text>Automatycznie włącza ikony dochodu</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TRANSPARENT" Language="pl_PL">
+      <Text>Przeźroczysty</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP" Language="pl_PL">
+      <Text>Plotki</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="pl_PL">
+      <Text>Przycinaj plotki</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="pl_PL">
+      <Text>Usuwa głównie bezużyteczne początki wiadomości opisujące skąd pochodzi dana plotka</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES" Language="pl_PL">
+      <Text>Filtry</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="pl_PL">
+      <Text>Automatycznie włącz filtr archeologa</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="pl_PL">
+      <Text>Automatycznie włącz filtr budowniczego</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="pl_PL">
+      <Text>Automatycznie włącz filtr zwiadowcy</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS" Language="pl_PL">
+      <Text>Popup'y</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_ALWAYSOPENTECHTREES" Language="pl_PL">
+      <Text>Zawsze otwieraj drzewo technologii</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="pl_PL">
+      <Text>Popup zakończenia Badania/Kodeksu</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="pl_PL">
+      <Text>Przełącza wyskakiwanie popup'u który informuje o zakończeniu badania bądź kodeksu prawnego</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="pl_PL">
+      <Text>Dzwięk zakończenia Badania/Kodeksu</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="pl_PL">
+      <Text>Przełącza odtwarzanie dzwięku po zakończeniu badania bądź kodeksu prawnego. Jest całkowicie niezależny od popup'u i może być odtwarzany nawet gdy wizualny popup jest wyłączony</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="pl_PL">
+      <Text>Pamiętaj: Ustawienia CQUI są przypisane do poszczególnych zapisów gry![NEWLINE]Jeśli chcesz zmienić ustawienia na stałe, zmień je w pliku[NEWLINE] CQUI_Settings.sql znajdującym się w katalogu [KATALOG INSTALACJI MODU]/CQUI/Assets</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS" Language="pl_PL">
+      <Text>Jednostki</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="pl_PL">
+      <Text>Pokazuj drogę jednostki</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="pl_PL">
+      <Text>Rozwijaj listę akcji w panelu jednostki</Text>
+    </Row>
+
+  </LocalizedText>
+</GameData>

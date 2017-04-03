@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- RUSSIAN -->
+
+    <Row Tag="LOC_CQUI_BINDINGS" Language="ru_RU">
+      <Text>Сочетания клавиш</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="ru_RU">
+      <Text>Сочетания</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="ru_RU">
+      <Text>Стандартные: Без изменений[NEWLINE]Классические: клавиши из Civ V[NEWLINE]Продвинутые: Клавиши из Civ V со следующими изменениями:[NEWLINE]  WASD контроль камеры[NEWLINE]  Q/E переключение юнита/города[NEWLINE]  Shift переключает выбор города/юнита[NEWLINE] Каменоломня/Авиаудар изменён на Alt + Q/S[NEWLINE]  ВНИМАНИЕ: ОТКРЕПИТЕ КЛАВИШИ W/E В НАСТРОЙКАХ ИЛИ ДАННЫЙ РЕЖИМ НЕ ЗАРАБОТАЕТ!</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="ru_RU">
+      <Text>Классические</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="ru_RU">
+      <Text>Продвинутые</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="ru_RU">
+      <Text>Стандартные</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW" Language="ru_RU">
+      <Text>Обзор города</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="ru_RU">
+      <Text>Высота строки элемента производства</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="ru_RU">
+      <Text>Очередь производства</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="ru_RU">
+      <Text>Показывать культурный рост</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="ru_RU">
+      <Text>Также может быть включена нажатием на иконку роста в обзоре города</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" Language="ru_RU">
+      <Text>Информация о городе при наведении</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="ru_RU">
+      <Text>Расстановка горожан, урожайность клеток, и рост границ при наведении</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_HEADER" Language="ru_RU">
+      <Text>Умные баннеры</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="ru_RU">
+      <Text>Включить баннеры</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="ru_RU">
+      <Text>[ICON_EXCLAMATION] отображается пока в городе есть незаблокированные горожане, распределенные ИИ.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_DISTRICTS_TOOLTIP" Language="ru_RU">
+      <Text>Иконки районов отображают построенные на территории города районы.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_POPULATION_TOOLTIP" Language="ru_RU">
+      <Text>Показывает количество ходов до увеличения населения [NEWLINE] и [текущее население/максимум жилья].</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="ru_RU">
+      <Text>Показывает количество ходов до культурного роста.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="ru_RU">
+        <Text>Отображает новые иконки на баннере города.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL" Language="ru_RU">
+      <Text>Основные</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="ru_RU">
+      <Text>Скрытый</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_MINIMAPSIZE" Language="ru_RU">
+      <Text>Размер мини-карты</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="ru_RU">
+      <Text>Отображение иконок ресурсов</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="ru_RU">
+      <Text>Сплошные: всегда показывать иконки ресурсов[NEWLINE]Прозрачные: делает иконки ресурсов полупрозрачными[NEWLINE]Скрытые: скрывает иконки ресурсов</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="ru_RU">
+      <Text>Редкие ресурсы на верхней панели</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="ru_RU">
+      <Text>Сплошные</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="ru_RU">
+      <Text>Показать урожайность по умолчанию</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TRANSPARENT" Language="ru_RU">
+      <Text>Прозрачные</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP" Language="ru_RU">
+      <Text>Слухи</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="ru_RU">
+      <Text>Сокращает сообщения о слухах</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="ru_RU">
+      <Text>Удаляет, в основном, бесполезное начало слухов, описывающее от кого пришла информация.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES" Language="ru_RU">
+      <Text>Линзы</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="ru_RU">
+      <Text>Автовключение линзы археолога</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="ru_RU">
+      <Text>Автовключение линзы строителей</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="ru_RU">
+      <Text>Автовключение линзы разведки</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS" Language="ru_RU">
+      <Text>Попапы</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_ALWAYSOPENTECHTREES" Language="ru_RU">
+      <Text>Всегда открывает дерево вместо попапа</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="ru_RU">
+      <Text>Попапы Исследований/Институтов</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="ru_RU">
+      <Text>Всплывающие окна, которые появлялись всякий раз, когда были исследованы новая технология или социальный институт</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="ru_RU">
+      <Text>Звуки Исследований/Институтов</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="ru_RU">
+      <Text>Оповещение и голосовое описание, которое воспроизводится всякий раз, когда были исследованы новая технология или социальный институт. Является полностью независимым от визуальной составляющей компонентом и может проигрываться, когда всплывающее окно выключено</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="ru_RU">
+      <Text>Напоминание: настройки CQUI связаны с каждым сохранением![NEWLINE]Если вы хотите изменить настройки по умолчанию, измените файл CQUI_Settings.sql в папке [MOD INSTALL DIRECTORY]/CQUI/Assets</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS" Language="ru_RU">
+      <Text>Юниты</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="ru_RU">
+      <Text>Путь юнита при выборе/наведении</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="ru_RU">
+      <Text>Автораскрытие всех действий на панели юнита</Text>
+    </Row>
+
+  </LocalizedText>
+</GameData>

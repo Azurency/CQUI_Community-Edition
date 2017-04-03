@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- POLISH -->
+
+    <!-- Builder Lens -->
+    <Replace Tag="LOC_HUD_BUILDER_LENS" Language="pl_PL">
+      <Text>Budowniczowie</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_BUILDER_LENS_TOOLTIP" Language="pl_PL">
+      <Text>Podświetla pola na których może pracować budowniczy</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_IMP" Language="pl_PL">
+      <Text>Zasób/Zniszczone ulepszenie/Specjalna umiejętność</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_HILL" Language="pl_PL">
+      <Text>Wzgórze</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_FEATURE" Language="pl_PL">
+      <Text>Funkcja usuwania</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_GENERIC" Language="pl_PL">
+      <Text>Standardowe pole</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_NOTHING" Language="pl_PL">
+      <Text>Nic do zrobienia</Text>
+    </Replace>
+
+    <!-- Archaeologist Lens -->
+    <Replace Tag="LOC_HUD_ARCHAEOLOGIST_LENS" Language="pl_PL">
+      <Text>Archeolog</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_ARCHAEOLOGIST_LENS_TOOLTIP" Language="pl_PL">
+      <Text>Podświetla archeologiczne ślady przeszłości.</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_ARTIFACT" Language="pl_PL">
+      <Text>Artefakt</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_SHIPWRECK" Language="pl_PL">
+      <Text>Wrak statku</Text>
+    </Replace>
+
+    <!-- City Overlap Lens -->
+    <Replace Tag="LOC_HUD_CITYOVERLAP6_LENS" Language="pl_PL">
+      <Text>Miasta w zasięgu 6</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_CITYOVERLAP6_LENS_TOOLTIP" Language="pl_PL">
+      <Text>Pokazuje ile miast znajduje się w zasięgu 6 pól od danego pola</Text>
+    </Replace>
+
+    <!-- City Overlap Lens -->
+    <Replace Tag="LOC_HUD_CITYOVERLAP9_LENS" Language="pl_PL">
+      <Text>Miasta w zasięgu 9</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_CITYOVERLAP9_LENS_TOOLTIP" Language="pl_PL">
+      <Text>Pokazuje ile miast znajduje się w zasięgu 9 pól od danego pola</Text>
+    </Replace>
+
+    <!-- Barbarian Lens -->
+    <Replace Tag="LOC_HUD_BARBARIAN_LENS" Language="pl_PL">
+      <Text>Barbarzyńcy</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_BARBARIAN_LENS_TOOLTIP" Language="pl_PL">
+      <Text>Podświetla obozy barbarzyńców</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BARBARIAN_LENS_ENCAPMENT" Language="pl_PL">
+      <Text>Obóz barbarzyńców</Text>
+    </Replace>
+
+    <!-- Resources Lens -->
+    <Replace Tag="LOC_HUD_RESOURCE_LENS" Language="pl_PL">
+      <Text>Zasoby</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_RESOURCE_LENS_TOOLTIP" Language="pl_PL">
+      <Text>Podświetla zasoby na mapie</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_LUXURY" Language="pl_PL">
+      <Text>Zasób luksusowy</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NLUXURY" Language="pl_PL">
+      <Text>Nieprzyłączony zasób luksusowy</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_STRATEGIC" Language="pl_PL">
+      <Text>Zasób strategiczny</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NSTRATEGIC" Language="pl_PL">
+      <Text>Nieprzyłączony zasób strategiczny</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_BONUS" Language="pl_PL">
+      <Text>Zasób dodatkowy</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NBONUS" Language="pl_PL">
+      <Text>Nieprzyłączony zasób dodatkowy</Text>
+    </Replace>
+
+    <!-- Wonder Lens -->
+    <Replace Tag="LOC_HUD_WONDER_LENS" Language="pl_PL">
+      <Text>Cuda</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_WONDER_LENS_TOOLTIP" Language="pl_PL">
+      <Text>Podświetla cuda natury oraz cuda zbudowane przez graczy</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_WONDER_LENS_NWONDER" Language="pl_PL">
+      <Text>Cud natury</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_PWONDER" Language="pl_PL">
+      <Text>Cud zbudowany przez gracza</Text>
+    </Replace>
+
+    <!-- Adjacency Yield Lens -->
+    <Replace Tag="LOC_HUD_ADJYIELD_LENS" Language="pl_PL">
+      <Text>Premia dochodu</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_ADJYIELD_LENS_TOOLTIP" Language="pl_PL">
+      <Text>Pokazuje premie do dochodu dla dzielnic</Text>
+    </Replace>
+
+    <!-- Scout Lens -->
+    <Replace Tag="LOC_HUD_SCOUT_LENS" Language="pl_PL">
+      <Text>Zwiadowca</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_SCOUT_LENS_TOOLTIP" Language="pl_PL">
+      <Text>Podświetla wioski plemienne</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_SCOUT_LENS_GHUT" Language="pl_PL">
+      <Text>Wioska plemienna</Text>
+    </Replace>
+
+  </LocalizedText>
+</GameData>

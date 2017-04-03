@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- SIMPLIFY-CHINESE -->
+
+    <Row Tag="LOC_CQUI_BINDINGS" Language="zh_Hans_CN">
+      <Text>热键</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="zh_Hans_CN">
+      <Text>热键模式</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="zh_Hans_CN">
+      <Text>标准：不变[NEWLINE]经典: 文明5热键[NEWLINE]强化: 文明5热键加上如下改动[NEWLINE]  WASD 控制视角[NEWLINE]  Q/E 单位/城市 轮转[NEWLINE]  Shift 切换 城市/单位 选择[NEWLINE]  挖掘/空袭 移至 alt-键 + Q/S[NEWLINE]  注意:在设置里取消 W/E 的热键，否则以上无效。</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="zh_Hans_CN">
+      <Text>经典</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="zh_Hans_CN">
+      <Text>强化</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="zh_Hans_CN">
+      <Text>标准</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW" Language="zh_Hans_CN">
+      <Text>城市视图</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="zh_Hans_CN">
+      <Text>生产项目横幅的高度</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="zh_Hans_CN">
+      <Text>启用生产队列</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="zh_Hans_CN">
+      <Text>显示边境拓展的地块</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="zh_Hans_CN">
+      <Text>点击城市视图中的成长按钮也可切换显示/隐藏</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" Language="zh_Hans_CN">
+      <Text>鼠标指向时显示城市市民分配信息</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="zh_Hans_CN">
+      <Text>鼠标指向时显示市民分配，顶部显示，以及边境增长</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_HEADER" Language="zh_Hans_CN">
+      <Text>智能城市横幅</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="zh_Hans_CN">
+      <Text>开启智能横幅</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="zh_Hans_CN">
+      <Text>在城市横幅上显示新的图标</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="zh_Hans_CN">
+      <Text>当有未锁公民自动安置时会显示[ICON_EXCLAMATION]图标。</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_DISTRICTS_TOOLTIP" Language="zh_Hans_CN">
+      <Text>显示区域图标表示已建造的区域</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_POPULATION_TOOLTIP" Language="zh_Hans_CN">
+      <Text>显示下一人口增长剩余回合[NEWLINE]以及多余住房数量。</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="zh_Hans_CN">
+      <Text>显示文化增长剩余回合。</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON" Language="zh_Hans_CN">
+      <Text>工作中的市民头像</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON_TOOLTIP" Language="zh_Hans_CN">
+      <Text>使工作中的市民头像有不同的大小/透明度</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONALPHA" Language="zh_Hans_CN">
+      <Text>头像透明度</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONSIZE" Language="zh_Hans_CN">
+      <Text>头像大小</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONS_HEADER" Language="zh_Hans_CN">
+      <Text>市民头像</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONALPHA" Language="zh_Hans_CN">
+      <Text>头像透明度</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONSIZE" Language="zh_Hans_CN">
+      <Text>头像大小</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL" Language="zh_Hans_CN">
+      <Text>通用</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="zh_Hans_CN">
+      <Text>隐藏</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_MINIMAPSIZE" Language="zh_Hans_CN">
+      <Text>小地图尺寸</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="zh_Hans_CN">
+      <Text>已开发过的资源图标</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="zh_Hans_CN">
+      <Text>固定：总是显示资源的图标[NEWLINE]透明：改良过的资源的图标透明显示[NEWLINE]隐藏：改良过的资源的图标隐藏</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="zh_Hans_CN">
+      <Text>在顶部面板显示奢侈</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="zh_Hans_CN">
+      <Text>固定</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="zh_Hans_CN">
+      <Text>默认显示产量</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TRANSPARENT" Language="zh_Hans_CN">
+      <Text>透明</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP" Language="zh_Hans_CN">
+      <Text>情报消息</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="zh_Hans_CN">
+      <Text>简略情报消息</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="zh_Hans_CN">
+      <Text>移除情报消息中说明情报来源的废话</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES" Language="zh_Hans_CN">
+      <Text>滤镜</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="zh_Hans_CN">
+      <Text>选中考古学家自动切换为考古透镜</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="zh_Hans_CN">
+      <Text>选中建造者自动切换为建造者透镜</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="zh_Hans_CN">
+      <Text>选中侦察兵自动切换为侦查透镜</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS" Language="zh_Hans_CN">
+      <Text>弹窗</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_ALWAYSOPENTECHTREES" Language="zh_Hans_CN">
+      <Text>科技完成时弹出科技树</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="zh_Hans_CN">
+      <Text>开启科技/市政弹窗</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="zh_Hans_CN">
+      <Text>每当新的科技/市政完成时弹窗</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="zh_Hans_CN">
+      <Text>开启科技/市政语音</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="zh_Hans_CN">
+      <Text>每当新的科技/市政完成时播放语音。即使没有弹窗也可以播放。</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="zh_Hans_CN">
+      <Text>注意：CQUI的设置在存档间是相互独立的。[NEWLINE]如果你想要修改默认配置，请编辑 [MOD INSTALL DIRECTORY]/CQUI/Assets目录下的CQUI_Settings.sql文件</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS" Language="zh_Hans_CN">
+      <Text>单位</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="zh_Hans_CN">
+      <Text>选中或者鼠标指向时显示单位行进路径</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="zh_Hans_CN">
+      <Text>自动展开单位的指令面板</Text>
+    </Row>
+
+  </LocalizedText>
+</GameData>

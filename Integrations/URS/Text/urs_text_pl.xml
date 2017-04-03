@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- POLISH -->
+
+    <!-- HUD Common Text -->
+    <Replace Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="pl_PL">
+      <Text>Aktualne umowy handlowe</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_REPORTS_TAB_HIDE_CITY_BUILDINGS" Language="pl_PL">
+      <Text>Ukryj budynki miejskie</Text>
+    </Replace>
+    <!-- Current Deals -->
+    <Replace Tag="LOC_CURRENT_DEALS_OUTGOING" Language="pl_PL">
+      <Text>Wychodzące</Text>
+    </Replace>
+    <Replace Tag="LOC_CURRENT_DEALS_INCOMING" Language="pl_PL">
+      <Text>Przychodzące</Text>
+    </Replace>
+    <!-- Units Overview -->
+    <Replace Tag="LOC_UNITS_MILITARY_LAND" Language="pl_PL">
+      <Text>Jednoski militarne (Lądowe)</Text>
+    </Replace>
+    <Replace Tag="LOC_UNITS_MILITARY_AIR" Language="pl_PL">
+      <Text>Jednoski militarne (Powietrzne)</Text>
+    </Replace>
+    <Replace Tag="LOC_UNITS_MILITARY_SEA" Language="pl_PL">
+      <Text>Jednoski militarne (Morskie)</Text>
+    </Replace>
+    <Replace Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="pl_PL">
+      <Text>Znajdź tę jednostkę na mapie.</Text>
+    </Replace>
+
+  </LocalizedText>
+</GameData>

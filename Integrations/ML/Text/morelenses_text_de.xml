@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- GERMAN -->
+
+    <!-- Builder Lens -->
+    <Replace Tag="LOC_HUD_BUILDER_LENS" Language="de_DE">
+      <Text>Handwerker</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_BUILDER_LENS_TOOLTIP" Language="de_DE">
+      <Text>Zeigt besondere Felder auf der Karte an, wo gebaut werden kann.</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_IMP" Language="de_DE">
+      <Text>Res. Geplündert Einzigartig</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_HILL" Language="de_DE">
+      <Text>Hügel</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_FEATURE" Language="de_DE">
+      <Text>Entfernbares Feature</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_GENERIC" Language="de_DE">
+      <Text>Normales Feld</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_NOTHING" Language="de_DE">
+      <Text>Nichts zu tun</Text>
+    </Replace>
+
+    <!-- Archaeologist Lens -->
+    <Replace Tag="LOC_HUD_ARCHAEOLOGIST_LENS" Language="de_DE">
+      <Text>Archäologe</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_ARCHAEOLOGIST_LENS_TOOLTIP" Language="de_DE">
+      <Text>Zeigt Ausgrabungsstätten auf der Karte.</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_ARTIFACT" Language="de_DE">
+      <Text>Artefakt</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_SHIPWRECK" Language="de_DE">
+      <Text>Schiffswrack</Text>
+    </Replace>
+
+    <!-- City Overlap Lens -->
+    <Replace Tag="LOC_HUD_CITYOVERLAP6_LENS" Language="de_DE">
+      <Text>Neue Stadt 6Feld</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_CITYOVERLAP6_LENS_TOOLTIP" Language="de_DE">
+      <Text>Zeigt Felder für Städtegründungen mit einem 6 Hexfelder Abstand.</Text>
+    </Replace>
+
+    <!-- City Overlap Lens -->
+    <Replace Tag="LOC_HUD_CITYOVERLAP9_LENS" Language="de_DE">
+      <Text>Neue Stadt 9Feld</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_CITYOVERLAP9_LENS_TOOLTIP" Language="de_DE">
+      <Text>Zeigt Felder für Städtegründungen mit einem 9 Hexfelder Abstand.</Text>
+    </Replace>
+
+    <!-- Barbarian Lens -->
+    <Replace Tag="LOC_HUD_BARBARIAN_LENS" Language="de_DE">
+      <Text>Barbaren</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_BARBARIAN_LENS_TOOLTIP" Language="de_DE">
+      <Text>Zeigt Barbaren-Außenposten auf der Karte.</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BARBARIAN_LENS_ENCAPMENT" Language="de_DE">
+      <Text>Barbaren- Außenposten</Text>
+    </Replace>
+
+    <!-- Resources Lens -->
+    <Replace Tag="LOC_HUD_RESOURCE_LENS" Language="de_DE">
+      <Text>Ressourcen</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_RESOURCE_LENS_TOOLTIP" Language="de_DE">
+      <Text>Zeigt Ressourcenfelder.</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_LUXURY" Language="de_DE">
+      <Text>Luxusressource</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NLUXURY" Language="de_DE">
+      <Text>Unerschlossene Luxusressource</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_STRATEGIC" Language="de_DE">
+      <Text>Strategische Ressource</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NSTRATEGIC" Language="de_DE">
+      <Text>Unerschlossene strateg. Ressource</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_BONUS" Language="de_DE">
+      <Text>Bonusressource</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NBONUS" Language="de_DE">
+      <Text>Unerschlossene Bonusressource</Text>
+    </Replace>
+
+    <!-- Wonder Lens -->
+    <Replace Tag="LOC_HUD_WONDER_LENS" Language="de_DE">
+      <Text>Wunder</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_WONDER_LENS_TOOLTIP" Language="de_DE">
+      <Text>Zeigt Naturwunder und gebaute Wunder auf der Karte.</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_WONDER_LENS_NWONDER" Language="de_DE">
+      <Text>Naturwunder</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_PWONDER" Language="de_DE">
+      <Text>Gebaute Wunder</Text>
+    </Replace>
+
+    <!-- Adjacency Yield Lens -->
+    <Replace Tag="LOC_HUD_ADJYIELD_LENS" Language="de_DE">
+      <Text>Nachbarerträge</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_ADJYIELD_LENS_TOOLTIP" Language="de_DE">
+      <Text>Zeigt die Nachbarschaftserträge der Bezirke.</Text>
+    </Replace>
+
+    <!-- Scout Lens -->
+    <Replace Tag="LOC_HUD_SCOUT_LENS" Language="de_DE">
+      <Text>Späher</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_SCOUT_LENS_TOOLTIP" Language="de_DE">
+      <Text>Zeigt Stammesdörfer auf der Karte.</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_SCOUT_LENS_GHUT" Language="de_DE">
+      <Text>Stammesdorf</Text>
+    </Replace>
+
+  </LocalizedText>
+</GameData>

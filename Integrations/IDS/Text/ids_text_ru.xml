@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- RUSSIAN -->
+
+    <!-- HUD Common Text -->
+    <Replace Tag="LOC_IDS_DUMMY_KEY" Language="ru_RU">
+      <Text>Текущие Сделки</Text>
+    </Replace>
+
+  </LocalizedText>
+</GameData>

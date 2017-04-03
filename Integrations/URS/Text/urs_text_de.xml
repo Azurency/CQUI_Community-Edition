@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- GERMAN -->
+
+    <!-- HUD Common Text -->
+    <Replace Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="de_DE">
+      <Text>Handelsübersicht</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_REPORTS_TAB_HIDE_CITY_BUILDINGS" Language="de_DE">
+      <Text>Verstecke Stadtgebäude</Text>
+    </Replace>
+    <!-- Current Deals -->
+    <Replace Tag="LOC_CURRENT_DEALS_OUTGOING" Language="de_DE">
+      <Text>Ausgaben</Text>
+    </Replace>
+    <Replace Tag="LOC_CURRENT_DEALS_INCOMING" Language="de_DE">
+      <Text>Einnahmen</Text>
+    </Replace>
+    <!-- Units Overview -->
+    <Replace Tag="LOC_UNITS_MILITARY_LAND" Language="de_DE">
+      <Text>Militär (Heer)</Text>
+    </Replace>
+    <Replace Tag="LOC_UNITS_MILITARY_AIR" Language="de_DE">
+      <Text>Militär (Luftwaffe)</Text>
+    </Replace>
+    <Replace Tag="LOC_UNITS_MILITARY_SEA" Language="de_DE">
+      <Text>Militär (Marine)</Text>
+    </Replace>
+    <Replace Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="de_DE">
+      <Text>Zeige Einheit auf der Karte.</Text>
+    </Replace>
+
+  </LocalizedText>
+</GameData>

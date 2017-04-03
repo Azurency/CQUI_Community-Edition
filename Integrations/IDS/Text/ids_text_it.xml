@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- ITALIAN -->
+
+    <!-- HUD Common Text -->
+    <Replace Tag="LOC_IDS_DUMMY_KEY" Language="it_IT">
+      <Text>Scambi correnti</Text>
+    </Replace>
+
+  </LocalizedText>
+</GameData>

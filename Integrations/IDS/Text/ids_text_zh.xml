@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- SIMPLIFY-CHINESE -->
+
+    <!-- HUD Common Text -->
+    <Replace Tag="LOC_IDS_DUMMY_KEY" Language="zh_Hans_CN">
+      <Text>交易记录</Text>
+    </Replace>
+
+  </LocalizedText>
+</GameData>

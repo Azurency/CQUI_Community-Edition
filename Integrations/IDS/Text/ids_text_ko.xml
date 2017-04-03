@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- KOREAN -->
+
+    <!-- HUD Common Text -->
+    <Replace Tag="LOC_IDS_DUMMY_KEY" Language="ko_KR">
+      <Text>거래 현황</Text>
+    </Replace>
+
+  </LocalizedText>
+</GameData>

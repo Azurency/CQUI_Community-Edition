@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- KOREAN -->
+
+    <!-- Builder Lens -->
+    <Replace Tag="LOC_HUD_BUILDER_LENS" Language="ko_KR">
+      <Text>건설자</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_BUILDER_LENS_TOOLTIP" Language="ko_KR">
+      <Text>건설자가 작업할 수 있는 타일을 나타냅니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_IMP" Language="ko_KR">
+      <Text>자원/약탈당함/고유 능력</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_HILL" Language="ko_KR">
+      <Text>언덕</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_FEATURE" Language="ko_KR">
+      <Text>제거 가능한 지형 특성</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_GENERIC" Language="ko_KR">
+      <Text>일반 타일</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_NOTHING" Language="ko_KR">
+      <Text>할수 있는 작업 없음</Text>
+    </Replace>
+
+    <!-- Archaeologist Lens -->
+    <Replace Tag="LOC_HUD_ARCHAEOLOGIST_LENS" Language="ko_KR">
+      <Text>고고학자</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_ARCHAEOLOGIST_LENS_TOOLTIP" Language="ko_KR">
+      <Text>고고학자가 작업할 수 있는 타일을 나타냅니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_ARTIFACT" Language="ko_KR">
+      <Text>사적지</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_SHIPWRECK" Language="ko_KR">
+      <Text>난파선</Text>
+    </Replace>
+
+    <!-- City Overlap Lens -->
+    <Replace Tag="LOC_HUD_CITYOVERLAP6_LENS" Language="ko_KR">
+      <Text>도시 오버랩 6칸</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_CITYOVERLAP6_LENS_TOOLTIP" Language="ko_KR">
+      <Text>얼마나 많은 도시가 6개 타일 범위에서 서로 중복되는지 보여줍니다.</Text>
+    </Replace>
+
+    <!-- City Overlap Lens -->
+    <Replace Tag="LOC_HUD_CITYOVERLAP9_LENS" Language="ko_KR">
+      <Text>도시 오버랩 9칸</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_CITYOVERLAP9_LENS_TOOLTIP" Language="ko_KR">
+      <Text>얼마나 많은 도시가 9개 타일 범위에서 서로 중복되는지 보여줍니다.</Text>
+    </Replace>
+
+    <!-- Barbarian Lens -->
+    <Replace Tag="LOC_HUD_BARBARIAN_LENS" Language="ko_KR">
+      <Text>야만인</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_BARBARIAN_LENS_TOOLTIP" Language="ko_KR">
+      <Text>야만인 전초기지를 나타냅니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BARBARIAN_LENS_ENCAPMENT" Language="ko_KR">
+      <Text>야만인 전초기지</Text>
+    </Replace>
+
+    <!-- Resources Lens -->
+    <Replace Tag="LOC_HUD_RESOURCE_LENS" Language="ko_KR">
+      <Text>자원</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_RESOURCE_LENS_TOOLTIP" Language="ko_KR">
+      <Text>자원의 상태를 나타냅니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_LUXURY" Language="ko_KR">
+      <Text>개발한 사치 자원</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NLUXURY" Language="ko_KR">
+      <Text>미개발 사치 자원</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_STRATEGIC" Language="ko_KR">
+      <Text>개발한 전략 자원</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NSTRATEGIC" Language="ko_KR">
+      <Text>미개발 전략 자원</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_BONUS" Language="ko_KR">
+      <Text>개발한 보너스 자원</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NBONUS" Language="ko_KR">
+      <Text>미개발 보너스 자원</Text>
+    </Replace>
+
+    <!-- Wonder Lens -->
+    <Replace Tag="LOC_HUD_WONDER_LENS" Language="ko_KR">
+      <Text>자연경관/불가사의</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_WONDER_LENS_TOOLTIP" Language="ko_KR">
+      <Text>자연경관과 불가사의를 나타냅니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_WONDER_LENS_NWONDER" Language="ko_KR">
+      <Text>자연경관</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_PWONDER" Language="ko_KR">
+      <Text>불가사의</Text>
+    </Replace>
+
+    <!-- Adjacency Yield Lens -->
+    <Replace Tag="LOC_HUD_ADJYIELD_LENS" Language="ko_KR">
+      <Text>인접 보너스 산출량</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_ADJYIELD_LENS_TOOLTIP" Language="ko_KR">
+      <Text>특수지구의 인접 보너스 산출량을 보여줍니다.</Text>
+    </Replace>
+
+    <!-- Scout Lens -->
+    <Replace Tag="LOC_HUD_SCOUT_LENS" Language="ko_KR">
+      <Text>정잘병</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_SCOUT_LENS_TOOLTIP" Language="ko_KR">
+      <Text>부족 마을을 나타냅니다.</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_SCOUT_LENS_GHUT" Language="ko_KR">
+      <Text>부족 마을</Text>
+    </Replace>
+
+  </LocalizedText>
+</GameData>

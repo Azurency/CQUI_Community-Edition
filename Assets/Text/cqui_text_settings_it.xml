@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- ITALIAN -->
+
+    <Row Tag="LOC_CQUI_BINDINGS" Language="it_IT">
+        <Text>Combinazione tasti</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="it_IT">
+      <Text>Modalità</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="it_IT">
+      <Text>Standard: senza modifiche[NEWLINE]Classica: combinazione Civ V[NEWLINE]Avanzata: combinazione Civ V con le seguenti modifiche:[NEWLINE]  controllo camera WASD[NEWLINE]  Q/E scorrimento unità/città[NEWLINE]  Shift attiva/disattiva la selezione di città/unità[NEWLINE]  il comando Cava/Attacco Aereo diventa ALT+Q/ALT+S[NEWLINE]  NOTA:SCOLLEGA I TASTI W/E NELLE IMPOSTAZIONI ALTRIMENTI NON FUNZIONA!</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="it_IT">
+      <Text>Classica</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="it_IT">
+      <Text>Avanzata</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="it_IT">
+      <Text>Standard</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW" Language="it_IT">
+      <Text>Vista Cittadina</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="it_IT">
+      <Text>Altezza elemento da produrre</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="it_IT">
+      <Text>Abilita coda di produzione</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="it_IT">
+      <Text>Mostra crescita culturale</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="it_IT">
+      <Text>Può anche essere attivata cliccando sul simbolo della crescita nella vista cittadina</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" Language="it_IT">
+      <Text>Mostra gestione cittadina al passaggio del mouse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="it_IT">
+      <Text>Mostra la gestione dei cittadini, la resa delle caselle e la crescita dei confini al passaggio del mouse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_HEADER" Language="it_IT">
+      <Text>Banner Smart</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="it_IT">
+      <Text>Abilita banner smart</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="it_IT">
+      <Text>Mostra nuove icone nel banner cittadino.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="it_IT">
+      <Text>Un [ICON_EXCLAMATION] appare quando il Governatore assegna automaticamente cittadini alle caselle della città.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_DISTRICTS_TOOLTIP" Language="it_IT">
+      <Text>Le icone distretto indicano i distretti costruiti</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_POPULATION_TOOLTIP" Language="it_IT">
+      <Text>Mostra il numero di turni alla crescita della popolazione[NEWLINE]ed il rapporto [popolazione/abitazioni].</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="it_IT">
+      <Text>Mostra il numero di turni alla crescita culturale.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON" Language="it_IT">
+      <Text>Icone Caselle Lavorate Smart</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON_TOOLTIP" Language="it_IT">
+      <Text>Personalizza dimensione e trasparenza delle icone cittadino delle caselle lavorate</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONALPHA" Language="it_IT">
+      <Text>Trasparenza Icone Caselle Lavorate Smart</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONSIZE" Language="it_IT">
+      <Text>Dimensione Icone Caselle Lavorate Smart</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONS_HEADER" Language="it_IT">
+      <Text>Icone Caselle Lavorate</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONALPHA" Language="it_IT">
+      <Text>Trasparenza Icone Caselle Lavorate</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONSIZE" Language="it_IT">
+      <Text>Dimensione Icone Caselle Lavorate</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL" Language="it_IT">
+      <Text>Generali</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="it_IT">
+      <Text>Nascosto</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_MINIMAPSIZE" Language="it_IT">
+      <Text>Dimensione Minimappa</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="it_IT">
+      <Text>Stile icone risorse migliorato</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="it_IT">
+      <Text>Solido: disegna sempre l'icone risorse[NEWLINE]Trasparente: icone risorse con effetto trasparenza[NEWLINE]Nascosto: icone risorse nascoste</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="it_IT">
+      <Text>Risorse di lusso nel pannello superiore</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="it_IT">
+      <Text>Solido</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="it_IT">
+      <Text>Attiva le rese di default</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TRANSPARENT" Language="it_IT">
+      <Text>Trasparente</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP" Language="it_IT">
+      <Text>Pettegolezzi</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="it_IT">
+      <Text>Abbrevia i pettegolezzi</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="it_IT">
+      <Text>Rimuove le inutili parti iniziali dei pettegolezzi, descrivendo la provenieinza delle informazioni</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES" Language="it_IT">
+      <Text>Lenti</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="it_IT">
+      <Text>Lente Archeologo in automatico</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="it_IT">
+      <Text>Lente Costruttore in automatico</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="it_IT">
+      <Text>Lente Scout in automatico</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS" Language="it_IT">
+      <Text>Popup</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_ALWAYSOPENTECHTREES" Language="it_IT">
+      <Text>Apri sempre l'albero completo piuttosto che i popup</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="it_IT">
+      <Text>Popup Scienza/Progressi Civici</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="it_IT">
+      <Text>Attiva/disattiva i popup di completamento di una tecnologica o un progresso civico</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="it_IT">
+      <Text>Audio Scienza/Progressi Civici</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="it_IT">
+      <Text>Attiva/disattiva l'audio dei popup di completamento di una tecnologica o un progresso civico. Impostazione indipindente dall'opzione di visualizzazione dei popup, l'audio suona anche in caso di popup non visibili.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="it_IT">
+      <Text>Ricorda: le impostazioni CQUI sono legate ai singoli salvataggi![NEWLINE]Se vuoi impostare un parametro di default puoi modificare il file CQUI_Settings.sql all'interno della cartella [MOD INSTALL DIRECTORY]/CQUI/Assets</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS" Language="it_IT">
+      <Text>Unità</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="it_IT">
+      <Text>Percorso dell'unità visibile</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="it_IT">
+      <Text>Espandi automaticamente tutte le azioni del pannello unità</Text>
+    </Row>
+
+  </LocalizedText>
+</GameData>

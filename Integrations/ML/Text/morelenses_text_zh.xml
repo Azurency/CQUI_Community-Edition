@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- SIMPLIFY-CHINESE -->
+
+    <!-- Builder Lens -->
+    <Replace Tag="LOC_HUD_BUILDER_LENS" Language="zh_Hans_CN">
+      <Text>建造者</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_BUILDER_LENS_TOOLTIP" Language="zh_Hans_CN">
+      <Text>高亮显示可以被建造者改良的地块</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_IMP" Language="zh_Hans_CN">
+      <Text>资源/可掠夺/可使用特殊能力</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_HILL" Language="zh_Hans_CN">
+      <Text>丘陵</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_FEATURE" Language="zh_Hans_CN">
+      <Text>可移除地貌</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_GENERIC" Language="zh_Hans_CN">
+      <Text>一般地块</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_NOTHING" Language="zh_Hans_CN">
+      <Text>无法改良</Text>
+    </Replace>
+
+    <!-- Archaeologist Lens -->
+    <Replace Tag="LOC_HUD_ARCHAEOLOGIST_LENS" Language="zh_Hans_CN">
+      <Text>考古学家</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_ARCHAEOLOGIST_LENS_TOOLTIP" Language="zh_Hans_CN">
+      <Text>高亮显示可被考古学家发掘的地块</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_ARTIFACT" Language="zh_Hans_CN">
+      <Text>考古现场</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_SHIPWRECK" Language="zh_Hans_CN">
+      <Text>船只残骸</Text>
+    </Replace>
+
+    <!-- City Overlap Lens -->
+    <Replace Tag="LOC_HUD_CITYOVERLAP6_LENS" Language="zh_Hans_CN">
+      <Text>6格城市数</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_CITYOVERLAP6_LENS_TOOLTIP" Language="zh_Hans_CN">
+      <Text>显示地块6格范围内的城市数量</Text>
+    </Replace>
+
+    <!-- City Overlap Lens -->
+    <Replace Tag="LOC_HUD_CITYOVERLAP9_LENS" Language="zh_Hans_CN">
+      <Text>9格城市数</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_CITYOVERLAP9_LENS_TOOLTIP" Language="zh_Hans_CN">
+      <Text>显示地块9格范围内的城市数量</Text>
+    </Replace>
+
+    <!-- Barbarian Lens -->
+    <Replace Tag="LOC_HUD_BARBARIAN_LENS" Language="zh_Hans_CN">
+      <Text>野蛮人</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_BARBARIAN_LENS_TOOLTIP" Language="zh_Hans_CN">
+      <Text>高亮显示地图上的野蛮人营地</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BARBARIAN_LENS_ENCAPMENT" Language="zh_Hans_CN">
+      <Text>野蛮人营地</Text>
+    </Replace>
+
+    <!-- Resources Lens -->
+    <Replace Tag="LOC_HUD_RESOURCE_LENS" Language="zh_Hans_CN">
+      <Text>资源</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_RESOURCE_LENS_TOOLTIP" Language="zh_Hans_CN">
+      <Text>高亮显示地图上的资源</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_LUXURY" Language="zh_Hans_CN">
+      <Text>已开发奢侈资源</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NLUXURY" Language="zh_Hans_CN">
+      <Text>奢侈资源</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_STRATEGIC" Language="zh_Hans_CN">
+      <Text>已开发战略资源</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NSTRATEGIC" Language="zh_Hans_CN">
+      <Text>战略资源</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_BONUS" Language="zh_Hans_CN">
+      <Text>已开发奖励资源</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NBONUS" Language="zh_Hans_CN">
+      <Text>奖励资源</Text>
+    </Replace>
+
+    <!-- Wonder Lens -->
+    <Replace Tag="LOC_HUD_WONDER_LENS" Language="zh_Hans_CN">
+      <Text>奇观</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_WONDER_LENS_TOOLTIP" Language="zh_Hans_CN">
+      <Text>高亮显示自然奇观和玩家建造的世界奇观</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_WONDER_LENS_NWONDER" Language="zh_Hans_CN">
+      <Text>自然奇观</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_PWONDER" Language="zh_Hans_CN">
+      <Text>世界奇观</Text>
+    </Replace>
+
+    <!-- Adjacency Yield Lens -->
+    <Replace Tag="LOC_HUD_ADJYIELD_LENS" Language="zh_Hans_CN">
+      <Text>邻接收益</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_ADJYIELD_LENS_TOOLTIP" Language="zh_Hans_CN">
+      <Text>显示区域的邻接收益</Text>
+    </Replace>
+
+    <!-- Scout Lens -->
+    <Replace Tag="LOC_HUD_SCOUT_LENS" Language="zh_Hans_CN">
+      <Text>侦查</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_SCOUT_LENS_TOOLTIP" Language="zh_Hans_CN">
+      <Text>高亮显示地图上的部落村庄</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_SCOUT_LENS_GHUT" Language="zh_Hans_CN">
+      <Text>部落村庄</Text>
+    </Replace>
+
+  </LocalizedText>
+</GameData>
