@@ -302,14 +302,11 @@ function RefreshResources()
     local isOverflow = false;
     local overflowString = "";
     local plusInstance:table;
+    
+    -- CQUI/jhcd: split into two iterations to sort STRATEGIC before LUXURY
+    -- RESOURCECLASS_STRATEGIC (original code)
     for resource in GameInfo.Resources() do
-      local showLux = "RESOURCECLASS_LUXURY";
-      if (g_showluxury) then showLux = nil; end
-
-      if (resource.ResourceClassType ~= nil 
-        and resource.ResourceClassType ~= "RESOURCECLASS_BONUS" 
-        and resource.ResourceClassType ~= showLux
-      ) then
+      if (resource.ResourceClassType ~= nil and resource.ResourceClassType ~= "RESOURCECLASS_BONUS" and resource.ResourceClassType ~="RESOURCECLASS_LUXURY") then
         local amount = pPlayerResources:GetResourceAmount(resource.ResourceType);
         if (amount > 0) then
           local resourceText = "[ICON_"..resource.ResourceType.."] ".. amount;
@@ -322,13 +319,7 @@ function RefreshResources()
             if (amount ~= 0) then
               local instance:table = m_kResourceIM:GetInstance();
               instance.ResourceText:SetText(resourceText);
-              
-              if (resource.ResourceClassType == "RESOURCECLASS_LUXURY") then
-                instance.ResourceText:SetToolTipString(Locale.Lookup(resource.Name).."[NEWLINE]"..Locale.Lookup("LOC_TOOLTIP_LUXURY_RESOURCE"));
-              elseif (resource.ResourceClassType == "RESOURCECLASS_STRATEGIC") then
-                instance.ResourceText:SetToolTipString(Locale.Lookup(resource.Name).."[NEWLINE]"..Locale.Lookup("LOC_TOOLTIP_STRATEGIC_RESOURCE"));
-              end
-
+              instance.ResourceText:SetToolTipString(Locale.Lookup(resource.Name).."[NEWLINE]"..Locale.Lookup("LOC_TOOLTIP_STRATEGIC_RESOURCE"));
               instanceWidth = instance.ResourceText:GetSizeX();
               currSize = currSize + instanceWidth;
             end
@@ -346,6 +337,43 @@ function RefreshResources()
         end
       end
     end
+    
+    -- CQUI/jhcd: show RESOURCECLASS_LUXURY too, if it is enabled in CQUI settings
+    if (g_showluxury) then
+      for resource in GameInfo.Resources() do
+        if (resource.ResourceClassType ~= nil and resource.ResourceClassType ~= "RESOURCECLASS_BONUS" and resource.ResourceClassType ~= "RESOURCECLASS_STRATEGIC") then
+          local amount = pPlayerResources:GetResourceAmount(resource.ResourceType);
+          if (amount > 0) then
+            local resourceText = "[ICON_"..resource.ResourceType.."] ".. amount;
+            local numDigits = 3;
+            if (amount >= 10) then
+              numDigits = 4;
+            end
+            local guessinstanceWidth = math.ceil(numDigits * FONT_MULTIPLIER);
+            if(currSize + guessinstanceWidth < maxSize and not isOverflow) then
+              if (amount ~= 0) then
+                local instance:table = m_kResourceIM:GetInstance();
+                instance.ResourceText:SetText(resourceText);
+                instance.ResourceText:SetToolTipString(Locale.Lookup(resource.Name).."[NEWLINE]"..Locale.Lookup("LOC_TOOLTIP_LUXURY_RESOURCE"));
+                instanceWidth = instance.ResourceText:GetSizeX();
+                currSize = currSize + instanceWidth;
+              end
+            else
+              if (not isOverflow) then 
+                overflowString = amount.. "[ICON_"..resource.ResourceType.."]".. Locale.Lookup(resource.Name);
+                local instance:table = m_kResourceIM:GetInstance();
+                instance.ResourceText:SetText("[ICON_Plus]");
+                plusInstance = instance.ResourceText;
+              else
+                overflowString = overflowString .. "[NEWLINE]".. amount.. "[ICON_"..resource.ResourceType.."]".. Locale.Lookup(resource.Name);
+              end
+              isOverflow = true;
+            end
+          end
+        end
+      end
+    end
+    
     if (plusInstance ~= nil) then
       plusInstance:SetToolTipString(overflowString);
     end
