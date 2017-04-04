@@ -59,9 +59,9 @@
         <Stack              ID="ContentStack"               Anchor="C,T" StackGrowth="Right" Padding="5" >
           <Container                                        Anchor="L,C" Size="34,34">
             <Label          ID="CityPopulation"             Anchor="C,C" String="999"   Style="FontFlair28" FontStyle="glow" KerningAdjustment="-3" />
-            <Stack StackGrowth="Right">
-              <Label ID="CityPopTurnsLeft" Anchor="L,T" Offset="3,-6" Style="StrongSmall2" />
-              <Label ID="CityCultureTurnsLeft" Anchor="L,T" Offset="3,-6" Style="StrongSmall2" Color="204,109,197,255" />
+            <Stack StackGrowth="Down">
+              <Label ID="CityPopTurnsLeft" Anchor="L,T" Offset="-20,-16" Style="StrongSmall2" />
+              <Label ID="CityCultureTurnsLeft" Anchor="L,B" Offset="-10,27" Style="StrongSmall2" Color="204,109,197,255" />
             </Stack>
           </Container>
 
@@ -122,19 +122,21 @@
           <Button ID="CityRangeStrikeButton" Style="CityBannerRangeAttack" Anchor="C,B" Offset="0,10" StateOffsetIncrement="0,25" ConsumeMouse="1" ToolTip="LOC_CITY_BANNER_CITY_RANGE_STRIKE"/>
         </Image>
 
-        <Grid ID="BannerStrengthBacking"  Texture="Banner_StrengthBacking"  Size="55,15"  Anchor="R,T"  SliceTextureSize="42,15"  SliceCorner="21,7"  AnchorSide="I,O" Color="255,255,255,150">
-          <Stack StackGrowth="Right" Anchor="C,T" Padding="0" ID="DefenseStack">
-            <Image Size="16,18" Texture="Banner_StrengthIcon" ID="DefenseIcon"/>
-            <Image Size="21,18" Texture="Banner_StrengthIcon_Shields" ID="ShieldsIcon"  Hidden="1"/>
-            <Label ID="DefenseNumber" Style="StrongSmall" String="00 [00]" KerningAdjustment="-1"/>
-            <Container Size="3,2" />
-            <Stack StackGrowth="Down" Anchor="L,C">
-              <Grid ID="CityDefenseBarBacking" Size="50,8" Texture="Banner_LifeBar" SliceTextureSize="50,6" SliceCorner="50,3">
-                <TextureBar ID="CityDefenseBar" Texture="Banner_LifeBar" Size="50,6" Direction="Right" Speed="1" Anchor="L,C" TextureOffset="0,6" Color="120,198,247,255"/>
-              </Grid>
-              <Grid ID="CityHealthBarBacking" Size="50,8" Texture="Banner_LifeBar" SliceTextureSize="50,6" SliceCorner="50,3" Hidden="1">
-                <TextureBar ID="CityHealthBar"  Texture="Banner_LifeBar" Size="50,6" Direction="Right" Speed="1" Anchor="L,C" TextureOffset="0,6"/>
-              </Grid>
+				<Grid ID="BannerStrengthBacking"  Texture="Banner_StrengthBacking"  Size="55,15"  Anchor="C,T"  SliceTextureSize="42,15"  SliceCorner="21,7"  AnchorSide="I,O" Color="255,255,255,150">
+					<Stack StackGrowth="Right" Anchor="C,T" Padding="0" ID="DefenseStack">
+						<Image Size="16,18" Texture="Banner_StrengthIcon" ID="DefenseIcon"/>
+						<Image Size="21,18" Texture="Banner_StrengthIcon_Shields" ID="ShieldsIcon"  Hidden="1"/>
+						<Label ID="DefenseNumber" Style="StrongSmall" String="00 [00]" KerningAdjustment="-1"/>
+						<Container Size="3,2" />
+						<Stack StackGrowth="Down" Anchor="L,C">
+							<Grid ID="CityDefenseBarBacking" Size="100,8" Texture="Banner_LifeBar" SliceTextureSize="100,6" SliceCorner="50,3">
+								<TextureBar ID="CityDefenseBar" Texture="Banner_LifeBar" Size="100,6" Direction="Right" Speed="1" Anchor="L,C" TextureOffset="0,6" Color="120,198,247,255"/>
+
+							</Grid>
+							<Grid ID="CityHealthBarBacking" Size="100,8" Texture="Banner_LifeBar" SliceTextureSize="100,6" SliceCorner="50,3" Hidden="1">
+								<TextureBar ID="CityHealthBar"	Texture="Banner_LifeBar" Size="100,6" Direction="Right" Speed="1" Anchor="L,C" TextureOffset="0,6"/>
+
+							</Grid>
             </Stack>
           </Stack>
         </Grid>
@@ -206,8 +208,9 @@
               <Label        ID="TradingPostIcon"              Anchor="R,C" Offset="0,2" String="[ICON_TradingPost]" Hidden="1">
                 <Label      ID="TradingPostDisabledIcon"      Anchor="C,C"  String="[ICON_Exclamation]" Hidden="1"/>
               </Label>
-              <Label        ID="CityUnderSiegeIcon"           Anchor="L,C"    Style="FontNormal20" String="[ICON_UnderSiege]" ConsumeMouse="1" ToolTip="LOC_HUD_REPORTS_STATUS_UNDER_SEIGE"/>
-              <Label        ID="CityQuestIcon"                Anchor="L,C"    Style="FontNormal20"/>
+              <Label				ID="CityUnderSiegeIcon"	          Anchor="L,C"		Style="FontNormal20" String="[ICON_UnderSiege]" ConsumeMouse="1" ToolTip="LOC_HUD_REPORTS_STATUS_UNDER_SEIGE"/>
+              <Label				ID="CityOccupiedIcon"	            Anchor="L,C"	Style="FontNormal20" String="[ICON_Occupied]" ConsumeMouse="1" ToolTip="LOC_HUD_CITY_GROWTH_OCCUPIED"/>
+              <Label				ID="CityQuestIcon"								Anchor="L,C"		Style="FontNormal20"/>
               <Label        ID="CityName"                     Anchor="L,C"    Style="HeaderSmallCaps" String="BALTIMORE" />
               <Image        ID="ReligionBannerIconContainer"  Anchor="L,C"    Size="26,26"  Texture="Banner_ProductionCircle" Hidden="1">
                 <Image      ID="ReligionBannerIcon"           Anchor="C,C"    Size="22,22"  Texture="Religions22"/>
