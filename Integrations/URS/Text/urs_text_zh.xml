@@ -30,6 +30,9 @@
     <Replace Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="zh_Hans_CN">
       <Text>在地图上查看该单位。</Text>
     </Replace>
+	<Replace Tag="LOC_HUD_REPORTS_BONUSES_URS" Language="zh_Hans_CN">
+      <Text>加成资源</Text>
+    </Replace>
 
   </LocalizedText>
 </GameData>

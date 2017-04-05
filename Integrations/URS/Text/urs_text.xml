@@ -30,6 +30,9 @@
     <Row Tag="LOC_UNITS_VIEW_ON_THE_MAP">
       <Text>View this unit on the map.</Text>
     </Row>
+	<Row Tag="LOC_HUD_REPORTS_BONUSES_URS">
+		<Text>Bonuses</Text>
+	</Row>
 
   </BaseGameText>
 </GameData>

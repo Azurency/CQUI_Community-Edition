@@ -30,6 +30,9 @@
     <Row Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="ru_RU">
       <Text>Показать юнит на карте.</Text>
     </Row>
+	<Replace Tag="LOC_HUD_REPORTS_BONUSES_URS" Language="ru_RU">
+      <Text>Бонусные:</Text>
+    </Replace>
 
   </LocalizedText>
 </GameData>

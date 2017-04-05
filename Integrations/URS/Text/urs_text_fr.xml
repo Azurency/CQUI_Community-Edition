@@ -30,6 +30,9 @@
     <Replace Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="fr_FR">
       <Text>Afficher cet unité sur la carte.</Text>
     </Replace>
+	<Replace Tag="LOC_HUD_REPORTS_BONUSES_URS" Language="fr_FR">
+      <Text>Bonus</Text>
+    </Replace>
 
   </LocalizedText>
 </GameData>

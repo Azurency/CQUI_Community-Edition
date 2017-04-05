@@ -135,7 +135,7 @@
 				</Grid>				
 				<Grid			ID="BonusGrid"													Offset="510,10"	Size="parent-515,40"				Style="SubContainer4"				Color="36,50,62,255" InnerPadding="2,2">
 					<!-- <Label																					Offset="5,0"																Style="ReportResourceText"	String="LOC_HUD_REPORTS_BONUSES" /> -->
-					<GridButton   ID="BonusCheckbox"  Anchor="L,C" Style="CheckBoxControl" String="LOC_HUD_REPORTS_BONUSES" Size="120,25" Offset="5,0" Hidden="0" />
+					<GridButton   ID="BonusCheckbox"  Anchor="L,C" Style="CheckBoxControl" String="LOC_HUD_REPORTS_BONUSES_URS" Size="120,25" Offset="5,0" Hidden="0" />
 					<Stack	ID="BonusResources"				Anchor="L,C"	Offset="150,-9"	WrapWidth="340"	WrapGrowth="Down"	StackGrowth="Right" />
 				</Grid>
 				<Grid			ID="LuxuryGrid"													Offset="5,55"		Size="parent-10,40"					Style="SubContainer4"				Color="36,50,62,255" InnerPadding="2,2">

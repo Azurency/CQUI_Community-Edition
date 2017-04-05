@@ -30,6 +30,9 @@
     <Replace Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="ko_KR">
       <Text>이 유닛을 지도에서 봅니다.</Text>
     </Replace>
+	<Replace Tag="LOC_HUD_REPORTS_BONUSES_URS" Language="ko_KR">
+      <Text>보너스</Text>
+    </Replace>
 
   </LocalizedText>
 </GameData>
