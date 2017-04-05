@@ -1523,8 +1523,9 @@ function getImportedResources(playerID)
 		if ( otherID ~= playerID ) then
 			local pPlayerConfig :table = PlayerConfigurations[otherID];
 			local pDeals        :table = DealManager.GetPlayerDeals(playerID, otherID); -- ARISTOS: double filter Resources!
+			local isNotCheat	:boolean = (playerID == Game.GetLocalPlayer()) or (otherID == Game.GetLocalPlayer()); -- ARISTOS: non-cheat CQUI policy
 
-			if ( pDeals ~= nil ) then
+			if ( pDeals ~= nil and isNotCheat) then --ARISTOS: show only if local player is the importer or the exporter!!!
 				for i,pDeal in ipairs(pDeals) do
 					--if ( pDeal:IsValid() ) then --!! ARISTOS: Bug??? deal:IsValid() not always returns true even if the deal IS valid!!!
 						-- Add incoming resource deals
@@ -1576,8 +1577,9 @@ function getImportedResources(playerID)
 
 	-- Add resources provided by city states
 	for i, pMinorPlayer in ipairs(PlayerManager.GetAliveMinors()) do
-		local pMinorPlayerInfluence:table = pMinorPlayer:GetInfluence();		
-		if pMinorPlayerInfluence ~= nil then
+		local pMinorPlayerInfluence:table = pMinorPlayer:GetInfluence();
+		local hasMetLocalPlayer: boolean = Players[Game.GetLocalPlayer()]:GetDiplomacy():HasMet( pMinorPlayer:GetID() ); --ARISTOS: CQUI anti-cheat policy
+		if (pMinorPlayerInfluence ~= nil and hasMetLocalPlayer) then --ARISTOS: show only if local player has met the City State!!!
 			local suzerainID:number = pMinorPlayerInfluence:GetSuzerain();
 			if suzerainID == playerID then
 				for row in GameInfo.Resources() do

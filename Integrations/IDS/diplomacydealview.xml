@@ -92,18 +92,18 @@
                   SliceSize="1,1" 
                   SliceTextureSize="24,24" 
                   StateOffsetIncrement="0,24" Anchor="L,T" Color="255,255,255,200">
-            <Image ID="Icon" StretchMode="None" Size="50,502" Anchor="C,C"/>
+            <Image ID="Icon" StretchMode="None" Size="50,50" Anchor="C,C"/>
             <Label ID="AmountText" Style="FontNormalBold16" Anchor="R,B" Offset="3,0" FontStyle="Stroke" />
         </GridButton>
     </Instance>
 
     <!-- Untradeable Resources (Either imported via trade or city-state, or Qty == 0) -->
     <Instance Name="IconOnly_Resource_Untradeable">
-        <GridButton ID="SelectButton" Texture="Controls_ButtonControl_Gray" Size="42,42" SliceCorner="10,10" 
+        <GridButton ID="SelectButton" Texture="Controls_ButtonControl_Gray" Size="50,50" SliceCorner="10,10" 
                   SliceSize="1,1" 
                   SliceTextureSize="24,24" 
                   StateOffsetIncrement="0,24" Anchor="L,T">          
-            <Image ID="Icon" StretchMode="None" Size="32,32" Anchor="L,T" Color="255,255,255,170" Offset="2,2"/>
+            <Image ID="Icon" StretchMode="None" Size="50,50" Anchor="C,C" Color="255,255,255,170" />
             <Label ID="AmountText" Style="FontNormalBold16" Anchor="R,B" Offset="3,0" FontStyle="Stroke" />
         </GridButton>
     </Instance>
