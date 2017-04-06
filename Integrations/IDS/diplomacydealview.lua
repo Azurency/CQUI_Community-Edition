@@ -1665,18 +1665,18 @@ function PopulateAvailableResources(player : table, iconList : table, className 
 			local resourceDesc = GameInfo.Resources[entry.ForType];
 			local resourceType = entry.ForType;
 
-			if (resourceDesc.ResourceClassType ~= className) then -- wrong resource type; null
-				playerResources[resourceType] = nil;
-			else
+			if (resourceDesc ~= nil and resourceDesc.ResourceClassType == className) then -- correct resource class
+				--playerResources[resourceType] = nil;
+			--else
 				-- Check if all copies have been traded away
 				if (entry.MaxAmount == 0) then
 					table.insert(playerUntradeableResources, playerResources[i]);
-					playerResources[resourceType] = nil;
+					--playerResources[resourceType] = nil;
 
 				-- Check if partner already has the resource
 				elseif (MatchesPartnerResource(partnerResources, resourceDesc.ResourceType) > -1 or MatchesPartnerResource(partnerImportedResources, resourceDesc.ResourceType) > -1) then
 					table.insert(playerDuplicateResources, playerResources[i]);
-					playerResources[resourceType] = nil;
+					--playerResources[resourceType] = nil;
 
 				-- Tradeable item
 				else
