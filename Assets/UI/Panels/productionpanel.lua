@@ -67,10 +67,11 @@ LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 -- ===========================================================================
 
 local m_queueIM     = InstanceManager:new( "UnnestedList",  "Top", Controls.ProductionQueueList );
-local CQUI_previousProductionHash :table = {};
-local CQUI_currentProductionHash :table = {};
+-- local CQUI_previousProductionHash :table = {};
+-- local CQUI_currentProductionHash :table = {};
 
 local m_listIM      = InstanceManager:new( "NestedList",  "Top", Controls.ProductionList );
+
 
 local m_productionTab;  -- Additional tracking of the tab control data so that we can select between graphical tabs and label tabs
 local m_purchaseTab;
@@ -202,6 +203,7 @@ function BuildUnit(city, unitEntry)
   tParameters[CityOperationTypes.PARAM_UNIT_TYPE] = unitEntry.Hash;
   tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
   CityManager.RequestOperation(city, CityOperationTypes.BUILD, tParameters);
+    UI.PlaySound("Confirm_Production");
 end
 
 -- ===========================================================================
@@ -211,6 +213,7 @@ function BuildUnitCorps(city, unitEntry)
   tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
   tParameters[CityOperationTypes.MILITARY_FORMATION_TYPE] = MilitaryFormationTypes.CORPS_MILITARY_FORMATION;
   CityManager.RequestOperation(city, CityOperationTypes.BUILD, tParameters);
+    UI.PlaySound("Confirm_Production");
 end
 
 -- ===========================================================================
@@ -220,6 +223,7 @@ function BuildUnitArmy(city, unitEntry)
   tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
   tParameters[CityOperationTypes.MILITARY_FORMATION_TYPE] = MilitaryFormationTypes.ARMY_MILITARY_FORMATION;
   CityManager.RequestOperation(city, CityOperationTypes.BUILD, tParameters);
+  UI.PlaySound("Confirm_Production");
   Refresh();
 end
 
@@ -233,6 +237,7 @@ function BuildBuilding(city, buildingEntry)
   if (pBuildQueue:HasBeenPlaced(buildingEntry.Hash)) then
     bNeedsPlacement = false;
   end
+
 
   if(not pBuildQueue:CanProduce(buildingEntry.Hash, true)) then
     -- For one reason or another we can't produce this, so remove it
@@ -257,6 +262,7 @@ function BuildBuilding(city, buildingEntry)
     tParameters[CityOperationTypes.PARAM_BUILDING_TYPE] = buildingEntry.Hash;
     tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
     CityManager.RequestOperation(city, CityOperationTypes.BUILD, tParameters);
+    UI.PlaySound("Confirm_Production");
   end
 end
 
@@ -298,6 +304,7 @@ function AdvanceProject(city, projectEntry)
   tParameters[CityOperationTypes.PARAM_PROJECT_TYPE] = projectEntry.Hash;
   tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
   CityManager.RequestOperation(city, CityOperationTypes.BUILD, tParameters);
+  UI.PlaySound("Confirm_Production");
 end
 
 -- ===========================================================================
@@ -1010,9 +1017,9 @@ function PopulateList(data, listIM)
     local currentProductionHash = buildQueue:GetCurrentProductionTypeHash();
     local previousProductionHash = buildQueue:GetPreviousProductionTypeHash();
 
-    if CQUI_previousProductionHash[selectedCity:GetID()] ~= nil then
-      previousProductionHash = CQUI_previousProductionHash[selectedCity:GetID()];
-    end
+    -- if CQUI_previousProductionHash[selectedCity:GetID()] ~= nil then
+      -- previousProductionHash = CQUI_previousProductionHash[selectedCity:GetID()];
+    -- end
 
     local screenX, screenY:number = UIManager:GetScreenSizeVal();
 
@@ -1190,6 +1197,7 @@ function PopulateList(data, listIM)
       districtListing.Root:SetTag(UITutorialManager:GetHash(item.Type));
     end
 
+
     districtList.List:CalculateSize();
     districtList.List:ReprocessAnchoring();
 
@@ -1294,6 +1302,7 @@ function PopulateList(data, listIM)
             QueueBuilding(data.City, buildingItem, true);
             RecenterCameraToSelectedCity();
           end);
+
 
           buildingListing.Button:RegisterCallback( Mouse.eRClick, function()
             LuaEvents.OpenCivilopedia(buildingItem.Type);
@@ -1937,8 +1946,8 @@ function Refresh()
     };
 
     local currentProductionHash = buildQueue:GetCurrentProductionTypeHash();
-    CQUI_currentProductionHash[cityID] = currentProductionHash;
-    GameConfiguration.SetValue("CQUI_currentProductionHash" .. cityID, CQUI_currentProductionHash[cityID]);
+    -- CQUI_currentProductionHash[cityID] = currentProductionHash;
+    -- GameConfiguration.SetValue("CQUI_currentProductionHash" .. cityID, CQUI_currentProductionHash[cityID]);
 
     for row in GameInfo.Districts() do
       if row.Hash == currentProductionHash then
@@ -2353,6 +2362,7 @@ function Refresh()
         local isCanProduceExclusion, results = buildQueue:CanProduce( row.Hash, false, true );
         local isDisabled      :boolean = not isCanProduceExclusion;
 
+
         local allReasons    :string = ComposeFailureReasonStrings( isDisabled, results );
         local sToolTip      :string = ToolTipHelper.GetProjectToolTip( row.Hash ) .. allReasons;
 
@@ -2373,6 +2383,7 @@ function Refresh()
         });
       end
     end
+
 
     View(new_data);
     ResizeQueueWindow();
@@ -2657,8 +2668,8 @@ function OnCityProductionChanged(playerID:number, cityID:number)
     Refresh();
   end
   end
-  CQUI_previousProductionHash[cityID] = CQUI_currentProductionHash[cityID];
-  GameConfiguration.SetValue("CQUI_previousProductionHash" .. cityID, CQUI_previousProductionHash[cityID]);
+  -- CQUI_previousProductionHash[cityID] = CQUI_currentProductionHash[cityID];
+  -- GameConfiguration.SetValue("CQUI_previousProductionHash" .. cityID, CQUI_previousProductionHash[cityID]);
 end
 
 function OnCityProductionUpdated( ownerPlayerID:number, cityID:number, eProductionType, eProductionObject)
@@ -3823,23 +3834,26 @@ function Initialize()
 
   -- CQUI Loading Previous Turn items
   -- ===================================================================
-  local ePlayer :number = Game.GetLocalPlayer();
-  local kPlayer         = Players[ePlayer];
-  local cities          = kPlayer:GetCities();
-  local cityCount       = cities:GetCount();
+  -- local ePlayer :number = Game.GetLocalPlayer();
+  -- local kPlayer         = Players[ePlayer];
+  -- local cities          = kPlayer:GetCities();
+  -- local cityCount       = cities:GetCount();
 
-  if GameConfiguration.IsSavedGame() then
+  -- if GameConfiguration.IsSavedGame() then
 
-    for i=0,cityCount-1 do
-      CQUI_currentProductionHash[i] = GameConfiguration.GetValue("CQUI_currentProductionHash" .. i);
-    end
+    -- for i=0,cityCount-1 do
+      -- CQUI_currentProductionHash[i] = GameConfiguration.GetValue("CQUI_currentProductionHash" .. i);
+    -- end
 
-    for i=0,cityCount-1 do
-      CQUI_previousProductionHash[i] = GameConfiguration.GetValue("CQUI_previousProductionHash" .. i);
-    end
+    -- for i=0,cityCount-1 do
+      -- CQUI_previousProductionHash[i] = GameConfiguration.GetValue("CQUI_previousProductionHash" .. i);
+    -- end
 
-  end
+  -- end
   -- ===================================================================
+
+
+
 
 end
 Initialize();
