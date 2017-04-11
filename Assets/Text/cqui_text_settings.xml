@@ -24,6 +24,12 @@
     <Row Tag="LOC_CQUI_CITYVIEW" Language="en_US">
       <Text>City View</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK" Language="en_US">
+      <Text>Block end turn for city attack</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK_TOOLTIP" Language="en_US">
+      <Text>Enable this if you want "End Turn" to be block if a city can attack.</Text>
+    </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="en_US">
       <Text>Production item height</Text>
     </Row>

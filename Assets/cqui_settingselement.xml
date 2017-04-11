@@ -78,6 +78,9 @@
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <GridButton ID="ShowYieldsOnCityHoverCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" />
           </Stack>
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <GridButton ID="BlockOnCityAttackCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK" />
+          </Stack>
           <Stack Anchor="C,C" StackGrowth="Left">
             <Label Anchor="C,C" Style="ShellOptionText" String="LOC_CQUI_CITYVIEW_SMARTBANNER_HEADER" Offset="0,10"/>
           </Stack>

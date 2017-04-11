@@ -117,6 +117,16 @@ local m_visibleBlockerTypes : table   = {};
 local m_isSlowTurnEnable  : boolean = false;                  -- Tutorial: when active slow to allow clicks when turn raises.
 
 -- ===========================================================================
+--  QUI
+-- ===========================================================================
+
+local cqui_blockOnCityAttack = true;
+function CQUI_OnSettingsUpdate()
+  cqui_blockOnCityAttack = GameConfiguration.GetValue("CQUI_BlockOnCityAttack");
+end
+LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
+
+-- ===========================================================================
 --  UI Event
 --  The View()
 -- ===========================================================================
@@ -388,7 +398,7 @@ end
 -- ===========================================================================
 function HaveCityRangeAttackStateEnabled()
   -- When is the "City Ranged Attack" end turn button enabled?
-  return  (UserConfiguration.IsAutoEndTurn()) and Game.IsAllowTacticalCommands(Game.GetLocalPlayer());
+  return  (UserConfiguration.IsAutoEndTurn() or cqui_blockOnCityAttack) and Game.IsAllowTacticalCommands(Game.GetLocalPlayer());
 end
 
 -- ===========================================================================
@@ -506,7 +516,11 @@ function DoEndTurn( optionalNewBlocker:number )
     elseif(CheckCityRangeAttackState()) then
       local attackCity = pPlayer:GetCities():GetFirstRangedAttackCity();
       if(attackCity ~= nil) then
-        UI.SelectCity(attackCity);
+        if cqui_blockOnCityAttack then
+          UI.LookAtPlot(attackCity:GetX(), attackCity:GetY());
+        else
+          UI.SelectCity(attackCity);
+        end
       else
         error( "Unable to find selectable attack city while in CheckCityRangeAttackState()" );
       end

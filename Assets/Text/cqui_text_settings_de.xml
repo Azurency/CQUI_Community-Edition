@@ -24,6 +24,12 @@
     <Row Tag="LOC_CQUI_CITYVIEW" Language="de_DE">
       <Text>Stadtansicht</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK" Language="de_DE">
+      <Text>Stadtverteidigung verhindert Rundenende</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK_TOOLTIP" Language="de_DE">
+      <Text>Der "Nächste Runde"-Button ist blockiert, solange eine Stadtverteidigung möglich ist.</Text>
+    </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="de_DE">
       <Text>Zeilenhöhe i.d. Produktwahlliste</Text>
     </Row>
