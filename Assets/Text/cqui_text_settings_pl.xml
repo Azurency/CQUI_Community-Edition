@@ -24,6 +24,12 @@
     <Row Tag="LOC_CQUI_CITYVIEW" Language="pl_PL">
       <Text>Widok miasta</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK" Language="pl_PL">
+      <Text>Zablokuj koniec tury dla ataku miasta</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK_TOOLTIP" Language="pl_PL">
+      <Text>Włącz tę opcję jeśli chcesz by "Zakończ Turę" było zablokowane gdy miasto może atakować.</Text>
+    </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="pl_PL">
       <Text>Wysokość elementu produkcji</Text>
     </Row>
