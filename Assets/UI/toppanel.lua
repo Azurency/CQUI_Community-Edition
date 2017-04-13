@@ -11,7 +11,6 @@ local YIELD_PADDING_Y = 20;
 local META_PADDING    = 100;  -- The amount of padding to give the meta area to make enough room for the (+) when there is resource overflow
 local FONT_MULTIPLIER = 11; -- The amount to multiply times the string length to approximate the width in pixels of the label control
 local m_OpenPediaId;
-local m_viewReportsX :number = 0; -- With of view report button
 
 -- ===========================================================================
 --  QUI
@@ -31,21 +30,21 @@ function OnCityInitialized(owner, ID)
   if owner == Game.GetLocalPlayer() then
     local player = Players[owner];
     local pPlayerCities :table = player:GetCities();
-    if table.count(pPlayerCities) == 1 then     
+    if table.count(pPlayerCities) == 1 then
       -- Remove?
       --Controls.YieldStack:SetHide(false);   -- Once the first city is founded, then display the corner.
     end
     RefreshYields();
-  end 
+  end
 end
 
 -- ===========================================================================
 --  Game Engine Event
 -- ===========================================================================
-function OnLocalPlayerChanged( playerID:number , prevLocalPlayerID:number ) 
+function OnLocalPlayerChanged( playerID:number , prevLocalPlayerID:number )
   if playerID == -1 then return; end
   local player = Players[playerID];
-  local pPlayerCities :table = player:GetCities();  
+  local pPlayerCities :table = player:GetCities();
   RefreshAll();
 end
 
@@ -58,18 +57,19 @@ end
 --  UI Callback
 --  Send signal to open/close the Reports Screen
 -- ===========================================================================
-function OnToggleReportsScreen()
-  local pReportsScreen :table = ContextPtr:LookUpControl( "/InGame/ReportScreen" );
-  if pReportsScreen == nil then
-    UI.DataError("Unable to toggle Reports Screen.  Not found in '/InGame/ReportScreen'.");
-    return;
-  end
-  if pReportsScreen:IsHidden() then
-    LuaEvents.TopPanel_OpenReportsScreen();
-  else
-    LuaEvents.TopPanel_CloseReportsScreen();
-  end
-end
+--CQUI: Moved this to launchbar.lua since we moved the button there
+-- function OnToggleReportsScreen()
+--   local pReportsScreen :table = ContextPtr:LookUpControl( "/InGame/ReportScreen" );
+--   if pReportsScreen == nil then
+--     UI.DataError("Unable to toggle Reports Screen.  Not found in '/InGame/ReportScreen'.");
+--     return;
+--   end
+--   if pReportsScreen:IsHidden() then
+--     LuaEvents.TopPanel_OpenReportsScreen();
+--   else
+--     LuaEvents.TopPanel_CloseReportsScreen();
+--   end
+-- end
 
 -- ===========================================================================
 --  Callback
@@ -94,10 +94,9 @@ end
 
 -- ===========================================================================
 function Resize()
-  Controls.ViewReports:SetSizeToText(20,11);
   Controls.Backing:ReprocessAnchoring();
   Controls.Backing2:ReprocessAnchoring();
-  Controls.RightContents:ReprocessAnchoring();  
+  Controls.RightContents:ReprocessAnchoring();
 end
 
 -- ===========================================================================
@@ -119,16 +118,16 @@ function RefreshYields()
   ---- SCIENCE ----
   local playerTechnology    :table  = localPlayer:GetTechs();
   local currentScienceYield :number = playerTechnology:GetScienceYield();
-  Controls.SciencePerTurn:SetText( FormatValuePerTurn(currentScienceYield) ); 
+  Controls.SciencePerTurn:SetText( FormatValuePerTurn(currentScienceYield) );
 
   Controls.ScienceBacking:SetToolTipString( GetScienceTooltip() );
   Controls.ScienceStack:CalculateSize();
   Controls.ScienceBacking:SetSizeX(Controls.ScienceStack:GetSizeX() + YIELD_PADDING_Y);
-  
+
   ---- CULTURE----
   local playerCulture     :table  = localPlayer:GetCulture();
   local currentCultureYield :number = playerCulture:GetCultureYield();
-  Controls.CulturePerTurn:SetText( FormatValuePerTurn(currentCultureYield) ); 
+  Controls.CulturePerTurn:SetText( FormatValuePerTurn(currentCultureYield) );
 
   Controls.CultureBacking:SetToolTipString( GetCultureTooltip() );
   Controls.CultureStack:CalculateSize();
@@ -141,39 +140,39 @@ function RefreshYields()
   if(tourismBreakdown and #tourismBreakdown > 0) then
     tourismRateTT = tourismRateTT .. "[NEWLINE][NEWLINE]" .. tourismBreakdown;
   end
-  
-  Controls.TourismBalance:SetText( tourismRate ); 
+
+  Controls.TourismBalance:SetText( tourismRate );
   Controls.TourismBacking:SetToolTipString(tourismRateTT);
   if (tourismRate > 0) then
     Controls.TourismBacking:SetHide(false);
   else
     Controls.TourismBacking:SetHide(true);
-  end 
-  
+  end
+
   ---- GOLD ----
   local playerTreasury:table  = localPlayer:GetTreasury();
   local goldYield   :number = playerTreasury:GetGoldYield() - playerTreasury:GetTotalMaintenance();
   local goldBalance :number = math.floor(playerTreasury:GetGoldBalance());
-  Controls.GoldBalance:SetText( Locale.ToNumber(goldBalance, "#,###.#") );  
-  Controls.GoldPerTurn:SetText( FormatValuePerTurn(goldYield) );  
+  Controls.GoldBalance:SetText( Locale.ToNumber(goldBalance, "#,###.#") );
+  Controls.GoldPerTurn:SetText( FormatValuePerTurn(goldYield) );
   -- local gptTooltip :string = GetExtendedGoldTooltip();
   -- Controls.GoldPerTurn:SetToolTipString(gptTooltip);
 
   Controls.GoldBacking:SetToolTipString( GetGoldTooltip() );
 
-  Controls.GoldStack:CalculateSize(); 
+  Controls.GoldStack:CalculateSize();
   Controls.GoldBacking:SetSizeX(Controls.GoldStack:GetSizeX() + YIELD_PADDING_Y);
 
   ---- FAITH ----
   local playerReligion    :table  = localPlayer:GetReligion();
   local faithYield      :number = playerReligion:GetFaithYield();
   local faithBalance      :number = playerReligion:GetFaithBalance();
-  Controls.FaithBalance:SetText( Locale.ToNumber(faithBalance, "#,###.#") );  
+  Controls.FaithBalance:SetText( Locale.ToNumber(faithBalance, "#,###.#") );
   Controls.FaithPerTurn:SetText( FormatValuePerTurn(faithYield) );
 
   Controls.FaithBacking:SetToolTipString( GetFaithTooltip() );
 
-  Controls.FaithStack:CalculateSize();  
+  Controls.FaithStack:CalculateSize();
   Controls.FaithBacking:SetSizeX(Controls.FaithStack:GetSizeX() + YIELD_PADDING_Y);
 
   RefreshResources();
@@ -237,7 +236,7 @@ function RefreshInfluence()
   local influenceThreshold:number = playerInfluence:GetPointsThreshold();
   local envoysPerThreshold:number = playerInfluence:GetTokensPerThreshold();
   local currentEnvoys   :number = playerInfluence:GetTokensToGive();
-  
+
   local sTooltip = "";
 
   if (currentEnvoys > 0) then
@@ -251,7 +250,7 @@ function RefreshInfluence()
   sTooltip = sTooltip .. Locale.Lookup("LOC_TOP_PANEL_INFLUENCE_TOOLTIP_POINTS_RATE", influenceRate);
   sTooltip = sTooltip .. "[NEWLINE][NEWLINE]";
   sTooltip = sTooltip .. Locale.Lookup("LOC_TOP_PANEL_INFLUENCE_TOOLTIP_SOURCES_HELP");
-  
+
   local meterRatio = influenceBalance / influenceThreshold;
   if (meterRatio < 0) then
     meterRatio = 0;
@@ -268,9 +267,9 @@ end
 -- ===========================================================================
 function RefreshTime()
   local format = UserConfiguration.GetClockFormat();
-  
+
   local strTime;
-  
+
   if(format == 1) then
     strTime = os.date("%H:%M");
   else
@@ -292,17 +291,17 @@ end
 function RefreshResources()
   local localPlayerID = Game.GetLocalPlayer();
   if (localPlayerID ~= -1) then
-    m_kResourceIM:ResetInstances(); 
+    m_kResourceIM:ResetInstances();
     local pPlayerResources  =  Players[localPlayerID]:GetResources();
     local yieldStackX   = Controls.YieldStack:GetSizeX();
     local metaStackX    = Controls.RightContents:GetSizeX();
     local screenX, _:number = UIManager:GetScreenSizeVal();
-    local maxSize = screenX - yieldStackX - metaStackX - m_viewReportsX - META_PADDING;
+    local maxSize = screenX - yieldStackX - metaStackX - META_PADDING;
     local currSize = 0;
     local isOverflow = false;
     local overflowString = "";
     local plusInstance:table;
-    
+
     -- CQUI/jhcd: split into two iterations to sort STRATEGIC before LUXURY
     -- RESOURCECLASS_STRATEGIC (original code)
     for resource in GameInfo.Resources() do
@@ -324,7 +323,7 @@ function RefreshResources()
               currSize = currSize + instanceWidth;
             end
           else
-            if (not isOverflow) then 
+            if (not isOverflow) then
               overflowString = amount.. "[ICON_"..resource.ResourceType.."]".. Locale.Lookup(resource.Name);
               local instance:table = m_kResourceIM:GetInstance();
               instance.ResourceText:SetText("[ICON_Plus]");
@@ -337,7 +336,7 @@ function RefreshResources()
         end
       end
     end
-    
+
     -- CQUI/jhcd: show RESOURCECLASS_LUXURY too, if it is enabled in CQUI settings
     if (g_showluxury) then
       for resource in GameInfo.Resources() do
@@ -359,7 +358,7 @@ function RefreshResources()
                 currSize = currSize + instanceWidth;
               end
             else
-              if (not isOverflow) then 
+              if (not isOverflow) then
                 overflowString = amount.. "[ICON_"..resource.ResourceType.."]".. Locale.Lookup(resource.Name);
                 local instance:table = m_kResourceIM:GetInstance();
                 instance.ResourceText:SetText("[ICON_Plus]");
@@ -373,7 +372,7 @@ function RefreshResources()
         end
       end
     end
-    
+
     if (plusInstance ~= nil) then
       plusInstance:SetToolTipString(overflowString);
     end
@@ -489,7 +488,7 @@ end
 -- ===========================================================================
 --  Game Engine Event
 -- ===========================================================================
-function OnTurnBegin()  
+function OnTurnBegin()
   RefreshAll();
 end
 
@@ -513,7 +512,7 @@ end
 -- ===========================================================================
 --  Game Engine Event
 --  Wait until the game engine is done loading before the initial refresh,
---  otherwise there is a chance the load of the LUA threads (UI & core) will 
+--  otherwise there is a chance the load of the LUA threads (UI & core) will
 --  clash and then we'll all have a bad time. :(
 -- ===========================================================================
 function OnLoadGameViewStateDone()
@@ -522,9 +521,8 @@ end
 
 
 -- ===========================================================================
-function Initialize() 
+function Initialize()
 
-  m_viewReportsX = Controls.ViewReports:GetSizeX();
   Resize();
 
   -- UI Callbacks
@@ -533,8 +531,6 @@ function Initialize()
   Controls.CivpediaButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.MenuButton:RegisterCallback( Mouse.eLClick, OnMenu );
   Controls.MenuButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.ViewReports:RegisterCallback( Mouse.eLClick, OnToggleReportsScreen );
-  Controls.ViewReports:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 
   -- Game Events
   Events.AnarchyBegins.Add(       OnRefreshYields );
@@ -567,7 +563,7 @@ function Initialize()
   Events.UnitKilledInCombat.Add(      OnRefreshYields );
   Events.UnitRemovedFromMap.Add(      OnRefreshYields );
   Events.VisualStateRestored.Add(     OnTurnBegin );
-  Events.WMDCountChanged.Add(       OnWMDUpdate );  
+  Events.WMDCountChanged.Add(       OnWMDUpdate );
   OnTurnBegin();
   LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 end

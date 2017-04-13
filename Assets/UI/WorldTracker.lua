@@ -3,7 +3,7 @@ include("TechAndCivicSupport");
 include("SupportFunctions");
 include("GameCapabilities");
 
---	Hotloading note: The World Tracker button check now positions based on how many hooks are showing.  
+--	Hotloading note: The World Tracker button check now positions based on how many hooks are showing.
 --	You'll need to save "LaunchBar" to see the tracker button appear.
 -- ===========================================================================
 --	CONSTANTS
@@ -67,7 +67,7 @@ function ToggleAll(hideAll:boolean)
 	if m_hideAll == hideAll then return; end
 
 	m_hideAll = hideAll;
-	
+
 	if(not hideAll) then
 		Controls.PanelStack:SetHide(false);
 		UI.PlaySound("Tech_Tray_Slide_Open");
@@ -95,8 +95,15 @@ function ToggleAll(hideAll:boolean)
 	Controls.WorldTrackerSlide:Reverse();
 	CheckUnreadChatMessageCount();
 
-	LuaEvents.WorldTracker_ToggleCivicPanel(m_hideCivics or m_hideAll);
-	LuaEvents.WorldTracker_ToggleResearchPanel(m_hideResearch or m_hideAll);
+   -- CQUI --
+  if(not hideAll) then
+    LuaEvents.WorldTracker_ToggleResearchPanel(m_hideResearch);
+    LuaEvents.WorldTracker_ToggleCivicPanel(m_hideCivics);
+	else
+    LuaEvents.WorldTracker_ToggleResearchPanel(true);
+    LuaEvents.WorldTracker_ToggleCivicPanel(true);
+  end
+  -- CQUI --
 end
 
 function OnWorldTrackerAnimationFinished()
@@ -128,27 +135,27 @@ function RealizeStack()
 end
 
 -- ===========================================================================
-function UpdateResearchPanel( isHideResearch:boolean )	
-	
-	if not HasCapability("CAPABILITY_TECH_CHOOSER") then
+function UpdateResearchPanel( isHideResearch:boolean )
+  
+  if not HasCapability("CAPABILITY_TECH_CHOOSER") then
 		isHideResearch = true;
 		Controls.ResearchCheck:SetHide(true);
 	end
-	
+
 	if isHideResearch ~= nil then
-		m_hideResearch = isHideResearch;		
+		m_hideResearch = isHideResearch;
 	end
-	
+
 	m_researchInstance.MainPanel:SetHide( m_hideResearch );
 	Controls.ResearchCheck:SetCheck( not m_hideResearch );
-	LuaEvents.WorldTracker_ToggleResearchPanel(m_hideResearch or m_hideAll);
+	LuaEvents.WorldTracker_ToggleResearchPanel( m_hideResearch or m_hideAll );
 	RealizeEmptyMessage();
 	RealizeStack();
 
 	-- Set the technology to show (or -1 if none)...
 	local iTech			:number = m_currentResearchID;
-	if m_currentResearchID == -1 then 
-		iTech = m_lastResearchCompletedID; 
+	if m_currentResearchID == -1 then
+		iTech = m_lastResearchCompletedID;
 	end
 	local ePlayer		:number = Game.GetLocalPlayer();
 	local pPlayer		:table  = Players[ePlayer];
@@ -162,9 +169,9 @@ function UpdateResearchPanel( isHideResearch:boolean )
 			kResearchData.IsLastCompleted = true;
 		end
 	end
-	
+
 	RealizeCurrentResearch( ePlayer, kResearchData, m_researchInstance );
-	
+
 	-- No tech started (or finished)
 	if kResearchData == nil then
 		m_researchInstance.TitleButton:SetHide( false );
@@ -179,16 +186,16 @@ end
 -- ===========================================================================
 function UpdateCivicsPanel(hideCivics:boolean)
 
-	if not HasCapability("CAPABILITY_CIVICS_CHOOSER") then
+  if not HasCapability("CAPABILITY_CIVICS_CHOOSER") then
 		hideCivics = true;
 		Controls.CivicsCheck:SetHide(true);
 	end
-
+  
 	if hideCivics ~= nil then
-		m_hideCivics = hideCivics;		
+		m_hideCivics = hideCivics;
 	end
 
-	m_civicsInstance.MainPanel:SetHide(m_hideCivics); 
+	m_civicsInstance.MainPanel:SetHide(m_hideCivics);
 	Controls.CivicsCheck:SetCheck(not m_hideCivics);
 	LuaEvents.WorldTracker_ToggleCivicPanel(m_hideCivics or m_hideAll);
 	RealizeEmptyMessage();
@@ -196,8 +203,8 @@ function UpdateCivicsPanel(hideCivics:boolean)
 
 	-- Set the civic to show (or -1 if none)...
 	local iCivic :number = m_currentCivicID;
-	if iCivic == -1 then 
-		iCivic = m_lastCivicCompletedID; 
+	if iCivic == -1 then
+		iCivic = m_lastCivicCompletedID;
 	end
 	local ePlayer		:number = Game.GetLocalPlayer();
 	local pPlayer		:table  = Players[ePlayer];
@@ -211,7 +218,7 @@ function UpdateCivicsPanel(hideCivics:boolean)
 			kCivicData.IsLastCompleted = true;
 		end
 	end
-		
+
 	RealizeCurrentCivic( ePlayer, kCivicData, m_civicsInstance );
 
 	-- No civic started (or finished)
@@ -228,7 +235,7 @@ end
 
 -- ===========================================================================
 function UpdateChatPanel(hideChat:boolean)
-	m_hideChat = hideChat; 
+	m_hideChat = hideChat;
 	Controls.ChatPanel:SetHide(m_hideChat);
 	Controls.ChatCheck:SetCheck(not m_hideChat);
 	RealizeEmptyMessage();
@@ -265,10 +272,13 @@ function Refresh()
 	if localPlayer < 0 then
 		ToggleAll(true);
 		return;
+	else
+    -- Fix for the Checkbox bug by ARISTOS
+		ToggleAll(m_hideAll);
 	end
 
 	local pPlayerTechs :table = Players[localPlayer]:GetTechs();
-	m_currentResearchID = pPlayerTechs:GetResearchingTech();			
+	m_currentResearchID = pPlayerTechs:GetResearchingTech();
 	m_lastResearchCompletedID = -1;
 	UpdateResearchPanel();
 
@@ -276,8 +286,8 @@ function Refresh()
 	m_currentCivicID = pPlayerCulture:GetProgressingCivic();
 	m_lastCivicCompletedID = -1;
 	UpdateCivicsPanel();
-
-	-- Hide world tracker by default if there are no tracker options enabled
+  
+  -- Hide world tracker by default if there are no tracker options enabled
 	if( Controls.ChatCheck:IsHidden() and 
 		Controls.CivicsCheck:IsHidden() and
 		Controls.ResearchCheck:IsHidden() ) then
@@ -297,14 +307,14 @@ end
 
 -- ===========================================================================
 function OnCityInitialized( playerID:number, cityID:number )
-	if playerID == Game.GetLocalPlayer() then	
+	if playerID == Game.GetLocalPlayer() then
 		Refresh();
 	end
 end
 
 -- ===========================================================================
 function OnBuildingChanged( plotX:number, plotY:number, buildingIndex:number, playerID:number, iPercentComplete:number )
-	if playerID == Game.GetLocalPlayer() then	
+	if playerID == Game.GetLocalPlayer() then
 		Refresh(); -- Buildings can change culture/science yield which can effect "turns to complete" values
 	end
 end
@@ -317,7 +327,7 @@ end
 function OnCivicChanged( ePlayer:number, eCivic:number )
 	local localPlayer = Game.GetLocalPlayer();
 	ResetOverflowArrow( m_civicsInstance );
-	if localPlayer ~= -1 and localPlayer == ePlayer then		
+	if localPlayer ~= -1 and localPlayer == ePlayer then
 		local pPlayerCulture:table = Players[localPlayer]:GetCulture();
 		m_currentCivicID = pPlayerCulture:GetProgressingCivic();
 		m_lastCivicCompletedID = -1;
@@ -332,7 +342,7 @@ function OnCivicCompleted( ePlayer:number, eCivic:number )
 	local localPlayer = Game.GetLocalPlayer();
 	if localPlayer ~= -1 and localPlayer == ePlayer then
 		m_currentCivicID = -1;
-		m_lastCivicCompletedID = eCivic;		
+		m_lastCivicCompletedID = eCivic;
 		UpdateCivicsPanel();
 	end
 end
@@ -350,7 +360,7 @@ end
 -- ===========================================================================
 function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
 	if eNewMode == InterfaceModeTypes.VIEW_MODAL_LENS then
-		ContextPtr:SetHide(true); 
+		ContextPtr:SetHide(true);
 	end
 	if eOldMode == InterfaceModeTypes.VIEW_MODAL_LENS then
 		ContextPtr:SetHide(false);
@@ -367,7 +377,7 @@ function OnResearchChanged( ePlayer:number, eTech:number )
 	ResetOverflowArrow( m_researchInstance );
 	if localPlayer ~= -1 and localPlayer == ePlayer then
 		local pPlayerTechs :table = Players[localPlayer]:GetTechs();
-		m_currentResearchID = pPlayerTechs:GetResearchingTech();			
+		m_currentResearchID = pPlayerTechs:GetResearchingTech();
 		m_lastResearchCompletedID = -1;
 		if eTech == m_currentResearchID then
 			UpdateResearchPanel();
@@ -416,7 +426,7 @@ function OnShutdown()
 	LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID, "m_currentCivicID",			m_currentCivicID);
 	LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID, "m_lastCivicCompletedID",		m_lastCivicCompletedID);
 end
-function OnGameDebugReturn(context:string, contextTable:table)	
+function OnGameDebugReturn(context:string, contextTable:table)
 	if context == RELOAD_CACHE_ID then
 		m_currentResearchID			= contextTable["m_currentResearchID"];
 		m_lastResearchCompletedID	= contextTable["m_lastResearchCompletedID"];
@@ -452,7 +462,7 @@ function Initialize()
 	ContextPtr:BuildInstanceForControl( "ResearchInstance", m_researchInstance, Controls.PanelStack );
 	ContextPtr:BuildInstanceForControl( "CivicInstance",	m_civicsInstance,	Controls.PanelStack );
 	Controls.ChatPanel:ChangeParent( Controls.PanelStack );
-	Controls.TutorialGoals:ChangeParent( Controls.PanelStack );	
+	Controls.TutorialGoals:ChangeParent( Controls.PanelStack );
 
 	-- Handle any text overflows with truncation and tooltip
 	local fullString :string = Controls.WorldTracker:GetText();
@@ -463,7 +473,7 @@ function Initialize()
 	ContextPtr:SetInitHandler(OnInit);
 	ContextPtr:SetShutdown(OnShutdown);
 	LuaEvents.GameDebug_Return.Add(OnGameDebugReturn);
-	
+
 	Controls.ChatCheck:SetCheck(true);
 	Controls.CivicsCheck:SetCheck(true);
 	Controls.ResearchCheck:SetCheck(true);
@@ -490,7 +500,7 @@ function Initialize()
 	Events.ResearchCompleted.Add(OnResearchCompleted);
 	Events.ResearchYieldChanged.Add(OnResearchYieldChanged);
 	LuaEvents.LaunchBar_Resize.Add(OnLaunchBarResized);
-	
+
 	LuaEvents.CivicChooser_ForceHideWorldTracker.Add(	function() ContextPtr:SetHide(true);  end);
 	LuaEvents.CivicChooser_RestoreWorldTracker.Add(		function() ContextPtr:SetHide(false); end);
 	LuaEvents.ResearchChooser_ForceHideWorldTracker.Add(function() ContextPtr:SetHide(true);  end);
