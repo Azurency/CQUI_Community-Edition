@@ -121,6 +121,7 @@ local CQUI_PlotIM        :table = InstanceManager:new( "CQUI_WorkedPlotInstance"
 local CQUI_uiWorldMap    :table = {};
 local CQUI_yieldsOn    :boolean = false;
 local CQUI_Hovering :boolean = false;
+local CQUI_NextPlot4Away :number = nil;
 
 
 local m_CityCenterTeamIM  :table  = InstanceManager:new( "TeamCityBanner",  "Anchor", Controls.CityBanners );
@@ -358,7 +359,13 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
         UILens.SetLayerHexesArea(LensLayers.CITY_YIELDS, Game.GetLocalPlayer(), yields);
         UILens.ToggleLayerOn( LensLayers.CITY_YIELDS );
       end
-
+    elseif UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) == false then
+      local pInstance :table = CQUI_GetInstanceAt(pNextPlotID);
+      if (pInstance ~= nil) then
+        pInstance.CQUI_NextPlotLabel:SetString("[ICON_Turn]" .. Locale.Lookup("LOC_HUD_CITY_IN_TURNS" , TurnsUntilExpansion ) .. "   ");
+        pInstance.CQUI_NextPlotButton:SetHide( false );
+        CQUI_NextPlot4Away = pNextPlotID;
+      end
     end
   end
 end
@@ -420,6 +427,11 @@ function CQUI_OnBannerMouseExit(playerID: number, cityID: number)
 
     end
 
+  end
+
+  if (CQUI_NextPlot4Away ~= nil) then
+    pInstance = CQUI_ReleaseInstanceAt(CQUI_NextPlot4Away);
+    CQUI_NextPlot4Away = nil;
   end
 
 end
@@ -2137,7 +2149,7 @@ function OnCityRangeStrikeButtonClick( playerID, cityID )
 	UI.DeselectAll();
 	UI.SelectCity( pCity );
 	UI.SetInterfaceMode(InterfaceModeTypes.CITY_RANGE_ATTACK);
-  
+
 end
 
 -- ===========================================================================

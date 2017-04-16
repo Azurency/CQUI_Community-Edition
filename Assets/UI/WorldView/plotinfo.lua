@@ -175,10 +175,8 @@ function ShowPurchases()
   end
 
   m_kLensMask[KEY_PLOT_PURCHASE] = {};
-
   local tPlots  :table = tResults[CityCommandResults.PLOTS];
   if (tPlots ~= nil and table.count(tPlots) ~= 0) then
-
     local playerTreasury:table  = Players[Game.GetLocalPlayer()]:GetTreasury();
     local playerGold  :number = playerTreasury:GetGoldBalance();
     local cityGold    :table  = pSelectedCity:GetGold();
@@ -220,12 +218,7 @@ function ShowPurchases()
               pInstance.PurchaseButton:SetToolTipString("");
             end
             if (index == pNextPlotID ) then
-              pInstance.CQUI_NextPlotLabel:SetString("[ICON_Turn]" .. Locale.Lookup("LOC_HUD_CITY_IN_TURNS" , TurnsUntilExpansion ) .. "   ");
-              pInstance.CQUI_NextPlotLabel:SetToolTipString( " " .. Round(pCityCulture:GetCurrentCulture(), 1) .. "/" .. pCityCulture:GetNextPlotCultureCost() .. " (+" .. Round(pCityCulture:GetCultureYield(), 1) .. "[ICON_CULTURE]) " .. Locale.Lookup( "LOC_HUD_CITY_BORDER_EXPANSION" , TurnsUntilExpansion ).."[ICON_Turn]");
-              pInstance.CQUI_NextPlotButton:RegisterCallback( Mouse.eLClick, function()
-                LuaEvents.CQUI_ToggleGrowthTile();
-              end);
-              pInstance.CQUI_NextPlotButton:SetHide( false );
+              CQUI_SetupNextPlotButton(pInstance, pCityCulture, TurnsUntilExpansion);
             end
             pInstance.PurchaseButton:SetHide( false );
             table.insert( m_uiPurchase, pInstance );
@@ -235,6 +228,12 @@ function ShowPurchases()
           table.insert(m_kLensMask[KEY_PLOT_PURCHASE], plotId);
         end
       end
+    end
+  else
+    local pInstance:table = GetInstanceAt( pNextPlotID );
+    if pInstance ~= nil then
+      CQUI_SetupNextPlotButton(pInstance, pCityCulture, TurnsUntilExpansion);
+      table.insert( m_uiPurchase, pInstance );
     end
   end
 
@@ -259,8 +258,15 @@ function ShowPurchases()
       end
     end
   end
+end
 
-
+-- ===========================================================================
+function CQUI_SetupNextPlotButton(pInstance:table, pCityCulture:table, TurnsUntilExpansion:number)
+  pInstance.CQUI_NextPlotLabel:SetString("[ICON_Turn]" .. Locale.Lookup("LOC_HUD_CITY_IN_TURNS" , TurnsUntilExpansion ) .. "   ");
+  pInstance.CQUI_NextPlotLabel:SetToolTipString( " " .. Round(pCityCulture:GetCurrentCulture(), 1) .. "/" .. pCityCulture:GetNextPlotCultureCost()
+    .. " (+" .. Round(pCityCulture:GetCultureYield(), 1) .. "[ICON_CULTURE]) " .. Locale.Lookup( "LOC_HUD_CITY_BORDER_EXPANSION" , TurnsUntilExpansion ).."[ICON_Turn]");
+  pInstance.CQUI_NextPlotButton:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_ToggleGrowthTile() end);
+  pInstance.CQUI_NextPlotButton:SetHide( false );
 end
 
 -- ===========================================================================
