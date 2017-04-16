@@ -2428,7 +2428,7 @@ function OnInputHandler( pInputStruct:table )
       return isMouseInMinimap; -- Only consume event if it's inside the minimap.
 
     end
-    if msg == MouseEvents.RButtonDown then
+    if msg == MouseEvents.RButtonDown or msg == MouseEvents.RButtonUp then
       local minix, miniy = GetMinimapMouseCoords( pInputStruct:GetX(), pInputStruct:GetY() );
       if IsMouseInMinimap( minix, miniy ) then
         return true
@@ -2516,8 +2516,8 @@ function Initialize()
     Controls.MapPinListButton:SetHide(true);
     Controls.StrategicSwitcherButton:SetHide(true);
     Controls.OptionsStack:ReprocessAnchoring();
-  end  
-  
+  end
+
   --CQUI Options Button
   Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_ToggleSettings() end);
   Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
