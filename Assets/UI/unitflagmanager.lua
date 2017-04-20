@@ -160,8 +160,8 @@ local CQUI_ShowPaths = true; --Toggle for showing the paths
 --CQUI Functions
 --Draws a path with numbers for the given unitID. Hijacks trade layer
 function CQUI_ShowPath(unitID)
-	if(CQUI_ShowPaths) then
-		local unit = Players[Game.GetLocalPlayer()]:GetUnits():FindID(unitID);
+  if(CQUI_ShowPaths) and (Game.GetLocalPlayer() > -1) then
+    local unit = Players[Game.GetLocalPlayer()]:GetUnits():FindID(unitID);
     if (unit ~= nil) then
       if (GameInfo.Units[unit:GetUnitType()].UnitType ~= "UNIT_TRADER") then --Since this hijacks the trade layer, be sure to NOT touch it when the game actually needs the trade layer!
           local dest = UnitManager.GetQueuedDestination(unit);
@@ -184,7 +184,7 @@ function CQUI_ShowPath(unitID)
 end
 --Hides any currently drawn paths.
 function CQUI_HidePath(unitID)
-	if(CQUI_ShowPaths) then
+  if(CQUI_ShowPaths) and (Game.GetLocalPlayer() > -1) then
 		local unit = Players[Game.GetLocalPlayer()]:GetUnits():FindID(unitID);
     if (unit ~= nil) then
       if (unitID == nil or GameInfo.Units[unit:GetUnitType()].UnitType ~= "UNIT_TRADER") then
@@ -514,18 +514,20 @@ function UnitFlag.SetColor( self )
 
 
   -- War Check
-	local pUnit : table = self:GetUnit();
-	local localPlayer =  Players[Game.GetLocalPlayer()];
-	local ownerPlayer = pUnit:GetOwner();
+  if Game.GetLocalPlayer() > -1 then
+    local pUnit : table = self:GetUnit();
+    local localPlayer =  Players[Game.GetLocalPlayer()];
+    local ownerPlayer = pUnit:GetOwner();
 
-	local isAtWar = localPlayer:GetDiplomacy():IsAtWarWith( ownerPlayer );
-	local CQUI_isBarb = Players[ownerPlayer]:IsBarbarian(); --pUnit:GetBarbarianTribeIndex() ~= -1
+    local isAtWar = localPlayer:GetDiplomacy():IsAtWarWith( ownerPlayer );
+    local CQUI_isBarb = Players[ownerPlayer]:IsBarbarian(); --pUnit:GetBarbarianTribeIndex() ~= -1
 
-	if(isAtWar and (not CQUI_isBarb)) then
-		self.m_Instance.FlagBaseDarken:SetColor( RGBAValuesToABGRHex(255,0,0,255) );
-	else
-		self.m_Instance.FlagBaseDarken:SetColor( darkerFlagColor );
-	end
+    if(isAtWar and (not CQUI_isBarb)) then
+      self.m_Instance.FlagBaseDarken:SetColor( RGBAValuesToABGRHex(255,0,0,255) );
+    else
+      self.m_Instance.FlagBaseDarken:SetColor( darkerFlagColor );
+    end
+  end
 
 	self.m_Instance.FlagBase:SetColor( primaryColor );
 	self.m_Instance.UnitIcon:SetColor( brighterIconColor );
@@ -1486,6 +1488,9 @@ function OnPlayerTurnActivated( ePlayer:number, bFirstTimeThisTurn:boolean )
 	end
 
 	local idLocalPlayer = Game.GetLocalPlayer();
+  if idLocalPlayer < 0 then
+    return
+  end
 	if (ePlayer == idLocalPlayer and bFirstTimeThisTurn) then
 
 		local playerFlagInstances = m_UnitFlagInstances[ idLocalPlayer ];
