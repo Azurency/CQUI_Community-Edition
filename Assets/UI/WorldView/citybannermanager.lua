@@ -167,9 +167,9 @@ local CQUI_WorkIconAlpha = .60;
 local CQUI_SmartWorkIcon: boolean = true;
 local CQUI_SmartWorkIconSize: number = 64;
 local CQUI_SmartWorkIconAlpha = .45;
-
 local g_smartbanner = true;
-function CQUI_OnSettingsUpdate()
+
+function CQUI_OnSettingsInitialized()
   CQUI_ShowYieldsOnCityHover = GameConfiguration.GetValue("CQUI_ShowYieldsOnCityHover");
   g_smartbanner = GameConfiguration.GetValue("CQUI_Smartbanner");
   g_smartbanner_unmanaged_citizen = GameConfiguration.GetValue("CQUI_Smartbanner_UnlockedCitizen");
@@ -182,6 +182,10 @@ function CQUI_OnSettingsUpdate()
   CQUI_SmartWorkIcon = GameConfiguration.GetValue("CQUI_SmartWorkIcon");
   CQUI_SmartWorkIconSize = GameConfiguration.GetValue("CQUI_SmartWorkIconSize");
   CQUI_SmartWorkIconAlpha = GameConfiguration.GetValue("CQUI_SmartWorkIconAlpha") / 100;
+end
+
+function CQUI_OnSettingsUpdate()
+  CQUI_OnSettingsInitialized();
   Reload();
 end
 LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
@@ -3233,7 +3237,7 @@ function Initialize()
 
   LuaEvents.GameDebug_Return.Add(OnGameDebugReturn);
 
-  LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
+  LuaEvents.CQUI_SettingsInitialized.Add( CQUI_OnSettingsInitialized );
   Events.CitySelectionChanged.Add( CQUI_OnBannerMouseExit );
 end
 Initialize();
