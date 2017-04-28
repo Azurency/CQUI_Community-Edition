@@ -30,5 +30,13 @@
       <Text>Progresso:</Text>
     </Replace>
 
+    <!-- ActionPanel -->
+    <Replace Tag="LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK" Language="it_IT">
+      <Text>Attacco a distanza Accampamento</Text>
+    </Replace>
+    <Replace Tag="LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK_TOOLTIP" Language="it_IT">
+      <Text>Il tuo accampamento è in grado di eseguire un attacco a distanza</Text>
+    </Replace>
+
   </LocalizedText>
 </GameData>

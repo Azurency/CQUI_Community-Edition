@@ -4,7 +4,7 @@
     <!-- ITALIAN -->
 
     <Row Tag="LOC_CQUI_BINDINGS" Language="it_IT">
-        <Text>Combinazione tasti</Text>
+      <Text>Combinazione tasti</Text>
     </Row>
     <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="it_IT">
       <Text>Modalità</Text>
@@ -43,7 +43,7 @@
       <Text>Può anche essere attivata cliccando sul simbolo della crescita nella vista cittadina</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" Language="it_IT">
-      <Text>Mostra gestione cittadina al passaggio del mouse</Text>
+      <Text>Gestione cittadina al passaggio del mouse</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="it_IT">
       <Text>Mostra la gestione dei cittadini, la resa delle caselle e la crescita dei confini al passaggio del mouse</Text>
@@ -166,7 +166,7 @@
       <Text>Percorso dell'unità visibile</Text>
     </Row>
     <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="it_IT">
-      <Text>Espandi automaticamente tutte le azioni del pannello unità</Text>
+      <Text>Mostra tutte le azioni del pannello unità</Text>
     </Row>
 
   </LocalizedText>
