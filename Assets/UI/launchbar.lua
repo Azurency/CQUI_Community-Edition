@@ -477,8 +477,10 @@ function OnTurnBegin()
 		local cost				:number	= playerTechs:GetResearchCost(currentTechID);
 
 		Controls.ScienceMeter:SetPercent(progress/cost);
+    Controls.ScienceTurnsLeft:SetText(playerTechs:GetTurnsLeft());
 	else
 		Controls.ScienceMeter:SetPercent(0);
+    Controls.ScienceTurnsLeft:SetText("");
 	end
 
 	local techInfo:table = GameInfo.Technologies[currentTechID];
@@ -498,8 +500,10 @@ function OnTurnBegin()
 		local civicCost				:number	= playerCivics:GetCultureCost(currentCivicID);
 
 		Controls.CultureMeter:SetPercent(civicProgress/civicCost);
+    Controls.CultureTurnsLeft:SetText(playerCivics:GetTurnsLeft());
 	else
 		Controls.CultureMeter:SetPercent(0);
+    Controls.CultureTurnsLeft:SetText("");
 	end
 
 	local CivicInfo:table = GameInfo.Civics[currentCivicID];

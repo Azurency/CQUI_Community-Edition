@@ -93,18 +93,20 @@
 
   <Container ID="ScienceHookWithMeter"	Anchor="L,T" Offset="1,25" Size="57,57" Hidden="1">
 	  <Button	 ID="ScienceMeterButton"	Anchor="C,C"	 Offset="0,1"		 Size="51,51"   Texture="LaunchBar_Hook_ScienceButton" Style="ButtonNormalText"     TextureOffset="4,9"   StateOffsetIncrement="0,60" ToolTip="LOC_HUD_TECHTREE_TOOLTIP" Hidden="0">
-      <Image															Anchor="C,C" Size="57,57"	Texture="LaunchBar_Hook_CultureMeter_Backing.dds" Hidden="0" Offset="-1,-5">
-        <Meter	ID="ScienceMeter"					Anchor="C,C"								Size="57,57"	Texture="LaunchBar_Hook_ScienceMeter_Fill.dds" Percent="0" Speed="1.0" Follow="1" Offset="0,1"/>
-        <Image		ID="ResearchIcon"				Anchor="C,C"	Size="38,38"	Texture="Tech38" />
+      <Image													Anchor="C,C" Size="57,57"	Texture="LaunchBar_Hook_CultureMeter_Backing.dds" Hidden="0" Offset="-1,-5">
+        <Meter	ID="ScienceMeter"			Anchor="C,C"								Size="57,57"	Texture="LaunchBar_Hook_ScienceMeter_Fill.dds" Percent="0" Speed="1.0" Follow="1" Offset="0,1"/>
+        <Image	ID="ResearchIcon"			Anchor="C,C"	Size="38,38"	Texture="Tech38" Alpha="0.7"/>
+        <Label  ID="ScienceTurnsLeft" Anchor="C,C" String="" FontStyle="stroke" Color0="160,188,220,255"	Color1="0,0,0,200" Color2="255,255,255,255" Style="FontNormal20"/>
       </Image>
 	  </Button>
   </Container>
 
   <Container ID="CultureHookWithMeter"	Anchor="L,T" Offset="54,25" Size="57,57" Hidden="1">
     <Button	  ID="CultureMeterButton"	Anchor="C,C"	 Offset="0,1"	        Size="51,51"  Texture="LaunchBar_Hook_CultureButton" Style="ButtonNormalText"     TextureOffset="4,9"   StateOffsetIncrement="0,60" ToolTip="LOC_HUD_CIVICSTREE_TOOLTIP" Hidden="0">
-      <Image											  Anchor="C,C"  Size="57,57"	Texture="LaunchBar_Hook_CultureMeter_Backing.dds" Hidden="0" Offset="-1,-5">
-        <Meter	ID="CultureMeter"	  Anchor="C,C"	Size="57,57"	Texture="LaunchBar_Hook_CultureMeter_Fill.dds" Percent="0" Speed="1.0" Follow="1"/>
-        <Image  ID="CultureIcon"		Anchor="C,C" 	Size="38,38"	Texture="Civics38" />
+      <Image											    Anchor="C,C"  Size="57,57"	Texture="LaunchBar_Hook_CultureMeter_Backing.dds" Hidden="0" Offset="-1,-5">
+        <Meter	ID="CultureMeter"	    Anchor="C,C"	Size="57,57"	Texture="LaunchBar_Hook_CultureMeter_Fill.dds" Percent="0" Speed="1.0" Follow="1"/>
+        <Image  ID="CultureIcon"		  Anchor="C,C" 	Size="38,38"	Texture="Civics38" Alpha="0.8" />
+        <Label  ID="CultureTurnsLeft" Anchor="C,C" String="" FontStyle="stroke" Color0="160,188,220,255"	Color1="0,0,0,200" Color2="255,255,255,255" Style="FontNormal20"/>
       </Image>
     </Button>
   </Container>
