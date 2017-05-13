@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<AssetObjects:ArtDefSet>
+  <m_Version>
+    <major>3</major>
+    <minor>0</minor>
+    <build>186</build>
+    <revision>62</revision>
+  </m_Version>
+  <m_TemplateName text="Minimap"/>
+  <m_RootCollections>
+    <Element>
+      <m_CollectionName text="Frustum"/>
+      <m_ReplaceMergedCollectionElements>false</m_ReplaceMergedCollectionElements>
+      <Element>
+        <m_Fields>
+          <m_Values>
+            <Element class="AssetObjects:FloatValue">
+              <m_fValue>0.750000</m_fValue>
+              <m_ParamName text="Width"/>
+            </Element>
+            <Element class="AssetObjects:RGBValue">
+              <m_r>255.000000</m_r>
+              <m_g>255.000000</m_g>
+              <m_b>255.000000</m_b>
+              <m_ParamName text="Color"/>
+            </Element>
+            <Element class="AssetObjects:FloatValue">
+              <m_fValue>1.000000</m_fValue>
+              <m_ParamName text="Opacity"/>
+            </Element>
+          </m_Values>
+        </m_Fields>
+        <m_ChildCollections/>
+        <m_Name text="Default"/>
+        <m_AppendMergedParameterCollections>false</m_AppendMergedParameterCollections>
+      </Element>
+    </Element>
+    <Element>
+      <m_CollectionName text="Blip"/>
+      <m_ReplaceMergedCollectionElements>false</m_ReplaceMergedCollectionElements>
+      <Element>
+        <m_Fields>
+          <m_Values>
+            <Element class="AssetObjects:FloatValue">
+              <m_fValue>20.000000</m_fValue>
+              <m_ParamName text="Width"/>
+            </Element>
+            <Element class="AssetObjects:RGBValue">
+              <m_r>0.000000</m_r>
+              <m_g>255.000000</m_g>
+              <m_b>0.000000</m_b>
+              <m_ParamName text="Color"/>
+            </Element>
+            <Element class="AssetObjects:FloatValue">
+              <m_fValue>1.000000</m_fValue>
+              <m_ParamName text="Opacity"/>
+            </Element>
+            <Element class="AssetObjects:FloatValue">
+              <m_fValue>2.000000</m_fValue>
+              <m_ParamName text="FlashRate"/>
+            </Element>
+          </m_Values>
+        </m_Fields>
+        <m_ChildCollections/>
+        <m_Name text="CityBlip"/>
+        <m_AppendMergedParameterCollections>false</m_AppendMergedParameterCollections>
+      </Element>
+      <Element>
+        <m_Fields>
+          <m_Values>
+            <Element class="AssetObjects:FloatValue">
+              <m_fValue>15.000000</m_fValue>
+              <m_ParamName text="Width"/>
+            </Element>
+            <Element class="AssetObjects:RGBValue">
+              <m_r>0.000000</m_r>
+              <m_g>255.000000</m_g>
+              <m_b>0.000000</m_b>
+              <m_ParamName text="Color"/>
+            </Element>
+            <Element class="AssetObjects:FloatValue">
+              <m_fValue>1.000000</m_fValue>
+              <m_ParamName text="Opacity"/>
+            </Element>
+            <Element class="AssetObjects:FloatValue">
+              <m_fValue>2.000000</m_fValue>
+              <m_ParamName text="FlashRate"/>
+            </Element>
+          </m_Values>
+        </m_Fields>
+        <m_ChildCollections/>
+        <m_Name text="SelectedBlip"/>
+        <m_AppendMergedParameterCollections>false</m_AppendMergedParameterCollections>
+      </Element>
+    </Element>
+  </m_RootCollections>
+</AssetObjects:ArtDefSet>
+

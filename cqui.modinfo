@@ -5,7 +5,7 @@
     <Name>Chao's Quick UI</Name>
     <Teaser>CQUI_TEASER</Teaser>
     <Description>CQUI_TEASER</Description>
-    <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek, zeyangl, velit, the-m4a, Frozen-In-Ice, Remolten, bestekov, bolbass, SpaceOgre, cpinter, JHCD, paavohuhtala, Aristos, MarkusKV</Authors>
+    <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek, zeyangl, velit, the-m4a, Frozen-In-Ice, Remolten, bestekov, bolbass, SpaceOgre, cpinter, JHCD, paavohuhtala, Aristos, MarkusKV, apskim</Authors>
     <SpecialThanks>vans163 for his original qui mod.[NEWLINE]astog for his Better Trade Screen mod.[NEWLINE]astog for his More Lenses mod.[NEWLINE]Ace for his Next City Plot mod.[NEWLINE]Divine Yuri for his Custom City Panel mod.[NEWLINE]Greg Miller for his Unit Report Screen mod.[NEWLINE]Lozenged/kblease for his Production Queue mod.[NEWLINE]mironos for his Improved Deal Screen mod.[NEWLINE]HellBlazer for parts of his NQ EUI mod.[NEWLINE]ZhouYzzz for providing the Chinese translation.[NEWLINE]Simone1974 for providing the Italian translation.[NEWLINE]e1ectron for providing the Russian translation.[NEWLINE]sejbr for providing the Polish translation.[NEWLINE]frytom/maxap/JHCD for providing the German translation.[NEWLINE]lctrs for providing a partial French translation.[NEWLINE]wbqd for providing the Korean translation.</SpecialThanks>
     <Stability>CQUI_STABILITY_NIGHTLY</Stability>
   </Properties>
@@ -94,6 +94,7 @@
 
   <!-- Complete File Manifest -->
   <Files>
+    <File>cqui.dep</File>
     <File>Assets/cqui_databaseschema.sql</File>
     <File>Assets/cqui_settings.sql</File>
     <File>Assets/cqui_settings_local.sql</File>
@@ -336,6 +337,12 @@
         <File>Assets/cqui_main.lua</File>
       </Items>
     </GameplayScripts>
+    <!-- CQUI specific art overrides -->
+    <ModArt id="CQUI_MODART">
+      <Items>
+        <File>cqui.dep</File>
+      </Items>
+    </ModArt>
 
     <!-- Mod integrations -->
     <LocalizedText id="BTS_TEXT">

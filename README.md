@@ -246,6 +246,7 @@ Those looking to contribute to CQUI should visit [the CQUI repo](https://github.
 * @velit for a UI bugfix in #138
 * @the-m4a for a patch incompatibility bugfix in #181
 * @MarkusKV for fixing a bug concerning district completion checkboxes
+* @apskim for changing the style of city markers on the minimap
 * Firaxis for eventually delivering mod tools and steam workshop ;)
 * The lovely folks over at Civfanatics for their guides, knowledge, tools, and resources
 * The even lovelier folks over at /r/civ for their input and testing
