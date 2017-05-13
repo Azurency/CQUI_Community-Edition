@@ -24,6 +24,12 @@
     <Row Tag="LOC_CQUI_CITYVIEW" Language="ru_RU">
       <Text>Обзор города</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK" Language="ru_RU">
+      <Text>Не завершать ход, когда город атакован</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK_TOOLTIP" Language="ru_RU">
+      <Text>Предотвращает завершение хода, когда город может атаковать</Text>
+    </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="ru_RU">
       <Text>Высота строки элемента производства</Text>
     </Row>
@@ -130,7 +136,7 @@
       <Text>Оповещение и голосовое описание, которое воспроизводится всякий раз, когда были исследованы новая технология или социальный институт. Является полностью независимым от визуальной составляющей компонентом и может проигрываться, когда всплывающее окно выключено</Text>
     </Row>
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="ru_RU">
-      <Text>Напоминание: настройки CQUI связаны с каждым сохранением![NEWLINE]Если вы хотите изменить настройки по умолчанию, измените файл CQUI_Settings.sql в папке [MOD INSTALL DIRECTORY]/CQUI/Assets</Text>
+      <Text>Напоминание: настройки CQUI связаны с каждым сохранением![NEWLINE]Если вы хотите изменить настройки по умолчанию, изучите информацию в файле cqui_settings.sql в папке [MOD INSTALL DIRECTORY]/CQUI/Assets</Text>
     </Row>
     <Row Tag="LOC_CQUI_UNITS" Language="ru_RU">
       <Text>Юниты</Text>
