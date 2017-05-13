@@ -188,16 +188,16 @@
         <Image    ID="BonusIcon6"            Anchor="C,B"                  Size="26,26"          Texture="EnvoyBonuses26"          TextureOffset="104,0"  />
       </Image>
       <!-- CQUI Note: The size of the container below was changed from 108 to 120 in order to fix a spacing issue. -->
-      <Container                            Anchor="L,C"  Offset="346,0"  Size="120,42">
-        <Grid      ID="BonusImageSuzerainOff"                              Size="parent,parent"  Texture="CityState_BonusSlotBigOff" SliceCorner="31,21" SliceTextureSize="34,42"  />
-        <Grid      ID="BonusImageSuzerainOn"                                Size="parent,parent"  Texture="CityState_BonusSlotBigOn"  SliceCorner="31,21" SliceTextureSize="34,42"    />
-        <Label    ID="BonusTextSuzerain"    Anchor="R,T"  Offset="4,2"                          Style="FontNormal12"                String="4" />
-        <Image    ID="BonusIconSuzerain"    Anchor="L,T"  Offset="2,0"    Size="26,26"          Texture="EnvoyBonuses26"            TextureOffset="156,0"  />
-        <Label    ID="SecondHighestLabel"   Anchor="L,B"  Offset="3,0"                          Style="FontNormal12" />
-        <Label    ID="SuzerainLabel"        Anchor="L,T"  Offset="32,14"                        Style="FontNormal12"                String="LOC_CITY_STATES_SUZERAIN" />
-        <Label    ID="Suzerain"              Anchor="L,T"  Offset="32,2"                          Style="FontNormal12"                String="LOC_CITY_STATES_NONE" />
-        <Label    ID="SecondHighestName"    Anchor="L,B"  Offset="32,0"                         Style="FontNormal12" />
-        <Label    ID="SecondHighestEnvoys"  Anchor="R,B"  Offset="4,0"                          Style="FontNormal12" />
+      <Container                             Anchor="L,C"  Offset="346,0"  Size="120,42">
+        <Grid     ID="BonusImageSuzerainOff"                               Size="parent,parent"  Texture="CityState_BonusSlotBigOff" SliceCorner="31,21" SliceTextureSize="34,42"  />
+        <Grid     ID="BonusImageSuzerainOn"                                Size="parent,parent"  Texture="CityState_BonusSlotBigOn"  SliceCorner="31,21" SliceTextureSize="34,42"    />
+        <Label    ID="BonusTextSuzerain"     Anchor="R,B"  Offset="4,2"                          Style="FontNormal12"                String="4" />
+        <Image    ID="BonusIconSuzerain"     Anchor="L,B"  Offset="2,0"    Size="26,26"          Texture="EnvoyBonuses26"            TextureOffset="156,0"  />
+        <Label    ID="SecondHighestLabel"    Anchor="L,T"  Offset="3,0"                          Style="FontNormal12" />
+        <Label    ID="SuzerainLabel"         Anchor="L,B"  Offset="32,14"                        Style="FontNormal12"                String="LOC_CITY_STATES_SUZERAIN" />
+        <Label    ID="Suzerain"              Anchor="L,B"  Offset="32,2"                          Style="FontNormal12"                String="LOC_CITY_STATES_NONE" />
+        <Label    ID="SecondHighestName"     Anchor="L,T"  Offset="32,0"                         Style="FontNormal12" />
+        <Label    ID="SecondHighestEnvoys"   Anchor="R,T"  Offset="4,0"                          Style="FontNormal12" />
       </Container>
 
       <Button      ID="LookAtButton"          Anchor="R,C"  Offset="3,-7"    Size="23,31"          Texture="Controls_ShowMe"          StateOffsetIncrement="0,0"  ToolTip="LOC_CITY_STATES_LOOK_AT" />

@@ -796,7 +796,7 @@ function AddCityStateRow( kCityState:table )
   kInst.BonusTextSuzerain:SetText( kCityState.SuzerainTokensNeeded );
   kInst.SuzerainLabel:SetColor( kCityState.isBonusSuzerain and kCityState.ColorSecondary or COLOR_ICON_BONUS_OFF );
   kInst.Suzerain:SetColor( kCityState.isBonusSuzerain and kCityState.ColorSecondary or COLOR_ICON_BONUS_OFF );
-  kInst.Suzerain:SetText( kCityState.SuzerainName );
+  kInst.Suzerain:SetText( CQUI_TruncateSuzerainName(kCityState.SuzerainName) );
 
   -- Begin CQUI Changes Marker
   local localPlayerID = Game.GetLocalPlayer();
@@ -836,7 +836,7 @@ function AddCityStateRow( kCityState:table )
   -- CQUI Note: SecondHighestLabel needs to be localized, but is hard coded for now
   kInst.SecondHighestLabel:SetText( "2nd" );
   kInst.SecondHighestName:SetColor( secondHighestIsPlayer and kCityState.ColorSecondary or COLOR_ICON_BONUS_OFF );
-  kInst.SecondHighestName:SetText( secondHighestName );
+  kInst.SecondHighestName:SetText( CQUI_TruncateSuzerainName(secondHighestName) );
   kInst.SecondHighestEnvoys:SetColor( secondHighestIsPlayer and kCityState.ColorSecondary or COLOR_ICON_BONUS_OFF );
   kInst.SecondHighestEnvoys:SetText( secondHighestEnvoys );
   -- End CQUI Changes Marker
@@ -850,6 +850,14 @@ function AddCityStateRow( kCityState:table )
   kInst.Button:RegisterCallback( Mouse.eLClick, function() OpenSingleViewCityState( kCityState.iPlayer ) end );
 
   return kInst;
+end
+
+function CQUI_TruncateSuzerainName( name:string )
+  if(name:len() >= 12) then
+    return string.sub(name, 0, 10) .. "...";
+  else
+    return name;
+  end
 end
 
 -- ===========================================================================
