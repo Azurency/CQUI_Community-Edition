@@ -1100,6 +1100,7 @@ function OnCheckYield( yieldType:number, yieldName:string )
     Controls[yieldName.."Ignore"]:SetHide( false );
     Controls[yieldName.."Check"]:SetDisabled( true );
   end
+  CQUI_UpdateSelectedCityCitizens();    -- CQUI Update production panel's data when changing yield focus
 end
 
 -- ===========================================================================
@@ -1112,6 +1113,7 @@ function OnResetYieldToNormal( yieldType:number, yieldName:string )
   Controls[yieldName.."Ignore"]:SetHide( true );
   Controls[yieldName.."Check"]:SetDisabled( false );
   SetYieldIgnore( yieldType );    -- One more ignore to flip it off
+  CQUI_UpdateSelectedCityCitizens();    -- CQUI Update production panel's data when changing yield focus
 end
 
 -- ===========================================================================
