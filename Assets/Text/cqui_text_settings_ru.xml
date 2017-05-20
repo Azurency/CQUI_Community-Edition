@@ -54,6 +54,9 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="ru_RU">
       <Text>Включить баннеры</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="ru_RU">
+        <Text>Отображает новые иконки на баннере города.</Text>
+    </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="ru_RU">
       <Text>[ICON_EXCLAMATION] отображается пока в городе есть незаблокированные горожане, распределенные ИИ.</Text>
     </Row>
@@ -66,8 +69,26 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="ru_RU">
       <Text>Показывает количество ходов до культурного роста.</Text>
     </Row>
-    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="ru_RU">
-        <Text>Отображает новые иконки на баннере города.</Text>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON" Language="ru_RU">
+      <Text>Активные иконки рабочих</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON_TOOLTIP" Language="ru_RU">
+      <Text>Задает особые размер/прозрачность активных ячеек рабочих</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONALPHA" Language="ru_RU">
+      <Text>Прозрачность активной иконки</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONSIZE" Language="ru_RU">
+      <Text>Размер активной иконки</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONS_HEADER" Language="ru_RU">
+      <Text>Иконки рабочих</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONALPHA" Language="ru_RU">
+      <Text>Прозрачность иконки</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONSIZE" Language="ru_RU">
+      <Text>Размер иконки</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL" Language="ru_RU">
       <Text>Основные</Text>
@@ -136,7 +157,7 @@
       <Text>Оповещение и голосовое описание, которое воспроизводится всякий раз, когда были исследованы новая технология или социальный институт. Является полностью независимым от визуальной составляющей компонентом и может проигрываться, когда всплывающее окно выключено</Text>
     </Row>
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="ru_RU">
-      <Text>Напоминание: настройки CQUI связаны с каждым сохранением![NEWLINE]Если вы хотите изменить настройки по умолчанию, изучите информацию в файле cqui_settings.sql в папке [MOD INSTALL DIRECTORY]/CQUI/Assets</Text>
+      <Text>Напоминание: настройки CQUI связаны с каждым сохранением![NEWLINE]Если вы хотите изменить настройки по умолчанию, изучите информацию[NEWLINE]в файле cqui_settings.sql в папке [MOD INSTALL DIRECTORY]/CQUI/Assets</Text>
     </Row>
     <Row Tag="LOC_CQUI_UNITS" Language="ru_RU">
       <Text>Юниты</Text>
@@ -145,7 +166,7 @@
       <Text>Путь юнита при выборе/наведении</Text>
     </Row>
     <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="ru_RU">
-      <Text>Автораскрытие всех действий на панели юнита</Text>
+      <Text>Автопоказ действий на панели юнита</Text>
     </Row>
 
   </LocalizedText>
