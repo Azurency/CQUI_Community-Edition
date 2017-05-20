@@ -49,6 +49,7 @@
       <de_DE>Alpha</de_DE>
       <it_IT>Alfa</it_IT>
       <ko_KR>알파</ko_KR>
+      <es_ES>Alfa</es_ES>
     </Text>
     <Text id="CQUI_STABILITY_BETA">
       <en_US>Beta</en_US>
@@ -59,6 +60,7 @@
       <de_DE>Beta</de_DE>
       <it_IT>Beta</it_IT>
       <ko_KR>베타</ko_KR>
+      <es_ES>Beta</es_ES>
     </Text>
     <Text id="CQUI_STABILITY_RELEASECANDIDATE">
       <en_US>Release Candidate</en_US>
@@ -69,6 +71,7 @@
       <de_DE>Release Candidate</de_DE>
       <it_IT>Release Candidate</it_IT>
       <ko_KR>릴리즈 후보</ko_KR>
+      <es_ES>Release Candidate</es_ES>
     </Text>
     <Text id="CQUI_STABILITY_RELEASE">
       <en_US>Release</en_US>
@@ -79,6 +82,7 @@
       <de_DE>Release</de_DE>
       <it_IT>Release</it_IT>
       <ko_KR>릴리즈</ko_KR>
+      <es_ES>Release</es_ES>
     </Text>
     <Text id="CQUI_STABILITY_NIGHTLY">
       <en_US>Nightly</en_US>
@@ -89,6 +93,7 @@
       <de_DE>Nightly</de_DE>
       <it_IT>Nightly</it_IT>
       <ko_KR>나이틀리</ko_KR>
+      <es_ES>Nightly</es_ES>
     </Text>
   </LocalizedText>
 
@@ -111,6 +116,7 @@
     <File>Assets/Text/cqui_text_general_pl.xml</File>
     <File>Assets/Text/cqui_text_general_ru.xml</File>
     <File>Assets/Text/cqui_text_general_zh.xml</File>
+    <File>Assets/Text/cqui_text_general_es.xml</File>
     <File>Assets/Text/cqui_text_settings.xml</File>
     <File>Assets/Text/cqui_text_settings_de.xml</File>
     <File>Assets/Text/cqui_text_settings_fr.xml</File>
@@ -119,6 +125,7 @@
     <File>Assets/Text/cqui_text_settings_pl.xml</File>
     <File>Assets/Text/cqui_text_settings_ru.xml</File>
     <File>Assets/Text/cqui_text_settings_zh.xml</File>
+    <File>Assets/Text/cqui_text_settings_es.xml</File>
     <File>Assets/UI/actionpanel.lua</File>
     <File>Assets/UI/citysupport.lua</File>
     <File>Assets/UI/civ6common.lua</File>
@@ -189,6 +196,7 @@
     <File>Integrations/BTS/Text/bts_text_pl.xml</File>
     <File>Integrations/BTS/Text/bts_text_ru.xml</File>
     <File>Integrations/BTS/Text/bts_text_zh.xml</File>
+    <File>Integrations/BTS/Text/bts_text_es.xml</File>
     <File>Integrations/URS/reportscreen.lua</File>
     <File>Integrations/URS/reportscreen.xml</File>
     <File>Integrations/URS/unitpromotionpopup.lua</File>
@@ -200,6 +208,7 @@
     <File>Integrations/URS/Text/urs_text_pl.xml</File>
     <File>Integrations/URS/Text/urs_text_ru.xml</File>
     <File>Integrations/URS/Text/urs_text_zh.xml</File>
+    <File>Integrations/URS/Text/urs_text_es.xml</File>
     <File>Integrations/IDS/diplomacydealview.lua</File>
     <File>Integrations/IDS/diplomacydealview.xml</File>
     <File>Integrations/IDS/Text/ids_text.xml</File>
@@ -210,6 +219,7 @@
     <File>Integrations/IDS/Text/ids_text_pl.xml</File>
     <File>Integrations/IDS/Text/ids_text_ru.xml</File>
     <File>Integrations/IDS/Text/ids_text_zh.xml</File>
+    <File>Integrations/IDS/Text/ids_text_es.xml</File>
     <File>Integrations/ML/UI/minimappanel.lua</File>
     <File>Integrations/ML/UI/minimappanel.xml</File>
     <File>Integrations/ML/UI/Panels/modallenspanel.lua</File>
@@ -223,6 +233,7 @@
     <File>Integrations/ML/Text/morelenses_text_pl.xml</File>
     <File>Integrations/ML/Text/morelenses_text_ru.xml</File>
     <File>Integrations/ML/Text/morelenses_text_zh.xml</File>
+    <File>Integrations/ML/Text/morelenses_text_es.xml</File>
   </Files>
 
   <!-- Describes how each file is used -->
@@ -299,6 +310,7 @@
         <File>Assets/Text/cqui_text_general_pl.xml</File>
         <File>Assets/Text/cqui_text_general_ru.xml</File>
         <File>Assets/Text/cqui_text_general_zh.xml</File>
+        <File>Assets/Text/cqui_text_general_es.xml</File>
         <File>Assets/Text/cqui_text_settings.xml</File>
         <File>Assets/Text/cqui_text_settings_de.xml</File>
         <File>Assets/Text/cqui_text_settings_fr.xml</File>
@@ -307,6 +319,7 @@
         <File>Assets/Text/cqui_text_settings_pl.xml</File>
         <File>Assets/Text/cqui_text_settings_ru.xml</File>
         <File>Assets/Text/cqui_text_settings_zh.xml</File>
+        <File>Assets/Text/cqui_text_settings_es.xml</File>
       </Items>
     </LocalizedText>
     <!-- CQUI specific settings -->
@@ -355,6 +368,7 @@
         <File>Integrations/BTS/Text/bts_text_pl.xml</File>
         <File>Integrations/BTS/Text/bts_text_ru.xml</File>
         <File>Integrations/BTS/Text/bts_text_zh.xml</File>
+        <File>Integrations/BTS/Text/bts_text_es.xml</File>
       </Items>
     </LocalizedText>
     <ImportFiles id="BTS_IMPORT_FILES">
@@ -378,6 +392,7 @@
         <File>Integrations/URS/Text/urs_text_pl.xml</File>
         <File>Integrations/URS/Text/urs_text_ru.xml</File>
         <File>Integrations/URS/Text/urs_text_zh.xml</File>
+        <File>Integrations/URS/Text/urs_text_es.xml</File>
       </Items>
     </LocalizedText>
     <ImportFiles id="UNITREPORT_IMPORT_FILES">
@@ -403,6 +418,7 @@
         <File>Integrations/IDS/Text/ids_text_pl.xml</File>
         <File>Integrations/IDS/Text/ids_text_ru.xml</File>
         <File>Integrations/IDS/Text/ids_text_zh.xml</File>
+        <File>Integrations/IDS/Text/ids_text_es.xml</File>
       </Items>
     </LocalizedText>
     <ImportFiles id="MORELENSES_IMPORT_FILES">
@@ -423,6 +439,7 @@
         <File>Integrations/ML/Text/morelenses_text_pl.xml</File>
         <File>Integrations/ML/Text/morelenses_text_ru.xml</File>
         <File>Integrations/ML/Text/morelenses_text_zh.xml</File>
+        <File>Integrations/ML/Text/morelenses_text_es.xml</File>
       </Items>
     </LocalizedText>
     <UpdateDatabase id="MORELENSES_DATABASE">

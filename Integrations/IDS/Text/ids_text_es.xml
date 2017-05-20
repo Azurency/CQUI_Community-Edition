@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- SPANISH -->
+
+    <!-- HUD Common Text -->
+    <Replace Tag="LOC_IDS_DUMMY_KEY" Language="es_ES">
+      <Text>Acuerdos actuales</Text>
+    </Replace>
+
+  </LocalizedText>
+</GameData>

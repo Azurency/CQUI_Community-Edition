@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- SPANISH -->
+
+    <Row Tag="LOC_CQUI_BINDINGS" Language="es_ES">
+      <Text>Atajos de Teclado</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="es_ES">
+      <Text>Modalidad</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="es_ES">
+      <Text>Estándar: Sin cambios[NEWLINE]Clásico: Atajos Civ V [NEWLINE]Mejorado: Atajos Civ V con los cambios:[NEWLINE] WASD: control de cámara [NEWLINE]  Q/E: ciclo unidad/ciudad[NEWLINE]  Shift: selecciona/deselecciona de unidad/ciudad[NEWLINE]  Cantera/Ataque aéreo pasa a ser ALT+Q/ALT+S[NEWLINE]  NOTA:DESACTIVAR W/E EN CONFIGURACIÓN, O NO FUNCIONARÁ!</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="es_ES">
+      <Text>Clásico</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="es_ES">
+      <Text>Mejorado</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="es_ES">
+      <Text>Estándar</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW" Language="es_ES">
+      <Text>Vista de ciudad</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK" Language="es_ES">
+      <Text>Bloquea turno para ataques de ciudad</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK_TOOLTIP" Language="es_ES">
+      <Text>Activar para bloquear "Finalizar Turno" si una ciudad puede atacar.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="es_ES">
+      <Text>Altura de elementos de producción</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="es_ES">
+      <Text>Activa cola de producción</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="es_ES">
+      <Text>Muestra capa de crecimiento cultural</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="es_ES">
+      <Text>También puede activarse haciendo clic en el indicador de crecimiento de la vista de ciudad</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" Language="es_ES">
+      <Text>Muestra información al pasar el ratón</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="es_ES">
+      <Text>Muestra los iconos de gestión de ciudadanos, el rendimiento de las casillas y el crecimiento de los bordes al pasar el ratón</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_HEADER" Language="es_ES">
+      <Text>Estandartes Inteligentes</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="es_ES">
+      <Text>Activa los Estandartes Inteligentes</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="es_ES">
+      <Text>Muestra nuevos iconos e información en el estandarte de la ciudad.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="es_ES">
+      <Text>Se muestra [ICON_EXCLAMATION] siempre que haya ciudadanos no bloqueados siendo asignados automáticamente por la IA del gobernador de la ciudad.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_DISTRICTS_TOOLTIP" Language="es_ES">
+      <Text>Iconos de distrito indican los distritos construidos</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_POPULATION_TOOLTIP" Language="es_ES">
+      <Text>Muestra el número de turnos hasta el aumento de población [NEWLINE]y la [población/alojamientos max].</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="es_ES">
+      <Text>Muestra el número de turnos restantes hasta el crecimiento de bordes.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON" Language="es_ES">
+      <Text>Iconos de trabajadores inteligentes</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON_TOOLTIP" Language="es_ES">
+      <Text>Indica el tamaño/transparencia de los botonos de ciudanos trabajadores</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONALPHA" Language="es_ES">
+      <Text>Transparencia del icono de trabajadores</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONSIZE" Language="es_ES">
+      <Text>Tamaño del icono de trabajadores</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONS_HEADER" Language="es_ES">
+      <Text>Iconos de trabajadores</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONALPHA" Language="es_ES">
+      <Text>Transparencia del icono de trabajadores</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONSIZE" Language="es_ES">
+      <Text>Tamaño del icono de trabajadores</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL" Language="es_ES">
+      <Text>General</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="es_ES">
+      <Text>Oculto</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_MINIMAPSIZE" Language="es_ES">
+      <Text>Tamaño del minimapa</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="es_ES">
+      <Text>Estilo de los iconos de recursos mejorado</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="es_ES">
+      <Text>Sólido: siempre muestra los iconos de recursos[NEWLINE]Transparente: los iconos de recursos con mejora tienen transparencia[NEWLINE]Oculto: Los iconos de recursos con mejora se ocultan</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="es_ES">
+      <Text>Muuestra los lujos en el panel superior</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="es_ES">
+      <Text>Sólido</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="es_ES">
+      <Text>Activa por defecto el rendimiento</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TRANSPARENT" Language="es_ES">
+      <Text>Transparente</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP" Language="es_ES">
+      <Text>Chismorreos</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="es_ES">
+      <Text>Acorta los mensajes de chismorreos</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="es_ES">
+      <Text>Elimina la mayoría de los inicios inútiles de los mensajes de cotilleo que describen de dónde proviene la información</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES" Language="es_ES">
+      <Text>Lentes</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="es_ES">
+      <Text>Lente de Arqueólogo automática</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="es_ES">
+      <Text>Lente de Constructor automática</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="es_ES">
+      <Text>Lente de Batidor automática</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS" Language="es_ES">
+      <Text>Popups</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_ALWAYSOPENTECHTREES" Language="es_ES">
+      <Text>Siempre árbol completo</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="es_ES">
+      <Text>Ventana de Tecnología/Principio</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="es_ES">
+      <Text>Activa la ventana que aparece siempre que nuevas tecnologías o principios sean descubiertos</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="es_ES">
+      <Text>Audio de Tecnología/Principio</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="es_ES">
+      <Text>Reproduce el audio siempre que nuevas tecnologías o principios sean descubiertos. Es independiente del contenido visual y puede reproducirse aunque éste esté desactivado</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="es_ES">
+      <Text>Recuerda: ¡la configuración CQUI está ligada a guardados individuales![NEWLINE]Para cambiar la configuración por defecto, lee el fichero cqui_settings.sql en el directorio [MOD INSTALL DIRECTORY]/CQUI/Assets</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS" Language="es_ES">
+      <Text>Unidades</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="es_ES">
+      <Text>Muestra la ruta de la unidad</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="es_ES">
+      <Text>Expande acciones del panel de unidad</Text>
+    </Row>
+
+  </LocalizedText>
+</GameData>
