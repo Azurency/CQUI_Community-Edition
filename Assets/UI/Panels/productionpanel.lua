@@ -241,7 +241,7 @@ function BuildBuilding(city, buildingEntry)
 
   if(not pBuildQueue:CanProduce(buildingEntry.Hash, true)) then
     -- For one reason or another we can't produce this, so remove it
-    RemoveFromQueue(city:GetID(), 1, true);
+    RemoveFromQueue(city, 1, true);
     BuildFirstQueued(city);
     return;
   end
@@ -547,6 +547,7 @@ function PopulateList(data, listIM)
   local selectedCity  = UI.GetHeadSelectedCity();
   local pBuildings = selectedCity:GetBuildings();
   local cityID = selectedCity:GetID();
+  local productionQueueTableKey = FindProductionQueueKey(cityID, selectedCity:GetOwner())
   local cityData = GetCityData(selectedCity);
   local localPlayer = Players[Game.GetLocalPlayer()];
   local CQUI_ProdTable = {}; --Keeps track of each producable item. Key is the item hash, Value is a table with three keys (time/gold/faith) representing the respective costs
@@ -618,7 +619,7 @@ function PopulateList(data, listIM)
       local costStrTT = "";
 
       -- ProductionQueue: We need to check that there isn't already one of these in the queue
-      if(prodQueue[cityID][1] and prodQueue[cityID][1].entry.Hash == item.Hash) then
+      if(prodQueue[productionQueueTableKey][1] and prodQueue[productionQueueTableKey][1].entry.Hash == item.Hash) then
           item.TurnsLeft = math.ceil(item.Cost / cityData.ProductionPerTurn);
           item.Progress = 0;
       end
@@ -1556,7 +1557,7 @@ function PopulateList(data, listIM)
     --===================================================================================================================
     m_queueIM:ResetInstances();
 
-    if(#prodQueue[cityID] > 0) then
+    if(#prodQueue[productionQueueTableKey] > 0) then
       queueList = m_queueIM:GetInstance();
 
       if (queueList.queueListIM ~= nil) then
@@ -1567,7 +1568,7 @@ function PopulateList(data, listIM)
 
       local itemEncountered = {};
 
-      for i, qi in pairs(prodQueue[cityID]) do
+      for i, qi in pairs(prodQueue[productionQueueTableKey]) do
         local queueListing = queueList["queueListIM"]:GetInstance();
         ResetInstanceVisibility(queueListing);
         queueListing.ProductionProgressArea:SetHide(true);
@@ -1597,7 +1598,7 @@ function PopulateList(data, listIM)
             local unitDef = GameInfo.Units[qi.entry.Hash];
             local cost = 0;
 
-            if(prodQueue[cityID][i].type == PRODUCTION_TYPE.CORPS) then
+            if(prodQueue[productionQueueTableKey][i].type == PRODUCTION_TYPE.CORPS) then
               cost = qi.entry.CorpsCost;
               if(unitDef.Domain == "DOMAIN_SEA") then
                 suffix = " " .. Locale.Lookup("LOC_UNITFLAG_FLEET_SUFFIX");
@@ -1644,8 +1645,8 @@ function PopulateList(data, listIM)
 
         -- EVENT HANDLERS --
         queueListing.Button:RegisterCallback( Mouse.eRClick, function()
-          if(CanRemoveFromQueue(cityID, i)) then
-            if(RemoveFromQueue(cityID, i)) then
+          if(CanRemoveFromQueue(selectedCity, i)) then
+            if(RemoveFromQueue(selectedCity, i)) then
               if(i == 1) then
                 BuildFirstQueued(selectedCity);
               else
@@ -1668,12 +1669,12 @@ function PopulateList(data, listIM)
         end);
 
         queueListing.Button:RegisterCallback( Mouse.eLDblClick, function()
-          MoveQueueIndex(cityID, i, 1);
+          MoveQueueIndex(selectedCity, i, 1);
           BuildFirstQueued(selectedCity);
         end);
 
         queueListing.Button:RegisterCallback( Mouse.eMClick, function()
-          MoveQueueIndex(cityID, i, 1);
+          MoveQueueIndex(selectedCity, i, 1);
           BuildFirstQueued(selectedCity);
           RecenterCameraToSelectedCity();
         end);
@@ -1923,8 +1924,9 @@ function Refresh()
     local cityID    = selectedCity:GetID();
     local cityData    = GetCityData(selectedCity);
     local cityPlot    = Map.GetPlot(selectedCity:GetX(), selectedCity:GetY());
+	local productionQueueTableKey = FindProductionQueueKey(cityID, selectedCity:GetOwner())
 
-    if(not prodQueue[cityID]) then prodQueue[cityID] = {}; end
+    if(not prodQueue[productionQueueTableKey]) then prodQueue[productionQueueTableKey] = {}; end
     CheckAndReplaceQueueForUpgrades(selectedCity);
 
     local new_data = {
@@ -2691,23 +2693,25 @@ function OnCityProductionCompleted(playerID, cityID, orderType, unitType, cancel
   if (pCity == nil) then return end;
 
   local currentTurn = Game.GetCurrentGameTurn();
+  
+  local productionQueueTableKey = FindProductionQueueKey(cityID, pCity:GetOwner())
 
   -- Only one item can be produced per turn per city
   if(lastProductionCompletePerCity[cityID] and lastProductionCompletePerCity[cityID] == currentTurn) then
     return;
   end
 
-  if(prodQueue[cityID] and prodQueue[cityID][1]) then
+  if(prodQueue[productionQueueTableKey] and prodQueue[productionQueueTableKey][1]) then
     -- Check that the production is actually completed
-    local productionInfo = GetProductionInfoOfCity(pCity, prodQueue[cityID][1].entry.Hash);
+    local productionInfo = GetProductionInfoOfCity(pCity, prodQueue[productionQueueTableKey][1].entry.Hash);
     local pDistricts = pCity:GetDistricts();
     local pBuildings = pCity:GetBuildings();
     local isComplete = false;
 
-    if(prodQueue[cityID][1].type == PRODUCTION_TYPE.BUILDING or prodQueue[cityID][1].type == PRODUCTION_TYPE.PLACED) then
-      if(GameInfo.Districts[prodQueue[cityID][1].entry.Hash] and pDistricts:HasDistrict(GameInfo.Districts[prodQueue[cityID][1].entry.Hash].Index, true)) then
+    if(prodQueue[productionQueueTableKey][1].type == PRODUCTION_TYPE.BUILDING or prodQueue[productionQueueTableKey][1].type == PRODUCTION_TYPE.PLACED) then
+      if(GameInfo.Districts[prodQueue[productionQueueTableKey][1].entry.Hash] and pDistricts:HasDistrict(GameInfo.Districts[prodQueue[productionQueueTableKey][1].entry.Hash].Index, true)) then
         isComplete = true;
-      elseif(GameInfo.Buildings[prodQueue[cityID][1].entry.Hash] and pBuildings:HasBuilding(GameInfo.Buildings[prodQueue[cityID][1].entry.Hash].Index)) then
+      elseif(GameInfo.Buildings[prodQueue[productionQueueTableKey][1].entry.Hash] and pBuildings:HasBuilding(GameInfo.Buildings[prodQueue[productionQueueTableKey][1].entry.Hash].Index)) then
         isComplete = true;
       elseif(productionInfo.PercentComplete >= 1) then
         isComplete = true;
@@ -2719,17 +2723,17 @@ function OnCityProductionCompleted(playerID, cityID, orderType, unitType, cancel
     end
 
     -- PQ: Experimental
-    local productionType = prodQueue[cityID][1].type;
+    local productionType = prodQueue[productionQueueTableKey][1].type;
     if(orderType == 0) then
       if(productionType == PRODUCTION_TYPE.UNIT or productionType == PRODUCTION_TYPE.CORPS or productionType == PRODUCTION_TYPE.ARMY) then
-        if(GameInfo.Units[prodQueue[cityID][1].entry.Hash].Index == unitType) then
+        if(GameInfo.Units[prodQueue[productionQueueTableKey][1].entry.Hash].Index == unitType) then
           isComplete = true;
         end
       end
     elseif(orderType == 1) then
       -- Building/wonder
       if(productionType == PRODUCTION_TYPE.BUILDING or productionType == PRODUCTION_TYPE.PLACED) then
-        local buildingInfo = GameInfo.Buildings[prodQueue[cityID][1].entry.Hash];
+        local buildingInfo = GameInfo.Buildings[prodQueue[productionQueueTableKey][1].entry.Hash];
         if(buildingInfo and buildingInfo.Index == unitType) then
           isComplete = true;
         end
@@ -2738,7 +2742,7 @@ function OnCityProductionCompleted(playerID, cityID, orderType, unitType, cancel
         -- Check if this building is in our queue at all
       if(not isComplete and IsHashInQueue(pCity, GameInfo.Buildings[unitType].Hash)) then
         local removeIndex = GetIndexOfHashInQueue(pCity, GameInfo.Buildings[unitType].Hash);
-        RemoveFromQueue(cityID, removeIndex, true);
+        RemoveFromQueue(pCity, removeIndex, true);
 
         if(removeIndex == 1) then
           BuildFirstQueued(pCity);
@@ -2752,7 +2756,7 @@ function OnCityProductionCompleted(playerID, cityID, orderType, unitType, cancel
     elseif(orderType == 2) then
       -- District
       if(productionType == PRODUCTION_TYPE.PLACED) then
-        local districtInfo = GameInfo.Districts[prodQueue[cityID][1].entry.Hash];
+        local districtInfo = GameInfo.Districts[prodQueue[productionQueueTableKey][1].entry.Hash];
         if(districtInfo and districtInfo.Index == unitType) then
           isComplete = true;
         end
@@ -2760,7 +2764,7 @@ function OnCityProductionCompleted(playerID, cityID, orderType, unitType, cancel
     elseif(orderType == 3) then
       -- Project
       if(productionType == PRODUCTION_TYPE.PROJECT) then
-        local projectInfo = GameInfo.Projects[prodQueue[cityID][1].entry.Hash];
+        local projectInfo = GameInfo.Projects[prodQueue[productionQueueTableKey][1].entry.Hash];
         if(projectInfo and projectInfo.Index == unitType) then
           isComplete = true;
         end
@@ -2773,8 +2777,8 @@ function OnCityProductionCompleted(playerID, cityID, orderType, unitType, cancel
       return;
     end
 
-    table.remove(prodQueue[cityID], 1);
-    if(#prodQueue[cityID] > 0) then
+    table.remove(prodQueue[productionQueueTableKey], 1);
+    if(#prodQueue[productionQueueTableKey] > 0) then
       BuildFirstQueued(pCity);
     end
 
@@ -2793,6 +2797,16 @@ end
 --- ==========================================================================
 function SaveQueues()
   PlayerConfigurations[Game.GetLocalPlayer()]:SetValue("ZenProductionQueue", DataDumper(prodQueue, "prodQueue"));
+end
+
+--- ==========================================================================
+--  Finds production queue key based on player and current city id
+--  Desirable improvement : Refactor to use local player ID as a key to the table of cities instead 
+--                          of mixing all cities in one queue.
+--                          At the moment only allow 1000 cities per active local player.
+--- ==========================================================================
+function FindProductionQueueKey(cityID:number, localPlayerID:number)
+  return cityID * 1000 + localPlayerID;
 end
 
 --- ==========================================================================
@@ -2817,12 +2831,13 @@ function LoadQueues()
     local buildQueue = city:GetBuildQueue();
     local currentProductionHash = buildQueue:GetCurrentProductionTypeHash();
     local plotID = -1;
-
-    if(not prodQueue[cityID]) then
-      prodQueue[cityID] = {};
+	local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner());
+	
+    if(not prodQueue[productionQueueTableKey]) then
+      prodQueue[productionQueueTableKey] = {};
     end
 
-    if(not prodQueue[cityID][1] and currentProductionHash ~= 0) then
+    if(not prodQueue[productionQueueTableKey][1] and currentProductionHash ~= 0) then
       -- Determine the type of the item
       local currentType = 0;
       local productionInfo = GetProductionInfoOfCity(city, currentProductionHash);
@@ -2858,7 +2873,7 @@ function LoadQueues()
         print("Could not find production type for hash: " .. currentProductionHash);
       end
 
-      prodQueue[cityID][1] = {
+      prodQueue[productionQueueTableKey][1] = {
         entry=productionInfo,
         type=currentType,
         plotID=plotID
@@ -2879,9 +2894,10 @@ end
 --- ===========================================================================
 function IsBuildingInQueue(city, buildingHash)
   local cityID = city:GetID();
+  local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner())
 
-  if(prodQueue and #prodQueue[cityID] > 0) then
-    for _, qi in pairs(prodQueue[cityID]) do
+  if(prodQueue and #prodQueue[productionQueueTableKey] > 0) then
+    for _, qi in pairs(prodQueue[productionQueueTableKey]) do
       if(qi.entry and qi.entry.Hash == buildingHash) then
         if(qi.type == PRODUCTION_TYPE.BUILDING or qi.type == PRODUCTION_TYPE.PLACED) then
           return true;
@@ -2927,9 +2943,10 @@ end
 --- ===========================================================================
 function IsHashInQueue(city, hash)
   local cityID = city:GetID();
+  local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner())
 
-  if(prodQueue and #prodQueue[cityID] > 0) then
-    for i, qi in pairs(prodQueue[cityID]) do
+  if(prodQueue and #prodQueue[productionQueueTableKey] > 0) then
+    for i, qi in pairs(prodQueue[productionQueueTableKey]) do
       if(qi.entry and qi.entry.Hash == hash) then
         return true;
       end
@@ -2943,9 +2960,10 @@ end
 --- ===========================================================================
 function GetIndexOfHashInQueue(city, hash)
   local cityID = city:GetID();
+  local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner())
 
-  if(prodQueue and #prodQueue[cityID] > 0) then
-    for i, qi in pairs(prodQueue[cityID]) do
+  if(prodQueue and #prodQueue[productionQueueTableKey] > 0) then
+    for i, qi in pairs(prodQueue[productionQueueTableKey]) do
       if(qi.entry and qi.entry.Hash == hash) then
         return i;
       end
@@ -2962,9 +2980,10 @@ function GetNumDistrictsInCityQueue(city)
   local numDistricts = 0;
   local cityID = city:GetID();
   local pBuildQueue = city:GetBuildQueue();
+  local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner())
 
-  if(#prodQueue[cityID] > 0) then
-    for _,qi in pairs(prodQueue[cityID]) do
+  if(#prodQueue[productionQueueTableKey] > 0) then
+    for _,qi in pairs(prodQueue[productionQueueTableKey]) do
       if(GameInfo.Districts[qi.entry.Hash] and GameInfo.Districts[qi.entry.Hash].RequiresPopulation) then
         if (not pBuildQueue:HasBeenPlaced(qi.entry.Hash)) then
           numDistricts = numDistricts + 1;
@@ -2982,9 +3001,10 @@ end
 --- =============================================================================
 GameInfo.Districts['DISTRICT_CITY_CENTER'].IsPlotValid = function(pCity, plotID)
   local cityID = pCity:GetID();
+  local productionQueueTableKey = FindProductionQueueKey(cityID, pCity:GetOwner())
 
-  if(#prodQueue[cityID] > 0) then
-    for j,item in ipairs(prodQueue[cityID]) do
+  if(#prodQueue[productionQueueTableKey] > 0) then
+    for j,item in ipairs(prodQueue[productionQueueTableKey]) do
       if(item.plotID == plotID) then
         return false;
       end
@@ -3025,7 +3045,7 @@ function OnDropInQueue( dragStruct:table, queueListing:table, index:number )
     local city = UI.GetHeadSelectedCity();
     local cityID = city:GetID();
 
-    MoveQueueIndex(cityID, index, dropArea.id);
+    MoveQueueIndex(city, index, dropArea.id);
     dragControl:StopSnapBack();
     if(index == 1 or dropArea.id == 1) then
       BuildFirstQueued(city);
@@ -3044,18 +3064,19 @@ end
 --- ==========================================================================
 function QueueUnitOfType(city, unitEntry, unitType, skipToFront)
   local cityID = city:GetID();
+  local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner())
   local index = 1;
 
-  if(not prodQueue[cityID]) then prodQueue[cityID] = {}; end
-  if(not skipToFront) then index = #prodQueue[cityID] + 1; end
+  if(not prodQueue[productionQueueTableKey]) then prodQueue[productionQueueTableKey] = {}; end
+  if(not skipToFront) then index = #prodQueue[productionQueueTableKey] + 1; end
 
-  table.insert(prodQueue[cityID], index, {
+  table.insert(prodQueue[productionQueueTableKey], index, {
     entry=unitEntry,
     type=unitType,
     plotID=-1
     });
 
-  if(#prodQueue[cityID] == 1 or skipToFront) then
+  if(#prodQueue[productionQueueTableKey] == 1 or skipToFront) then
     BuildFirstQueued(city);
   else
     Refresh();
@@ -3105,11 +3126,12 @@ function QueueBuilding(city, buildingEntry, skipToFront)
     UI.SetInterfaceMode(InterfaceModeTypes.BUILDING_PLACEMENT, tParameters);
   else
     local cityID = city:GetID();
+	local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner())
     local plotID = -1;
     local buildingType = PRODUCTION_TYPE.BUILDING;
 
-    if(not prodQueue[cityID]) then
-      prodQueue[cityID] = {};
+    if(not prodQueue[productionQueueTableKey]) then
+      prodQueue[productionQueueTableKey] = {};
     end
 
     if(building.RequiresPlacement) then
@@ -3127,19 +3149,19 @@ function QueueBuilding(city, buildingEntry, skipToFront)
       end
     end
 
-    table.insert(prodQueue[cityID], {
+    table.insert(prodQueue[productionQueueTableKey], {
       entry=buildingEntry,
       type=buildingType,
       plotID=plotID
       });
 
     if(skipToFront) then
-      if(MoveQueueIndex(cityID, #prodQueue[cityID], 1) ~= 0) then
+      if(MoveQueueIndex(city, #prodQueue[productionQueueTableKey], 1) ~= 0) then
         Refresh();
       else
         BuildFirstQueued(city);
       end
-    elseif(#prodQueue[cityID] == 1) then
+    elseif(#prodQueue[productionQueueTableKey] == 1) then
       BuildFirstQueued(city);
     else
       Refresh();
@@ -3179,22 +3201,23 @@ function QueueDistrict(city, districtEntry, skipToFront)
     tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
 
     local cityID = city:GetID();
+	local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner());
 
-    if(not prodQueue[cityID]) then
-      prodQueue[cityID] = {};
+    if(not prodQueue[productionQueueTableKey]) then
+      prodQueue[productionQueueTableKey] = {};
     end
 
     local index = 1;
-    if(not skipToFront) then index = #prodQueue[cityID] + 1; end
+    if(not skipToFront) then index = #prodQueue[productionQueueTableKey] + 1; end
 
-    table.insert(prodQueue[cityID], index, {
+    table.insert(prodQueue[productionQueueTableKey], index, {
       entry=districtEntry,
       type=PRODUCTION_TYPE.PLACED,
       plotID=-1,
       tParameters=tParameters
       });
 
-    if(#prodQueue[cityID] == 1 or skipToFront) then
+    if(#prodQueue[productionQueueTableKey] == 1 or skipToFront) then
       BuildFirstQueued(city);
     else
       Refresh();
@@ -3208,21 +3231,22 @@ end
 --- ==========================================================================
 function QueueProject(city, projectEntry, skipToFront)
   local cityID = city:GetID();
+  local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner());
 
-  if(not prodQueue[cityID]) then
-    prodQueue[cityID] = {};
+  if(not prodQueue[productionQueueTableKey]) then
+    prodQueue[productionQueueTableKey] = {};
   end
 
   local index = 1;
-  if(not skipToFront) then index = #prodQueue[cityID] + 1; end
+  if(not skipToFront) then index = #prodQueue[productionQueueTableKey] + 1; end
 
-  table.insert(prodQueue[cityID], index, {
+  table.insert(prodQueue[productionQueueTableKey], index, {
     entry=projectEntry,
     type=PRODUCTION_TYPE.PROJECT,
     plotID=-1
     });
 
-  if(#prodQueue[cityID] == 1 or skipToFront) then
+  if(#prodQueue[productionQueueTableKey] == 1 or skipToFront) then
       BuildFirstQueued(city);
   else
     Refresh();
@@ -3234,18 +3258,20 @@ end
 --- ===========================================================================
 --  Check if removing an index would result in an empty queue
 --- ===========================================================================
-function CanRemoveFromQueue(cityID, index)
+function CanRemoveFromQueue(city, index)
+  local cityID = city:GetID();
+  local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner());
   local totalItemsToRemove = 1;
 
-  if(prodQueue[cityID] and #prodQueue[cityID] > 1 and prodQueue[cityID][index]) then
-    local destIndex = MoveQueueIndex(cityID, index, #prodQueue[cityID], true);
+  if(prodQueue[productionQueueTableKey] and #prodQueue[productionQueueTableKey] > 1 and prodQueue[productionQueueTableKey][index]) then
+    local destIndex = MoveQueueIndex(city, index, #prodQueue[productionQueueTableKey], true);
     if(destIndex > 0) then
       totalItemsToRemove = totalItemsToRemove + 1;
-      CanRemoveFromQueue(cityID, destIndex + 1);
+      CanRemoveFromQueue(city, destIndex + 1);
     end
   end
 
-  if(totalItemsToRemove == #prodQueue[cityID]) then
+  if(totalItemsToRemove == #prodQueue[productionQueueTableKey]) then
     return false;
   else
     return true;
@@ -3255,15 +3281,18 @@ end
 --- ===========================================================================
 --  Remove a specific index from a city's Production Queue
 --- ===========================================================================
-function RemoveFromQueue(cityID, index, force)
-  if(prodQueue[cityID] and (#prodQueue[cityID] > 1 or force) and prodQueue[cityID][index]) then
-    local destIndex = MoveQueueIndex(cityID, index, #prodQueue[cityID]);
+function RemoveFromQueue(city, index, force)
+  local cityID = city:GetID();
+  local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner());
+
+  if(prodQueue[productionQueueTableKey] and (#prodQueue[productionQueueTableKey] > 1 or force) and prodQueue[productionQueueTableKey][index]) then
+    local destIndex = MoveQueueIndex(city, index, #prodQueue[productionQueueTableKey]);
     if(destIndex > 0) then
       -- There was a conflict
-      RemoveFromQueue(cityID, destIndex + 1);
-      table.remove(prodQueue[cityID], destIndex);
+      RemoveFromQueue(city, destIndex + 1);
+      table.remove(prodQueue[productionQueueTableKey], destIndex);
     else
-      table.remove(prodQueue[cityID], #prodQueue[cityID]);
+      table.remove(prodQueue[productionQueueTableKey], #prodQueue[productionQueueTableKey]);
     end
     return true;
   end
@@ -3284,7 +3313,7 @@ function BuildPlaced(city, tParameters)
 
     if(GameInfo.Districts[districtHash] and GameInfo.Districts[districtHash].RequiresPopulation and numDistricts <= numPossibleDistricts) then
       if(GetNumDistrictsInCityQueue(city) + numDistricts > numPossibleDistricts) then
-        RemoveFromQueue(city:GetID(), 1);
+        RemoveFromQueue(city, 1);
         BuildFirstQueued(city);
         return;
       end
@@ -3299,27 +3328,29 @@ end
 --- ==========================================================================
 function BuildFirstQueued(pCity)
   local cityID = pCity:GetID();
-  if(prodQueue[cityID][1]) then
-    if(prodQueue[cityID][1].type == PRODUCTION_TYPE.BUILDING) then
-      BuildBuilding(pCity, prodQueue[cityID][1].entry);
-    elseif(prodQueue[cityID][1].type == PRODUCTION_TYPE.UNIT) then
-      BuildUnit(pCity, prodQueue[cityID][1].entry);
-    elseif(prodQueue[cityID][1].type == PRODUCTION_TYPE.ARMY) then
-      BuildUnitArmy(pCity, prodQueue[cityID][1].entry);
-    elseif(prodQueue[cityID][1].type == PRODUCTION_TYPE.CORPS) then
-      BuildUnitCorps(pCity, prodQueue[cityID][1].entry);
-    elseif(prodQueue[cityID][1].type == PRODUCTION_TYPE.PLACED) then
-      if(not prodQueue[cityID][1].tParameters) then
-        if(GameInfo.Buildings[prodQueue[cityID][1].entry.Hash]) then
-          BuildBuilding(pCity, prodQueue[cityID][1].entry);
+  local productionQueueTableKey = FindProductionQueueKey(cityID, pCity:GetOwner())
+  
+  if(prodQueue[productionQueueTableKey][1]) then
+    if(prodQueue[productionQueueTableKey][1].type == PRODUCTION_TYPE.BUILDING) then
+      BuildBuilding(pCity, prodQueue[productionQueueTableKey][1].entry);
+    elseif(prodQueue[productionQueueTableKey][1].type == PRODUCTION_TYPE.UNIT) then
+      BuildUnit(pCity, prodQueue[productionQueueTableKey][1].entry);
+    elseif(prodQueue[productionQueueTableKey][1].type == PRODUCTION_TYPE.ARMY) then
+      BuildUnitArmy(pCity, prodQueue[productionQueueTableKey][1].entry);
+    elseif(prodQueue[productionQueueTableKey][1].type == PRODUCTION_TYPE.CORPS) then
+      BuildUnitCorps(pCity, prodQueue[productionQueueTableKey][1].entry);
+    elseif(prodQueue[productionQueueTableKey][1].type == PRODUCTION_TYPE.PLACED) then
+      if(not prodQueue[productionQueueTableKey][1].tParameters) then
+        if(GameInfo.Buildings[prodQueue[productionQueueTableKey][1].entry.Hash]) then
+          BuildBuilding(pCity, prodQueue[productionQueueTableKey][1].entry);
         else
-          ZoneDistrict(pCity, prodQueue[cityID][1].entry);
+          ZoneDistrict(pCity, prodQueue[productionQueueTableKey][1].entry);
         end
       else
-        BuildPlaced(pCity, prodQueue[cityID][1].tParameters);
+        BuildPlaced(pCity, prodQueue[productionQueueTableKey][1].tParameters);
       end
-    elseif(prodQueue[cityID][1].type == PRODUCTION_TYPE.PROJECT) then
-      AdvanceProject(pCity, prodQueue[cityID][1].entry);
+    elseif(prodQueue[productionQueueTableKey][1].type == PRODUCTION_TYPE.PROJECT) then
+      AdvanceProject(pCity, prodQueue[productionQueueTableKey][1].entry);
     end
   else
     Refresh();
@@ -3334,20 +3365,21 @@ function OnStrategicViewMapPlacementProductionClose(tProductionQueueParameters)
   local cityID = tProductionQueueParameters.pSelectedCity:GetID();
   local entry = GetProductionInfoOfCity(tProductionQueueParameters.pSelectedCity, tProductionQueueParameters.buildingHash);
   entry.Hash = tProductionQueueParameters.buildingHash;
+  local productionQueueTableKey = FindProductionQueueKey(cityID, tProductionQueueParameters.pSelectedCity:GetOwner())
 
-  if(not prodQueue[cityID]) then prodQueue[cityID] = {}; end
+  if(not prodQueue[productionQueueTableKey]) then prodQueue[productionQueueTableKey] = {}; end
 
   local index = 1;
-  if(not nextDistrictSkipToFront) then index = #prodQueue[cityID] + 1; end
+  if(not nextDistrictSkipToFront) then index = #prodQueue[productionQueueTableKey] + 1; end
 
-  table.insert(prodQueue[cityID], index, {
+  table.insert(prodQueue[productionQueueTableKey], index, {
     entry=entry,
     type=PRODUCTION_TYPE.PLACED,
     plotID=tProductionQueueParameters.plotId,
     tParameters=tProductionQueueParameters.tParameters
     });
 
-  if(nextDistrictSkipToFront or #prodQueue[cityID] == 1) then BuildFirstQueued(tProductionQueueParameters.pSelectedCity); end
+  if(nextDistrictSkipToFront or #prodQueue[productionQueueTableKey] == 1) then BuildFirstQueued(tProductionQueueParameters.pSelectedCity); end
   Refresh();
   UI.PlaySound("Confirm_Production");
 end
@@ -3355,26 +3387,29 @@ end
 --- ===========================================================================
 --  Move a city's queue item from one index to another
 --- ===========================================================================
-function MoveQueueIndex(cityID, sourceIndex, destIndex, noMove)
+function MoveQueueIndex(city, sourceIndex, destIndex, noMove)
+  local cityID = city:GetID();
   local direction = -1;
   local actualDest = 0;
+  local city = UI.GetHeadSelectedCity();
+  local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner())
 
-  local sourceInfo = prodQueue[cityID][sourceIndex];
+  local sourceInfo = prodQueue[productionQueueTableKey][sourceIndex];
 
   if(sourceIndex < destIndex) then direction = 1; end
   for i=sourceIndex, math.max(destIndex-direction, 1), direction do
     -- Each time we swap, we need to check that there isn't a prereq that would break
-    if(sourceInfo.type == PRODUCTION_TYPE.BUILDING and prodQueue[cityID][i+direction].type == PRODUCTION_TYPE.PLACED) then
+    if(sourceInfo.type == PRODUCTION_TYPE.BUILDING and prodQueue[productionQueueTableKey][i+direction].type == PRODUCTION_TYPE.PLACED) then
       local buildingInfo = GameInfo.Buildings[sourceInfo.entry.Hash];
       if(buildingInfo and buildingInfo.PrereqDistrict) then
-        local districtInfo = GameInfo.Districts[prodQueue[cityID][i+direction].entry.Hash];
-        if(districtInfo and (districtInfo.DistrictType == buildingInfo.PrereqDistrict or (GameInfo.DistrictReplaces[prodQueue[cityID][i+direction].entry.Hash] and GameInfo.DistrictReplaces[prodQueue[cityID][i+direction].entry.Hash].ReplacesDistrictType == buildingInfo.PrereqDistrict))) then
+        local districtInfo = GameInfo.Districts[prodQueue[productionQueueTableKey][i+direction].entry.Hash];
+        if(districtInfo and (districtInfo.DistrictType == buildingInfo.PrereqDistrict or (GameInfo.DistrictReplaces[prodQueue[productionQueueTableKey][i+direction].entry.Hash] and GameInfo.DistrictReplaces[prodQueue[productionQueueTableKey][i+direction].entry.Hash].ReplacesDistrictType == buildingInfo.PrereqDistrict))) then
           actualDest = i;
           break;
         end
       end
-    elseif(sourceInfo.type == PRODUCTION_TYPE.PLACED and prodQueue[cityID][i+direction].type == PRODUCTION_TYPE.BUILDING) then
-      local buildingInfo = GameInfo.Buildings[prodQueue[cityID][i+direction].entry.Hash];
+    elseif(sourceInfo.type == PRODUCTION_TYPE.PLACED and prodQueue[productionQueueTableKey][i+direction].type == PRODUCTION_TYPE.BUILDING) then
+      local buildingInfo = GameInfo.Buildings[prodQueue[productionQueueTableKey][i+direction].entry.Hash];
       local districtInfo = GameInfo.Districts[sourceInfo.entry.Hash];
 
       if(buildingInfo and buildingInfo.PrereqDistrict) then
@@ -3383,8 +3418,8 @@ function MoveQueueIndex(cityID, sourceIndex, destIndex, noMove)
           break;
         end
       end
-    elseif(sourceInfo.type == PRODUCTION_TYPE.BUILDING and prodQueue[cityID][i+direction].type == PRODUCTION_TYPE.BUILDING) then
-      local destInfo = GameInfo.Buildings[prodQueue[cityID][i+direction].entry.Hash];
+    elseif(sourceInfo.type == PRODUCTION_TYPE.BUILDING and prodQueue[productionQueueTableKey][i+direction].type == PRODUCTION_TYPE.BUILDING) then
+      local destInfo = GameInfo.Buildings[prodQueue[productionQueueTableKey][i+direction].entry.Hash];
       local sourceBuildingInfo = GameInfo.Buildings[sourceInfo.entry.Hash];
 
       if(GameInfo.BuildingReplaces[destInfo.BuildingType]) then
@@ -3419,7 +3454,7 @@ function MoveQueueIndex(cityID, sourceIndex, destIndex, noMove)
     end
 
     if(not noMove) then
-      prodQueue[cityID][i], prodQueue[cityID][i+direction] = prodQueue[cityID][i+direction], prodQueue[cityID][i];
+      prodQueue[productionQueueTableKey][i], prodQueue[productionQueueTableKey][i+direction] = prodQueue[productionQueueTableKey][i+direction], prodQueue[productionQueueTableKey][i];
     end
   end
 
@@ -3455,13 +3490,14 @@ function CheckAndReplaceQueueForUpgrades(city)
   local pCulture = pPlayer:GetCulture();
   local buildQueue = city:GetBuildQueue();
   local cityID = city:GetID();
+  local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner());
   local pBuildings = city:GetBuildings();
   local civTypeName = PlayerConfigurations[playerID]:GetCivilizationTypeName();
   local removeUnits = {};
 
-  if(not prodQueue[cityID]) then prodQueue[cityID] = {} end
+  if(not prodQueue[productionQueueTableKey]) then prodQueue[productionQueueTableKey] = {} end
 
-  for i, qi in pairs(prodQueue[cityID]) do
+  for i, qi in pairs(prodQueue[productionQueueTableKey]) do
     if(qi.type == PRODUCTION_TYPE.UNIT or qi.type == PRODUCTION_TYPE.CORPS or qi.type == PRODUCTION_TYPE.ARMY) then
       local unitUpgrades = GameInfo.UnitUpgrades[qi.entry.Hash];
       if(unitUpgrades) then
@@ -3508,7 +3544,7 @@ function CheckAndReplaceQueueForUpgrades(city)
             local nProductionProgress :number = buildQueue:GetUnitProgress( upgradeUnit.Index );
             sToolTip = sToolTip .. ComposeProductionCostString( nProductionProgress, nProductionCost );
 
-            prodQueue[cityID][i].entry = {
+            prodQueue[productionQueueTableKey ][i].entry = {
               Type      = upgradeUnit.UnitType,
               Name      = upgradeUnit.Name,
               ToolTip     = sToolTip,
@@ -3578,9 +3614,9 @@ function CheckAndReplaceQueueForUpgrades(city)
     end
   end
 
-  if (#removeUnits == #prodQueue[cityID]) and (#removeUnits > 0) then
+  if (#removeUnits == #prodQueue[productionQueueTableKey ]) and (#removeUnits > 0) then
 
-      prodQueue[cityID] = {};
+      prodQueue[productionQueueTableKey ] = {};
       removeUnits = {};
       BuildFirstQueued(city);
       LuaEvents.UpdateBanner(playerID, cityID);
@@ -3590,7 +3626,7 @@ function CheckAndReplaceQueueForUpgrades(city)
 
   if (#removeUnits > 0) then
     for i=#removeUnits, 1, -1 do
-      local success = RemoveFromQueue(cityID, removeUnits[i], true);
+      local success = RemoveFromQueue(city, removeUnits[i], true);
 
       if success then
         print("Removing Item: " .. i);
@@ -3686,13 +3722,15 @@ function ResetCityQueue(cityID, player)
   end
   if(not player) then return end
   local city = player:GetCities():FindID(cityID);
+  
   if(not city) then return end
 
   local buildQueue = city:GetBuildQueue();
   local currentProductionHash = buildQueue:GetCurrentProductionTypeHash();
   local plotID = -1;
+  local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner())
 
-  if(prodQueue[cityID]) then prodQueue[cityID] = {}; end
+  if(prodQueue[productionQueueTableKey ]) then prodQueue[productionQueueTableKey ] = {}; end
 
   if(currentProductionHash ~= 0) then
     -- Determine the type of the item
@@ -3730,7 +3768,7 @@ function ResetCityQueue(cityID, player)
       print("Could not find production type for hash: " .. currentProductionHash);
     end
 
-    prodQueue[cityID][1] = {
+    prodQueue[productionQueueTableKey][1] = {
       entry=productionInfo,
       type=currentType,
       plotID=plotID
