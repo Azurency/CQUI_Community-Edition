@@ -1533,6 +1533,7 @@ function getImportedResources(playerID)
 						if ( pDealResources ~= nil ) then
 							for j,pDealResource in ipairs(pDealResources) do
 								local pClassType = GameInfo.Resources[pDealResource:GetValueType()].ResourceClassType;
+								local ending:number = pDealResource:GetEndTurn() - Game.GetCurrentGameTurn();
 								local convertedResources = {
 									Name = tostring(pDealResource:GetValueType());
 									ForType = pDealResource:GetValueType();
@@ -1540,7 +1541,7 @@ function getImportedResources(playerID)
 									ClassType = pClassType;
 									-- ARISTOS: Show the deal's other civ's identity only if it is the local player.
 									ImportString = "[COLOR_Red]Trade[ENDCOLOR] with " .. ((otherID == Game.GetLocalPlayer() or playerID == Game.GetLocalPlayer())
-										and Locale.Lookup(PlayerConfigurations[otherID]:GetPlayerName()) or "another civ") .. " : " .. pDealResource:GetAmount();
+										and Locale.Lookup(PlayerConfigurations[otherID]:GetPlayerName()) or "another civ") .. " (" .. ending .. "[ICON_Turn])" .. " : " .. pDealResource:GetAmount();
 								};
 								-- !!ARISTOS: To group resources imported from different sources into a single icon!!!
 								local isIncluded:boolean = false;
