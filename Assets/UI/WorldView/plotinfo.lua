@@ -77,8 +77,8 @@ function OnClickSwapTile( plotId:number )
   tParameters[CityCommandTypes.PARAM_Y] = kPlot:GetY();
 
   local tResults :table = CityManager.RequestCommand( pSelectedCity, CityCommandTypes.SWAP_TILE_OWNER, tParameters );
-  -- CQUI_UpdateSelectedCityCitizens
-  OnClickCitizen();
+  
+  CQUI_UpdateAllCitiesCitizens();    -- CQUI update all cities citizens and data when swap tiles
   return true;
 end
 
@@ -110,8 +110,8 @@ function OnClickPurchasePlot( plotId:number )
   --     after a plot puchase (e.g., buying plot for district placement)
   --     you must wait for the event raised from the gamecore before figuring
   --     out which plots need a display.
-  -- CQUI_UpdateSelectedCityCitizens
-  OnClickCitizen();
+  
+  OnClickCitizen();    -- CQUI update selected city citizens and data
   return true;
 end
 
@@ -955,6 +955,31 @@ function OnInputHandler( pInputStruct:table )
   local uiMsg = pInputStruct:GetMessageType();
   if (uiMsg == KeyEvents.KeyUp) then return KeyHandler( pInputStruct:GetKey() ); end;
   return false;
+end
+
+-- ===========================================================================
+-- CQUI update all cities citizens and data when swap tiles
+function CQUI_UpdateAllCitiesCitizens()
+
+  local m_pCity:table = Players[Game.GetLocalPlayer()]:GetCities();
+  for i, pCity in m_pCity:Members() do
+    local pCitizens   :table = pCity:GetCitizens();    
+    local tParameters :table = {};
+    
+    if pCitizens:IsFavoredYield(YieldTypes.CULTURE) then
+      tParameters[CityCommandTypes.PARAM_FLAGS]   = 0;      -- Set favoured
+      tParameters[CityCommandTypes.PARAM_DATA0] = 1;          -- on
+    elseif pCitizens:IsDisfavoredYield(YieldTypes.CULTURE) then
+      tParameters[CityCommandTypes.PARAM_FLAGS]   = 1;      -- Set Ignored
+      tParameters[CityCommandTypes.PARAM_DATA0] = 1;          -- on
+    else
+      tParameters[CityCommandTypes.PARAM_FLAGS]   = 0;      -- Set favoured
+      tParameters[CityCommandTypes.PARAM_DATA0] = 0;          -- off
+    end
+    
+    tParameters[CityCommandTypes.PARAM_YIELD_TYPE]= yieldType;  -- Yield type
+    CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, tParameters);
+  end
 end
 
 -- ===========================================================================
