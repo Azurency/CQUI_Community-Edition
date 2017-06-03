@@ -487,6 +487,10 @@ end
 
 -- ===========================================================================
 function ViewPanelHousing( data:table )
+
+  local selectedCity  = UI.GetHeadSelectedCity();
+  local CQUI_HousingFromImprovements = CQUI_RealHousingFromImprovements(selectedCity);    -- CQUI calculate real housing from improvements
+
   -- Only show the advisor bubbles during the tutorial
   Controls.HousingAdvisorBubble:SetHide( IsTutorialRunning() == false );
 
@@ -503,12 +507,12 @@ function ViewPanelHousing( data:table )
   --Water
   CQUI_BuildHousingBubbleInstance("ICON_GREAT_PERSON_CLASS_ADMIRAL", data.HousingFromWater, "LOC_PEDIA_CONCEPTS_PAGE_CITIES_15_CHAPTER_CONTENT_TITLE");
   --Improvements
-  CQUI_BuildHousingBubbleInstance("ICON_IMPROVEMENT_PASTURE", data.HousingFromImprovements, "LOC_IMPROVEMENT_NAME");
+  CQUI_BuildHousingBubbleInstance("ICON_IMPROVEMENT_PASTURE", CQUI_HousingFromImprovements, "LOC_IMPROVEMENT_NAME");    -- CQUI real housing from improvements value
   --Era
   CQUI_BuildHousingBubbleInstance("ICON_GREAT_PERSON_CLASS_SCIENTIST", data.HousingFromStartingEra, "LOC_ERA_NAME");
 
   local colorName:string = GetPercentGrowthColor( data.HousingMultiplier ) ;
-  Controls.HousingTotalNum:SetText( data.Housing );
+  Controls.HousingTotalNum:SetText( data.Housing - data.HousingFromImprovements + CQUI_HousingFromImprovements );    -- CQUI calculate real housing for the selected city
   Controls.HousingTotalNum:SetColorByName( colorName );
   local uv:number;
 

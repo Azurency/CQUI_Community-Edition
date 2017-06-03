@@ -592,10 +592,11 @@ function ViewMain( data:table )
 
   Controls.ReligionNum:SetText( data.ReligionFollowers );
 
+  local CQUI_HousingFromImprovements = CQUI_RealHousingFromImprovements(selectedCity);    -- CQUI calculate real housing from improvements
   Controls.HousingNum:SetText( data.Population );
   colorName = GetPercentGrowthColor( data.HousingMultiplier );
   Controls.HousingNum:SetColorByName( colorName );
-  Controls.HousingMax:SetText( data.Housing );  
+  Controls.HousingMax:SetText( data.Housing - data.HousingFromImprovements + CQUI_HousingFromImprovements );    -- CQUI calculate real housing
 
   Controls.BreakdownLabel:SetHide( m_isShowingPanels );
   Controls.ReligionLabel:SetHide( m_isShowingPanels );

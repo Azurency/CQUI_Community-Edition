@@ -1492,7 +1492,8 @@ function city_fields( kCityData, pCityInstance )
 
 	pCityInstance.GrowthRateStatus:SetText( Locale.Lookup(status) );
 
-	pCityInstance.Housing:SetText( tostring( kCityData.Housing ) );
+  local CQUI_HousingFromImprovements = CQUI_RealHousingFromImprovements(kCityData.City);    -- CQUI calculate real housing from improvements
+	pCityInstance.Housing:SetText( tostring( kCityData.Housing - kCityData.HousingFromImprovements + CQUI_HousingFromImprovements ) );    -- CQUI calculate real housing
 	pCityInstance.Amenities:SetText( tostring(kCityData.AmenitiesNum).." / "..tostring(kCityData.AmenitiesRequiredNum) );
 
 	local happinessText:string = Locale.Lookup( GameInfo.Happinesses[kCityData.Happiness].Name );
