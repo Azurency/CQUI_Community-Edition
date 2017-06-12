@@ -107,11 +107,11 @@
     </Replace>
  
     <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_LABEL" Language="es_ES">
-      <Text>Ruta superior</Text>
+      <Text>Mejor ruta</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_TOOLTIP" Language="es_ES">
-      <Text>La ruta repetida es la ruta superior según el orden actual. La ruta se esge una vez que el comerciante complete su ruta actual.</Text>
+      <Text>La ruta repetida es la mejor ruta según los criterios de ordenación seleccionados. La nueva mejor ruta se escoge cada vez que el comerciante complete su ruta actual.</Text>
     </Replace>
 
     <!-- Trade Origin Chooser -->

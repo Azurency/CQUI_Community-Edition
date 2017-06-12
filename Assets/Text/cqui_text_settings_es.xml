@@ -70,25 +70,25 @@
       <Text>Muestra el número de turnos restantes hasta el crecimiento de bordes.</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON" Language="es_ES">
-      <Text>Iconos de trabajadores inteligentes</Text>
+      <Text>Iconos de casillas trabajadas</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON_TOOLTIP" Language="es_ES">
-      <Text>Indica el tamaño/transparencia de los botonos de ciudanos trabajadores</Text>
+      <Text>Especifica un tamaño/transparencia especial para los iconos de ciudadanos en casillas trabajadas</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONALPHA" Language="es_ES">
-      <Text>Transparencia del icono de trabajadores</Text>
+      <Text>Transparencia del icono de ciudadano</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONSIZE" Language="es_ES">
-      <Text>Tamaño del icono de trabajadores</Text>
+      <Text>Tamaño del icono de ciudadano</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_WORKICONS_HEADER" Language="es_ES">
-      <Text>Iconos de trabajadores</Text>
+      <Text>Iconos de casillas trabajadas/paradas</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_WORKICONALPHA" Language="es_ES">
-      <Text>Transparencia del icono de trabajadores</Text>
+      <Text>Transparencia del icono de ciudadano</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_WORKICONSIZE" Language="es_ES">
-      <Text>Tamaño del icono de trabajadores</Text>
+      <Text>Tamaño del icono de ciudadano</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL" Language="es_ES">
       <Text>General</Text>
@@ -100,13 +100,13 @@
       <Text>Tamaño del minimapa</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="es_ES">
-      <Text>Estilo de los iconos de recursos mejorado</Text>
+      <Text>Estilo de iconos de recursos mejorados</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="es_ES">
       <Text>Sólido: siempre muestra los iconos de recursos[NEWLINE]Transparente: los iconos de recursos con mejora tienen transparencia[NEWLINE]Oculto: Los iconos de recursos con mejora se ocultan</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="es_ES">
-      <Text>Muuestra los lujos en el panel superior</Text>
+      <Text>Muestra los lujos en el panel superior</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="es_ES">
       <Text>Sólido</Text>
