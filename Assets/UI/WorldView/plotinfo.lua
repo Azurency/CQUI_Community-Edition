@@ -78,6 +78,7 @@ function OnClickSwapTile( plotId:number )
 
   local tResults :table = CityManager.RequestCommand( pSelectedCity, CityCommandTypes.SWAP_TILE_OWNER, tParameters );
   
+  OnClickCitizen();    -- CQUI update selected city citizens and data
   CQUI_UpdateAllCitiesCitizens();    -- CQUI update all cities citizens and data when swap tiles
   return true;
 end
