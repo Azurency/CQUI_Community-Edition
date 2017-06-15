@@ -42,7 +42,7 @@
         <m_Fields>
           <m_Values>
             <Element class="AssetObjects:FloatValue">
-              <m_fValue>20.000000</m_fValue>
+              <m_fValue>14.000000</m_fValue>
               <m_ParamName text="Width"/>
             </Element>
             <Element class="AssetObjects:RGBValue">
