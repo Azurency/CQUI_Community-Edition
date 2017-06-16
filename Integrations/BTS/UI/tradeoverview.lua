@@ -782,8 +782,8 @@ function AddRouteInstanceFromRouteInfo( routeInfo:table )
         end
     end
 
-    if routeInfo.TraderUnitID then
-        local tradeUnit:table = originPlayer:GetUnits():FindID(routeInfo.TraderUnitID);
+    local tradeUnit:table = originPlayer:GetUnits():FindID(routeInfo.TraderUnitID);
+    if routeInfo.TraderUnitID then        
         routeInstance.GridButton:RegisterCallback( Mouse.eLClick,
             function()
                 SelectUnit(tradeUnit);
@@ -802,6 +802,7 @@ function AddRouteInstanceFromRouteInfo( routeInfo:table )
                 end
             );
         else -- Cycle through all traders
+          if tradeUnit then
             local co = coroutine.create(
                 function()
                     while true do -- Infinitely cycle
@@ -822,6 +823,7 @@ function AddRouteInstanceFromRouteInfo( routeInfo:table )
                     CycleTraders(co)
                 end
             );
+          end
         end
     end
 end
