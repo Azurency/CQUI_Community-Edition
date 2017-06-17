@@ -62,6 +62,8 @@ local m_secondaryColor        :number = 0xf00d1ace;
 local m_kTutorialDisabledControls :table  = nil;
 local m_GrowthPlot          :number = -1;
 
+local CQUI_HousingFromImprovementsTable :table = {};
+
 -- ====================CQUI Cityview==========================================
 
 local CQUI_cityview = false;
@@ -592,7 +594,9 @@ function ViewMain( data:table )
 
   Controls.ReligionNum:SetText( data.ReligionFollowers );
 
-  local CQUI_HousingFromImprovements = CQUI_RealHousingFromImprovements(selectedCity);    -- CQUI calculate real housing from improvements
+  -- CQUI get real housing from improvements value
+  local selectedCityID = selectedCity:GetID();
+  local CQUI_HousingFromImprovements = CQUI_HousingFromImprovementsTable[selectedCityID];  
   Controls.HousingNum:SetText( data.Population );
   colorName = GetPercentGrowthColor( data.HousingMultiplier );
   Controls.HousingNum:SetColorByName( colorName );
@@ -1326,6 +1330,12 @@ function CQUI_UpdateSelectedCityCitizens( plotId:number )
 end
 
 -- ===========================================================================
+--CQUI get real housing from improvements
+function CQUI_HousingFromImprovementsTableInsert (pCityID, CQUI_HousingFromImprovements)
+  CQUI_HousingFromImprovementsTable[pCityID] = CQUI_HousingFromImprovements;
+end
+
+-- ===========================================================================
 --  CTOR
 -- ===========================================================================
 function Initialize()
@@ -1406,6 +1416,7 @@ function Initialize()
   LuaEvents.CQUI_ToggleGrowthTile.Add( CQUI_ToggleGrowthTile );
   LuaEvents.CQUI_SettingsUpdate.Add( CQUI_SettingsUpdate );
   LuaEvents.RefreshCityPanel.Add(Refresh);
+  LuaEvents.CQUI_RealHousingFromImprovementsCalculated.Add(CQUI_HousingFromImprovementsTableInsert);    --CQUI get real housing from improvements values
 
   -- Truncate possible static text overflows
   TruncateStringWithTooltip(Controls.BreakdownLabel,  MAX_BEFORE_TRUNC_STATIC_LABELS, Controls.BreakdownLabel:GetText());

@@ -11,15 +11,15 @@
             <Image                                    Anchor="R,B" Offset="0,-7"                                Texture="SelectionPanel_Divider"  />
             <Grid           ID="BreakdownGrid"        Anchor="R,T" Offset="4,20"    Size="parent-100,20"        Style="CityPanelSlotGrid">
               <Label        ID="BreakdownNum"         Anchor="L,C" Offset="33,1"    Style="CityPanelNumLarge"   String="-" />
-              <Label        ID="BreakdownLabel"       Anchor="R,C" Offset="4,1"     Style="CityPanelHeader"     String="{LOC_HUD_DISTRICTS:upper}" />
+              <Label        ID="BreakdownLabel"       Anchor="R,C" Offset="4,1"     Style="CityPanelHeader"     String="{LOC_HUD_DISTRICTS}" />
             </Grid>
             <Grid           ID="ReligionGrid"         Anchor="R,T" Offset="4,45"    Size="parent-100,20"        Style="CityPanelSlotGrid">
               <Label        ID="ReligionNum"          Anchor="L,C" Offset="33,1"    Style="CityPanelNumLarge"   String="-" />
-              <Label        ID="ReligionLabel"        Anchor="R,C" Offset="4,1"     Style="CityPanelHeader"     String="{LOC_HUD_CITY_RELIGIOUS_CITIZENS:upper}" />
+              <Label        ID="ReligionLabel"        Anchor="R,C" Offset="4,1"     Style="CityPanelHeader"     String="{LOC_HUD_CITY_RELIGIOUS_CITIZENS}" />
             </Grid>
             <Grid           ID="AmenitiesGrid"        Anchor="R,T" Offset="4,71"    Size="parent-100,20"        Style="CityPanelSlotGrid">
               <Label        ID="AmenitiesNum"         Anchor="L,C" Offset="34,1"    Style="CityPanelNumLarge"   String="-" />
-              <Label        ID="AmenitiesLabel"       Anchor="R,C" Offset="4,1"     Style="CityPanelHeader"     String="{LOC_HUD_CITY_AMENITIES:upper}" />
+              <Label        ID="AmenitiesLabel"       Anchor="R,C" Offset="4,1"     Style="CityPanelHeader"     String="{LOC_HUD_CITY_AMENITIES}" />
             </Grid>
             <Grid           ID="HousingGrid"          Anchor="R,T" Offset="4,94"    Size="parent-100,20"        Style="CityPanelSlotGrid">
               <Stack                                               Offset="13,1"    StackGrowth="Right" >
@@ -27,7 +27,7 @@
                 <Label                                Anchor="L,C" Offset="1,0"     Style="CityPanelNumSmall"   String="/" />
                 <Label      ID="HousingMax"           Anchor="L,C" Offset="0,1"     Style="CityPanelNumSmall"   String="-" />
               </Stack>
-              <Label        ID="HousingLabel"         Anchor="R,C" Offset="4,1"     Style="CityPanelHeader"     String="{LOC_HUD_CITY_HOUSING_CAPACITY:upper}" />
+              <Label        ID="HousingLabel"         Anchor="R,C" Offset="4,1"     Style="CityPanelHeader"     String="{LOC_HUD_CITY_HOUSING_CAPACITY}" />
             </Grid>
             <Image          ID="GrowthTurnsSmall"     Anchor="L,B" Offset="82,-4"   Size="71,21"                Texture="CityPanel_MeterSmallBacking"   Hidden="1"  >
               <TextureBar   ID="GrowthTurnsBarSmall"  Anchor="L,T" Offset="2,2"     Size="parent-4,parent-3"    Texture="CityPanel_CitizenMeterSmall"   ShadowColor="255,255,255,100" />

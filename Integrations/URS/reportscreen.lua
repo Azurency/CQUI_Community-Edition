@@ -88,6 +88,8 @@ local m_kCurrentDeals	:table = nil;
 local m_kCurrentTab = 1
 -- !!
 
+local CQUI_HousingFromImprovementsTable :table = {};
+
 -- ===========================================================================
 --	Single exit point for display
 -- ===========================================================================
@@ -1492,7 +1494,9 @@ function city_fields( kCityData, pCityInstance )
 
 	pCityInstance.GrowthRateStatus:SetText( Locale.Lookup(status) );
 
-  local CQUI_HousingFromImprovements = CQUI_RealHousingFromImprovements(kCityData.City);    -- CQUI calculate real housing from improvements
+	-- CQUI get real housing from improvements value
+	local kCityID = kCityData.City:GetID();
+	local CQUI_HousingFromImprovements = CQUI_HousingFromImprovementsTable[kCityID];
 	pCityInstance.Housing:SetText( tostring( kCityData.Housing - kCityData.HousingFromImprovements + CQUI_HousingFromImprovements ) );    -- CQUI calculate real housing
 	pCityInstance.Amenities:SetText( tostring(kCityData.AmenitiesNum).." / "..tostring(kCityData.AmenitiesRequiredNum) );
 
@@ -2131,6 +2135,13 @@ function OnToggleBonus()
 end
 --ARISTOS: End resources toggle
 
+-- ===========================================================================
+--CQUI get real housing from improvements
+function CQUI_HousingFromImprovementsTableInsert (pCityID, CQUI_HousingFromImprovements)
+  CQUI_HousingFromImprovementsTable[pCityID] = CQUI_HousingFromImprovements;
+end
+
+-- ===========================================================================
 function Initialize()
 
 	Resize();
@@ -2179,6 +2190,7 @@ function Initialize()
 	-- Events
 	LuaEvents.TopPanel_OpenReportsScreen.Add( OnTopOpenReportsScreen );
 	LuaEvents.TopPanel_CloseReportsScreen.Add( OnTopCloseReportsScreen );
+	LuaEvents.CQUI_RealHousingFromImprovementsCalculated.Add(CQUI_HousingFromImprovementsTableInsert);    --CQUI get real housing from improvements values
 end
 Initialize();
 
