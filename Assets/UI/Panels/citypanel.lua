@@ -893,6 +893,9 @@ function OnTileImproved(x, y)
       -- despite the large size.
       LuaEvents.CityPanel_LiveCityDataChanged( m_kData, true );
       --LuaEvents.UpdateBanner(Game.GetLocalPlayer(), m_pCity:GetID());
+
+      local pCityID = m_pCity:GetID();
+      LuaEvents.CQUI_CityInfoUpdated(pCityID);
     end
   end
 end

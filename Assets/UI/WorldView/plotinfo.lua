@@ -980,6 +980,9 @@ function CQUI_UpdateAllCitiesCitizens()
     
     tParameters[CityCommandTypes.PARAM_YIELD_TYPE]= yieldType;  -- Yield type
     CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, tParameters);
+
+    local pCityID = pCity:GetID();
+    LuaEvents.CQUI_CityInfoUpdated(pCityID);
   end
 end
 
