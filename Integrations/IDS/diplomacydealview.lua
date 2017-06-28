@@ -2672,8 +2672,8 @@ function OnShow()
 	-- Controls.Signature_Alpha:Play();
 	Controls.YieldAlpha:SetToBeginning();
 	Controls.YieldAlpha:Play();
-	-- Controls.YieldSlide:SetToBeginning();
-	-- Controls.YieldSlide:Play();
+	Controls.YieldSlide:SetToBeginning();
+	Controls.YieldSlide:Play();
 	Controls.TradePanelFade:SetToBeginning();
 	Controls.TradePanelFade:Play();
 	-- Controls.TradePanelSlide:SetToBeginning();
