@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd">
+
+  <SlideAnim				Style="ChooserAnim">
+    <!-- Top Panel -->
+    <Grid Anchor="C,T" Size="parent+7,96" Offset="0,28" Texture="DestinationChooser_CurrentSlot" SliceStart="0,0" SliceCorner="30,30" SliceSize="250,90" SliceTextureSize="308,207" >
+      <!-- City Banner -->
+      <Grid								ID="BannerBase"								Anchor="C,T" Offset="0,14"		Size="parent-26,33"								Texture="CityPanel_BannerBase"				SliceCorner="20,10" SliceSize="160,1" SliceTextureSize="199,33" Color="150,170,100,255">
+        <Grid							ID="BannerDarker"													Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerDarker"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="0,0,0,100" />
+        <Grid							ID="BannerLighter"													Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerLighter"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="255,255,255,255" />
+        <Grid																				Anchor="L,T" Offset="6,2"			Size="parent-10,parent-8"		Texture="CityPanel_BannerNone"				SliceCorner="70,10" SliceSize="1,1" SliceTextureSize="179,20" Color="255,0,0,255" />
+        <Label						ID="CityName"							Anchor="L,C" Offset="34,-2"		Style="FontFlair16"					FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="EveryWord" />
+
+        <!-- Travel Time -->
+        <Stack ID="TravelTimeStack" Anchor="R,T" Offset="12,3" StackGrowth="Right" StackPadding="2">
+          <Image ID="TravelTimeIcon" Size="16,16" Offset="0,2" Texture="Stats16" TextureOffset="48,0"/>
+          <Label ID="TravelTime" Offset="0,0" Style="FontFlair20" String="24" />
+        </Stack>
+      </Grid>
+
+      <!-- District Info -->
+      <Grid	ID="DistrictInfo" Size="225,30" Anchor="C,T" Offset="0,48" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16" >
+        <!-- Column Background -->
+        <Box Size="32,parent" Offset="32,0" Color="255,255,255,10"/>
+        <Box Size="32,parent" Offset="96,0" Color="255,255,255,10"/>
+        <Box Size="32,parent" Offset="161,0" Color="255,255,255,10"/>
+
+        <Stack Anchor="C,C" StackGrowth="Right">
+          <Image ID="CityCenterIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="0,0"/>
+          <Image ID="CommericalIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="192,0"/>
+          <Image ID="TheaterIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="0,32"/>
+          <Image ID="ScienceIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="64,0"/>
+          <Image ID="IndustrialIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="32,32"/>
+          <Image ID="NeighborhoodIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="64,32"/>
+          <Image ID="SpaceIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="128,32"/>
+        </Stack>
+      </Grid>
+
+      <!-- Status Label -->
+      <Label ID="SelectACityMessage" Anchor="C,C" Style="FontNormal16" Align="C,C" WrapWidth="250" Color="Dark_Gray" String="LOC_ESPIONAGECHOOSER_SELECT_A_CITY"/>
+
+      <!-- Active Boost Container -->
+      <Container ID="ActiveBoostContainer" Anchor="C,C" Size="250,44" Offset="0,14">
+        <Image Anchor="L,C" Size="40,40" Offset="0,0" Texture="EspionageMissions40" TextureOffset="40,0"/>
+        <Label ID="ActiveBoostLabel" Offset="46,8" Style="FontNormal14" Color="Dark_Gray"/>
+        <Label Offset="46,23" Style="FontNormal12" Color="Dark_Gray" String="LOC_ESPIONAGECHOOSER_SUCCESS_BOOSTED" TruncateWidth="235" ToolTip="LOC_ESPIONAGECHOOSER_SUCCESS_BOOSTED" />
+      </Container>
+
+      <!-- No Active Boost Label -->
+      <Label ID="NoActiveBoostLabel" Anchor="C,C" Offset="0,15" Style="FontNormal16" Color="Dark_Gray" String="LOC_ESPIONAGECHOOSER_NO_BOOST_ACTIVE"/>
+    </Grid>
+
+    <!-- Close Button -->
+    <Button					ID="CloseButton"				Anchor="L,T"	Offset="265,2" Style="CloseButtonSmall"/>
+
+    <!-- Destination Panel -->
+    <PullDown ID="DestinationFilterPulldown" ConsumeMouse="0" Offset="0,150" Anchor="C,T" Size="parent-10,25" AutoSizePopUp="1" AutoFlip="1" ScrollThreshold="400">
+      <ButtonData>
+        <GridButton   ID="FilterButton" TextAnchor="R,C" TextOffset="15,0" Style="FontNormal14" FontStyle="Shadow" EffectColor="0,0,0,255" Offset="0,-25" Size="50,-20" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" />
+      </ButtonData>
+
+      <GridData InnerPadding="15,15" Offset="0,0" Anchor="L,T" Style="Drawer"/>
+
+      <ScrollPanelData Anchor="L,T"  Vertical="1" Size="11,14"  Offset="0,0" AutoScrollBar="1">
+        <ScrollBar Style="ScrollVerticalBacking" Anchor="L,T" AnchorSide="I,I" Color="28,60,90,255" Offset="-2,2">
+          <Thumb Style="ScrollThumbAlt" Color="28,60,90,255" />
+        </ScrollBar>
+      </ScrollPanelData>
+
+      <StackData StackGrowth="Bottom" Offset="0,0" Size="200,400" Anchor="L,T" />
+
+      <InstanceData Name="FilterEntry">
+        <GridButton Anchor="L,T" ID="Button" Size="265,26" Offset="1,0" Style="FontNormal14" FontStyle="Shadow" EffectColor="0,0,0,255" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" StateOffsetIncrement="0,24"/>
+      </InstanceData>
+
+      <!-- Show Route Text -->
+      <Label String="LOC_ESPIONAGECHOOSER_FILTER_SHOW_CITIES" Anchor="L,T" Offset="30,-19" Style="FontNormal14" FontStyle="Shadow" EffectColor="0,0,0,255"/>
+      <Image ID="PulldownOpenedArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,T" Offset="7,-21"/>
+      <Image ID="PulldownClosedArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,T" Offset="7,-25"/>
+    </PullDown>
+
+    <Stack ID="DistrictFilterStack" StackGrowth="Right" StackPadding="8" Offset="50,150" Anchor="L,T">
+      <Stack StackGrowth="Down" StackPadding="8">
+        <CheckBox ID="FilterCityCenterCheckbox" IsChecked="1" Offset="0,4" BoxOnLeft="1" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
+        <Label Offset="-2,0" Style="FontNormal14" String="[Icon_DISTRICT_CITYCENTER]"/>
+      </Stack>
+
+      <Stack StackGrowth="Down" StackPadding="8">
+        <CheckBox ID="FilterCommericalHubCheckbox" IsChecked="0" Offset="0,4" BoxOnLeft="1" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
+        <Label Offset="-2,0" Style="FontNormal14" String="[Icon_DISTRICT_COMMERCIAL_HUB]"/>
+      </Stack>
+
+      <Stack StackGrowth="Down" StackPadding="8">
+        <CheckBox ID="FilterTheaterCheckbox" IsChecked="0" Offset="0,4" BoxOnLeft="1" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
+        <Label Offset="-2,0" Style="FontNormal14" String="[Icon_DISTRICT_THEATER]"/>
+      </Stack>
+
+      <Stack StackGrowth="Down" StackPadding="8">
+        <CheckBox ID="FilterCampusCheckbox" IsChecked="0" Offset="0,4" BoxOnLeft="1" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
+        <Label Offset="-2,0" Style="FontNormal14" String="[Icon_DISTRICT_CAMPUS]"/>
+      </Stack>
+
+      <Stack StackGrowth="Down" StackPadding="8">
+        <CheckBox ID="FilterIndustrialCheckbox" IsChecked="0" Offset="0,4" BoxOnLeft="1" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
+        <Label Offset="-2,0" Style="FontNormal14" String="[Icon_DISTRICT_INDUSTRIAL_ZONE]"/>
+      </Stack>
+
+      <Stack StackGrowth="Down" StackPadding="8">
+        <CheckBox ID="FilterNeighborhoodCheckbox" IsChecked="0" Offset="0,4" BoxOnLeft="1" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
+        <Label Offset="-2,0" Style="FontNormal14" String="[Icon_DISTRICT_NEIGHBORHOOD]"/>
+      </Stack>
+
+      <Stack StackGrowth="Down" StackPadding="8">
+        <CheckBox ID="FilterSpaceportCheckbox" IsChecked="0" Offset="0,4" BoxOnLeft="1" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
+        <Label Offset="-2,0" Style="FontNormal14" String="[Icon_DISTRICT_SPACEPORT]"/>
+      </Stack>
+    </Stack>
+
+    <ScrollPanel		ID="DestinationPanel"	Anchor="L,T" Offset="18,197" Size="parent-22,parent-200" Vertical="1" AutoScrollBar="0">
+      <ScrollBar    Anchor="L,C" Size="11,parent" AnchorSide="O,I" Offset="4,0"	Style="ScrollVerticalBar" />
+      <Stack				ID="DestinationStack" StackGrowth="Bottom" StackPadding="2" />
+    </ScrollPanel>
+
+    <!-- Mission Panel -->
+    <Grid ID="MissionGrid" Size="parent,parent" Offset="296,126" Texture="Controls_ContainerBlue" SliceStart="0,0" SliceCorner="3,3" SliceSize="9,9" SliceTextureSize="16,16" ConsumeMouse="1">
+      <Stack ID="MissionPanel"  StachGrowth="Down" StackPadding="2">
+        <Grid ID="PossibleMissionsLabel" Size="parent+2,50" Offset="0,-7" Texture="Controls_SubHeader3" SliceCorner="10,10" SliceSize="14,14" SliceTextureSize="34,34">
+          <Label Anchor="C,C" Style="FontFlair20" SmallCaps="26" SmallCapsType="EveryWord" String="LOC_ESPIONAGECHOOSER_POSSIBLE_MISSIONS"/>
+        </Grid>
+
+        <!-- MissionStack -->
+        <ScrollPanel 		ID="MissionScrollPanel"	Offset="19,0" Size="parent-22,parent-200" Vertical="1" AutoScrollBar="0">
+          <ScrollBar    Anchor="L,C" Size="11,parent" AnchorSide="O,I" Offset="4,0"	Style="ScrollVerticalBar" AutoScrollBar="1" />
+          <Stack				ID="MissionStack" StackGrowth="Bottom" StackPadding="2" />
+        </ScrollPanel>
+
+        <Grid ID="DestinationChooserButtons" Anchor="L,B" Size="parent,78" Offset="0,0" Texture="Controls_SubHeader3" SliceCorner="10,10" SliceSize="14,14" SliceTextureSize="34,34">
+          <!-- Confirm Button -->
+          <GridButton ID="ConfirmButton" Size="270,26" Offset="0,40" Anchor="C,B" String="LOC_ESPIONAGECHOOSER_CONFIRM_PLACEMENT" Style="FontFlair14" FontStyle="Shadows" TextOffset="0,2" EffectColor="0,0,0,255" SmallCaps="20" SmallCapsType="EveryWord">
+            <GridData Texture="Controls_ConfirmSmall" StateOffsetIncrement="0,26" SliceCorner="26,13" SliceSize="2,2" SliceTextureSize="51,26"/>
+          </GridButton>
+
+          <!-- Cancel Button -->
+          <GridButton ID="CancelButton" Size="240,26" Offset="0,10" Anchor="C,B" String="LOC_ESPIONAGECHOOSER_CANCEL" Style="FontFlair14" FontStyle="Shadows" TextOffset="0,2" EffectColor="0,0,0,255" SmallCaps="20" SmallCapsType="EveryWord">
+            <GridData Style="ButtonLightWeightGrid"/>
+          </GridButton>
+        </Grid>
+      </Stack>
+    </Grid>
+  </SlideAnim>
+
+  <!-- Instances -->
+  <Instance Name="DestinationInstance">
+    <GridButton ID="DestinationButton" Size="parent,72" Anchor="C,T">
+      <GridData Texture="DestinationChooser_Button" StateOffsetIncrement="0,76" SliceCorner="14,14" SliceSize="19,44" SliceTextureSize="48,76"/>
+
+      <!-- City Banner -->
+      <Grid								ID="BannerBase"			 					Anchor="C,T" Offset="-1,5"		Size="parent-10,33"								Texture="CityPanel_BannerBase"				SliceCorner="20,10" SliceSize="160,1" SliceTextureSize="199,33" Color="150,170,100,255">
+        <Grid							ID="BannerDarker"													Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerDarker"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="0,0,0,100" />
+        <Grid							ID="BannerLighter"													Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerLighter"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="255,255,255,255" />
+        <Grid																				Anchor="L,T" Offset="6,2"			Size="parent-10,parent-8"		Texture="CityPanel_BannerNone"				SliceCorner="70,10" SliceSize="1,1" SliceTextureSize="179,20" Color="255,0,0,255" />
+        <Label						ID="CityName"							Anchor="L,C" Offset="34,-2"		Style="FontFlair16"					FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="EveryWord" />
+
+        <!-- Travel Time -->
+        <Stack ID="TravelTimeStack" Anchor="R,T" Offset="12,3" StackGrowth="Right" StackPadding="2" >
+          <Image ID="TravelTimeIcon" Size="16,16" Offset="0,2" Texture="Stats16" TextureOffset="48,0"/>
+          <Label ID="TravelTime" Offset="0,0" Style="FontFlair20" String="24"/>
+        </Stack>
+      </Grid>
+
+      <!-- District Info -->
+      <Grid	Size="225,30" Anchor="C,B" Offset="-1,6" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16" >
+        <!-- Column Background -->
+        <Box Size="32,parent" Offset="32,0" Color="255,255,255,10"/>
+        <Box Size="32,parent" Offset="96,0" Color="255,255,255,10"/>
+        <Box Size="32,parent" Offset="161,0" Color="255,255,255,10"/>
+
+        <Stack Anchor="C,C" StackGrowth="Right">
+          <Image ID="CityCenterIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="0,0"/>
+          <Image ID="CommericalIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="192,0"/>
+          <Image ID="TheaterIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="0,32"/>
+          <Image ID="ScienceIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="64,0"/>
+          <Image ID="IndustrialIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="32,32"/>
+          <Image ID="NeighborhoodIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="64,32"/>
+          <Image ID="SpaceIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="128,32"/>
+        </Stack>
+      </Grid>
+    </GridButton>
+  </Instance>
+
+  <Instance Name="MissionInstance">
+    <GridButton ID="MissionButton" Size="parent,70" Offset="0,0" Anchor="C,T" AutoSize="Vertical">
+      <GridData Texture="DestinationChooser_Button" StateOffsetIncrement="0,76" SliceCorner="14,14" SliceSize="19,44" SliceTextureSize="48,76" NoStateChange="0"/>
+
+      <!-- Selector Brace -->
+      <Grid ID="SelectorBrace" Anchor="C,C" Size="parent,90" AutoSize="Vertical" AutoSizePadding="6,3" Texture="Controls_SelectorBrace" SliceCorner="29,29" SliceSize="2,2" SliceTextureSize="64,64" Color="255,255,255,0">
+        <!-- Mission Icon -->
+        <Grid Size="55,55" Offset="7,7" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">
+          <Image ID="MissionIcon" Anchor="C,C" Size="40,40" Texture="EspionageMissions40"/>
+        </Grid>
+
+        <Stack ID="MissionStack" StackGrowth="Down" Offset="70,7">
+          <!-- Mission Name -->
+          <Label ID="MissionName" Size="180,20" Style="FontNormal16"/>
+
+          <!-- Mission Details -->
+          <Label ID="MissionDetails" Style="FontNormal12" WrapWidth="192"/>
+
+          <!-- Container to maintain consistent size when auto sizing -->
+          <Container Size="192,18"/>
+        </Stack>
+
+        <!-- Stack used to manage operation district, turns to complete, and success chance information -->
+        <Stack ID="MissionStatsStack" Anchor="R,B" Offset="8,5" StackGrowth="Right" StackPadding="4">
+          <Grid AutoSize="1" AutoSizePadding="-4,0" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">
+            <Stack Offset="-2,0" StackGrowth="Right" StackPadding="-3">
+              <Label Offset="0,4" Style="FontNormal14" String="[Icon_LocationPip]"/>
+              <Label ID="MissionDistrictName" Offset="0,2" Style="FontNormal14" String="City Center"/>
+              <Label ID="MissionDistrictIcon" Offset="3,4" Style="FontNormal14" String="[Icon_DISTRICT_CITYCENTER]"/>
+            </Stack>
+          </Grid>
+
+          <Grid ID="TurnsToCompleteGrid" AutoSize="1" AutoSizePadding="2,1" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">
+            <Stack Offset="0,2" StackGrowth="Right" StackPadding="-3">
+              <Label Offset="0,0" Style="FontNormal14" String="[Icon_Turn]"/>
+              <Label ID="TurnsToCompleteLabel" Offset="0,0" Style="FontNormal14" String="4"/>
+            </Stack>
+          </Grid>
+
+          <Grid ID="ProbabilityGrid" AutoSize="1" AutoSizePadding="1,1" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">
+            <Label ID="ProbabilityLabel" Offset="3,2" Style="FontNormal14" String="5%"/>
+          </Grid>
+        </Stack>
+      </Grid>
+    </GridButton>
+  </Instance>
+</Context>
