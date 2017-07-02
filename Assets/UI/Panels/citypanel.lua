@@ -809,7 +809,7 @@ function RefreshOnTurnRoll()
 
     end
 
-    tParameters[CityCommandTypes.PARAM_YIELD_TYPE]= yieldType;  -- Yield type
+    tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = YieldTypes.CULTURE;  -- Yield type
     CityManager.RequestCommand(m_pCity, CityCommandTypes.SET_FOCUS, tParameters);
 
     m_kData = GetCityData( m_pCity );
@@ -872,7 +872,7 @@ function OnTileImproved(x, y)
         tParameters[CityCommandTypes.PARAM_DATA0] = 0;          -- off
       end
       
-      tParameters[CityCommandTypes.PARAM_YIELD_TYPE]= yieldType;  -- Yield type
+      tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = YieldTypes.CULTURE;  -- Yield type
       CityManager.RequestCommand(m_pCity, CityCommandTypes.SET_FOCUS, tParameters);
 
       m_kData = GetCityData( m_pCity );

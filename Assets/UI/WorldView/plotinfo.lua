@@ -977,7 +977,7 @@ function CQUI_UpdateAllCitiesCitizens()
       tParameters[CityCommandTypes.PARAM_DATA0] = 0;          -- off
     end
     
-    tParameters[CityCommandTypes.PARAM_YIELD_TYPE]= yieldType;  -- Yield type
+    tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = YieldTypes.CULTURE;  -- Yield type
     CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, tParameters);
   end
 end
