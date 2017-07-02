@@ -3864,7 +3864,9 @@ function Initialize()
   Events.CityProductionCompleted.Add(OnCityProductionCompleted);
   Events.CityProductionUpdated.Add(OnCityProductionUpdated);
 
+  -- CQUI Update production panel
   Events.CityWorkerChanged.Add(Refresh);
+  Events.CityFocusChanged.Add(Refresh);
 
   -- CQUI Setting Controls
   PopulateCheckBox(Controls.CQUI_ProductionQueueCheckbox, "CQUI_ProductionQueue");
