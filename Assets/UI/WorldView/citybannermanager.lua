@@ -1056,7 +1056,7 @@ function CityBanner.UpdateStats( self : CityBanner)
         if g_smartbanner and g_smartbanner_population then
           local CQUI_HousingFromImprovements = CQUI_HousingFromImprovementsTable[pCityID];
           if CQUI_HousingFromImprovements ~= nil then    -- CQUI real housing from improvements fix to show correct values when waiting for the next turn
-            self.m_Instance.CityPopulation:SetToolTipString(popTooltip);            
+            self.m_Instance.CityPopulation:SetToolTipString(popTooltip);
             local housingLeft = pCityGrowth:GetHousing() - pCityGrowth:GetHousingFromImprovements() + CQUI_HousingFromImprovements - currentPopulation;    -- CQUI calculate real housing
             local housingLeftText = housingLeft;
             local housingLeftColor = "Error";
@@ -1068,7 +1068,7 @@ function CityBanner.UpdateStats( self : CityBanner)
               housingLeftColor = "WarningMinor";
               housingLeftText = "+"..housingLeft;
               --COLOR: Yellow
-					  elseif housingLeft == 0.5 then
+            elseif housingLeft == 0.5 then
               housingLeftColor = "WarningMajor";
               housingLeftText = "+"..housingLeft;
             elseif housingLeft < 0.5 and housingLeft >= -4.5 then
@@ -3245,17 +3245,17 @@ end
 -- ===========================================================================
 -- CQUI recenter camera on city when right click on citybanner
 function OnCityBannerRightClick( playerID:number, cityID:number )
-	local pPlayer = Players[playerID];
-	if (pPlayer == nil) then
-		return;
-	end
-	
-	local pCity = pPlayer:GetCities():FindID(cityID);
-	if (pCity == nil) then
-		return;
-	end
-	
-	UI.LookAtPlot( pCity:GetX(), pCity:GetY() );
+  local pPlayer = Players[playerID];
+  if (pPlayer == nil) then
+    return;
+  end
+
+  local pCity = pPlayer:GetCities():FindID(cityID);
+  if (pCity == nil) then
+    return;
+  end
+
+  UI.LookAtPlot( pCity:GetX(), pCity:GetY() );
 end
 
 -- ===========================================================================
