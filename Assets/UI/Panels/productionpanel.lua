@@ -2693,7 +2693,7 @@ function OnCityProductionCompleted(playerID, cityID, orderType, unitType, cancel
   if (pCity == nil) then return end;
 
   local currentTurn = Game.GetCurrentGameTurn();
-  
+
   local productionQueueTableKey = FindProductionQueueKey(cityID, pCity:GetOwner())
 
   -- Only one item can be produced per turn per city
@@ -2801,7 +2801,7 @@ end
 
 --- ==========================================================================
 --  Finds production queue key based on player and current city id
---  Desirable improvement : Refactor to use local player ID as a key to the table of cities instead 
+--  Desirable improvement : Refactor to use local player ID as a key to the table of cities instead
 --                          of mixing all cities in one queue.
 --                          At the moment only allow 1000 cities per active local player.
 --- ==========================================================================
@@ -2832,7 +2832,7 @@ function LoadQueues()
     local currentProductionHash = buildQueue:GetCurrentProductionTypeHash();
     local plotID = -1;
 	local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner());
-	
+
     if(not prodQueue[productionQueueTableKey]) then
       prodQueue[productionQueueTableKey] = {};
     end
@@ -3329,7 +3329,7 @@ end
 function BuildFirstQueued(pCity)
   local cityID = pCity:GetID();
   local productionQueueTableKey = FindProductionQueueKey(cityID, pCity:GetOwner())
-  
+
   if(prodQueue[productionQueueTableKey][1]) then
     if(prodQueue[productionQueueTableKey][1].type == PRODUCTION_TYPE.BUILDING) then
       BuildBuilding(pCity, prodQueue[productionQueueTableKey][1].entry);
@@ -3722,7 +3722,7 @@ function ResetCityQueue(cityID, player)
   end
   if(not player) then return end
   local city = player:GetCities():FindID(cityID);
-  
+
   if(not city) then return end
 
   local buildQueue = city:GetBuildQueue();
