@@ -2552,5 +2552,6 @@ function Initialize()
   LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
   LuaEvents.CQUI_SettingsInitialized.Add( CQUI_UpdateMinimapSize );
   LuaEvents.CQUI_SettingsInitialized.Add( CQUI_ToggleYieldIcons );
+  CQUI_OnSettingsUpdate(); --ARISTOS: to force lenses settings when first starting the game
 end
 Initialize();
