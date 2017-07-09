@@ -53,11 +53,11 @@ local UV_CITIZEN_STARVING_STATUS    :table = {};
 -- ===========================================================================
 
 local m_kData           :table  = nil;
-local m_isInitializing        :boolean= false;    
+local m_isInitializing        :boolean= false;
 local m_isShowingPanels       :boolean= false;
 local m_pCity           :table  = nil;
 local m_pPlayer           :table  = nil;
-local m_primaryColor        :number = 0xcafef00d; 
+local m_primaryColor        :number = 0xcafef00d;
 local m_secondaryColor        :number = 0xf00d1ace;
 local m_kTutorialDisabledControls :table  = nil;
 local m_GrowthPlot          :number = -1;
@@ -129,7 +129,7 @@ LuaEvents.CQUI_Strike_Exit.Add (function() CQUI_usingStrikeButton = false; end)
 
 function CQUI_OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
   if(eOldMode == InterfaceModeTypes.CITY_MANAGEMENT or eOldMode == InterfaceModeTypes.DISTRICT_PLACEMENT or eOldMode == InterfaceModeTypes.BUILDING_PLACEMENT) then
-    if(eNewMode == InterfaceModeTypes.DISTRICT_PLACEMENT or eNewMode == InterfaceModeTypes.BUILDING_PLACEMENT) then 
+    if(eNewMode == InterfaceModeTypes.DISTRICT_PLACEMENT or eNewMode == InterfaceModeTypes.BUILDING_PLACEMENT) then
       CQUI_WonderModeEnabled();
     elseif(eNewMode ~= InterfaceModeTypes.CITY_MANAGEMENT) then
       if(CQUI_wonderMode) then
@@ -140,7 +140,7 @@ function CQUI_OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
     else
       LuaEvents.CQUI_CityviewEnable();
     end
-  elseif(eOldMode == InterfaceModeTypes.CITY_RANGE_ATTACK) then 
+  elseif(eOldMode == InterfaceModeTypes.CITY_RANGE_ATTACK) then
     UI.DeselectAllCities()
   end
 end
@@ -183,7 +183,7 @@ function CQUI_OnCitySelectionChanged( ownerPlayerID:number, cityID:number, i:num
     end
   end
 end
-  
+
 function CQUI_OnNextCity()
   local kCity:table = UI.GetHeadSelectedCity();
   UI.SelectNextCity(kCity);
@@ -210,7 +210,7 @@ function CQUI_RecenterCameraGameStart()
   local ePlayer :number = Game.GetLocalPlayer();
   local kPlayer         = Players[ePlayer];
   local cities = kPlayer:GetCities();
-  
+
   -- If there is a city, center on the capital
   -- Else, center on a unit
   if cities:GetCount() > 0 then
@@ -275,26 +275,26 @@ function RealizeYield3WayCheck( yieldData:number, yieldType, yieldToolTip )
 
     local yieldName = controlLookup[yieldInfo.YieldType];
     if(yieldName) then
-      
+
       local checkControl = Controls[yieldName.."Check"];
       local ignoreControl = Controls[yieldName.."Ignore"];
       local gridControl = Controls[yieldName.."Grid"];
 
       if(checkControl and ignoreControl and gridControl) then
-    
+
         local toolTip = "";
 
-        if yieldData == YIELD_STATE.FAVORED then 
+        if yieldData == YIELD_STATE.FAVORED then
           checkControl:SetCheck(true);  -- Just visual, no callback!
           checkControl:SetDisabled(false);
           ignoreControl:SetHide(true);
-        
-          toolTip = Locale.Lookup("LOC_HUD_CITY_YIELD_FOCUSING", yieldInfo.Name) .. "[NEWLINE][NEWLINE]";   
-        elseif yieldData == YIELD_STATE.IGNORED then 
+
+          toolTip = Locale.Lookup("LOC_HUD_CITY_YIELD_FOCUSING", yieldInfo.Name) .. "[NEWLINE][NEWLINE]";
+        elseif yieldData == YIELD_STATE.IGNORED then
           checkControl:SetCheck(false); -- Just visual, no callback!
           checkControl:SetDisabled(true);
           ignoreControl:SetHide(false);
-                
+
           toolTip = Locale.Lookup("LOC_HUD_CITY_YIELD_IGNORING", yieldInfo.Name) .. "[NEWLINE][NEWLINE]";
         else
           checkControl:SetCheck(false);
@@ -303,13 +303,13 @@ function RealizeYield3WayCheck( yieldData:number, yieldType, yieldToolTip )
 
           toolTip = Locale.Lookup("LOC_HUD_CITY_YIELD_CITIZENS", yieldInfo.Name) .. "[NEWLINE][NEWLINE]";
         end
-      
+
         if(#yieldToolTip > 0) then
           toolTip = toolTip .. yieldToolTip;
         else
           toolTip = toolTip .. Locale.Lookup("LOC_HUD_CITY_YIELD_NOTHING");
         end
-        
+
         gridControl:SetToolTipString(toolTip);
       end
     end
@@ -321,12 +321,12 @@ end
 --  Set the health meter
 -- ===========================================================================
 function RealizeHealthMeter( control:table, percent:number )
-  if  ( percent > 0.7 ) then 
-    control:SetColor( COLORS.METER_HP_GOOD ); 
+  if  ( percent > 0.7 ) then
+    control:SetColor( COLORS.METER_HP_GOOD );
   elseif ( percent > 0.4 )  then
     control:SetColor( COLORS.METER_HP_OK );
-  else             
-    control:SetColor( COLORS.METER_HP_BAD );  
+  else
+    control:SetColor( COLORS.METER_HP_BAD );
   end
 
   -- Meter control is half circle, so add enough to start at half point and condense % into the half area
@@ -426,14 +426,14 @@ function ViewMain( data:table )
     if (table.count(data.Religions) > 0) then
       local religiousMinorities = "";
       local religiousMinoritiesExist = false;
-      for _,religion in ipairs(data.Religions) do 
+      for _,religion in ipairs(data.Religions) do
         local religionName  :string = Game.GetReligion():GetName(religion.ID);
         local iconName    :string = "ICON_" .. religion.ReligionType;
         if religion == data.Religions[DATA_DOMINANT_RELIGION] then
           Controls.ReligionIcon:SetIcon("ICON_" .. religion.ReligionType);
           ReligionTooltip = ReligionTooltip.."[NEWLINE][NEWLINE]"..Locale.Lookup("LOC_UI_RELIGION_NUM_FOLLOWERS_TT", religionName, religion.Followers);
         else
-          if ( religion.ID > -1 and religion.Followers > 0) then 
+          if ( religion.ID > -1 and religion.Followers > 0) then
             religiousMinoritiesExist = true;
             religiousMinorities = religiousMinorities.. "[NEWLINE]"..Locale.Lookup("LOC_UI_RELIGION_NUM_FOLLOWERS_TT", religionName, religion.Followers);
           end
@@ -517,7 +517,7 @@ function ViewMain( data:table )
     HappinessTooltipString = HappinessTooltipString.."[NEWLINE]-"..aTable.Amenities.." "..aTable.AmenityType:sub(1, -2).."";
   end
   if data.HappinessGrowthModifier ~= 0 then
-    local growthInfo:string = 
+    local growthInfo:string =
       GetColorPercentString(Round(1 + (data.HappinessGrowthModifier/100), 2)) .. " " ..
       Locale.Lookup("LOC_HUD_CITY_CITIZEN_GROWTH") .. "[NEWLINE]" ..
       GetColorPercentString(Round(1 + (data.HappinessNonFoodYieldModifier/100), 2)) .. " "..
@@ -525,7 +525,7 @@ function ViewMain( data:table )
     HappinessTooltipString = HappinessTooltipString.."[NEWLINE][NEWLINE]"..growthInfo;
   end
   -- Housing tooltip
-  local HousingTooltip = "";         
+  local HousingTooltip = "";
   if data.HousingMultiplier == 0 then
     HousingTooltip = Locale.Lookup("LOC_HUD_CITY_POPULATION_GROWTH_HALTED");
   else
@@ -533,20 +533,20 @@ function ViewMain( data:table )
       HousingTooltip = Locale.Lookup("LOC_HUD_CITY_POPULATION_GROWTH_SLOWED", (1 - data.HousingMultiplier) * 100);
     else
       HousingTooltip = Locale.Lookup("LOC_HUD_CITY_POPULATION_GROWTH_NORMAL");
-    end 
+    end
   end
   -- Production info
   local buildQueue  = selectedCity:GetBuildQueue();
   local currentProductionHash   = buildQueue:GetCurrentProductionTypeHash();
   local productionHash = 0;
-  
+
   if( currentProductionHash == 0 ) then
     productionHash = buildQueue:GetPreviousProductionTypeHash();
   else
     productionHash = currentProductionHash;
   end
   local currentProductionInfo       :table = GetProductionInfoOfCity( data.City, productionHash );
-  
+
 
   -- Set icons and values for the yield checkboxes
   Controls.CultureCheck:GetTextButton():SetText(    "[ICON_Culture]"  ..toPlusMinusString(data.CulturePerTurn) );
@@ -571,7 +571,7 @@ function ViewMain( data:table )
   Controls.FaithCheck:ReprocessAnchoring();
   Controls.GoldCheck:ReprocessAnchoring();
   Controls.YieldStack:ReprocessAnchoring();
-  
+
   if m_isShowingPanels then
     Controls.LabelButtonRows:SetSizeX( SIZE_MAIN_ROW_LEFT_COLLAPSED );
   else
@@ -596,7 +596,7 @@ function ViewMain( data:table )
 
   -- CQUI get real housing from improvements value
   local selectedCityID = selectedCity:GetID();
-  local CQUI_HousingFromImprovements = CQUI_HousingFromImprovementsTable[selectedCityID];  
+  local CQUI_HousingFromImprovements = CQUI_HousingFromImprovementsTable[selectedCityID];
   Controls.HousingNum:SetText( data.Population );
   colorName = GetPercentGrowthColor( data.HousingMultiplier );
   Controls.HousingNum:SetColorByName( colorName );
@@ -607,7 +607,7 @@ function ViewMain( data:table )
   Controls.AmenitiesLabel:SetHide( m_isShowingPanels );
   Controls.HousingLabel:SetHide( m_isShowingPanels );
   Controls.PanelStackShadow:SetHide( not m_isShowingPanels );
-  Controls.ProductionNowLabel:SetHide( m_isShowingPanels ); 
+  Controls.ProductionNowLabel:SetHide( m_isShowingPanels );
 
   -- Determine size of progress bars at the bottom, as well as sub-panel offset.
   local OFF_BOTTOM_Y            :number = 9;
@@ -618,14 +618,14 @@ function ViewMain( data:table )
 
   -- Growth
   Controls.GrowthTurnsSmall:SetHide( not m_isShowingPanels );
-  Controls.GrowthTurns:SetHide( m_isShowingPanels );  
+  Controls.GrowthTurns:SetHide( m_isShowingPanels );
   Controls.GrowthTurnsBar:SetPercent( data.CurrentFoodPercent );
-  Controls.GrowthTurnsBar:SetShadowPercent( data.FoodPercentNextTurn ); 
+  Controls.GrowthTurnsBar:SetShadowPercent( data.FoodPercentNextTurn );
   Controls.GrowthTurnsBarSmall:SetPercent( data.CurrentFoodPercent );
   Controls.GrowthTurnsBarSmall:SetShadowPercent( data.FoodPercentNextTurn );
   Controls.GrowthNum:SetText( math.abs(data.TurnsUntilGrowth) );
   Controls.GrowthNumSmall:SetText( math.abs(data.TurnsUntilGrowth).."[Icon_Turn]" );
-  
+
   if data.Occupied then
     Controls.GrowthLabel:SetColorByName("StatBadCS");
     Controls.GrowthLabel:SetText( Locale.ToUpper( Locale.Lookup("LOC_HUD_CITY_GROWTH_OCCUPIED") ) );
@@ -647,7 +647,7 @@ function ViewMain( data:table )
 
   --Production
 
-  --Controls.ProductionTurns:SetHide( m_isShowingPanels );  
+  --Controls.ProductionTurns:SetHide( m_isShowingPanels );
   Controls.CurrentProductionProgress:SetPercent(data.CurrentProdPercent);
   Controls.CurrentProductionProgress:SetShadowPercent(data.ProdPercentNextTurn);
   Controls.CurrentProductionCost:SetText( data.CurrentTurnsLeft );
@@ -669,18 +669,18 @@ function ViewMain( data:table )
   else
     Controls.ProductionIcon:SetHide(true);
   end
-  
+
   Controls.CurrentProductionCost:SetHide( data.CurrentTurnsLeft < 0 );
   Controls.ProductionLabel:SetHide( data.CurrentTurnsLeft < 0 );
 
-  if data.CurrentTurnsLeft < 0 then 
+  if data.CurrentTurnsLeft < 0 then
     Controls.ProductionLabel:SetText( Locale.ToUpper( Locale.Lookup("LOC_HUD_CITY_NOTHING_PRODUCED")) );
     widthNumLabel = 0;
   end
 
   TruncateStringWithTooltip(Controls.ProductionLabel, MAX_BEFORE_TRUNC_TURN_LABELS-widthNumLabel, Controls.ProductionLabel:GetText());
   Controls.CurrentProductionProgress:ReprocessAnchoring();  -- Fixes up children elements inside of the bar.
-  
+
   -- Tutorial lockdown
   if m_kTutorialDisabledControls ~= nil then
     for _,name in ipairs(m_kTutorialDisabledControls) do
@@ -688,7 +688,7 @@ function ViewMain( data:table )
         Controls[name]:SetDisabled(true);
       end
     end
-  end 
+  end
 
 end
 
@@ -712,7 +712,7 @@ end
 -- ===========================================================================
 function GetTurnsUntilGrowthColor( turns:number )
   if  turns < 1 then return "StatBadCS"; end
-  return "StatGoodCS";  
+  return "StatGoodCS";
 end
 
 function GetPercentGrowthColor( percent:number )
@@ -730,7 +730,7 @@ function SetYieldFocus( yieldType:number )
   local pCitizens   :table = m_pCity:GetCitizens();
   local tParameters :table = {};
   tParameters[CityCommandTypes.PARAM_FLAGS]   = 0;      -- Set Favored
-  tParameters[CityCommandTypes.PARAM_YIELD_TYPE]= yieldType;  -- Yield type 
+  tParameters[CityCommandTypes.PARAM_YIELD_TYPE]= yieldType;  -- Yield type
   if pCitizens:IsFavoredYield(yieldType) then
     tParameters[CityCommandTypes.PARAM_DATA0]= 0;      -- boolean (1=true, 0=false)
   else
@@ -743,13 +743,13 @@ function SetYieldFocus( yieldType:number )
 end
 
 -- ===========================================================================
---  Changes what yield type(s) should be ignored by citizens 
+--  Changes what yield type(s) should be ignored by citizens
 -- ===========================================================================
 function SetYieldIgnore( yieldType:number )
   local pCitizens   :table = m_pCity:GetCitizens();
   local tParameters :table = {};
   tParameters[CityCommandTypes.PARAM_FLAGS]   = 1;      -- Set Ignored
-  tParameters[CityCommandTypes.PARAM_YIELD_TYPE]= yieldType;  -- Yield type 
+  tParameters[CityCommandTypes.PARAM_YIELD_TYPE]= yieldType;  -- Yield type
   if pCitizens:IsDisfavoredYield(yieldType) then
     tParameters[CityCommandTypes.PARAM_DATA0]= 0;      -- boolean (1=true, 0=false)
   else
@@ -770,14 +770,14 @@ function Refresh()
   m_pPlayer= Players[eLocalPlayer];
   m_pCity  = UI.GetHeadSelectedCity();
 
-  if m_pPlayer ~= nil and m_pCity ~= nil then     
+  if m_pPlayer ~= nil and m_pCity ~= nil then
     m_kData = GetCityData( m_pCity );
     if m_kData == nil then
       return;
     end
-    
+
     ViewMain( m_kData );
-    
+
     -- Tell others (e.g., CityPanelOverview) that the selected city data has changed.
     -- Passing this large table across contexts via LuaEvent is *much*
     -- more effecient than recomputing the entire set of yields a second time,
@@ -816,7 +816,7 @@ function RefreshOnTurnRoll()
     if m_kData == nil then
       return;
     end
-    
+
     --print("=============================================================");
     --print("Updating City Panel Details Due To Turn Roll");
     --print("=============================================================");
@@ -846,18 +846,18 @@ function OnTileImproved(x, y)
   --print("A Tile Was Improved!");
   local plot:table = Map.GetPlot(x,y);
   local PlayerID = Game.GetLocalPlayer();
-  
+
   m_pCity = Cities.GetPlotPurchaseCity(plot);
 
   if (m_pCity ~= nil) then
-    
+
     --print("Location: " .. x .."," .. y);
     --print("Player: " .. PlayerID);
     --print("City Owner: " .. m_pCity:GetOwner());
-    
+
     if (PlayerID == m_pCity:GetOwner()) then
       --print("City: " .. m_pCity:GetID());
-      
+
       local pCitizens   :table = m_pCity:GetCitizens();
       local tParameters :table = {};
 
@@ -893,6 +893,9 @@ function OnTileImproved(x, y)
       -- despite the large size.
       LuaEvents.CityPanel_LiveCityDataChanged( m_kData, true );
       --LuaEvents.UpdateBanner(Game.GetLocalPlayer(), m_pCity:GetID());
+
+      local pCityID = m_pCity:GetID();
+      LuaEvents.CQUI_CityInfoUpdated(pCityID);
     end
   end
 end
@@ -909,7 +912,7 @@ end
 function OnCityAddedToMap( ownerPlayerID:number, cityID:number )
   if Game.GetLocalPlayer() ~= nil then
     if ownerPlayerID == Game.GetLocalPlayer() then
-      local pSelectedCity:table = UI.GetHeadSelectedCity();     
+      local pSelectedCity:table = UI.GetHeadSelectedCity();
       if pSelectedCity ~= nil then
         Refresh();
       else
@@ -920,7 +923,7 @@ function OnCityAddedToMap( ownerPlayerID:number, cityID:number )
 end
 
 function OnCityNameChanged( playerID:number, cityID:number )
-  local city = UI.GetHeadSelectedCity();      
+  local city = UI.GetHeadSelectedCity();
   if(city and city:GetOwner() == playerID and city:GetID() == cityID) then
     local name = city:IsCapital() and "[ICON_Capital]" or "";
     name = name .. Locale.ToUpper(Locale.Lookup(city:GetName()));
@@ -981,7 +984,7 @@ end
 -- ===========================================================================
 --  GAME Event
 -- ===========================================================================
-function OnUnitSelectionChanged( playerID:number, unitID:number, hexI:number, hexJ:number, hexK:number, isSelected:boolean, isEditable:boolean )  
+function OnUnitSelectionChanged( playerID:number, unitID:number, hexI:number, hexJ:number, hexK:number, isSelected:boolean, isEditable:boolean )
   if playerID == Game.GetLocalPlayer() then
     if ContextPtr:IsHidden()==false then
       Close();
@@ -1024,11 +1027,11 @@ end
 -- ===========================================================================
 function OnGameDebugReturn( context:string, contextTable:table )
   function RunWithNoError()
-    if context ~= "CityPanel" or contextTable == nil then 
+    if context ~= "CityPanel" or contextTable == nil then
       return;
     end
-    local isHidden:boolean = contextTable["isHidden"]; 
-    ContextPtr:SetHide( isHidden ); 
+    local isHidden:boolean = contextTable["isHidden"];
+    ContextPtr:SetHide( isHidden );
   end
   pcall( RunWithNoError );
 end
@@ -1078,7 +1081,7 @@ end
 -- ===========================================================================
 --function OnCheckQueue()
 --  if m_isInitializing then return; end
---  if not m_debugAllowMultiPanel then  
+--  if not m_debugAllowMultiPanel then
 --    UILens.ToggleLayerOff(LensLayers.ADJACENCY_BONUS_DISTRICTS);
 --    UILens.ToggleLayerOff(LensLayers.DISTRICTS);
 --  end
@@ -1139,11 +1142,11 @@ function OnTogglePurchaseTile()
     end
     RecenterCameraOnCity();
     UILens.ToggleLayerOn( LensLayers.PURCHASE_PLOT );
-  else    
+  else
     if not Controls.ManageCitizensCheck:IsChecked() then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);      -- Exit mode    
+      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);      -- Exit mode
     end
-    UILens.ToggleLayerOff( LensLayers.PURCHASE_PLOT );      
+    UILens.ToggleLayerOff( LensLayers.PURCHASE_PLOT );
   end
 end
 
@@ -1219,7 +1222,7 @@ function DisplayGrowthTile()
       local newGrowthPlot:number = cityCulture:GetNextPlot();
       if(newGrowthPlot ~= -1 and newGrowthPlot ~= m_GrowthPlot and CQUI_growthTile) then
         m_GrowthPlot = newGrowthPlot;
-        
+
         local cost:number = cityCulture:GetNextPlotCultureCost();
         local currentCulture:number = cityCulture:GetCurrentCulture();
         local currentYield:number = cityCulture:GetCultureYield();
@@ -1245,7 +1248,7 @@ function OnLocalPlayerChanged( eLocalPlayer:number , ePrevLocalPlayer:number )
   if eLocalPlayer == -1 then
     m_pPlayer = nil;
     return;
-  end 
+  end
   m_pPlayer = Players[eLocalPlayer];
   if ContextPtr:IsHidden()==false then
     Close();
@@ -1262,13 +1265,13 @@ end
 -- ===========================================================================
 function SetupCollapsibleToggle( pCheckBoxControl:table, pButtonControl:table, pAreaControl:table, kParentControls:table )
   pCheckBoxControl:RegisterCheckHandler(
-    function()      
+    function()
       pAreaControl:SetHide( pCheckBoxControl:IsChecked() );
       if kParentControls ~= nil then
         for _,pControl in ipairs(kParentControls) do
           pControl:ReprocessAnchoring();
         end
-      end   
+      end
     end
   );
   if pButtonControl ~= nil then
@@ -1300,7 +1303,7 @@ function OnTutorial_ContextDisableItems( contextName:string, kIdsToDisable:table
   end
 
   m_kTutorialDisabledControls = kIdsToDisable;
-  
+
   -- Immediate set disabled
   if m_kTutorialDisabledControls ~= nil then
     for _,name in ipairs(m_kTutorialDisabledControls) do
@@ -1316,15 +1319,15 @@ end
 -- ===========================================================================
 function CQUI_UpdateSelectedCityCitizens( plotId:number )
 
-	local pSelectedCity	:table = UI.GetHeadSelectedCity();
-	local kPlot			:table = Map.GetPlotByIndex(plotId);
-	local tParameters	:table = {};
-	tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
-	tParameters[CityCommandTypes.PARAM_X] = kPlot:GetX();
-	tParameters[CityCommandTypes.PARAM_Y] = kPlot:GetY();
+  local pSelectedCity	:table = UI.GetHeadSelectedCity();
+  local kPlot			:table = Map.GetPlotByIndex(plotId);
+  local tParameters	:table = {};
+  tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
+  tParameters[CityCommandTypes.PARAM_X] = kPlot:GetX();
+  tParameters[CityCommandTypes.PARAM_Y] = kPlot:GetY();
 
-	local tResults :table = CityManager.RequestCommand( pSelectedCity, CityCommandTypes.MANAGE, tParameters );
-	return true;
+  local tResults :table = CityManager.RequestCommand( pSelectedCity, CityCommandTypes.MANAGE, tParameters );
+  return true;
 end
 
 -- ===========================================================================
@@ -1340,7 +1343,7 @@ function Initialize()
   LuaEvents.CityPanel_OpenOverview();
 
   m_isInitializing = true;
-  
+
   -- Context Events
   ContextPtr:SetInitHandler( OnInit );
   ContextPtr:SetShutdown( OnShutdown );
@@ -1352,27 +1355,27 @@ function Initialize()
   Controls.HousingButton:RegisterCallback(    Mouse.eLClick,  OnHousing );
   Controls.CitizensGrowthButton:RegisterCallback( Mouse.eLClick,  OnCitizensGrowth );
 
-  Controls.CultureCheck:RegisterCheckHandler(         function() OnCheckYield( YieldTypes.CULTURE,  "Culture"); end );  
-  Controls.FaithCheck:RegisterCheckHandler(         function() OnCheckYield( YieldTypes.FAITH,    "Faith"); end );  
-  Controls.FoodCheck:RegisterCheckHandler(          function() OnCheckYield( YieldTypes.FOOD,   "Food"); end ); 
-  Controls.GoldCheck:RegisterCheckHandler(          function() OnCheckYield( YieldTypes.GOLD,   "Gold"); end ); 
-  Controls.ProductionCheck:RegisterCheckHandler(        function() OnCheckYield( YieldTypes.PRODUCTION, "Production"); end ); 
-  Controls.ScienceCheck:RegisterCheckHandler(         function() OnCheckYield( YieldTypes.SCIENCE,  "Science"); end );  
+  Controls.CultureCheck:RegisterCheckHandler(         function() OnCheckYield( YieldTypes.CULTURE,  "Culture"); end );
+  Controls.FaithCheck:RegisterCheckHandler(         function() OnCheckYield( YieldTypes.FAITH,    "Faith"); end );
+  Controls.FoodCheck:RegisterCheckHandler(          function() OnCheckYield( YieldTypes.FOOD,   "Food"); end );
+  Controls.GoldCheck:RegisterCheckHandler(          function() OnCheckYield( YieldTypes.GOLD,   "Gold"); end );
+  Controls.ProductionCheck:RegisterCheckHandler(        function() OnCheckYield( YieldTypes.PRODUCTION, "Production"); end );
+  Controls.ScienceCheck:RegisterCheckHandler(         function() OnCheckYield( YieldTypes.SCIENCE,  "Science"); end );
   Controls.CultureIgnore:RegisterCallback(  Mouse.eLClick,  function() OnResetYieldToNormal( YieldTypes.CULTURE,  "Culture"); end);
   Controls.FaithIgnore:RegisterCallback(    Mouse.eLClick,  function() OnResetYieldToNormal( YieldTypes.FAITH,    "Faith"); end);
   Controls.FoodIgnore:RegisterCallback(   Mouse.eLClick,  function() OnResetYieldToNormal( YieldTypes.FOOD,   "Food"); end);
   Controls.GoldIgnore:RegisterCallback(   Mouse.eLClick,  function() OnResetYieldToNormal( YieldTypes.GOLD,   "Gold"); end);
   Controls.ProductionIgnore:RegisterCallback( Mouse.eLClick,  function() OnResetYieldToNormal( YieldTypes.PRODUCTION, "Production"); end);
-  Controls.ScienceIgnore:RegisterCallback(  Mouse.eLClick,  function() OnResetYieldToNormal( YieldTypes.SCIENCE,  "Science"); end); 
-  Controls.NextCityButton:RegisterCallback( Mouse.eLClick,  CQUI_OnNextCity); 
-  Controls.PrevCityButton:RegisterCallback( Mouse.eLClick,  CQUI_OnPreviousCity); 
-  
+  Controls.ScienceIgnore:RegisterCallback(  Mouse.eLClick,  function() OnResetYieldToNormal( YieldTypes.SCIENCE,  "Science"); end);
+  Controls.NextCityButton:RegisterCallback( Mouse.eLClick,  CQUI_OnNextCity);
+  Controls.PrevCityButton:RegisterCallback( Mouse.eLClick,  CQUI_OnPreviousCity);
+
   -- CQUI recenter on the city when clicking the round icon in the panel
   Controls.CircleBacking:RegisterCallback( Mouse.eLClick,  RecenterCameraOnCity);
 
   Controls.PurchaseTileCheck:RegisterCheckHandler(  OnTogglePurchaseTile );
   Controls.PurchaseTileCheck:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.ManageCitizensCheck:RegisterCheckHandler(  OnToggleManageCitizens ); 
+  Controls.ManageCitizensCheck:RegisterCheckHandler(  OnToggleManageCitizens );
   Controls.ManageCitizensCheck:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.ChangeProductionCheck:RegisterCheckHandler( OnToggleProduction );
   Controls.ChangeProductionCheck:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
@@ -1389,7 +1392,7 @@ function Initialize()
   Events.CitySelectionChanged.Add(  CQUI_OnCitySelectionChanged );
   Events.CityFocusChanged.Add(    OnCityFocusChange );
   Events.CityProductionCompleted.Add( OnCityProductionCompleted );
-  Events.CityProductionUpdated.Add( OnCityProductionUpdated );  
+  Events.CityProductionUpdated.Add( OnCityProductionUpdated );
   Events.CityProductionChanged.Add( OnCityProductionChanged );
   Events.CityWorkerChanged.Add(   OnCityWorkerChanged );
   Events.DistrictDamageChanged.Add( OnCityProductionChanged );
@@ -1405,7 +1408,7 @@ function Initialize()
 
   -- LUA Events
   LuaEvents.CityPanelOverview_CloseButton.Add( OnCloseOverviewPanel );
-  LuaEvents.GameDebug_Return.Add( OnGameDebugReturn );      -- hotloading help  
+  LuaEvents.GameDebug_Return.Add( OnGameDebugReturn );      -- hotloading help
   LuaEvents.ProductionPanel_Close.Add( OnProductionPanelClose );
   LuaEvents.Tutorial_CityPanelOpen.Add( OnTutorialOpen );
   LuaEvents.Tutorial_ContextDisableItems.Add( OnTutorial_ContextDisableItems );

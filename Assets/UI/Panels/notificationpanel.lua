@@ -1,8 +1,8 @@
 ﻿-- ===========================================================================
---  Notification Panel  
+--  Notification Panel
 -- ===========================================================================
 
-include( "ToolTipHelper" ); 
+include( "ToolTipHelper" );
 include( "InstanceManager" );
 
 
@@ -51,14 +51,14 @@ hstructure NotificationHandler
   OnPhaseBegin        : ifunction;
   OnNextSelect        : ifunction;
   OnPreviousSelect      : ifunction;
-  AddSound          : string;         -- optional: name of sound to trigger each time it 
+  AddSound          : string;         -- optional: name of sound to trigger each time it
 end
 
 -- The structure that holds the group data for a set of notifications.
 hstructure NotificationGroupType
   m_GroupID         : number;         -- The group ID for all the notifications this group is tracking.
   m_InstanceManager     : table;          -- The instance manager that made the control set for the group.
-    m_Instance          : table;          -- The instanced control set for the group UI.   
+    m_Instance          : table;          -- The instanced control set for the group UI.
     m_PlayerID          : number;         -- The player who the notification is for
   m_Notifications       : table;          -- All the notifications that are in the group.
 end
@@ -67,7 +67,7 @@ end
 hstructure NotificationType
   m_InstanceManager     : table;          -- The instance manager that made the control set.
     m_Instance          : table;          -- The instanced control set.
-  m_kHandlers         : NotificationHandler;    -- The handler set for the notification    
+  m_kHandlers         : NotificationHandler;    -- The handler set for the notification
     m_PlayerID          : number;         -- The player who the notification is for
   m_IDs           : table;          -- The IDs related to this type of notificaiton
   m_Group           : NotificationGroupType;  -- The group of the notification, can be nil
@@ -104,7 +104,7 @@ end
 -- =======================================================================================
 function RegisterHandlers()
 
-  -- Add the table of function handlers for each type of notification 
+  -- Add the table of function handlers for each type of notification
   m_notificationHandlers[DEBUG_NOTIFICATION_TYPE]                 = MakeDefaultHandlers();  --DEBUG
   m_notificationHandlers[NotificationTypes.DEFAULT]               = MakeDefaultHandlers();  --DEFAULT
   m_notificationHandlers[NotificationTypes.CHOOSE_ARTIFACT_PLAYER]        = MakeDefaultHandlers();
@@ -114,7 +114,7 @@ function RegisterHandlers()
   m_notificationHandlers[NotificationTypes.CHOOSE_PANTHEON]           = MakeDefaultHandlers();
   m_notificationHandlers[NotificationTypes.CHOOSE_RELIGION]           = MakeDefaultHandlers();
   m_notificationHandlers[NotificationTypes.CHOOSE_TECH]             = MakeDefaultHandlers();
-  m_notificationHandlers[NotificationTypes.CITY_LOW_AMENITIES]          = MakeDefaultHandlers();  
+  m_notificationHandlers[NotificationTypes.CITY_LOW_AMENITIES]          = MakeDefaultHandlers();
   m_notificationHandlers[NotificationTypes.CLAIM_GREAT_PERSON]          = MakeDefaultHandlers();
   m_notificationHandlers[NotificationTypes.COMMAND_UNITS]             = MakeDefaultHandlers();
   m_notificationHandlers[NotificationTypes.CONSIDER_GOVERNMENT_CHANGE]      = MakeDefaultHandlers();
@@ -165,47 +165,47 @@ function RegisterHandlers()
     m_notificationHandlers[NotificationTypes.SPY_ENEMY_DISRUPTED_ROCKETRY]          = MakeDefaultHandlers();
     m_notificationHandlers[NotificationTypes.SPY_ENEMY_CAPTURED]                    = MakeDefaultHandlers();
     m_notificationHandlers[NotificationTypes.SPY_ENEMY_KILLED]                      = MakeDefaultHandlers();
-    
-  -- Custom function handlers for the "Activate" signal:  
+
+  -- Custom function handlers for the "Activate" signal:
   m_notificationHandlers[DEBUG_NOTIFICATION_TYPE].Activate            = OnDebugActivate;
   m_notificationHandlers[NotificationTypes.CHOOSE_ARTIFACT_PLAYER].Activate   = OnChooseArtifactPlayerActivate;
   m_notificationHandlers[NotificationTypes.CHOOSE_BELIEF].Activate        = OnChooseReligionActivate;
-  m_notificationHandlers[NotificationTypes.CHOOSE_CITY_PRODUCTION].Activate   = OnChooseCityProductionActivate; 
-  m_notificationHandlers[NotificationTypes.CHOOSE_CIVIC].Activate         = OnChooseCivicActivate;  
-  m_notificationHandlers[NotificationTypes.CHOOSE_PANTHEON].Activate        = OnChooseReligionActivate; 
-  m_notificationHandlers[NotificationTypes.CHOOSE_RELIGION].Activate        = OnChooseReligionActivate; 
-  m_notificationHandlers[NotificationTypes.CHOOSE_TECH].Activate          = OnChooseTechActivate; 
-  m_notificationHandlers[NotificationTypes.CLAIM_GREAT_PERSON].Activate     = OnClaimGreatPersonActivate; 
+  m_notificationHandlers[NotificationTypes.CHOOSE_CITY_PRODUCTION].Activate   = OnChooseCityProductionActivate;
+  m_notificationHandlers[NotificationTypes.CHOOSE_CIVIC].Activate         = OnChooseCivicActivate;
+  m_notificationHandlers[NotificationTypes.CHOOSE_PANTHEON].Activate        = OnChooseReligionActivate;
+  m_notificationHandlers[NotificationTypes.CHOOSE_RELIGION].Activate        = OnChooseReligionActivate;
+  m_notificationHandlers[NotificationTypes.CHOOSE_TECH].Activate          = OnChooseTechActivate;
+  m_notificationHandlers[NotificationTypes.CLAIM_GREAT_PERSON].Activate     = OnClaimGreatPersonActivate;
   m_notificationHandlers[NotificationTypes.COMMAND_UNITS].Activate        = OnCommandUnitsActivate;
-  m_notificationHandlers[NotificationTypes.CONSIDER_GOVERNMENT_CHANGE].Activate = OnConsiderGovernmentChangeActivate; 
-  m_notificationHandlers[NotificationTypes.CONSIDER_RAZE_CITY].Activate     = OnConsiderRazeCityActivate; 
+  m_notificationHandlers[NotificationTypes.CONSIDER_GOVERNMENT_CHANGE].Activate = OnConsiderGovernmentChangeActivate;
+  m_notificationHandlers[NotificationTypes.CONSIDER_RAZE_CITY].Activate     = OnConsiderRazeCityActivate;
   m_notificationHandlers[NotificationTypes.DIPLOMACY_SESSION].Activate            = OnDiplomacySessionActivate;
-  m_notificationHandlers[NotificationTypes.FILL_CIVIC_SLOT].Activate        = OnFillCivicSlotActivate;  
-  m_notificationHandlers[NotificationTypes.GIVE_INFLUENCE_TOKEN].Activate     = OnGiveInfluenceTokenActivate; 
+  m_notificationHandlers[NotificationTypes.FILL_CIVIC_SLOT].Activate        = OnFillCivicSlotActivate;
+  m_notificationHandlers[NotificationTypes.GIVE_INFLUENCE_TOKEN].Activate     = OnGiveInfluenceTokenActivate;
   m_notificationHandlers[NotificationTypes.SPY_CHOOSE_DRAGNET_PRIORITY].Activate  = OnChooseEscapeRouteActivate;
-  m_notificationHandlers[NotificationTypes.SPY_CHOOSE_ESCAPE_ROUTE].Activate    = OnChooseEscapeRouteActivate;  
+  m_notificationHandlers[NotificationTypes.SPY_CHOOSE_ESCAPE_ROUTE].Activate    = OnChooseEscapeRouteActivate;
   m_notificationHandlers[NotificationTypes.PLAYER_DEFEATED].Activate        = OnLookAtAndActivateNotification;
   m_notificationHandlers[NotificationTypes.DISCOVER_CONTINENT].Activate     = OnDiscoverContinentActivateNotification;
 
   -- Sound to play when added
-  m_notificationHandlers[NotificationTypes.SPY_KILLED].AddSound             = "ALERT_NEGATIVE"; 
-  m_notificationHandlers[NotificationTypes.TREASURY_BANKRUPT].AddSound            = "ALERT_NEGATIVE"; 
-  m_notificationHandlers[NotificationTypes.HOUSING_PREVENTING_GROWTH].AddSound    = "ALERT_NEUTRAL";  
+  m_notificationHandlers[NotificationTypes.SPY_KILLED].AddSound             = "ALERT_NEGATIVE";
+  m_notificationHandlers[NotificationTypes.TREASURY_BANKRUPT].AddSound            = "ALERT_NEGATIVE";
+  m_notificationHandlers[NotificationTypes.HOUSING_PREVENTING_GROWTH].AddSound    = "ALERT_NEUTRAL";
   m_notificationHandlers[NotificationTypes.BARBARIANS_SIGHTED].AddSound           = "ALERT_NEGATIVE";
   m_notificationHandlers[NotificationTypes.CAPITAL_LOST].AddSound         = "ALERT_NEUTRAL";
   m_notificationHandlers[NotificationTypes.TRADE_ROUTE_PLUNDERED].AddSound        = "ALERT_NEGATIVE";
-  m_notificationHandlers[NotificationTypes.CITY_STARVING].AddSound          = "ALERT_NEUTRAL";  
-  m_notificationHandlers[NotificationTypes.CITY_FOOD_FOCUS].AddSound          = "ALERT_NEUTRAL";  
-  m_notificationHandlers[NotificationTypes.CITY_LOW_AMENITIES].AddSound     = "ALERT_NEUTRAL";  
-  m_notificationHandlers[NotificationTypes.CITYSTATE_QUEST_COMPLETED].AddSound  = "ALERT_POSITIVE"; 
-  m_notificationHandlers[NotificationTypes.TRADE_ROUTE_CAPACITY_INCREASED].AddSound = "ALERT_POSITIVE"; 
+  m_notificationHandlers[NotificationTypes.CITY_STARVING].AddSound          = "ALERT_NEUTRAL";
+  m_notificationHandlers[NotificationTypes.CITY_FOOD_FOCUS].AddSound          = "ALERT_NEUTRAL";
+  m_notificationHandlers[NotificationTypes.CITY_LOW_AMENITIES].AddSound     = "ALERT_NEUTRAL";
+  m_notificationHandlers[NotificationTypes.CITYSTATE_QUEST_COMPLETED].AddSound  = "ALERT_POSITIVE";
+  m_notificationHandlers[NotificationTypes.TRADE_ROUTE_CAPACITY_INCREASED].AddSound = "ALERT_POSITIVE";
 
   m_notificationHandlers[NotificationTypes.RELIC_CREATED].AddSound = "NOTIFICATION_MISC_POSITIVE";
   m_notificationHandlers[NotificationTypes.REBELLION].AddSound = "NOTIFICATION_REBELLION";
-    
+
     m_notificationHandlers[NotificationTypes.UNIT_PROMOTION_AVAILABLE].AddSound     = "UNIT_PROMOTION_AVAILABLE";
     m_notificationHandlers[NotificationTypes.WONDER_COMPLETED].AddSound             = "NOTIFICATION_OTHER_CIV_BUILD_WONDER";
-        
+
     m_notificationHandlers[NotificationTypes.SPY_HEIST_GREAT_WORK].AddSound         = "NOTIFICATION_ESPIONAGE_OP_SUCCESS";
     m_notificationHandlers[NotificationTypes.SPY_RECRUIT_PARTISANS].AddSound        = "NOTIFICATION_ESPIONAGE_OP_SUCCESS";
     m_notificationHandlers[NotificationTypes.SPY_SABOTAGED_PRODUCTION].AddSound     = "NOTIFICATION_ESPIONAGE_OP_SUCCESS";
@@ -228,7 +228,7 @@ function RegisterHandlers()
     m_notificationHandlers[NotificationTypes.SPY_ENEMY_DISRUPTED_ROCKETRY].AddSound = "NOTIFICATION_ESPIONAGE_OP_FAILED";
     m_notificationHandlers[NotificationTypes.SPY_ENEMY_CAPTURED].AddSound           = "NOTIFICATION_ESPIONAGE_OP_SUCCESS";
     m_notificationHandlers[NotificationTypes.SPY_ENEMY_KILLED].AddSound             = "NOTIFICATION_ESPIONAGE_OP_SUCCESS";
-    
+
   -- Custom function handlers for the "Add" signal:
   m_notificationHandlers[DEBUG_NOTIFICATION_TYPE].Add               = OnDebugAdd;
     m_notificationHandlers[NotificationTypes.PLAYER_MET].Add                        = OnMetCivAddNotification;
@@ -238,16 +238,16 @@ function RegisterHandlers()
 
   -- Custom function handlers for the "OnPhaseBegin" signal:
   m_notificationHandlers[DEBUG_NOTIFICATION_TYPE].OnPhaseBegin          = OnPhaseBegin;
-  
+
 
   -- Custom function handlers for the "TryDismiss" signal:
-  
+
   -- Custom function handlers for the "OnNextSelect" callback:
   m_notificationHandlers[NotificationTypes.COMMAND_UNITS].OnNextSelect      = OnCommandUnitsNextSelect;
 
   -- Custom function handlers for the "OnPreviousSelect" callback:
   m_notificationHandlers[NotificationTypes.COMMAND_UNITS].OnPreviousSelect    = OnCommandUnitsPreviousSelect;
-  
+
 end
 
 -- ===========================================================================
@@ -257,7 +257,7 @@ function ProcessStackSizes()
     Controls.ScrollStack:ReprocessAnchoring();
   Controls.ScrollPanel:CalculateSize();
   local stacksize = Controls.ScrollStack:GetSizeY();
-  
+
   -- Play the gear ticking animation
   if m_ActionPanelGearAnim ~= nil then
     m_ActionPanelGearAnim:SetToBeginning();
@@ -317,7 +317,7 @@ function ProcessStackSizes()
 end
 
 -- ===========================================================================
---  Get the handler table for a notification type.  
+--  Get the handler table for a notification type.
 --  Returns default handler table if one doesn't exist.
 -- ===========================================================================
 function GetHandler( notificationType:number )
@@ -371,7 +371,7 @@ end
 -- Ok if it already exists.
 -- ===========================================================================
 function AddNotificationEntry( playerID:number, typeName:string, notificationID:number, notificationGroupID:number )
-  
+
   -- Obtain existing player table or create one if first time call is made.
   local playerTable :table = m_notifications[playerID];
   if playerTable == nil then
@@ -381,9 +381,9 @@ function AddNotificationEntry( playerID:number, typeName:string, notificationID:
 
   local notificationEntry = playerTable[typeName];
   if notificationEntry == nil then
-    playerTable[typeName] = hmake NotificationType { 
+    playerTable[typeName] = hmake NotificationType {
       m_IDs   = {notificationID},         -- list with 1 item
-      m_PlayerID  = playerID, 
+      m_PlayerID  = playerID,
       m_TypeName  = typeName,
       m_isAuto  = false,
       m_Group   = nil,
@@ -397,10 +397,10 @@ function AddNotificationEntry( playerID:number, typeName:string, notificationID:
     if notificationGroupID ~= NotificationGroups.NONE then
       local notificationGroup = m_notificationGroups[notificationGroupID];
       if (m_notificationGroups[notificationGroupID] == nil) then
-        m_notificationGroups[notificationGroupID] = hmake NotificationGroupType { 
-          m_GroupID   = notificationGroupID; 
-          m_PlayerID    = playerID; 
-          m_Notifications = {} 
+        m_notificationGroups[notificationGroupID] = hmake NotificationGroupType {
+          m_GroupID   = notificationGroupID;
+          m_PlayerID    = playerID;
+          m_Notifications = {}
         };
         notificationGroup = m_notificationGroups[notificationGroupID];
       end
@@ -432,7 +432,7 @@ end
 --  Returns UI entry for the notification or NIL.
 -- ===========================================================================
 function GetNotificationEntry( playerID:number, notificationID:number )
-    
+
   local kPlayerTable:table = m_notifications[playerID];
   if (kPlayerTable == nil) then
     return nil;
@@ -443,7 +443,7 @@ function GetNotificationEntry( playerID:number, notificationID:number )
       if id == notificationID then
         return kNotification;
       end
-    end   
+    end
   end
 
   return nil;
@@ -468,8 +468,8 @@ function ReleaseNotificationEntry( playerID:number, notificationID:number )
 
   local notificationEntry:NotificationType = GetNotificationEntry( playerID, notificationID );
   if notificationEntry ~= nil then
-      
-    -- Remove this ID instance. 
+
+    -- Remove this ID instance.
     local index :number = 1;
     for _,id in ipairs(notificationEntry.m_IDs) do
       if id == notificationID then
@@ -514,9 +514,9 @@ function ReleaseNotificationEntry( playerID:number, notificationID:number )
       -- Remove empty group
       if (groupInstance ~= nil and table.count(groupInstance.m_Notifications) == 0) then
         if notificationEntry.m_Group ~= nil then
-          m_notificationGroups[notificationEntry.m_Group] = nil;      
+          m_notificationGroups[notificationEntry.m_Group] = nil;
         end
-      end   
+      end
 
       -- Remove this local data reference
       playerTable[notificationEntry.m_TypeName] = nil;
@@ -524,7 +524,7 @@ function ReleaseNotificationEntry( playerID:number, notificationID:number )
 
       -- In most situations, since there is more than one ID left, it's safe to
       -- update the UI with the next ID, but there are cases where the engine
-      -- is wiping out a bunch of IDs at once 
+      -- is wiping out a bunch of IDs at once
       -- (e.g., meeting more than 1 leader in a turn)
       -- In which case, more dismiss calls are about to be made... so check the
       -- engine still has a valid notification.
@@ -550,8 +550,8 @@ function TryDismissNotificationStack( playerID:number, notificationID:number )
   local kPlayerTable:table = m_notifications[playerID];
   if (kPlayerTable == nil) then
     return nil;
-  end   
-  
+  end
+
   local topNotification :NotificationType = GetNotificationEntry( playerID, notificationID );
   if (topNotification == nil) then
     return nil;
@@ -581,15 +581,15 @@ function LookAtNotification( pNotification:table )
   end
 
   -- Do we have a valid location?
-  if pNotification:IsLocationValid() then     
+  if pNotification:IsLocationValid() then
     local x, y = pNotification:GetLocation(); -- Look at it.
     UI.LookAtPlot(x, y);
     isLookedAt = true;
   end
-  
+
   -- Do we have a valid target?
-  if pNotification:IsTargetValid() then     
-    local targetPlayerID, targetID, targetType = pNotification:GetTarget();   
+  if pNotification:IsTargetValid() then
+    local targetPlayerID, targetID, targetType = pNotification:GetTarget();
     -- Is it a unit?
     if targetType == PlayerComponentTypes.UNIT then
       local pUnit:table = Players[targetPlayerID]:GetUnits():FindID(targetID);
@@ -607,7 +607,7 @@ function LookAtNotification( pNotification:table )
       local pCity = Players[targetPlayerID]:GetCities():FindID(targetID);
       if (pCity ~= nil) then
         -- Look at it, if we have not already
-        if (not isLookedAt) then 
+        if (not isLookedAt) then
           UI.LookAtPlot(pCity:GetX(), pCity:GetY());
         end
         -- Select it.
@@ -631,7 +631,7 @@ function OnLookAtAndActivateNotification( notificationEntry : NotificationType )
 end
 
 -- ===========================================================================
---  The default handler for activating a notification.  
+--  The default handler for activating a notification.
 --  Usually called when the user left clicks the notification
 -- ===========================================================================
 function OnDefaultActivateNotification( notificationEntry : NotificationType )
@@ -648,7 +648,7 @@ end
 --  The input is the Game Core notification instance.
 -- ===========================================================================
 function OnDefaultAddNotification( pNotification:table )
-  
+
   local typeName        :string       = pNotification:GetTypeName();
   if typeName == nil then
     UI.DataError("NIL notification type name for notifcation ID:"..tostring(pNotification:GetID()));
@@ -669,7 +669,7 @@ function OnDefaultAddNotification( pNotification:table )
   -- TODO: If creating custom notification instances based on type:
   --[[
   if (ContextPtr:LookUpControl(typeName) ~= nil) then
-    -- We have a custom UI for the notification type 
+    -- We have a custom UI for the notification type
     ContextPtr:BuildInstanceForControl( typeName, notificationEntry.m_Instance, Controls.ScrollStack );
   else
     -- Make a generic UI
@@ -692,8 +692,8 @@ function OnDefaultAddNotification( pNotification:table )
     if (notificationEntry.m_Instance ~= nil) then
       if (notificationEntry.m_Instance.ItemButton ~= nil and notificationEntry.m_Instance.ItemButtonInvalidPhase ~= nil) then
 
-        -- Use the (collapse) button as the actual mouse-in area, but a larger rectangle will 
-        -- track the mouse out, since the player may be interacting with the extended 
+        -- Use the (collapse) button as the actual mouse-in area, but a larger rectangle will
+        -- track the mouse out, since the player may be interacting with the extended
         -- information that flew out to the left of the notification.
 
         notificationEntry.m_Instance.ItemButton:RegisterCallback( Mouse.eLClick, function() kHandlers.Activate(notificationEntry); end );
@@ -731,7 +731,7 @@ function OnDefaultAddNotification( pNotification:table )
           function()
             pAnimControl:ClearEndCallback();
             pAnimControl:SetPauseTime( TIME_PAUSE_FIRST_SHOW_NOTIFICATION );
-            pAnimControl:Reverse();         
+            pAnimControl:Reverse();
           end
         );
       end
@@ -768,7 +768,7 @@ end
 -- ===========================================================================
 --
 -- ===========================================================================
-function OnMouseExitNotification( pInstance:table )   
+function OnMouseExitNotification( pInstance:table )
   if not pInstance.NotificationSlide:IsStopped() then
     -- If still playing, apply logic once it's done.
     local pAnimControl:table = pInstance.NotificationSlide;
@@ -777,7 +777,7 @@ function OnMouseExitNotification( pInstance:table )
         pAnimControl:ClearEndCallback();
         ApplyCollapseLogic( pInstance );
       end
-    );    
+    );
   else
     -- Done playing, immediately apply collapsing logic.
     ApplyCollapseLogic( pInstance );
@@ -799,7 +799,7 @@ function RealizeMaxWidth( notificationEntry:NotificationType , pNotification:tab
     if notificationEntry.m_Instance.LeftArrow:IsHidden() == false then
       titleWidthPadding = (notificationEntry.m_Instance.TitleCount:GetSizeX() +
                 (notificationEntry.m_Instance.LeftArrow:GetSizeX() * 2));
-    else 
+    else
       -- Don't pad out the stack since there aren't extra buttons or a title count
       summaryWidthPadding = 0;
     end
@@ -830,12 +830,12 @@ function RealizeMaxWidth( notificationEntry:NotificationType , pNotification:tab
 end
 
 -- ===========================================================================
---  Assign the notification summary and title to the notification instance, 
+--  Assign the notification summary and title to the notification instance,
 --    and set wrap width if needs to be wrapped
 -- ===========================================================================
 function SetNotificationText( notificationEntry:NotificationType , pNotification:table )
   if (pNotification ~= nil) then    -- Because the notification storage is 'ahead' of the events, the notification may be gone (we will get an event shortly)
-    local messageName:string = Locale.Lookup( pNotification:GetMessage() ); 
+    local messageName:string = Locale.Lookup( pNotification:GetMessage() );
     local summary:string = Locale.Lookup(pNotification:GetSummary());
     local widthSummary :number = 0;
 
@@ -880,7 +880,7 @@ function RealizeStandardNotification( playerID:number, notificationID:number )
 
   -- Auto generated, obtain the actual count...
   if notificationEntry.m_isAuto then
-    count = pNotification:GetCount();       
+    count = pNotification:GetCount();
   end
 
   notificationEntry.m_Instance.CountImage:SetHide( count < 2 );
@@ -889,7 +889,7 @@ function RealizeStandardNotification( playerID:number, notificationID:number )
   notificationEntry.m_Instance.RightArrow:SetHide( count < 2 );
   notificationEntry.m_Instance.PagePipStack:SetHide( count < 2 );
 
-  if count > 1 then   
+  if count > 1 then
     notificationEntry.m_Instance.Count:SetText( tostring(count) );
     notificationEntry.m_Instance.DismissStackButton:RegisterCallback( Mouse.eRClick,    function() TryDismissNotificationStack(playerID, notificationID); end );
     notificationEntry.m_Instance.TitleCount:SetText( tostring(count) );
@@ -900,12 +900,12 @@ function RealizeStandardNotification( playerID:number, notificationID:number )
 
     -- Prepare the area
     notificationEntry.m_Instance.PagePipStack:DestroyAllChildren();
-    
+
     for i=1,count,1 do
       local pipInstance:table = {};
       ContextPtr:BuildInstanceForControl("PipInstance", pipInstance, notificationEntry.m_Instance.PagePipStack);
       pipInstance.Pip:SetColor( i==notificationEntry.m_Index and COLOR_PIP_CURRENT or COLOR_PIP_OTHER );
-    end 
+    end
 
   else
     notificationEntry.m_Instance.LeftArrow:ClearCallback( Mouse.eLClick );
@@ -934,7 +934,7 @@ end
 function OnDefaultDismissNotification( playerID:number, notificationID:number )
   -- Don't try and get the Game Core notification object, it might be gone
   ReleaseNotificationEntry( playerID, notificationID );
-end 
+end
 
 -- ===========================================================================
 --  Default handler for a user request to try and manually dismiss a notification.
@@ -948,7 +948,7 @@ function OnDefaultTryDismissNotification( notificationEntry : NotificationType )
       end
     end
   end
-end 
+end
 
 -- ===========================================================================
 --  Default event handler for a turn phase beginning (Multiplayer)
@@ -961,7 +961,7 @@ function OnDefaultPhaseBeginNotification( playerID:number, notificationID:number
     notificationEntry.m_Instance.ItemButton:SetHide(not isValidForPhase);
     notificationEntry.m_Instance.ItemButtonInvalidPhase:SetHide(isValidForPhase);
   end
-end 
+end
 
 -- ===========================================================================
 --  Default event handler for the next notification in a "stacking"
@@ -969,7 +969,7 @@ end
 function OnDefaultNextSelectNotification( pNotification:table )
   local playerID        :number       = pNotification:GetPlayerID();
   local notificationID    :number       = pNotification:GetID();
-  local notificationEntry   :NotificationType = GetNotificationEntry(playerID, notificationID); 
+  local notificationEntry   :NotificationType = GetNotificationEntry(playerID, notificationID);
 
   notificationEntry.m_Index = notificationEntry.m_Index + 1;
   if notificationEntry.m_Index > table.count(notificationEntry.m_IDs) then  -- Check for wrap around
@@ -987,7 +987,7 @@ end
 function OnDefaultPreviousSelectNotification( pNotification:table )
   local playerID        :number       = pNotification:GetPlayerID();
   local notificationID    :number       = pNotification:GetID();
-  local notificationEntry   :NotificationType = GetNotificationEntry(playerID, notificationID); 
+  local notificationEntry   :NotificationType = GetNotificationEntry(playerID, notificationID);
   local nextID        :number = -1;
 
   notificationEntry.m_Index = notificationEntry.m_Index - 1;
@@ -1011,7 +1011,7 @@ end
 --  Create a table with the default handlers callbacks
 -- =======================================================================================
 function MakeDefaultHandlers()
-  return hmake NotificationHandler 
+  return hmake NotificationHandler
   {
     Add       = OnDefaultAddNotification,
     Dismiss     = OnDefaultDismissNotification,
@@ -1068,7 +1068,7 @@ end
 -- Move or give an operation to a unit
 -- =======================================================================================
 function OnCommandUnitsActivate( notificationEntry : NotificationType )
-  UI.SelectNextReadyUnit(); 
+  UI.SelectNextReadyUnit();
 end
 
 -- =======================================================================================
@@ -1077,7 +1077,7 @@ end
 function OnCommandUnitsNextSelect( pNotification:table )
   local playerID        :number       = pNotification:GetPlayerID();
   local notificationID    :number       = pNotification:GetID();
-  local notificationEntry   :NotificationType = GetNotificationEntry(playerID, notificationID); 
+  local notificationEntry   :NotificationType = GetNotificationEntry(playerID, notificationID);
 
   notificationEntry.m_Index = notificationEntry.m_Index + 1;
   if notificationEntry.m_Index > pNotification:GetCount() then  -- Check for wrap around
@@ -1093,13 +1093,13 @@ end
 function OnCommandUnitsPreviousSelect( pNotification:table)
   local playerID        :number       = pNotification:GetPlayerID();
   local notificationID    :number       = pNotification:GetID();
-  local notificationEntry   :NotificationType = GetNotificationEntry(playerID, notificationID); 
+  local notificationEntry   :NotificationType = GetNotificationEntry(playerID, notificationID);
 
   notificationEntry.m_Index = notificationEntry.m_Index - 1;
   if notificationEntry.m_Index == 0 then  -- Check for wrap around
     notificationEntry.m_Index = pNotification:GetCount();
   end
-  RealizeStandardNotification( playerID, notificationID );  -- Update pips  
+  RealizeStandardNotification( playerID, notificationID );  -- Update pips
   UI.SelectPrevReadyUnit();                 -- Engine automatically moves camera
 end
 
@@ -1150,7 +1150,7 @@ end
 -- =======================================================================================
 function OnGiveInfluenceTokenActivate( notificationEntry : NotificationType )
   if (notificationEntry ~= nil and notificationEntry.m_PlayerID == Game.GetLocalPlayer()) then
-    LuaEvents.NotificationPanel_OpenCityStatesSendEnvoys(); 
+    LuaEvents.NotificationPanel_OpenCityStatesSendEnvoys();
   end
 end
 
@@ -1176,7 +1176,7 @@ end
 -- =======================================================================================
 -- Diplomacy Handlers
 -- =======================================================================================
-function OnDiplomacySessionActivate( notificationEntry : NotificationType ) 
+function OnDiplomacySessionActivate( notificationEntry : NotificationType )
   if (notificationEntry ~= nil and notificationEntry.m_PlayerID == Game.GetLocalPlayer()) then
     local pNotification :table = GetActiveNotificationFromEntry(notificationEntry);
     if pNotification ~= nil then
@@ -1199,9 +1199,9 @@ function OnDiscoverContinentActivateNotification( notificationEntry : Notificati
 end
 
 -- =======================================================================================
-function OnMetCivAddNotification( pNotification:table ) 
+function OnMetCivAddNotification( pNotification:table )
     if m_isLoadComplete then
-        UI.PlaySound("NOTIFICATION_MISC_NEUTRAL"); 
+        UI.PlaySound("NOTIFICATION_MISC_NEUTRAL");
     end
   OnDefaultAddNotification( pNotification );
 end
@@ -1245,7 +1245,7 @@ function OnDebugAdd( name:string, fakeID:number )
         function()
           pAnimControl:ClearEndCallback();
           pAnimControl:SetPauseTime( TIME_PAUSE_FIRST_SHOW_NOTIFICATION );
-          pAnimControl:Reverse();         
+          pAnimControl:Reverse();
         end
       );
       notificationEntry.m_Instance.TitleInfo:SetString( name );
@@ -1275,9 +1275,9 @@ end
 --  Generate a debug event
 -- =======================================================================================
 function MakeDebugNotification( name:string, fakeID:number )
-  local handler = GetHandler( DEBUG_NOTIFICATION_TYPE );  
+  local handler = GetHandler( DEBUG_NOTIFICATION_TYPE );
   table.insert(m_kDebugNotification, fakeID);
-  handler.Add( name, fakeID );  
+  handler.Add( name, fakeID );
 end
 
 
@@ -1303,6 +1303,10 @@ function OnNotificationAdded( playerID:number, notificationID:number )
       -- Sanity check
       UI.DataError("Notification added Event but not found in manager. PlayerID - " .. tostring(playerID) .. " Notification ID - " .. tostring(notificationID));
     end
+
+    if notificationID	== 577 then                   -- CQUI: Notification when a City lost tile by Culture Bomb (Index == 577)
+      LuaEvents.CQUI_CityLostTileByCultureBomb();
+    end
   end
 end
 
@@ -1314,7 +1318,7 @@ function OnNotificationDismissed( playerID:number, notificationID:number )
   if (playerID == Game.GetLocalPlayer()) then -- one of the ones we track?
     -- Don't try and get the Game Core notification object, it might be gone
     local notificationEntry:NotificationType = GetNotificationEntry( playerID, notificationID );
-    if notificationEntry ~= nil then    
+    if notificationEntry ~= nil then
       --print("OnNotificationDismissed():",notificationID); --debug
       local handler = notificationEntry.m_kHandlers;
       handler.Dismiss( playerID, notificationID );
@@ -1393,7 +1397,7 @@ end
 --  Resizes/realigns each notification slide
 -- ===========================================================================
 function ProcessNotificationSizes( playerID:number )
-    
+
   local kPlayerTable:table = m_notifications[playerID];
   if (kPlayerTable == nil) then
     return;
@@ -1421,7 +1425,7 @@ function Resize()
   m_screenX, m_screenY  = UIManager:GetScreenSizeVal();
   Controls.RailOffsetAnim:ReprocessAnchoring();
   Controls.RailAnim:ReprocessAnchoring();
-  
+
   Controls.RailOffsetAnim:SetToBeginning();
   Controls.RailOffsetAnim:Play();
 
@@ -1445,7 +1449,7 @@ end
 --  UI Event
 -- ===========================================================================
 function OnInit( isReload:boolean )
-  if isReload then      
+  if isReload then
     NotificationManager.RestoreVisualState(Game.GetLocalPlayer());  -- Restore the notifications
   end
 end
@@ -1455,18 +1459,18 @@ end
 -- ===========================================================================
 function ClearNotifications()
 
-  -- Propery destroy instances; especially so callbacks are destroy... 
+  -- Propery destroy instances; especially so callbacks are destroy...
   -- otherwise hotloading may not hot load.
   for playerID,playerTable in pairs(m_notifications) do
     if playerTable ~= nil then
       for typeName, notification in pairs( playerTable ) do
         for _, id in ipairs( notification.m_IDs ) do
           ReleaseNotificationEntry( playerID, id );
-        end       
+        end
       end
     end
   end
-  
+
 end
 
 
@@ -1476,7 +1480,7 @@ end
 function OnShutdown()
 
   ClearNotifications();
-  
+
 end
 
 -- ===========================================================================
@@ -1513,12 +1517,12 @@ function OnUnitKilledInCombat( targetUnit )
     if notificationEntry.m_Instance ~= nil then
       local pNotification :table = GetActiveNotificationFromEntry(notificationEntry);
       if (pNotification ~= nil) then
-        local targetPlayerID, targetID, targetType = pNotification:GetTarget();   
+        local targetPlayerID, targetID, targetType = pNotification:GetTarget();
         -- Is it a unit?
         if targetType == PlayerComponentTypes.UNIT then
-          if pNotification:IsTargetValid() then 
+          if pNotification:IsTargetValid() then
             local pUnit:table = Players[targetPlayerID]:GetUnits():FindID(targetID);
-            if (pUnit == nil) then    
+            if (pUnit == nil) then
               ReleaseNotificationEntry( playerId, notificationEntry.m_IDs[ notificationEntry.m_Index ]);
             end
           end
@@ -1529,16 +1533,16 @@ function OnUnitKilledInCombat( targetUnit )
 end
 
 function CQUI_AddNotification(description:string, summary:string)
-    local handler = GetHandler( NotificationTypes.DEFAULT );  
+    local handler = GetHandler( NotificationTypes.DEFAULT );
   table.insert(m_kDebugNotification);
-  handler.Add( summary, table.count(m_kDebugNotificaiton)); 
+  handler.Add( summary, table.count(m_kDebugNotificaiton));
 end
 
 -- ===========================================================================
 --  Setup
 -- ===========================================================================
 function Initialize()
-  
+
   RegisterHandlers();
 
   ContextPtr:SetInitHandler( OnInit );
