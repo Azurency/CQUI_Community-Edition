@@ -356,11 +356,10 @@ function View(data:table, bIsUpdate:boolean)
       else
         szMoveString = Locale.Lookup("LOC_TOOLTIP_ROUTE_MOVEMENT", routeInfo.MovementCost, routeInfo.Name);
       end
-      szMoveString = szMoveString:gsub("%d?%.?%d+%s",routeInfo.MovementCost.. "[ICON_Movement]",1);
+      szMoveString = szMoveString.. "[ICON_Movement]";
     end
   elseif (not data.Impassable and data.MovementCost > 0) then
-    szMoveString = Locale.Lookup("LOC_TOOLTIP_MOVEMENT_COST", data.MovementCost);
-    szMoveString = szMoveString:gsub("%d?%.?%d+",data.MovementCost.. "[ICON_Movement]",1);
+    szMoveString = Locale.Lookup("LOC_TOOLTIP_MOVEMENT_COST", data.MovementCost).. "[ICON_Movement]";
   end
   if (szMoveString ~=nil) then
     --szMoveString = szMoveString:gsub("%d+%s",": [ICON_Movement]",1);
@@ -369,7 +368,7 @@ function View(data:table, bIsUpdate:boolean)
 
   -- Defense modifier
   if (data.DefenseModifier ~= 0) then
-    table.insert(details, Locale.Lookup("LOC_TOOLTIP_DEFENSE_MODIFIER", data.DefenseModifier).. " [ICON_STRENGTH]");
+    table.insert(details, Locale.Lookup("LOC_TOOLTIP_DEFENSE_MODIFIER", data.DefenseModifier).. "[ICON_STRENGTH]");
   end
 
   -- Appeal
