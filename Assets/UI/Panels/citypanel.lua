@@ -238,10 +238,10 @@ function CQUI_ToggleGrowthTile()
 end
 function CQUI_SettingsUpdate()
   CQUI_growthTile = GameConfiguration.GetValue("CQUI_ShowCultureGrowth");
-  if(CQUI_growthTile) then
+  if(m_GrowthPlot ~= -1 and not CQUI_growthTile) then
+    UILens.ClearHex(LensLayers.PURCHASE_PLOT, m_GrowthPlot);
     m_GrowthPlot = -1;
   end
-  UILens.ClearHex(LensLayers.PURCHASE_PLOT, m_GrowthPlot);
   if(UI.GetInterfaceMode() == InterfaceModeTypes.CITY_MANAGEMENT) then
     DisplayGrowthTile();
   end
