@@ -240,6 +240,7 @@
     <File>Integrations/BES/UI/PartialScreens/EspionageOverview.lua</File>
     <File>Integrations/BES/UI/PartialScreens/EspionageOverview.xml</File>
     <File>Integrations/BES/Text/BES_Text.xml</File>
+    <File>Integrations/BES/Text/bes_text_es.xml</File>
   </Files>
 
   <!-- Describes how each file is used -->
