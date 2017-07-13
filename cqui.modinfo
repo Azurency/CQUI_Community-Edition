@@ -232,12 +232,12 @@
     <File>Integrations/ML/Text/morelenses_text_ru.xml</File>
     <File>Integrations/ML/Text/morelenses_text_zh.xml</File>
     <File>Integrations/ML/Text/morelenses_text_es.xml</File>
-    <File>Integrations/BES/UI/EspionageSupport.lua</File>
-    <File>Integrations/BES/UI/Choosers/EspionageChooser.lua</File>
-    <File>Integrations/BES/UI/Choosers/EspionageChooser.xml</File>
-    <File>Integrations/BES/UI/PartialScreens/EspionageOverview.lua</File>
-    <File>Integrations/BES/UI/PartialScreens/EspionageOverview.xml</File>
-    <File>Integrations/BES/Text/BES_Text.xml</File>
+    <File>Integrations/BES/UI/espionagesupport.lua</File>
+    <File>Integrations/BES/UI/Choosers/espionagechooser.lua</File>
+    <File>Integrations/BES/UI/Choosers/espionagechooser.xml</File>
+    <File>Integrations/BES/UI/PartialScreens/espionageoverview.lua</File>
+    <File>Integrations/BES/UI/PartialScreens/espionageoverview.xml</File>
+    <File>Integrations/BES/Text/bes_text.xml</File>
     <File>Integrations/BES/Text/bes_text_es.xml</File>
   </Files>
 
@@ -427,16 +427,16 @@
     </LocalizedText>
   <ImportFiles id="BES_IMPORT_FILES">
       <Items>
-        <File>Integrations/BES/UI/EspionageSupport.lua</File>
-        <File>Integrations/BES/UI/Choosers/EspionageChooser.lua</File>
-        <File>Integrations/BES/UI/Choosers/EspionageChooser.xml</File>
-        <File>Integrations/BES/UI/PartialScreens/EspionageOverview.lua</File>
-        <File>Integrations/BES/UI/PartialScreens/EspionageOverview.xml</File>
+        <File>Integrations/BES/UI/espionagesupport.lua</File>
+        <File>Integrations/BES/UI/Choosers/espionagechooser.lua</File>
+        <File>Integrations/BES/UI/Choosers/espionagechooser.xml</File>
+        <File>Integrations/BES/UI/PartialScreens/espionageoverview.lua</File>
+        <File>Integrations/BES/UI/PartialScreens/espionageoverview.xml</File>
       </Items>
     </ImportFiles>
     <LocalizedText id="BES_TEXT">
       <Items>
-        <File>Integrations/BES/Text/BES_Text.xml</File>
+        <File>Integrations/BES/Text/bes_text.xml</File>
       </Items>
     </LocalizedText>
     <ImportFiles id="MORELENSES_IMPORT_FILES">
