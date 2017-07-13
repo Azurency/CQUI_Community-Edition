@@ -23,8 +23,6 @@
     <Mod id="2027E5A2-A48D-E606-031F-141E1196975A" title="Production Queue" />
     <!-- More Lenses: Integrated already, doubling up on installed mods is bad! -->
     <Mod id="35f33319-ad93-4d6b-bf27-406fac382d06" title="More Lenses" />
-    <!-- YnAMP: Breaks CQUI for some reason... see issue #207 on the Github tracker and issue #43 on the YnAMP Github tracker for more details -->
-    <Mod id="36e88483-48fe-4545-b85f-bafc50dde315" title="Yet (not) Another Maps Pack" />
     <!-- NQ EUI: Uses some things from CQUI and CQUI uses some things from NQ EUI -->
     <Mod id="c9d28cde-61ee-459c-93f5-c734cd392553" title="NQ Enhanced User Interface" />
   </Blocks>
