@@ -563,7 +563,7 @@ end
 
 function GetCityHeaderTooltipString( routeInfo:table )
     return "Top Route: " .. GetTradeRouteString(routeInfo) .. "[NEWLINE]" .. Locale.Lookup("LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER")
-                 .. "[NEWLINE]" .. GetTradeRouteYieldString(routeInfo);
+                .. "[NEWLINE]" .. GetTradeRouteYieldString(routeInfo);
 end
 
 -- ===========================================================================
@@ -783,7 +783,7 @@ function AddRouteInstanceFromRouteInfo( routeInfo:table )
     end
 
     local tradeUnit:table = originPlayer:GetUnits():FindID(routeInfo.TraderUnitID);
-    if routeInfo.TraderUnitID then        
+    if routeInfo.TraderUnitID then
         routeInstance.GridButton:RegisterCallback( Mouse.eLClick,
             function()
                 SelectUnit(tradeUnit);

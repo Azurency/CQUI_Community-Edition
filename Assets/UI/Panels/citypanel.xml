@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd">
   <AlphaAnim                ID="CityPanelAlpha"       AlphaBegin="0" AlphaEnd="1" Speed="3"   Function="OutSine" Cycle="Once" Size="full,full">
     <SlideAnim              ID="CityPanelSlide"       Start="200,0" End="-175,0"     Speed="3.5" Function="OutSine" Cycle="Once" Size="full,full">

@@ -168,29 +168,29 @@
         <Button ID="Header_CloseButton" Size="32,32" Offset="10,-2" Anchor="R,T" Texture="Controls_CloseButtonAlt"/>
       </Grid>
 
-		<Tutorial  ID="TutTradePanel" Style="TutorialContainer" AnchorSide="O,I" Offset="-280,190" TriggerBy="TutorialTradePanel" >
-			<SlideAnim Anchor="C,T" Start="30,0" EndOffset="40,0" Cycle="Bounce" Function="OutQuad" >
-				<Image Texture="Tutorial_ArrowH" Offset="0,0" Size="58,44" FlipX="1"/>
-			</SlideAnim>
-		</Tutorial>
+    <Tutorial  ID="TutTradePanel" Style="TutorialContainer" AnchorSide="O,I" Offset="-280,190" TriggerBy="TutorialTradePanel" >
+      <SlideAnim Anchor="C,T" Start="30,0" EndOffset="40,0" Cycle="Bounce" Function="OutQuad" >
+        <Image Texture="Tutorial_ArrowH" Offset="0,0" Size="58,44" FlipX="1"/>
+      </SlideAnim>
+    </Tutorial>
 
-		<Tutorial  ID="TutTradeRoute" Style="TutorialContainer" AnchorSide="O,I" Offset="-280,250" TriggerBy="TutorialTradeRoute" >
-			<Grid Style="TutorialCalloutGrid" Offset="220,0">
-				<Label Style="TutorialBodyText" String="LOC_META_145b_BODY" />
-			</Grid>
-			<SlideAnim Anchor="C,T" Start="30,0" EndOffset="40,0" Cycle="Bounce" Function="OutQuad" >
-				<Image Texture="Tutorial_ArrowH" Offset="0,0" Size="58,44" FlipX="1"/>
-			</SlideAnim>
-		</Tutorial>
+    <Tutorial  ID="TutTradeRoute" Style="TutorialContainer" AnchorSide="O,I" Offset="-280,250" TriggerBy="TutorialTradeRoute" >
+      <Grid Style="TutorialCalloutGrid" Offset="220,0">
+        <Label Style="TutorialBodyText" String="LOC_META_145b_BODY" />
+      </Grid>
+      <SlideAnim Anchor="C,T" Start="30,0" EndOffset="40,0" Cycle="Bounce" Function="OutQuad" >
+        <Image Texture="Tutorial_ArrowH" Offset="0,0" Size="58,44" FlipX="1"/>
+      </SlideAnim>
+    </Tutorial>
 
-		<Tutorial  ID="TutBeginRoute" Style="TutorialContainer" AnchorSide="O,I" Offset="-260,154" TriggerBy="TutorialBeginRoute" >
-			<Grid Style="TutorialCalloutGrid" Offset="220,0">
-				<Label Style="TutorialBodyText" String="LOC_META_145c_BODY" />
-			</Grid>
-			<SlideAnim Anchor="C,T" Start="30,0" EndOffset="40,0" Cycle="Bounce" Function="OutQuad" >
-				<Image Texture="Tutorial_ArrowH" Offset="0,0" Size="58,44" FlipX="1"/>
-			</SlideAnim>
-		</Tutorial>
+    <Tutorial  ID="TutBeginRoute" Style="TutorialContainer" AnchorSide="O,I" Offset="-260,154" TriggerBy="TutorialBeginRoute" >
+      <Grid Style="TutorialCalloutGrid" Offset="220,0">
+        <Label Style="TutorialBodyText" String="LOC_META_145c_BODY" />
+      </Grid>
+      <SlideAnim Anchor="C,T" Start="30,0" EndOffset="40,0" Cycle="Bounce" Function="OutQuad" >
+        <Image Texture="Tutorial_ArrowH" Offset="0,0" Size="58,44" FlipX="1"/>
+      </SlideAnim>
+    </Tutorial>
 
     </Container>
   </SlideAnim>

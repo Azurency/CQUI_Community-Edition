@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Context>
 
   <SlideAnim  Size="parent,parent"  ID="Pause" Begin="0,0" End="0,160" Function="Root" Speed="4"    Cycle="Once"  Stopped="1"/>

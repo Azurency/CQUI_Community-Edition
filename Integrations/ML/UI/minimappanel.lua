@@ -1,4 +1,4 @@
-﻿-- ===========================================================================
+-- ===========================================================================
 --  MINIMAP PANEL
 -- ===========================================================================
 include( "InstanceManager" );
@@ -784,9 +784,9 @@ function SetGovernmentHexes()
   local localPlayerVis:table = PlayersVisibility[localPlayer];
   if (localPlayerVis ~= nil) then
     local players = Game.GetPlayers();
-		for i, player in ipairs(players) do
+    for i, player in ipairs(players) do
       local cities = players[i]:GetCities();
-			local culture = player:GetCulture();
+      local culture = player:GetCulture();
       local governmentId :number = culture:GetCurrentGovernment();
       local GovernmentColor;
       if(governmentId < 0) or GameInfo.Governments[governmentId] == nil then
@@ -799,7 +799,7 @@ function SetGovernmentHexes()
 
       -- print(GovernmentColor)
 
-			for _, pCity in cities:Members() do
+      for _, pCity in cities:Members() do
         local visibleCityPlots:table = Map.GetCityPlots():GetVisiblePurchasedPlots(pCity);
 
         if table.count(visibleCityPlots) > 0 then
@@ -985,7 +985,7 @@ function SetBuilderLensHexes()
       -- NOTHING TO DO
       --------------------------------------
       else
-         table.insert(unworkableHexes, i)
+        table.insert(unworkableHexes, i)
       end
     end
   end
@@ -1437,11 +1437,11 @@ function GetCurrentModdedLens()
   -- local localPlayerID = Game.GetLocalPlayer();
   -- if(PlayerConfigurations[localPlayerID]:GetValue("ModdedLens_CurrentModdedLensOn") ~= nil) then
   --  local dataDump = PlayerConfigurations[localPlayerID]:GetValue("ModdedLens_CurrentModdedLensOn");
-   -- print("Get: " .. dataDump);
+  -- print("Get: " .. dataDump);
   --  loadstring(dataDump)();
   --  m_CurrentModdedLensOn = currentModdedLensOn;
   -- else
-   -- print("No modded lens data was found.")
+  -- print("No modded lens data was found.")
   -- end
   return m_CurrentModdedLensOn;
 end

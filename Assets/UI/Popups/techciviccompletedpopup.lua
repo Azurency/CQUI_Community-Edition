@@ -1,9 +1,9 @@
-﻿-- ===========================================================================
+-- ===========================================================================
 --  Popups when a Tech or Civic are completed
 -- ===========================================================================
 include("TechAndCivicSupport"); -- (Already includes Civ6Common and InstanceManager) PopulateUnlockablesForTech, PopulateUnlockablesForCivic, GetUnlockablesForCivic, GetUnlockablesForTech
 
-  
+
 -- ===========================================================================
 --  CONSTANTS / MEMBERS
 -- ===========================================================================
@@ -78,10 +78,10 @@ function ShowCivicCompletedPopup(player:number, civic:number, isCanceled:boolean
 
     local unlockableTypes = GetUnlockablesForCivic(civicType, player);
     local unlockCount = unlockableTypes and #unlockableTypes or 0;
-    
+
     PopulateUnlockablesForCivic( player, civic, m_unlockIM );
     Controls.UnlockCountLabel:SetText(Locale.Lookup("LOC_RESEARCH_COMPLETE_UNLOCKED_BY_CIVIC", unlockCount));
-  
+
     Controls.UnlockStack:CalculateSize();
     Controls.UnlockStack:ReprocessAnchoring();
 
@@ -100,14 +100,14 @@ function ShowCivicCompletedPopup(player:number, civic:number, isCanceled:boolean
     end
 
 
-    -- If we have a quote, display it.  
+    -- If we have a quote, display it.
     -- Otherwise, hide the quote box.
     if(quote and #quote > 0) then
       Controls.QuoteLabel:LocalizeAndSetText(quote);
-    
+
       if(m_quote_audio and #m_quote_audio > 0) then
         Controls.QuoteAudio:SetHide(false);
-        Controls.QuoteButton:RegisterCallback(Mouse.eLClick, function() 
+        Controls.QuoteButton:RegisterCallback(Mouse.eLClick, function()
           UI.PlaySound(m_quote_audio);
         end);
       else
@@ -119,10 +119,10 @@ function ShowCivicCompletedPopup(player:number, civic:number, isCanceled:boolean
     else
       Controls.QuoteButton:SetHide(true);
     end
-    
+
     -- Determine if we've unlocked a new government type
     for _,unlockItem in ipairs(unlockableTypes) do
-			local typeInfo = GameInfo.Types[unlockItem[1]];
+      local typeInfo = GameInfo.Types[unlockItem[1]];
       if(typeInfo and typeInfo.Kind == "KIND_GOVERNMENT") then
         isCivicUnlockGovernmentType = true;
       end
@@ -130,7 +130,7 @@ function ShowCivicCompletedPopup(player:number, civic:number, isCanceled:boolean
 
     -- Update Government Button depending on if we unlocked a new government type
     if isCivicUnlockGovernmentType then
-			Controls.ChangeGovernmentButton:SetText(Locale.Lookup("LOC_GOVT_GOVERNMENT_UNLOCKED"));
+      Controls.ChangeGovernmentButton:SetText(Locale.Lookup("LOC_GOVT_GOVERNMENT_UNLOCKED"));
       Controls.ChangeGovernmentButton:ClearCallback( eLClick );
       Controls.ChangeGovernmentButton:RegisterCallback( eLClick, OnChangeGovernment );
       Controls.ChangeGovernmentButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
@@ -182,7 +182,7 @@ function ShowTechCompletedPopup(player:number, techId:number, isCanceled:boolean
 
     PopulateUnlockablesForTech(player, techId, m_unlockIM);
     Controls.UnlockCountLabel:SetText(Locale.Lookup("LOC_RESEARCH_COMPLETE_UNLOCKED_BY_TECH", #unlockableTypes));
-    
+
     Controls.UnlockStack:CalculateSize();
     Controls.UnlockStack:ReprocessAnchoring();
 
@@ -199,14 +199,14 @@ function ShowTechCompletedPopup(player:number, techId:number, isCanceled:boolean
       end
     end
 
-    -- If we have a quote, display it.  
+    -- If we have a quote, display it.
     -- Otherwise, hide the quote box.
     if(quote and #quote > 0) then
       Controls.QuoteLabel:LocalizeAndSetText(quote);
-    
+
       if(m_quote_audio and #m_quote_audio > 0) then
         Controls.QuoteAudio:SetHide(false);
-        Controls.QuoteButton:RegisterCallback(Mouse.eLClick, function() 
+        Controls.QuoteButton:RegisterCallback(Mouse.eLClick, function()
           UI.PlaySound(m_quote_audio);
         end);
       else
@@ -218,7 +218,7 @@ function ShowTechCompletedPopup(player:number, techId:number, isCanceled:boolean
     else
       Controls.QuoteButton:SetHide(true);
     end
-    
+
     -- Hide Change Government Button
     Controls.ChangeGovernmentButton:SetHide(true);
   end
@@ -313,16 +313,16 @@ function OnInputHandler( input )
 end
 
 -- ===========================================================================
-function OnChangeGovernment() 
+function OnChangeGovernment()
   Close();
-  LuaEvents.TechCivicCompletedPopup_GovernmentOpenGovernments();  -- Open Government Screen 
+  LuaEvents.TechCivicCompletedPopup_GovernmentOpenGovernments();  -- Open Government Screen
   UI.PlaySound("Stop_Speech_Civics");
 end
 
 -- ===========================================================================
-function OnChangePolicy() 
+function OnChangePolicy()
   Close();
-  LuaEvents.TechCivicCompletedPopup_GovernmentOpenPolicies();   -- Open Government Screen 
+  LuaEvents.TechCivicCompletedPopup_GovernmentOpenPolicies();   -- Open Government Screen
   UI.PlaySound("Stop_Speech_Civics");
 end
 
@@ -330,8 +330,8 @@ end
 --  UI Event
 -- ===========================================================================
 function OnInit( isReload:boolean )
-  if isReload then    
-    LuaEvents.GameDebug_GetValues(RELOAD_CACHE_ID);   
+  if isReload then
+    LuaEvents.GameDebug_GetValues(RELOAD_CACHE_ID);
   end
 end
 
@@ -371,7 +371,7 @@ function OnGameDebugReturn( context:string, contextTable:table )
   if context ~= RELOAD_CACHE_ID then
     return;
   end
-  local isHidden:boolean = contextTable["isHidden"]; 
+  local isHidden:boolean = contextTable["isHidden"];
   if not isHidden then
     local kQueuedPopups:table = contextTable["kQueuedPopups"];
     if kQueuedPopups ~= nil then
@@ -397,7 +397,7 @@ function OnEnableTechAndCivicPopups()
 end
 
 -- ===========================================================================
-function Initialize() 
+function Initialize()
   -- Controls Events
   Controls.CloseButton:RegisterCallback( eLClick, OnClose );
   Controls.CloseButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);

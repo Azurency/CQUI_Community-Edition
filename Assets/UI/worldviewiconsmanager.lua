@@ -1,4 +1,4 @@
-﻿-- ===========================================================================
+-- ===========================================================================
 -- World Icon Manager
 -- Handles showing world icons (e.g., resources) on the map.
 -- May be moved to PlotInfo.lua

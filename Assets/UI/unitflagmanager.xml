@@ -1,14 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <Context >
 
-	<Container ID="CivilianFlags"/>
-	<Container ID="MilitaryFlags"/>
+  <Container ID="CivilianFlags"/>
+  <Container ID="MilitaryFlags"/>
   <Container ID="TradeFlags"/>
   <Container ID="SupportFlags"/>
   <Container ID="NavalFlags"/>
 
-	<Instance Name="UnitFlag">
+  <Instance Name="UnitFlag">
     <WorldAnchor ID="Anchor">
       <!-- FormationIndicators -->
       <Grid  ID="Formation3" Anchor="C,C" Size="200,68" Offset="0,0" Texture="UnitFormationTrio.dds" SliceCorner="1,1" SliceSize="98,66" SliceTextureSize="100,68" Hidden="1" />
@@ -46,8 +46,8 @@
             </Button>
 
             <!-- Offsets may look weird but it's so the hit-area is aligned with the art, otherwise it will
-						     be possible to hover over a part of the flag, have it's animation play but have an adjacent
-							   hex be the target. -->
+                be possible to hover over a part of the flag, have it's animation play but have an adjacent
+                hex be the target. -->
             <Button ID="HealthBarButton" Size="42,42" NoDefaultSound="1" Offset="10,10">
               <AlphaAnim AlphaStart="0" AlphaEnd="1" Cycle="Bounce" Pause="0" ShowOnMouseOver="1">
                 <Image ID="FlagOverHealthBar" Size="64,64" TextureOffset="0,64" Offset="-10,-10" Texture="UnitFlagBase.dds"/>
@@ -129,12 +129,12 @@
       </AlphaAnim>
 
     </WorldAnchor>
-	</Instance>
+  </Instance>
 
-	<Instance			Name="AttentionMarkerInstance">
-		<AlphaAnim	ID="Top"	Size="48,48" AlphaStart="1" AlphaEnd="0.5" >
-			<Label		ID="Text"	Anchor="C,T" Offset="0,-30" Style="FontFlair40" FontStyle="Glow" Color0="255,0,0,255" Color1="0,0,0,200" String="!" ToolTip="LOC_HUD_BARBARIAN_SPOTTED_YOUR_CITY"/>
-		</AlphaAnim>
-	</Instance>
+  <Instance			Name="AttentionMarkerInstance">
+    <AlphaAnim	ID="Top"	Size="48,48" AlphaStart="1" AlphaEnd="0.5" >
+      <Label		ID="Text"	Anchor="C,T" Offset="0,-30" Style="FontFlair40" FontStyle="Glow" Color0="255,0,0,255" Color1="0,0,0,200" String="!" ToolTip="LOC_HUD_BARBARIAN_SPOTTED_YOUR_CITY"/>
+    </AlphaAnim>
+  </Instance>
 
 </Context>

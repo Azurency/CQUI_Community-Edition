@@ -105,7 +105,7 @@
     <Replace Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_TOOLTIP" Language="es_ES">
       <Text>Activa para que este comerciante repita la ruta. Por defecto, la ruta repetida es la última efectuada por el comerciante.</Text>
     </Replace>
- 
+
     <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_LABEL" Language="es_ES">
       <Text>Mejor ruta</Text>
     </Replace>

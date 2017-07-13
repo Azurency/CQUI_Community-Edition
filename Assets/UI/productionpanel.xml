@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Context>
   <!-- PauseAnim - The amount of time that the list should wait before collapsing. -->
   <SlideAnim ID="PauseCollapseList" Speed="10" Begin="-10,0" End="0,0" Cycle="Once"/>
@@ -42,14 +42,14 @@
         <!-- Deco Stripes on the sides of the window -->
         <Box Color="12,24,38,200" Size="2,parent"  Offset="4,0"/>
         <Box Color="12,24,38,200" Size="2,parent" Anchor="R,T" Offset="4,0"/>
-        
+
         <Container ID="ProductionPanel" Size="parent,parent" ConsumeMouse="1">
           <!-- Filter Subheader - Taking this out for now.  We may want to bring it back, but let's try without it.
-          
+
           <Grid Offset="0,29" Size="350,26" Texture="Controls_SubHeader.dds" SliceCorner="1,1" SliceTextureSize="22,22">
             <GridButton     ID="HideDisabled"  Anchor="C,T" Style="CheckBoxControl" Offset="0,2" String="LOC_PRODUCTION_HIDE_NAME" Size="140,24"/>
           </Grid>-->
-          
+
           <!-- All Window Content -->
           <Container        ID="WindowContent"        Offset="0,10" Size="parent,parent">
             <Container      ID="ChooseProductionMenu" Size="parent,parent" >
@@ -140,14 +140,14 @@
                 <SlideAnim Start="0,0" EndOffset="20,0" Cycle="Bounce" Speed="1.2" Function="OutSine" EndPause=".4" Size="parent,parent">
                   <Image Texture="Tutorial_ArrowH" Anchor="R,T" Offset="-10,16" Size="59,44"/>
                 </SlideAnim>
-              </Tutorial>           
+              </Tutorial>
             </Container>
           </Container>
-          
+
           <!-- Tab Subheader-->
-          
+
         </Container>
-        
+
         <!-- Blue Window Header -->
         <Grid                                   Anchor="R,T"                  Size="parent+16,59"       Style="HeaderBannerRight" >
           <Container                            Anchor="L,T"                  Size="parent-20,parent-27" >
@@ -161,7 +161,7 @@
         </Grid>
 
         <Image                                  Anchor="L,B" Size="parent,30" StretchMode="Fill" Color="255,255,255,100"  Texture="Controls_ScrollMaskLower.dds" />
-        <Image                                  Anchor="L,B" Size="parent,11" StretchMode="Fill" AnchorSide="I,O"         Texture="Controls_WoodenRim.dds"       />     
+        <Image                                  Anchor="L,B" Size="parent,11" StretchMode="Fill" AnchorSide="I,O"         Texture="Controls_WoodenRim.dds"       />
       </Grid>
     </SlideAnim>
   </AlphaAnim>
@@ -356,7 +356,7 @@
                     <GridButton ID="CorpsPurchaseButton" Size="70,21" Style="PanelButtonLightweight" Anchor="R,C"/>
                     <GridButton ID="CorpsFaithPurchaseButton" Size="70,21" Style="PanelButtonLightweight" Anchor="R,C"/>
                   </Stack>
-                </Container>  
+                </Container>
               </Stack>
               <Container      ID="CorpsDisabled"          Size="parent,parent" Hidden="1"  ConsumeMouse="1">
                 <GridButton                         Size="parent,parent"              Style="ProductionButtonNest" Color="200,200,200,150" Disabled="1"/>

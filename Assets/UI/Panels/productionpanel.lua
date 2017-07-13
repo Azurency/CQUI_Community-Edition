@@ -1,4 +1,4 @@
-﻿-- ===========================================================================
+-- ===========================================================================
 --  Production Panel / Purchase Panel
 -- ===========================================================================
 
@@ -387,7 +387,7 @@ function OnCitySelectionChanged( owner:number, cityID:number, i, j, k, isSelecte
   if owner == localPlayerId and isSelected then
     -- Already open then populate with newly selected city's data...
     if (ContextPtr:IsHidden() == false) and Controls.PauseDismissWindow:IsStopped() and Controls.AlphaIn:IsStopped() then
-     Refresh();
+    Refresh();
     end
   end
 end
@@ -1924,7 +1924,7 @@ function Refresh()
     local cityID    = selectedCity:GetID();
     local cityData    = GetCityData(selectedCity);
     local cityPlot    = Map.GetPlot(selectedCity:GetX(), selectedCity:GetY());
-	local productionQueueTableKey = FindProductionQueueKey(cityID, selectedCity:GetOwner())
+  local productionQueueTableKey = FindProductionQueueKey(cityID, selectedCity:GetOwner())
 
     if(not prodQueue[productionQueueTableKey]) then prodQueue[productionQueueTableKey] = {}; end
     CheckAndReplaceQueueForUpgrades(selectedCity);
@@ -2831,7 +2831,7 @@ function LoadQueues()
     local buildQueue = city:GetBuildQueue();
     local currentProductionHash = buildQueue:GetCurrentProductionTypeHash();
     local plotID = -1;
-	local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner());
+  local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner());
 
     if(not prodQueue[productionQueueTableKey]) then
       prodQueue[productionQueueTableKey] = {};
@@ -3126,7 +3126,7 @@ function QueueBuilding(city, buildingEntry, skipToFront)
     UI.SetInterfaceMode(InterfaceModeTypes.BUILDING_PLACEMENT, tParameters);
   else
     local cityID = city:GetID();
-	local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner())
+  local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner())
     local plotID = -1;
     local buildingType = PRODUCTION_TYPE.BUILDING;
 
@@ -3201,7 +3201,7 @@ function QueueDistrict(city, districtEntry, skipToFront)
     tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
 
     local cityID = city:GetID();
-	local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner());
+  local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner());
 
     if(not prodQueue[productionQueueTableKey]) then
       prodQueue[productionQueueTableKey] = {};

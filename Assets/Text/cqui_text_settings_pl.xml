@@ -54,7 +54,7 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="pl_PL">
       <Text>Włącz inteligentne banery</Text>
     </Row>
-   <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="pl_PL">
+  <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="pl_PL">
       <Text>Wyświetla nowe ikony i informacje w banerze miasta.</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="pl_PL">

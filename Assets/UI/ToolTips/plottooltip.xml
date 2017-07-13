@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Context>
-  
+
   <AlphaAnim  ID="TooltipMain" Anchor="L,B" Offset="0,200" Speed="8" Pause="12345" Cycle="Once"  Hidden="1">
     <Grid     ID="PlotInfo"  Style="TTGrid" Anchor="L,B" Size="220,140" />
     <Stack    ID="InfoStack" StackGrowth="Bottom" Anchor="L,B" Offset="7,12" StackPadding="5">
@@ -9,5 +9,5 @@
       <Label  ID="DebugTxt"     WrapWidth="200" Style="TTText" />
     </Stack>
   </AlphaAnim>
-  
+
 </Context>

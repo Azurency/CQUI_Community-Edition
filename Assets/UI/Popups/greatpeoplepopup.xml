@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd">
 
   <Container Style="FullScreenVignetteConsumer" />
@@ -21,7 +21,7 @@
         <SlideAnim Start="110,-40" EndOffset="30,0" Cycle="Bounce" Function="OutQuad" >
           <Image Texture="Tutorial_ArrowH" Size="58,44" />
         </SlideAnim>
-      </Tutorial> 
+      </Tutorial>
     </ScrollPanel>
 
     <Box                  ID="RecruitedArea"                                          Size="parent,parent"              Color="11,27,40,255">
@@ -40,8 +40,8 @@
           <Thumb                                                                                            Style="ScrollThumbHAlt" />
         </ScrollBar>
       </ScrollPanel>
-    </Box>    
-    
+    </Box>
+
     <!-- Tabs -->
     <Container                                          Anchor="C,T"  Offset="0,30"   Size="400,61" >
       <Image                                            Anchor="C,C"                  Size="439,27"         Texture="Controls_TabLedge2_Fill" StretchMode="Tile" />
@@ -60,7 +60,7 @@
         </Container>
       </Grid>
     </Container>
-    
+
     <!-- Place the modal screen controls in a separate container; this uses a custom background inside of the scroll panel. -->
     <Container            ID="ModalFrame" Style="ModalScreenWide" />
   </Container>
@@ -84,30 +84,30 @@
           <Stack      ID="EffectStack"                      Offset="0,0" StackPadding="4"/>
           <ScrollBar                          Anchor="R,T" AnchorSide="I,I"  Offset="76,0"  Style="ScrollVerticalBarAlt" Size="8,parent-10"/>
         </ScrollPanel>
-        <Box            ID="RecruitProgressBox" Anchor="C,B"  Offset="-1,0" Size="parent,200"            Color="0,0,0,100">          
-          <Label                              Anchor="C,T"  Offset="0,6"   Style="FontFlair14"       Color="157,150,138,255" SmallCaps="20" SmallCapsType="EveryWord" String="LOC_GREAT_PEOPLE_RECRUIT_PROGRESS" />      
+        <Box            ID="RecruitProgressBox" Anchor="C,B"  Offset="-1,0" Size="parent,200"            Color="0,0,0,100">
+          <Label                              Anchor="C,T"  Offset="0,6"   Style="FontFlair14"       Color="157,150,138,255" SmallCaps="20" SmallCapsType="EveryWord" String="LOC_GREAT_PEOPLE_RECRUIT_PROGRESS" />
           <ScrollPanel  ID="RecruitScroll"                  Offset="0,25"   Size="parent,116" Vertical="1" >
             <Stack      ID="RecruitStack"                   Offset="30,0"   StackPadding="2" />
             <ScrollBar                        Anchor="R,C"  Offset="10,0"   AnchorSide="I,I"            Style="ScrollVerticalBarAlt" />
           </ScrollPanel>
           <Label      ID="RecruitInfo"        Anchor="C,B"  Offset="0,40"   Style="GreatPeopleText" String="LOC_GREAT_PEOPLE_OR_RECRUIT_WITH_PATRONAGE" />
           <GridButton ID="GoldButton"         Anchor="C,B"  Offset="-50,2"  Size="80,32"              SliceCorner="12,12" SliceSize="1,1" SliceTextureSize="24,24" Texture="Controls_ButtonControl_Brown" TextColor="126,123,120" Style="FontNormal18" StateOffsetIncrement="0,24"            String="999" />
-          <GridButton ID="FaithButton"        Anchor="C,B"  Offset="50,2"   Size="80,32"              SliceCorner="12,12" SliceSize="1,1" SliceTextureSize="24,24" Texture="Controls_ButtonControl_Brown" TextColor="126,123,120" Style="FontNormal18" StateOffsetIncrement="0,24"            String="999" />         
+          <GridButton ID="FaithButton"        Anchor="C,B"  Offset="50,2"   Size="80,32"              SliceCorner="12,12" SliceSize="1,1" SliceTextureSize="24,24" Texture="Controls_ButtonControl_Brown" TextColor="126,123,120" Style="FontNormal18" StateOffsetIncrement="0,24"            String="999" />
           <GridButton ID="RecruitButton"      Anchor="C,B"  Offset="0,30"   Size="190,26"             Style="ButtonConfirmSmall"      Hidden="1" String="LOC_GREAT_PEOPLE_RECRUIT" />
           <GridButton ID="RejectButton"       Anchor="C,B"  Offset="0,6"    Size="190,24"             Style="ButtonLightweightSmall"  Hidden="1" String="LOC_GREAT_PEOPLE_PASS" />
-          <Grid                                             Offset="2,2"    Size="parent-4,parent-4"  SliceCorner="19,24" SliceSize="1,1" SliceTextureSize="39,49" Texture="Controls_Deco" Color="210,190,140,90" />      
+          <Grid                                             Offset="2,2"    Size="parent-4,parent-4"  SliceCorner="19,24" SliceSize="1,1" SliceTextureSize="39,49" Texture="Controls_Deco" Color="210,190,140,90" />
         </Box>
-      </Container>      
+      </Container>
       <GridButton     ID="BiographyBackButton"  Anchor="C,B"  Offset="0,-12"    Size="parent-60,28" SliceCorner="12,12" SliceSize="1,1" SliceTextureSize="24,24" Texture="Controls_ButtonControl_Tan" TextColor="20,20,20" Style="FontNormal16" String="LOC_GREAT_PEOPLE_BIOGRAPHY" StateOffsetIncrement="0,24" />
       <Label          ID="ClaimedLabel"         Anchor="C,C"  Offset="0,-120" Align="Center" WrapWidth="200" Style="FontFlair16" FontStyle="Shadow" ColorSet="GreatPeopleCS" String="LOC_GREAT_PEOPLE_ALL_POSSIBLE_CHOSEN" />
-            
+
       <Container        ID="BiographyArea"                    Offset="0,305"  Size="215,310" >
         <Line                                   Start="15,0"  End="190,0" Width="2"       Color="199,187,157,90"  />
         <ScrollPanel    ID="BiographyScroll"                  Offset="10,10"    Size="parent,parent-10"     Vertical="1">
           <Label ID="BiographyText" Offset="10,0" WrapWidth="170" Style="GreatPeopleText" FontStyle="Shadow" ColorSet="GreatPeopleCS" String="$Text$" />
           <ScrollBar                            Anchor="L,C"  Offset="1,0"    AnchorSide="O,I"          Style="ScrollVerticalBarAlt" />
         </ScrollPanel>
-      </Container>      
+      </Container>
     </Container>
   </Instance>
 

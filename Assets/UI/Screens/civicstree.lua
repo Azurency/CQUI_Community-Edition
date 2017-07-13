@@ -1,4 +1,4 @@
-﻿-- ===========================================================================
+-- ===========================================================================
 --  CivicsTree
 --  Tabs set to 4 spaces retaining tab.
 --
@@ -1266,7 +1266,7 @@ function OnCivicComplete( ePlayer:number, eTech:number)
     -- Make sure there is a civic selected before continuing with checks
     if currentCivicID ~= -1 then
       local civicName = GameInfo.Civics[currentCivicID].Name;
-	  LuaEvents.CQUI_AddStatusMessage(Locale.Lookup("LOC_CIVIC_BOOST_COMPLETE", civicName), 10, CQUI_STATUS_MESSAGE_CIVIC);
+    LuaEvents.CQUI_AddStatusMessage(Locale.Lookup("LOC_CIVIC_BOOST_COMPLETE", civicName), 10, CQUI_STATUS_MESSAGE_CIVIC);
     end -- end of if currentCivivID ~= -1
 
     --------------------------------------------------------------------------

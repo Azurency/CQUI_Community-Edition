@@ -4,27 +4,27 @@
     <!-- SPANISH -->
 
     <!-- Builder Lens -->
-  	<Replace Tag="LOC_HUD_BUILDER_LENS" Language="es_ES">
-  		<Text>Constructor</Text>
-  	</Replace>
-  	<Replace Tag="LOC_HUD_BUILDER_LENS_TOOLTIP" Language="es_ES">
-  		<Text>Resalta los hexágonos en los que el constructor puede trabajar</Text>
-  	</Replace>
-  	<Replace Tag="LOC_TOOLTIP_BUILDER_LENS_IMP" Language="es_ES">
-  		<Text>Recurso/Saqueado/Habilidad Única</Text>
-  	</Replace>
+    <Replace Tag="LOC_HUD_BUILDER_LENS" Language="es_ES">
+      <Text>Constructor</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_BUILDER_LENS_TOOLTIP" Language="es_ES">
+      <Text>Resalta los hexágonos en los que el constructor puede trabajar</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_IMP" Language="es_ES">
+      <Text>Recurso/Saqueado/Habilidad Única</Text>
+    </Replace>
     <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_HILL" Language="es_ES">
       <Text>Colina</Text>
     </Replace>
     <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_FEATURE" Language="es_ES">
       <Text>Accidente Eliminable</Text>
     </Replace>
-  	<Replace Tag="LOC_TOOLTIP_BUILDER_LENS_GENERIC" Language="es_ES">
-  		<Text>Casilla genérica</Text>
-  	</Replace>
-  	<Replace Tag="LOC_TOOLTIP_BUILDER_LENS_NOTHING" Language="es_ES">
-  		<Text>Nada que hacer</Text>
-  	</Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_GENERIC" Language="es_ES">
+      <Text>Casilla genérica</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_NOTHING" Language="es_ES">
+      <Text>Nada que hacer</Text>
+    </Replace>
 
     <!-- Archaeologist Lens -->
     <Replace Tag="LOC_HUD_ARCHAEOLOGIST_LENS" Language="es_ES">

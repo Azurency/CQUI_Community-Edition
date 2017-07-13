@@ -1,4 +1,4 @@
-﻿-- ===========================================================================
+-- ===========================================================================
 --  Notification Panel
 -- ===========================================================================
 
@@ -595,7 +595,7 @@ function LookAtNotification( pNotification:table )
       local pUnit:table = Players[targetPlayerID]:GetUnits():FindID(targetID);
       if (pUnit ~= nil) then
         -- Look at it, if we have not already
-        if (not isLookedAt) then 
+        if (not isLookedAt) then
           UI.LookAtPlot(pUnit:GetX(), pUnit:GetY());
         end
         -- Select it.

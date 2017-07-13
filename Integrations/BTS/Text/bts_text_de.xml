@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GameData>
   <LocalizedText>
-   <!-- GERMAN -->
+  <!-- GERMAN -->
 
-   <!-- Common Text -->
-     <Replace Tag="LOC_TRADE_GROUP_SETTINGS" Language="de_DE">
+  <!-- Common Text -->
+    <Replace Tag="LOC_TRADE_GROUP_SETTINGS" Language="de_DE">
         <Text>Gruppeneinstellungen</Text>
     </Replace>
 

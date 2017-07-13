@@ -16,61 +16,61 @@ local m_strEllipsis = Locale.Lookup("LOC_GENERIC_DOT_DOT_DOT");
 -- ===========================================================================
 function TruncateString(control, resultSize, longStr, trailingText)
 
-	-- Ensure this has the actual text control
-	if control.GetTextControl ~= nil then
-		control = control:GetTextControl();
-	end
+  -- Ensure this has the actual text control
+  if control.GetTextControl ~= nil then
+    control = control:GetTextControl();
+  end
 
-	local isTruncated = false;
-	if(longStr == nil)then
-		longStr = control:GetText();
+  local isTruncated = false;
+  if(longStr == nil)then
+    longStr = control:GetText();
 
-		if(trailingText == nil)then
-			longStr = "";
-		end
-	end
+    if(trailingText == nil)then
+      longStr = "";
+    end
+  end
 
-	if(control ~= nil)then
+  if(control ~= nil)then
 
-		-- Determine full length of control.
-		control:SetText(longStr);
-		local fullStrExtent = control:GetSizeX();
+    -- Determine full length of control.
+    control:SetText(longStr);
+    local fullStrExtent = control:GetSizeX();
 
-		-- Determine how long a trailing text portion will be.
-		if(trailingText == nil)then
-			trailingText = "";
-		end
-		control:SetText(trailingText);
-		local trailingExtent = control:GetSizeX();
+    -- Determine how long a trailing text portion will be.
+    if(trailingText == nil)then
+      trailingText = "";
+    end
+    control:SetText(trailingText);
+    local trailingExtent = control:GetSizeX();
 
-		local sizeAfterTruncate = resultSize - trailingExtent;
-		if(sizeAfterTruncate > 0)then
-			local truncatedSize = fullStrExtent;
-			local newString = longStr;
+    local sizeAfterTruncate = resultSize - trailingExtent;
+    if(sizeAfterTruncate > 0)then
+      local truncatedSize = fullStrExtent;
+      local newString = longStr;
 
-			local ellipsis = "";
+      local ellipsis = "";
 
-			if( sizeAfterTruncate < truncatedSize ) then
-				ellipsis = m_strEllipsis;
-				isTruncated = true;
-			end
+      if( sizeAfterTruncate < truncatedSize ) then
+        ellipsis = m_strEllipsis;
+        isTruncated = true;
+      end
 
-			control:SetText(ellipsis);
-			local ellipsisExtent = control:GetSizeX();
-			sizeAfterTruncate = sizeAfterTruncate - ellipsisExtent;
+      control:SetText(ellipsis);
+      local ellipsisExtent = control:GetSizeX();
+      sizeAfterTruncate = sizeAfterTruncate - ellipsisExtent;
 
-			while (sizeAfterTruncate < truncatedSize and Locale.Length(newString) > 1) do
-				newString = Locale.SubString(newString, 1, Locale.Length(newString) - 1);
-				control:SetText(newString);
-				truncatedSize = control:GetSizeX();
-			end
+      while (sizeAfterTruncate < truncatedSize and Locale.Length(newString) > 1) do
+        newString = Locale.SubString(newString, 1, Locale.Length(newString) - 1);
+        control:SetText(newString);
+        truncatedSize = control:GetSizeX();
+      end
 
-			control:SetText(newString .. ellipsis .. trailingText);
-		end
-	else
-		UI.DataError("Attempt to TruncateString but NIL control passed in!. string=", longStr);
-	end
-	return isTruncated;
+      control:SetText(newString .. ellipsis .. trailingText);
+    end
+  else
+    UI.DataError("Attempt to TruncateString but NIL control passed in!. string=", longStr);
+  end
+  return isTruncated;
 end
 
 
@@ -79,13 +79,13 @@ end
 --	the full text as a tooltip.
 -- ===========================================================================
 function TruncateStringWithTooltip(control, resultSize, longStr, trailingText)
-	local isTruncated = TruncateString( control, resultSize, longStr, trailingText );
-	if isTruncated then
-		control:SetToolTipString( longStr );
-	else
-		control:SetToolTipString( nil );
-	end
-	return isTruncated;
+  local isTruncated = TruncateString( control, resultSize, longStr, trailingText );
+  if isTruncated then
+    control:SetToolTipString( longStr );
+  else
+    control:SetToolTipString( nil );
+  end
+  return isTruncated;
 end
 
 
@@ -93,9 +93,9 @@ end
 --	Performs a truncation based on the control's contents
 -- ===========================================================================
 function TruncateSelfWithTooltip( control )
-	local resultSize = control:GetSizeX();
-	local longStr	 = control:GetText();
-	return TruncateStringWithTooltip(control, resultSize, longStr);
+  local resultSize = control:GetSizeX();
+  local longStr	 = control:GetText();
+  return TruncateStringWithTooltip(control, resultSize, longStr);
 end
 
 
@@ -104,10 +104,10 @@ end
 --	(Most useful when having to truncate a string *in* a tooltip.
 -- ===========================================================================
 function TruncateStringByLength( textString, textLen )
-	if ( Locale.Length(textString) > textLen ) then
-		return Locale.SubString(textString, 1, textLen) .. m_strEllipsis;
-	end
-	return textString;
+  if ( Locale.Length(textString) > textLen ) then
+    return Locale.SubString(textString, 1, textLen) .. m_strEllipsis;
+  end
+  return textString;
 end
 
 -- Wraps a string according to the provided length, but, unlike the built in wrapping, will ignore the limit if a single continuous word exceeds the length of the wrap width
@@ -143,29 +143,29 @@ end
 -- ===========================================================================
 function RGBAValuesToABGRHex( red, green, blue, alpha )
 
-	-- optionally pass in alpha, to taste
-	if alpha==nil then
-		alpha = 1.0;
-	end
+  -- optionally pass in alpha, to taste
+  if alpha==nil then
+    alpha = 1.0;
+  end
 
-	-- prepare ingredients so they are clamped from 0 to 255
-	red 	= math.max( 0, math.min( 255, red*255 ));
-	green 	= math.max( 0, math.min( 255, green*255 ));
-	blue	= math.max( 0, math.min( 255, blue*255 ));
-	alpha	= math.max( 0, math.min( 255, alpha*255 ));
+  -- prepare ingredients so they are clamped from 0 to 255
+  red 	= math.max( 0, math.min( 255, red*255 ));
+  green 	= math.max( 0, math.min( 255, green*255 ));
+  blue	= math.max( 0, math.min( 255, blue*255 ));
+  alpha	= math.max( 0, math.min( 255, alpha*255 ));
 
-	-- combine the ingredients, stiring gently
-	local value = lshift( alpha, 24 ) + lshift( blue, 16 ) + lshift( green, 8 ) + red;
+  -- combine the ingredients, stiring gently
+  local value = lshift( alpha, 24 ) + lshift( blue, 16 ) + lshift( green, 8 ) + red;
 
-	-- return the baked goodness
-	return math.floor(value);
+  -- return the baked goodness
+  return math.floor(value);
 end
 
 -- ===========================================================================
 --	Use to convert from CivBE style colors to ForgeUI color
 -- ===========================================================================
 function RGBAObjectToABGRHex( colorObject )
-	return RGBAValuesToABGRHex( colorObject.x, colorObject.y, colorObject.z, colorObject.w );
+  return RGBAValuesToABGRHex( colorObject.x, colorObject.y, colorObject.z, colorObject.w );
 end
 
 -- ===========================================================================
@@ -173,12 +173,12 @@ end
 --	RETURNS: Object with R G B A to a vector like format with fields X Y Z W
 -- ===========================================================================
 function ABGRHExToRGBAObject( hexColor )
-	local ret = {};
-	ret.w = math.floor( math.fmod( rshift(hexColor,24), 256));
-	ret.z = math.floor( math.fmod( rshift(hexColor,16), 256));
-	ret.y = math.floor( math.fmod( rshift(hexColor,8), 256));
-	ret.x = math.floor( math.fmod( hexColor, 0x256 ));	-- lower MODs are messed up due what is in higher bits, need an AND!
-	return ret;
+  local ret = {};
+  ret.w = math.floor( math.fmod( rshift(hexColor,24), 256));
+  ret.z = math.floor( math.fmod( rshift(hexColor,16), 256));
+  ret.y = math.floor( math.fmod( rshift(hexColor,8), 256));
+  ret.x = math.floor( math.fmod( hexColor, 0x256 ));	-- lower MODs are messed up due what is in higher bits, need an AND!
+  return ret;
 end
 
 
@@ -220,24 +220,24 @@ g_supportFunctions_shiftTable[24] = 16777216;
 --	Converts a number into a table of bits.
 -- ===========================================================================
 function numberToBitsTable( value:number )
-	if value < 0 then
-		return numberToBitsTable( bitNot(math.abs(value))+1 );	-- Recurse
-	end
+  if value < 0 then
+    return numberToBitsTable( bitNot(math.abs(value))+1 );	-- Recurse
+  end
 
-	local kReturn	:table = {};
-	local i			:number = 1;
-	while value > 0 do
-		local digit:number = math.fmod(value, 2);
-		if digit == 1 then
-			kReturn[i] = 1;
-		else
-			kReturn[i] = 0;
-		end
-		value = (value - digit) * 0.5;
-		i = i + 1;
-	end
+  local kReturn	:table = {};
+  local i			:number = 1;
+  while value > 0 do
+    local digit:number = math.fmod(value, 2);
+    if digit == 1 then
+      kReturn[i] = 1;
+    else
+      kReturn[i] = 0;
+    end
+    value = (value - digit) * 0.5;
+    i = i + 1;
+  end
 
-	return kReturn;
+  return kReturn;
 end
 
 -- ===========================================================================
@@ -245,49 +245,49 @@ end
 --	Converts a table of bits into it's corresponding number.
 -- ===========================================================================
 function bitsTableToNumber( kTable:table )
-	local bits	:number = table.count(kTable);
-	local n		:number = 0;
-	local power :number = 1;
-	for i = 1, bits,1 do
-		n = n + kTable[i] * power;
-		power = power * 2;
-	end
-	return n;
+  local bits	:number = table.count(kTable);
+  local n		:number = 0;
+  local power :number = 1;
+  for i = 1, bits,1 do
+    n = n + kTable[i] * power;
+    power = power * 2;
+  end
+  return n;
 end
 
 -- ===========================================================================
 --	Bitwise not (because LUA 5.2 support doesn't exist yet in Havok script)
 -- ===========================================================================
 function bitNot( value:number )
-	local kBits:table	= numberToBitsTable(value);
-	local size:number	= math.max(table.getn(kBits), 32)
-	for i = 1, size do
-		if(kBits[i] == 1) then
-			kBits[i] = 0
-		else
-			kBits[i] = 1
-		end
-	end
-	return bitsTableToNumber(kBits);
+  local kBits:table	= numberToBitsTable(value);
+  local size:number	= math.max(table.getn(kBits), 32)
+  for i = 1, size do
+    if(kBits[i] == 1) then
+      kBits[i] = 0
+    else
+      kBits[i] = 1
+    end
+  end
+  return bitsTableToNumber(kBits);
  end
 
  -- ===========================================================================
 --	Bitwise or (because LUA 5.2 support doesn't exist yet in Havok script)
 -- ===========================================================================
  local function bitOr( na:number, nb:number)
-	local ka :table = numberToBitsTable(na);
-	local kb :table = numberToBitsTable(nb);
+  local ka :table = numberToBitsTable(na);
+  local kb :table = numberToBitsTable(nb);
 
-	-- Make sure both are the same size; pad with 0's if necessary.
-	while table.count(ka) < table.count(kb) do ka[table.count(ka)+1] = 0; end
-	while table.count(kb) < table.count(ka) do kb[table.count(kb)+1] = 0; end
+  -- Make sure both are the same size; pad with 0's if necessary.
+  while table.count(ka) < table.count(kb) do ka[table.count(ka)+1] = 0; end
+  while table.count(kb) < table.count(ka) do kb[table.count(kb)+1] = 0; end
 
-	local kResult	:table	= {};
-	local digits	:number = table.count(ka);
-	for i:number = 1, digits, 1 do
-		kResult[i] = (ka[i]==1 or kb[i]==1) and 1 or 0;
-	end
-	return bitsTableToNumber( kResult );
+  local kResult	:table	= {};
+  local digits	:number = table.count(ka);
+  for i:number = 1, digits, 1 do
+    kResult[i] = (ka[i]==1 or kb[i]==1) and 1 or 0;
+  end
+  return bitsTableToNumber( kResult );
 end
 
 
@@ -295,24 +295,24 @@ end
 -- Left shift (because LUA 5.2 support doesn't exist yet in Havok script)
 -- ===========================================================================
 function lshift( value, shift )
-	return math.floor(value) * g_supportFunctions_shiftTable[shift];
+  return math.floor(value) * g_supportFunctions_shiftTable[shift];
 end
 
 -- ===========================================================================
 -- Right shift (because LUA 5.2 support doesn't exist yet in Havok script)
 -- ===========================================================================
 function rshift( value:number, shift:number )
-	local highBit:number = 0;
+  local highBit:number = 0;
 
-	if value < 0 then
-		value	= bitNot(math.abs(value)) + 1;
-		highBit = 0x80000000;
-	end
+  if value < 0 then
+    value	= bitNot(math.abs(value)) + 1;
+    highBit = 0x80000000;
+  end
 
-	for i=1, shift, 1 do
-		value = bitOr( math.floor(value*0.5), highBit );
-	end
-	return math.floor(value);
+  for i=1, shift, 1 do
+    value = bitOr( math.floor(value*0.5), highBit );
+  end
+  return math.floor(value);
 end
 
 
@@ -341,17 +341,17 @@ function GetIPType( ip )
         return 4;	-- This is IP4
     end
 
-	-- Check for ipv6 format, should be 8 'chunks' of numbers/letters without trailing chars
-	local chunks = {ip:match(("([a-fA-F0-9]*):"):rep(8):gsub(":$","$"))}
-	if table.count(chunks) == 8 then
-		for _,v in pairs(chunks) do
-			if table.count(v) > 0 and tonumber(v, 16) > 65535 then
-				return 0;
-			end
-		end
-		return 6;	-- This is IP6
-	end
-	return 0;
+  -- Check for ipv6 format, should be 8 'chunks' of numbers/letters without trailing chars
+  local chunks = {ip:match(("([a-fA-F0-9]*):"):rep(8):gsub(":$","$"))}
+  if table.count(chunks) == 8 then
+    for _,v in pairs(chunks) do
+      if table.count(v) > 0 and tonumber(v, 16) > 65535 then
+        return 0;
+      end
+    end
+    return 6;	-- This is IP6
+  end
+  return 0;
 end
 
 
@@ -361,18 +361,18 @@ end
 --	LUA Helper function
 -- ===========================================================================
 function RemoveTableEntry( T:table, key:string, theValue )
-	local pos = nil;
-	for i,v in ipairs(T) do
-		if (v[key]==theValue) then
-			pos=i;
-			break;
-		end
-	end
-	if(pos ~= nil) then
-		table.remove(T, pos);
-		return true;
-	end
-	return false;
+  local pos = nil;
+  for i,v in ipairs(T) do
+    if (v[key]==theValue) then
+      pos=i;
+      break;
+    end
+  end
+  if(pos ~= nil) then
+    table.remove(T, pos);
+    return true;
+  end
+  return false;
 end
 
 -- ===========================================================================
@@ -390,7 +390,7 @@ function __genOrderedIndex( t )
 end
 function orderedNext(t, state)
     -- Equivalent of the next function, but returns the keys in the alphabetic order.
-	-- Using a temporary ordered key table that is stored in the table being iterated.
+  -- Using a temporary ordered key table that is stored in the table being iterated.
     key = nil;
     if state == nil then
         -- Is first time; generate the index.
@@ -407,8 +407,8 @@ function orderedNext(t, state)
 
     if key then
         return key, t[key];
-	else
-		t.__orderedIndex = nil;		-- No more value to return, cleanup.
+  else
+    t.__orderedIndex = nil;		-- No more value to return, cleanup.
     end
 end
 function orderedPairs(t)
@@ -423,7 +423,7 @@ end
 --	RETURNS: Table of tokenized strings
 -- ===========================================================================
 function Split(str:string, delim:string, maxNb:number)
-	-- Eliminate bad cases...
+  -- Eliminate bad cases...
     if string.find(str, delim) == nil then
         return { str };
     end
@@ -439,8 +439,8 @@ function Split(str:string, delim:string, maxNb:number)
         result[nb] = part;
         lastPos = pos;
         if nb == maxNb then
-			break;
-		end
+      break;
+    end
     end
     -- Handle the last field
     if nb ~= maxNb then
@@ -455,13 +455,13 @@ end
 --	Returns the value passed, only changing if it's above or below the min/max
 -- ===========================================================================
 function Clamp( value:number, min:number, max:number )
-	if value < min then
-		return min;
-	elseif value > max then
-		return max;
-	else
-		return value;
-	end
+  if value < min then
+    return min;
+  elseif value > max then
+    return max;
+  else
+    return value;
+  end
 end
 
 
@@ -488,10 +488,10 @@ end
 --						return x,y;
 -- ===========================================================================
 function PolarToCartesian( r:number, phi:number )
-	return r * math.cos( math.rad(phi) ), r * math.sin( math.rad(phi) );
+  return r * math.cos( math.rad(phi) ), r * math.sin( math.rad(phi) );
 end
 function PolarToRatioCartesian( r:number, phi:number, ratio:number )
-	return r * math.cos( math.rad(phi) ), r * math.sin( math.rad(phi) ) * ratio;
+  return r * math.cos( math.rad(phi) ), r * math.sin( math.rad(phi) ) * ratio;
 end
 
 -- ===========================================================================
@@ -503,62 +503,62 @@ end
 -- ===========================================================================
 function DarkenLightenColor( hexColor:number, amt:number, alpha:number )
 
-	--Parse the a,g,b,r hex values from the string
-	local hexString :string = string.format("%x",hexColor);
-	local b = string.sub(hexString,3,4);
-	local g = string.sub(hexString,5,6);
-	local r = string.sub(hexString,7,8);
-	b = tonumber(b,16);
-	g = tonumber(g,16);
-	r = tonumber(r,16);
+  --Parse the a,g,b,r hex values from the string
+  local hexString :string = string.format("%x",hexColor);
+  local b = string.sub(hexString,3,4);
+  local g = string.sub(hexString,5,6);
+  local r = string.sub(hexString,7,8);
+  b = tonumber(b,16);
+  g = tonumber(g,16);
+  r = tonumber(r,16);
 
-	if (b == nil) then b = 0; end
-	if (g == nil) then g = 0; end
-	if (r == nil) then r = 0; end
+  if (b == nil) then b = 0; end
+  if (g == nil) then g = 0; end
+  if (r == nil) then r = 0; end
 
-	local a = string.format("%x",alpha);
-	if (string.len(a)==1) then
-			a = "0"..a;
-	end
+  local a = string.format("%x",alpha);
+  if (string.len(a)==1) then
+      a = "0"..a;
+  end
 
-	b = b + amt;
-	if (b < 0 or b == 0) then
-		b = "00";
-	elseif (b > 255 or b == 255) then
-		b = "FF";
-	else
-		b = string.format("%x",b);
-		if (string.len(b)==1) then
-			b = "0"..b;
-		end
-	end
+  b = b + amt;
+  if (b < 0 or b == 0) then
+    b = "00";
+  elseif (b > 255 or b == 255) then
+    b = "FF";
+  else
+    b = string.format("%x",b);
+    if (string.len(b)==1) then
+      b = "0"..b;
+    end
+  end
 
-	g = g + amt;
-	if (g < 0 or g == 0) then
-		g = "00";
-	elseif (g > 255 or g == 255) then
-		g = "FF";
-	else
-		g = string.format("%x",g);
-		if (string.len(g)==1) then
-			g = "0"..g;
-		end
-	end
+  g = g + amt;
+  if (g < 0 or g == 0) then
+    g = "00";
+  elseif (g > 255 or g == 255) then
+    g = "FF";
+  else
+    g = string.format("%x",g);
+    if (string.len(g)==1) then
+      g = "0"..g;
+    end
+  end
 
-	r = r + amt;
-	if (r < 0 or r == 0) then
-		r = "00";
-	elseif (r > 255 or r == 255) then
-		r = "FF";
-	else
-		r = string.format("%x",r);
-		if (string.len(r)==1) then
-			r = "0"..r;
-		end
-	end
+  r = r + amt;
+  if (r < 0 or r == 0) then
+    r = "00";
+  elseif (r > 255 or r == 255) then
+    r = "FF";
+  else
+    r = string.format("%x",r);
+    if (string.len(r)==1) then
+      r = "0"..r;
+    end
+  end
 
-	hexString = a..b..g..r;
-	return tonumber(hexString,16);
+  hexString = a..b..g..r;
+  return tonumber(hexString,16);
 end
 
 
@@ -588,18 +588,18 @@ end
 --	ARG 5: OPTIONAL maxY (number) - the minimum height of the control.
 -- ===========================================================================
 function UniformToFillY( control:table, maxY:number )
-	local currentX = control:GetSizeX();
-	local currentY = control:GetSizeY();
-	local newX = 0;
-	local newY = 0;
-	if (maxY == nil) then
-		local _, screenY:number = UIManager:GetScreenSizeVal();
-		newY = screenY;
-	else
-		newY = maxY;
-	end
-	newX = (currentX * newY)/currentY;
-	control:SetSizeVal(newX,newY);
+  local currentX = control:GetSizeX();
+  local currentY = control:GetSizeY();
+  local newX = 0;
+  local newY = 0;
+  if (maxY == nil) then
+    local _, screenY:number = UIManager:GetScreenSizeVal();
+    newY = screenY;
+  else
+    newY = maxY;
+  end
+  newX = (currentX * newY)/currentY;
+  control:SetSizeVal(newX,newY);
 end
 
 

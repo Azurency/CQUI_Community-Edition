@@ -1,4 +1,4 @@
-﻿-- ===========================================================================
+-- ===========================================================================
 --
 --  PlotToolTip
 --  Show information about the plot currently being hovered by the mouse,
@@ -572,13 +572,13 @@ function View(data:table, bIsUpdate:boolean)
 
 
   -- Set the control values
-	if (data.IsLake) then
-		Controls.PlotName:LocalizeAndSetText("LOC_TOOLTIP_LAKE");
-	elseif (data.TerrainTypeName == "LOC_TERRAIN_COAST_NAME") then
-		Controls.PlotName:LocalizeAndSetText("LOC_TOOLTIP_COAST");
-	else
-		Controls.PlotName:LocalizeAndSetText(data.TerrainTypeName);
-	end
+  if (data.IsLake) then
+    Controls.PlotName:LocalizeAndSetText("LOC_TOOLTIP_LAKE");
+  elseif (data.TerrainTypeName == "LOC_TERRAIN_COAST_NAME") then
+    Controls.PlotName:LocalizeAndSetText("LOC_TOOLTIP_COAST");
+  else
+    Controls.PlotName:LocalizeAndSetText(data.TerrainTypeName);
+  end
   Controls.PlotDetails:SetText(table.concat(details, "[NEWLINE]"));
 
   if m_isShowDebug then

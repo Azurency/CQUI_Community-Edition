@@ -1,4 +1,4 @@
-﻿--CityPanelOverview
+--CityPanelOverview
 --Triggered by selecting a city
 
 include( "AdjacencyBonusSupport" );   -- GetAdjacentYieldBonusString()

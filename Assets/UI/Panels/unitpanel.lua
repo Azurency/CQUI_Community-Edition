@@ -1,4 +1,4 @@
-﻿-- ===========================================================================
+-- ===========================================================================
 --  Unit Panel Screen
 -- ===========================================================================
 include( "InstanceManager" );
@@ -3094,7 +3094,7 @@ function InspectPlot( plot:table )
       return false;
     end
     GetCombatResults( pDistrict:GetComponentID(), plot:GetX(), plot:GetY() )
-     isValidToShow = ReadTargetData();
+    isValidToShow = ReadTargetData();
 
   else
     local pUnit = UI.GetHeadSelectedUnit();

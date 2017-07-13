@@ -234,7 +234,7 @@
     <File>Integrations/ML/Text/morelenses_text_ru.xml</File>
     <File>Integrations/ML/Text/morelenses_text_zh.xml</File>
     <File>Integrations/ML/Text/morelenses_text_es.xml</File>
-	<File>Integrations/BES/UI/EspionageSupport.lua</File>
+    <File>Integrations/BES/UI/EspionageSupport.lua</File>
     <File>Integrations/BES/UI/Choosers/EspionageChooser.lua</File>
     <File>Integrations/BES/UI/Choosers/EspionageChooser.xml</File>
     <File>Integrations/BES/UI/PartialScreens/EspionageOverview.lua</File>
@@ -245,7 +245,6 @@
 
   <!-- Describes how each file is used -->
   <Components>
-
     <!-- CQUI changes that override the base game files -->
     <ImportFiles id="CQUI_IMPORT_FILES">
       <Items>
@@ -409,13 +408,13 @@
         <File>Integrations/URS/unitpromotionpopup.lua</File>
       </Items>
     </ImportFiles>
-	<ImportFiles id="IDS_IMPORT_FILES">
+  <ImportFiles id="IDS_IMPORT_FILES">
       <Items>
         <File>Integrations/IDS/diplomacydealview.lua</File>
         <File>Integrations/IDS/diplomacydealview.xml</File>
       </Items>
     </ImportFiles>
-	<LocalizedText id="IDS_TEXT">
+  <LocalizedText id="IDS_TEXT">
       <Items>
         <File>Integrations/IDS/Text/ids_text.xml</File>
         <File>Integrations/IDS/Text/ids_text_de.xml</File>
@@ -428,7 +427,7 @@
         <File>Integrations/IDS/Text/ids_text_es.xml</File>
       </Items>
     </LocalizedText>
-	<ImportFiles id="BES_IMPORT_FILES">
+  <ImportFiles id="BES_IMPORT_FILES">
       <Items>
         <File>Integrations/BES/UI/EspionageSupport.lua</File>
         <File>Integrations/BES/UI/Choosers/EspionageChooser.lua</File>
@@ -437,7 +436,6 @@
         <File>Integrations/BES/UI/PartialScreens/EspionageOverview.xml</File>
       </Items>
     </ImportFiles>
-
     <LocalizedText id="BES_TEXT">
       <Items>
         <File>Integrations/BES/Text/BES_Text.xml</File>
@@ -470,7 +468,5 @@
       </Items>
     </UpdateDatabase>
   </Components>
-
   <Settings />
-
 </Mod>

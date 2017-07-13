@@ -30,7 +30,7 @@
     <Replace Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="pl_PL">
       <Text>Znajdź tę jednostkę na mapie.</Text>
     </Replace>
-	<Replace Tag="LOC_HUD_REPORTS_BONUSES_URS" Language="pl_PL">
+  <Replace Tag="LOC_HUD_REPORTS_BONUSES_URS" Language="pl_PL">
       <Text>Premie</Text>
     </Replace>
 

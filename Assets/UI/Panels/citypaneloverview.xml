@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Context  ColorSet="BodyTextCool" FontStyle="Shadow">
 
   <SlideAnim    ID="OverviewSlide"  Anchor="L,T"                  Size="300,full"       Start="-330,27" End="0,27" Cycle="Once" Speed="3.5" Function="OutSine" Stopped="1" >
@@ -358,7 +358,7 @@
           <Button ID="ReligionButton" Offset="0,2" Anchor="L,C" Size="44,44"  Texture="LaunchBar_Hook_ButtonMedium" Style="ButtonNormalText" ToolTip="LOC_HUD_CITY_OVERVIEW_RELIGION_TOOLTIP" >
             <Image ID="ReligionIcon" Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="C,C"  Icon="ICON_RELIGION"/>
           </Button>
-         <!--  <Button ID="QueueButton" Offset="0,2" Anchor="L,C" Size="44,44"  Texture="LaunchBar_Hook_ButtonMedium" Style="ButtonNormalText">
+        <!--  <Button ID="QueueButton" Offset="0,2" Anchor="L,C" Size="44,44"  Texture="LaunchBar_Hook_ButtonMedium" Style="ButtonNormalText">
             <Image ID="QueueIcon" Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="C,C"  Icon="ICON_QUEUE"/>
           </Button> -->
           <!--<Button ID="StrengthButton" Offset="0,2" Anchor="L,C" Size="44,44"  Texture="LaunchBar_Hook_ButtonMedium" Style="ButtonNormalText">

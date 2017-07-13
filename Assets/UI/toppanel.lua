@@ -1,4 +1,4 @@
-﻿-- ===========================================================================
+-- ===========================================================================
 --  HUD Top of Screen Area
 -- ===========================================================================
 include( "InstanceManager" );
@@ -275,10 +275,10 @@ function RefreshTime()
   else
     strTime = os.date("%I:%M %p");
 
-		-- Remove the leading zero (if any) from 12-hour clock format
-		if(string.sub(strTime, 1, 1) == "0") then
-			strTime = string.sub(strTime, 2);
-		end
+    -- Remove the leading zero (if any) from 12-hour clock format
+    if(string.sub(strTime, 1, 1) == "0") then
+      strTime = string.sub(strTime, 2);
+    end
   end
 
   Controls.Time:SetText( strTime );

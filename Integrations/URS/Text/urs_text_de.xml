@@ -30,7 +30,7 @@
     <Replace Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="de_DE">
       <Text>Zeige Einheit auf der Karte.</Text>
     </Replace>
-	<Replace Tag="LOC_HUD_REPORTS_BONUSES_URS" Language="de_DE">
+  <Replace Tag="LOC_HUD_REPORTS_BONUSES_URS" Language="de_DE">
       <Text>Bonusse</Text>
     </Replace>
 

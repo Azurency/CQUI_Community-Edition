@@ -23,10 +23,10 @@ local TEAM_RIBBON_SIZE		:number = 53;
 local TEAM_RIBBON_PREFIX	:string = "ICON_TEAM_RIBBON_";
 
 local VALID_RELATIONSHIPS	:table = {
-	"DIPLO_STATE_ALLIED",
-	"DIPLO_STATE_DECLARED_FRIEND",
-	"DIPLO_STATE_DENOUNCED",
-	"DIPLO_STATE_WAR"
+  "DIPLO_STATE_ALLIED",
+  "DIPLO_STATE_DECLARED_FRIEND",
+  "DIPLO_STATE_DENOUNCED",
+  "DIPLO_STATE_WAR"
 };
 
 -- ===========================================================================
@@ -52,363 +52,363 @@ local CQUI_hoveringOverPortrait = false;
 --	Cleanup leaders
 -- ===========================================================================
 function ResetLeaders()
-	m_leadersMet = 0;
-	m_uiLeadersByID = {};
-	m_kLeaderIM:ResetInstances();
+  m_leadersMet = 0;
+  m_uiLeadersByID = {};
+  m_kLeaderIM:ResetInstances();
 end
 
 -- ===========================================================================
 function OnLeaderClicked(playerID : number )
-	-- Send an event to open the leader in the diplomacy view (only if they met)
+  -- Send an event to open the leader in the diplomacy view (only if they met)
 
-	local localPlayerID:number = Game.GetLocalPlayer();
-	if playerID == localPlayerID or Players[localPlayerID]:GetDiplomacy():HasMet(playerID) then
-		LuaEvents.DiplomacyRibbon_OpenDiplomacyActionView( playerID );
-	end
+  local localPlayerID:number = Game.GetLocalPlayer();
+  if playerID == localPlayerID or Players[localPlayerID]:GetDiplomacy():HasMet(playerID) then
+    LuaEvents.DiplomacyRibbon_OpenDiplomacyActionView( playerID );
+  end
 end
 
 -- ===========================================================================
 function OnLeaderRightClicked(ms_SelectedPlayerID : number )
 
-	local ms_LocalPlayerID:number = Game.GetLocalPlayer();
-	if ms_SelectedPlayerID == ms_LocalPlayerID then
-		UpdateLeaders();
-	end
-	local pPlayer = Players[ms_LocalPlayerID];
-	local iPlayerDiploState = pPlayer:GetDiplomaticAI():GetDiplomaticStateIndex(ms_SelectedPlayerID);
-	local relationshipHash = GameInfo.DiplomaticStates[iPlayerDiploState].Hash;
-	if (not (relationshipHash == DiplomaticStates.WAR)) then
-		if (not DealManager.HasPendingDeal(ms_LocalPlayerID, ms_SelectedPlayerID)) then
-			DealManager.ClearWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayerID, ms_SelectedPlayerID);
-		end
-		DiplomacyManager.RequestSession(ms_LocalPlayerID, ms_SelectedPlayerID, "MAKE_DEAL");
-	--ARISTOS: To make Right Click on leader go directly to peace deal
-	else
-		if (not DealManager.HasPendingDeal(ms_LocalPlayerID, ms_SelectedPlayerID)) then
-			DealManager.ClearWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayerID, ms_SelectedPlayerID);
-			local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayerID, ms_SelectedPlayerID);
-			if (pDeal ~= nil) then
-				pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, ms_LocalPlayerID);
-				if (pDealItem ~= nil) then
-					pDealItem:SetSubType(DealAgreementTypes.MAKE_PEACE);
-					pDealItem:SetLocked(true);
-				end
-				-- Validate the deal, this will make sure peace is on both sides of the deal.
-				pDeal:Validate();
-			end
-		end
-		DiplomacyManager.RequestSession(ms_LocalPlayerID, ms_SelectedPlayerID, "MAKE_DEAL");
-	end
-	LuaEvents.QuickDealModeActivate();
+  local ms_LocalPlayerID:number = Game.GetLocalPlayer();
+  if ms_SelectedPlayerID == ms_LocalPlayerID then
+    UpdateLeaders();
+  end
+  local pPlayer = Players[ms_LocalPlayerID];
+  local iPlayerDiploState = pPlayer:GetDiplomaticAI():GetDiplomaticStateIndex(ms_SelectedPlayerID);
+  local relationshipHash = GameInfo.DiplomaticStates[iPlayerDiploState].Hash;
+  if (not (relationshipHash == DiplomaticStates.WAR)) then
+    if (not DealManager.HasPendingDeal(ms_LocalPlayerID, ms_SelectedPlayerID)) then
+      DealManager.ClearWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayerID, ms_SelectedPlayerID);
+    end
+    DiplomacyManager.RequestSession(ms_LocalPlayerID, ms_SelectedPlayerID, "MAKE_DEAL");
+  --ARISTOS: To make Right Click on leader go directly to peace deal
+  else
+    if (not DealManager.HasPendingDeal(ms_LocalPlayerID, ms_SelectedPlayerID)) then
+      DealManager.ClearWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayerID, ms_SelectedPlayerID);
+      local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayerID, ms_SelectedPlayerID);
+      if (pDeal ~= nil) then
+        pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, ms_LocalPlayerID);
+        if (pDealItem ~= nil) then
+          pDealItem:SetSubType(DealAgreementTypes.MAKE_PEACE);
+          pDealItem:SetLocked(true);
+        end
+        -- Validate the deal, this will make sure peace is on both sides of the deal.
+        pDeal:Validate();
+      end
+    end
+    DiplomacyManager.RequestSession(ms_LocalPlayerID, ms_SelectedPlayerID, "MAKE_DEAL");
+  end
+  LuaEvents.QuickDealModeActivate();
 end
 
 -- ===========================================================================
 -- ARISTOS: To show relationship icon of other civs on hovering mouse over a given leader
 function OnLeaderMouseOver(playerID : number )
-	CQUI_hoveringOverPortrait = true;
-	local localPlayerID:number = Game.GetLocalPlayer();
-	local playerDiplomacy = Players[playerID]:GetDiplomacy();
-	if m_isCTRLDown then
-		UI.PlaySound("Main_Menu_Mouse_Over");
-		for otherPlayerID, instance in pairs(m_uiLeadersByID) do
-			local pPlayer:table = Players[otherPlayerID];
-			local pPlayerConfig:table = PlayerConfigurations[otherPlayerID];
-			local isHuman:boolean = pPlayerConfig:IsHuman();
-			-- Set relationship status (for non-local players)
-			local diplomaticAI:table = pPlayer:GetDiplomaticAI();
-			local relationshipStateID:number = diplomaticAI:GetDiplomaticStateIndex(playerID);
-			if relationshipStateID ~= -1 then
-				local relationshipState:table = GameInfo.DiplomaticStates[relationshipStateID];
-				-- Always show relationship icon for AIs, only show player triggered states for humans
-				if not isHuman or IsValidRelationship(relationshipState.StateType) then
-					--!! ARISTOS: to extend relationship tooltip to include diplo modifiers!
-					local relationshipTooltip:string = Locale.Lookup(relationshipState.Name)
-					--!! Extend it only of the selected player is the local player!
-					.. (localPlayerID == playerID and ("[NEWLINE][NEWLINE]" .. RelationshipGet(otherPlayerID)) or "");
-					-- KWG: This is bad, there is a piece of art that is tied to the order of a database entry.  Please fix!
-					instance.Relationship:SetVisState(relationshipStateID);
-					--ARISTOS: this shows a ? mark instead of leader portrait if player is unknown to the selected leader
-					if (otherPlayerID == playerID or otherPlayerID == localPlayerID) then
-						instance.Relationship:SetHide(true);
-						instance.Portrait:SetIcon("ICON_"..PlayerConfigurations[otherPlayerID]:GetLeaderTypeName());
-					elseif playerDiplomacy:HasMet(otherPlayerID) then
-						instance.Relationship:SetToolTipString(relationshipTooltip);
-						instance.Relationship:SetHide(false);
-						instance.Portrait:SetIcon("ICON_"..PlayerConfigurations[otherPlayerID]:GetLeaderTypeName());
-					else
-						instance.Portrait:SetIcon("ICON_LEADER_DEFAULT");
-						instance.Relationship:LocalizeAndSetToolTip("LOC_DIPLOPANEL_UNMET_PLAYER");
-						instance.Relationship:SetHide(false);
-					end
-				end
-			end
-			if(playerID == otherPlayerID) then
-				instance.YouIndicator:SetHide(false);
-			else
-				instance.YouIndicator:SetHide(true);
-			end
-		end
-	end
+  CQUI_hoveringOverPortrait = true;
+  local localPlayerID:number = Game.GetLocalPlayer();
+  local playerDiplomacy = Players[playerID]:GetDiplomacy();
+  if m_isCTRLDown then
+    UI.PlaySound("Main_Menu_Mouse_Over");
+    for otherPlayerID, instance in pairs(m_uiLeadersByID) do
+      local pPlayer:table = Players[otherPlayerID];
+      local pPlayerConfig:table = PlayerConfigurations[otherPlayerID];
+      local isHuman:boolean = pPlayerConfig:IsHuman();
+      -- Set relationship status (for non-local players)
+      local diplomaticAI:table = pPlayer:GetDiplomaticAI();
+      local relationshipStateID:number = diplomaticAI:GetDiplomaticStateIndex(playerID);
+      if relationshipStateID ~= -1 then
+        local relationshipState:table = GameInfo.DiplomaticStates[relationshipStateID];
+        -- Always show relationship icon for AIs, only show player triggered states for humans
+        if not isHuman or IsValidRelationship(relationshipState.StateType) then
+          --!! ARISTOS: to extend relationship tooltip to include diplo modifiers!
+          local relationshipTooltip:string = Locale.Lookup(relationshipState.Name)
+          --!! Extend it only of the selected player is the local player!
+          .. (localPlayerID == playerID and ("[NEWLINE][NEWLINE]" .. RelationshipGet(otherPlayerID)) or "");
+          -- KWG: This is bad, there is a piece of art that is tied to the order of a database entry.  Please fix!
+          instance.Relationship:SetVisState(relationshipStateID);
+          --ARISTOS: this shows a ? mark instead of leader portrait if player is unknown to the selected leader
+          if (otherPlayerID == playerID or otherPlayerID == localPlayerID) then
+            instance.Relationship:SetHide(true);
+            instance.Portrait:SetIcon("ICON_"..PlayerConfigurations[otherPlayerID]:GetLeaderTypeName());
+          elseif playerDiplomacy:HasMet(otherPlayerID) then
+            instance.Relationship:SetToolTipString(relationshipTooltip);
+            instance.Relationship:SetHide(false);
+            instance.Portrait:SetIcon("ICON_"..PlayerConfigurations[otherPlayerID]:GetLeaderTypeName());
+          else
+            instance.Portrait:SetIcon("ICON_LEADER_DEFAULT");
+            instance.Relationship:LocalizeAndSetToolTip("LOC_DIPLOPANEL_UNMET_PLAYER");
+            instance.Relationship:SetHide(false);
+          end
+        end
+      end
+      if(playerID == otherPlayerID) then
+        instance.YouIndicator:SetHide(false);
+      else
+        instance.YouIndicator:SetHide(true);
+      end
+    end
+  end
 end
 
 function OnLeaderMouseExit()
-	CQUI_hoveringOverPortrait = false;
+  CQUI_hoveringOverPortrait = false;
 end
 
 -- ===========================================================================
 function IsValidRelationship(relationshipType:string)
-	for _:number, tmpType:string in ipairs(VALID_RELATIONSHIPS) do
-		if relationshipType == tmpType then
-			return true;
-		end
-	end
-	return false;
+  for _:number, tmpType:string in ipairs(VALID_RELATIONSHIPS) do
+    if relationshipType == tmpType then
+      return true;
+    end
+  end
+  return false;
 end
 
 -- ===========================================================================
 --	Add a leader (from right to left)
 -- ===========================================================================
 function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean)
-	m_leadersMet = m_leadersMet + 1;
+  m_leadersMet = m_leadersMet + 1;
 
-	local pPlayer:table = Players[playerID];
-	local pPlayerConfig:table = PlayerConfigurations[playerID];
-	local isHuman:boolean = pPlayerConfig:IsHuman();
+  local pPlayer:table = Players[playerID];
+  local pPlayerConfig:table = PlayerConfigurations[playerID];
+  local isHuman:boolean = pPlayerConfig:IsHuman();
 
-	-- Create a new leader instance
-	local instance:table = m_kLeaderIM:GetInstance();
-	m_uiLeadersByID[playerID] = instance;
+  -- Create a new leader instance
+  local instance:table = m_kLeaderIM:GetInstance();
+  m_uiLeadersByID[playerID] = instance;
 
-	-- Display the civ colors/icon for duplicate civs
-	if(isUniqueLeader == false) then
-		local backColor, frontColor  = UI.GetPlayerColors( playerID );
-		instance.CivIndicator:SetHide(false);
-		instance.CivIndicator:SetColor(backColor);
-		instance.CivIcon:SetColor(frontColor);
-		instance.CivIcon:SetIcon("ICON_"..pPlayerConfig:GetCivilizationTypeName());
-	end
+  -- Display the civ colors/icon for duplicate civs
+  if(isUniqueLeader == false) then
+    local backColor, frontColor  = UI.GetPlayerColors( playerID );
+    instance.CivIndicator:SetHide(false);
+    instance.CivIndicator:SetColor(backColor);
+    instance.CivIcon:SetColor(frontColor);
+    instance.CivIcon:SetIcon("ICON_"..pPlayerConfig:GetCivilizationTypeName());
+  end
 
-	-- Set leader portrait
-	instance.Portrait:SetIcon(iconName);
-	-- Register the click handler
-	instance.Button:RegisterCallback( Mouse.eLClick, function() OnLeaderClicked(playerID); end );
-	instance.Button:RegisterCallback( Mouse.eRClick, function() OnLeaderRightClicked(playerID); end );
-	instance.Button:RegisterCallback( Mouse.eMouseEnter, function() OnLeaderMouseOver(playerID); end ); --ARISTOS
-	instance.Button:RegisterCallback( Mouse.eMouseExit, function() OnLeaderMouseExit(); end );
-	instance.Button:RegisterCallback( Mouse.eMClick, function() OnLeaderMouseOver(playerID); end ); --ARISTOS
+  -- Set leader portrait
+  instance.Portrait:SetIcon(iconName);
+  -- Register the click handler
+  instance.Button:RegisterCallback( Mouse.eLClick, function() OnLeaderClicked(playerID); end );
+  instance.Button:RegisterCallback( Mouse.eRClick, function() OnLeaderRightClicked(playerID); end );
+  instance.Button:RegisterCallback( Mouse.eMouseEnter, function() OnLeaderMouseOver(playerID); end ); --ARISTOS
+  instance.Button:RegisterCallback( Mouse.eMouseExit, function() OnLeaderMouseExit(); end );
+  instance.Button:RegisterCallback( Mouse.eMClick, function() OnLeaderMouseOver(playerID); end ); --ARISTOS
 
-	local bShowRelationshipIcon:boolean = false;
-	local localPlayerID:number = Game.GetLocalPlayer();
+  local bShowRelationshipIcon:boolean = false;
+  local localPlayerID:number = Game.GetLocalPlayer();
 
-	if(playerID == localPlayerID) then
-		instance.YouIndicator:SetHide(false);
-	else
-		-- Set relationship status (for non-local players)
-		local diplomaticAI:table = pPlayer:GetDiplomaticAI();
-		local relationshipStateID:number = diplomaticAI:GetDiplomaticStateIndex(localPlayerID);
-		if relationshipStateID ~= -1 then
-			local relationshipState:table = GameInfo.DiplomaticStates[relationshipStateID];
-			-- Always show relationship icon for AIs, only show player triggered states for humans
-			if not isHuman or IsValidRelationship(relationshipState.StateType) then
-				--!! ARISTOS: to extend relationship tooltip to include diplo modifiers!
-				local extendedRelationshipTooltip:string = Locale.Lookup(relationshipState.Name)
-				.. "[NEWLINE][NEWLINE]" .. RelationshipGet(playerID);
-				-- KWG: This is bad, there is a piece of art that is tied to the order of a database entry.  Please fix!
-				instance.Relationship:SetVisState(relationshipStateID);
-				instance.Relationship:SetToolTipString(extendedRelationshipTooltip);
-				bShowRelationshipIcon = true;
-			end
-		end
-		instance.YouIndicator:SetHide(true);
-	end
+  if(playerID == localPlayerID) then
+    instance.YouIndicator:SetHide(false);
+  else
+    -- Set relationship status (for non-local players)
+    local diplomaticAI:table = pPlayer:GetDiplomaticAI();
+    local relationshipStateID:number = diplomaticAI:GetDiplomaticStateIndex(localPlayerID);
+    if relationshipStateID ~= -1 then
+      local relationshipState:table = GameInfo.DiplomaticStates[relationshipStateID];
+      -- Always show relationship icon for AIs, only show player triggered states for humans
+      if not isHuman or IsValidRelationship(relationshipState.StateType) then
+        --!! ARISTOS: to extend relationship tooltip to include diplo modifiers!
+        local extendedRelationshipTooltip:string = Locale.Lookup(relationshipState.Name)
+        .. "[NEWLINE][NEWLINE]" .. RelationshipGet(playerID);
+        -- KWG: This is bad, there is a piece of art that is tied to the order of a database entry.  Please fix!
+        instance.Relationship:SetVisState(relationshipStateID);
+        instance.Relationship:SetToolTipString(extendedRelationshipTooltip);
+        bShowRelationshipIcon = true;
+      end
+    end
+    instance.YouIndicator:SetHide(true);
+  end
 
   -- CQUI: Set score values for DRS display
   instance.CQUI_ScoreOverall:SetText("[ICON_Capital]"..Players[playerID]:GetScore());
   instance.CQUI_ScienceRate:SetText("[ICON_Science]"..Round(Players[playerID]:GetTechs():GetScienceYield(),0));
   instance.CQUI_MilitaryStrength:SetText("[ICON_Strength]"..Players[playerID]:GetStats():GetMilitaryStrength());
 
-	instance.Relationship:SetHide(not bShowRelationshipIcon);
+  instance.Relationship:SetHide(not bShowRelationshipIcon);
 
-	-- Set the tooltip
-	if(pPlayerConfig ~= nil) then
-		local leaderTypeName:string = pPlayerConfig:GetLeaderTypeName();
-		if(leaderTypeName ~= nil) then
-			local leaderDesc:string = pPlayerConfig:GetLeaderName();
-			local civDesc:string = pPlayerConfig:GetCivilizationDescription();
+  -- Set the tooltip
+  if(pPlayerConfig ~= nil) then
+    local leaderTypeName:string = pPlayerConfig:GetLeaderTypeName();
+    if(leaderTypeName ~= nil) then
+      local leaderDesc:string = pPlayerConfig:GetLeaderName();
+      local civDesc:string = pPlayerConfig:GetCivilizationDescription();
 
-			local civData:string = GetExtendedTooltip(playerID);
+      local civData:string = GetExtendedTooltip(playerID);
 
-			if GameConfiguration.IsAnyMultiplayer() and isHuman then
-				if(playerID ~= localPlayerID and not Players[localPlayerID]:GetDiplomacy():HasMet(playerID)) then
-					instance.Portrait:SetToolTipString(Locale.Lookup("LOC_DIPLOPANEL_UNMET_PLAYER") .. " (" .. pPlayerConfig:GetPlayerName() .. ")");
-				else
-					instance.Portrait:SetToolTipString(Locale.Lookup("LOC_DIPLOMACY_DEAL_PLAYER_PANEL_TITLE", leaderDesc, civDesc) .. " (" .. pPlayerConfig:GetPlayerName() .. ")");
-				end
-			else
-				instance.Portrait:SetToolTipString(Locale.Lookup("LOC_DIPLOMACY_DEAL_PLAYER_PANEL_TITLE", leaderDesc, civDesc)..civData);
-			end
-		end
-	end
+      if GameConfiguration.IsAnyMultiplayer() and isHuman then
+        if(playerID ~= localPlayerID and not Players[localPlayerID]:GetDiplomacy():HasMet(playerID)) then
+          instance.Portrait:SetToolTipString(Locale.Lookup("LOC_DIPLOPANEL_UNMET_PLAYER") .. " (" .. pPlayerConfig:GetPlayerName() .. ")");
+        else
+          instance.Portrait:SetToolTipString(Locale.Lookup("LOC_DIPLOMACY_DEAL_PLAYER_PANEL_TITLE", leaderDesc, civDesc) .. " (" .. pPlayerConfig:GetPlayerName() .. ")");
+        end
+      else
+        instance.Portrait:SetToolTipString(Locale.Lookup("LOC_DIPLOMACY_DEAL_PLAYER_PANEL_TITLE", leaderDesc, civDesc)..civData);
+      end
+    end
+  end
 
-	-- Team Ribbon
-	if(playerID == localPlayerID or Players[localPlayerID]:GetDiplomacy():HasMet(playerID)) then
-		-- Show team ribbon for ourselves and civs we've met
-		local teamID:number = pPlayerConfig:GetTeam();
-		if #Teams[teamID] > 1 then
-			local teamRibbonName:string = TEAM_RIBBON_PREFIX .. tostring(teamID);
-			instance.TeamRibbon:SetIcon(teamRibbonName, TEAM_RIBBON_SIZE);
-			instance.TeamRibbon:SetHide(false);
-			instance.TeamRibbon:SetColor(GetTeamColor(teamID));
-		else
-			-- Hide team ribbon if team only contains one player
-			instance.TeamRibbon:SetHide(true);
-		end
-	else
-		-- Hide team ribbon for civs we haven't met
-		instance.TeamRibbon:SetHide(true);
-	end
+  -- Team Ribbon
+  if(playerID == localPlayerID or Players[localPlayerID]:GetDiplomacy():HasMet(playerID)) then
+    -- Show team ribbon for ourselves and civs we've met
+    local teamID:number = pPlayerConfig:GetTeam();
+    if #Teams[teamID] > 1 then
+      local teamRibbonName:string = TEAM_RIBBON_PREFIX .. tostring(teamID);
+      instance.TeamRibbon:SetIcon(teamRibbonName, TEAM_RIBBON_SIZE);
+      instance.TeamRibbon:SetHide(false);
+      instance.TeamRibbon:SetColor(GetTeamColor(teamID));
+    else
+      -- Hide team ribbon if team only contains one player
+      instance.TeamRibbon:SetHide(true);
+    end
+  else
+    -- Hide team ribbon for civs we haven't met
+    instance.TeamRibbon:SetHide(true);
+  end
 end
 
 --ARISTOS: To display key information in leader tooltip inside Diplo Ribbon
 function GetExtendedTooltip(playerID:number)
-	local govType:string = "";
-	local eSelectePlayerGovernment :number = Players[playerID]:GetCulture():GetCurrentGovernment();
-	if eSelectePlayerGovernment ~= -1 then
-		govType = Locale.Lookup(GameInfo.Governments[eSelectePlayerGovernment].Name);
-	else
-		govType = Locale.Lookup("LOC_GOVERNMENT_ANARCHY_NAME" );
-	end
-	local cities = Players[playerID]:GetCities();
-	local numCities = 0;
-	for i,city in cities:Members() do
-		numCities = numCities + 1;
-	end
-	local civData:string = "[NEWLINE]"..Locale.Lookup("LOC_DIPLOMACY_INTEL_GOVERNMENT").." "..govType
-		.."[NEWLINE]"..Locale.Lookup("LOC_PEDIA_CONCEPTS_PAGEGROUP_CITIES_NAME").. ": "..numCities
-		.."[NEWLINE][ICON_Capital] "..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_DOMINATION_SCORE", Players[playerID]:GetScore())
-		.."[NEWLINE]"..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_SCIENCE_SCIENCE_RATE", Round(Players[playerID]:GetTechs():GetScienceYield(),1))
-		.."[NEWLINE][ICON_Science] "..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_SCIENCE_NUM_TECHS", Players[playerID]:GetStats():GetNumTechsResearched())
-		.."[NEWLINE]"..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_CULTURE_CULTURE_RATE", Round(Players[playerID]:GetCulture():GetCultureYield(),1))
-		.."[NEWLINE]"..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_CULTURE_TOURISM_RATE", Round(Players[playerID]:GetStats():GetTourism(),1))
-		.."[NEWLINE]"..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_RELIGION_FAITH_RATE", Round(Players[playerID]:GetReligion():GetFaithYield(),1))
-		.."[NEWLINE][ICON_Strength] "..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_DOMINATION_MILITARY_STRENGTH", Players[playerID]:GetStats():GetMilitaryStrength())
-		;
+  local govType:string = "";
+  local eSelectePlayerGovernment :number = Players[playerID]:GetCulture():GetCurrentGovernment();
+  if eSelectePlayerGovernment ~= -1 then
+    govType = Locale.Lookup(GameInfo.Governments[eSelectePlayerGovernment].Name);
+  else
+    govType = Locale.Lookup("LOC_GOVERNMENT_ANARCHY_NAME" );
+  end
+  local cities = Players[playerID]:GetCities();
+  local numCities = 0;
+  for i,city in cities:Members() do
+    numCities = numCities + 1;
+  end
+  local civData:string = "[NEWLINE]"..Locale.Lookup("LOC_DIPLOMACY_INTEL_GOVERNMENT").." "..govType
+    .."[NEWLINE]"..Locale.Lookup("LOC_PEDIA_CONCEPTS_PAGEGROUP_CITIES_NAME").. ": "..numCities
+    .."[NEWLINE][ICON_Capital] "..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_DOMINATION_SCORE", Players[playerID]:GetScore())
+    .."[NEWLINE]"..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_SCIENCE_SCIENCE_RATE", Round(Players[playerID]:GetTechs():GetScienceYield(),1))
+    .."[NEWLINE][ICON_Science] "..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_SCIENCE_NUM_TECHS", Players[playerID]:GetStats():GetNumTechsResearched())
+    .."[NEWLINE]"..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_CULTURE_CULTURE_RATE", Round(Players[playerID]:GetCulture():GetCultureYield(),1))
+    .."[NEWLINE]"..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_CULTURE_TOURISM_RATE", Round(Players[playerID]:GetStats():GetTourism(),1))
+    .."[NEWLINE]"..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_RELIGION_FAITH_RATE", Round(Players[playerID]:GetReligion():GetFaithYield(),1))
+    .."[NEWLINE][ICON_Strength] "..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_DOMINATION_MILITARY_STRENGTH", Players[playerID]:GetStats():GetMilitaryStrength())
+    ;
 
-	return civData;
+  return civData;
 end
 
 -- Extended Relationship Tooltip creator
 -- Aristos and atggta
 function RelationshipGet(nPlayerID :number)
-	local tPlayer :table = Players[nPlayerID];
-	local nLocalPlayerID :number = Game.GetLocalPlayer();
-	local tTooltips :table = tPlayer:GetDiplomaticAI():GetDiplomaticModifiers(nLocalPlayerID);
+  local tPlayer :table = Players[nPlayerID];
+  local nLocalPlayerID :number = Game.GetLocalPlayer();
+  local tTooltips :table = tPlayer:GetDiplomaticAI():GetDiplomaticModifiers(nLocalPlayerID);
 
-	if not tTooltips then return ""; end
+  if not tTooltips then return ""; end
 
-	local tRelationship :table = {};
-	local nRelationshipSum :number = 0;
-	local sTextColor :string = "";
+  local tRelationship :table = {};
+  local nRelationshipSum :number = 0;
+  local sTextColor :string = "";
 
-	for i, tTooltip in ipairs(tTooltips) do
-		local nScore :number = tTooltip.Score;
-		local sText :string = tTooltip.Text;
+  for i, tTooltip in ipairs(tTooltips) do
+    local nScore :number = tTooltip.Score;
+    local sText :string = tTooltip.Text;
 
-		if(nScore ~= 0) then
-			if(nScore > 0) then
-				sTextColor = "[COLOR_Civ6Green]";
-			else
-				sTextColor = "[COLOR_Civ6Red]";
-			end
-			table.insert(tRelationship, {nScore, sTextColor .. nScore .. "[ENDCOLOR] - " .. sText .. "[NEWLINE]"});
-			nRelationshipSum = nRelationshipSum + nScore;
-		end
-	end
+    if(nScore ~= 0) then
+      if(nScore > 0) then
+        sTextColor = "[COLOR_Civ6Green]";
+      else
+        sTextColor = "[COLOR_Civ6Red]";
+      end
+      table.insert(tRelationship, {nScore, sTextColor .. nScore .. "[ENDCOLOR] - " .. sText .. "[NEWLINE]"});
+      nRelationshipSum = nRelationshipSum + nScore;
+    end
+  end
 
-	table.sort(
-		tRelationship,
-		function(a, b)
-			return a[1] > b[1];
-		end
-	);
+  table.sort(
+    tRelationship,
+    function(a, b)
+      return a[1] > b[1];
+    end
+  );
 
-	local sRelationshipSum :string = "";
-	local sRelationship :string = "";
-	if(nRelationshipSum >= 0) then
-		sRelationshipSum = "[COLOR_Civ6Green]";
-	else
-		sRelationshipSum = "[COLOR_Civ6Red]";
-	end
-	sRelationshipSum = sRelationshipSum .. nRelationshipSum .. "[ENDCOLOR]"
-	for nKey, tValue in pairs(tRelationship) do
-		sRelationship = sRelationship .. tValue[2];
-	end
-	if sRelationship ~= "" then
-		sRelationship = Locale.Lookup("LOC_DIPLOMACY_INTEL_RELATIONSHIPS") .. " " .. sRelationshipSum .. "[NEWLINE]" .. sRelationship:sub(1, #sRelationship - #"[NEWLINE]");
-	end
+  local sRelationshipSum :string = "";
+  local sRelationship :string = "";
+  if(nRelationshipSum >= 0) then
+    sRelationshipSum = "[COLOR_Civ6Green]";
+  else
+    sRelationshipSum = "[COLOR_Civ6Red]";
+  end
+  sRelationshipSum = sRelationshipSum .. nRelationshipSum .. "[ENDCOLOR]"
+  for nKey, tValue in pairs(tRelationship) do
+    sRelationship = sRelationship .. tValue[2];
+  end
+  if sRelationship ~= "" then
+    sRelationship = Locale.Lookup("LOC_DIPLOMACY_INTEL_RELATIONSHIPS") .. " " .. sRelationshipSum .. "[NEWLINE]" .. sRelationship:sub(1, #sRelationship - #"[NEWLINE]");
+  end
 
-	return sRelationship;
+  return sRelationship;
 end
 
 -- ===========================================================================
 --	Clears leaders and re-adds them to the stack
 -- ===========================================================================
 function UpdateLeaders()
-	-- Clear previous list items
-	ResetLeaders();
+  -- Clear previous list items
+  ResetLeaders();
 
-	-- Add entries for everyone we know (Majors only)
-	local aPlayers:table = PlayerManager.GetAliveMajors();
-	local localPlayerID:number = Game.GetLocalPlayer();
-	if (localPlayerID ~= -1) then		-- It is possible to not have a local player!
-		local localPlayer:table = Players[localPlayerID];
-		local localDiplomacy:table = localPlayer:GetDiplomacy();
+  -- Add entries for everyone we know (Majors only)
+  local aPlayers:table = PlayerManager.GetAliveMajors();
+  local localPlayerID:number = Game.GetLocalPlayer();
+  if (localPlayerID ~= -1) then		-- It is possible to not have a local player!
+    local localPlayer:table = Players[localPlayerID];
+    local localDiplomacy:table = localPlayer:GetDiplomacy();
 
-		table.sort(aPlayers, function(a:table,b:table) return localDiplomacy:GetMetTurn(a:GetID()) < localDiplomacy:GetMetTurn(b:GetID()) end);
+    table.sort(aPlayers, function(a:table,b:table) return localDiplomacy:GetMetTurn(a:GetID()) < localDiplomacy:GetMetTurn(b:GetID()) end);
 
-		--First, add me!
-		AddLeader("ICON_"..PlayerConfigurations[localPlayerID]:GetLeaderTypeName(), localPlayerID);
+    --First, add me!
+    AddLeader("ICON_"..PlayerConfigurations[localPlayerID]:GetLeaderTypeName(), localPlayerID);
 
-		--Then, let's do a check to see if any of these players are duplicate leaders and track it.
-		--		Must go through entire list to detect duplicates (would be lovely if we had an IsUnique from PlayerConfigurations)
-		local metPlayers:table = {};
-		local isUniqueLeader:table = {};
-		for _, pPlayer in ipairs(aPlayers) do
-			local playerID:number = pPlayer:GetID();
-			if(playerID ~= localPlayerID) then
-				local playerMet:boolean = localDiplomacy:HasMet(playerID);
-				if (playerMet) then
-					local leaderName:string = PlayerConfigurations[playerID]:GetLeaderTypeName();
-					if (isUniqueLeader[leaderName] == nil) then
-						isUniqueLeader[leaderName] = true;
-					else
-						isUniqueLeader[leaderName] = false;
-					end
-				end
-				metPlayers[playerID] = playerMet;
-			end
-		end
+    --Then, let's do a check to see if any of these players are duplicate leaders and track it.
+    --		Must go through entire list to detect duplicates (would be lovely if we had an IsUnique from PlayerConfigurations)
+    local metPlayers:table = {};
+    local isUniqueLeader:table = {};
+    for _, pPlayer in ipairs(aPlayers) do
+      local playerID:number = pPlayer:GetID();
+      if(playerID ~= localPlayerID) then
+        local playerMet:boolean = localDiplomacy:HasMet(playerID);
+        if (playerMet) then
+          local leaderName:string = PlayerConfigurations[playerID]:GetLeaderTypeName();
+          if (isUniqueLeader[leaderName] == nil) then
+            isUniqueLeader[leaderName] = true;
+          else
+            isUniqueLeader[leaderName] = false;
+          end
+        end
+        metPlayers[playerID] = playerMet;
+      end
+    end
 
-		--Then, add the leader icons.
-		for _, pPlayer in ipairs(aPlayers) do
-			local playerID:number = pPlayer:GetID();
-			if(playerID ~= localPlayerID) then
-				local playerMet:boolean = metPlayers[playerID];
-				local pPlayerConfig:table = PlayerConfigurations[playerID];
-				if (playerMet or (GameConfiguration.IsAnyMultiplayer() and pPlayerConfig:IsHuman())) then
-					if playerMet then
-						local leaderName:string = pPlayerConfig:GetLeaderTypeName();
-						AddLeader("ICON_"..leaderName, playerID, isUniqueLeader[leaderName]);
-					else
-						AddLeader("ICON_LEADER_DEFAULT", playerID);
-					end
-				end
-			end
-		end
-	end
+    --Then, add the leader icons.
+    for _, pPlayer in ipairs(aPlayers) do
+      local playerID:number = pPlayer:GetID();
+      if(playerID ~= localPlayerID) then
+        local playerMet:boolean = metPlayers[playerID];
+        local pPlayerConfig:table = PlayerConfigurations[playerID];
+        if (playerMet or (GameConfiguration.IsAnyMultiplayer() and pPlayerConfig:IsHuman())) then
+          if playerMet then
+            local leaderName:string = pPlayerConfig:GetLeaderTypeName();
+            AddLeader("ICON_"..leaderName, playerID, isUniqueLeader[leaderName]);
+          else
+            AddLeader("ICON_LEADER_DEFAULT", playerID);
+          end
+        end
+      end
+    end
+  end
 
-	Controls.LeaderStack:CalculateSize();
-	RealizeSize();
+  Controls.LeaderStack:CalculateSize();
+  RealizeSize();
 end
 
 -- ===========================================================================
@@ -417,67 +417,67 @@ end
 -- Optional size argument being passed in through an event.
 local BG_TILE_PADDING: number	= 0;
 function RealizeSize( barWidth:number )
-	local launchBarWidth = MIN_LEFT_HOOKS;
-	local partialScreenBarWidth = RIGHT_HOOKS_INITIAL;
+  local launchBarWidth = MIN_LEFT_HOOKS;
+  local partialScreenBarWidth = RIGHT_HOOKS_INITIAL;
 
-	m_PartialScreenHookBar	= ContextPtr:LookUpControl( "/InGame/PartialScreenHooks/ButtonStack" );
-	m_LaunchBar				= ContextPtr:LookUpControl( "/InGame/LaunchBar/ButtonStack" );
+  m_PartialScreenHookBar	= ContextPtr:LookUpControl( "/InGame/PartialScreenHooks/ButtonStack" );
+  m_LaunchBar				= ContextPtr:LookUpControl( "/InGame/LaunchBar/ButtonStack" );
 
-	if (m_LaunchBar ~= nil) then
-		launchBarWidth = math.max(m_LaunchBar:GetSizeX() + WORLD_TRACKER_OFFSET + BG_TILE_PADDING, MIN_LEFT_HOOKS);
-	end
+  if (m_LaunchBar ~= nil) then
+    launchBarWidth = math.max(m_LaunchBar:GetSizeX() + WORLD_TRACKER_OFFSET + BG_TILE_PADDING, MIN_LEFT_HOOKS);
+  end
 
-	if (m_PartialScreenHookBar~=nil) then
-		partialScreenBarWidth = m_PartialScreenHookBar:GetSizeX() + BG_TILE_PADDING;
-	end
+  if (m_PartialScreenHookBar~=nil) then
+    partialScreenBarWidth = m_PartialScreenHookBar:GetSizeX() + BG_TILE_PADDING;
+  end
 
-	local screenWidth:number, screenHeight:number = UIManager:GetScreenSizeVal(); -- Cache screen dimensions
+  local screenWidth:number, screenHeight:number = UIManager:GetScreenSizeVal(); -- Cache screen dimensions
 
-	local maxSize:number = screenWidth - launchBarWidth - partialScreenBarWidth;
-	m_maxNumLeaders = math.floor(maxSize / (SIZE_LEADER + PADDING_LEADER));
+  local maxSize:number = screenWidth - launchBarWidth - partialScreenBarWidth;
+  m_maxNumLeaders = math.floor(maxSize / (SIZE_LEADER + PADDING_LEADER));
 
-	local size:number = maxSize;
-	if(m_leadersMet == 0) then
-		Controls.LeaderBG:SetHide(true);
-	else
-		Controls.LeaderBG:SetHide(false);
-		size = m_maxNumLeaders * (SIZE_LEADER + PADDING_LEADER) - 8;
-		local bgSize;
-		if (m_leadersMet > m_maxNumLeaders) then
-			bgSize = m_maxNumLeaders * (SIZE_LEADER + PADDING_LEADER)+ BG_PADDING_EDGE;
-		else
-			bgSize = m_leadersMet * (SIZE_LEADER + PADDING_LEADER)+ BG_PADDING_EDGE;
-		end
-		Controls.LeaderBG:SetSizeX(math.max(bgSize, MINIMUM_BG_SIZE));
-		Controls.LeaderBGClip:SetSizeX(math.max(bgSize, MINIMUM_BG_SIZE));
-		Controls.RibbonContainer:SetSizeX(math.max(bgSize, MINIMUM_BG_SIZE));
-	end
-	Controls.LeaderScroll:SetSizeX(size);
-	Controls.RibbonContainer:ReprocessAnchoring();
-	Controls.RibbonContainer:SetOffsetX(partialScreenBarWidth);
-	Controls.LeaderScroll:CalculateSize();
-	Controls.LeaderScroll:ReprocessAnchoring();
-	Controls.LeaderBG:ReprocessAnchoring();
-	RealizeScroll();
+  local size:number = maxSize;
+  if(m_leadersMet == 0) then
+    Controls.LeaderBG:SetHide(true);
+  else
+    Controls.LeaderBG:SetHide(false);
+    size = m_maxNumLeaders * (SIZE_LEADER + PADDING_LEADER) - 8;
+    local bgSize;
+    if (m_leadersMet > m_maxNumLeaders) then
+      bgSize = m_maxNumLeaders * (SIZE_LEADER + PADDING_LEADER)+ BG_PADDING_EDGE;
+    else
+      bgSize = m_leadersMet * (SIZE_LEADER + PADDING_LEADER)+ BG_PADDING_EDGE;
+    end
+    Controls.LeaderBG:SetSizeX(math.max(bgSize, MINIMUM_BG_SIZE));
+    Controls.LeaderBGClip:SetSizeX(math.max(bgSize, MINIMUM_BG_SIZE));
+    Controls.RibbonContainer:SetSizeX(math.max(bgSize, MINIMUM_BG_SIZE));
+  end
+  Controls.LeaderScroll:SetSizeX(size);
+  Controls.RibbonContainer:ReprocessAnchoring();
+  Controls.RibbonContainer:SetOffsetX(partialScreenBarWidth);
+  Controls.LeaderScroll:CalculateSize();
+  Controls.LeaderScroll:ReprocessAnchoring();
+  Controls.LeaderBG:ReprocessAnchoring();
+  RealizeScroll();
 end
 
 -- ===========================================================================
 --	Updates visibility of previous and next buttons
 -- ===========================================================================
 function RealizeScroll()
-	Controls.NextButtonContainer:SetHide(not CanScroll(-1));
-	Controls.PreviousButtonContainer:SetHide(not CanScroll(1));
+  Controls.NextButtonContainer:SetHide(not CanScroll(-1));
+  Controls.PreviousButtonContainer:SetHide(not CanScroll(1));
 end
 
 -- ===========================================================================
 --	Determines visibility of previous and next buttons
 -- ===========================================================================
 function CanScroll(direction : number)
-	if(direction < 0) then
-		return m_scrollIndex > 0;
-	else
-		return m_leadersMet - m_scrollIndex > m_maxNumLeaders;
-	end
+  if(direction < 0) then
+    return m_scrollIndex > 0;
+  else
+    return m_leadersMet - m_scrollIndex > m_maxNumLeaders;
+  end
 end
 
 -- ===========================================================================
@@ -485,17 +485,17 @@ end
 -- ===========================================================================
 function Scroll(direction : number)
 
-	m_scrollPercent = 0;
-	m_scrollIndex = m_scrollIndex + direction;
+  m_scrollPercent = 0;
+  m_scrollIndex = m_scrollIndex + direction;
 
-	if(m_scrollIndex < 0) then m_scrollIndex = 0; end
+  if(m_scrollIndex < 0) then m_scrollIndex = 0; end
 
-	if(not m_isScrolling) then
-		ContextPtr:SetUpdate( UpdateScroll );
-		m_isScrolling = true;
-	end
+  if(not m_isScrolling) then
+    ContextPtr:SetUpdate( UpdateScroll );
+    m_isScrolling = true;
+  end
 
-	RealizeScroll();
+  RealizeScroll();
 end
 
 -- ===========================================================================
@@ -503,34 +503,34 @@ end
 -- ===========================================================================
 function UpdateScroll(deltaTime : number)
 
-	local start:number = Controls.LeaderScroll:GetScrollValue();
-	local destination:number = 1.0 - (m_scrollIndex / (m_leadersMet - m_maxNumLeaders));
+  local start:number = Controls.LeaderScroll:GetScrollValue();
+  local destination:number = 1.0 - (m_scrollIndex / (m_leadersMet - m_maxNumLeaders));
 
-	m_scrollPercent = m_scrollPercent + (SCROLL_SPEED * deltaTime);
-	if(m_scrollPercent >= 1) then
-		m_scrollPercent = 1
-		EndScroll();
-	end
+  m_scrollPercent = m_scrollPercent + (SCROLL_SPEED * deltaTime);
+  if(m_scrollPercent >= 1) then
+    m_scrollPercent = 1
+    EndScroll();
+  end
 
-	Controls.LeaderScroll:SetScrollValue(start + (destination - start) * m_scrollPercent);
+  Controls.LeaderScroll:SetScrollValue(start + (destination - start) * m_scrollPercent);
 end
 
 -- ===========================================================================
 --	Cleans up scroll update callback when done scrollin
 -- ===========================================================================
 function EndScroll()
-	ContextPtr:ClearUpdate();
-	m_isScrolling = false;
-	RealizeScroll();
+  ContextPtr:ClearUpdate();
+  m_isScrolling = false;
+  RealizeScroll();
 end
 
 -- ===========================================================================
 --	SystemUpdateUI Callback
 -- ===========================================================================
 function OnUpdateUI(type:number, tag:string, iData1:number, iData2:number, strData1:string)
-	if(type == SystemUpdateUI.ScreenResize) then
-		RealizeSize();
-	end
+  if(type == SystemUpdateUI.ScreenResize) then
+    RealizeSize();
+  end
 end
 
 -- ===========================================================================
@@ -538,14 +538,14 @@ end
 -- ===========================================================================
 function OnDiplomacyMeet(player1ID:number, player2ID:number)
 
-	local localPlayerID:number = Game.GetLocalPlayer();
-	-- Have a local player?
-	if(localPlayerID ~= -1) then
-		-- Was the local player involved?
-		if (player1ID == localPlayerID or player2ID == localPlayerID) then
-			UpdateLeaders();
-		end
-	end
+  local localPlayerID:number = Game.GetLocalPlayer();
+  -- Have a local player?
+  if(localPlayerID ~= -1) then
+    -- Was the local player involved?
+    if (player1ID == localPlayerID or player2ID == localPlayerID) then
+      UpdateLeaders();
+    end
+  end
 end
 
 -- ===========================================================================
@@ -553,14 +553,14 @@ end
 -- ===========================================================================
 function OnDiplomacyWarStateChange(player1ID:number, player2ID:number)
 
-	local localPlayerID:number = Game.GetLocalPlayer();
-	-- Have a local player?
-	if(localPlayerID ~= -1) then
-		-- Was the local player involved?
-		if (player1ID == localPlayerID or player2ID == localPlayerID) then
-			UpdateLeaders();
-		end
-	end
+  local localPlayerID:number = Game.GetLocalPlayer();
+  -- Have a local player?
+  if(localPlayerID ~= -1) then
+    -- Was the local player involved?
+    if (player1ID == localPlayerID or player2ID == localPlayerID) then
+      UpdateLeaders();
+    end
+  end
 end
 
 -- ===========================================================================
@@ -568,15 +568,15 @@ end
 -- ===========================================================================
 function OnDiplomacySessionClosed(sessionID:number)
 
-	local localPlayerID:number = Game.GetLocalPlayer();
-	-- Have a local player?
-	if(localPlayerID ~= -1) then
-		-- Was the local player involved?
-		local diplomacyInfo:table = DiplomacyManager.GetSessionInfo(sessionID);
-		if(diplomacyInfo ~= nil and (diplomacyInfo.FromPlayer == localPlayerID or diplomacyInfo.ToPlayer == localPlayerID)) then
-			UpdateLeaders();
-		end
-	end
+  local localPlayerID:number = Game.GetLocalPlayer();
+  -- Have a local player?
+  if(localPlayerID ~= -1) then
+    -- Was the local player involved?
+    local diplomacyInfo:table = DiplomacyManager.GetSessionInfo(sessionID);
+    if(diplomacyInfo ~= nil and (diplomacyInfo.FromPlayer == localPlayerID or diplomacyInfo.ToPlayer == localPlayerID)) then
+      UpdateLeaders();
+    end
+  end
 
 end
 
@@ -584,47 +584,47 @@ end
 --	Game Engine Event
 -- ===========================================================================
 function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
-	if eNewMode == InterfaceModeTypes.VIEW_MODAL_LENS then
-		ContextPtr:SetHide(true);
-	end
-	if eOldMode == InterfaceModeTypes.VIEW_MODAL_LENS then
-		ContextPtr:SetHide(false);
-	end
+  if eNewMode == InterfaceModeTypes.VIEW_MODAL_LENS then
+    ContextPtr:SetHide(true);
+  end
+  if eOldMode == InterfaceModeTypes.VIEW_MODAL_LENS then
+    ContextPtr:SetHide(false);
+  end
 end
 
 -- ===========================================================================
 --	LocalPlayerTurnBegin / RemotePlayerTurnBegin Callback
 -- ===========================================================================
 function OnTurnBegin(playerID:number)
-	local leader:table = m_uiLeadersByID[playerID];
-	if(leader ~= nil) then
-		leader.LeaderContainer:SetToBeginning();
-		leader.LeaderContainer:Play();
-	end
+  local leader:table = m_uiLeadersByID[playerID];
+  if(leader ~= nil) then
+    leader.LeaderContainer:SetToBeginning();
+    leader.LeaderContainer:Play();
+  end
 end
 
 function OnTurnEnd(playerID:number)
-	if(playerID ~= -1) then
-		local leader = m_uiLeadersByID[playerID];
-		if(leader ~= nil) then
-			leader.LeaderContainer:Reverse();
-		end
+  if(playerID ~= -1) then
+    local leader = m_uiLeadersByID[playerID];
+    if(leader ~= nil) then
+      leader.LeaderContainer:Reverse();
+    end
     UpdateLeaders();
-	end
+  end
 end
 
 -- ===========================================================================
 --	UI Callback
 -- ===========================================================================
 function OnScrollLeft()
-	if CanScroll(-1) then Scroll(-1); end
+  if CanScroll(-1) then Scroll(-1); end
 end
 
 -- ===========================================================================
 --	UI Callback
 -- ===========================================================================
 function OnScrollRight()
-	if CanScroll(1) then Scroll(1); end
+  if CanScroll(1) then Scroll(1); end
 end
 
 -- ===========================================================================
@@ -641,81 +641,81 @@ end
 --	Debug Helper
 -- ===========================================================================
 function DebugWorstCase()
-	-- Clear previous list items
-	ResetLeaders();
+  -- Clear previous list items
+  ResetLeaders();
 
-	for i=1, 50 do
-		AddLeader("ICON_LEADER_DEFAULT", i);
-	end
+  for i=1, 50 do
+    AddLeader("ICON_LEADER_DEFAULT", i);
+  end
 
-	Controls.LeaderStack:CalculateSize();
-	RealizeSize();
+  Controls.LeaderStack:CalculateSize();
+  RealizeSize();
 end
 
 function OnChatReceived(fromPlayer:number, stayOnScreen:boolean)
-	local instance:table= m_uiLeadersByID[fromPlayer];
-	if instance == nil then return; end
-	if stayOnScreen then
-		Controls.ChatIndicatorWaitTimer:Stop();
-		instance.ChatIndicatorFade:RegisterEndCallback(function() end);
-		table.insert(m_uiChatIconsVisible, instance.ChatIndicatorFade);
-	else
-		Controls.ChatIndicatorWaitTimer:Stop();
+  local instance:table= m_uiLeadersByID[fromPlayer];
+  if instance == nil then return; end
+  if stayOnScreen then
+    Controls.ChatIndicatorWaitTimer:Stop();
+    instance.ChatIndicatorFade:RegisterEndCallback(function() end);
+    table.insert(m_uiChatIconsVisible, instance.ChatIndicatorFade);
+  else
+    Controls.ChatIndicatorWaitTimer:Stop();
 
-		instance.ChatIndicatorFade:RegisterEndCallback(function()
-			Controls.ChatIndicatorWaitTimer:RegisterEndCallback(function()
-				instance.ChatIndicatorFade:RegisterEndCallback(function() instance.ChatIndicatorFade:SetToBeginning(); end);
-				instance.ChatIndicatorFade:Reverse();
-			end);
-			Controls.ChatIndicatorWaitTimer:SetToBeginning();
-			Controls.ChatIndicatorWaitTimer:Play();
-		end);
-	end
-	instance.ChatIndicatorFade:Play();
+    instance.ChatIndicatorFade:RegisterEndCallback(function()
+      Controls.ChatIndicatorWaitTimer:RegisterEndCallback(function()
+        instance.ChatIndicatorFade:RegisterEndCallback(function() instance.ChatIndicatorFade:SetToBeginning(); end);
+        instance.ChatIndicatorFade:Reverse();
+      end);
+      Controls.ChatIndicatorWaitTimer:SetToBeginning();
+      Controls.ChatIndicatorWaitTimer:Play();
+    end);
+  end
+  instance.ChatIndicatorFade:Play();
 end
 
 function OnChatPanelShown(fromPlayer:number, stayOnScreen:boolean)
-	for _, chatIndicatorFade in ipairs(m_uiChatIconsVisible) do
-		chatIndicatorFade:RegisterEndCallback(function() chatIndicatorFade:SetToBeginning(); end);
-		chatIndicatorFade:Reverse();
-	end
-	chatIndicatorFade = {};
+  for _, chatIndicatorFade in ipairs(m_uiChatIconsVisible) do
+    chatIndicatorFade:RegisterEndCallback(function() chatIndicatorFade:SetToBeginning(); end);
+    chatIndicatorFade:Reverse();
+  end
+  chatIndicatorFade = {};
 end
 
 --ARISTOS: to manage mouse over leader icons to show relations
 function OnInputHandler( pInputStruct:table )
-	local uiKey :number = pInputStruct:GetKey();
-	local uiMsg :number = pInputStruct:GetMessageType();
-	if uiMsg == KeyEvents.KeyDown then
-		if uiKey == Keys.VK_CONTROL then
-			if m_isCTRLDown == false then
-				m_isCTRLDown = true;
-			end
-		end
-	end
-	if uiMsg == KeyEvents.KeyUp then
-		if uiKey == Keys.VK_CONTROL then
-			if m_isCTRLDown == true then
-				m_isCTRLDown = false;
-			end
-		end
-	end
-	if uiMsg == MouseEvents.MButtonDown then
-		if m_isCTRLDown == false then
-			m_isCTRLDown = true;
-		end
-		if(CQUI_hoveringOverPortrait) then
-			return true;
-		end
-	end
-	if uiMsg == MouseEvents.MButtonUp then
-		if m_isCTRLDown == true then
-			m_isCTRLDown = false;
-		end
-		if(CQUI_hoveringOverPortrait) then
-			return true;
-		end
-	end
+  local uiKey :number = pInputStruct:GetKey();
+  local uiMsg :number = pInputStruct:GetMessageType();
+  if uiMsg == KeyEvents.KeyDown then
+    if uiKey == Keys.VK_CONTROL then
+      if m_isCTRLDown == false then
+        m_isCTRLDown = true;
+      end
+    end
+  end
+  if uiMsg == KeyEvents.KeyUp then
+    if uiKey == Keys.VK_CONTROL then
+      if m_isCTRLDown == true then
+        m_isCTRLDown = false;
+      end
+    end
+  end
+  if uiMsg == MouseEvents.MButtonDown then
+    if m_isCTRLDown == false then
+      m_isCTRLDown = true;
+    end
+    if(CQUI_hoveringOverPortrait) then
+      return true;
+    end
+  end
+  if uiMsg == MouseEvents.MButtonUp then
+    if m_isCTRLDown == true then
+      m_isCTRLDown = false;
+    end
+    if(CQUI_hoveringOverPortrait) then
+      return true;
+    end
+  end
 
 end
 ContextPtr:SetInputHandler( OnInputHandler, true );
@@ -725,34 +725,34 @@ ContextPtr:SetInputHandler( OnInputHandler, true );
 --	INIT
 -- ===========================================================================
 function Initialize()
-	--DebugWorstCase();
-	UpdateLeaders();
-	Controls.LeaderScroll:SetScrollValue(1);
+  --DebugWorstCase();
+  UpdateLeaders();
+  Controls.LeaderScroll:SetScrollValue(1);
 
-	Events.SystemUpdateUI.Add( OnUpdateUI );
-	Events.DiplomacyMeet.Add( OnDiplomacyMeet );
-	Events.DiplomacySessionClosed.Add( OnDiplomacySessionClosed );
-	Events.DiplomacyDeclareWar.Add( OnDiplomacyWarStateChange );
-	Events.DiplomacyMakePeace.Add( OnDiplomacyWarStateChange );
-	Events.DiplomacyRelationshipChanged.Add( UpdateLeaders );
-	Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );
-	Events.RemotePlayerTurnBegin.Add( OnTurnBegin );
-	Events.RemotePlayerTurnEnd.Add( OnTurnEnd );
-	Events.LocalPlayerTurnBegin.Add( function() OnTurnBegin(Game.GetLocalPlayer()); end );
-	Events.LocalPlayerTurnEnd.Add( function() OnTurnEnd(Game.GetLocalPlayer()); end );
-	Events.MultiplayerPlayerConnected.Add(UpdateLeaders);
-	Events.MultiplayerPostPlayerDisconnected.Add(UpdateLeaders);
-	Events.LocalPlayerChanged.Add(UpdateLeaders);
-	Events.PlayerInfoChanged.Add(UpdateLeaders);
-	Events.PlayerDefeat.Add(UpdateLeaders);
-	Events.PlayerRestored.Add(UpdateLeaders);
+  Events.SystemUpdateUI.Add( OnUpdateUI );
+  Events.DiplomacyMeet.Add( OnDiplomacyMeet );
+  Events.DiplomacySessionClosed.Add( OnDiplomacySessionClosed );
+  Events.DiplomacyDeclareWar.Add( OnDiplomacyWarStateChange );
+  Events.DiplomacyMakePeace.Add( OnDiplomacyWarStateChange );
+  Events.DiplomacyRelationshipChanged.Add( UpdateLeaders );
+  Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );
+  Events.RemotePlayerTurnBegin.Add( OnTurnBegin );
+  Events.RemotePlayerTurnEnd.Add( OnTurnEnd );
+  Events.LocalPlayerTurnBegin.Add( function() OnTurnBegin(Game.GetLocalPlayer()); end );
+  Events.LocalPlayerTurnEnd.Add( function() OnTurnEnd(Game.GetLocalPlayer()); end );
+  Events.MultiplayerPlayerConnected.Add(UpdateLeaders);
+  Events.MultiplayerPostPlayerDisconnected.Add(UpdateLeaders);
+  Events.LocalPlayerChanged.Add(UpdateLeaders);
+  Events.PlayerInfoChanged.Add(UpdateLeaders);
+  Events.PlayerDefeat.Add(UpdateLeaders);
+  Events.PlayerRestored.Add(UpdateLeaders);
 
-	LuaEvents.ChatPanel_OnChatReceived.Add(OnChatReceived);
-	LuaEvents.WorldTracker_OnChatShown.Add(OnChatPanelShown);
-	LuaEvents.LaunchBar_Resize.Add(RealizeSize);
-	LuaEvents.PartialScreenHooks_Resize.Add(RealizeSize);
+  LuaEvents.ChatPanel_OnChatReceived.Add(OnChatReceived);
+  LuaEvents.WorldTracker_OnChatShown.Add(OnChatPanelShown);
+  LuaEvents.LaunchBar_Resize.Add(RealizeSize);
+  LuaEvents.PartialScreenHooks_Resize.Add(RealizeSize);
 
-	Controls.NextButton:RegisterCallback( Mouse.eLClick, OnScrollLeft );
-	Controls.PreviousButton:RegisterCallback( Mouse.eLClick, OnScrollRight );
+  Controls.NextButton:RegisterCallback( Mouse.eLClick, OnScrollLeft );
+  Controls.PreviousButton:RegisterCallback( Mouse.eLClick, OnScrollRight );
 end
 Initialize();

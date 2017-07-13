@@ -192,7 +192,7 @@
         <!-- <Grid           ID="CityBannerFill2"           Anchor="C,C"                  Size="Parent-7,Parent-6"  Offset="-1,-1" Texture="Banner_Darker"    SliceTextureSize="196,34" SliceCorner="98,17"/> -->
         <Grid           ID="CityBannerFill"           Anchor="C,C"                  Size="Parent-7,Parent-6"  Offset="-1,-1"  Texture="Banner_Base"     SliceTextureSize="196,34" SliceCorner="98,17"/>
 
-       <!--  <Grid           ID="CityBannerFill3"          Anchor="C,C"                  Size="Parent-7,Parent-6"  Offset="-1,-1"  Texture="Banner_Lighter"  SliceTextureSize="196,34" SliceCorner="98,17"/> -->
+      <!--  <Grid           ID="CityBannerFill3"          Anchor="C,C"                  Size="Parent-7,Parent-6"  Offset="-1,-1"  Texture="Banner_Lighter"  SliceTextureSize="196,34" SliceCorner="98,17"/> -->
 
 
         <Label ID="HeaderLabel" Anchor="L,C" Offset="36,0" Style="FontFlair16" SmallCaps="20" SmallCapsType="EveryWord" Color="Beige"/>
@@ -309,10 +309,10 @@
           <!-- Origin Civ Arrow -->
           <Image ID="OriginCivArrow" Anchor="L,B" Size="20,19" Offset="46,25" FlipX="1" Texture="TradeOverview_Benefactor"/>
 
-           <!-- Destination Civ Icon -->
-           <Image ID="DestinationCivIconBacking" Anchor="R,B" Size="30,30" Offset="8,12" Texture="CircleBacking30" Color="100,100,100,255">
-             <Image ID="DestinationCivIcon" Anchor="C,C" Size="30,30" Offset="0,0" Icon="ICON_CIVILIZATION_UNKNOWN" IconSize="30"/>
-           </Image>
+          <!-- Destination Civ Icon -->
+          <Image ID="DestinationCivIconBacking" Anchor="R,B" Size="30,30" Offset="8,12" Texture="CircleBacking30" Color="100,100,100,255">
+            <Image ID="DestinationCivIcon" Anchor="C,C" Size="30,30" Offset="0,0" Icon="ICON_CIVILIZATION_UNKNOWN" IconSize="30"/>
+          </Image>
 
           <!-- Destination Civ Arrow -->
           <Image ID="DestinationCivArrow" Anchor="R,B" Size="20,19" Offset="45,3" Texture="TradeOverview_Benefactor"/>

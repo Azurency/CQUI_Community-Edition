@@ -1,4 +1,4 @@
-﻿-- ===========================================================================
+-- ===========================================================================
 --  CityPanel v3
 -- ===========================================================================
 
@@ -403,7 +403,7 @@ function ViewMain( data:table )
       totalFood = iModifiedFood * data.HousingMultiplier;
     end
   else
-    totalFood = data.FoodSurplus;   
+    totalFood = data.FoodSurplus;
   end
   -- Food p/turn tooltip
   local realFoodPerTurnToolTip = data.FoodPerTurnToolTip .."[NEWLINE]"..
@@ -871,7 +871,7 @@ function OnTileImproved(x, y)
         tParameters[CityCommandTypes.PARAM_FLAGS]   = 0;      -- Set favoured
         tParameters[CityCommandTypes.PARAM_DATA0] = 0;          -- off
       end
-      
+
       tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = YieldTypes.CULTURE;  -- Yield type
       CityManager.RequestCommand(m_pCity, CityCommandTypes.SET_FOCUS, tParameters);
 
@@ -880,7 +880,7 @@ function OnTileImproved(x, y)
       if m_kData == nil then
         return;
       end
-      
+
       --print("=============================================================");
       --print("Updating City Panel Details Due To Yield Change");
       --print("=============================================================");

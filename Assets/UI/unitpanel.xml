@@ -1,11 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <Context>
-  
+
     <!--UNIT PANEL MAIN-->
   <AlphaAnim            ID="UnitPanelAlpha"       AlphaBegin="0" AlphaEnd="1" Speed="3"   Function="OutSine" Cycle="Once" Size="full,full">
     <SlideAnim          ID="UnitPanelSlide"       Start="200,0" End="0,0"     Speed="3.5" Function="OutSine" Cycle="Once" Size="full,full">
-      
+
       <Grid							ID="BuildActionsPanel"				Anchor="R,B" Offset="501,0"	Size="51,180" Texture="UnitPanel_SpecialActionsFrame" SliceCorner="14,14"  >
         <Button					ID="RecommendedActionButton"	Anchor="C,T" Offset="1,-23" Size="44,53" Texture="UnitPanel_ActionButton"		>
           <Image				ID="RecommendedActionIcon"		Anchor="C,C" Offset="-1,-1" Size="38,38"		/>
@@ -25,10 +25,10 @@
           <Grid																		Anchor="C,T" Offset="0,38"		Size="169,22"		Texture="CombatPreview_VsFrame.dds"  SliceCorner="8,8" SliceSize="6,6">
             <Label			ID="VersusText"						Anchor="C,C" Offset="0,2"			Style="UnitPanelHeader" String="{LOC_HUD_UNIT_PANEL_VS:upper}"/>
           </Grid>
-           <Label				ID="CombatAssessmentText"	Anchor="C,C" Offset="-6,-76"	Align="Center" WrapWidth="120" Style="UnitPanelHeader" />
+          <Label				ID="CombatAssessmentText"	Anchor="C,C" Offset="-6,-76"	Align="Center" WrapWidth="120" Style="UnitPanelHeader" />
         </Container>
 
-		    <Stack	ID="PrimaryArtStack"	Anchor="R,T"	Offset="6,-2"	AnchorSide="I,O"	StackGrowth="Right" Padding="2" />
+        <Stack	ID="PrimaryArtStack"	Anchor="R,T"	Offset="6,-2"	AnchorSide="I,O"	StackGrowth="Right" Padding="2" />
         <!-- ACTIONS PANEL -->
         <Stack ID="ActionsStack" Anchor="R,T" Offset="2,-4" AnchorSide="I,O" StackGrowth="Left" StackPadding="2">
           <Stack ID="StandardActionsStack" Anchor="C,B" StackGrowth="Right" Padding="2" ConsumeMouse="1" />
@@ -39,7 +39,7 @@
             </Stack>
           </Grid>
         </Stack>
-        
+
         <Grid						ID="MainPanel"						Anchor="R,B"  Offset="0,-2"    	Texture="SelectionPanel_MainPanel"  Size="Parent-48,Parent"  SliceCorner="60,60" SliceTextureSize="263,160" />
 
         <Button ID="SelectionPanelUnitPortrait"	Texture="SelectionPanel_Portrait"  Anchor="L,B" Size="107,107" Offset="-2,25" ConsumeMouse="1" NoStateChange="1">
@@ -78,7 +78,7 @@
         <Container Anchor="L,B"	Offset="0,28"		Size="Parent,Parent" >
           <Container ID="SubjectStatContainer" Anchor="L,T" Offset="86,56" Size="Parent-105,120">
             <Stack ID="SubjectStatStack" Anchor="R,T" StackGrowth="Down"/>
-          </Container> 
+          </Container>
         </Container>
 
         <!--Health Meters-->
@@ -115,7 +115,7 @@
             <Image  ID="CivIcon"  Texture="CivSymbols64" Size="64,64" Anchor="C,C"/>
           </Image>
         </Container>
-        
+
         <Container		ID="XPArea"									Anchor="R,B"	Offset="10,0"		Size="224,15" >
           <Box																									Offset="10,0"		Size="parent-20,parent" Color="0,0,0,255" />
           <Bar				ID="XPBar"									Color="255,255,255,0" Offset="80,2"		Size="130,10" Direction="Right" />
@@ -144,7 +144,7 @@
           </Image>
           <Label ID="CombatPreviewUnitName" Anchor="C,T" Offset="-45,-25" Style="UnitPanelHeader" TruncateWidth="210" />
           <Image                                  Anchor="R,B" Offset="-26,8" Texture="SelectionPanel_Rose"/>
-          
+
         </Container>
 
         <!-- Great Person Passive Information -->
@@ -153,7 +153,7 @@
             <Image Size="38,38" Offset="4,0" Anchor="L,C" Texture="GreatPeoplePassiveBonus"/>
             <Label Offset="6,0" Anchor="R,C" Style="CityPanelHeader" String="LOC_HUD_UNIT_PANEL_GREAT_PERSON_PASSIVE_ABILITY"/>
           </Grid>
-		    </Container>
+        </Container>
 
         <!-- Settlement Water Guide -->
         <Container ID="SettlementWaterContainer" Anchor="C,B" Offset="40,26" Size="180,36">
@@ -263,11 +263,11 @@
               <Meter			  ID="TargetCityHealthMeterShadow"	Texture="SelectionPanel_HealthFlipped"   Anchor="R,C"  Size="95,95"  CounterClockwise="true"  Offset="7,-2"/>
             </AlphaAnim>
             <Meter			  ID="TargetCityHealthMeter"				Texture="SelectionPanel_HealthFlipped"   Anchor="L,C"  Size="95,95"  CounterClockwise="true"  Offset="7,-2"/>
-            
+
           </Image>
 
-          
-          
+
+
           <!--Unit Icon-->
           <Image        ID="TargetUnitIcon"               Texture="UnitPortraits95_1" Size="95,95" Anchor="R,B" Offset="10,38" Icon="ICON_UNIT_WARRIOR_PORTRAIT"/>
           <!-- City Icon -->
@@ -279,7 +279,7 @@
               <Image  ID="TargetCivIcon"        Texture="CivSymbols64" Size="64,64" Anchor="C,C"/>
             </Image>
           </Container>
-          
+
           <!--STATS-->
           <Container ID="TargetStatContainer" Size="72,100" Offset="146,47" AutoSize="Vertical">
             <Stack ID="TargetStatStack" Anchor="L,T" StackGrowth="Down"/>
@@ -316,7 +316,7 @@
           </ScrollPanel>
           <Button				ID="PromotionCancelButton"					Anchor="R,T" Style="CloseButtonSmall" Offset="-11,-9"/>
         </Grid>
-        
+
         <!---->
         <!--VETERAN CUSTOM NAME UI-->
         <!---->
@@ -403,15 +403,15 @@
           </SlideAnim>
         </Tutorial>
 
-				<Tutorial  ID="TutTradeRouteAction" Style="TutorialContainer" Anchor="C,T" AnchorSide="O,O" Offset="-40,90" TriggerBy="TutorialTradeRouteAction">
-					<Grid Style="TutorialCalloutGrid">
-						<Label Style="TutorialHeaderText" String="LOC_META_142b_HEAD" />
-						<Label Style="TutorialBodyText" String="LOC_META_142b_BODY" />
-					</Grid>
-					<SlideAnim Start="0,0" EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" Anchor="C,B">
-						<Image Texture="Tutorial_ArrowV" Offset="-22,-25" Size="44,58"/>
-					</SlideAnim>
-				</Tutorial>
+        <Tutorial  ID="TutTradeRouteAction" Style="TutorialContainer" Anchor="C,T" AnchorSide="O,O" Offset="-40,90" TriggerBy="TutorialTradeRouteAction">
+          <Grid Style="TutorialCalloutGrid">
+            <Label Style="TutorialHeaderText" String="LOC_META_142b_HEAD" />
+            <Label Style="TutorialBodyText" String="LOC_META_142b_BODY" />
+          </Grid>
+          <SlideAnim Start="0,0" EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" Anchor="C,B">
+            <Image Texture="Tutorial_ArrowV" Offset="-22,-25" Size="44,58"/>
+          </SlideAnim>
+        </Tutorial>
 
         <!-- TRADE UNIT INFORMATION-->
         <Container ID="TradeUnitContainer" Anchor="R,B" Size="Parent-104,Parent-116" Offset="10,8">
@@ -428,8 +428,8 @@
         <!-- ESPIONAGE UNIT INFORMATION -->
         <Label ID="EspionageIdleLabel" Anchor="C,C" Offset="40,16" Style="FontNormal14" String="LOC_UNITPANEL_ESPIONAGE_AWAITING_ASSIGNMENT"/>
         <Container ID="EspionageUnitContainer" Anchor="R,B" Size="180,90" Offset="18,16">
-          
-		  <Label Offset="0,-16" Style="FontNormal12" String="LOC_UNITPANEL_ESPIONAGE_LOCATED_IN"/>
+
+      <Label Offset="0,-16" Style="FontNormal12" String="LOC_UNITPANEL_ESPIONAGE_LOCATED_IN"/>
             <!-- City Banner -->
             <Grid	ID="EspionageCityBanner"	Anchor="L,T" Offset="-10,0"	Size="parent+10,28"	Texture="Controls_CityBannerSmall" SliceCorner="14,9" SliceSize="5,4" SliceTextureSize="33,28" Color="150,170,100,255">
               <Label ID="EspionageCityName" Anchor="L,C" Offset="14,-1"		Style="FontFlair14"					FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="FirstWord" TruncateWidth="180"/>
@@ -451,13 +451,13 @@
 
     </SlideAnim>
   </AlphaAnim>
-  
+
   <!-- ==================================================================== -->
   <!--	INSTANCES																														-->
   <!-- ==================================================================== -->
 
   <!-- Unit stat instance -->
-	<Instance Name="StatInstance">
+  <Instance Name="StatInstance">
     <Grid	ID="StatGrid"	Anchor="R,T" Offset="0,0"	Size="parent,26" Style="CityPanelSlotGrid">
       <CheckBox	ID="StatCheckBox" Anchor="L,T" Offset="-5,-1"	ButtonTexture="SelectionPanel_Stat"	ButtonSize="28,32" CheckTexture="Stats22"	CheckTextureOffset="0,0" CheckSize="22,22" CheckOffset="3,3"	UnCheckTexture="Stats22"	UnCheckTextureOffset="0,0"	UnCheckSize="22,22" UnCheckOffset="3,3" UseSelectedTextures="1" CheckColor="0,0,0,255" Disabled="True"/>
 
@@ -481,77 +481,77 @@
   </Instance>
 
   <!-- Combat modifier -->
-	<Instance				Name="ModifierInstance">
-		<Container		ID="ModifierContainer"			    Size="130,26" AutoSize="Vertical" AutoSizePadding="0,2">
-			<Image			ID="ModifierIcon"			Anchor="L,T"	Icon="ICON_STRENGTH" IconSize="16" Size="16,16" />
-			<Label			ID="ModifierText"			Anchor="L,T"  Offset="20,0" WrapWidth="110"	Style="FontNormal12" FontStyle="Shadow" EffectColor="Black"/>
-		</Container>
-	</Instance>
-	
+  <Instance				Name="ModifierInstance">
+    <Container		ID="ModifierContainer"			    Size="130,26" AutoSize="Vertical" AutoSizePadding="0,2">
+      <Image			ID="ModifierIcon"			Anchor="L,T"	Icon="ICON_STRENGTH" IconSize="16" Size="16,16" />
+      <Label			ID="ModifierText"			Anchor="L,T"  Offset="20,0" WrapWidth="110"	Style="FontNormal12" FontStyle="Shadow" EffectColor="Black"/>
+    </Container>
+  </Instance>
+
   <!-- Confirmation popup -->
   <Instance						Name="PopupButtonInstance">
     <GridButton			  ID="Button"									                          Size="160,42"		Style="MainButton" />
   </Instance>
-  
-	<!-- Action definition -->
-	<Instance Name="UnitActionInstance" >
-		<Button		ID="UnitActionButton" Anchor="L,T" Size="44,53" Texture="UnitPanel_ActionButton">
-			<Image	ID="UnitActionIcon"		Anchor="C,C" Offset="0,-2" Size="38,38"  Texture="UnitActions"/>
-		</Button>
-	</Instance>
-	
+
+  <!-- Action definition -->
+  <Instance Name="UnitActionInstance" >
+    <Button		ID="UnitActionButton" Anchor="L,T" Size="44,53" Texture="UnitPanel_ActionButton">
+      <Image	ID="UnitActionIcon"		Anchor="C,C" Offset="0,-2" Size="38,38"  Texture="UnitActions"/>
+    </Button>
+  </Instance>
+
   <!-- Build definition -->
-	<Instance Name="BuildActionInstance" >
-		<Button		ID="UnitActionButton" Anchor="L,T" Offset="-4,-4" Size="44,53" Texture="Controls_IconButton.dds">
-			<Image	ID="UnitActionIcon"		Anchor="C,C" Offset="-1,-1" Size="38,38" Texture="UnitActions"/>
-		</Button>
-	</Instance>
+  <Instance Name="BuildActionInstance" >
+    <Button		ID="UnitActionButton" Anchor="L,T" Offset="-4,-4" Size="44,53" Texture="Controls_IconButton.dds">
+      <Image	ID="UnitActionIcon"		Anchor="C,C" Offset="-1,-1" Size="38,38" Texture="UnitActions"/>
+    </Button>
+  </Instance>
 
-	<!-- Grouping for actions -->
-	<Instance				Name="GroupArtInstance" >
-		<Grid					ID="Top"										Texture="UnitPanel_ActionGroupSlot"  SliceCorner="5,19" SliceSize="1,1" Size="50,41">
-			<Image										Anchor="C,B"	Texture="UnitPanel_ActionGroupGlow" />
-		</Grid>
-	</Instance>
-	
-	<!-- Stat Instance -->
-	<Instance				Name="BigStatInstance">
-		<Container		ID="Top"																		Size="200,26" >
-			<Container																							Size="28,22"	>
-				<Label		ID="Value"		Anchor="C,T"																String="-1?"			Style="UnitPanelBigValue" />
-			</Container>
-			<Label			ID="Text"									Offset="36,10"									String="?Details" Style="UnitPanelBigLabel" />
-		</Container>
-	</Instance>
+  <!-- Grouping for actions -->
+  <Instance				Name="GroupArtInstance" >
+    <Grid					ID="Top"										Texture="UnitPanel_ActionGroupSlot"  SliceCorner="5,19" SliceSize="1,1" Size="50,41">
+      <Image										Anchor="C,B"	Texture="UnitPanel_ActionGroupGlow" />
+    </Grid>
+  </Instance>
 
-	<!-- Ratio Stat Instance (e.g., 2/3 moves) -->
-	<Instance				Name="BigRatioStatInstance">
-		<Container		ID="Top"																		Size="200,26" >
-			<Stack			ID="Ratio"		StackGrowth="Right">
-				<Label		ID="Value"		Anchor="C,T"																String="-1?"			Style="UnitPanelBigValue" />
-				<Label		ID="FullVal"	Anchor="C,T"	Offset="0,11"									String="-1?"			Style="UnitPanelBigValue" FontSize="18" />
-			</Stack>		
-			<Label			ID="Text"										Offset="36,10"								String="?Details" Style="UnitPanelBigLabel" />
-		</Container>
-	</Instance>
+  <!-- Stat Instance -->
+  <Instance				Name="BigStatInstance">
+    <Container		ID="Top"																		Size="200,26" >
+      <Container																							Size="28,22"	>
+        <Label		ID="Value"		Anchor="C,T"																String="-1?"			Style="UnitPanelBigValue" />
+      </Container>
+      <Label			ID="Text"									Offset="36,10"									String="?Details" Style="UnitPanelBigLabel" />
+    </Container>
+  </Instance>
 
-	<!-- A column of 3 build actions Instance -->
-	<Instance				Name="BuildActionsColumnInstance">
-		<Container		ID="Top"																		Size="38,140" >
-			<Image			ID="Row1"			Anchor="L,T" Offset="0,15"								Texture="UnitPanel_SpecialActionSlot" />
-			<Image			ID="Row2"			Anchor="L,T" Offset="0,60"								Texture="UnitPanel_SpecialActionSlot" />
-			<Image			ID="Row3"			Anchor="L,T" Offset="0,105"								Texture="UnitPanel_SpecialActionSlot" />
-		</Container>
-	</Instance>
+  <!-- Ratio Stat Instance (e.g., 2/3 moves) -->
+  <Instance				Name="BigRatioStatInstance">
+    <Container		ID="Top"																		Size="200,26" >
+      <Stack			ID="Ratio"		StackGrowth="Right">
+        <Label		ID="Value"		Anchor="C,T"																String="-1?"			Style="UnitPanelBigValue" />
+        <Label		ID="FullVal"	Anchor="C,T"	Offset="0,11"									String="-1?"			Style="UnitPanelBigValue" FontSize="18" />
+      </Stack>
+      <Label			ID="Text"										Offset="36,10"								String="?Details" Style="UnitPanelBigLabel" />
+    </Container>
+  </Instance>
 
-	<!-- Promotion Instances (dots or badges on the banner) -->
-	<Instance				Name="EarnedPromotionInstance">
+  <!-- A column of 3 build actions Instance -->
+  <Instance				Name="BuildActionsColumnInstance">
+    <Container		ID="Top"																		Size="38,140" >
+      <Image			ID="Row1"			Anchor="L,T" Offset="0,15"								Texture="UnitPanel_SpecialActionSlot" />
+      <Image			ID="Row2"			Anchor="L,T" Offset="0,60"								Texture="UnitPanel_SpecialActionSlot" />
+      <Image			ID="Row3"			Anchor="L,T" Offset="0,105"								Texture="UnitPanel_SpecialActionSlot" />
+    </Container>
+  </Instance>
+
+  <!-- Promotion Instances (dots or badges on the banner) -->
+  <Instance				Name="EarnedPromotionInstance">
       <Image			ID="Top"			Size="32,32" Texture="PromotionsSmall"  TextureOffset="32,0" />
-	</Instance>
-  
-	<Instance				Name="EmptyPromotionInstance">
+  </Instance>
+
+  <Instance				Name="EmptyPromotionInstance">
     <Image				ID="Top"			Size="32,32" Texture="PromotionsSmall"	TextureOffset="0,0" Offset="0,2" />
-	</Instance>
+  </Instance>
 
   <!-- Promotion Selection Instance -->
   <Instance				Name="PromotionSelectionInstance">
@@ -566,10 +566,10 @@
       </GridButton>
     </Container>
   </Instance>
-  
-	<Instance Name="DetailInstance">
-		<Label			ID="DetailInstanceLabel" String="?Details" Style="FontFlair12" />
-	</Instance>
+
+  <Instance Name="DetailInstance">
+    <Label			ID="DetailInstanceLabel" String="?Details" Style="FontFlair12" />
+  </Instance>
 
   <!-- Trade Unit Resource Instance -->
   <Instance Name="TradeResourceyInstance">

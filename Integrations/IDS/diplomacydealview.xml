@@ -1,45 +1,45 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Context Style="FontNormal16" ColorSet="BodyTextCool" FontStyle="Shadow" Size="Full,Full" ConsumeMouse="1">
 
-	<!-- Containers for caching instances -->
-	<Container ID="IconOnlyContainer" Hidden="1"/>
-	<Container ID="IconAndTextContainer" Hidden="1"/>
-	<Container ID="LeftRightListContainer" Hidden="1"/>
-	<Container ID="TopDownListContainer" Hidden="1"/>
+  <!-- Containers for caching instances -->
+  <Container ID="IconOnlyContainer" Hidden="1"/>
+  <Container ID="IconAndTextContainer" Hidden="1"/>
+  <Container ID="LeftRightListContainer" Hidden="1"/>
+  <Container ID="TopDownListContainer" Hidden="1"/>
   <Container ID="SmallDetailsContainer" Hidden="1"/>
 
-	<!-- The full screen container, so they player can't click through. -->
-	<!--<Container Size="Full,Full"/>-->
+  <!-- The full screen container, so they player can't click through. -->
+  <!--<Container Size="Full,Full"/>-->
 
 
   <!-- NEW Icon, with optional Amount Text that overlaps the icon -->
   <Instance	Name="IconOnly">
-    <GridButton ID="SelectButton" Texture="Controls_ButtonControl" Size="50,50" SliceCorner="10,10" 
+    <GridButton ID="SelectButton" Texture="Controls_ButtonControl" Size="50,50" SliceCorner="10,10"
                 SliceSize="1,1"
-                SliceTextureSize="24,24" 
-                StateOffsetIncrement="0,24" Anchor="L,T" Offset="0,0" >          
+                SliceTextureSize="24,24"
+                StateOffsetIncrement="0,24" Anchor="L,T" Offset="0,0" >
       <Image ID="Icon" StretchMode="None" Size="50,50" Anchor="C,C"/>
       <Label ID="AmountText" Style="FontNormalBold16" FontStyle="Stroke" Anchor="R,B" Offset="3,0"/>
     </GridButton>
   </Instance>
 
-	<!-- An instance of an Icon, with optional Amount Text that overlaps the icon and description text on the right side of the icon. -->
-	<Instance	Name="IconAndText">
-		<GridButton ID="SelectButton" Style="ButtonLightWeight" Size="250,50" Anchor="L,T" Offset="0,2">
-			<Stack Size="parent,0" StackGrowth="Right">
-				<Container Size="44, parent">
-					<Image ID="Icon" StretchMode="None" Size="34,34" Anchor="C,C" Offset="0,0"/>
-					<Label ID="AmountText" Anchor="R,B" Style="FontNormalBold16" Offset="24,-9" FontStyle="Stroke"/>
-				</Container>
-				<Container Size="parent-44, parent">
-					<Stack StackGrowth="Bottom" Anchor="L,C">
-						<Label ID="IconText" Size="parent, 0" Style="FontNormalBold12" FontStyle="Stroke"/>
-						<Label ID="ValueText" Size="parent, 0" Style="FontNormalBold12" FontStyle="Stroke"/>
-					</Stack>
-				</Container>
-			</Stack>
-		</GridButton>
-	</Instance>
+  <!-- An instance of an Icon, with optional Amount Text that overlaps the icon and description text on the right side of the icon. -->
+  <Instance	Name="IconAndText">
+    <GridButton ID="SelectButton" Style="ButtonLightWeight" Size="250,50" Anchor="L,T" Offset="0,2">
+      <Stack Size="parent,0" StackGrowth="Right">
+        <Container Size="44, parent">
+          <Image ID="Icon" StretchMode="None" Size="34,34" Anchor="C,C" Offset="0,0"/>
+          <Label ID="AmountText" Anchor="R,B" Style="FontNormalBold16" Offset="24,-9" FontStyle="Stroke"/>
+        </Container>
+        <Container Size="parent-44, parent">
+          <Stack StackGrowth="Bottom" Anchor="L,C">
+            <Label ID="IconText" Size="parent, 0" Style="FontNormalBold12" FontStyle="Stroke"/>
+            <Label ID="ValueText" Size="parent, 0" Style="FontNormalBold12" FontStyle="Stroke"/>
+          </Stack>
+        </Container>
+      </Stack>
+    </GridButton>
+  </Instance>
 
   <!-- Instance for Cities which includes details on population, food, prod, and science -->
   <Instance Name="IconAndTextWithDetails">
@@ -61,13 +61,13 @@
     </GridButton>
   </Instance>
 
-	<!-- SPECIALIZED INSTANCES -->
+  <!-- SPECIALIZED INSTANCES -->
   <!-- Icon Only, 3 icons (for Gold per turn) -->
   <Instance Name="IconOnly_3">
-      <GridButton ID="SelectButton" Texture="Controls_ButtonControl" Size="50,50" SliceCorner="10,10" 
+      <GridButton ID="SelectButton" Texture="Controls_ButtonControl" Size="50,50" SliceCorner="10,10"
                 SliceSize="1,1"
-                SliceTextureSize="24,24" 
-                StateOffsetIncrement="0,24" Anchor="L,T" >          
+                SliceTextureSize="24,24"
+                StateOffsetIncrement="0,24" Anchor="L,T" >
           <Image ID="Icon1" StretchMode="None" Size="50,50" Anchor="C,C" Offset="-10,-10"/>
           <Image ID="Icon2" StretchMode="None" Size="50,50" Anchor="C,C" Offset="1,0"/>
           <Image ID="Icon3" StretchMode="None" Size="50,50" Anchor="C,C" Offset="13,10"/>
@@ -77,10 +77,10 @@
 
   <!-- Scarce Resources (Qty available == 1) -->
     <Instance Name="IconOnly_Resource_Scarce">
-        <GridButton ID="SelectButton" Texture="Controls_ButtonControl" Size="50,50" SliceCorner="10,10" 
-                  SliceSize="1,1" 
-                  SliceTextureSize="24,24" 
-                  StateOffsetIncrement="0,24" Anchor="L,T" >          
+        <GridButton ID="SelectButton" Texture="Controls_ButtonControl" Size="50,50" SliceCorner="10,10"
+                  SliceSize="1,1"
+                  SliceTextureSize="24,24"
+                  StateOffsetIncrement="0,24" Anchor="L,T" >
             <Image ID="Icon" StretchMode="None" Size="50,50" Anchor="C,C" />
             <Label ID="AmountText" Style="FontNormalBold16" Anchor="R,B" Offset="3,0" FontStyle="Stroke" Color="224,124,124,230"/>
         </GridButton>
@@ -88,9 +88,9 @@
 
     <!-- Duplicate Resources (Both trade partners have the resource) -->
     <Instance Name="IconOnly_Resource_Duplicate">
-        <GridButton ID="SelectButton" Texture="Controls_ButtonControl_Tan" Size="50,50" SliceCorner="10,10" 
-                  SliceSize="1,1" 
-                  SliceTextureSize="24,24" 
+        <GridButton ID="SelectButton" Texture="Controls_ButtonControl_Tan" Size="50,50" SliceCorner="10,10"
+                  SliceSize="1,1"
+                  SliceTextureSize="24,24"
                   StateOffsetIncrement="0,24" Anchor="L,T" Color="255,255,255,200">
             <Image ID="Icon" StretchMode="None" Size="50,50" Anchor="C,C"/>
             <Label ID="AmountText" Style="FontNormalBold16" Anchor="R,B" Offset="3,0" FontStyle="Stroke" />
@@ -99,10 +99,10 @@
 
     <!-- Untradeable Resources (Either imported via trade or city-state, or Qty == 0) -->
     <Instance Name="IconOnly_Resource_Untradeable">
-        <GridButton ID="SelectButton" Texture="Controls_ButtonControl_Gray" Size="50,50" SliceCorner="10,10" 
-                  SliceSize="1,1" 
-                  SliceTextureSize="24,24" 
-                  StateOffsetIncrement="0,24" Anchor="L,T">          
+        <GridButton ID="SelectButton" Texture="Controls_ButtonControl_Gray" Size="50,50" SliceCorner="10,10"
+                  SliceSize="1,1"
+                  SliceTextureSize="24,24"
+                  StateOffsetIncrement="0,24" Anchor="L,T">
             <Image ID="Icon" StretchMode="None" Size="50,50" Anchor="C,C" Color="255,255,255,170" />
             <Label ID="AmountText" Style="FontNormalBold16" Anchor="R,B" Offset="3,0" FontStyle="Stroke" />
         </GridButton>
@@ -114,7 +114,7 @@
     <Instance Name="LeftRightList">
       <Stack ID="List" Size="parent, 0" Offset="0,0" StackGrowth="Bottom">
         <Grid Style="ColumnHeader" ID="Title" Size="parent-40,26" Offset="0,20" Anchor="L,T" Color="GoldMetalDark">
-          <Label ID="TitleText" Anchor="C,C" Offset="4,0" Style="HeaderSmallCaps" Hidden="false" Color0="GoldMetalDark" Color1="0,0,0,210"/>    
+          <Label ID="TitleText" Anchor="C,C" Offset="4,0" Style="HeaderSmallCaps" Hidden="false" Color0="GoldMetalDark" Color1="0,0,0,210"/>
         </Grid>
         <Stack ID="ListStack" StackGrowth="Right" Anchor="L,T" WrapWidth="parent-30" Offset="0,4">
         </Stack>
@@ -131,7 +131,7 @@
         </Stack>
       </Stack>
     </Instance>
-  
+
   <Container ID="TradePanel" Size="full,full" Anchor="C,C">
     <!-- The background of the panel, enclosing all contents -->
     <AlphaAnim ID="TradePanelFade" AlphaBegin="0" AlphaEnd="1" Speed="2" Cycle="Once" Size="parent,parent">
@@ -144,7 +144,7 @@
           <Container Size="290,parent">
             <Image ID="PlayerBackground" Size="parent,parent" Texture="Controls_BannerWideTint" Color="255,255,255,255" Anchor="L,C">
             <Image	ID="PlayerBackgroundBarRight"	Anchor="R,C" Offset="5,0"	Size="5,parent"			Texture="Controls_BannerWideTint" TextureOffset="5,0" Color="255,255,255,255" />
-            <Stack ID="PlayerStack"  Offset="20,10" Anchor="L,T">                    
+            <Stack ID="PlayerStack"  Offset="20,10" Anchor="L,T">
               <!-- Signature area -->
               <Stack ID="PlayerSignatureStack" StackGrowth="Right">
                 <!-- Civ Icon -->
@@ -156,7 +156,7 @@
                   <Image ID="PlayerCivIcon" Texture="CivSymbols36" Size="36,36" Anchor="C,C"/>
                   <Image Texture="Controls_CircleRim50" Size="50,50" Anchor="C,C" Offset="-1,-1" Color="255,255,255,50"/>
                 </Container>
-                  
+
                 <Stack ID="PlayerText" Offset="5,0" Anchor="L,C">
                   <Label  ID="PlayerLeaderName" String="TEST"  WrapWidth="210" Align="L" Anchor="L,C" Style="FontBoldFlair18"  SmallCaps="22" FontStyle="shadow" Color0="130,130,130,255"  Color1="0,0,0,150"/>
                   <Label  ID="PlayerCivName"    String="EGYPT"      WrapWidth="210" Align="L" Anchor="L,C" Style="HeaderSmallCaps"  SmallCaps="18" Color0="220,220,220,255"  Color1="0,0,0,200"/>
@@ -164,15 +164,15 @@
               </Stack>
               <!-- Item Area -->
               <ScrollPanel      ID="MyInventoryScroll"  Size="parent, parent-100"  Vertical="1" AutoScollbar="1">
-               <ScrollBar Size="18,parent" SliceTextureSize="11,11" SliceCorner="5,5" Anchor="L,B" Color="225,225,225,225" Offset="-40,0" AnchorSide="I,I"  Texture="Controls_ScrollBarBacking" StateOffsetIncrement="0,0" Vertical="1" >
-                  <Thumb   Size="13,13"          Texture="Controls_ScrollBarHandleV_Brown" StateOffsetIncrement="0,0" SliceCorner="6,6" SliceTextureSize="13,13"/>                  
+              <ScrollBar Size="18,parent" SliceTextureSize="11,11" SliceCorner="5,5" Anchor="L,B" Color="225,225,225,225" Offset="-40,0" AnchorSide="I,I"  Texture="Controls_ScrollBarBacking" StateOffsetIncrement="0,0" Vertical="1" >
+                  <Thumb   Size="13,13"          Texture="Controls_ScrollBarHandleV_Brown" StateOffsetIncrement="0,0" SliceCorner="6,6" SliceTextureSize="13,13"/>
                 </ScrollBar>
                 <Stack ID="MyInventoryStack" StackGrowth="Bottom" WrapGrowth="Bottom"/>
               </ScrollPanel>
               </Stack>
             </Image>
           </Container>
-          
+
           <!-- Offer Area -->
           <Container ID="OfferArea" Size="560,parent" >
             <Image Size="parent,parent" Texture="Controls_BannerWideTint" Color="80,80,80,255">
@@ -194,16 +194,16 @@
                   <Stack ID="CenterDealOffersStack" StackGrowth="Right" Anchor="L,T" Offset="0,0">
                     <Container ID="MyOffer" Size="280,parent" Anchor="L,T">
                       <Stack StackGrowth="Bottom" Anchor="C,T" Size="parent,parent">
-                       <Label ID="MyOfferLabel" Anchor="C,T" String="LOC_DIPLOMACY_DEAL_MY_OFFER" Style="DiplomacyIntelHeader" Offset="12,0" Color1="GoldMetalDark" FontStyle="DropShadow3"/>                      
-                       <Grid ID="MyOfferBracket" Style="DecoGrid" Color="GoldMetalDark" Anchor="C,T" AutoSize="0" Offset="8,10" InnerPadding="12,30" MinSize="264,150" >
+                      <Label ID="MyOfferLabel" Anchor="C,T" String="LOC_DIPLOMACY_DEAL_MY_OFFER" Style="DiplomacyIntelHeader" Offset="12,0" Color1="GoldMetalDark" FontStyle="DropShadow3"/>
+                      <Grid ID="MyOfferBracket" Style="DecoGrid" Color="GoldMetalDark" Anchor="C,T" AutoSize="0" Offset="8,10" InnerPadding="12,30" MinSize="264,150" >
                           <Stack ID="MyOfferStack" StackGrowth="Bottom" WrapWidth="250" WrapGrowth="Bottom" Anchor="C,C">
                             <Label ID="MyDirections" String="LOC_DIPLOMACY_TRADE_UI_SELECT_TEXT" Anchor="C,C" Style="FontNormalMedium16" Color0="GoldMetalDark" Color1="Black" FontStyle="Shadow" WrapWidth="200" Align="Center" Hidden="0"/>
                           </Stack>
-                           <GridButton ID="WhatWouldItTakeButton" Offset="0,3" Style="ButtonLightweightSmall" Anchor="C,B" String="LOC_DIPLOMACY_DEAL_WHAT_WOULD_IT_TAKE" WrapWidth="170" FontSize="14" Size="190,25" Hidden="1" ToolTip="LOC_DIPLOMACY_DEAL_WHAT_IT_WILL_TAKE_TOOLTIP"/>
+                          <GridButton ID="WhatWouldItTakeButton" Offset="0,3" Style="ButtonLightweightSmall" Anchor="C,B" String="LOC_DIPLOMACY_DEAL_WHAT_WOULD_IT_TAKE" WrapWidth="170" FontSize="14" Size="190,25" Hidden="1" ToolTip="LOC_DIPLOMACY_DEAL_WHAT_IT_WILL_TAKE_TOOLTIP"/>
                         </Grid>
                       </Stack>
                     </Container>
-                    
+
                     <Container ID="TheirOffer" Size="280,parent" Anchor="L,T" Offset="0,0">
                       <Stack StackGrowth="Bottom" Anchor="C,T" Size="parent,parent">
                         <Label ID="TheirOfferLabel" Anchor="C,T" String="LOC_DIPLOMACY_DEAL_THEIR_OFFER" Style="DiplomacyIntelHeader" Offset="5,0" Color1="GoldMetalDark" FontStyle="DropShadow3"/>
@@ -213,7 +213,7 @@
                           </Stack>
                           <GridButton ID="WhatWouldYouGiveMe" Offset="0,3" Style="ButtonLightweightSmall" Anchor="C,B" String="LOC_DIPLOMACY_DEAL_WHAT_WOULD_YOU_GIVE_ME" WrapWidth="170" Size="190,25" Hidden="1"/>
                         </Grid>
-                      
+
                       </Stack>
                     </Container>
                   </Stack>
@@ -221,7 +221,7 @@
               </Stack>
             </Image>
           </Container>
-         
+
           <!-- Partner Side -->
           <Container Size="290, parent">
             <Image ID="PartnerBackground" Size="parent,parent" Texture="Controls_BannerWideTint" Color="255,255,255,255" Anchor="R,C">
@@ -230,7 +230,7 @@
                 <Stack ID="PartnerStack"  Offset="20,10" Anchor="L,T">
                 <!-- Signature area -->
                 <Stack    ID="PartnerSignatureStack" StackGrowth="Right" Offset="-7,0">
-                   <!-- Civ Icon -->
+                  <!-- Civ Icon -->
                   <Container Size="62,62" Anchor="L,C">
                     <Image ID="PartnerCivBacking_Base" Texture="Circle44_Base" Size="44,44" Anchor="C,C" Color="49,59,80,255"/>
                     <Image ID="PartnerCivBacking_Darker" Texture="Circle44_Darker" Size="44,44" Anchor="C,C" Color="49,59,80,255"/>
@@ -239,13 +239,13 @@
                     <Image ID="PartnerCivIcon" Texture="CivSymbols36" Size="36,36" Anchor="C,C"/>
                     <Image Texture="Controls_CircleRim50" Size="50,50" Anchor="C,C" Offset="-1,-1" Color="255,255,255,50"/>
                   </Container>
-                
+
                   <Stack ID="PartnerText" Offset="5,0" Anchor="L,C">
                     <Label  ID="PartnerLeaderName" String="TEST"  WrapWidth="210" Align="L" Anchor="L,C" Style="FontBoldFlair18"  SmallCaps="22" FontStyle="glow" Color0="130,130,130,255"  Color1="0,0,0,200"/>
                     <Label  ID="PartnerCivName"    String="EGYPT"      WrapWidth="210" Align="L" Anchor="L,C" Style="HeaderSmallCaps"  SmallCaps="18" Color0="220,220,220,255"  Color1="0,0,0,200"/>
                   </Stack>
                 </Stack>
-        
+
                 <ScrollPanel      ID="TheirInventoryScroll" Size="parent, parent-100" Vertical="1" AutoScollbar="1">
                   <ScrollBar Size="18,parent" SliceTextureSize="11,11" SliceCorner="5,5" Anchor="R,B" Color="225,225,225,225" Offset="2,0" AnchorSide="I,I"  Texture="Controls_ScrollBarBacking" StateOffsetIncrement="0,0" Vertical="1" >
                     <Thumb Size="13,13" Texture="Controls_ScrollBarHandleV_Brown" StateOffsetIncrement="0,0" SliceCorner="6,6" SliceTextureSize="13,13"/>
@@ -256,13 +256,13 @@
               </Image>
             </Container>
 
-        </Stack>  
+        </Stack>
         <!-- Left Divider -->
         <Grid Style="Divider3VGrid" Size="8,parent-46" Anchor="L,T" Offset="307,24">
           <Image Size="10,parent" Texture="Controls_GradientSmall" Anchor="R,T" Rotate="270" AnchorSide="O,I" Color="0,0,0,255"/>
           <Image Size="10,parent" Texture="Controls_GradientSmall" Anchor="L,T" Rotate="90" AnchorSide="O,I" Color="0,0,0,255"/>
         </Grid>
-        
+
         <!-- Right Divider -->
         <Grid Style="Divider3VGrid" Size="8,parent-46" Anchor="L,T" Offset="866,24">
           <Image Size="10,parent" Texture="Controls_GradientSmall" Anchor="R,T" Rotate="270" AnchorSide="O,I" Color="0,0,0,255"/>
@@ -313,9 +313,9 @@
         </Stack>
       </SlideAnim>
     </AlphaAnim>
-    
-    
-    
+
+
+
   </Container>
 
   <!-- The value amount editing overlay, only one will exist and it will be moved to overlay the selected item. -->
@@ -334,7 +334,7 @@
       </Container>
     </Container>
   </Container>
-  
+
   <!-- The value type editing overlay, only one will exist and it will be moved to overlay the selected item. -->
   <Container ID="ValueTypeEditOverlay" Hidden="1">
     <Container Size="280,30" Offset="0,0" Anchor="C,B">
@@ -342,15 +342,15 @@
     </Container>
   </Container>
 
-	<!-- Customized popup dialog pieces-->
-	<Instance						Name="PopupTextInstance">
+  <!-- Customized popup dialog pieces-->
+  <Instance						Name="PopupTextInstance">
     <Label        ID="Text"       Anchor="C,T" Style="BodyTextDark18" Align="Center" WrapWidth="parent-20"/>
-	</Instance>
-	<Instance						Name="RowInstance">
-		<Stack					  ID="Row"			Anchor="C,T" StackGrowth="Right" StackWrap="Bottom" StackPadding="10" />
-	</Instance>
+  </Instance>
+  <Instance						Name="RowInstance">
+    <Stack					  ID="Row"			Anchor="C,T" StackGrowth="Right" StackWrap="Bottom" StackPadding="10" />
+  </Instance>
 
-	<!-- Custom popup dialog -->
+  <!-- Custom popup dialog -->
   <Box Style="PopupDialogBox"/>
   <Instance Name="PopupButtonInstance">
     <GridButton ID="Button" Style="MainButton" Size="200,41" />

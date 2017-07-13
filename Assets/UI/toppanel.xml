@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Context >
 
   <Grid						ID="Backing"				Anchor="C,T" Size="parent+100,29" Texture="TopBar_Bar" SliceCorner="28,8" SliceTextureSize="57,29">
@@ -22,7 +22,7 @@
       <Label	ID="CurrentDate"		 Style="TopBarMeta" String="LOC_TOP_PANEL_CURRENT_DATE"/>
     </Stack>
   </Stack>
-  
+
   <!-- Civ Yields Display -->
   <Stack					ID="InfoStack" Offset="10,2"  StackGrowth="Right" Padding="2">
     <Stack				ID="YieldStack"						  StackGrowth="Right" Padding="2">
@@ -68,11 +68,11 @@
           <Label	ID="TradeRoutesCapacity"								Offset="0,-3"	Style="FontNormal14" ColorSet="TopBarValueCS" String="?"	WrapWidth="45" />
         </Stack>
 
-		  <Tutorial  ID="TutTradeRoutes" Style="TutorialContainer" Anchor="C,B" AnchorSide="I,O" Offset="0,24" TriggerBy="TutorialTradeRoutes" >
-			  <SlideAnim Anchor="C,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad" >
-				  <Image Texture="Tutorial_ArrowV" Offset="-22,0" Size="44,58" FlipY="true"/>
-			  </SlideAnim>
-		  </Tutorial>
+      <Tutorial  ID="TutTradeRoutes" Style="TutorialContainer" Anchor="C,B" AnchorSide="I,O" Offset="0,24" TriggerBy="TutorialTradeRoutes" >
+        <SlideAnim Anchor="C,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad" >
+          <Image Texture="Tutorial_ArrowV" Offset="-22,0" Size="44,58" FlipY="true"/>
+        </SlideAnim>
+      </Tutorial>
       </Grid>
 
       <Grid		ID="Envoys" Style="SubContainerSmall" Size="48,24" ToolTip="LOC_TOP_PANEL_INFLUENCE">
@@ -104,41 +104,41 @@
       <Stack ID="ResourceStack" StackGrowth="Right" StackPadding="4" Anchor="L,C" Offset="0,-5"/>
     </Grid>
 
-	</Stack>
+  </Stack>
 
-	<Tutorial ID="TechYieldPointer" Style="TutorialContainer" Anchor="L,T" Offset="46, 70" TriggerBy="TutorialTechYieldPointer">
-		<SlideAnim Anchor="L,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad" >
-			<Image Texture="Tutorial_ArrowV" Offset="-22,-20" Size="44,58" FlipY="true"/>
-		</SlideAnim>
-	</Tutorial>
+  <Tutorial ID="TechYieldPointer" Style="TutorialContainer" Anchor="L,T" Offset="46, 70" TriggerBy="TutorialTechYieldPointer">
+    <SlideAnim Anchor="L,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad" >
+      <Image Texture="Tutorial_ArrowV" Offset="-22,-20" Size="44,58" FlipY="true"/>
+    </SlideAnim>
+  </Tutorial>
 
-	<Tutorial ID="FaithYieldPointer" Style="TutorialContainer" Anchor="L,T" Offset="46, 70" TriggerBy="TutorialFaithYieldPointer">
-		<SlideAnim Anchor="L,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad" >
-			<Image Texture="Tutorial_ArrowV" Offset="110,-20" Size="44,58" FlipY="true"/>
-		</SlideAnim>
-	</Tutorial>
+  <Tutorial ID="FaithYieldPointer" Style="TutorialContainer" Anchor="L,T" Offset="46, 70" TriggerBy="TutorialFaithYieldPointer">
+    <SlideAnim Anchor="L,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad" >
+      <Image Texture="Tutorial_ArrowV" Offset="110,-20" Size="44,58" FlipY="true"/>
+    </SlideAnim>
+  </Tutorial>
 
-	<Tutorial ID="TutCivilopediaPointer" Style="TutorialContainer" Anchor="R,T" Offset="46, 70" TriggerBy="TutorialCivilopediaPointer">
-		<SlideAnim Anchor="R,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad" >
-			<Image Texture="Tutorial_ArrowV" Offset="-24,-20" Size="44,58" FlipY="true"/>
-		</SlideAnim>
-	</Tutorial>
-	
-	<ToolTipType Name="TooltipTypeTopPanel" >
-		<Grid Size="530,90" Offset="8.0" Padding="8,8" Style="TTGrid"  ID="TopPanelMouseover" NoClip="1" >
-			<Label Offset="12,12" Style="FontNormal16" ID="TooltipLabel" String="LOC_TOP_PANEL_TOOLTIP_DESCRIPTION" LeadingOffset="-5" WrapWidth="512" />
-		</Grid>
-	</ToolTipType>
+  <Tutorial ID="TutCivilopediaPointer" Style="TutorialContainer" Anchor="R,T" Offset="46, 70" TriggerBy="TutorialCivilopediaPointer">
+    <SlideAnim Anchor="R,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad" >
+      <Image Texture="Tutorial_ArrowV" Offset="-24,-20" Size="44,58" FlipY="true"/>
+    </SlideAnim>
+  </Tutorial>
 
-	<Instance Name="ResourceInstance">
-		<Label	ID="ResourceText" Style="FontNormal14" ColorSet="TopBarValueCS"/>
-	</Instance>
-	
-	<Instance Name="TopBarButtonInstance">
-		<Container	ID="Top"																		Size="50,36" > 
-			<Image									Anchor="C,C" Offset="0,2"			Size="39,39"		Texture="TopBarRingOtherBG.dds"		/>
-			<Image									Anchor="C,C" Offset="0,0"			Size="49,53"		Texture="TopBarRingOther.dds"		/>
-		</Container>
-	</Instance>
-  
+  <ToolTipType Name="TooltipTypeTopPanel" >
+    <Grid Size="530,90" Offset="8.0" Padding="8,8" Style="TTGrid"  ID="TopPanelMouseover" NoClip="1" >
+      <Label Offset="12,12" Style="FontNormal16" ID="TooltipLabel" String="LOC_TOP_PANEL_TOOLTIP_DESCRIPTION" LeadingOffset="-5" WrapWidth="512" />
+    </Grid>
+  </ToolTipType>
+
+  <Instance Name="ResourceInstance">
+    <Label	ID="ResourceText" Style="FontNormal14" ColorSet="TopBarValueCS"/>
+  </Instance>
+
+  <Instance Name="TopBarButtonInstance">
+    <Container	ID="Top"																		Size="50,36" >
+      <Image									Anchor="C,C" Offset="0,2"			Size="39,39"		Texture="TopBarRingOtherBG.dds"		/>
+      <Image									Anchor="C,C" Offset="0,0"			Size="49,53"		Texture="TopBarRingOther.dds"		/>
+    </Container>
+  </Instance>
+
 </Context>

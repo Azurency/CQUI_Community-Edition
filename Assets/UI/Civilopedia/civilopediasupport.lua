@@ -1,4 +1,4 @@
-﻿-- ===========================================================================
+-- ===========================================================================
 --  Civilopedia Support
 --  Includes the main logic to populate the civilopedia.
 -- ===========================================================================
@@ -70,13 +70,13 @@ function CacheData_FetchData()
       exclude[row.SectionId .. "::" .. row.PageId] = true;
     end
   end
-     if(GameInfo.CivilopediaPageGroupExcludes) then
+    if(GameInfo.CivilopediaPageGroupExcludes) then
     for row in GameInfo.CivilopediaPageGroupExcludes() do
       exclude[row.SectionId .. "|:" .. row.PageGroupId] = true;
     end
   end
 
-   -- Cache Sections
+  -- Cache Sections
   if(GameInfo.CivilopediaSections) then
     for row in GameInfo.CivilopediaSections() do
       if(exclude[row.SectionId] ~= true) then
@@ -103,7 +103,7 @@ function CacheData_FetchData()
           _PagesBySection[sectionId] = {};
         end
 
-       table.insert(_PagesBySection[sectionId], page);
+      table.insert(_PagesBySection[sectionId], page);
       end
     end
   end
@@ -224,7 +224,7 @@ function CacheData_ProcessData()
     section.TabName = Locale.Lookup(tab_key);
   end
 
-   -- Populate Additional Data
+  -- Populate Additional Data
   for sectionId, pages in pairs(_PagesBySection) do
     for i, page in ipairs(pages) do
 
@@ -285,7 +285,7 @@ function CacheData_SortData()
     elseif(a.SortIndex ~= b.SortIndex) then
       return SortNumberOrNil(a.SortIndex, b.SortIndex);
     else
-       return Locale.Compare(a.TabName, b.TabName) == -1;
+      return Locale.Compare(a.TabName, b.TabName) == -1;
     end
   end
 
@@ -321,7 +321,7 @@ function CacheData_SortData()
     table.sort(v, function(a, b) return SortPages(sectionId, a, b); end);
   end
 
-   -- Sort chapters.
+  -- Sort chapters.
   for _, v in pairs(_ChaptersByPageLayout) do
     table.sort(v, function(a, b) return SortNumberOrNil(a.SortIndex,b.SortIndex); end);
   end

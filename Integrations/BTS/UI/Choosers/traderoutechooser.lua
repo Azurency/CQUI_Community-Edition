@@ -909,7 +909,7 @@ function OnGeneralNotSortBy(sortByID)
 end
 
 function OnNotSortByFood()
-   OnGeneralNotSortBy(SORT_BY_ID.FOOD)
+  OnGeneralNotSortBy(SORT_BY_ID.FOOD)
 end
 
 function OnNotSortByProduction()

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd" Style="FontNormal16" FontStyle="Shadow">
 
   <!-- Containers for caching instances -->
@@ -10,76 +10,76 @@
   <Container ID="ActionButtonContainer" Hidden="1"/>
 
 
-	<!--
-			...:::{ MAIN PLAYER PANEL }:::...
- 			An instance of a panel that displays what actions and reports a player can see.
-	-->
-	<Instance Name="PlayerPanel">
-		<!-- The background of the panel, enclosing all contents -->
-		<Image ID="Root" Size="314,parent" StretchMode="Tile" Texture="Diplomacy_Banner">
-			<Image Texture="Controls_GradientSmall" Size="22,parent" AnchorSide="O,I" Anchor="R,T" Color="0,0,0,255" Rotate="270" Offset="-2,0"/>
-			<Image Texture="Controls_GradientSmall" Size="22,parent" AnchorSide="O,I" Anchor="L,T" Color="0,0,0,255" Rotate="90" Offset="-2,0"/>
-			<Image Texture="Controls_Gradient" Size="parent,150" Anchor="L,T" Color="0,0,0,255" Offset="0,-20"/>
-			<Image Texture="Controls_Gradient" Size="parent,100" Anchor="L,B" Color="0,0,0,255" Offset="0,0" FlipY="1"/>
-			<Grid ID="PlayerPanelWindow" Style="DiplomacyInfoWindowGrid" Size="parent,parent-80" Offset="0,75">
-				<!-- The leader icon and title -->
-				<Container Size="parent, 154" Offset="0,-68">
-					<Grid Style="DiplomacyInfoHeaderGrid" Anchor="C,B" Size="parent,88">
-						<Label ID="PlayerNameText" Anchor="C,C" Offset="0,-11" Align="C" Style="DiplomacyCivHeader"/>
-						<Label ID="CivNameText" Anchor="C,C" Offset="0,13" Align="C" Style="DiplomacyCivHeader"/>
-					</Grid>
-					<Image Texture="Diplomacy_PortraitBacking.dds" Anchor="C,B" Offset="0,86"/>
-					<Image Texture="Controls_CircleBacking68" Anchor="C,B" Offset="0,76" Size="80,80"/>
-					<Image Texture="Diplomacy_YouIndicatorLarge" Anchor="C,B" Offset="0,74"/>
-					<Image ID="LeaderIcon" Anchor="C,B" Offset="0,80" Size="64,64" Texture="Leaders64"/>
-				</Container>
-				<!-- The container for all the content below the header -->
-				<Container ID="ContentContainer" Size="parent, parent-108" Offset="0,88">
-					<!-- A stack to contain the Content -->
-					<Stack ID="RootStack" StackGrowth="Bottom" >
-						<!-- The content stack for the panel-->
-						<Stack ID="SubOptionsStack" StackGrowth="Bottom" Offset="7,-6" />
-						<Stack ID="ContentStack" StackGrowth="Bottom" Offset="0,-6" />
-					</Stack>
-				</Container>
-				<!--
-		  <Tutorial   ID="TutDiploDelegation"	Style="TutorialContainer"			Anchor="R,T"	Offset="20,116"	AnchorSide="O,I"  TriggerBy="TutorialDiploDelegation">
-			  <SlideAnim				Start="0,0"		EndOffset="-20,0" Cycle="Bounce" Function="OutQuad" >
-				  <Image				Offset="0,0"	Size="58,44"		Texture="Tutorial_ArrowH" FlipX="1" />
-			  </SlideAnim>
-		  </Tutorial>
+  <!--
+      ...:::{ MAIN PLAYER PANEL }:::...
+      An instance of a panel that displays what actions and reports a player can see.
+  -->
+  <Instance Name="PlayerPanel">
+    <!-- The background of the panel, enclosing all contents -->
+    <Image ID="Root" Size="314,parent" StretchMode="Tile" Texture="Diplomacy_Banner">
+      <Image Texture="Controls_GradientSmall" Size="22,parent" AnchorSide="O,I" Anchor="R,T" Color="0,0,0,255" Rotate="270" Offset="-2,0"/>
+      <Image Texture="Controls_GradientSmall" Size="22,parent" AnchorSide="O,I" Anchor="L,T" Color="0,0,0,255" Rotate="90" Offset="-2,0"/>
+      <Image Texture="Controls_Gradient" Size="parent,150" Anchor="L,T" Color="0,0,0,255" Offset="0,-20"/>
+      <Image Texture="Controls_Gradient" Size="parent,100" Anchor="L,B" Color="0,0,0,255" Offset="0,0" FlipY="1"/>
+      <Grid ID="PlayerPanelWindow" Style="DiplomacyInfoWindowGrid" Size="parent,parent-80" Offset="0,75">
+        <!-- The leader icon and title -->
+        <Container Size="parent, 154" Offset="0,-68">
+          <Grid Style="DiplomacyInfoHeaderGrid" Anchor="C,B" Size="parent,88">
+            <Label ID="PlayerNameText" Anchor="C,C" Offset="0,-11" Align="C" Style="DiplomacyCivHeader"/>
+            <Label ID="CivNameText" Anchor="C,C" Offset="0,13" Align="C" Style="DiplomacyCivHeader"/>
+          </Grid>
+          <Image Texture="Diplomacy_PortraitBacking.dds" Anchor="C,B" Offset="0,86"/>
+          <Image Texture="Controls_CircleBacking68" Anchor="C,B" Offset="0,76" Size="80,80"/>
+          <Image Texture="Diplomacy_YouIndicatorLarge" Anchor="C,B" Offset="0,74"/>
+          <Image ID="LeaderIcon" Anchor="C,B" Offset="0,80" Size="64,64" Texture="Leaders64"/>
+        </Container>
+        <!-- The container for all the content below the header -->
+        <Container ID="ContentContainer" Size="parent, parent-108" Offset="0,88">
+          <!-- A stack to contain the Content -->
+          <Stack ID="RootStack" StackGrowth="Bottom" >
+            <!-- The content stack for the panel-->
+            <Stack ID="SubOptionsStack" StackGrowth="Bottom" Offset="7,-6" />
+            <Stack ID="ContentStack" StackGrowth="Bottom" Offset="0,-6" />
+          </Stack>
+        </Container>
+        <!--
+      <Tutorial   ID="TutDiploDelegation"	Style="TutorialContainer"			Anchor="R,T"	Offset="20,116"	AnchorSide="O,I"  TriggerBy="TutorialDiploDelegation">
+        <SlideAnim				Start="0,0"		EndOffset="-20,0" Cycle="Bounce" Function="OutQuad" >
+          <Image				Offset="0,0"	Size="58,44"		Texture="Tutorial_ArrowH" FlipX="1" />
+        </SlideAnim>
+      </Tutorial>
 
-		  <Tutorial   ID="TutDiploDenounce"	Style="TutorialContainer"			Anchor="R,T"	Offset="20,156"	AnchorSide="O,I"  TriggerBy="TutorialDiploDenounce">
-			  <SlideAnim				Start="0,0"		EndOffset="-20,0" Cycle="Bounce" Function="OutQuad" >
-				  <Image				Offset="0,0"	Size="58,44"		Texture="Tutorial_ArrowH" FlipX="1" />
-			  </SlideAnim>
-		  </Tutorial>
+      <Tutorial   ID="TutDiploDenounce"	Style="TutorialContainer"			Anchor="R,T"	Offset="20,156"	AnchorSide="O,I"  TriggerBy="TutorialDiploDenounce">
+        <SlideAnim				Start="0,0"		EndOffset="-20,0" Cycle="Bounce" Function="OutQuad" >
+          <Image				Offset="0,0"	Size="58,44"		Texture="Tutorial_ArrowH" FlipX="1" />
+        </SlideAnim>
+      </Tutorial>
 
-		  <Tutorial   ID="TutDiploDeal"	Style="TutorialContainer"			Anchor="R,T"	Offset="20,232"	AnchorSide="O,I"  TriggerBy="TutorialDiploDeal">
-			  <SlideAnim				Start="0,0"		EndOffset="-20,0" Cycle="Bounce" Function="OutQuad" >
-				  <Image				Offset="0,0"	Size="58,44"		Texture="Tutorial_ArrowH" FlipX="1" />
-			  </SlideAnim>
-		  </Tutorial>
+      <Tutorial   ID="TutDiploDeal"	Style="TutorialContainer"			Anchor="R,T"	Offset="20,232"	AnchorSide="O,I"  TriggerBy="TutorialDiploDeal">
+        <SlideAnim				Start="0,0"		EndOffset="-20,0" Cycle="Bounce" Function="OutQuad" >
+          <Image				Offset="0,0"	Size="58,44"		Texture="Tutorial_ArrowH" FlipX="1" />
+        </SlideAnim>
+      </Tutorial>
 
-		  <Tutorial   ID="TutDiploIntel"	Style="TutorialContainer"			Anchor="R,T"	Offset="20,332"	AnchorSide="O,I"  TriggerBy="TutorialDiploIntel">
-			  <SlideAnim				Start="0,0"		EndOffset="-20,0" Cycle="Bounce" Function="OutQuad" >
-				  <Image				Offset="0,0"	Size="58,44"		Texture="Tutorial_ArrowH" FlipX="1" />
-			  </SlideAnim>
-		  </Tutorial>
+      <Tutorial   ID="TutDiploIntel"	Style="TutorialContainer"			Anchor="R,T"	Offset="20,332"	AnchorSide="O,I"  TriggerBy="TutorialDiploIntel">
+        <SlideAnim				Start="0,0"		EndOffset="-20,0" Cycle="Bounce" Function="OutQuad" >
+          <Image				Offset="0,0"	Size="58,44"		Texture="Tutorial_ArrowH" FlipX="1" />
+        </SlideAnim>
+      </Tutorial>
 
-		  <Tutorial   ID="TutDiploDetails"	Style="TutorialContainer"			Anchor="R,T"	Offset="20,494"	AnchorSide="O,I"  TriggerBy="TutorialDiploDetails">
-			  <SlideAnim				Start="0,0"		EndOffset="-20,0" Cycle="Bounce" Function="OutQuad" >
-				  <Image				Offset="0,0"	Size="58,44"		Texture="Tutorial_ArrowH" FlipX="1" />
-			  </SlideAnim>
-		  </Tutorial>
-		  -->
-			</Grid>
-		</Image>
-	</Instance>
+      <Tutorial   ID="TutDiploDetails"	Style="TutorialContainer"			Anchor="R,T"	Offset="20,494"	AnchorSide="O,I"  TriggerBy="TutorialDiploDetails">
+        <SlideAnim				Start="0,0"		EndOffset="-20,0" Cycle="Bounce" Function="OutQuad" >
+          <Image				Offset="0,0"	Size="58,44"		Texture="Tutorial_ArrowH" FlipX="1" />
+        </SlideAnim>
+      </Tutorial>
+      -->
+      </Grid>
+    </Image>
+  </Instance>
 
 
 
-	<!-- An instance of a text label that can be added to make a list -->
+  <!-- An instance of a text label that can be added to make a list -->
   <Instance	Name="IconOnly">
     <Image ID="Icon" Anchor="L,C" Size="22,22" Texture="Agreements22" Color="255,255,255,255"/>
   </Instance>
@@ -89,7 +89,7 @@
     <Label ID="Text" Anchor="L,C" Style="FontNormal14" String="???" WrapWidth="135"/>
   </Instance>
 
-	<!-- An instance of an Icon, with optional Amount Text that overlaps the icon and description text on the right side of the icon. -->
+  <!-- An instance of an Icon, with optional Amount Text that overlaps the icon and description text on the right side of the icon. -->
   <Instance	Name="IconAndText">
     <GridButton ID="SelectButton" Style="ButtonDraggableGrid" Size="200,72">
       <Stack StackGrowth="Right" Offset="5, 0">
@@ -451,19 +451,19 @@
     </GridButton>
   </Instance>
 
-	<!-- Customized popup dialog pieces-->
-	<Instance						Name="PopupButtonInstance">
-		<GridButton			  ID="Button"									                          Size="160,42"		Style="MainButton" />
-	</Instance>
-	<Instance						Name="PopupTextInstance">
-		<Label						ID="Text"      Anchor="C,T" Style="FontNormal20"  Color="0,0,0,255" WrapWidth="parent-20" />
-	</Instance>
-	<Instance						Name="RowInstance">
-		<Stack					  ID="Row"			Anchor="C,T" StackGrowth="Right" StackWrap="Bottom" StackPadding="10" />
-	</Instance>
+  <!-- Customized popup dialog pieces-->
+  <Instance						Name="PopupButtonInstance">
+    <GridButton			  ID="Button"									                          Size="160,42"		Style="MainButton" />
+  </Instance>
+  <Instance						Name="PopupTextInstance">
+    <Label						ID="Text"      Anchor="C,T" Style="FontNormal20"  Color="0,0,0,255" WrapWidth="parent-20" />
+  </Instance>
+  <Instance						Name="RowInstance">
+    <Stack					  ID="Row"			Anchor="C,T" StackGrowth="Right" StackWrap="Bottom" StackPadding="10" />
+  </Instance>
 
 
-	<!-- Set leader screen offsets on LeaderAnchor in lua -->
+  <!-- Set leader screen offsets on LeaderAnchor in lua -->
   <Container ID="LeaderAnchor" Anchor="L,B" Size="0,0">
     <!-- Fallback texture is set in C++ -->
     <AlphaAnim ID="LeaderAlpha" AlphaBegin="0" AlphaEnd="1" Speed="2" Cycle="Once">
@@ -561,22 +561,22 @@
     </Container>
   </Container>
 
-	<!-- (System) Close popup dialog -->
-	<Container				ID="QuitPopupDialog"															Size="Full,Full"	ConsumeMouse="1" Color="0,0,0,150" Hidden="1">
-		<Grid																	Anchor="C,C"								Size="500,250"    Style="DropShadow2"     Color="255,255,255,200" AutoSize="1" AutoSizePadding="25,25">
-			<Grid																Anchor="C,C"								Size="500,250"    Style="WindowFrameTitle" AutoSize="V" AutoSizePadding="0,10">
-				<Container												             Offset="0,4"		Size="parent,38">
-					<Label													Anchor="C,C"																	Style="WindowHeader"        String="{LOC_CONFIRM_CHOICE:upper}" />
-				</Container>
-				<Label														Anchor="C,T" Offset="0,50"			Style="BodyTextDark18" Align="Center" WrapWidth="parent-20" String="LOC_CONFIRM_EXIT_TXT"/>
-				<GridButton   ID="NoButton"				Anchor="C,T" Offset="-100,100"		Size="200,41"			Style="MainButton" String="LOC_NO" />
-				<GridButton   ID="YesButton"			Anchor="C,T" Offset="100,100"		Size="200,41"			Style="ButtonRed" String="LOC_YES" />
-				</Grid>
-		</Grid>
-	</Container>
+  <!-- (System) Close popup dialog -->
+  <Container				ID="QuitPopupDialog"															Size="Full,Full"	ConsumeMouse="1" Color="0,0,0,150" Hidden="1">
+    <Grid																	Anchor="C,C"								Size="500,250"    Style="DropShadow2"     Color="255,255,255,200" AutoSize="1" AutoSizePadding="25,25">
+      <Grid																Anchor="C,C"								Size="500,250"    Style="WindowFrameTitle" AutoSize="V" AutoSizePadding="0,10">
+        <Container												             Offset="0,4"		Size="parent,38">
+          <Label													Anchor="C,C"																	Style="WindowHeader"        String="{LOC_CONFIRM_CHOICE:upper}" />
+        </Container>
+        <Label														Anchor="C,T" Offset="0,50"			Style="BodyTextDark18" Align="Center" WrapWidth="parent-20" String="LOC_CONFIRM_EXIT_TXT"/>
+        <GridButton   ID="NoButton"				Anchor="C,T" Offset="-100,100"		Size="200,41"			Style="MainButton" String="LOC_NO" />
+        <GridButton   ID="YesButton"			Anchor="C,T" Offset="100,100"		Size="200,41"			Style="ButtonRed" String="LOC_YES" />
+        </Grid>
+    </Grid>
+  </Container>
 
 
-	<!--The fade-to-black stuff -->
+  <!--The fade-to-black stuff -->
   <Container ID="BlackFade" Hidden="1">
     <AlphaAnim ID="BlackFadeAnim" Begin="0" End="1" Speed="3" Cycle="Once" Stopped="1">
       <Box Color="0,0,0,255" Size="full,full" ConsumeMouse="0"/>

@@ -4,27 +4,27 @@
     <!-- ENGLISH -->
 
     <!-- Builder Lens -->
-  	<Row Tag="LOC_HUD_BUILDER_LENS">
-  		<Text>Builder</Text>
-  	</Row>
-  	<Row Tag="LOC_HUD_BUILDER_LENS_TOOLTIP">
-  		<Text>Highlights what hexes the builder can work on</Text>
-  	</Row>
-  	<Row Tag="LOC_TOOLTIP_BUILDER_LENS_IMP">
-  		<Text>Resource/Pillaged/Unique Ability</Text>
-  	</Row>
+    <Row Tag="LOC_HUD_BUILDER_LENS">
+      <Text>Builder</Text>
+    </Row>
+    <Row Tag="LOC_HUD_BUILDER_LENS_TOOLTIP">
+      <Text>Highlights what hexes the builder can work on</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_IMP">
+      <Text>Resource/Pillaged/Unique Ability</Text>
+    </Row>
     <Row Tag="LOC_TOOLTIP_BUILDER_LENS_HILL">
       <Text>Hill</Text>
     </Row>
     <Row Tag="LOC_TOOLTIP_BUILDER_LENS_FEATURE">
       <Text>Removable Feature</Text>
     </Row>
-  	<Row Tag="LOC_TOOLTIP_BUILDER_LENS_GENERIC">
-  		<Text>Generic Tile</Text>
-  	</Row>
-  	<Row Tag="LOC_TOOLTIP_BUILDER_LENS_NOTHING">
-  		<Text>Nothing to do</Text>
-  	</Row>
+    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_GENERIC">
+      <Text>Generic Tile</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_NOTHING">
+      <Text>Nothing to do</Text>
+    </Row>
 
     <!-- Archaeologist Lens -->
     <Row Tag="LOC_HUD_ARCHAEOLOGIST_LENS">

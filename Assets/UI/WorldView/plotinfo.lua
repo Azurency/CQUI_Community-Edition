@@ -1,4 +1,4 @@
-﻿-- ===========================================================================
+-- ===========================================================================
 --  Plot information
 --  Handles: plot purchasing, resources, etc...
 -- ===========================================================================
@@ -863,10 +863,10 @@ function CQUI_RemoveDuplicates(i:table)
   local hash = {};
   local o = {};
   for _,v in ipairs(i) do
-     if (not hash[v]) then
-         o[#o+1] = v;
-         hash[v] = true;
-     end
+    if (not hash[v]) then
+        o[#o+1] = v;
+        hash[v] = true;
+    end
   end
   return o;
 end
@@ -977,7 +977,7 @@ function CQUI_UpdateAllCitiesCitizens()
       tParameters[CityCommandTypes.PARAM_FLAGS] = 0;        -- Set favoured
       tParameters[CityCommandTypes.PARAM_DATA0] = 0;        -- off
     end
-    
+
     tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = YieldTypes.CULTURE;  -- Yield type
     CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, tParameters);
 

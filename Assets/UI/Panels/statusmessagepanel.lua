@@ -1,4 +1,4 @@
-﻿-- ===========================================================================
+-- ===========================================================================
 -- Status Message Manager
 -- Non-interactive messages that appear in the upper-center of the screen.
 -- ===========================================================================
@@ -337,12 +337,12 @@ end
 
 -- ===========================================================================
 function OnEndAnim( kTypeEntry:table, pInstance:table )
-	RemoveMessage( kTypeEntry, pInstance );
+  RemoveMessage( kTypeEntry, pInstance );
 end
 
 -- ===========================================================================
 function OnMessageClicked( kTypeEntry:table, pInstance:table )
-	RemoveMessage( kTypeEntry, pInstance );
+  RemoveMessage( kTypeEntry, pInstance );
 end
 
 -- ===========================================================================

@@ -1,4 +1,4 @@
-﻿-- ===========================================================================
+-- ===========================================================================
 --  Great People Popup
 -- ===========================================================================
 
@@ -101,31 +101,31 @@ function ViewCurrent( data:table )
     local individualData:table = GameInfo.GreatPersonIndividuals[kPerson.IndividualID];
     local classText   :string = "";
 
-	--CQUI Changes to Keep Great Person Class Label even when all are claimed
+  --CQUI Changes to Keep Great Person Class Label even when all are claimed
 
-	--[[if (kPerson.ClassID ~= nil) then
+  --[[if (kPerson.ClassID ~= nil) then
       classText = Locale.Lookup(classData.Name);
       instance.ClassName:SetText(classText);
     --end]]
-	if(i==1) then
-	  instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_GENERAL_NAME"));
-	elseif(i==2) then
+  if(i==1) then
+    instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_GENERAL_NAME"));
+  elseif(i==2) then
       instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_ADMIRAL_NAME"));
-	elseif(i==3) then
-	  instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_ENGINEER_NAME"));
-	elseif(i==4) then
-	  instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_MERCHANT_NAME"));
-	elseif(i==5) then
-	  instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_PROPHET_NAME"));
-	elseif(i==6) then
-	  instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_SCIENTIST_NAME"));
-	elseif(i==7) then
-	  instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_WRITER_NAME"));
-	elseif(i==8) then
-	  instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_ARTIST_NAME"));
-	else
-	  instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_MUSICIAN_NAME"));
-	end
+  elseif(i==3) then
+    instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_ENGINEER_NAME"));
+  elseif(i==4) then
+    instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_MERCHANT_NAME"));
+  elseif(i==5) then
+    instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_PROPHET_NAME"));
+  elseif(i==6) then
+    instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_SCIENTIST_NAME"));
+  elseif(i==7) then
+    instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_WRITER_NAME"));
+  elseif(i==8) then
+    instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_ARTIST_NAME"));
+  else
+    instance.ClassName:SetText(Locale.Lookup("LOC_GREAT_PERSON_CLASS_MUSICIAN_NAME"));
+  end
 
     if kPerson.IndividualID ~= nil then
       local individualName:string = Locale.ToUpper(kPerson.Name);
@@ -300,7 +300,7 @@ function ViewCurrent( data:table )
           --recruitTurnsLeft gets +0.5 so that's rounded up
           local recruitTurnsLeft = Round((kPerson.RecruitCost-kPlayerPoints.PointsTotal)/kPlayerPoints.PointsPerTurn + 0.5,0);
           if(recruitTurnsLeft == math.huge) then recruitTurnsLeft = "∞"; end
-		      recruitInst.CQUI_PerTurn:SetText( "(+" .. tostring(Round(kPlayerPoints.PointsPerTurn,1)) .. ") " .. tostring(recruitTurnsLeft) .. "[ICON_Turn]");
+          recruitInst.CQUI_PerTurn:SetText( "(+" .. tostring(Round(kPlayerPoints.PointsPerTurn,1)) .. ") " .. tostring(recruitTurnsLeft) .. "[ICON_Turn]");
 
 
           local progressPercent :number = Clamp( kPlayerPoints.PointsTotal / kPerson.RecruitCost, 0, 1 );
@@ -317,7 +317,7 @@ function ViewCurrent( data:table )
           recruitInst.ProgressBar:SetColorByName( recruitColorName );
 
           local recruitDetails:string = Locale.Lookup("LOC_CQUI_GREAT_PERSON_PROGRESS") .. tostring(Round(kPlayerPoints.PointsTotal,1)) .. "/" .. tostring(kPerson.RecruitCost)
-			.. "[NEWLINE]" .. Locale.Lookup("LOC_GREAT_PEOPLE_POINT_DETAILS", Round(kPlayerPoints.PointsPerTurn, 1), classData.IconString, classData.Name);
+      .. "[NEWLINE]" .. Locale.Lookup("LOC_GREAT_PEOPLE_POINT_DETAILS", Round(kPlayerPoints.PointsPerTurn, 1), classData.IconString, classData.Name);
 
           DifferentiateCiv(kPlayerPoints.PlayerID,recruitInst.CivIcon,recruitInst.CivIcon,recruitInst.CivBacking, nil, nil, Game.GetLocalPlayer());
 
@@ -367,12 +367,12 @@ function ViewCurrent( data:table )
 
   -- Clamp overall popup size to not be larger than contents (overspills in 4k and eyefinitiy rigs.)
   local screenX,_     :number = UIManager:GetScreenSizeVal();
-  if m_screenWidth > screenX then	
+  if m_screenWidth > screenX then
     m_screenWidth = screenX;
   end
 
   Controls.PopupContainer:SetSizeX( m_screenWidth );
-  Controls.ModalFrame:SetSizeX( m_screenWidth );	
+  Controls.ModalFrame:SetSizeX( m_screenWidth );
 
   -- Has an instance been set to auto scroll to?
   Controls.PeopleScroller:SetScrollValue( 0 );		-- Either way reset scroll first (mostly for hot seat)
@@ -523,7 +523,7 @@ function ViewPast( data:table )
 
   -- Scaling to screen width required for the previously recruited tab
   Controls.PopupContainer:SetSizeX( m_screenWidth );
-  Controls.ModalFrame:SetSizeX( m_screenWidth );	
+  Controls.ModalFrame:SetSizeX( m_screenWidth );
 
   Controls.RecruitedStack:CalculateSize();
   Controls.RecruitedScroller:CalculateSize();

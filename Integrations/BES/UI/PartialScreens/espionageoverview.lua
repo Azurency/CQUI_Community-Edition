@@ -890,7 +890,7 @@ function OnAskForOperativeTradeClicked(capturingPlayerID:number, capturedSpyID:n
                 -- The value of the deal item holds the spy's index
                 pDealItem:SetValueType( capturedSpyID );
                 if (pDealItem:IsValid()) then
-					pDealItem:SetLocked(true);							   
+          pDealItem:SetLocked(true);
                     bDealValid = true;
                 end
             end
@@ -936,7 +936,7 @@ function OnAskForEnemyOperativeTradeClicked(owningPlayerID:number, capturedSpyID
         --local pDealItem = pDeal:AddItemOfType(DealItemTypes.CAPTIVE, Game.GetLocalPlayer());
         if (pDealItem ~= nil) then
             ---- The value of the deal item holds the spy's index
-			pDealItem:SetLocked(true);							 
+      pDealItem:SetLocked(true);
             pDealItem:SetValueType( capturedSpyID );
         end
     end

@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <Context Style="FontNormal16">
   <!-- Map Pin List Panel -->
   <Grid Anchor="L,B" ID="MapPinPanel" Size="320,119" Texture="Tracker_OptionsBacking" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" MinSize="121,119" AutoSize="V" AutoSizePadding="0,15">
-    
+
     <Label Anchor="C,T" String="{LOC_HUD_MAP_PIN_LIST:upper}" Offset="0,12" Style="FontFlair16" Color0="106,93,69,255" Color1="0,0,0,150" Color2="146,133,109,255" FontStyle="Glow" SmallCaps="20" SmallCapsLeading="0" SmallCapsType="EveryWord" KerningAdjustment="0"/>
 
     <Stack  Anchor="C,T" StackGrowth="Bottom" StackPadding="5" Offset="-6,0">
@@ -16,19 +16,19 @@
 
     <Image Texture="Controls_ButtonExtendSmall" TextureOffset="0,60" Size="20,20" Anchor="L,B" Offset="20,10"/>
   </Grid>
-  
+
   <!-- ==================================================================== -->
   <!--  INSTANCES                                                           -->
   <!-- ==================================================================== -->
   <!--
-  
+
       <Stack Anchor="C,T" Offset="0,32" StackGrowth="Bottom">
       <ScrollPanel Anchor="C,T" ID="MapPinLogPanel" Offset="0,0" Size="260,130" Style="ScrollPanelWithLeftBar" HideScrollBar="0" >
         <Stack Anchor="C,T" ID="MapPinEntryStack"                    StackGrowth="Bottom" Offset="0,0" StackPadding="1" />
       </ScrollPanel>
 
     </Stack>
-  
+
         <Container  Size="200,30" AutoSize="V">
         <CheckBox ID="ChatCheck"        Anchor="R,T"  Style="WorldTrackerCheckBox" TextOffset="-5" String="LOC_HIDE_CHAT_PANEL" WrapWidth="180" Align="Right"/>
       </Container>
@@ -44,5 +44,5 @@
       </GridButton>
     </Container>
   </Instance>
-  
+
 </Context>
