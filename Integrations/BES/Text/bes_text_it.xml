@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <BaseGameText>
+    <Row Tag="LOC_ESPIONAGECHOOSER_FILTER_ALL">
+      <Text>Tutto</Text>
+    </Row>
+    <Row Tag="LOC_ESPIONAGECHOOSER_FILTER_SHOW_CITIES">
+      <Text>Mostra Città</Text>
+    </Row>
+  </BaseGameText>
+</GameData>
