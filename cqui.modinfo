@@ -137,6 +137,8 @@
     <File>Assets/UI/mappinmanager.lua</File>
     <File>Assets/UI/minimappanel.lua</File>
     <File>Assets/UI/minimappanel.xml</File>
+    <File>Assets/UI/partialscreenhooks.lua</File>
+    <File>Assets/UI/partialscreenhooks.xml</File>
     <File>Assets/UI/productionpanel.xml</File>
     <File>Assets/UI/strategicview_mapplacement.lua</File>
     <File>Assets/UI/supportfunctions.lua</File>
@@ -148,6 +150,7 @@
     <File>Assets/UI/worldinput.lua</File>
     <File>Assets/UI/worldviewiconsmanager.lua</File>
     <File>Assets/UI/worldtracker.lua</File>
+    <File>Assets/UI/worldtracker.xml</File>
     <File>Assets/UI/Choosers/civicschooser.lua</File>
     <File>Assets/UI/Choosers/researchchooser.lua</File>
     <File>Assets/UI/Civilopedia/civilopediasupport.lua</File>
@@ -259,6 +262,8 @@
         <File>Assets/UI/mappinmanager.lua</File>
         <File>Assets/UI/minimappanel.lua</File>
         <File>Assets/UI/minimappanel.xml</File>
+        <File>Assets/UI/partialscreenhooks.lua</File>
+        <File>Assets/UI/partialscreenhooks.xml</File>
         <File>Assets/UI/productionpanel.xml</File>
         <File>Assets/UI/strategicview_mapplacement.lua</File>
         <File>Assets/UI/supportfunctions.lua</File>
@@ -270,6 +275,7 @@
         <File>Assets/UI/worldinput.lua</File>
         <File>Assets/UI/worldviewiconsmanager.lua</File>
         <File>Assets/UI/worldtracker.lua</File>
+        <File>Assets/UI/worldtracker.xml</File>
         <File>Assets/UI/Choosers/civicschooser.lua</File>
         <File>Assets/UI/Choosers/researchchooser.lua</File>
         <File>Assets/UI/Civilopedia/civilopediasupport.lua</File>

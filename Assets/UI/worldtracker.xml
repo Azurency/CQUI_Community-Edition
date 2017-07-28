@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Context>
+
+  <Grid               ID="TrackerHeading"           Offset="-15,24"   Size="215,54" Texture="Tracker_Header" SliceCorner="15,27" SliceTextureSize="61,54" Color="255,255,255,200" Hidden="1"/>
+  <Grid               ID="TrackerHeadingCollapsed"  Offset="-15,24"   Size="215,54" Texture="Tracker_HeaderCollapsed" SliceCorner="11,27" SliceTextureSize="61,54" Color="255,255,255,200" Hidden="1"/>
+  <!-- <CheckBox           ID="ToggleAllButton"          Offset="158,44"   ButtonSize="35,35" ButtonTexture="Controls_CheckboxCircle" CheckTexture="Controls_CheckboxCircle" CheckSize="35,35" CheckTextureOffset="0,35"  Style="FontNormal16" NoStateChange="1" ToolTip="LOC_WORLDTRACKER_HIDE_TEXT"/> -->
+
+  <AlphaAnim ID="WorldTrackerAlpha" AlphaBegin="0" AlphaEnd="1" Speed="3" Cycle="Once" Function="OutQuint" Stopped="0">
+    <SlideAnim ID="WorldTrackerSlide" Start="0,-100" EndOffset="0,100" Function="OutQuint" Speed="3" Cycle="Once" Stopped="0">
+      <Stack              ID="PanelStack" StackGrowth="Down" Offset="0,75">
+        <Box  ID="WorldTrackerHeader" Color="40,35,25,230" Size="296,25" AutoSizePadding="0,2" AutoSize="V">
+          <Box Color="143,122,82,200" Anchor="L,B" Size="parent-1,2">
+            <Box Color="0,0,0,200" Anchor="L,T" Size="parent-1,1" AnchorSide="I,O"/>
+          </Box>
+          <Image Texture="Controls_GradientSmall" Size="parent,20" Color="0,0,0,255" Anchor="L,T"/>
+          <Label              ID="WorldTracker"       Anchor="C,C" Offset="0,0"   String="{LOC_WORLD_TRACKER_HEADER:upper}" WrapWidth="Parent-40" Align="Center" Style="FontFlair16" Color2="143,122,82,255" Color0="106,93,69,230" SmallCaps="20" SmallCapsLeading="0" SmallCapsType="EveryWord" KerningAdjustment="0" />
+          <GridButton         ID="ToggleDropdownButton"     Anchor="L,C" Offset="1,-2" Size="25,25" Texture="Controls_ButtonControl_Brown" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" StateOffsetIncrement="0,24"                                                 ToolTip="LOC_WORLDTRACKER_ENABLE_TEXT">
+            <Image                                                            Size="20,17" Texture="Controls_MenuIcon" Anchor="C,C" Color="157,132,87"/>
+          </GridButton>
+          <Grid Texture="Controls_SeparatorAngled" TextureSize="14,6" Anchor="L,T" Size="parent,6" SliceCorner="6,4" AnchorSide="I,O" Offset="0,-2"/>
+        </Box>
+
+        <!--
+        <Box ID="EmptyPanel" Color="40,35,25,230" Size="296,25" AutoSize="V" AutoSizePadding="0,5" Hidden="1">
+          <Image Texture="Controls_GradientSmall" Size="parent,50" Color="0,0,0,200" Anchor="L,T"/>
+          <Grid                           Anchor="C,C"              Size="parent-10,0"  AutoSize="Vertical" InnerPadding="40,30" Texture="Controls_DecoFrame" SliceCorner="20,19" SliceSize="1,1" SliceTextureSize="40,38" Color="143,122,82,100" MinSize="40,38">
+            <Label Anchor="C,C" String="LOC_WORLD_TRACKER_EMPTY" Style="FontNormal14" Color="143,122,82,255" WrapWidth="parent-50"/>
+          </Grid>
+          <Box Color="143,122,82,200" Anchor="L,B" Size="parent-1,2">
+            <Box Color="0,0,0,200" Anchor="L,T" Size="parent,1" AnchorSide="I,O"/>
+            <Box Color="0,0,0,200" Anchor="L,B" Size="parent,1" AnchorSide="I,O"/>
+          </Box>
+        </Box>
+        -->
+
+        <Container        ID="ChatPanel" Size="300,106" Offset="0,0">
+          <LuaContext     FileName="ChatPanel"/>
+        </Container>
+
+        <Container        ID="TutorialGoals" Size="300,106" Offset="-2,0">
+          <LuaContext     FileName="TutorialGoals"        Hidden="1" />
+        </Container>
+      </Stack>
+    </SlideAnim>
+  </AlphaAnim>
+
+  <ScrollPanel          ID="DropdownScroll"                       Offset="15,98"  Size="194,500"  Vertical="1">
+    <SlideAnim          ID="DropdownAnim"           Start="0,-490" EndOffset="0,480" Function="OutQuint" Speed="3" Cycle="Once" Stopped="1">
+      <Grid             ID="DropdownGrid"           Offset="0,-25"  Size="270,160"  Texture="Tracker_OptionsBacking" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" AutoSize="V" MinSize="121,119" AutoSizePadding="0,10">
+        <Stack  Anchor="C,T" Offset="0,0" StackGrowth="Bottom" StackPadding="5">
+          <Container Size="30,40"/>
+          <Container  ID="ResearchCheckButton" Size="200,30" AutoSize="1" Anchor="R,T">
+            <CheckBox ID="ResearchCheck"      Anchor="R,T"  Style="WorldTrackerCheckBox" TextOffset="-5" String="LOC_HIDE_RESEARCH_PANEL" WrapWidth="180" Align="Right"/>
+          </Container>
+          <Container  ID="CivicsCheckButton" Size="200,30" AutoSize="1" Anchor="R,T">
+            <CheckBox ID="CivicsCheck"        Anchor="R,T"  Style="WorldTrackerCheckBox" TextOffset="-5" String="LOC_HIDE_CIVICS_PANEL" WrapWidth="180" Align="Right"/>
+          </Container>
+          <Container  ID="ChatCheckButton" Size="200,30" AutoSize="1" Anchor="R,T">
+            <CheckBox ID="ChatCheck"        Anchor="R,T"  Style="WorldTrackerCheckBox" TextOffset="-5" String="LOC_HIDE_CHAT_PANEL" WrapWidth="180" Align="Right"/>
+          </Container>
+        </Stack>
+      </Grid>
+    </SlideAnim>
+  </ScrollPanel>
+
+
+  <!-- ================================================================== -->
+  <!--  INSTANCES                                                         -->
+  <!--  Used by TechAndCivicSupport.lua                                   -->
+  <!-- ================================================================== -->
+
+  <Instance           Name="ResearchInstance">
+    <Grid             ID="MainPanel"                                Offset="0,0" Size="296,96"          Texture="ResearchPanel_Frame" SliceCorner="80,80" SliceSize="1,1" SliceTextureSize="110,88" ConsumeMouseOver="1">
+      <Box                                                          Offset="0,25" Size="parent,1"       Color="0,0,0,100"/>
+      <Container                                                    Offset="-5,0" Size="parent,parent" >
+        <FlipAnim     ID="MainGearAnim"                                                                 Texture="ResearchPanel_MeterFrameAnim" FrameCount="3" Columns="3" Speed="10" Size="40,40" Stopped="1"/>
+        <TextButton   ID="TitleButton"                              Offset="65,8"   Size="200,40"       Style="PanelHeaderText" String="ResearchName" />
+        <Image                                                                                          Texture="ResearchPanel_MeterFrame">
+          <Button     ID="IconButton"                 Anchor="C,C"                Size="44,44"          Texture="ResearchPanel_Button"    >
+            <Image    ID="Icon"                       Anchor="C,C" Size="38,38"         Texture="Tech38" />
+          </Button>
+          <Meter      ID="BoostMeter"                 Anchor="C,C"                Size="56,56"          Texture="ResearchPanel_BoostMeter"  Percent="0"   Speed="1.0" Follow="1"/>
+          <Meter      ID="ProgressMeter"              Anchor="C,C"                Size="56,56"          Texture="ResearchPanel_Meter"       Percent=".4"  Speed="1.0" Follow="1"/>
+        </Image>
+
+        <Label        ID="TurnsLeftLabel"             Anchor="L,B"  Offset="15,17"  Style="FontNormal12" String="LOC_RESEARCH_CHOOSER_TURNS" />
+        <Label        ID="TurnsLeft"                  Anchor="L,B"  Offset="12,3"   Style="FontNormal14" String="33" />
+        <Image        ID="IconCanBeBoosted"           Anchor="L,B"  Offset="50,-4"                      Texture="ResearchPanel_BoostIconAvailable"  Hidden="1" />
+        <Label        ID="BoostLabel"                 Anchor="L,B"  Offset="80,7"   Style="FontNormal12" Color0="150,150,150,155" />
+        <Image        ID="IconHasBeenBoosted"         Anchor="L,B"  Offset="50,-4"                      Texture="ResearchPanel_BoostIconBoosted"    Hidden="1" />
+        <Stack        ID="UnlockStack"                              Offset="65,30"  StackGrowth="Right" StackPadding="-2" />
+        <Button   ID="UnlockPageTurner"   Anchor="R,B"   Offset="18, 33"  Size ="19,23" Hidden="1" >
+          <Image  ID="PageTurnerImage"    Anchor="C,C"   Offset="0,0"     Size="parent,parent"  Texture="Controls_ArrowButtonRight" FlipX="false"/>
+        </Button>
+      </Container>
+    </Grid>
+  </Instance>
+
+  <Instance           Name="CivicInstance">
+    <Grid             ID="MainPanel"                                Offset="0,0"    Size="296,96"         Texture="CivicPanel_Frame" SliceCorner="80,80" SliceSize="1,1" SliceTextureSize="110,88" ConsumeMouseOver="1">
+      <Box                                                          Offset="0,25"   Size="parent,1"       Color="0,0,0,100"/>
+      <Container                                                    Offset="-5,0"   Size="parent,parent" >
+        <FlipAnim     ID="MainGearAnim"                                                                   Texture="CivicPanel_MeterFrameAnim" FrameCount="3" Columns="3" Speed="10" Size="40,40" Stopped="1"/>
+        <TextButton   ID="TitleButton"                              Offset="65,8"   Size="200,40"         Style="PanelHeaderText" String="ResearchName" />
+        <Image                                                                                            Texture="CivicPanel_MeterFrame">
+          <Button     ID="IconButton"                 Anchor="C,C"                  Size="44,44"          Texture="CivicPanel_Button"   >
+            <Image    ID="Icon"                       Anchor="C,C"                  Size="38,38"          Texture="Tech38" />
+          </Button>
+          <Meter      ID="BoostMeter"                 Anchor="C,C"                  Size="56,56"          Texture="CivicPanel_BoostMeter"  Percent="0"    Speed="1.0" Follow="1"/>
+          <Meter      ID="ProgressMeter"              Anchor="C,C"                  Size="56,56"          Texture="CivicPanel_Meter"        Percent=".4"  Speed="1.0" Follow="1"/>
+        </Image>
+
+        <Label        ID="TurnsLeftLabel"             Anchor="L,B"  Offset="15,17"  Style="FontNormal12"  String="LOC_RESEARCH_CHOOSER_TURNS" Hidden="1" />
+        <Label        ID="TurnsLeft"                  Anchor="L,B"  Offset="12,3"   Style="FontNormal14"  String="33" />
+        <Image        ID="IconCanBeBoosted"           Anchor="L,B"  Offset="50,-4"                        Texture="CivicPanel_BoostIconAvailable" Hidden="1" />
+        <Label        ID="BoostLabel"                 Anchor="L,B"  Offset="80,7"   Style="FontNormal12"  Color0="150,150,150,155" />
+        <Image        ID="IconHasBeenBoosted"         Anchor="L,B"  Offset="50,-4"                        Texture="CivicPanel_BoostIconBoosted"   Hidden="1" />
+        <Stack        ID="UnlockStack"                              Offset="65,30"  StackGrowth="Right" StackPadding="-2" />
+        <Button   ID="UnlockPageTurner"   Anchor="R,B"   Offset="18, 33"  Size ="19,23" Hidden="1" >
+          <Image  ID="PageTurnerImage"    Anchor="C,C"   Offset="0,0"     Size="parent,parent"  Texture="Controls_ArrowButtonRight" FlipX="false"/>
+        </Button>
+      </Container>
+    </Grid>
+  </Instance>
+
+
+
+  <Instance Name="UnlockIconInstance">
+    <Button ID="UnlockIcon" Style="UnlockFrames" NoStateChange="1">
+      <Image ID="Icon" Size="38,38" Texture="Controls_Blank" Anchor="C,C"/>
+    </Button>
+  </Instance>
+
+</Context>

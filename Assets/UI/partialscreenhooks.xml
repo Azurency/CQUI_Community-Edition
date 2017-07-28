@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Context>
+  <Container               ID="RootContainer" Offset="65,-5" Size="full,full">
+    <Grid   Anchor="R,T"   ID="LaunchBackingDropShadow" Offset="40,25"    Texture="Controls_Glow2"                  Size="165,70"   SliceCorner="25,25" SliceTextureSize="50,50" Color="0,0,0,200"/>
+    <Image  Anchor="R,T"   ID="LaunchBackingTile"       Offset ="65,34"   Texture="LaunchBar_Backing_Tile"          Size="140,41"   StretchMode="Tile"/>
+    <Grid   Anchor="R,T"   ID="LaunchBacking"                             Texture="LaunchBar_BackingRight_Backing"  Size="285, 77"  SliceCorner="114,32" SliceSize="1,1" SliceTextureSize="226,77"/>
+
+    <Stack ID="ButtonStack" Anchor="R,T" StackGrowth="Left" Offset="65,38" Padding="-3">
+      <Button ID="TradeRoutesButton" Anchor="L,C" Size="40,40"  Texture="LaunchBar_Hook_ButtonSmall.dds" Style="ButtonDisabledText" ToolTip="LOC_PARTIALSCREEN_TRADEROUTES_TOOLTIP">
+        <Image Texture="LaunchBar_Hook_Trade" Size="26,26" Anchor="C,C" Offset="0,-1"/>
+      </Button>
+      <Image  ID="TradeRoutesBolt"                      Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip.dds" Color="255,255,255,200" Offset="0,-2"/>
+      <Button ID="EspionageButton" Anchor="L,C" Size="40,40"  Texture="LaunchBar_Hook_ButtonSmall.dds" Style="ButtonNormalText" ToolTip="LOC_PARTIALSCREEN_ESPIONAGE_TOOLTIP">
+        <Image Texture="LaunchBar_Hook_Espionage" Size="26,26" Anchor="C,C" Offset="0,-1"/>
+      </Button>
+      <Image  ID="EspionageBolt"                       Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip.dds" Color="255,255,255,200" Offset="0,-2"/>
+      <Button ID="CityStatesButton"   Anchor="L,C" Size="40,40"  Texture="LaunchBar_Hook_ButtonSmall.dds" Style="ButtonNormalText" ToolTip="LOC_PARTIALSCREEN_CITYSTATES_TOOLTIP">
+        <Image Texture="LaunchBar_Hook_CityStates" Size="26,26" Anchor="C,C" Offset="0,-1"/>
+      </Button>
+      <Image  ID="CityStatesBolt"                      Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip.dds" Color="255,255,255,200" Offset="0,-2"/>
+      <Button ID="WorldRankingsButton" Anchor="L,C" Size="40,40"  Texture="LaunchBar_Hook_ButtonSmall.dds" Style="ButtonNormalText" ToolTip="LOC_PARTIALSCREEN_WORLDRANKINGS_TOOLTIP">
+        <Image Texture="LaunchBar_Hook_WorldRankings" Size="26,26" Anchor="C,C" Offset="0,-1"/>
+
+      <Tutorial  ID="TutOpenWorldRankings" Style="TutorialContainer" Anchor="R,T" Offset="216,10" TriggerBy="TutorialOpenWorldRankings" >
+        <Grid Style="TutorialCalloutGrid">
+          <Label Style="TutorialHeaderText" String="LOC_META_119a_HEAD" />
+          <Label Style="TutorialBodyText" String="LOC_META_119a_BODY" />
+        </Grid>
+        <SlideAnim Start="0,0" EndOffset="30,0" Cycle="Bounce" Function="OutQuad" >
+          <Image Texture="Tutorial_ArrowH" Offset="90,-11" Size="58,44" />
+        </SlideAnim>
+      </Tutorial>
+
+      </Button>
+      <Image                        Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip.dds" Color="255,255,255,200" Offset="0,-2"/>
+    </Stack>
+
+  </Container>
+
+  <Instance Name="HookIconInstance">
+    <Stack StackGrowth="Left" Padding="-3" >
+      <Button ID="Button" Anchor="L,C" Size="40,40"  Style="ButtonNormalText">
+        <Image ID="Base" Texture="" Size="40,40" Anchor="C,C" Offset="0,0"/>
+        <Image ID="Icon" Texture="" Size="26,26" Anchor="C,C" Offset="0,0"/>
+      </Button>
+      <Image Anchor="L,C" Size="7,7" Texture="LaunchBar_TrackPip.dds" Color="255,255,255,200" Offset="0,-2"/>
+    </Stack>
+  </Instance>
+</Context>

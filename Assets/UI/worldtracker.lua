@@ -15,6 +15,7 @@ local MAX_BEFORE_TRUNC_TITLE			:number = 225;
 local LAUNCH_BAR_PADDING				:number = 50;
 local WORLD_TRACKER_PANEL_WIDTH			:number = 300;
 local STARTING_TRACKER_OPTIONS_OFFSET	:number = 75;
+local LAUNCH_BAR_EXTRA_OFFSET     :number = 361;
 
 -- ===========================================================================
 --	VARIABLES
@@ -39,9 +40,9 @@ local m_TrackerAlwaysVisuallyCollapsed:boolean = false;	-- Once the launch bar e
 
 function RealizeEmptyMessage()
   if(m_hideChat and m_hideCivics and m_hideResearch) then
-    Controls.EmptyPanel:SetHide(false);
+    -- Controls.EmptyPanel:SetHide(false);
   else
-    Controls.EmptyPanel:SetHide(true);
+    -- Controls.EmptyPanel:SetHide(true);
   end
 end
 
@@ -73,7 +74,7 @@ function ToggleAll(hideAll:boolean)
     UI.PlaySound("Tech_Tray_Slide_Open");
   end
 
-  Controls.ToggleAllButton:SetCheck(not m_hideAll);
+  -- Controls.ToggleAllButton:SetCheck(not m_hideAll);
 
   if ( not m_TrackerAlwaysVisuallyCollapsed) then
     Controls.TrackerHeading:SetHide(hideAll);
@@ -125,7 +126,7 @@ function OnLaunchBarResized( buttonStackSize: number)
     Controls.TrackerHeading:SetHide(m_hideAll);
     Controls.TrackerHeadingCollapsed:SetHide(not m_hideAll);
   end
-  Controls.ToggleAllButton:SetOffsetX(buttonStackSize - 7);
+  -- Controls.ToggleAllButton:SetOffsetX(buttonStackSize - 7);
 end
 -- ===========================================================================
 function RealizeStack()
@@ -454,6 +455,19 @@ function OnTutorialGoalsHiding()
   RealizeStack();
 end
 
+function OnLoadScreenClose()
+  local callback = function()
+    ToggleAll(not m_hideAll)
+  end
+
+  local buttonInfo = {
+    Text = Locale.Lookup("LOC_WORLDTRACKER_HIDE_TEXT");
+    Callback = callback;
+    Tooltip = Locale.Lookup("LOC_WORLDTRACKER_HIDE_TEXT");
+  }
+
+  LuaEvents.LaunchBar_AddExtra("ToggleWorldTracker", buttonInfo)
+end
 
 -- ===========================================================================
 function Initialize()
@@ -477,14 +491,14 @@ function Initialize()
   Controls.ChatCheck:SetCheck(true);
   Controls.CivicsCheck:SetCheck(true);
   Controls.ResearchCheck:SetCheck(true);
-  Controls.ToggleAllButton:SetCheck(true);
+  -- Controls.ToggleAllButton:SetCheck(true);
 
   Controls.ChatCheck:RegisterCheckHandler(						function() UpdateChatPanel(not m_hideChat); end);
   Controls.CivicsCheck:RegisterCheckHandler(						function() UpdateCivicsPanel(not m_hideCivics); end);
   Controls.ResearchCheck:RegisterCheckHandler(					function() UpdateResearchPanel(not m_hideResearch); end);
   m_researchInstance.IconButton:RegisterCallback(	Mouse.eLClick,	function() LuaEvents.WorldTracker_OpenChooseResearch(); end);
   m_civicsInstance.IconButton:RegisterCallback(	Mouse.eLClick,	function() LuaEvents.WorldTracker_OpenChooseCivic(); end);
-  Controls.ToggleAllButton:RegisterCheckHandler(					function() ToggleAll(not Controls.ToggleAllButton:IsChecked()) end);
+  -- Controls.ToggleAllButton:RegisterCheckHandler(					function() ToggleAll(not Controls.ToggleAllButton:IsChecked()) end);
   Controls.ToggleDropdownButton:RegisterCallback(	Mouse.eLClick, ToggleDropdown);
   Controls.WorldTrackerAlpha:RegisterEndCallback( OnWorldTrackerAnimationFinished );
 

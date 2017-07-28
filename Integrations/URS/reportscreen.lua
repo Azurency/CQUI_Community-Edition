@@ -2141,6 +2141,36 @@ function CQUI_HousingFromImprovementsTableInsert (pCityID, CQUI_HousingFromImpro
   CQUI_HousingFromImprovementsTable[pCityID] = CQUI_HousingFromImprovements;
 end
 
+function OnLoadScreenClose()
+  -- Add Icon to Launchbar
+  local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas("ICON_CIVIC_FUTURE_CIVIC" ,38);
+  local reportsButtonInfo = {
+    -- ICON TEXTURE
+    IconTexture = {
+      OffsetX = textureOffsetX;
+      OffsetY = textureOffsetY;
+      Sheet = textureSheet;
+    };
+
+    -- BUTTON TEXTURE
+    BaseTexture = {
+      OffsetX = 4;
+      OffsetY = 245;
+      Sheet = "LaunchBar_Hook_CultureButton";
+
+      -- Offset to have when hovering
+      HoverOffsetX = 4;
+      HoverOffsetY = 5;
+    };
+
+    -- BUTTON INFO
+    Callback = Open;
+    Tooltip = Locale.Lookup("LOC_HUD_REPORTS_VIEW_REPORTS");
+  }
+
+  LuaEvents.LaunchBar_AddIcon(reportsButtonInfo);
+end
+
 -- ===========================================================================
 function Initialize()
 
@@ -2165,6 +2195,7 @@ function Initialize()
 
   Events.UnitPromoted.Add( function() LuaEvents.UnitPanel_HideUnitPromotion(); ContextPtr:RequestRefresh() end )
   Events.UnitUpgraded.Add( function() ContextPtr:RequestRefresh() end )
+  Events.LoadScreenClose.Add( OnLoadScreenClose );
 
   Controls.CloseButton:RegisterCallback( Mouse.eLClick, OnCloseButton );
   Controls.CloseButton:RegisterCallback(	Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
@@ -2193,4 +2224,3 @@ function Initialize()
   LuaEvents.CQUI_RealHousingFromImprovementsCalculated.Add(CQUI_HousingFromImprovementsTableInsert);    --CQUI get real housing from improvements values
 end
 Initialize();
-
