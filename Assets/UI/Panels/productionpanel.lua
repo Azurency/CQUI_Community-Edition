@@ -762,13 +762,18 @@ function PopulateList(data, listIM)
 
       --CQUI Productionpanel buy buttons
       unitListing.PurchaseButton:RegisterCallback( Mouse.eLClick, function()
-        PurchaseUnit(data.City, item, GameInfo.Yields["YIELD_GOLD"].Index);
+        -- Check if city can spawn unit
+        if data.City:GetGold():CanPlaceUnit(item.Hash) then
+          PurchaseUnit(data.City, item, GameInfo.Yields["YIELD_GOLD"].Index);
+        else
+          unitListing.TrainUnit:SetToolTipString(Locale.Lookup("LOC_BUILDING_CONSTRUCT_NO_SUITABLE_LOCATION"));
+        end
         end);
       if CQUI_ProdTable[item.Hash]["gold"] ~= nil then
         unitListing.PurchaseButton:SetText(CQUI_ProdTable[item.Hash]["gold"] .. "[ICON_GOLD]");
         unitListing.PurchaseButton:SetHide(false);
         unitListing.PurchaseButton:SetDisabled(CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["gold"]);
-        if (CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["gold"]) then
+        if (CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["gold"] or not data.City:GetGold():CanPlaceUnit(item.Hash)) then
           unitListing.PurchaseButton:SetColor(0xDD3366FF);
         else
           unitListing.PurchaseButton:SetColor(0xFFF38FFF);
@@ -777,13 +782,17 @@ function PopulateList(data, listIM)
         unitListing.PurchaseButton:SetHide(true);
       end
       unitListing.FaithPurchaseButton:RegisterCallback( Mouse.eLClick, function()
-        PurchaseUnit(data.City, item, GameInfo.Yields["YIELD_FAITH"].Index);
-        end);
+        if data.City:GetGold():CanPlaceUnit(item.Hash) then
+          PurchaseUnit(data.City, item, GameInfo.Yields["YIELD_FAITH"].Index);
+        else
+          unitListing.TrainUnit:SetToolTipString(Locale.Lookup("LOC_BUILDING_CONSTRUCT_NO_SUITABLE_LOCATION"));
+        end
+      end);
       if CQUI_ProdTable[item.Hash]["faith"] ~= nil then
         unitListing.FaithPurchaseButton:SetText(CQUI_ProdTable[item.Hash]["faith"] .. "[ICON_FAITH]");
         unitListing.FaithPurchaseButton:SetHide(false);
         unitListing.FaithPurchaseButton:SetDisabled(CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["faith"]);
-        if (CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["faith"]) then
+        if (CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["faith"] or not data.City:GetGold():CanPlaceUnit(item.Hash)) then
           unitListing.FaithPurchaseButton:SetColor(0xDD3366FF);
         else
           unitListing.FaithPurchaseButton:SetColor(0xFFF38FFF);
@@ -796,6 +805,10 @@ function PopulateList(data, listIM)
         LuaEvents.OpenCivilopedia(item.Type);
       end);
       unitListing.TrainUnit:SetTag(UITutorialManager:GetHash(item.Type));
+      
+      -- Change ToolTip back to item description 
+      unitListing.PurchaseButton:RegisterCallback( Mouse.eMouseExit, function() unitListing.TrainUnit:SetToolTipString(item.ToolTip); end);
+      unitListing.FaithPurchaseButton:RegisterCallback( Mouse.eMouseExit, function() unitListing.TrainUnit:SetToolTipString(item.ToolTip); end);
 
       -- Controls for training unit corps and armies.
       -- Want a special text string for this!! #NEW TEXT #LOCALIZATION - "You can only directly build corps and armies once you have constructed a military academy."
@@ -860,7 +873,7 @@ function PopulateList(data, listIM)
           unitListing.CorpsPurchaseButton:SetText(CQUI_ProdTable[item.Hash]["corpsGold"] .. "[ICON_GOLD]");
           unitListing.CorpsPurchaseButton:SetHide(false);
           unitListing.CorpsPurchaseButton:SetDisabled(CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["corpsGold"]);
-          if (CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["corpsGold"]) then
+          if (CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["corpsGold"] or not data.City:GetGold():CanPlaceUnit(item.Hash)) then
             unitListing.CorpsPurchaseButton:SetColor(0xDD3366FF);
           else
             unitListing.CorpsPurchaseButton:SetColor(0xFFF38FFF);
@@ -872,7 +885,7 @@ function PopulateList(data, listIM)
           unitListing.CorpsFaithPurchaseButton:SetText(CQUI_ProdTable[item.Hash]["corpsFaith"] .. "[ICON_FAITH]");
           unitListing.CorpsFaithPurchaseButton:SetHide(false);
           unitListing.CorpsFaithPurchaseButton:SetDisabled(CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["corpsFaith"]);
-          if (CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["corpsFaith"]) then
+          if (CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["corpsFaith"] or not data.City:GetGold():CanPlaceUnit(item.Hash)) then
             unitListing.CorpsFaithPurchaseButton:SetColor(0xDD3366FF);
           else
             unitListing.CorpsFaithPurchaseButton:SetColor(0xFFF38FFF);
@@ -894,11 +907,22 @@ function PopulateList(data, listIM)
         end);
 
         unitListing.CorpsPurchaseButton:RegisterCallback( Mouse.eLClick, function()
-          PurchaseUnitCorps(data.City, item, GameInfo.Yields["YIELD_GOLD"].Index)
+          if data.City:GetGold():CanPlaceUnit(item.Hash) then
+            PurchaseUnitCorps(data.City, item, GameInfo.Yields["YIELD_GOLD"].Index);
+          else
+            unitListing.TrainUnit:SetToolTipString(Locale.Lookup("LOC_BUILDING_CONSTRUCT_NO_SUITABLE_LOCATION"));
+          end
         end);
         unitListing.CorpsFaithPurchaseButton:RegisterCallback( Mouse.eLClick, function()
-          PurchaseUnitCorps(data.City, item, GameInfo.Yields["YIELD_FAITH"].Index)
+          if data.City:GetGold():CanPlaceUnit(item.Hash) then
+            PurchaseUnitCorps(data.City, item, GameInfo.Yields["YIELD_FAITH"].Index);
+          else
+            unitListing.TrainUnit:SetToolTipString(Locale.Lookup("LOC_BUILDING_CONSTRUCT_NO_SUITABLE_LOCATION"));
+          end
         end);
+        
+        unitListing.CorpsPurchaseButton:RegisterCallback( Mouse.eMouseExit, function() unitListing.TrainUnit:SetToolTipString(item.ToolTip); end);
+        unitListing.CorpsFaithPurchaseButton:RegisterCallback( Mouse.eMouseExit, function() unitListing.TrainUnit:SetToolTipString(item.ToolTip); end);
       end
       if item.Army then
         -- Check to see if this item is recommended           -- CQUI: Remove production recommendations
@@ -936,7 +960,7 @@ function PopulateList(data, listIM)
           unitListing.ArmyPurchaseButton:SetText(CQUI_ProdTable[item.Hash]["armyGold"] .. "[ICON_GOLD]");
           unitListing.ArmyPurchaseButton:SetHide(false);
           unitListing.ArmyPurchaseButton:SetDisabled(CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["armyGold"]);
-          if (CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["armyGold"]) then
+          if (CQUI_PlayerGold < CQUI_ProdTable[item.Hash]["armyGold"] or not data.City:GetGold():CanPlaceUnit(item.Hash)) then
             unitListing.ArmyPurchaseButton:SetColor(0xDD3366FF);
           else
             unitListing.ArmyPurchaseButton:SetColor(0xFFF38FFF);
@@ -948,7 +972,7 @@ function PopulateList(data, listIM)
           unitListing.ArmyFaithPurchaseButton:SetText(CQUI_ProdTable[item.Hash]["armyFaith"] .. "[ICON_FAITH]");
           unitListing.ArmyFaithPurchaseButton:SetHide(false);
           unitListing.ArmyFaithPurchaseButton:SetDisabled(CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["armyFaith"]);
-          if (CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["armyFaith"]) then
+          if (CQUI_PlayerFaith < CQUI_ProdTable[item.Hash]["armyFaith"] or not data.City:GetGold():CanPlaceUnit(item.Hash)) then
             unitListing.ArmyFaithPurchaseButton:SetColor(0xDD3366FF);
           else
             unitListing.ArmyFaithPurchaseButton:SetColor(0xFFF38FFF);
@@ -970,11 +994,23 @@ function PopulateList(data, listIM)
         end);
 
         unitListing.ArmyPurchaseButton:RegisterCallback( Mouse.eLClick, function()
-          PurchaseUnitArmy(data.City, item, GameInfo.Yields["YIELD_GOLD"].Index)
+          if data.City:GetGold():CanPlaceUnit(item.Hash) then
+            PurchaseUnitArmy(data.City, item, GameInfo.Yields["YIELD_GOLD"].Index);
+          else
+            unitListing.TrainUnit:SetToolTipString(Locale.Lookup("LOC_BUILDING_CONSTRUCT_NO_SUITABLE_LOCATION"));
+          end
         end);
+        
         unitListing.ArmyFaithPurchaseButton:RegisterCallback( Mouse.eLClick, function()
-          PurchaseUnitArmy(data.City, item, GameInfo.Yields["YIELD_FAITH"].Index)
+          if data.City:GetGold():CanPlaceUnit(item.Hash) then
+            PurchaseUnitArmy(data.City, item, GameInfo.Yields["YIELD_FAITH"].Index);
+          else
+            unitListing.TrainUnit:SetToolTipString(Locale.Lookup("LOC_BUILDING_CONSTRUCT_NO_SUITABLE_LOCATION"));
+          end
         end);
+        
+        unitListing.ArmyPurchaseButton:RegisterCallback( Mouse.eMouseExit, function() unitListing.TrainUnit:SetToolTipString(item.ToolTip); end);
+        unitListing.ArmyFaithPurchaseButton:RegisterCallback( Mouse.eMouseExit, function() unitListing.TrainUnit:SetToolTipString(item.ToolTip); end);
       end
 
       -- Handle if the item is disabled
