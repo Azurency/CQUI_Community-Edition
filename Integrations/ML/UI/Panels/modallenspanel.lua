@@ -2,25 +2,34 @@
 
 include( "InstanceManager" );
 
-local m_KeyStackIM:table = InstanceManager:new( "KeyEntry", "KeyColorImage", Controls.KeyStack );
-local m_ContinentColorList:table = {};
-local m_CurrentModdedLensOn;
-
 -- Similiar to MinimapPanel.lua to control modded lenses
 -- Used to control ModalLensPanel.lua
 local MODDED_LENS_ID:table = {
-  NONE 			= 0;
-  APPEAL 			= 1;
-  BUILDER 		= 2;
-  ARCHAEOLOGIST 	= 3;
-  BARBARIAN 		= 4;
-  CITY_OVERLAP6 	= 5;
-  CITY_OVERLAP9 	= 6;
-  RESOURCE 		= 7;
-  WONDER 			= 8;
-  ADJACENCY_YIELD = 9;
-  SCOUT 			= 10;
+  NONE = 0;
+  APPEAL = 1;
+  BUILDER = 2;
+  ARCHAEOLOGIST = 3;
+  BARBARIAN = 4;
+  CITY_OVERLAP = 5;
+  RESOURCE = 6;
+  WONDER = 7;
+  ADJACENCY_YIELD = 8;
+  SCOUT = 9;
+  NATURALIST = 10;
+  CUSTOM = 11;
 };
+
+-- Different from above, since it uses a government lens, instead of appeal
+local AREA_LENS_ID:table = {
+  NONE = 0;
+  GOVERNMENT = 1;
+  CITIZEN_MANAGEMENT = 2;
+}
+
+local m_KeyStackIM:table = InstanceManager:new( "KeyEntry", "KeyColorImage", Controls.KeyStack );
+local m_ContinentColorList:table = {};
+local m_CurrentModdedLensOn = MODDED_LENS_ID.NONE;
+local m_CurrentAreaLensOn = AREA_LENS_ID.NONE;
 
 --============================================================================
 function Close()
@@ -56,6 +65,8 @@ function ShowBuilderLensKey()
   m_KeyStackIM: ResetInstances();
 
   AddKeyEntry("LOC_TOOLTIP_BUILDER_LENS_IMP", UI.GetColorValue("COLOR_RESOURCE_BUILDER_LENS"));
+
+  AddKeyEntry("LOC_TOOLTIP_RECOMFEATURE_LENS_HILL", UI.GetColorValue("COLOR_RECOMFEATURE_BUILDER_LENS"));
 
   AddKeyEntry("LOC_TOOLTIP_BUILDER_LENS_HILL", UI.GetColorValue("COLOR_HILL_BUILDER_LENS"));
 
@@ -180,7 +191,7 @@ function ShowPoliticalLensKey()
 end
 
 --============================================================================
-function ShowCityOverlap6LensKey()
+function ShowCityOverlapLensKey()
   m_KeyStackIM: ResetInstances();
 
   for i = 1, 8 do
@@ -197,7 +208,7 @@ function ShowCityOverlap6LensKey()
     end
 
     local colorLookup:string = "COLOR_GRADIENT8_" .. tostring(i);
-    print(colorLookup);
+    -- print(colorLookup);
     local color:number = UI.GetColorValue(colorLookup);
     AddKeyEntryAlt(s, color);
   end
@@ -221,22 +232,22 @@ end
 function ShowResourceLensKey()
   m_KeyStackIM: ResetInstances();
 
-  local LuxConnectedColor		:number = UI.GetColorValue("COLOR_LUXCONNECTED_RES_LENS");
+  local LuxConnectedColor     :number = UI.GetColorValue("COLOR_LUXCONNECTED_RES_LENS");
   AddKeyEntry("LOC_TOOLTIP_RESOURCE_LENS_LUXURY", LuxConnectedColor);
 
-  local LuxNConnectedColor	:number = UI.GetColorValue("COLOR_LUXNCONNECTED_RES_LENS");
+  local LuxNConnectedColor    :number = UI.GetColorValue("COLOR_LUXNCONNECTED_RES_LENS");
   AddKeyEntry("LOC_TOOLTIP_RESOURCE_LENS_NLUXURY", LuxNConnectedColor);
 
-  local BonusConnectedColor	:number = UI.GetColorValue("COLOR_BONUSCONNECTED_RES_LENS");
+  local BonusConnectedColor   :number = UI.GetColorValue("COLOR_BONUSCONNECTED_RES_LENS");
   AddKeyEntry("LOC_TOOLTIP_RESOURCE_LENS_BONUS", BonusConnectedColor);
 
-  local BonusNConnectedColor	:number = UI.GetColorValue("COLOR_BONUSNCONNECTED_RES_LENS");
+  local BonusNConnectedColor  :number = UI.GetColorValue("COLOR_BONUSNCONNECTED_RES_LENS");
   AddKeyEntry("LOC_TOOLTIP_RESOURCE_LENS_NBONUS", BonusNConnectedColor);
 
-  local StratConnectedColor	:number = UI.GetColorValue("COLOR_STRATCONNECTED_RES_LENS");
+  local StratConnectedColor   :number = UI.GetColorValue("COLOR_STRATCONNECTED_RES_LENS");
   AddKeyEntry("LOC_TOOLTIP_RESOURCE_LENS_STRATEGIC", StratConnectedColor);
 
-  local StratNConnectedColor	:number = UI.GetColorValue("COLOR_STRATNCONNECTED_RES_LENS");
+  local StratNConnectedColor  :number = UI.GetColorValue("COLOR_STRATNCONNECTED_RES_LENS");
   AddKeyEntry("LOC_TOOLTIP_RESOURCE_LENS_NSTRATEGIC", StratNConnectedColor);
 
   Controls.KeyPanel:SetHide(false);
@@ -247,10 +258,10 @@ end
 function ShowWonderLensKey()
   m_KeyStackIM: ResetInstances();
 
-  local NaturalWonderColor 	:number = UI.GetColorValue("COLOR_NATURAL_WONDER_LENS");
+  local NaturalWonderColor    :number = UI.GetColorValue("COLOR_NATURAL_WONDER_LENS");
   AddKeyEntry("LOC_TOOLTIP_WONDER_LENS_NWONDER", NaturalWonderColor);
 
-  local PlayerWonderColor 	:number = UI.GetColorValue("COLOR_PLAYER_WONDER_LENS");
+  local PlayerWonderColor     :number = UI.GetColorValue("COLOR_PLAYER_WONDER_LENS");
   AddKeyEntry("LOC_TOOLTIP_RESOURCE_LENS_PWONDER", PlayerWonderColor);
 
   Controls.KeyPanel:SetHide(false);
@@ -271,7 +282,7 @@ function ShowAdjacencyYieldLensKey()
     end
 
     local colorLookup:string = "COLOR_GRADIENT8_" .. tostring(i);
-    print(colorLookup);
+        -- print(colorLookup);
     local color:number = UI.GetColorValue(colorLookup);
     AddKeyEntryAlt(s, color);
   end
@@ -284,8 +295,21 @@ end
 function ShowScoutLensKey()
   m_KeyStackIM: ResetInstances();
 
-  local GoodyHutColor 	:number = UI.GetColorValue("COLOR_GHUT_SCOUT_LENS");
+  local GoodyHutColor     :number = UI.GetColorValue("COLOR_GHUT_SCOUT_LENS");
   AddKeyEntry("LOC_TOOLTIP_SCOUT_LENS_GHUT", GoodyHutColor);
+
+  Controls.KeyPanel:SetHide(false);
+  Controls.KeyScrollPanel:CalculateSize();
+end
+
+--============================================================================
+function ShowNaturalistLensKey()
+  m_KeyStackIM: ResetInstances();
+
+  local parkNaturalistLens     :number = UI.GetColorValue("COLOR_PARK_NATURALIST_LENS");
+  AddKeyEntry("LOC_TOOLTIP_NATURALIST_LENS_NPARK", parkNaturalistLens);
+  AddKeyEntry("LOC_TOOLTIP_NATURALIST_LENS_OK", UI.GetColorValue("COLOR_OK_NATURALIST_LENS"));
+  AddKeyEntry("LOC_TOOLTIP_NATURALIST_LENS_FIXABLE", UI.GetColorValue("COLOR_FIXABLE_NATURALIST_LENS"));
 
   Controls.KeyPanel:SetHide(false);
   Controls.KeyScrollPanel:CalculateSize();
@@ -391,22 +415,7 @@ function AddKeyEntryAlt(textString:string, colorValue:number, bonusIcon:string, 
 end
 
 -- ===========================================================================
-function GetCurrentModdedLens()
-  -- local localPlayerID = Game.GetLocalPlayer();
-  -- if(PlayerConfigurations[localPlayerID]:GetValue("ModdedLens_CurrentModdedLensOn") ~= nil) then
-  -- 	local dataDump = PlayerConfigurations[localPlayerID]:GetValue("ModdedLens_CurrentModdedLensOn");
-  -- 	print("Get: " .. dataDump);
-  -- 	loadstring(dataDump)();
-  -- 	m_CurrentModdedLensOn = currentModdedLensOn;
-  -- else
-  -- 	print("No modded lens data was found.")
-  -- end
-  return m_CurrentModdedLensOn;
-end
-
--- ===========================================================================
 function OnLensLayerOn( layerNum:number )
-  -- print("Lens layer on " .. layerNum);
   if layerNum == LensLayers.HEX_COLORING_RELIGION then
     Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_RELIGION_LENS")));
     Controls.KeyPanel:SetHide(true);
@@ -415,40 +424,48 @@ function OnLensLayerOn( layerNum:number )
     Controls.KeyPanel:SetHide(true);
     ShowContinentLensKey();
   elseif layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL then
-    if GetCurrentModdedLens() == MODDED_LENS_ID.APPEAL then
+    -- print("Modded Lens on " .. m_CurrentModdedLensOn);
+    if m_CurrentModdedLensOn == MODDED_LENS_ID.APPEAL then
       Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_APPEAL_LENS")));
       ShowAppealLensKey();
-    elseif GetCurrentModdedLens() == MODDED_LENS_ID.BUILDER then
+    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.BUILDER then
       Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_BUILDER_LENS")));
       ShowBuilderLensKey();
-    elseif GetCurrentModdedLens() == MODDED_LENS_ID.ARCHAEOLOGIST then
+    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.ARCHAEOLOGIST then
       Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_ARCHAEOLOGIST_LENS")));
       ShowArchaeologistLensKey();
-    elseif GetCurrentModdedLens() == MODDED_LENS_ID.CITY_OVERLAP6 then
-      Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_CITYOVERLAP6_LENS")));
-      ShowCityOverlap6LensKey();
-    elseif GetCurrentModdedLens() == MODDED_LENS_ID.CITY_OVERLAP9 then
-      Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_CITYOVERLAP9_LENS")));
-      ShowCityOverlap6LensKey(); -- TODO Create a custom key
-    elseif GetCurrentModdedLens() == MODDED_LENS_ID.BARBARIAN then
+    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.CITY_OVERLAP then
+      Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_CITYOVERLAP_LENS")));
+      ShowCityOverlapLensKey();
+    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.BARBARIAN then
       Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_BARBARIAN_LENS")));
       ShowBarbarianLensKey();
-    elseif GetCurrentModdedLens() == MODDED_LENS_ID.RESOURCE then
+    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.RESOURCE then
       Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_RESOURCE_LENS")));
       ShowResourceLensKey();
-    elseif GetCurrentModdedLens() == MODDED_LENS_ID.WONDER then
+    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.WONDER then
       Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_WONDER_LENS")));
       ShowWonderLensKey();
-    elseif GetCurrentModdedLens() == MODDED_LENS_ID.ADJACENCY_YIELD then
+    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.ADJACENCY_YIELD then
       Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_ADJYIELD_LENS")));
       ShowAdjacencyYieldLensKey();
-    elseif GetCurrentModdedLens() == MODDED_LENS_ID.SCOUT then
+    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.SCOUT then
       Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_SCOUT_LENS")));
       ShowScoutLensKey();
+    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.NATURALIST then
+      Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_NATURALIST_LENS")));
+      ShowNaturalistLensKey();
+    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.CUSTOM then
+      print("Hiding")
+      ContextPtr:SetHide(true);   -- Hide the Modal Panel if custom
     end
   elseif layerNum == LensLayers.HEX_COLORING_GOVERNMENT then
-    Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_GOVERNMENT_LENS")));
-    ShowGovernmentLensKey();
+    if m_CurrentAreaLensOn == AREA_LENS_ID.GOVERNMENT then
+      Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_GOVERNMENT_LENS")));
+      ShowGovernmentLensKey();
+    -- else
+       -- Add extra area lenses here
+    end
   elseif layerNum == LensLayers.HEX_COLORING_OWING_CIV then
     Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_OWNER_LENS")));
     ShowPoliticalLensKey();
@@ -462,14 +479,19 @@ function OnLensLayerOn( layerNum:number )
 end
 
 -- ===========================================================================
--- Called from
-function OnModdedLensOn(modID)
-  print("Current modded lens on " .. modID);
-  m_CurrentModdedLensOn = modID;
+-- Called from MinimapPanel.lua
+function OnModdedLensOn(lensID)
+    print("Current modded lens on " .. lensID);
+    m_CurrentModdedLensOn = lensID;
+end
+
+function OnAreaLensOn(lensID)
+    print("Current area lens on " .. lensID);
+    m_CurrentAreaLensOn = lensID;
 end
 
 -- ===========================================================================
---	Game Engine Event
+--  Game Engine Event
 -- ===========================================================================
 function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
   if eNewMode == InterfaceModeTypes.VIEW_MODAL_LENS then
@@ -481,7 +503,7 @@ function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
 end
 
 -- ===========================================================================
---	INIT (ModalLensPanel)
+--  INIT (ModalLensPanel)
 -- ===========================================================================
 function InitializeModalLensPanel()
   print("Initializing ModalLensPanel")
@@ -496,5 +518,6 @@ function InitializeModalLensPanel()
 
   LuaEvents.MinimapPanel_AddContinentColorPair.Add(OnAddContinentColorPair);
   LuaEvents.MinimapPanel_ModdedLensOn.Add(OnModdedLensOn);
+  LuaEvents.MinimapPanel_AreaLensOn.Add(OnAreaLensOn);
 end
 InitializeModalLensPanel();

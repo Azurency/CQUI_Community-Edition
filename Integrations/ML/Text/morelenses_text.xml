@@ -13,6 +13,9 @@
     <Row Tag="LOC_TOOLTIP_BUILDER_LENS_IMP">
       <Text>Resource/Pillaged/Unique Ability</Text>
     </Row>
+    <Row Tag="LOC_TOOLTIP_RECOMFEATURE_LENS_HILL">
+      <Text>Recommended Improve Feature</Text>
+    </Row>
     <Row Tag="LOC_TOOLTIP_BUILDER_LENS_HILL">
       <Text>Hill</Text>
     </Row>
@@ -41,19 +44,26 @@
     </Row>
 
     <!-- City Overlap Lens -->
-    <Row Tag="LOC_HUD_CITYOVERLAP6_LENS">
-        <Text>City Overlap 6</Text>
+    <Row Tag="LOC_HUD_CITYOVERLAP_LENS">
+      <Text>City Overlap</Text>
     </Row>
-    <Row Tag="LOC_HUD_CITYOVERLAP6_LENS_TOOLTIP">
+    <Row Tag="LOC_HUD_CITYOVERLAP_LENS_TOOLTIP">
       <Text>Shows how many cities (in range of 6 hexes) a hex overlaps with</Text>
     </Row>
-
-    <!-- City Overlap Lens -->
-    <Row Tag="LOC_HUD_CITYOVERLAP9_LENS">
-      <Text>City Overlap 9</Text>
+    <Row Tag="LOC_PANEL_CITYOVERLAP_OPTION1">
+      <Text>Highlight outside border</Text>
     </Row>
-    <Row Tag="LOC_HUD_CITYOVERLAP9_LENS_TOOLTIP">
-      <Text>Shows how many cities (in range of 9 hexes) a hex overlaps with</Text>
+    <Row Tag="LOC_PANEL_CITYOVERLAP_NMOUSE">
+        <Text>No Mouse</Text>
+    </Row>
+    <Row Tag="LOC_PANEL_CITYOVERLAP_RANGE">
+      <Text>Range Mouse</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_CITYOVERLAP_RANGE">
+      <Text>Shows tiles and highlights cities within range (set below) from the tile under the mouse.</Text>
+    </Row>
+    <Row Tag="LOC_PANEL_CITYOVERLAP_RADIUS">
+      <Text>Radius Mouse</Text>
     </Row>
 
     <!-- Barbarian Lens -->
@@ -124,6 +134,23 @@
     </Row>
     <Row Tag="LOC_TOOLTIP_SCOUT_LENS_GHUT">
       <Text>Goody Hut</Text>
+    </Row>
+
+    <!-- Naturalist Lens -->
+    <Row Tag="LOC_HUD_NATURALIST_LENS">
+      <Text>Naturalist</Text>
+    </Row>
+    <Row Tag="LOC_HUD_NATURALIST_LENS_TOOLTIP">
+      <Text>Highlights places where National Parks can be built</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_NATURALIST_LENS_NPARK">
+      <Text>Area is ready for National Park</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_NATURALIST_LENS_OK">
+      <Text>Tile could be used, if some other plot is fixed</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_NATURALIST_LENS_FIXABLE">
+      <Text>Needs fixing to be used for a park</Text>
     </Row>
 
   </BaseGameText>

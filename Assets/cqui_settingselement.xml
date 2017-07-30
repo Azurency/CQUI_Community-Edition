@@ -79,6 +79,15 @@
             <GridButton ID="ShowYieldsOnCityHoverCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" />
           </Stack>
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <GridButton ID="ShowCitizenIconsOnHoverCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_CITYVIEW_SHOWCITIZENICONSONHOVER" />
+          </Stack>
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <GridButton ID="ShowCityManageAreaOnHoverCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEONHOVER" />
+          </Stack>
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <GridButton ID="ShowCityManageAreaInScreenCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEINSCREEN" />
+          </Stack>
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <GridButton ID="BlockOnCityAttackCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK" />
           </Stack>
           <Stack Anchor="C,C" StackGrowth="Left">
@@ -114,7 +123,7 @@
             <Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_CITYVIEW_WORKICONALPHA"/>
             <Label String="0" Style="ShellOptionText" Anchor="L,C" ID="WorkIconAlphaText" Offset="3,0" />
           </Stack>
-          <Slider Style="SliderControl" Anchor="C,B" Size="300,13" SpaceForScroll="0" ID="WorkIconAlphaSlider" Steps="90" />
+          <Slider Style="SliderControl" Anchor="C,B" Size="300,13" SpaceForScroll="0" ID="WorkIconAlphaSlider" Steps="100" />
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <GridButton ID="SmartWorkIconCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_CITYVIEW_SMARTWORKICON" />
           </Stack>
@@ -129,7 +138,7 @@
               <Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_CITYVIEW_SMARTWORKICONALPHA"/>
               <Label String="0" Style="ShellOptionText" Anchor="L,C" ID="SmartWorkIconAlphaText" Offset="3,0" />
             </Stack>
-            <Slider Style="SliderControl" Anchor="C,B" Size="300,13" SpaceForScroll="0" ID="SmartWorkIconAlphaSlider" Steps="68" />
+            <Slider Style="SliderControl" Anchor="C,B" Size="300,13" SpaceForScroll="0" ID="SmartWorkIconAlphaSlider" Steps="100" />
           </Stack>
         </Stack>
       </Container>
@@ -384,6 +393,9 @@
           </Stack>
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <GridButton ID="AutoapplyScoutLensCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS"/>
+          </Stack>
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <GridButton ID="ShowNothingToDoInBuilderLens" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_LENSES_SHOWNOTHINGTODO"/>
           </Stack>
         </Stack>
       </Container>

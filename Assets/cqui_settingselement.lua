@@ -244,12 +244,12 @@ local WorkIconSizeConverter = {
 --Minimum value is 10, maximum is 100. This translates to 91 steps, or 0th step to 90th
 local WorkIconAlphaConverter = {
   ToSteps = function(value)
-    local out = value - 10;
+    local out = value;
     if(out < 0) then out = 0; end
     return out;
   end,
   ToValue = function(steps)
-    local out = steps + 10;
+    local out = steps;
     if(out > 100) then out = 100; end
     return out;
   end,
@@ -300,7 +300,11 @@ function Initialize()
   PopulateCheckBox(Controls.AutoapplyArchaeologistLensCheckbox, "CQUI_AutoapplyArchaeologistLens");
   PopulateCheckBox(Controls.AutoapplyBuilderLensCheckbox, "CQUI_AutoapplyBuilderLens");
   PopulateCheckBox(Controls.AutoapplyScoutLensCheckbox, "CQUI_AutoapplyScoutLens");
+  PopulateCheckBox(Controls.ShowNothingToDoInBuilderLens, "CQUI_ShowNothingToDoBuilderLens", Locale.Lookup("LOC_CQUI_LENSES_SHOWNOTHINGTODO_TOOLTIP"));
   PopulateCheckBox(Controls.ShowYieldsOnCityHoverCheckbox, "CQUI_ShowYieldsOnCityHover", Locale.Lookup("LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP"));
+  PopulateCheckBox(Controls.ShowCitizenIconsOnHoverCheckbox, "CQUI_ShowCitizenIconsOnCityHover", Locale.Lookup("LOC_CQUI_CITYVIEW_SHOWCITIZENICONSONHOVER_TOOLTIP"));
+  PopulateCheckBox(Controls.ShowCityManageAreaOnHoverCheckbox, "CQUI_ShowCityManageAreaOnCityHover", Locale.Lookup("LOC_CQUI_CITYVIEW_SHOWCITYMANAGEONHOVER_TOOLTIP"));
+  PopulateCheckBox(Controls.ShowCityManageAreaInScreenCheckbox, "CQUI_ShowCityMangeAreaInScreen", Locale.Lookup("LOC_CQUI_CITYVIEW_SHOWCITYMANAGEINSCREEN_TOOLTIP"));
   PopulateCheckBox(Controls.ShowUnitPathsCheckbox, "CQUI_ShowUnitPaths");
   PopulateCheckBox(Controls.AutoExpandUnitActionsCheckbox, "CQUI_AutoExpandUnitActions");
   PopulateCheckBox(Controls.AlwaysOpenTechTreesCheckbox, "CQUI_AlwaysOpenTechTrees");
@@ -328,14 +332,14 @@ function Initialize()
 end
 
 function ToggleSmartbannerCheckboxes()
-    local selected = Controls.SmartbannerCheckbox:IsSelected();
-    Controls.SmartbannerCheckboxes:SetHide(not selected);
-    Controls.CityViewStack:ReprocessAnchoring();
+  local selected = Controls.SmartbannerCheckbox:IsSelected();
+  Controls.SmartbannerCheckboxes:SetHide(not selected);
+  Controls.CityViewStack:ReprocessAnchoring();
 end
 function ToggleSmartWorkIconSettings()
-    local selected = Controls.SmartWorkIconCheckbox:IsSelected();
-    Controls.SmartWorkIconSettings:SetHide(not selected);
-    Controls.CityViewStack:ReprocessAnchoring();
+  local selected = Controls.SmartWorkIconCheckbox:IsSelected();
+  Controls.SmartWorkIconSettings:SetHide(not selected);
+  Controls.CityViewStack:ReprocessAnchoring();
 end
 
 Initialize();

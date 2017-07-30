@@ -161,6 +161,9 @@ local ZOFFSET_3DVIEW        :number = 36;
 local SIZEOFPOPANDPROD        :number = 80; --The amount to add to the city banner to account for the size of the production icon and population number
 local SIZEOFPOPANDPRODMETERS    :number = 15; --The amount to add to the city banner backing width to allow for the production and population meters to appear
 
+local CQUI_ShowCitizenIconsOnCityHover:boolean = false;
+local CQUI_ShowCityManageAreaOnCityHover:boolean = true;
+
 -- ===========================================================================
 --  QUI
 -- ===========================================================================
@@ -185,6 +188,9 @@ function CQUI_OnSettingsInitialized()
   CQUI_SmartWorkIcon = GameConfiguration.GetValue("CQUI_SmartWorkIcon");
   CQUI_SmartWorkIconSize = GameConfiguration.GetValue("CQUI_SmartWorkIconSize");
   CQUI_SmartWorkIconAlpha = GameConfiguration.GetValue("CQUI_SmartWorkIconAlpha") / 100;
+
+  CQUI_ShowCitizenIconsOnCityHover = GameConfiguration.GetValue("CQUI_ShowCitizenIconsOnCityHover");
+  CQUI_ShowCityManageAreaOnCityHover = GameConfiguration.GetValue("CQUI_ShowCityManageAreaOnCityHover");
 end
 
 function CQUI_OnSettingsUpdate()
@@ -262,6 +268,10 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
 
     CQUI_Hovering = true;
 
+    if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) then
+      LuaEvents.Area_ShowCitizenManagement(cityID);
+    end
+
     local kPlayer = Players[playerID];
     local kCities = kPlayer:GetCities();
     local kCity = kCities:FindID(cityID);
@@ -301,23 +311,30 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
         local numUnits:number = tUnits[i];
         local maxUnits:number = tMaxUnits[i];
 
-        -- If this plot is getting worked
-        if workerCount > 0 and kPlot:IsCity() == false then
-          pInstance.CitizenButton:SetHide(false);
-          pInstance.CitizenButton:SetTextureOffsetVal(0, 256);
-          if(CQUI_SmartWorkIcon) then
-            pInstance.CitizenButton:SetSizeVal(CQUI_SmartWorkIconSize, CQUI_SmartWorkIconSize);
-            pInstance.CitizenButton:SetAlpha(CQUI_SmartWorkIconAlpha);
-          else
-            pInstance.CitizenButton:SetSizeVal(CQUI_WorkIconSize, CQUI_WorkIconSize);
-            pInstance.CitizenButton:SetAlpha(CQUI_WorkIconAlpha);
+        if CQUI_ShowCitizenIconsOnCityHover then
+          -- If this plot is getting worked
+          if workerCount > 0 and kPlot:IsCity() == false then
+            pInstance.CitizenButton:SetHide(false);
+            pInstance.CitizenButton:SetTextureOffsetVal(0, 256);
+            if(CQUI_SmartWorkIcon) then
+              pInstance.CitizenButton:SetSizeVal(CQUI_SmartWorkIconSize, CQUI_SmartWorkIconSize);
+              pInstance.CitizenButton:SetAlpha(CQUI_SmartWorkIconAlpha);
+            else
+              pInstance.CitizenButton:SetSizeVal(CQUI_WorkIconSize, CQUI_WorkIconSize);
+              pInstance.CitizenButton:SetAlpha(CQUI_WorkIconAlpha);
+            end
           end
-        end
 
-        if(tLockedUnits[i] > 0) then
-          pInstance.LockedIcon:SetHide(false);
-        else
-          pInstance.LockedIcon:SetHide(true);
+          if(tLockedUnits[i] > 0) then
+            pInstance.LockedIcon:SetHide(false);
+            if(CQUI_SmartWorkIcon) then
+              pInstance.LockedIcon:SetAlpha(CQUI_SmartWorkIconAlpha);
+            else
+              pInstance.LockedIcon:SetAlpha(CQUI_WorkIconAlpha);
+            end
+          else
+            pInstance.LockedIcon:SetHide(true);
+          end
         end
 
         table.insert(yields, plotId);
@@ -402,6 +419,10 @@ function CQUI_OnBannerMouseExit(playerID: number, cityID: number)
   if tResults == nil then
     -- Add error message here
     return;
+  end
+
+  if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) then
+    LuaEvents.Area_ClearCitizenManagement();
   end
 
   local tPlots    :table = tResults[CityCommandResults.PLOTS];

@@ -48,6 +48,24 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="en_US">
       <Text>Shows citizen managament icons, tile yields, and border growth on hover</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITIZENICONSONHOVER" Language="en_US">
+      <Text>Show citizen icons on hover</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITIZENICONSONHOVER_TOOLTIP" Language="en_US">
+      <Text>Shows citizen icons when hovering over the city banner</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEONHOVER" Language="en_US">
+      <Text>Show city management area on hover</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEONHOVER_TOOLTIP" Language="en_US">
+      <Text>Shows citizen managament area when hovering over city banner</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEINSCREEN" Language="en_US">
+      <Text>Show city management area in screen</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEINSCREEN_TOOLTIP" Language="en_US">
+      <Text>Shows citizen managament area when in city screen</Text>
+    </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_HEADER" Language="en_US">
       <Text>Smartbanners</Text>
     </Row>
@@ -137,6 +155,12 @@
     </Row>
     <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="en_US">
       <Text>Autoapply scout lens</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWNOTHINGTODO" Language="en_US">
+      <Text>Show nothing to do in builder lens</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWNOTHINGTODO_TOOLTIP" Language="en_US">
+      <Text>Shows nothing to do hexes (red tiles) when in builder lens</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS" Language="en_US">
       <Text>Popups</Text>

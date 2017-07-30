@@ -66,3 +66,30 @@ VALUES                  (   'COLOR_PLAYER_WONDER_LENS',         '0.98',     '0.0
 
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
 VALUES                  (   'COLOR_GHUT_SCOUT_LENS',            '0.56',     '0.0',      '0.98',     '0.5');
+
+-- Naturalist Lens
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_PARK_NATURALIST_LENS',       '0',        '1',        '0',        '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_OK_NATURALIST_LENS',         '0',        '1',        '1',        '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_FIXABLE_NATURALIST_LENS',    '0.56',     '0.0',      '0.98',     '0.5');
+
+
+-- City Manager Colors
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_CITY_PLOT_WORKING',          '1',        '0.5',      '0',        '0.2');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_CITY_PLOT_LOCKED',           '0',        '1',        '0',        '0.2');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_AREA_LENS_NEUTRAL',          '0',        '0',        '0',        '0.0');
+
+-- Alternate Settler Colors
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_ALT_SETTLER_RESOURCE',       '0.37',     '0',        '0.72',     '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_ALT_SETTLER_UNUSABLE',       '1',        '0',        '0',        '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_ALT_SETTLER_OVERLAP',        '0.75',     '0.75',     '0.75',     '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_ALT_SETTLER_REGULAR',        '0',        '0.75',     '0',        '0.5');
