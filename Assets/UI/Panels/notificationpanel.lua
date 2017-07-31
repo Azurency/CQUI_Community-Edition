@@ -20,22 +20,22 @@ local m_debugNotificationNum:number = 0;    -- (0) The # of fake notifications t
 local COLOR_PIP_CURRENT           :number = 0xffffffff;
 local COLOR_PIP_OTHER           :number = 0xff3c3c3c;
 local DEBUG_NOTIFICATION_TYPE       :number = 999999;
+local SIZE_PIP								:number = 12;
 local SIZE_TOP_SPACE_Y            :number = 140;
-local TIME_PAUSE_FIRST_SHOW_NOTIFICATION  :number = 2;
-local TIME_PAUSE_MOUSE_OVER_NOTIFICATION  :number = 1;
 local TOPBAR_OFFSET             :number = 50;
 local ACTION_CORNER_OFFSET          :number = 300; -- Rail should still visible further down screen even when extended
 local DATA_ICON_PREFIX            :string = "ICON_";
 local SCROLLBAR_OFFSET            :number = 13;
 local MAX_WIDTH_INSTANCE          :number = 500;
 local RAIL_OFFSET_ANIM_Y_OFFSET       :number = -72;
+local TITLE_OFFSET_NO_COUNT					:number = 5;
+local TITLE_OFFSET_DEFAULT					:number = 1;
 
 -- ===========================================================================
 --  VARIABLES
 -- ===========================================================================
 
-local m_groupIM     :table = InstanceManager:new( "GroupInstance",  "Top", Controls.Groups );
-local m_genericItemIM :table = InstanceManager:new( "ItemInstance", "Top", Controls.Items );
+local m_genericItemIM	:table = InstanceManager:new( "ItemInstance",	"Top", Controls.ScrollStack );
 
 local m_screenX, m_screenY    :number = UIManager:GetScreenSizeVal();
 local _, offsetY    :number = 0,0; --Controls.OuterStack:GetOffsetVal();
@@ -47,6 +47,7 @@ hstructure NotificationHandler
   Add             : ifunction;
     Dismiss           : ifunction;
     TryDismiss          : ifunction;
+    TryActivate					: ifunction;
     Activate          : ifunction;
   OnPhaseBegin        : ifunction;
   OnNextSelect        : ifunction;
@@ -67,6 +68,7 @@ end
 hstructure NotificationType
   m_InstanceManager     : table;          -- The instance manager that made the control set.
     m_Instance          : table;          -- The instanced control set.
+	m_PipInstanceManager		: table;
   m_kHandlers         : NotificationHandler;    -- The handler set for the notification
     m_PlayerID          : number;         -- The player who the notification is for
   m_IDs           : table;          -- The IDs related to this type of notificaiton
@@ -117,6 +119,7 @@ function RegisterHandlers()
   m_notificationHandlers[NotificationTypes.CITY_LOW_AMENITIES]          = MakeDefaultHandlers();
   m_notificationHandlers[NotificationTypes.CLAIM_GREAT_PERSON]          = MakeDefaultHandlers();
   m_notificationHandlers[NotificationTypes.COMMAND_UNITS]             = MakeDefaultHandlers();
+	m_notificationHandlers[NotificationTypes.CITY_RANGE_ATTACK]						= MakeDefaultHandlers();
   m_notificationHandlers[NotificationTypes.CONSIDER_GOVERNMENT_CHANGE]      = MakeDefaultHandlers();
   m_notificationHandlers[NotificationTypes.CONSIDER_RAZE_CITY]          = MakeDefaultHandlers();
   m_notificationHandlers[NotificationTypes.DIPLOMACY_SESSION]                 = MakeDefaultHandlers();
@@ -165,6 +168,8 @@ function RegisterHandlers()
     m_notificationHandlers[NotificationTypes.SPY_ENEMY_DISRUPTED_ROCKETRY]          = MakeDefaultHandlers();
     m_notificationHandlers[NotificationTypes.SPY_ENEMY_CAPTURED]                    = MakeDefaultHandlers();
     m_notificationHandlers[NotificationTypes.SPY_ENEMY_KILLED]                      = MakeDefaultHandlers();
+	m_notificationHandlers[NotificationTypes.TECH_BOOST]							= MakeDefaultHandlers();
+	m_notificationHandlers[NotificationTypes.CIVIC_BOOST]							= MakeDefaultHandlers();
 
   -- Custom function handlers for the "Activate" signal:
   m_notificationHandlers[DEBUG_NOTIFICATION_TYPE].Activate            = OnDebugActivate;
@@ -177,6 +182,7 @@ function RegisterHandlers()
   m_notificationHandlers[NotificationTypes.CHOOSE_TECH].Activate          = OnChooseTechActivate;
   m_notificationHandlers[NotificationTypes.CLAIM_GREAT_PERSON].Activate     = OnClaimGreatPersonActivate;
   m_notificationHandlers[NotificationTypes.COMMAND_UNITS].Activate        = OnCommandUnitsActivate;
+	m_notificationHandlers[NotificationTypes.CITY_RANGE_ATTACK].Activate			= OnCityRangeAttack;
   m_notificationHandlers[NotificationTypes.CONSIDER_GOVERNMENT_CHANGE].Activate = OnConsiderGovernmentChangeActivate;
   m_notificationHandlers[NotificationTypes.CONSIDER_RAZE_CITY].Activate     = OnConsiderRazeCityActivate;
   m_notificationHandlers[NotificationTypes.DIPLOMACY_SESSION].Activate            = OnDiplomacySessionActivate;
@@ -184,8 +190,10 @@ function RegisterHandlers()
   m_notificationHandlers[NotificationTypes.GIVE_INFLUENCE_TOKEN].Activate     = OnGiveInfluenceTokenActivate;
   m_notificationHandlers[NotificationTypes.SPY_CHOOSE_DRAGNET_PRIORITY].Activate  = OnChooseEscapeRouteActivate;
   m_notificationHandlers[NotificationTypes.SPY_CHOOSE_ESCAPE_ROUTE].Activate    = OnChooseEscapeRouteActivate;
-  m_notificationHandlers[NotificationTypes.PLAYER_DEFEATED].Activate        = OnLookAtAndActivateNotification;
+	m_notificationHandlers[NotificationTypes.PLAYER_DEFEATED].Activate				= OnLookAtActivate;
   m_notificationHandlers[NotificationTypes.DISCOVER_CONTINENT].Activate     = OnDiscoverContinentActivateNotification;
+	m_notificationHandlers[NotificationTypes.TECH_BOOST].Activate					= OnTechBoostActivateNotification;
+	m_notificationHandlers[NotificationTypes.CIVIC_BOOST].Activate					= OnCivicBoostActivateNotification;
 
   -- Sound to play when added
   m_notificationHandlers[NotificationTypes.SPY_KILLED].AddSound             = "ALERT_NEGATIVE";
@@ -265,7 +273,8 @@ function ProcessStackSizes()
   end
 
   -- If the notifications overflow the stack
-  if (stacksize > m_screenY-TOPBAR_OFFSET-ACTION_CORNER_OFFSET) then
+  if (Controls.ScrollBar:IsVisible()) then
+	Controls.ScrollPanel:SetOffsetY(280);
     if (Controls.RailOffsetAnim:GetOffsetX() ~= SCROLLBAR_OFFSET) then
       Controls.RailOffsetAnim:SetBeginVal(0,0);
       Controls.RailOffsetAnim:SetEndVal(SCROLLBAR_OFFSET,RAIL_OFFSET_ANIM_Y_OFFSET);
@@ -273,6 +282,7 @@ function ProcessStackSizes()
       Controls.RailOffsetAnim:Play();
     end
   else
+		Controls.ScrollPanel:SetOffsetY(300);
     if (Controls.RailOffsetAnim:GetOffsetX() ~= 0) then
       Controls.RailOffsetAnim:SetBeginVal(SCROLLBAR_OFFSET,0);
       Controls.RailOffsetAnim:SetEndVal(0,RAIL_OFFSET_ANIM_Y_OFFSET);
@@ -336,7 +346,7 @@ end
 -- ===========================================================================
 --  Sets width of notifications in the stack to the largest width.
 -- ===========================================================================
-function SetWidthNotificationStack( playerID:number, notificationID:number )
+function RealizeNotificationSize( playerID:number, notificationID:number )
   -- Spacing details
   local X_EXTRA     :number = 20; -- Needs to cover right (collapsed) side button too.
   local X_EXTRA_MOUSE_OUT :number = 70;
@@ -345,11 +355,11 @@ function SetWidthNotificationStack( playerID:number, notificationID:number )
   -- Set the extends/bounds of the ExpandedArea of the notification stack
   local notificationEntry:NotificationType = GetNotificationEntry( playerID, notificationID );
   if (notificationEntry ~= nil) and (notificationEntry.m_Instance ~= nil) then
-    for i,id in ipairs(notificationEntry.m_IDs) do
-      local currentEntry :NotificationType = GetNotificationEntry( playerID, id );
-      currentEntry.m_Instance.ExpandedArea:SetSizeX( currentEntry.m_maxWidth + X_EXTRA);
-      currentEntry.m_Instance.NotificationSlide:SetEndVal( ((currentEntry.m_maxWidth - X_AREA) + X_EXTRA ), 0 );
-      currentEntry.m_Instance.MouseOutArea:SetSizeX( currentEntry.m_maxWidth + X_EXTRA_MOUSE_OUT);
+		notificationEntry.m_Instance.ExpandedArea:SetSizeX( notificationEntry.m_maxWidth + X_EXTRA);
+		notificationEntry.m_Instance.NotificationSlide:SetEndVal( ((notificationEntry.m_maxWidth - X_AREA) + X_EXTRA ), 0 );
+		notificationEntry.m_Instance.MouseOutArea:SetSizeX(notificationEntry.m_maxWidth + X_EXTRA_MOUSE_OUT);
+		if notificationEntry.m_Instance.m_MouseIn and notificationEntry.m_Instance.NotificationSlide:IsStopped() then
+			notificationEntry.m_Instance.NotificationSlide:SetToEnd();
     end
   end
 end
@@ -459,7 +469,7 @@ end
 -- ===========================================================================
 --  Release the notification entry.
 -- ===========================================================================
-function ReleaseNotificationEntry( playerID:number, notificationID:number )
+function ReleaseNotificationEntry( playerID:number, notificationID:number, isShuttingDown:boolean )
   -- Don't try and get the Game Core notification object, it might be gone
   local playerTable = m_notifications[playerID];
   if playerTable == nil then
@@ -484,8 +494,9 @@ function ReleaseNotificationEntry( playerID:number, notificationID:number )
 
       -- Release it's UI (if it has one)
       if notificationEntry.m_Instance ~= nil then
-        notificationEntry.m_Instance.ItemButton:ClearMouseOverCallback();
+				notificationEntry.m_Instance.MouseInArea:ClearMouseOverCallback();
         notificationEntry.m_Instance.MouseOutArea:ClearMouseExitCallback();
+				notificationEntry.m_Instance.MouseOutArea:SetHide(true);
 
         if (notificationEntry.m_InstanceManager ~= nil) then
           notificationEntry.m_InstanceManager:ReleaseInstance( notificationEntry.m_Instance );
@@ -528,12 +539,15 @@ function ReleaseNotificationEntry( playerID:number, notificationID:number )
       -- (e.g., meeting more than 1 leader in a turn)
       -- In which case, more dismiss calls are about to be made... so check the
       -- engine still has a valid notification.
-
-      local nextID      :number = notificationEntry.m_IDs[1];
-      local pNotification   :table  = NotificationManager.Find( playerID, nextID );
-      if pNotification ~= nil then
+			if index > 1 then index = index - 1; end
+			local nextID:number = notificationEntry.m_IDs[index];
+			local pNotification:table = NotificationManager.Find( playerID, nextID );
+			local nextEntry:NotificationType = GetNotificationEntry( playerID, nextID );
+			if not isShuttingDown and pNotification and nextEntry then
+				nextEntry.m_Index = index;
         RealizeStandardNotification( playerID, nextID );
-        SetWidthNotificationStack(playerID, notificationID);
+				RealizeNotificationSize(playerID, nextID);
+				RealizeMaxWidth(nextEntry, pNotification);
       end
 
     end
@@ -620,12 +634,11 @@ end
 -- ===========================================================================
 --  Look at the notification's supplied location, then call Activate on the object
 -- ===========================================================================
-function OnLookAtAndActivateNotification( notificationEntry : NotificationType )
+function OnLookAtActivate( notificationEntry : NotificationType )
   if (notificationEntry ~= nil and notificationEntry.m_PlayerID == Game.GetLocalPlayer()) then
     local pNotification :table = GetActiveNotificationFromEntry(notificationEntry);
     if pNotification ~= nil then
       LookAtNotification( pNotification );
-      pNotification:Activate();
     end
   end
 end
@@ -675,7 +688,6 @@ function OnDefaultAddNotification( pNotification:table )
     -- Make a generic UI
     notificationEntry.m_Instance = m_genericItemIM:GetInstance();
     notificationEntry.m_InstanceManager = m_genericItemIM;
-    notificationEntry.m_Instance.Top:ChangeParent( Controls.ScrollStack );
   end
   ]]
 
@@ -686,19 +698,29 @@ function OnDefaultAddNotification( pNotification:table )
 
     notificationEntry.m_Instance    = m_genericItemIM:GetInstance();
     notificationEntry.m_InstanceManager = m_genericItemIM;
-    notificationEntry.m_Instance.Top:ChangeParent( Controls.ScrollStack );
-    notificationEntry.m_Instance["POINTER_IN"] = false; -- Manually track since 2 different, overlapping objects are tracking if a pointer is in/out
+		notificationEntry.m_Instance.m_MouseIn = false;	-- Manually track since 2 different, overlapping objects are tracking if a pointer is in/out
 
-    if (notificationEntry.m_Instance ~= nil) then
-      if (notificationEntry.m_Instance.ItemButton ~= nil and notificationEntry.m_Instance.ItemButtonInvalidPhase ~= nil) then
-
+		if notificationEntry.m_Instance then
         -- Use the (collapse) button as the actual mouse-in area, but a larger rectangle will
         -- track the mouse out, since the player may be interacting with the extended
         -- information that flew out to the left of the notification.
 
-        notificationEntry.m_Instance.ItemButton:RegisterCallback( Mouse.eLClick, function() kHandlers.Activate(notificationEntry); end );
-        notificationEntry.m_Instance.ItemButton:RegisterCallback( Mouse.eRClick, function() kHandlers.TryDismiss(notificationEntry); end );
-        notificationEntry.m_Instance.ItemButton:RegisterMouseEnterCallback( function() OnMouseEnterNotification( notificationEntry.m_Instance ); end );
+			if pNotification:IsValidForPhase() then
+				notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eLClick, function() kHandlers.TryActivate(notificationEntry); end );
+				notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eRClick, function() kHandlers.TryDismiss(notificationEntry); end );
+				notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eLClick, function() OnClickMouseOutArea(notificationEntry); end );
+				notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eRClick, function() OnClickMouseOutArea(notificationEntry, true); end );
+			else
+				--A notification in the wrong phase can be dismissed but not activated.
+				local messageName:string = Locale.Lookup(pNotification:GetMessage());
+				notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eLClick, OnDoNothing );
+				notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eRClick, function() kHandlers.TryDismiss(notificationEntry); end );
+				notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eLClick, OnDoNothing );
+				notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eRClick, function() kHandlers.TryDismiss(notificationEntry); end );
+				local toolTip:string = messageName .. "[NEWLINE]" .. Locale.Lookup("LOC_NOTIFICATION_WRONG_PHASE_TT", messageName);
+				notificationEntry.m_Instance.MouseInArea:SetToolTipString(toolTip);
+			end
+			notificationEntry.m_Instance.MouseInArea:RegisterMouseEnterCallback( function() OnMouseEnterNotification( notificationEntry.m_Instance ); end );
         notificationEntry.m_Instance.MouseOutArea:RegisterMouseExitCallback( function()  OnMouseExitNotification( notificationEntry.m_Instance ); end );
 
         --Set the notification icon
@@ -711,33 +733,34 @@ function OnDefaultAddNotification( pNotification:table )
           end
         end
 
-        --A notification in the wrong phase can be dismissed but not activated.
-        local messageName:string = Locale.Lookup(pNotification:GetMessage());
-        notificationEntry.m_Instance.ItemButtonInvalidPhase:RegisterCallback( Mouse.eLClick, OnDoNothing );
-        notificationEntry.m_Instance.ItemButtonInvalidPhase:RegisterCallback( Mouse.eRClick, function() kHandlers.TryDismiss(notificationEntry); end );
-        local toolTip:string = messageName .. "[NEWLINE]" .. Locale.Lookup("LOC_NOTIFICATION_WRONG_PHASE_TT", messageName);
-        notificationEntry.m_Instance.ItemButtonInvalidPhase:SetToolTipString(toolTip);
-
         -- If notification is auto generated, it will have an internal count.
         notificationEntry.m_isAuto = pNotification:IsAutoNotify();
 
         -- Sets current phase state.
         notificationEntry.m_kHandlers.OnPhaseBegin( playerID, notificationID );
 
-        -- Upon creation, animation will automatically reverse and play out after showing.
-        local pAnimControl:table = notificationEntry.m_Instance.NotificationSlide;
-        pAnimControl:SetPauseTime( 0 );
-        pAnimControl:RegisterEndCallback(
-          function()
-            pAnimControl:ClearEndCallback();
-            pAnimControl:SetPauseTime( TIME_PAUSE_FIRST_SHOW_NOTIFICATION );
-            pAnimControl:Reverse();
+			-- Update size of notification
+			RealizeStandardNotification( playerID, notificationID );
+
+			-- Reset animation control
+			notificationEntry.m_Instance.NotificationSlide:Stop();
+			notificationEntry.m_Instance.NotificationSlide:SetToBeginning();
           end
-        );
       end
+end
+
+function OnClickMouseOutArea(notificationEntry, dismiss)
+	if notificationEntry.m_Instance.LeftArrow:HasMouseOver() then
+		notificationEntry.m_kHandlers.OnPreviousSelect(GetActiveNotificationFromEntry(notificationEntry));
+	elseif notificationEntry.m_Instance.RightArrow:HasMouseOver() then
+		notificationEntry.m_kHandlers.OnNextSelect(GetActiveNotificationFromEntry(notificationEntry));
+	else
+		if dismiss then
+			notificationEntry.m_kHandlers.TryDismiss(notificationEntry);
+		else
+			notificationEntry.m_kHandlers.TryActivate(notificationEntry);
     end
   end
-  RealizeStandardNotification( playerID, notificationID );
 end
 
 
@@ -746,16 +769,16 @@ end
 function OnMouseEnterNotification( pInstance:table )
   local pAnimControl:table = pInstance.NotificationSlide;
 
-  if pInstance["POINTER_IN"] or pAnimControl:IsInPause() then
+	if pInstance.m_MouseIn or pAnimControl:IsInPause() then
     return;
   end
 
-  pInstance["POINTER_IN"] = true;
+	pInstance.m_MouseIn = true;
+	pInstance.MouseOutArea:SetHide(false);
 
   -- Remove any end callbacks and get this out there.
   pAnimControl:ClearEndCallback();
   pAnimControl:SetToBeginning();
-  pAnimControl:SetPauseTime( 0 );
   if pAnimControl:IsStopped() then
     pAnimControl:Play();
   else
@@ -778,55 +801,62 @@ function OnMouseExitNotification( pInstance:table )
         ApplyCollapseLogic( pInstance );
       end
     );
-  else
+	elseif pInstance.m_MouseIn then
     -- Done playing, immediately apply collapsing logic.
     ApplyCollapseLogic( pInstance );
   end
-  pInstance["POINTER_IN"] = false;
+	pInstance.m_MouseIn = false;
 end
 
 -- ===========================================================================
 --  Calculate and set the maximum width for a notification
 -- ===========================================================================
-function RealizeMaxWidth( notificationEntry:NotificationType , pNotification:table )
+function GetMaxWidth( notificationEntry:NotificationType , pNotification:table )
   local widthTitle      :number = 0; -- Width of the notification title
   local widthSummary      :number = 0; -- Width of the notification summary
   local titleWidthPadding   :number = 0; -- Calculated, adds the width of the arrows and number label
-  local summaryWidthPadding :number = 15;
+	local summaryWidthPadding	:number = 20;
 
-  if notificationEntry ~= nil then
+	if notificationEntry and notificationEntry.m_Instance then
     -- Seeing if the arrow is hidden is a quick way to check that there's more than one notification in this stack
-    if notificationEntry.m_Instance.LeftArrow:IsHidden() == false then
-      titleWidthPadding = (notificationEntry.m_Instance.TitleCount:GetSizeX() +
-                (notificationEntry.m_Instance.LeftArrow:GetSizeX() * 2));
+		if notificationEntry.m_Instance.LeftArrow:IsVisible() then
+			titleWidthPadding = notificationEntry.m_Instance.TitleCount:GetSizeX();
+			summaryWidthPadding = (notificationEntry.m_Instance.LeftArrow:GetSizeX() * 2) + 50;
     else
       -- Don't pad out the stack since there aren't extra buttons or a title count
       summaryWidthPadding = 0;
     end
     widthTitle = notificationEntry.m_Instance.TitleInfo:GetSizeX() + titleWidthPadding;
     widthSummary = notificationEntry.m_Instance.Summary:GetSizeX() + summaryWidthPadding;
-    if widthTitle > notificationEntry.m_maxWidth or widthSummary > notificationEntry.m_maxWidth then
       if widthTitle > widthSummary then
-        notificationEntry.m_maxWidth = widthTitle;
+			return widthTitle, summaryWidthPadding;
       else
-        notificationEntry.m_maxWidth = widthSummary;
+			return widthSummary, summaryWidthPadding;
       end
     end
-  else
+	return 0, 0;
+end
+function RealizeMaxWidth( notificationEntry:NotificationType , pNotification:table )
+
+	if notificationEntry == nil or notificationEntry.m_Instance == nil then
     return;
   end
 
+	local maxWidth, summaryWidthPadding = GetMaxWidth(notificationEntry, pNotification);
+
   -- Check to make sure PipStack doesn't overflow the width
-  if notificationEntry.m_maxWidth < notificationEntry.m_Instance.PagePipStack:GetSizeX() then
-    notificationEntry.m_maxWidth = notificationEntry.m_Instance.PagePipStack:GetSizeX();
+	if maxWidth < notificationEntry.m_Instance.PagePipStack:GetSizeX() then
+		maxWidth = notificationEntry.m_Instance.PagePipStack:GetSizeX();
   end
 
   --  If the max width is larger than the word wrap width, use that for word wrap instead so text will fill
   --    the grid and not clump in the middle.
-  if notificationEntry.m_maxWidth > (notificationEntry.m_wrapWidth + summaryWidthPadding) then
-    notificationEntry.m_wrapWidth = notificationEntry.m_maxWidth - summaryWidthPadding;
+	if maxWidth > (notificationEntry.m_wrapWidth + summaryWidthPadding) then
+		notificationEntry.m_wrapWidth = maxWidth - summaryWidthPadding;
     notificationEntry.m_Instance.Summary:SetWrapWidth(notificationEntry.m_wrapWidth);
   end
+
+	notificationEntry.m_maxWidth = maxWidth;
 end
 
 -- ===========================================================================
@@ -876,6 +906,11 @@ function RealizeStandardNotification( playerID:number, notificationID:number )
     return;
   end
 
+	local notificationPipIM:table = notificationEntry.m_Instance.m_PipInstanceManager;
+	if notificationPipIM then
+		notificationPipIM:ResetInstances();
+	end
+
   SetNotificationText(notificationEntry, pNotification);
 
   -- Auto generated, obtain the actual count...
@@ -889,6 +924,9 @@ function RealizeStandardNotification( playerID:number, notificationID:number )
   notificationEntry.m_Instance.RightArrow:SetHide( count < 2 );
   notificationEntry.m_Instance.PagePipStack:SetHide( count < 2 );
 
+	-- TODO: Remove this line and make sure Stack padding only gets applied on the X / Y depending on whether the stack grows Left / Right or Up / Down
+	notificationEntry.m_Instance.TitleInfo:SetOffsetY( (count < 2) and TITLE_OFFSET_NO_COUNT or TITLE_OFFSET_DEFAULT);
+
   if count > 1 then
     notificationEntry.m_Instance.Count:SetText( tostring(count) );
     notificationEntry.m_Instance.DismissStackButton:RegisterCallback( Mouse.eRClick,    function() TryDismissNotificationStack(playerID, notificationID); end );
@@ -898,13 +936,25 @@ function RealizeStandardNotification( playerID:number, notificationID:number )
     notificationEntry.m_Instance.LeftArrow:RegisterCallback( Mouse.eLClick,   function() notificationEntry.m_kHandlers.OnPreviousSelect(pNotification); end );
     notificationEntry.m_Instance.RightArrow:RegisterCallback( Mouse.eLClick,  function() notificationEntry.m_kHandlers.OnNextSelect(pNotification); end );
 
-    -- Prepare the area
-    notificationEntry.m_Instance.PagePipStack:DestroyAllChildren();
+		local maxWidth, _ = GetMaxWidth(notificationEntry, pNotification);
+		local pipStackWidth = count * SIZE_PIP;
 
+		if pipStackWidth < maxWidth then
+			if not notificationPipIM then
+				notificationPipIM = InstanceManager:new("PipInstance", "Pip", notificationEntry.m_Instance.PagePipStack);
+				notificationEntry.m_Instance.m_PipInstanceManager = notificationPipIM;
+			end
     for i=1,count,1 do
-      local pipInstance:table = {};
-      ContextPtr:BuildInstanceForControl("PipInstance", pipInstance, notificationEntry.m_Instance.PagePipStack);
-      pipInstance.Pip:SetColor( i==notificationEntry.m_Index and COLOR_PIP_CURRENT or COLOR_PIP_OTHER );
+				local pipInstance:table = notificationPipIM:GetInstance();
+				pipInstance.Pip:SetColor( i == notificationEntry.m_Index and COLOR_PIP_CURRENT or COLOR_PIP_OTHER );
+			end
+			notificationEntry.m_Instance.PagePipStack:CalculateSize();
+			notificationEntry.m_Instance.PagePipStack:SetHide(false);
+			notificationEntry.m_Instance.Pages:SetHide(true);
+		else
+			notificationEntry.m_Instance.Pages:SetText(notificationEntry.m_Index .. "/" .. count);
+			notificationEntry.m_Instance.PagePipStack:SetHide(true);
+			notificationEntry.m_Instance.Pages:SetHide(false);
     end
 
   else
@@ -912,9 +962,10 @@ function RealizeStandardNotification( playerID:number, notificationID:number )
     notificationEntry.m_Instance.RightArrow:ClearCallback( Mouse.eLClick );
   end
 
-  RealizeMaxWidth(notificationEntry, pNotification);
   -- Set text again now that calculations are done, text must always match the current index!!
   SetNotificationText(notificationEntry, NotificationManager.Find(playerID, notificationEntry.m_IDs[ notificationEntry.m_Index ]));
+	RealizeMaxWidth(notificationEntry, pNotification);
+	RealizeNotificationSize(playerID, notificationID);
 end
 
 -- ===========================================================================
@@ -924,7 +975,7 @@ function ApplyCollapseLogic( pInstance:table )
   if not pInstance.NotificationSlide:IsReversing() then
     pInstance.NotificationSlide:Reverse();
   end
-  pInstance.NotificationSlide:SetPauseTime( TIME_PAUSE_MOUSE_OVER_NOTIFICATION );
+	pInstance.MouseOutArea:SetHide(true);
 end
 
 
@@ -951,6 +1002,18 @@ function OnDefaultTryDismissNotification( notificationEntry : NotificationType )
 end
 
 -- ===========================================================================
+--	Default handler for a user request to try and manually activate a notification.
+-- ===========================================================================
+function OnDefaultTryActivateNotification( notificationEntry : NotificationType )
+	if (notificationEntry ~= nil and notificationEntry.m_PlayerID == Game.GetLocalPlayer()) then
+		local pNotification :table = GetActiveNotificationFromEntry(notificationEntry);
+		if (pNotification ~= nil) then
+			pNotification:Activate(true);	-- Passing true, signals that this is the user trying to do the activation.
+		end
+	end
+end	
+
+-- ===========================================================================
 --  Default event handler for a turn phase beginning (Multiplayer)
 -- ===========================================================================
 function OnDefaultPhaseBeginNotification( playerID:number, notificationID:number )
@@ -958,8 +1021,8 @@ function OnDefaultPhaseBeginNotification( playerID:number, notificationID:number
   local notificationEntry = GetNotificationEntry( playerID, notificationID );
   if (pNotification ~= nil and notificationEntry ~= nil and notificationEntry.m_Instance ~= nil ) then
     local isValidForPhase :boolean = pNotification:IsValidForPhase();
-    notificationEntry.m_Instance.ItemButton:SetHide(not isValidForPhase);
-    notificationEntry.m_Instance.ItemButtonInvalidPhase:SetHide(isValidForPhase);
+		notificationEntry.m_Instance.IconBG:SetHide(not isValidForPhase);
+		notificationEntry.m_Instance.IconBGInvalidPhase:SetHide(isValidForPhase);
   end
 end
 
@@ -1016,6 +1079,7 @@ function MakeDefaultHandlers()
     Add       = OnDefaultAddNotification,
     Dismiss     = OnDefaultDismissNotification,
     TryDismiss    = OnDefaultTryDismissNotification,
+		TryActivate		= OnDefaultTryActivateNotification,
     Activate    = OnDefaultActivateNotification,
     OnPhaseBegin  = OnDefaultPhaseBeginNotification,
     OnNextSelect  = OnDefaultNextSelectNotification,
@@ -1070,6 +1134,25 @@ end
 function OnCommandUnitsActivate( notificationEntry : NotificationType )
   UI.SelectNextReadyUnit();
 end
+
+-- =======================================================================================
+-- City has ranged attack available.
+-- =======================================================================================
+function OnCityRangeAttack( notificationEntry : NotificationType )
+	if (notificationEntry ~= nil and notificationEntry.m_PlayerID == Game.GetLocalPlayer()) then
+		local pPlayer = Players[notificationEntry.m_PlayerID];
+		if pPlayer ~= nil then
+			local attackCity = pPlayer:GetCities():GetFirstRangedAttackCity();
+			if(attackCity ~= nil) then
+				UI.SelectCity(attackCity);
+			else
+				error( "Unable to find selectable attack city while in OnCityRangeAttack()" );
+			end
+		end
+	end
+end
+
+
 
 -- =======================================================================================
 --  Look at the next unit.
@@ -1177,12 +1260,7 @@ end
 -- Diplomacy Handlers
 -- =======================================================================================
 function OnDiplomacySessionActivate( notificationEntry : NotificationType )
-  if (notificationEntry ~= nil and notificationEntry.m_PlayerID == Game.GetLocalPlayer()) then
-    local pNotification :table = GetActiveNotificationFromEntry(notificationEntry);
-    if pNotification ~= nil then
-      pNotification:Activate();
-    end
-  end
+	-- All the activation is handled by the C++ side
 end
 
 -- =======================================================================================
@@ -1191,10 +1269,44 @@ end
 function OnDiscoverContinentActivateNotification( notificationEntry : NotificationType )
   if (notificationEntry ~= nil and notificationEntry.m_PlayerID == Game.GetLocalPlayer()) then
     local pNotification :table = GetActiveNotificationFromEntry(notificationEntry);
-        if pNotification ~= nil then
-      LookAtNotification( pNotification );
+    if pNotification ~= nil then
+			LookAtNotification( pNotification );
         end
         LuaEvents.NotificationPanel_ShowContinentLens();
+	end
+end
+
+-- =======================================================================================
+-- Tech Boost Handlers
+-- =======================================================================================
+function OnTechBoostActivateNotification( notificationEntry : NotificationType )
+	if (notificationEntry ~= nil and notificationEntry.m_PlayerID == Game.GetLocalPlayer()) then
+		local pNotification :table = GetActiveNotificationFromEntry(notificationEntry);
+		if pNotification ~= nil then
+			local techIndex = pNotification:GetValue("TechIndex");
+			local techProgress = pNotification:GetValue("TechProgress");
+			local techSource = pNotification:GetValue("TechSource"); 
+			if(techIndex ~= nil and techProgress ~= nil and techSource ~= nil) then
+				LuaEvents.NotificationPanel_ShowTechBoost(notificationEntry.m_PlayerID, techIndex, techProgress, techSource);
+			end
+    end
+  end
+end
+
+-- =======================================================================================
+-- Civic Boost Handlers
+-- =======================================================================================
+function OnCivicBoostActivateNotification( notificationEntry : NotificationType )
+  if (notificationEntry ~= nil and notificationEntry.m_PlayerID == Game.GetLocalPlayer()) then
+    local pNotification :table = GetActiveNotificationFromEntry(notificationEntry);
+        if pNotification ~= nil then
+			local civicIndex = pNotification:GetValue("CivicIndex");
+			local civicProgress = pNotification:GetValue("CivicProgress");
+			local civicSource = pNotification:GetValue("CivicSource"); 
+			if(civicIndex ~= nil and civicProgress ~= nil and civicSource ~= nil) then
+				LuaEvents.NotificationPanel_ShowCivicBoost(notificationEntry.m_PlayerID, civicIndex, civicProgress, civicSource);
+			end
+        end
   end
 end
 
@@ -1216,35 +1328,28 @@ function OnDebugAdd( name:string, fakeID:number )
 
   notificationEntry.m_Instance    = m_genericItemIM:GetInstance();
   notificationEntry.m_InstanceManager = m_genericItemIM;
-  notificationEntry.m_Instance.Top:ChangeParent( Controls.ScrollStack );
-  notificationEntry.m_Instance["POINTER_IN"] = false; -- Manually track since 2 different, overlapping objects are tracking if a pointer is in/out
+	notificationEntry.m_Instance.m_MouseIn = false;	-- Manually track since 2 different, overlapping objects are tracking if a pointer is in/out
 
   if notificationEntry.m_Instance ~= nil then
-    if (notificationEntry.m_Instance.ItemButton ~= nil and notificationEntry.m_Instance.ItemButtonInvalidPhase ~= nil) then
-      notificationEntry.m_Instance.ItemButton:SetVoid1( playerID );
-      notificationEntry.m_Instance.ItemButton:SetVoid2( notificationID );
+		if (notificationEntry.m_Instance.MouseInArea ~= nil) then
+			notificationEntry.m_Instance.MouseInArea:SetVoid1( playerID );
+			notificationEntry.m_Instance.MouseInArea:SetVoid2( notificationID );
 
-      notificationEntry.m_Instance.ItemButton:RegisterCallback( Mouse.eLClick, kHandlers.Activate );
-      notificationEntry.m_Instance.ItemButton:RegisterCallback( Mouse.eRClick, function() kHandlers.Dismiss(playerID, 1000000 + notificationID); end );
-      notificationEntry.m_Instance.ItemButton:RegisterMouseEnterCallback( function() OnMouseEnterNotification( notificationEntry.m_Instance ); end );
+			notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eLClick, kHandlers.TryActivate );
+			notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eRClick, function() kHandlers.Dismiss(playerID, 1000000 + notificationID); end );
+			notificationEntry.m_Instance.MouseInArea:RegisterMouseEnterCallback( function() OnMouseEnterNotification( notificationEntry.m_Instance ); end );
       notificationEntry.m_Instance.MouseOutArea:RegisterMouseExitCallback( function()  OnMouseExitNotification( notificationEntry.m_Instance ); end );
 
-      notificationEntry.m_Instance.ItemButtonInvalidPhase:RegisterCallback( Mouse.eLClick, OnDoNothing );
-      notificationEntry.m_Instance.ItemButtonInvalidPhase:RegisterCallback( Mouse.eRClick, OnDoNothing );
-      notificationEntry.m_Instance.ItemButtonInvalidPhase:SetToolTipString("DEBUG");
       notificationEntry.m_isAuto = false;
 
-      --notificationEntry.m_kHandlers.OnPhaseBegin( playerID, notificationID );
-      notificationEntry.m_Instance.ItemButton:SetHide(false);
-      notificationEntry.m_Instance.ItemButtonInvalidPhase:SetHide(true);
+			notificationEntry.m_Instance.IconBG:SetHide(false);
+			notificationEntry.m_Instance.IconBGInvalidPhase:SetHide(true);
 
       -- Upon creation, animation will automatically reverse and play out after showing.
       local pAnimControl:table = notificationEntry.m_Instance.NotificationSlide;
-      pAnimControl:SetPauseTime( 0 );
       pAnimControl:RegisterEndCallback(
         function()
           pAnimControl:ClearEndCallback();
-          pAnimControl:SetPauseTime( TIME_PAUSE_FIRST_SHOW_NOTIFICATION );
           pAnimControl:Reverse();
         end
       );
@@ -1289,6 +1394,7 @@ function OnNotificationAdded( playerID:number, notificationID:number )
   if (playerID == Game.GetLocalPlayer())  then -- Was it for us?
     local pNotification = NotificationManager.Find( playerID, notificationID );
     if pNotification ~= nil then
+	  if pNotification:IsVisibleInUI() then
       --print("    OnNotificationAdded():",notificationID, "for type "..tostring(pNotification:GetMessage()) ); --debug
       local handler = GetHandler( pNotification:GetType() );
       handler.Add(pNotification);
@@ -1298,7 +1404,8 @@ function OnNotificationAdded( playerID:number, notificationID:number )
                 end
       end
       ProcessStackSizes();
-      SetWidthNotificationStack(playerID, notificationID);
+				RealizeNotificationSize(playerID, notificationID);
+			end
     else
       -- Sanity check
       UI.DataError("Notification added Event but not found in manager. PlayerID - " .. tostring(playerID) .. " Notification ID - " .. tostring(notificationID));
@@ -1324,7 +1431,24 @@ function OnNotificationDismissed( playerID:number, notificationID:number )
       handler.Dismiss( playerID, notificationID );
     end
     ProcessStackSizes();
-    SetWidthNotificationStack(playerID, notificationID);
+		RealizeNotificationSize(playerID, notificationID);
+	end
+end
+
+-- ===========================================================================
+--	ENGINE Event
+--	A notification was activated
+-- ===========================================================================
+function OnNotificationActivated( playerID:number, notificationID:number )
+	if (playerID == Game.GetLocalPlayer()) then -- one of the ones we track?
+
+		local notificationEntry:NotificationType = GetNotificationEntry( playerID, notificationID );
+		if notificationEntry ~= nil then		
+			local handler = notificationEntry.m_kHandlers;
+			handler.Activate( notificationEntry );
+		end
+		ProcessStackSizes();
+		RealizeNotificationSize(playerID, notificationID);
   end
 end
 
@@ -1335,7 +1459,6 @@ end
 function OnNotificationRefreshRequested()
   Controls.ScrollStack:DestroyAllChildren();
   m_genericItemIM:DestroyInstances();
-  m_groupIM:DestroyInstances();
   m_lastStackSize = 0;
 
   -- Add debug notifications
@@ -1399,23 +1522,11 @@ end
 function ProcessNotificationSizes( playerID:number )
 
   local kPlayerTable:table = m_notifications[playerID];
-  if (kPlayerTable == nil) then
-    return;
-  end
-
-  for _,kNotification in pairs(kPlayerTable) do
-    local currentEntry :NotificationType = kNotification;
-    if currentEntry.m_Instance ~= nil then
-      currentEntry.m_Instance.Clip:SetSizeX(m_screenX);
-      currentEntry.m_Instance.Clip:CalculateSize();
-      currentEntry.m_Instance.Clip:ReprocessAnchoring();
-      if currentEntry.m_Instance.NotificationSlide ~= nil and (currentEntry.m_Instance.NotificationSlide:GetNumChildren() ~= 0) then
-        currentEntry.m_Instance.NotificationSlide:SetToBeginning();
-      end
+	if playerTable ~= nil then
+		for typeName, notification in pairs( playerTable ) do
+			RealizeNotificationSize(playerID, notification.m_IDs[notification.m_Index]);
     end
-    SetWidthNotificationStack( playerID, id);
   end
-  return;
 end
 
 -- ===========================================================================
@@ -1426,13 +1537,9 @@ function Resize()
   Controls.RailOffsetAnim:ReprocessAnchoring();
   Controls.RailAnim:ReprocessAnchoring();
 
-  Controls.RailOffsetAnim:SetToBeginning();
-  Controls.RailOffsetAnim:Play();
+	-- force an update
+	m_lastStackSize = 0;
 
-  Controls.RailAnim:SetBeginVal(0,0);
-  Controls.RailAnim:SetEndVal(0,0);
-  Controls.RailAnim:SetToBeginning();
-  Controls.RailAnim:Play();
   ProcessStackSizes();
 end
 
@@ -1465,7 +1572,7 @@ function ClearNotifications()
     if playerTable ~= nil then
       for typeName, notification in pairs( playerTable ) do
         for _, id in ipairs( notification.m_IDs ) do
-          ReleaseNotificationEntry( playerID, id );
+					ReleaseNotificationEntry( playerID, id, true );
         end
       end
     end
@@ -1551,6 +1658,7 @@ function Initialize()
   Events.NotificationAdded.Add(       OnNotificationAdded );
   Events.NotificationDismissed.Add(     OnNotificationDismissed );
   Events.NotificationRefreshRequested.Add(  OnNotificationRefreshRequested );
+	Events.NotificationActivated.Add(			OnNotificationActivated );
 
   Events.UnitKilledInCombat.Add( OnUnitKilledInCombat );
 

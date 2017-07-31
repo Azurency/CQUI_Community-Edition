@@ -25,6 +25,7 @@ local TURN_TIMER_BAR_INACTIVE_COLOR :number = 0xff0000ff;
 local MAX_BLOCKER_BUTTONS     :number = 4;  -- Number of buttons around big action button
 local ERA_DEGREES         :table = { 209,190,171,153,137,122,106,106 }; -- Degrees to place the era indicator
 local autoEndTurnOptionHash     :number = DB.MakeHash("AutoEndTurn");
+local cityRangeAttackTurnOptionHash	:number = DB.MakeHash("CityRangeAttackTurnBlocking");
 
 local MAX_BEFORE_TRUNC_TURN_STRING  :number = 150;
 
@@ -76,8 +77,6 @@ local needArtifactPlayerString    :string = Locale.Lookup("LOC_ACTION_PANEL_CHOO
 local needArtifactPlayerTip     :string = Locale.Lookup("LOC_ACTION_PANEL_CHOOSE_ARTIFACT_PLAYER_TOOLTIP");
 local cityRangedAttackString    :string = Locale.Lookup("LOC_ACTION_PANEL_CITY_RANGED_ATTACK");
 local cityRangedAttackTip     :string = Locale.Lookup("LOC_ACTION_PANEL_CITY_RANGED_ATTACK_TOOLTIP");
-local encampmentRangedAttackString    :string = Locale.Lookup("LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK");
-local encampmentRangedAttackTip     :string = Locale.Lookup("LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK_TOOLTIP");
 local yourTurnToolStr       :string = Locale.Lookup("LOC_KEY_YOUR_TURN_TIME_TOOLTIP");
 local estTilTurnToolStr       :string = Locale.Lookup("LOC_KEY_ESTIMATED_TIME_TIL_YOUR_TURN_TIME_TOOLTIP");
 local estTimeElapsedToolStr     :string = Locale.Lookup("LOC_KEY_ESTIMATED_TIME_ELAPSED_TOOLTIP");
@@ -118,15 +117,6 @@ local m_numberVisibleBlockers :number = 0;
 local m_visibleBlockerTypes : table   = {};
 local m_isSlowTurnEnable  : boolean = false;                  -- Tutorial: when active slow to allow clicks when turn raises.
 
--- ===========================================================================
---  QUI
--- ===========================================================================
-
-local cqui_blockOnCityAttack = true;
-function CQUI_OnSettingsUpdate()
-  cqui_blockOnCityAttack = GameConfiguration.GetValue("CQUI_BlockOnCityAttack");
-end
-LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
 
 -- ===========================================================================
 --  UI Event
@@ -144,14 +134,14 @@ function OnRefresh()
     return;
   end
 
-  Controls.EndTurnButton:SetDisabled( false );
-  Controls.EndTurnButtonLabel:SetDisabled( false );
-
   if not pPlayer:IsTurnActiveComplete() or UI.IsProcessingMessages() then
     SetEndTurnWaiting();
     return;
   end
 
+	Controls.EndTurnButton:SetDisabled( false );
+	Controls.EndTurnButtonLabel:SetDisabled( false );	
+	
   local message       :string;
   local icon          :string;
   local toolTipString     :string;
@@ -202,15 +192,8 @@ function OnRefresh()
     -- Special "City Ranged Attack" state for when there are no end turn blockers but
     -- there is a city can that perform a ranged attack in 'auto end turn mode'.
     message     = cityRangedAttackString;
-    icon            = "ICON_NOTIFICATION_CITY_RANGED_STRIKE";
+		icon            = "ICON_NOTIFICATION_CITY_RANGE_ATTACK";
     toolTipString = cityRangedAttackTip;
-    iFlashingState  = FLASHING_END_TURN;
-  elseif (CQUI_CheckEncampmentRangeAttackState()) then
-    -- Special "Encampment Ranged Attack" state for when there are no end turn blockers but
-    -- there is a Encampment can that perform a ranged attack.
-    message     = encampmentRangedAttackString;
-    icon            = "ICON_NOTIFICATION_CITY_RANGED_STRIKE";
-    toolTipString = encampmentRangedAttackTip;
     iFlashingState  = FLASHING_END_TURN;
   else
     message     = nextTurnString;
@@ -407,7 +390,7 @@ end
 -- ===========================================================================
 function HaveCityRangeAttackStateEnabled()
   -- When is the "City Ranged Attack" end turn button enabled?
-  return  (UserConfiguration.IsAutoEndTurn() or cqui_blockOnCityAttack) and Game.IsAllowTacticalCommands(Game.GetLocalPlayer());
+	return 	(UserConfiguration.IsCityRangeAttackTurnBlocking()) and Game.IsAllowTacticalCommands(Game.GetLocalPlayer());
 end
 
 -- ===========================================================================
@@ -430,42 +413,16 @@ function CheckCityRangeAttackState()
     return false;
   end
 
-  local cityAttackState :boolean = HaveCityRangeAttackStateEnabled() and pPlayer:GetCities():GetFirstRangedAttackCity() ~= nil;
-  return cityAttackState;
-end
-
--- ===========================================================================
-function CQUI_CheckEncampmentRangeAttackState()
-  local pPlayer = Players[Game.GetLocalPlayer()];
-  if (pPlayer == nil) then
+	if(not HaveCityRangeAttackStateEnabled()) then
     return false;
   end
 
-  if(not HaveCityRangeAttackStateEnabled()) then
+	local pNotification :table = NotificationManager.FindType(NotificationTypes.CITY_RANGE_ATTACK, Game.GetLocalPlayer());
+	if pNotification == nil or pNotification:IsDismissed() then
     return false;
   end
 
-  for i, district in pPlayer:GetDistricts():Members() do
-    if CityManager.CanStartCommand(district, CityCommandTypes.RANGE_ATTACK) then
       return true;
-    end
-  end
-  return false;
-end
-
--- ===========================================================================
-function CQUI_GetFirstRangedAttackEncampment()
-  local pPlayer = Players[Game.GetLocalPlayer()];
-  if (pPlayer == nil) then
-    return nil;
-  end
-
-  for i, district in pPlayer:GetDistricts():Members() do
-    if CityManager.CanStartCommand(district, CityCommandTypes.RANGE_ATTACK) then
-      return district;
-    end
-  end
-  return nil;
 end
 
 -- ===========================================================================
@@ -509,7 +466,7 @@ function CheckAutoEndTurn( eCurrentEndTurnBlockingType:number )
     if eCurrentEndTurnBlockingType == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING
       and (UserConfiguration.IsAutoEndTurn() and not UI.SkipNextAutoEndTurn())
       -- In tactical phases, all units must have orders or used up their movement points.
-      and (not CheckUnitsHaveMovesState() and not CheckCityRangeAttackState() and not CQUI_CheckEncampmentRangeAttackState()) then
+			and (not CheckUnitsHaveMovesState() and not CheckCityRangeAttackState()) then 
         if not UI.CanEndTurn() then
           error("CheckAutoEndTurn thinks that we can't end turn, but the notification system disagrees");
         end
@@ -559,22 +516,11 @@ function DoEndTurn( optionalNewBlocker:number )
     elseif(CheckCityRangeAttackState()) then
       local attackCity = pPlayer:GetCities():GetFirstRangedAttackCity();
       if(attackCity ~= nil) then
-        if cqui_blockOnCityAttack then
-          UI.LookAtPlot(attackCity:GetX(), attackCity:GetY());
-        else
           UI.SelectCity(attackCity);
-        end
       else
         error( "Unable to find selectable attack city while in CheckCityRangeAttackState()" );
       end
-    elseif(CQUI_CheckEncampmentRangeAttackState()) then
-      local attackEncampment = CQUI_GetFirstRangedAttackEncampment();
-      if(attackEncampment ~= nil) then
-        UI.LookAtPlot(attackEncampment:GetX(), attackEncampment:GetY());
       else
-        error( "Unable to find selectable attack encampment while in CQUI_CheckEncampmentRangeAttackState()" );
-      end
-    else
       UI.RequestAction(ActionTypes.ACTION_ENDTURN);
       UI.PlaySound("Stop_Unit_Movement_Master");
     end
@@ -674,8 +620,20 @@ function OnEndTurnRightClicked()
     return;
   end
 
-    UI.RequestAction(ActionTypes.ACTION_ENDTURN);
-    UI.PlaySound("Stop_Unit_Movement_Master");
+	local activeBlockerId = NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
+	if activeBlockerId == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING then
+		if (CheckUnitsHaveMovesState()) then
+			-- Do Nothing
+		elseif(CheckCityRangeAttackState()) then
+			-- Remove the city range attack notification so the turn can proceed.
+			local pNotification :table = NotificationManager.FindType(NotificationTypes.CITY_RANGE_ATTACK, Game.GetLocalPlayer());
+			if pNotification ~= nil and not pNotification:IsDismissed() then
+				NotificationManager.Dismiss( pNotification:GetPlayerID(), pNotification:GetID() );
+			end
+		else
+			-- Do Nothing
+		end
+	end
 end
 
 -- ===========================================================================
@@ -800,13 +758,14 @@ end
 
 -- ===========================================================================
 function OnUserOptionChanged(eOptionSet, hOptionKey, iNewOptionValue)
-  -- If we enabled AutoEndTurn, we need to check auto end turns because we might already be in a state where we should autoend the turn.
-  if(hOptionKey == autoEndTurnOptionHash) then
+	-- If we enable certain user options, we need to check auto end turns because our auto end turn status might be affected.
+	if(hOptionKey == autoEndTurnOptionHash or hOptionKey == cityRangeAttackTurnOptionHash) then
     if(UserConfiguration.IsAutoEndTurn()) then
       local blockingType  :number= NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
       CheckAutoEndTurn( blockingType );
     end
-    ContextPtr:RequestRefresh();  --Refresh incase changing the autoendturn option results in a different end turn state.
+		-- Changing these user options can result in a different end turn state.
+		ContextPtr:RequestRefresh();
   end
 end
 
@@ -894,6 +853,23 @@ end
 function OnNotificationDismissed( playerID:number, notificationID:number )
   if playerID == Game.GetLocalPlayer() then
     ContextPtr:RequestRefresh();
+		
+		-- Need to check auto end turn if this was a NotificationTypes.CITY_RANGE_ATTACK
+		local wasCityRangeNotification = false;
+		local pNotification:table = NotificationManager.Find( playerID, notificationID );
+		if pNotification == nil then
+			-- It is possible, that by the time we get this event, the notification was 'expired' by some other action in the game.
+			-- To be safe, assume it was a NotificationTypes.CITY_RANGE_ATTACK.
+			wasCityRangeNotification = true;
+		elseif(pNotification:GetType() == NotificationTypes.CITY_RANGE_ATTACK) then
+			wasCityRangeNotification = true;
+		end
+
+		if (wasCityRangeNotification and HaveCityRangeAttackStateEnabled()) then
+			local pPlayer		:table = Players[Game.GetLocalPlayer()];
+			local blockingType	:number= NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
+			CheckAutoEndTurn( blockingType );
+		end		
   end
 end
 

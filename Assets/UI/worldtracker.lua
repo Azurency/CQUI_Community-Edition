@@ -3,6 +3,20 @@ include("TechAndCivicSupport");
 include("SupportFunctions");
 include("GameCapabilities");
 
+g_TrackedItems = {}; -- Populated by WorldTrackerItems_* scripts;
+g_TrackedInstances = {};
+
+include("WorldTrackerItem_", true);
+
+--table.insert(g_TrackedItems, {
+	--InstanceType = "ResearchInstance",
+	--Name = "Governor Panel",
+	--SelectFunc = function ()
+		--print("FLIBBY");
+	--end
+--});
+
+
 --	Hotloading note: The World Tracker button check now positions based on how many hooks are showing.
 --	You'll need to save "LaunchBar" to see the tracker button appear.
 -- ===========================================================================
@@ -280,7 +294,12 @@ function Refresh()
 
   local pPlayerTechs :table = Players[localPlayer]:GetTechs();
   m_currentResearchID = pPlayerTechs:GetResearchingTech();
-  m_lastResearchCompletedID = -1;
+	
+	-- Only reset last completed tech once a new tech has been selected
+	if m_currentResearchID >= 0 then	
+		m_lastResearchCompletedID = -1;
+	end	
+
   UpdateResearchPanel();
 
   local pPlayerCulture:table = Players[localPlayer]:GetCulture();
@@ -302,21 +321,28 @@ end
 function OnLocalPlayerTurnBegin()
   local localPlayer = Game.GetLocalPlayer();
   if localPlayer ~= -1 then
-    Refresh();
+		m_needsRefresh = true;
   end
 end
 
 -- ===========================================================================
 function OnCityInitialized( playerID:number, cityID:number )
   if playerID == Game.GetLocalPlayer() then
-    Refresh();
+		m_needsRefresh = true;
   end
 end
 
 -- ===========================================================================
 function OnBuildingChanged( plotX:number, plotY:number, buildingIndex:number, playerID:number, iPercentComplete:number )
   if playerID == Game.GetLocalPlayer() then
-    Refresh(); -- Buildings can change culture/science yield which can effect "turns to complete" values
+		m_needsRefresh = true; -- Buildings can change culture/science yield which can effect "turns to complete" values
+	end
+end
+
+function FlushChanges()
+	if m_needsRefresh then
+		Refresh();
+		m_needsRefresh = false;
   end
 end
 
@@ -379,7 +405,12 @@ function OnResearchChanged( ePlayer:number, eTech:number )
   if localPlayer ~= -1 and localPlayer == ePlayer then
     local pPlayerTechs :table = Players[localPlayer]:GetTechs();
     m_currentResearchID = pPlayerTechs:GetResearchingTech();
+		
+		-- Only reset last completed tech once a new tech has been selected
+		if m_currentResearchID >= 0 then	
     m_lastResearchCompletedID = -1;
+		end
+
     if eTech == m_currentResearchID then
       UpdateResearchPanel();
     end
@@ -455,6 +486,22 @@ function OnTutorialGoalsHiding()
   RealizeStack();
 end
 
+-- ===========================================================================
+function Tutorial_ShowFullTracker()
+	Controls.ToggleAllButton:SetHide(true);
+	Controls.ToggleDropdownButton:SetHide(true);
+	UpdateCivicsPanel(false);
+	UpdateResearchPanel(false);
+	ToggleAll(false);
+end
+
+-- ===========================================================================
+function Tutorial_ShowTrackerOptions()
+	Controls.ToggleAllButton:SetHide(false);
+	Controls.ToggleDropdownButton:SetHide(false);
+end
+
+-- ===========================================================================
 function OnLoadScreenClose()
   local callback = function()
     ToggleAll(not m_hideAll)
@@ -475,6 +522,21 @@ function Initialize()
   -- Create semi-dynamic instances; hack: change parent back to self for ordering:
   ContextPtr:BuildInstanceForControl( "ResearchInstance", m_researchInstance, Controls.PanelStack );
   ContextPtr:BuildInstanceForControl( "CivicInstance",	m_civicsInstance,	Controls.PanelStack );
+
+	for i,v in ipairs(g_TrackedItems) do
+		local instance = {};
+		ContextPtr:BuildInstanceForControl( v.InstanceType, instance, Controls.PanelStack );
+		if(instance.IconButton) then
+			instance.IconButton:RegisterCallback(Mouse.eLClick, function() v.SelectFunc() end);
+			table.insert(g_TrackedInstances, instance);
+		end
+
+		if(instance.TitleButton) then
+			instance.TitleButton:LocalizeAndSetText(v.Name);
+		end
+	end
+
+
   Controls.ChatPanel:ChangeParent( Controls.PanelStack );
   Controls.TutorialGoals:ChangeParent( Controls.PanelStack );
 
@@ -513,6 +575,7 @@ function Initialize()
   Events.ResearchChanged.Add(OnResearchChanged);
   Events.ResearchCompleted.Add(OnResearchCompleted);
   Events.ResearchYieldChanged.Add(OnResearchYieldChanged);
+	Events.GameCoreEventPublishComplete.Add(FlushChanges); --This event is raised directly after a series of gamecore events.
   LuaEvents.LaunchBar_Resize.Add(OnLaunchBarResized);
 
   LuaEvents.CivicChooser_ForceHideWorldTracker.Add(	function() ContextPtr:SetHide(true);  end);
@@ -520,7 +583,8 @@ function Initialize()
   LuaEvents.ResearchChooser_ForceHideWorldTracker.Add(function() ContextPtr:SetHide(true);  end);
   LuaEvents.ResearchChooser_RestoreWorldTracker.Add(	function() ContextPtr:SetHide(false); end);
   LuaEvents.Tutorial_ForceHideWorldTracker.Add(		function() ContextPtr:SetHide(true);  end);
-  LuaEvents.Tutorial_RestoreWorldTracker.Add(			function() ContextPtr:SetHide(false); end);
+	LuaEvents.Tutorial_RestoreWorldTracker.Add(			Tutorial_ShowFullTracker);
+	LuaEvents.Tutorial_EndTutorialRestrictions.Add(		Tutorial_ShowTrackerOptions);
   LuaEvents.TutorialGoals_Showing.Add(				OnTutorialGoalsShowing );
   LuaEvents.TutorialGoals_Hiding.Add(					OnTutorialGoalsHiding );
 

@@ -121,6 +121,7 @@ function GetCityData( pCity:table )
     AmenitiesFromReligion = 0,
     AmenitiesFromNationalParks = 0,
     AmenitiesFromStartingEra = 0,
+	AmenitiesFromImprovements = 0,
     AmenitiesRequiredNum = 0,
     BeliefsOfDominantReligion = {},
     Buildings = {}, -- Per Entry Format: { Name, CitizenNum }
@@ -274,6 +275,7 @@ function GetCityData( pCity:table )
   data.AmenitiesFromReligion = pCityGrowth:GetAmenitiesFromReligion();
   data.AmenitiesFromNationalParks = pCityGrowth:GetAmenitiesFromNationalParks();
   data.AmenitiesFromStartingEra = pCityGrowth:GetAmenitiesFromStartingEra();
+	data.AmenitiesFromImprovements		= pCityGrowth:GetAmenitiesFromImprovements();
   data.AmenitiesLostFromWarWeariness = pCityGrowth:GetAmenitiesLostFromWarWeariness();
   data.AmenitiesLostFromBankruptcy = pCityGrowth:GetAmenitiesLostFromBankruptcy();
   data.AmenitiesRequiredNum = pCityGrowth:GetAmenitiesNeeded();
@@ -379,6 +381,17 @@ function GetCityData( pCity:table )
       return 0;
     end
 
+	--I do not know why we make local functions, but I am keeping standard
+	function GetDistrictBonus( district:table, yieldType:string )
+		for i,yield in ipairs( kTempDistrictYields ) do
+			if yield.YieldType == yieldType then
+				return district:GetAdjacencyYield(i);
+			end
+		end
+		return 0;
+	end
+
+
     local districtInfo :table = GameInfo.Districts[district:GetType()];
     local districtType :string = districtInfo.DistrictType;
     local locX :number = district:GetX();
@@ -398,7 +411,16 @@ function GetCityData( pCity:table )
       Gold = GetDistrictYield(district, "YIELD_GOLD" ),
       Production = GetDistrictYield(district, "YIELD_PRODUCTION" ),
       Science = GetDistrictYield(district, "YIELD_SCIENCE" ),
-      Tourism = 0
+		Tourism		= 0,
+		Maintenance = districtInfo.Maintenance,
+		AdjacencyBonus = {
+			Culture		= GetDistrictBonus(district, "YIELD_CULTURE"),
+			Faith		= GetDistrictBonus(district, "YIELD_FAITH"),
+			Food		= GetDistrictBonus(district, "YIELD_FOOD"),
+			Gold		= GetDistrictBonus(district, "YIELD_GOLD"),
+			Production	= GetDistrictBonus(district, "YIELD_PRODUCTION"),
+			Science		= GetDistrictBonus(district, "YIELD_SCIENCE")
+		}
     };
 
     local buildingTypes = pCityBuildings:GetBuildingsAtLocation(plotID);
@@ -439,6 +461,7 @@ function GetCityData( pCity:table )
         table.insert( data.Wonders, {
             Name = Locale.Lookup(building.Name),
             Yields = kYields,
+			Type = building.BuildingType,
             Icon = "ICON_"..building.BuildingType,
             isPillaged = pCityBuildings:IsPillaged(building.BuildingType),
             isBuilt = pCityBuildings:HasBuilding(building.Index),
@@ -453,6 +476,7 @@ function GetCityData( pCity:table )
         data.BuildingsNum = data.BuildingsNum + 1;
         table.insert( districtTable.Buildings, {
             Name = Locale.Lookup(building.Name),
+			Type = building.BuildingType,
             Yields = kYields,
             Icon = "ICON_"..building.BuildingType,
             Citizens = kPlot:GetWorkerCount(),

@@ -7,6 +7,7 @@
 -- ===========================================================================
 include("SupportFunctions.lua");
 include("AdjacencyBonusSupport.lua");
+include("PopupDialog");
 
 
 -- ===========================================================================
@@ -51,7 +52,7 @@ function ConfirmPlaceWonder( pInputStruct:table )
           sConfirmText = sConfirmText .. "[NEWLINE]" .. Locale.Lookup(v);
         end
       end
-      local pPopupDialog :table = PopupDialog:new("PlaceWonderAt_X" .. kPlot:GetX() .. "_Y" .. kPlot:GetY()); -- unique identifier
+			local pPopupDialog :table = PopupDialogInGame:new("PlaceWonderAt_X" .. kPlot:GetX() .. "_Y" .. kPlot:GetY()); -- unique identifier
       pPopupDialog:AddText(sConfirmText);
       pPopupDialog:AddButton(Locale.Lookup("LOC_YES"), function()
         --CityManager.RequestOperation(pSelectedCity, CityOperationTypes.BUILD, tParameters);
@@ -203,7 +204,7 @@ function ConfirmPlaceDistrict(pInputStruct:table)
           sConfirmText = sConfirmText .. "[NEWLINE]" .. Locale.Lookup(v);
         end
       end
-      local pPopupDialog :table = PopupDialog:new("PlaceDistrictAt_X" .. kPlot:GetX() .. "_Y" .. kPlot:GetY()); -- unique identifier
+			local pPopupDialog :table = PopupDialogInGame:new("PlaceDistrictAt_X" .. kPlot:GetX() .. "_Y" .. kPlot:GetY()); -- unique identifier
       pPopupDialog:AddText(sConfirmText);
       pPopupDialog:AddButton(Locale.Lookup("LOC_YES"), function()
         --CityManager.RequestOperation(pSelectedCity, CityOperationTypes.BUILD, tParameters);

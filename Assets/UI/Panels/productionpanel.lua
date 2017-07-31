@@ -246,6 +246,14 @@ function BuildBuilding(city, buildingEntry)
     return;
   end
 
+	-- If it's a Wonder and the city already has the building then it doesn't need to be replaced.
+	if (bNeedsPlacement) then
+		local cityBuildings = city:GetBuildings();
+		if (cityBuildings:HasBuilding(buildingEntry.Hash)) then
+			bNeedsPlacement = false;
+		end
+	end
+
   -- Does the building need to be placed?
   if ( bNeedsPlacement ) then
     --If we were already placing something, quickly pop into selection mode, signalling to CQUI cityview code that placement was interrupted and resetting the view
@@ -315,14 +323,15 @@ function PurchaseUnit(city, unitEntry, purchaseType)
   if (purchaseType == nil) then
     if (unitEntry.Yield == "YIELD_GOLD") then
       tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_GOLD"].Index;
+		UI.PlaySound("Purchase_With_Gold");
     else
       tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_FAITH"].Index;
+		UI.PlaySound("Purchase_With_Faith");
     end
   else
     tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = purchaseType;
   end
   CityManager.RequestCommand(city, CityCommandTypes.PURCHASE, tParameters);
-  UI.PlaySound("Purchase_With_Gold");
 end
 
 -- ===========================================================================
@@ -333,14 +342,15 @@ function PurchaseUnitCorps(city, unitEntry, purchaseType)
   if (purchaseType == nil) then
     if (unitEntry.Yield == "YIELD_GOLD") then
       tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_GOLD"].Index;
+		UI.PlaySound("Purchase_With_Gold");
     else
       tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_FAITH"].Index;
+		UI.PlaySound("Purchase_With_Faith");
     end
   else
     tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = purchaseType;
   end
   CityManager.RequestCommand(city, CityCommandTypes.PURCHASE, tParameters);
-  UI.PlaySound("Purchase_With_Gold");
 end
 
 -- ===========================================================================
@@ -351,14 +361,15 @@ function PurchaseUnitArmy(city, unitEntry, purchaseType)
   if (purchaseType == nil) then
     if (unitEntry.Yield == "YIELD_GOLD") then
       tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_GOLD"].Index;
+		UI.PlaySound("Purchase_With_Gold");
     else
       tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_FAITH"].Index;
+		UI.PlaySound("Purchase_With_Faith");
     end
   else
     tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = purchaseType;
   end
   CityManager.RequestCommand(city, CityCommandTypes.PURCHASE, tParameters);
-  UI.PlaySound("Purchase_With_Gold");
 end
 
 -- ===========================================================================
@@ -368,14 +379,15 @@ function PurchaseBuilding(city, buildingEntry, purchaseType)
   if(purchaseType == nil) then
     if (buildingEntry.Yield == "YIELD_GOLD") then
       tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_GOLD"].Index;
+		UI.PlaySound("Purchase_With_Gold");
     else
       tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_FAITH"].Index;
+		UI.PlaySound("Purchase_With_Faith");
     end
   else
     tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = purchaseType;
   end
   CityManager.RequestCommand(city, CityCommandTypes.PURCHASE, tParameters);
-  UI.PlaySound("Purchase_With_Gold");
 end
 
 -- ===========================================================================
@@ -2040,7 +2052,7 @@ function Refresh()
         end
 
         local allReasons      :string = ComposeFailureReasonStrings( isDisabled, results );
-        local sToolTip        :string = ToolTipHelper.GetDistrictToolTip( row.Hash ) .. allReasons;
+        local sToolTip        :string = ToolTipHelper..GetToolTip(row.DistrictType, Game.GetLocalPlayer()) .. allReasons;
 
         local iProductionCost   :number = buildQueue:GetDistrictCost( row.Index );
         local iProductionProgress :number = buildQueue:GetDistrictProgress( row.Index );
@@ -2293,7 +2305,7 @@ function Refresh()
           Kind      = row.Kind,
           TurnsLeft   = buildQueue:GetTurnsLeft( row.Hash ),
           Disabled    = isDisabled,
-          Repair      = cityBuildings:IsPillaged( row.Index ),
+          Repair      = cityBuildings:IsPillaged( row.Hash ),
           Cost      = iProductionCost,
           Progress    = iProductionProgress,
           IsWonder    = row.IsWonder,
@@ -2353,7 +2365,8 @@ function Refresh()
           ArmyCost    = 0,
           ArmyTurnsLeft = 1,
           ArmyTooltip   = "",
-          ArmyName    = ""
+          ArmyName    = "",
+          ReligiousStrength	= row.ReligiousStrength
         };
 
         -- Should we present options for building Corps or Army versions?

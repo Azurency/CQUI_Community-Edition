@@ -1,8 +1,10 @@
 -- ===========================================================================
 --	Leader container list on top of the HUD
 -- ===========================================================================
+include("DiplomacyRibbonSupport");
 include("InstanceManager");
 include("TeamSupport");
+include("LeaderIcon");
 
 -- ===========================================================================
 --	CONSTANTS

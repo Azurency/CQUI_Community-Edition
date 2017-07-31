@@ -9,7 +9,8 @@
 include("AnimSidePanelSupport");
 include("InstanceManager");
 include("SupportFunctions");
-
+include("GameCapabilities");
+include("TeamSupport");
 
 -- ===========================================================================
 --  CONSTANTS
@@ -31,16 +32,21 @@ local DIPLO_PIP_INFO = {};
     DIPLO_PIP_INFO["DIPLO_STATE_PATRON"]    = { IconName="ICON_RELATIONSHIP_GOOD",    Tooltip="LOC_CITY_STATES_DIPLO_GOOD"};
     DIPLO_PIP_INFO["DIPLO_STATE_AWARE"]      = { IconName="ICON_RELATIONSHIP_NEUTRAL",  Tooltip="LOC_CITY_STATES_DIPLO_AWARE"};
     DIPLO_PIP_INFO["DIPLO_STATE_WAR_WITH_MAJOR"]= { IconName="ICON_RELATIONSHIP_WAR",    Tooltip="LOC_CITY_STATES_DIPLO_WAR"};
+		DIPLO_PIP_INFO["DIPLO_STATE_WAR_WITH_MINOR"]= { IconName="ICON_RELATIONSHIP_WAR",		Tooltip="LOC_CITY_STATES_DIPLO_WAR"};
+		DIPLO_PIP_INFO["DIPLO_STATE_MINOR_MINOR_WAR"]= { IconName="ICON_RELATIONSHIP_WAR",		Tooltip="LOC_CITY_STATES_DIPLO_WAR"};
 local RELOAD_CACHE_ID          :string = "CityStates"; -- Must be unique (usually the same as the file name)
 
 local MODE                :table = {
   Overview  = "Overview",
   SendEnvoys  = "SendEnvoys",
   EnvoySent  = "EnvoySent",
-  InfluencedBy= "InfluencedBy",
-  Quests    = "Quests"
+	InfluencedBy  = "InfluencedBy",
+	Quests		  = "Quests",
+	Relationships = "Relationships"
 }
 
+local TEAM_RIBBON_PREFIX			:string = "ICON_TEAM_RIBBON_";
+local REPORT_CONTAINER_SIZE_PADDING	:number = -18;
 
 -- ===========================================================================
 --  MEMBERS
@@ -53,6 +59,9 @@ local m_EnvoysBonusCityHeaderIM  :table = InstanceManager:new( "BonusCityHeaderI
 local m_EnvoysBonusItemIM    :table = InstanceManager:new( "BonusItemOnInstance",  "Top",      Controls.EnvoysBonusStack);
 local m_InfluenceRowIM      :table = InstanceManager:new( "InfluenceRowInstance",  "Top",      Controls.InfluenceStack);
 local m_QuestsIM        :table = InstanceManager:new( "QuestInstance",      "Top",      Controls.QuestsStack);
+local m_RelationshipsButtonIM		:table = InstanceManager:new( "RelationshipIcon",	"Background",	Controls.RelationshipsButtonStack);
+local m_RelationshipsCivsIM			:table = InstanceManager:new( "RelationshipIcon",	"Background",	Controls.RelationshipsCivsStack);
+local m_RelationshipsCityStatesIM	:table = InstanceManager:new( "RelationshipIcon",	"Background",	Controls.RelationshipsCityStatesStack);
 
 local m_kScreenSlideAnim    :table;        -- Controls overall look/feel of animation.
 local m_kCityStates        :table = {};    -- City states, key is player num of city state
@@ -250,6 +259,72 @@ function GetQuests( playerID:number )
   return kQuests;
 end
 
+-- ===========================================================================
+--	RETURN a table of relationships for a given CityState
+-- ===========================================================================
+function GetRelationships( cityStateID:number )
+	local kRelationships:table  = {};
+
+	-- Civ relationships
+	kRelationships.CivRelationships = {};
+	for _, playerID in ipairs(PlayerManager.GetAliveMajorIDs()) do
+		local pPlayer:table = Players[playerID];
+		local diploStateID:number = pPlayer:GetDiplomaticAI():GetDiplomaticStateIndex( cityStateID );
+		if diploStateID ~= -1 then
+			local civEntry:table = {};
+			
+			local pPlayerConfig:table = PlayerConfigurations[playerID];
+			civEntry.PlayerIcon = "ICON_" .. pPlayerConfig:GetLeaderTypeName();
+			civEntry.PlayerName = pPlayerConfig:GetCivilizationShortDescription();
+			civEntry.TeamID = pPlayerConfig:GetTeam();
+			civEntry.DiploState = GameInfo.DiplomaticStates[diploStateID].StateType;
+			civEntry.DiploTooltip = GetRelationshipDiplomaticTooltip(cityStateID, playerID, diploStateID);
+			civEntry.HasMet = playerID == Game.GetLocalPlayer() or Players[Game.GetLocalPlayer()]:GetDiplomacy():HasMet( playerID )
+
+			table.insert( kRelationships.CivRelationships, civEntry );
+		end
+	end
+
+	-- City State relationships
+	kRelationships.CityStateRelationships = {};
+	for _, playerID in ipairs(PlayerManager.GetAliveMinorIDs()) do
+		local pPlayer:table = Players[playerID];
+		local diploStateID:number = pPlayer:GetDiplomaticAI():GetDiplomaticStateIndex( cityStateID );
+		if diploStateID ~= -1 then
+			local cityStateEntry:table = {};
+			
+			local pPlayerConfig:table = PlayerConfigurations[playerID];
+			cityStateEntry.PlayerIcon = "ICON_" .. GameInfo.CivilizationLeaders[pPlayerConfig:GetLeaderTypeName()].CivilizationType;
+			cityStateEntry.PlayerName = pPlayerConfig:GetCivilizationShortDescription();
+			cityStateEntry.TeamID = pPlayerConfig:GetTeam();
+			cityStateEntry.DiploState = GameInfo.DiplomaticStates[diploStateID].StateType;
+			cityStateEntry.DiploTooltip = GetRelationshipDiplomaticTooltip(cityStateID, playerID, diploStateID);
+			cityStateEntry.HasMet = playerID == Game.GetLocalPlayer() or Players[Game.GetLocalPlayer()]:GetDiplomacy():HasMet( playerID )
+
+			local primaryColor, secondaryColor = UI.GetPlayerColors( playerID );
+			cityStateEntry.Color = secondaryColor;
+
+			table.insert( kRelationships.CityStateRelationships, cityStateEntry );
+		end
+	end
+
+	return kRelationships;
+end
+
+-- ===========================================================================
+--	RETURN a tooltip to define a city state relationship
+-- ===========================================================================
+function GetRelationshipDiplomaticTooltip(cityStateID, playerID, diploStateID)
+	local tooltip:string = "";
+
+	-- Right now we don't need to worry about the diplo state as we only at war diplo pip
+	-- Once we display other pips this function will need to determine the proper tooltip
+	local pCityStateConfig:table = PlayerConfigurations[cityStateID];
+	local pPlayerConfig:table = PlayerConfigurations[playerID];
+	tooltip = Locale.Lookup("LOC_CITY_STATES_AT_WAR_WTIH", pCityStateConfig:GetCivilizationShortDescription(), pPlayerConfig:GetCivilizationShortDescription());
+
+	return tooltip;
+end
 
 -- ===========================================================================
 --  Returns the texture name and UV for a bonus icon type.
@@ -411,6 +486,12 @@ end
 --      -1 or nil it will show an overview list.
 -- ===========================================================================
 function OpenOverview( iPlayer:number )
+	-- dont show panel if there is no local player
+	local localPlayerID = Game.GetLocalPlayer();
+	if (localPlayerID == -1) then
+		return
+	end
+
   UI.PlaySound("CityStates_Panel_Open");
   m_mode = MODE.Overview;
   m_kScreenSlideAnim.Show();
@@ -425,6 +506,12 @@ end
 --      -1 or nil it will show an overview list.
 -- ===========================================================================
 function OnOpenSendEnvoys( iPlayer:number )
+	-- dont show panel if there is no local player
+	local localPlayerID = Game.GetLocalPlayer();
+	if (localPlayerID == -1) then
+		return
+	end
+
   m_mode = MODE.SendEnvoys;
   UI.PlaySound("CityStates_Panel_Open");
   m_kScreenSlideAnim.Show();
@@ -452,6 +539,12 @@ end
 --  Open panel pointing to a specific City State
 -- ===========================================================================
 function OpenSingleViewCityState( playerID:number )
+	-- dont show panel if there is no local player
+	local localPlayerID = Game.GetLocalPlayer();
+	if (localPlayerID == -1) then
+		return
+	end
+
   if m_mode == MODE.Overview or m_mode == MODE.SendEnvoys then
     m_mode = MODE.EnvoySent;
   end
@@ -684,6 +777,14 @@ end
 function OnQuestsClick()
   m_mode = MODE.Quests;
   Refresh();
+end
+
+-- ===========================================================================
+--	UI Callback
+-- ===========================================================================
+function OnRelationshipsClick()
+	m_mode = MODE.Relationships;
+	Refresh();
 end
 
 -- ===========================================================================
@@ -1049,8 +1150,12 @@ function ViewCityState( iPlayer:number )
     Controls.PeaceWarButton:SetText( Locale.Lookup("LOC_CITY_STATES_MAKE_PEACE") );
     Controls.PeaceWarButton:SetDisabled( not kCityState.CanMakePeaceWith );
     if not kCityState.CanMakePeaceWith then
+			if(GlobalParameters.DIPLOMACY_WAR_LAST_FOREVER == 1 or GlobalParameters.DIPLOMACY_WAR_LAST_FOREVER == true) then
+				warPeaceTooltip = warPeaceTooltip .. Locale.Lookup("LOC_CITY_STATES_TURNS_WAR_NO_PEACE");
+			else
       warPeaceTooltip = warPeaceTooltip .. Locale.Lookup("LOC_CITY_STATES_TURNS_WAR", m_iTurnsOfWar + kCityState.iTurnChanged - Game.GetCurrentGameTurn() );
     end
+		end
   else
     Controls.PeaceWarButton:SetText( Locale.Lookup("LOC_CITY_STATES_DECLARE_WAR_BUTTON") );
     Controls.PeaceWarButton:SetDisabled( not kCityState.CanDeclareWarOn );
@@ -1078,15 +1183,29 @@ function ViewCityState( iPlayer:number )
   Controls.EnvoysSentValue:SetText( tostring(kCityState.Tokens) );
   Controls.QuestsValue:SetText( tostring(table.count(kCityState.Quests)) );
 
+	-- Update the relationship button stack
+	RefreshRelationshipStack( kCityState.Relationships.CivRelationships, m_RelationshipsButtonIM );
+
+	-- Refresh AutoSize to update positions correctly
+	Controls.ReportArea:DoAutoSize();
+
+	Controls.SingleViewStack:CalculateSize();
+
+	-- Scale the tab container to fill the remaining area
+	Controls.ReportTabContainer:SetParentRelativeSizeY(REPORT_CONTAINER_SIZE_PADDING - Controls.SingleViewStack:GetSizeY() - Controls.SingleViewStack:GetOffsetY());
+	Controls.ReportTabContainer:ReprocessAnchoring();
+
   if m_mode == MODE.EnvoySent then
     -- Setup the buttons and what (sub) areas are shown/hidden.
     Controls.EnvoysSentButton:SetSelected( true );
     Controls.InfluencedByButton:SetSelected( false );
     Controls.QuestsButton:SetSelected( false );
+		Controls.RelationshipsButton:SetSelected( false );
 
     Controls.EnvoysSentArea:SetHide( false );
     Controls.InfluenceArea:SetHide( true );
     Controls.QuestsArea:SetHide( true );
+		Controls.RelationshipsArea:SetHide( true );
 
     Controls.EnvoysSentValue2:SetText( tostring(kCityState.Tokens) );
 
@@ -1135,10 +1254,12 @@ function ViewCityState( iPlayer:number )
     Controls.EnvoysSentButton:SetSelected( false );
     Controls.InfluencedByButton:SetSelected( true );
     Controls.QuestsButton:SetSelected( false );
+		Controls.RelationshipsButton:SetSelected( false );
 
     Controls.EnvoysSentArea:SetHide( true );
     Controls.InfluenceArea:SetHide( false );
     Controls.QuestsArea:SetHide( true );
+		Controls.RelationshipsArea:SetHide( true );
 
     m_InfluenceRowIM:ResetInstances();
 
@@ -1186,10 +1307,12 @@ function ViewCityState( iPlayer:number )
     Controls.EnvoysSentButton:SetSelected( false );
     Controls.InfluencedByButton:SetSelected( false );
     Controls.QuestsButton:SetSelected( true );
+		Controls.RelationshipsButton:SetSelected( false );
 
     Controls.EnvoysSentArea:SetHide( true );
     Controls.InfluenceArea:SetHide( true );
     Controls.QuestsArea:SetHide( false );
+		Controls.RelationshipsArea:SetHide( true );
 
     m_QuestsIM:ResetInstances();
     for _,kQuest in pairs( kCityState.Quests ) do
@@ -1203,14 +1326,84 @@ function ViewCityState( iPlayer:number )
     Controls.QuestsStack:CalculateSize();
     Controls.QuestsScroll:CalculateSize();
 
+	elseif m_mode == MODE.Relationships then
+		ViewRelationships( kCityState );
   else
     UI.DataError("City-States in an unhandled mode '"..tostring(m_mode).."' when attempting to view a single City-State.");
     return;
   end
-
-  Controls.SingleViewStack:CalculateSize();
 end
 
+-- ===========================================================================
+function ViewRelationships( kCityState:table )
+	-- Setup the buttons and what (sub) areas are shown/hidden.
+	Controls.EnvoysSentButton:SetSelected( false );
+	Controls.InfluencedByButton:SetSelected( false );
+	Controls.QuestsButton:SetSelected( false );
+	Controls.RelationshipsButton:SetSelected( true );
+
+	Controls.EnvoysSentArea:SetHide( true );
+	Controls.InfluenceArea:SetHide( true );
+	Controls.QuestsArea:SetHide( true );
+	Controls.RelationshipsArea:SetHide( false );
+		
+	RefreshRelationshipStack( kCityState.Relationships.CivRelationships, m_RelationshipsCivsIM );
+
+	RefreshRelationshipStack( kCityState.Relationships.CityStateRelationships, m_RelationshipsCityStatesIM );
+
+	Controls.RelationshipsScroll:CalculateSize();
+end
+
+-- ===========================================================================	
+function RefreshRelationshipStack( kRelationships:table, StackIM:table )
+	
+	StackIM:ResetInstances();
+
+	for _, kRelationship in pairs( kRelationships ) do
+		if kRelationship.HasMet then
+			local instance:table = StackIM:GetInstance();
+
+			-- Update icon
+			instance.Icon:SetIcon(kRelationship.PlayerIcon);
+			instance.Icon:LocalizeAndSetToolTip(kRelationship.PlayerName);
+
+			-- Update color if it exists in the data
+			if kRelationship.Color ~= nil then
+				instance.Icon:SetColor( kRelationship.Color );
+			end
+
+			-- Update team ribbon
+			if #Teams[kRelationship.TeamID] > 1 then
+				local teamRibbonName:string = TEAM_RIBBON_PREFIX .. tostring(kRelationship.TeamID);
+				instance.TeamRibbon:SetIcon(teamRibbonName);
+				instance.TeamRibbon:SetColor(GetTeamColor(kRelationship.TeamID));
+				instance.TeamRibbon:SetHide(false);
+			else
+				-- Hide team ribbon if team only contains one player
+				instance.TeamRibbon:SetHide(true);
+			end
+
+			-- Update diplomacy pip
+			if DIPLO_PIP_INFO[kRelationship.DiploState] ~= nil then
+				local iconName	:string = DIPLO_PIP_INFO[kRelationship.DiploState].IconName;
+				if iconName == nil or iconName == "" then
+					print("WARNING: Unexpected DiplomaticState when obtain PIP art. value:"..kCityState.DiplomaticState);
+					iconName = "ICON_RELATIONSHIP_NEUTRAL";
+				end	
+				local textureOffsetX:number, textureOffsetY:number, textureSheet:string = IconManager:FindIconAtlas(iconName, 23);
+		
+				instance.DiplomacyPip:SetTexture(textureOffsetX, textureOffsetY, textureSheet);
+				instance.DiplomacyPip:SetToolTipString(kRelationship.DiploTooltip);
+				instance.DiplomacyPip:SetHide(false);
+			else
+				instance.DiplomacyPip:SetHide(true);
+			end
+		end
+	end
+
+	StackIM.m_ParentControl:CalculateSize();
+	StackIM.m_ParentControl:ReprocessAnchoring();
+end
 
 -- ===========================================================================
 --  Obtain data on city states
@@ -1348,6 +1541,7 @@ function GetData()
         HasLevyActive      = (pPlayer:GetInfluence():GetLevyTurnCounter() >= 0),
         IsLocalPlayerSuzerain  = (pLocalPlayer:GetID() == suzerainID),
         Quests          = GetQuests( iPlayer ),
+				Relationships			= GetRelationships( iPlayer ),			
         SuzerainID        = suzerainID,
         SuzerainName      = suzerainName,
         SuzerainTokensNeeded  = envoyTokensMostReceived,
@@ -1448,7 +1642,7 @@ function OnGameDebugReturn(context:string, contextTable:table)
     if contextTable["isHidden"] ~= nil and not contextTable["isHidden"] then
       if    m_mode == MODE.Overview then OpenOverview();
       elseif  m_mode == MODE.SendEnvoys then OnOpenSendEnvoys();
-      elseif  m_mode == MODE.EnvoySent or m_mode == MODE.InfluencedBy or m_mode == MODE.Quests then
+			elseif	m_mode == MODE.EnvoySent or m_mode == MODE.InfluencedBy or m_mode == MODE.Quests or m_mode == MODE.Relationships then 
         m_kScreenSlideAnim.Show();
         Refresh();
       end
@@ -1549,16 +1743,6 @@ end
 -- ===========================================================================
 function Resize()
   _, m_height = UIManager:GetScreenSizeVal();
-
-  local subMenuY:number = Controls.SubMenu:GetSizeY();
-
-  Controls.EnvoysSentArea:SetSizeY( m_height - (360+subMenuY) );
-  Controls.InfluenceArea:SetSizeY( m_height - (360+subMenuY));
-  Controls.QuestsArea:SetSizeY( m_height - (360+subMenuY));
-
-  Controls.EnvoysBonusScroll:SetSizeY( m_height - (424+subMenuY));
-  Controls.InfluenceScroll:SetSizeY( m_height - (424+subMenuY));
-  Controls.QuestsScroll:SetSizeY( m_height - (424+subMenuY));
 end
 
 -- ===========================================================================
@@ -1582,6 +1766,11 @@ end
 -- ===========================================================================
 function Initialize()
 
+	if (not HasCapability("CAPABILITY_CITY_STATES_VIEW")) then
+		-- City States is off, just exit
+		return;
+	end
+
   -- Check:
   if  NUM_ENVOY_TOKENS_FOR_FIRST_BONUS   == NUM_ENVOY_TOKENS_FOR_SECOND_BONUS or
     NUM_ENVOY_TOKENS_FOR_SECOND_BONUS  == NUM_ENVOY_TOKENS_FOR_THIRD_BONUS  or
@@ -1599,6 +1788,7 @@ function Initialize()
   Controls.EnvoysSentButton:RegisterCallback( Mouse.eLClick, OnEnvoySentClick );
   Controls.InfluencedByButton:RegisterCallback( Mouse.eLClick, OnInfluencedByClick );
   Controls.QuestsButton:RegisterCallback( Mouse.eLClick, OnQuestsClick );
+	Controls.RelationshipsButton:RegisterCallback( Mouse.eLClick, OnRelationshipsClick );
 
   -- UI Events
   ContextPtr:SetInitHandler( OnInit );

@@ -4,6 +4,12 @@
 -- ===========================================================================
 
 include( "GameCapabilities" );
+include( "InstanceManager" );
+
+g_TrackedItems = {}; -- Populated by LaunchBarItems_* scripts;
+g_TrackedInstances = {};
+
+include("LaunchBarItem_", true);
 
 local m_numTreesOpen:number = 0;
 local isTechTreeOpen	:boolean = false;
@@ -670,6 +676,31 @@ function OnLocalPlayerChanged()
 end
 
 -- ===========================================================================
+function InitializeTrackedItems()
+	for i,v in ipairs(g_TrackedItems) do
+		local instance = {};
+		local instance = {};
+		ContextPtr:BuildInstanceForControl( v.InstanceType, instance, Controls.ButtonStack );
+		if (instance.LaunchItemButton) then
+			instance.LaunchItemButton:RegisterCallback(Mouse.eLClick, function() v.SelectFunc() end);
+			table.insert(g_TrackedInstances, instance);
+		end
+
+		if (instance.LaunchItemButton and v.Tooltip) then
+			instance.LaunchItemButton:SetToolTipString(Locale.Lookup(v.Tooltip));
+		end
+
+		if (instance.LaunchItemIcon and v.IconTexture) then
+			instance.LaunchItemIcon:SetTexture(v.IconTexture);
+		end
+
+		-- Add a pin to the stack for each new item
+		local pinInstance = nil;
+		ContextPtr:BuildInstanceForControl( "LaunchBarPinInstance", pinInstance, Controls.ButtonStack );
+	end
+end
+
+-- ===========================================================================
 function Initialize()
 
   -- Icon added in reportscreen.lua
@@ -679,6 +710,7 @@ function Initialize()
   --   Controls.ReportsImage:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
   -- end
 
+  InitializeTrackedItems();
   Controls.CultureButton:RegisterCallback(Mouse.eLClick, OnOpenCulture);
   Controls.CultureButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.CultureMeterButton:RegisterCallback(Mouse.eLClick, OnOpenCulture);

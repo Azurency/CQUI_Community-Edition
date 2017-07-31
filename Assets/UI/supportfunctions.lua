@@ -88,6 +88,21 @@ function TruncateStringWithTooltip(control, resultSize, longStr, trailingText)
   return isTruncated;
 end
 
+-- ===========================================================================
+--	Same as TruncateStringWithTooltip(), but removes leading white space
+--	before truncation
+-- ===========================================================================
+function TruncateStringWithTooltipClean(control, resultSize, longStr, trailingText)
+	local cleanString = longStr:match("^%s*(.-)%s*$");
+	local isTruncated = TruncateString( control, resultSize, longStr, trailingText );
+	if isTruncated then
+		control:SetToolTipString( cleanString );
+	else
+		control:SetToolTipString( nil );
+	end
+	return isTruncated;
+end
+
 
 -- ===========================================================================
 --	Performs a truncation based on the control's contents
@@ -108,6 +123,38 @@ function TruncateStringByLength( textString, textLen )
     return Locale.SubString(textString, 1, textLen) .. m_strEllipsis;
   end
   return textString;
+end
+
+function GetGreatWorksForCity(pCity:table)
+	local result:table = {};
+	if pCity then
+		local pCityBldgs:table = pCity:GetBuildings();
+		for buildingInfo in GameInfo.Buildings() do
+			local buildingIndex:number = buildingInfo.Index;
+			local buildingType:string = buildingInfo.BuildingType;
+			if(pCityBldgs:HasBuilding(buildingIndex)) then
+				local numSlots:number = pCityBldgs:GetNumGreatWorkSlots(buildingIndex);
+				if (numSlots ~= nil and numSlots > 0) then
+					local greatWorksInBuilding:table = {};
+
+					-- populate great works
+					for index:number=0, numSlots - 1 do
+						local greatWorkIndex:number = pCityBldgs:GetGreatWorkInSlot(buildingIndex, index);
+						if greatWorkIndex ~= -1 then
+							local greatWorkType:number = pCityBldgs:GetGreatWorkTypeFromIndex(greatWorkIndex);
+							table.insert(greatWorksInBuilding, GameInfo.GreatWorks[greatWorkType]);
+						end
+					end
+
+					-- create association between building type and great works
+					if #greatWorksInBuilding > 0 then
+						result[buildingType] = greatWorksInBuilding;
+					end
+				end
+			end
+		end
+	end
+	return result;
 end
 
 -- Wraps a string according to the provided length, but, unlike the built in wrapping, will ignore the limit if a single continuous word exceeds the length of the wrap width

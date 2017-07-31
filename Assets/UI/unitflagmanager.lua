@@ -237,6 +237,11 @@ function UnitFlag.destroy( self )
         self:UpdateSelected( false );
 
     if (self.m_Instance ~= nil) then
+			--Alert instance needs reset as well
+			if self.m_Instance.FlagRoot["AttentionInstance"] ~= nil then
+				self.m_Instance.FlagRoot:DestroyChild( self.m_Instance.FlagRoot["AttentionInstance"] );
+				self.m_Instance.FlagRoot["AttentionInstance"] = nil;
+			end	
       self.m_InstanceManager:ReleaseInstance( self.m_Instance );
     end
     end
@@ -284,6 +289,7 @@ function UnitFlag.Initialize( self, playerID: number, unitID : number, flagType 
     self:UpdateFlagType();
     self:UpdateHealth();
     self:UpdateName();
+		self:UpdateReligion();
     self:UpdatePosition();
       self:UpdateVisibility();
     self:UpdateStats();
@@ -333,7 +339,7 @@ function OnUnitFlagClick( playerID : number, unitID : number )
       tParameters[UnitOperationTypes.PARAM_MODIFIERS] = UnitOperationMoveModifiers.ATTACK;
       if (UnitManager.CanStartOperation( pSelectedUnit, UnitOperationTypes.RANGE_ATTACK, nil, tParameters) ) then
         UnitManager.RequestOperation(pSelectedUnit, UnitOperationTypes.RANGE_ATTACK, tParameters);
-      else
+	  elseif (UnitManager.CanStartOperation( pSelectedUnit, UnitOperationTypes.MOVE_TO, nil, tParameters) ) then
         UnitManager.RequestOperation(pSelectedUnit, UnitOperationTypes.MOVE_TO, tParameters);
       end
     end
@@ -435,7 +441,7 @@ function UnitFlag.UpdateAircraftCounter( self )
           unitEntry.UnitName:SetText( Locale.ToUpper(unit:GetName()) );
 
           -- Update icon
-          local iconInfo:table, iconShadowInfo:table = GetUnitIconAndIconShadow(unit, 22, true);
+					local iconInfo:table, iconShadowInfo:table = GetUnitIcon(unit, 22, true);
           if iconInfo.textureSheet then
             unitEntry.UnitTypeIcon:SetTexture( iconInfo.textureOffsetX, iconInfo.textureOffsetY, iconInfo.textureSheet );
           end
@@ -852,6 +858,27 @@ function UnitFlag.UpdatePromotions( self )
       end
     end
   end
+end
+
+------------------------------------------------------------------
+-- Update the unit religion indicator icon
+function UnitFlag.UpdateReligion( self )
+	local pUnit : table = self:GetUnit();
+	if pUnit ~= nil then
+		local religionType = pUnit:GetReligionType();
+		if (religionType > 0 and pUnit:GetReligiousStrength() > 0) then
+			local religion:table = GameInfo.Religions[religionType];
+			local religionIcon:string = "ICON_" .. religion.ReligionType;
+			local religionColor:number = UI.GetColorValue(religion.Color);
+
+			self.m_Instance.ReligionIcon:SetIcon(religionIcon);
+			self.m_Instance.ReligionIcon:SetColor(religionColor);
+			self.m_Instance.ReligionIconBacking:LocalizeAndSetToolTip(religion.Name);
+			self.m_Instance.ReligionIconBacking:SetHide(false);
+		else
+			self.m_Instance.ReligionIconBacking:SetHide(true);
+		end
+	end
 end
 
 ------------------------------------------------------------------
@@ -1397,6 +1424,12 @@ function ShouldHideFlag(pUnit:table)
 
   -- If we're an air unit then check if we should hide the unit flag due to being based in a stacked tile
   local shouldHideFlag:boolean = false;
+
+	local activityType = UnitManager.GetActivityType(pUnit);
+	if (activityType == ActivityTypes.ACTIVITY_INTERCEPT) then
+		return false;
+	end
+
   if	unitInfo.Domain == "DOMAIN_AIR" then
     -- Hide air unit if we're stationed at a airstrip
     local tPlotAirUnits = unitPlot:GetAirUnits();

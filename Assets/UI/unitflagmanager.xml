@@ -15,6 +15,11 @@
       <Grid  ID="Formation2" Anchor="C,C" Size="100,36" Offset="0,0" Texture="UnitFormationDuo.dds" SliceCorner="20,17" SliceSize="60,1" SliceTextureSize="100,36" Hidden="1" />
 
       <AlphaAnim ID="FlagRoot" Anchor="C,C"	Size="48,48" Cycle="Once" Speed="1.5" GlobalUpdate="1">
+        <!-- Religious Unit Indicator -->
+        <Image ID="ReligionIconBacking" Anchor="C,T" Size="25,35" Offset="0,40" Texture="UnitFlagReligionTag" Hidden="1">
+          <Image ID="ReligionIcon" Anchor="C,B" Size="22,22" Offset="0,5" IconSize="22" Icon="ICON_RELIGION_ISLAM"/>
+        </Image>
+        
           <!-- Flag Shadow -->
           <Image ID="FlagShadow" Anchor="C,C" Size="64,64" TextureOffset="192,64" Texture="UnitFlagBase.dds">
             <Container ID="AirAnchor" Anchor="c,c" Size="64,64"/>

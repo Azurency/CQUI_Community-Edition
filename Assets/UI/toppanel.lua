@@ -6,11 +6,29 @@ include( "SupportFunctions" ); -- Round
 include( "ToolTipHelper_PlayerYields" );
 
 -- ===========================================================================
+-- Yield handles
+-- ===========================================================================
+local m_YieldButtonSingleManager = InstanceManager:new( "YieldButton_SingleLabel", "Top", Controls.YieldStack );
+local m_YieldButtonDoubleManager = InstanceManager:new( "YieldButton_DoubleLabel", "Top", Controls.YieldStack );
+g_ExtraYieldLoaders = {};
+include("TopPanelLoader_", true);
+
+-- ===========================================================================
 local m_kResourceIM :table = InstanceManager:new( "ResourceInstance", "ResourceText", Controls.ResourceStack );
 local YIELD_PADDING_Y = 20;
 local META_PADDING    = 100;  -- The amount of padding to give the meta area to make enough room for the (+) when there is resource overflow
 local FONT_MULTIPLIER = 11; -- The amount to multiply times the string length to approximate the width in pixels of the label control
 local m_OpenPediaId;
+local m_viewReportsX :number = 0;	-- With of view report button
+
+-- ===========================================================================
+-- Yield handles
+-- ===========================================================================
+local m_ScienceYieldButton:table = nil;
+local m_CultureYieldButton:table = nil;
+local m_GoldYieldButton:table = nil;
+local m_TourismYieldButton:table = nil;
+local m_FaithYieldButton:table = nil;
 
 -- ===========================================================================
 --  QUI
@@ -116,24 +134,63 @@ function RefreshYields()
   end
 
   ---- SCIENCE ----
+	m_ScienceYieldButton = m_ScienceYieldButton or m_YieldButtonSingleManager:GetInstance();
   local playerTechnology    :table  = localPlayer:GetTechs();
   local currentScienceYield :number = playerTechnology:GetScienceYield();
-  Controls.SciencePerTurn:SetText( FormatValuePerTurn(currentScienceYield) );
+	m_ScienceYieldButton.YieldPerTurn:SetText( FormatValuePerTurn(currentScienceYield) );	
 
-  Controls.ScienceBacking:SetToolTipString( GetScienceTooltip() );
-  Controls.ScienceStack:CalculateSize();
-  Controls.ScienceBacking:SetSizeX(Controls.ScienceStack:GetSizeX() + YIELD_PADDING_Y);
+	m_ScienceYieldButton.YieldBacking:SetToolTipString( GetScienceTooltip() );
+	m_ScienceYieldButton.YieldIconString:SetText("[ICON_ScienceLarge]");
+	m_ScienceYieldButton.YieldButtonStack:CalculateSize();
+	m_ScienceYieldButton.YieldBacking:SetSizeX(m_ScienceYieldButton.YieldButtonStack:GetSizeX() + YIELD_PADDING_Y);
+
 
   ---- CULTURE----
+	m_CultureYieldButton = m_CultureYieldButton or m_YieldButtonSingleManager:GetInstance();
   local playerCulture     :table  = localPlayer:GetCulture();
   local currentCultureYield :number = playerCulture:GetCultureYield();
-  Controls.CulturePerTurn:SetText( FormatValuePerTurn(currentCultureYield) );
+	m_CultureYieldButton.YieldPerTurn:SetText( FormatValuePerTurn(currentCultureYield) );	
+	m_CultureYieldButton.YieldPerTurn:SetColorByName("ResCultureLabelCS");
 
-  Controls.CultureBacking:SetToolTipString( GetCultureTooltip() );
-  Controls.CultureStack:CalculateSize();
-  Controls.CultureBacking:SetSizeX(Controls.CultureStack:GetSizeX() + YIELD_PADDING_Y);
+	m_CultureYieldButton.YieldBacking:SetToolTipString( GetCultureTooltip() );
+	m_CultureYieldButton.YieldBacking:SetColor(0x99fe2aec);
+	m_CultureYieldButton.YieldIconString:SetText("[ICON_CultureLarge]");
+	m_CultureYieldButton.YieldButtonStack:CalculateSize();
+	m_CultureYieldButton.YieldBacking:SetSizeX(m_CultureYieldButton.YieldButtonStack:GetSizeX() + YIELD_PADDING_Y);
+
+	---- FAITH ----
+	m_FaithYieldButton = m_FaithYieldButton or m_YieldButtonDoubleManager:GetInstance();
+	local playerReligion		:table	= localPlayer:GetReligion();
+	local faithYield			:number = playerReligion:GetFaithYield();
+	local faithBalance			:number = playerReligion:GetFaithBalance();
+	m_FaithYieldButton.YieldBalance:SetText( Locale.ToNumber(faithBalance, "#,###.#") );	
+	m_FaithYieldButton.YieldPerTurn:SetText( FormatValuePerTurn(faithYield) );
+	m_FaithYieldButton.YieldBacking:SetToolTipString( GetFaithTooltip() );
+	m_FaithYieldButton.YieldIconString:SetText("[ICON_FaithLarge]");
+	m_FaithYieldButton.YieldButtonStack:CalculateSize();	
+	m_FaithYieldButton.YieldBacking:SetSizeX(m_FaithYieldButton.YieldButtonStack:GetSizeX() + YIELD_PADDING_Y);
+
+	---- GOLD ----
+	m_GoldYieldButton = m_GoldYieldButton or m_YieldButtonDoubleManager:GetInstance();
+	local playerTreasury:table	= localPlayer:GetTreasury();
+	local goldYield		:number = playerTreasury:GetGoldYield() - playerTreasury:GetTotalMaintenance();
+	local goldBalance	:number = math.floor(playerTreasury:GetGoldBalance());
+	m_GoldYieldButton.YieldBalance:SetText( Locale.ToNumber(goldBalance, "#,###.#") );
+	m_GoldYieldButton.YieldBalance:SetColorByName("ResGoldLabelCS");	
+	m_GoldYieldButton.YieldPerTurn:SetText( FormatValuePerTurn(goldYield) );
+	m_GoldYieldButton.YieldIconString:SetText("[ICON_GoldLarge]");
+	m_GoldYieldButton.YieldPerTurn:SetColorByName("ResGoldLabelCS");	
+
+	m_GoldYieldButton.YieldBacking:SetToolTipString( GetGoldTooltip() );
+	m_GoldYieldButton.YieldBacking:SetColorByName("ResGoldLabelCS");
+	m_GoldYieldButton.YieldButtonStack:CalculateSize();	
+	m_GoldYieldButton.YieldBacking:SetSizeX(m_GoldYieldButton.YieldButtonStack:GetSizeX() + YIELD_PADDING_Y);
+
+
 
   ---- TOURISM ----
+	if GameCapabilities.HasCapability("CAPABILITY_TOURISM") then
+		m_TourismYieldButton = m_TourismYieldButton or m_YieldButtonSingleManager:GetInstance();
   local tourismRate = Round(localPlayer:GetStats():GetTourism(), 1);
   local tourismRateTT:string = Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_CULTURE_TOURISM_RATE", tourismRate);
   local tourismBreakdown = localPlayer:GetStats():GetTourismToolTip();
@@ -141,39 +198,25 @@ function RefreshYields()
     tourismRateTT = tourismRateTT .. "[NEWLINE][NEWLINE]" .. tourismBreakdown;
   end
 
-  Controls.TourismBalance:SetText( tourismRate );
-  Controls.TourismBacking:SetToolTipString(tourismRateTT);
+		m_TourismYieldButton.YieldPerTurn:SetText( tourismRate );	
+		m_TourismYieldButton.YieldBacking:SetToolTipString(tourismRateTT);
+		m_TourismYieldButton.YieldPerTurn:SetColorByName("ResTourismLabelCS");
+		m_TourismYieldButton.YieldBacking:SetColorByName("ResTourismLabelCS");
+		m_TourismYieldButton.YieldIconString:SetText("[ICON_TourismLarge]");
   if (tourismRate > 0) then
-    Controls.TourismBacking:SetHide(false);
+			m_TourismYieldButton.Top:SetHide(false);
   else
-    Controls.TourismBacking:SetHide(true);
+			m_TourismYieldButton.Top:SetHide(true);
+		end 
   end
 
-  ---- GOLD ----
-  local playerTreasury:table  = localPlayer:GetTreasury();
-  local goldYield   :number = playerTreasury:GetGoldYield() - playerTreasury:GetTotalMaintenance();
-  local goldBalance :number = math.floor(playerTreasury:GetGoldBalance());
-  Controls.GoldBalance:SetText( Locale.ToNumber(goldBalance, "#,###.#") );
-  Controls.GoldPerTurn:SetText( FormatValuePerTurn(goldYield) );
-  -- local gptTooltip :string = GetExtendedGoldTooltip();
-  -- Controls.GoldPerTurn:SetToolTipString(gptTooltip);
+	for _, loader in pairs(g_ExtraYieldLoaders) do
+		loader:RefreshExtraYields(m_YieldButtonSingleManager, m_YieldButtonDoubleManager);
+	end
 
-  Controls.GoldBacking:SetToolTipString( GetGoldTooltip() );
-
-  Controls.GoldStack:CalculateSize();
-  Controls.GoldBacking:SetSizeX(Controls.GoldStack:GetSizeX() + YIELD_PADDING_Y);
-
-  ---- FAITH ----
-  local playerReligion    :table  = localPlayer:GetReligion();
-  local faithYield      :number = playerReligion:GetFaithYield();
-  local faithBalance      :number = playerReligion:GetFaithBalance();
-  Controls.FaithBalance:SetText( Locale.ToNumber(faithBalance, "#,###.#") );
-  Controls.FaithPerTurn:SetText( FormatValuePerTurn(faithYield) );
-
-  Controls.FaithBacking:SetToolTipString( GetFaithTooltip() );
-
-  Controls.FaithStack:CalculateSize();
-  Controls.FaithBacking:SetSizeX(Controls.FaithStack:GetSizeX() + YIELD_PADDING_Y);
+	Controls.YieldStack:CalculateSize();
+	Controls.StaticInfoStack:CalculateSize();
+	Controls.InfoStack:CalculateSize();
 
   RefreshResources();
 end
@@ -224,7 +267,7 @@ end
 
 -- ===========================================================================
 function RefreshInfluence()
-
+	if GameCapabilities.HasCapability("CAPABILITY_TOP_PANEL_ENVOYS") then
   local localPlayer = Players[Game.GetLocalPlayer()];
   if (localPlayer == nil) then
     return;
@@ -262,6 +305,9 @@ function RefreshInfluence()
   Controls.Envoys:SetToolTipString(sTooltip);
   Controls.EnvoysStack:CalculateSize();
   Controls.EnvoysStack:ReprocessAnchoring();
+	else
+		Controls.Envoys:SetHide(true);
+	end
 end
 
 -- ===========================================================================
@@ -305,7 +351,7 @@ function RefreshResources()
     -- CQUI/jhcd: split into two iterations to sort STRATEGIC before LUXURY
     -- RESOURCECLASS_STRATEGIC (original code)
     for resource in GameInfo.Resources() do
-      if (resource.ResourceClassType ~= nil and resource.ResourceClassType ~= "RESOURCECLASS_BONUS" and resource.ResourceClassType ~="RESOURCECLASS_LUXURY") then
+      if (resource.ResourceClassType ~= nil and resource.ResourceClassType ~= "RESOURCECLASS_BONUS" and resource.ResourceClassType ~="RESOURCECLASS_LUXURY" and resource.ResourceClassType ~="RESOURCECLASS_ARTIFACT") then
         local amount = pPlayerResources:GetResourceAmount(resource.ResourceType);
         if (amount > 0) then
           local resourceText = "[ICON_"..resource.ResourceType.."] ".. amount;
@@ -340,7 +386,7 @@ function RefreshResources()
     -- CQUI/jhcd: show RESOURCECLASS_LUXURY too, if it is enabled in CQUI settings
     if (g_showluxury) then
       for resource in GameInfo.Resources() do
-        if (resource.ResourceClassType ~= nil and resource.ResourceClassType ~= "RESOURCECLASS_BONUS" and resource.ResourceClassType ~= "RESOURCECLASS_STRATEGIC") then
+        if (resource.ResourceClassType ~= nil and resource.ResourceClassType ~= "RESOURCECLASS_BONUS" and resource.ResourceClassType ~= "RESOURCECLASS_STRATEGIC" and resource.ResourceClassType ~="RESOURCECLASS_ARTIFACT") then
           local amount = pPlayerResources:GetResourceAmount(resource.ResourceType);
           if (amount > 0) then
             local resourceText = "[ICON_"..resource.ResourceType.."] ".. amount;
@@ -551,6 +597,7 @@ function Initialize()
   Events.LoadGameViewStateDone.Add(   OnLoadGameViewStateDone );
   Events.LocalPlayerChanged.Add(      OnLocalPlayerChanged );
   Events.PantheonFounded.Add(       OnRefreshYields );
+	Events.PlayerAgeChanged.Add(			OnRefreshYields );
   Events.ResearchCompleted.Add(     OnRefreshResources );
   Events.PlayerResourceChanged.Add(   OnRefreshResources );
   Events.SystemUpdateUI.Add(        OnUpdateUI );

@@ -139,8 +139,6 @@ function RealizePositionAt( x:number, y:number )
       Controls.TooltipMain:SetHide(true);
     else
       if m_isValidPlot then
-        Controls.TooltipMain:SetHide(false);
-
         local offsetx:number = x + m_offsetX;
         local offsety:number = m_screenHeight - y - m_offsetY;
 
@@ -527,6 +525,7 @@ function View(data:table, bIsUpdate:boolean)
       if (data.WonderType == nil) then
         table.insert(details, Locale.Lookup("LOC_TOOLTIP_PLOT_BUILDINGS_TEXT"));
       end
+			local greatWorksSection: table = {};
       for i, v in ipairs(data.BuildingNames) do
           if (data.WonderType == nil) then
           if (data.BuildingsPillaged[i]) then
@@ -540,8 +539,14 @@ function View(data:table, bIsUpdate:boolean)
           local greatWorkIndex:number = cityBuildings:GetGreatWorkInSlot(data.BuildingTypes[i], j);
           if (greatWorkIndex ~= -1) then
             local greatWorkType:number = cityBuildings:GetGreatWorkTypeFromIndex(greatWorkIndex)
-            table.insert(details, "  * " .. Locale.Lookup(GameInfo.GreatWorks[greatWorkType].Name));
+						table.insert(greatWorksSection, "- " .. Locale.Lookup(GameInfo.GreatWorks[greatWorkType].Name));
+					end
+				end
           end
+			if #greatWorksSection > 0 then
+				table.insert(details, Locale.Lookup("LOC_GREAT_WORKS") .. ":");
+				for i, v in ipairs(greatWorksSection) do
+					table.insert(details, v);
         end
       end
     end
@@ -588,7 +593,6 @@ function View(data:table, bIsUpdate:boolean)
   -- Some conditions, jump past "pause" and show immediately
   if m_isShiftDown or UserConfiguration.GetValue("PlotToolTipFollowsMouse") == 0 then
     Controls.TooltipMain:SetPauseTime( 0 );
-    Controls.TooltipMain:SetHide(false);
   else
     -- Pause time is shorter when using touch.
     local pauseTime = UserConfiguration.GetPlotTooltipDelay() or TIME_DEFAULT_PAUSE;
@@ -615,6 +619,8 @@ function View(data:table, bIsUpdate:boolean)
 
   m_ttWidth, m_ttHeight = Controls.InfoStack:GetSizeVal();
   Controls.TooltipMain:SetSizeVal(m_ttWidth, m_ttHeight);
+	Controls.TooltipMain:SetHide(false);
+
 end
 
 
@@ -624,7 +630,7 @@ end
 function ShowPlotInfo( plotId:number, bIsUpdate:boolean )
 
   -- Ignore request to show plot if system is not on or active.
-  if (not m_isActive) or m_isOff then
+	if (not m_isActive or not UIManager:GetMouseOverWorld()) or m_isOff then
     ClearView();    -- Make sure it is not there
     return;
   end

@@ -256,12 +256,13 @@ end
 -- ===========================================================================
 function RealizeSize()
   local _, screenY:number = UIManager:GetScreenSizeVal();
-  Controls.ChooseResearchList:SetSizeY(screenY - Controls.ChooseResearchList:GetOffsetY() - 30);
-  Controls.ChooseResearchList:CalculateInternalSize();
 
   Controls.ResearchStack:CalculateSize();
   Controls.ResearchStack:ReprocessAnchoring();
 
+	Controls.ChooseResearchList:SetSizeY(screenY - Controls.ChooseResearchList:GetOffsetY() - 30);
+	Controls.ChooseResearchList:CalculateInternalSize();
+	
   if(Controls.ChooseResearchList:GetScrollBar():IsHidden()) then
     Controls.ChooseResearchList:SetOffsetX(10);
   else
@@ -347,7 +348,11 @@ function OnResearchChanged( ePlayer:number, eTech:number )
   if localPlayer ~= -1 and localPlayer == ePlayer then
     local pPlayerTechs :table = Players[localPlayer]:GetTechs();
     m_currentID			= pPlayerTechs:GetResearchingTech();
-    m_lastCompletedID	= -1;
+		
+		-- Only reset last completed tech once a new tech has been selected
+		if m_currentID >= 0 then
+    		m_lastCompletedID	= -1;
+		end
 
     m_needsRefresh = true;
   end

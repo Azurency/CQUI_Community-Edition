@@ -5,10 +5,12 @@ include( "InstanceManager" );
 include( "SupportFunctions" );
 include( "Civ6Common" );
 include( "LeaderSupport" );
+include( "DiplomacyRibbonSupport" );
 include( "DiplomacyStatementSupport" );
 include( "TeamSupport" );
 include( "GameCapabilities" );
-
+include( "LeaderIcon" );
+include( "PopupDialog" );
 -- ===========================================================================
 --	CONSTANTS
 -- ===========================================================================
@@ -136,6 +138,7 @@ local m_currentSceneEffect	:string = "";
 
 local ms_OtherID;
 
+local m_PopupDialog :table = PopupDialog:new("ConfirmDenounce");
 -- ===========================================================================
 function GetOtherPlayer(player : table)
   if (player ~= nil and player:GetID() == ms_OtherPlayer:GetID()) then
@@ -662,14 +665,13 @@ function ApplyStatement(handler : table, statementTypeName : string, statementSu
   Controls.ConversationSelectionStack:ReprocessAnchoring();
   Controls.ConversationSelectionGrid:ReprocessAnchoring();
 
-  --We can't queue up the animation UNTIL we have already faded to black...
-  if #leaderstr > 0 and #reasonStr > 0 then
-    leaderstr = leaderstr .. "[NEWLINE][NEWLINE]" .. reasonStr;
-  else
-    leaderstr = leaderstr .. reasonStr;
-  end
+	-- Update leader response
   Controls.LeaderResponseText:SetText( leaderstr );
   Controls.LeaderResponseText:ReprocessAnchoring();
+
+	-- Update leader reason
+	Controls.LeaderReasonText:SetText( reasonStr );
+	Controls.LeaderReasonText:ReprocessAnchoring();
 
   m_currentLeaderAnim = kParsedStatement.LeaderAnimation;
   m_currentSceneEffect = kParsedStatement.SceneEffect;
@@ -688,57 +690,6 @@ function ApplyStatement(handler : table, statementTypeName : string, statementSu
     end
   end
 
-end
-
--- ==========================================================================================================================
---	Displays the leader's name (with screen name if you are a human in a multiplayer game), along with the civ name,
---	and the icon of the civ with civ colors.  When you mouse over the civ icon, you should see a full list of all cities.
---	This should help players differentiate between duplicate civs.
-function PopulateSignatureArea(player:table)
-  -- Set colors for the Civ icon
-  if (player ~= nil) then
-    m_primaryColor, m_secondaryColor  = UI.GetPlayerColors( player:GetID() );
-    local darkerBackColor = DarkenLightenColor(m_primaryColor,(-85),100);
-    local brighterBackColor = DarkenLightenColor(m_primaryColor,90,255);
-    Controls.CivBacking_Base:SetColor(m_primaryColor);
-    Controls.CivBacking_Lighter:SetColor(brighterBackColor);
-    Controls.CivBacking_Darker:SetColor(darkerBackColor);
-    Controls.CivIcon:SetColor(m_secondaryColor);
-  end
-
-  -- Set the leader name, civ name, and civ icon data
-  local leader:string = PlayerConfigurations[player:GetID()]:GetLeaderTypeName();
-  if GameInfo.CivilizationLeaders[leader] == nil then
-    UI.DataError("Banners found a leader \""..leader.."\" which is not/no longer in the game; icon may be whack.");
-  else
-    if(GameInfo.CivilizationLeaders[leader].CivilizationType ~= nil) then
-      local civTypeName = GameInfo.CivilizationLeaders[leader].CivilizationType
-      local civIconName = "ICON_"..civTypeName;
-      Controls.CivIcon:SetIcon(civIconName);
-      Controls.CivName:SetText(Locale.ToUpper(Locale.Lookup(GameInfo.Civilizations[civTypeName].Name)));
-      local leaderName = Locale.ToUpper(Locale.Lookup(GameInfo.Leaders[leader].Name))
-      local playerName = PlayerConfigurations[player:GetID()]:GetPlayerName();
-      if GameConfiguration.IsAnyMultiplayer() and player:IsHuman() then
-        leaderName = leaderName .. " ("..Locale.ToUpper(playerName)..")"
-      end
-      Controls.LeaderName:SetText(leaderName);
-
-      --Create a tooltip which shows a list of this Civ's cities
-      local civTooltip = Locale.Lookup(GameInfo.Civilizations[civTypeName].Name);
-      local pPlayerConfig = PlayerConfigurations[player:GetID()];
-      local playerName = pPlayerConfig:GetPlayerName();
-      local playerCities = player:GetCities();
-      if(playerCities ~= nil) then
-        civTooltip = civTooltip .. "[NEWLINE]"..Locale.Lookup("LOC_PEDIA_CONCEPTS_PAGEGROUP_CITIES_NAME").. ":[NEWLINE]----------";
-        for i,city in playerCities:Members() do
-          civTooltip = civTooltip.. "[NEWLINE]".. Locale.Lookup(city:GetName());
-        end
-      end
-      Controls.CivIcon:SetToolTipString(Locale.Lookup(civTooltip));
-    end
-  end
-  Controls.SignatureStack:CalculateSize();
-  Controls.SignatureStack:ReprocessAnchoring();
 end
 
 -- ===========================================================================
@@ -793,12 +744,31 @@ function PopulateStatementList( options: table, rootControl: table, isSubList: b
         end;
       end
 
+			--If denounce statement change callback to prompt first.
+			if (selection.Key == "CHOICE_DENOUNCE")then
+				local denounceFn = function() OnSelectInitialDiplomacyStatement( selection.Key ); end;
+				callback = function() 
+					local playerConfig = PlayerConfigurations[ms_SelectedPlayer:GetID()];
+					if (playerConfig ~= nil) then
+
+						selectedCivName = Locale.Lookup(playerConfig:GetCivilizationShortDescription());					
+						m_PopupDialog:AddText(Locale.Lookup("LOC_DENOUNCE_POPUP_BODY", selectedCivName));
+						m_PopupDialog:AddButton(Locale.Lookup("LOC_CANCEL"), nil);
+						m_PopupDialog:AddButton(Locale.Lookup("LOC_DIPLO_CHOICE_DENOUNCE"), denounceFn, nil, nil, "PopupButtonInstanceRed");
+						m_PopupDialog:Open();
+
+					end
+				end;
+			end
+
       instance.ButtonText:SetText( selectionText );
       if (selection.IsDisabled == nil or selection.IsDisabled == false) then
         instance.Button:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
         instance.Button:RegisterCallback( Mouse.eLClick, callback );
+				instance.ButtonText:SetColor( COLOR_BUTTONTEXT_NORMAL );
         instance.Button:SetDisabled( false );
       else
+				instance.ButtonText:SetColor( COLOR_BUTTONTEXT_DISABLED );
         instance.Button:SetDisabled( true );
         if (selection.FailureReasons ~= nil) then
           instance.Button:SetToolTipString(Locale.Lookup(selection.FailureReasons[1]));
@@ -807,6 +777,7 @@ function PopulateStatementList( options: table, rootControl: table, isSubList: b
 
     else
       callback = selection.Callback;
+			instance.ButtonText:SetColor( COLOR_BUTTONTEXT_NORMAL );
       instance.Button:SetDisabled( false );
       if ( selection.ToolTip ~= nil) then
         tooltipString = Locale.Lookup(selection.ToolTip);
@@ -824,6 +795,13 @@ function PopulateStatementList( options: table, rootControl: table, isSubList: b
       end
       instance.Button:SetToolTipString( finalTooltipString );
     end
+
+		-- Append tooltip string to the end of the tooltip if it exists in this selection
+		if selection.Tooltip then
+			local currentTooltipString = instance.Button:GetToolTipString();
+			instance.Button:SetToolTipString(currentTooltipString .. Locale.Lookup(selection.Tooltip));
+		end
+
         instance.Button:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
     instance.Button:RegisterCallback( Mouse.eLClick, callback );
   end
@@ -1501,8 +1479,9 @@ function AddIntelPanel(rootControl : table)
           local relationshipIcon = ms_RelationshipIconsIM:GetInstance(intelPanel.RelationshipsStack);
           local iPlayerDiploState = pPlayer:GetDiplomaticAI():GetDiplomaticStateIndex(ms_SelectedPlayer:GetID());
           relationshipIcon.Status:SetVisState( iPlayerDiploState );
-          local relationshipHash = GameInfo.DiplomaticStates[iPlayerDiploState].Hash;
-          if ( ((ms_SelectedPlayer:IsAI() or pPlayer:IsAI()) and relationshipHash ~= DiplomaticStates.NEUTRAL) or relationshipHash == DiplomaticStates.WAR) then	-- No diplo state icon if both players are human, except for the war state
+					local relationshipState = GameInfo.DiplomaticStates[iPlayerDiploState];
+					-- No diplo state icon if both players are human, except for the war state
+					if ( ((ms_SelectedPlayer:IsAI() or pPlayer:IsAI()) and relationshipState.Hash ~= DiplomaticStates.NEUTRAL) or IsValidRelationship(relationshipState.StateType)) then
             relationshipIcon.Status:SetToolTipString(Locale.Lookup(GameInfo.DiplomaticStates[iPlayerDiploState].Name));
           end
           if(localPlayerDiplomacy:HasMet(pPlayer:GetID())) then
@@ -1582,82 +1561,34 @@ function PopulatePlayerPanelHeader(rootControl : table, player : table)
 end
 
 -- ===========================================================================
-function PopulateLeader(rootControl : table, player : table, isUniqueLeader : boolean)
+function PopulateLeader(leaderIcon : table, player : table, isUniqueLeader : boolean)
 
   if (player ~= nil and player:IsMajor()) then
-    local playerConfig = PlayerConfigurations[player:GetID()];
+		local playerID = player:GetID();
+		local playerConfig = PlayerConfigurations[playerID];
     if (playerConfig ~= nil) then
       local leaderTypeName = playerConfig:GetLeaderTypeName();
       if (leaderTypeName ~= nil) then
-        -- Set the icon
-        rootControl.LeaderIcon:SetIcon("ICON_" .. leaderTypeName);
-        -- Set the leader name for the tool tip
-        local leaderDesc = playerConfig:GetLeaderName();
-        rootControl.LeaderIcon:LocalizeAndSetToolTip("LOC_DIPLOMACY_DEAL_PLAYER_PANEL_TITLE", leaderDesc, playerConfig:GetCivilizationDescription());
-        -- Display the civ colors/icon for duplicate civs
-        if(isUniqueLeader == false) then
-          local backColor, frontColor  = UI.GetPlayerColors( player:GetID() );
-          rootControl.CivIndicator:SetHide(false);
-          rootControl.CivIndicator:SetColor(backColor);
-          rootControl.CivIcon:SetColor(frontColor);
-          rootControl.CivIcon:SetIcon("ICON_"..playerConfig:GetCivilizationTypeName());
-        end
-        -- Hide the portrait overlay if not the local player
-        if (player:GetID() == ms_LocalPlayerID) then
-          rootControl.SelectedBackground:SetSizeX(60);
-          rootControl.YouIndicator:SetHide( false );
-        else
-          rootControl.YouIndicator:SetHide( true );
-        end
+
+				local iconName = "ICON_" .. leaderTypeName;
+				leaderIcon:UpdateIcon(iconName, playerID, isUniqueLeader);
+				
+				-- Configure button
+				leaderIcon.Controls.SelectButton:SetVoid1(playerID);
+				leaderIcon:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+				leaderIcon:RegisterCallback(Mouse.eLClick, OnPlayerSelected);
+
         -- Set the score.
-        rootControl.Score:SetText( tostring( player:GetScore() ) );
+				leaderIcon.Controls.Score:SetText( tostring( player:GetScore() ) );
         -- Set the gold per turn
         local goldYield = player:GetTreasury():GetGoldYield();
         if (goldYield > 0) then
-          rootControl.GoldPerTurn:SetText( "(+" .. string.format("%.1f", goldYield) .. " [ICON_Gold])" );
+					leaderIcon.Controls.GoldPerTurn:SetText( "(+" .. string.format("%.1f", goldYield) .. " [ICON_Gold])" );			
         else
-          rootControl.GoldPerTurn:SetText( "(" .. string.format("%.1f", goldYield) .. " [ICON_Gold])" );
+					leaderIcon.Controls.GoldPerTurn:SetText( "(" .. string.format("%.1f", goldYield) .. " [ICON_Gold])" );			
         end
         -- The selection background
-        rootControl.SelectedBackground:SetHide( not (player:GetID() == ms_SelectedPlayerID) );
-        -- Your relationship
-
-        -- Set team ribbon
-        if(rootControl.TeamRibbon) then
-          if(player:GetID() == Game.GetLocalPlayer() or Players[Game.GetLocalPlayer()]:GetDiplomacy():HasMet(player:GetID())) then
-            -- Show team ribbon for ourselves and civs we've met
-            local teamID:number = playerConfig:GetTeam();
-            if #Teams[teamID] > 1 then
-              local teamRibbonName:string = TEAM_RIBBON_PREFIX .. tostring(teamID);
-              rootControl.TeamRibbon:SetIcon(teamRibbonName, TEAM_RIBBON_SIZE);
-              rootControl.TeamRibbon:SetHide(false);
-              rootControl.TeamRibbon:SetColor(GetTeamColor(teamID));
-            else
-              -- Hide team ribbon if team only contains one player
-              rootControl.TeamRibbon:SetHide(true);
-            end
-          else
-            -- Hide team ribbon for civs we haven't met
-            rootControl.TeamRibbon:SetHide(true);
-          end
-        end
-
-        -- Humans don't show anything, unless we are at war
-        local ourRelationship = player:GetDiplomaticAI():GetDiplomaticStateIndex(ms_LocalPlayerID);
-        if (player:IsAI() or GameInfo.DiplomaticStates[ourRelationship].Hash == DiplomaticStates.WAR) then
-          -- ARISTOS: extend relationship icon tooltip to show diplo modifiers!
-          local extendedRelationshipTooltip:string = Locale.Lookup(GameInfo.DiplomaticStates[ourRelationship].Name)
-          .. "[NEWLINE][NEWLINE]" .. RelationshipGet(player:GetID());
-          rootControl.Relationship:SetVisState( GetVisStateFromDiplomaticState(ourRelationship) );
-          rootControl.Relationship:SetToolTipString(extendedRelationshipTooltip);
-          -- if (GameInfo.DiplomaticStates[ourRelationship].Hash ~= DiplomaticStates.NEUTRAL) then
-            -- rootControl.Relationship:SetToolTipString(extendedRelationshipTooltip);
-          -- end
-
-        else
-          rootControl.Relationship:SetVisState( DiplomaticStateIndexToVisState[DiplomaticStates.NEUTRAL] );
-          rootControl.Relationship:SetToolTipString("");
-        end
+				leaderIcon.Controls.SelectedBackground:SetHide(playerID ~= ms_SelectedPlayerID);
       end
     end
   end
@@ -1720,21 +1651,9 @@ end
 -- ===========================================================================
 function SetConversationMode(player : table)
 
-  --if (player ~= nil) then
-  --	local playerConfig = PlayerConfigurations[player:GetID()];
-  --	if (playerConfig ~= nil) then
-  --		-- Set the leader name
-  --		local leaderDesc = playerConfig:GetLeaderName();
-  --		Controls.SignatureText:LocalizeAndSetText("LOC_DIPLOMACY_DEAL_PLAYER_PANEL_TITLE", leaderDesc, playerConfig:GetCivilizationDescription());
-  --	end
-  --end
-  PopulateSignatureArea(player);
-
   Controls.ConversationContainer:SetHide(false);
-  Controls.Signature_Alpha:Play();
   Controls.LeaderResponse_Alpha:Play();
   Controls.ConversationSelection_Alpha:Play();
-  Controls.Signature_Slide:Play();
   Controls.LeaderResponse_Slide:Play();
   Controls.ConversationSelection_Slide:Play();
 
@@ -1952,12 +1871,9 @@ function PopulateDiplomacyRibbon(diplomacyRibbon : table)
     -- diplomacyRibbon.Advisor:SetTexture(IconManager:FindIconAtlas("ADVISOR_GENERIC", 48));
 
     -- Add an entry for the local player at the top
-    local leaderEntry = ms_DiplomacyRibbonLeaderIM:GetInstance(diplomacyRibbon.Leaders);
-    ms_LeaderIDToRibbonEntry[ms_LocalPlayerID] = leaderEntry;
-    leaderEntry.SelectButton:SetVoid1(ms_LocalPlayerID);
-    leaderEntry.SelectButton:RegisterCallback( Mouse.eLClick, OnPlayerSelected );
-        leaderEntry.SelectButton:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-    PopulateLeader(leaderEntry, ms_LocalPlayer);
+		local leaderIcon, leaderInstance = LeaderIcon:GetInstance(ms_DiplomacyRibbonLeaderIM, diplomacyRibbon.Leaders);
+		ms_LeaderIDToRibbonEntry[ms_LocalPlayerID] = leaderInstance;
+		PopulateLeader(leaderIcon, ms_LocalPlayer);
 
     --Then, let's do a check to see if any of these players are duplicate leaders and track it.
     --		Must go through entire list to detect duplicates (would be lovely if we had an IsUnique from PlayerConfigurations)
@@ -1979,19 +1895,16 @@ function PopulateDiplomacyRibbon(diplomacyRibbon : table)
     local aPlayers = PlayerManager.GetAliveMajors();
     for _, pPlayer in ipairs(aPlayers) do
       if (pPlayer:GetID() ~= ms_LocalPlayerID and pLocalPlayerDiplomacy:HasMet(pPlayer:GetID())) then
-        leaderEntry = ms_DiplomacyRibbonLeaderIM:GetInstance(diplomacyRibbon.Leaders);
-        ms_LeaderIDToRibbonEntry[pPlayer:GetID()] = leaderEntry;
+				local leaderIcon, leaderInstance = LeaderIcon:GetInstance(ms_DiplomacyRibbonLeaderIM, diplomacyRibbon.Leaders);
+				ms_LeaderIDToRibbonEntry[pPlayer:GetID()] = leaderInstance;
         -- Save the current coordinate in the scrollpanel so that we can autoscroll to this point later
         m_LeaderCoordinates[pPlayer:GetID()] = currentCoordinateY;
         currentCoordinateY = currentCoordinateY + coordinateOffsetIncrement;
-        leaderEntry.SelectButton:SetVoid1(pPlayer:GetID());
-                leaderEntry.SelectButton:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-        leaderEntry.SelectButton:RegisterCallback( Mouse.eLClick, OnPlayerSelected );
         local leaderName:string = PlayerConfigurations[pPlayer:GetID()]:GetLeaderTypeName();
         if(isUniqueLeader[leaderName] ~= nil) then
-          PopulateLeader(leaderEntry, pPlayer, isUniqueLeader[leaderName]);
+					PopulateLeader(leaderIcon, pPlayer, isUniqueLeader[leaderName]);
         else
-          PopulateLeader(leaderEntry, pPlayer);
+					PopulateLeader(leaderIcon, pPlayer);
         end
       end
     end
@@ -2003,10 +1916,8 @@ function PopulateDiplomacyRibbon(diplomacyRibbon : table)
     diplomacyRibbon.Root:ReprocessAnchoring();
 
     -- Offset the diplomacy ribbon to accomodate the scrollbar if not all the leaders fit
-    --local offsetX = 0;
     if(diplomacyRibbon.Leaders:GetSizeY() > diplomacyRibbon.LeaderRibbonScroll:GetSizeY()) then
       diplomacyRibbon.Root:SetOffsetX(15);
-      --offsetX = 15;
     end
     local offsetX = DIPLOMACY_RIBBON_OFFSET + diplomacyRibbon.Root:GetOffsetX();
     Controls.PlayerContainer:SetOffsetX(offsetX);
@@ -2140,10 +2051,8 @@ function UninitializeView()
     ms_showingLeaderName = "";
     ms_bLeaderShowRequested = false;
 
-    Controls.Signature_Alpha:SetToBeginning();
     Controls.LeaderResponse_Alpha:SetToBeginning();
     Controls.ConversationSelection_Alpha:SetToBeginning();
-    Controls.Signature_Slide:SetToBeginning();
     Controls.LeaderResponse_Slide:SetToBeginning();
     Controls.ConversationSelection_Slide:SetToBeginning();
     Controls.AlphaIn:SetSpeed(2);
@@ -2349,7 +2258,7 @@ function OnLeaderLoaded()
         if (m_lastLeaderPlayedMusicFor ~= ms_OtherLeaderID) then
 
       -- stop modder civ's leader music if necessary
-      if (m_lastLeaderPlayedMusicFor == -1) then
+			if (m_lastLeaderPlayedMusicFor ~= -1) then
         UI.StopModCivLeaderMusic(m_lastLeaderPlayedMusicFor);
       end
 
@@ -2366,6 +2275,7 @@ function OnLeaderLoaded()
       -- always restart modder music if the leader IDs don't match
       if (UI.GetCivilizationSoundSwitchValueByLeader(ms_OtherLeaderID) == -1) then
         UI.PlayModCivLeaderMusic(ms_OtherID);
+		m_lastLeaderPlayedMusicFor = ms_OtherID;
       end
         end
     end
@@ -2430,6 +2340,7 @@ function OnDiplomacySessionClosed(sessionID)
       else
         -- The local player started the diplo, go back to the overview.
         SelectPlayer(ms_OtherPlayerID, OVERVIEW_MODE);
+				PopulateDiplomacyRibbon(ms_DiplomacyRibbon);
       end
     end
   else
@@ -2441,6 +2352,7 @@ function OnDiplomacySessionClosed(sessionID)
           SelectPlayer(ms_SelectedPlayerID, OVERVIEW_MODE, true);
         end
       end
+			PopulateDiplomacyRibbon(ms_DiplomacyRibbon);
     end
   end
 
@@ -2625,7 +2537,11 @@ function HandleESC()
   elseif (ms_currentViewMode == DEAL_MODE) then
       -- No handling ESC while transitioning to/from deal mode.  The deal screen will handle it if it is up.
   else
+	if(m_PopupDialog:IsOpen())then
+		m_PopupDialog:Close()
+	else
     Close();
+  	end
   end
 end
 
