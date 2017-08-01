@@ -5,3 +5,4 @@ cqui.luaproj
 .vs/cqui/v14/.suo
 cqui_settings_local.sql
 .bak
+*.bak

@@ -10,6 +10,7 @@
         <Grid Anchor="L,T" Size="parent,61" Texture="Controls_TabLedge2"  SliceCorner="194,18" SliceSize="52,26" SliceTextureSize="438,61">
           <!-- My Routes Button -->
           <GridButton ID="MyRoutesButton" Size="150,34" Offset="30,13" Style="TabButton">
+						<GridButton ID="MyRoutesSelected" Size="parent,parent" Style="TabButtonSelected" ConsumeMouseButton="0" ConsumeMouseOver="1" />
             <Label ID="MyRoutesTabLabel" Anchor="C,C" Offset="0,1" Style="TabFont" String="LOC_TRADE_OVERVIEW_MY_ROUTES"/>
             <Image ID="MyRoutesSelectedArrow" Anchor="C,T" Offset="0,0" Texture="Controls_TabSelectArrow.dds"></Image>
             <Label ID="MyRoutesTabSelectedLabel" Anchor="C,C" Offset="0,1" Style="TabSelectedFont" String="LOC_TRADE_OVERVIEW_MY_ROUTES" Hidden="1"/>
@@ -17,6 +18,7 @@
 
           <!-- Routes to Cities Button  -->
           <GridButton ID="RoutesToCitiesButton" Size="166,34" Offset="188,13" Style="TabButton">
+						<GridButton ID="RoutesToCitiesSelected" Size="parent,parent" Style="TabButtonSelected" ConsumeMouseButton="0" ConsumeMouseOver="1" />
             <Label ID="RoutesToCitiesTabLabel" Anchor="C,C" Offset="0,1" Style="TabFont" String="LOC_TRADE_OVERVIEW_ROUTES_TO_MY_CITIES"/>
             <Image ID="RoutesToCitiesSelectedArrow" Anchor="C,T" Offset="0,0" Texture="Controls_TabSelectArrow.dds"/>
             <Label ID="RoutesToCitiesTabSelectedLabel" Anchor="C,C" Offset="0,1" Style="TabSelectedFont" String="LOC_TRADE_OVERVIEW_ROUTES_TO_MY_CITIES" Hidden="1"/>
@@ -24,6 +26,7 @@
 
           <!-- Available Routes Button  -->
           <GridButton ID="AvailableRoutesButton" Size="150,34" Offset="360,13" Style="TabButton">
+						<GridButton ID="AvailableRoutesSelected" Size="parent,parent" Style="TabButtonSelected" ConsumeMouseButton="0" ConsumeMouseOver="1" />
             <Label ID="AvailableRoutesTabLabel" Anchor="C,C" Offset="0,1" Style="TabFont" String="LOC_TRADE_OVERVIEW_AVAILABLE_ROUTES"/>
             <Image ID="AvailableRoutesSelectedArrow" Anchor="C,T" Offset="0,0" Texture="Controls_TabSelectArrow.dds"/>
             <Label ID="AvailableRoutesTabSelectedLabel" Anchor="C,C" Offset="0,1" Style="TabSelectedFont" String="LOC_TRADE_OVERVIEW_AVAILABLE_ROUTES" Hidden="1"/>

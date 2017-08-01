@@ -313,7 +313,7 @@
         <Grid																				Anchor="L,T" Offset="6,2"			Size="parent-10,parent-8"		Texture="CityPanel_BannerNone"				SliceCorner="70,10" SliceSize="1,1" SliceTextureSize="179,20" Color="255,0,0,255" />
         <Label						ID="CityName"							Anchor="C,C" Offset="0,-3"		Style="FontFlair16"					FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="EveryWord"/>
 
-        <Image ID="GainSourcesBoostIcon" Anchor="R,C" Size="20,20" Offset="6,-4" Texture="EspionageMissions20"/>
+        <Image ID="GainSourcesBoostIcon" Anchor="R,C" Size="20,20" Offset="6,-4" Texture="EspionageMissions20" TextureOffset="20,0"/>
 
         <Image ID="CounterspyIconBack" Anchor="R,C" Size="34,31" Offset="0,-4" Texture="Espionage_SpyIconBack">
           <Image ID="CounterspyIconFront" Anchor="C,C" Size="30,27" Offset="0,0" Texture="Espionage_SpyIconFront"/>

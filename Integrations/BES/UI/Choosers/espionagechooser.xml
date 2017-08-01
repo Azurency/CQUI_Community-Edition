@@ -3,13 +3,13 @@
 
   <SlideAnim				Style="ChooserAnim">
     <!-- Top Panel -->
-    <Grid Anchor="C,T" Size="parent+7,96" Offset="0,28" Texture="DestinationChooser_CurrentSlot" SliceStart="0,0" SliceCorner="30,30" SliceSize="250,90" SliceTextureSize="308,207" >
+    <Grid Anchor="C,T" Size="parent+7,102" Offset="0,28" Texture="DestinationChooser_CurrentSlot" SliceStart="0,0" SliceCorner="23,23" SliceSize="250,70" SliceTextureSize="308,173" >
       <!-- City Banner -->
       <Grid								ID="BannerBase"								Anchor="C,T" Offset="0,14"		Size="parent-26,33"								Texture="CityPanel_BannerBase"				SliceCorner="20,10" SliceSize="160,1" SliceTextureSize="199,33" Color="150,170,100,255">
         <Grid							ID="BannerDarker"													Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerDarker"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="0,0,0,100" />
         <Grid							ID="BannerLighter"													Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerLighter"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="255,255,255,255" />
         <Grid																				Anchor="L,T" Offset="6,2"			Size="parent-10,parent-8"		Texture="CityPanel_BannerNone"				SliceCorner="70,10" SliceSize="1,1" SliceTextureSize="179,20" Color="255,0,0,255" />
-        <Label						ID="CityName"							Anchor="L,C" Offset="34,-2"		Style="FontFlair16"					FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="EveryWord" />
+        <Label						ID="CityName"							Anchor="L,C" Offset="34,-3"		Style="FontFlair16"					FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="16" SmallCapsType="EveryWord" />
 
         <!-- Travel Time -->
         <Stack ID="TravelTimeStack" Anchor="R,T" Offset="12,3" StackGrowth="Right" StackPadding="2">
@@ -159,7 +159,7 @@
         <Grid							ID="BannerDarker"													Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerDarker"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="0,0,0,100" />
         <Grid							ID="BannerLighter"													Anchor="L,T" Offset="4,2"			Size="parent-8,parent-10"		Texture="CityPanel_BannerLighter"			SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="255,255,255,255" />
         <Grid																				Anchor="L,T" Offset="6,2"			Size="parent-10,parent-8"		Texture="CityPanel_BannerNone"				SliceCorner="70,10" SliceSize="1,1" SliceTextureSize="179,20" Color="255,0,0,255" />
-        <Label						ID="CityName"							Anchor="L,C" Offset="34,-2"		Style="FontFlair16"					FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="EveryWord" />
+        <Label						ID="CityName"							Anchor="L,C" Offset="34,-3"		Style="FontFlair16"					FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="16" SmallCapsType="EveryWord" />
 
         <!-- Travel Time -->
         <Stack ID="TravelTimeStack" Anchor="R,T" Offset="12,3" StackGrowth="Right" StackPadding="2" >

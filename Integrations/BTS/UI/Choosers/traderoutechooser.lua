@@ -16,6 +16,7 @@ include("TradeSupport");
 --  CONSTANTS
 -- ===========================================================================
 
+local DESTINATION_SCROLLPANEL_RELATIVE_Y:number = -34;
 local SORT_BY_ID:table = GetSortByIdConstants();
 local SORT_ASCENDING = GetSortAscendingIdConstant();
 local SORT_DESCENDING = GetSortDescendingIdConstant();

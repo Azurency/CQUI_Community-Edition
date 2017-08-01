@@ -298,7 +298,9 @@
       <Stack	StackGrowth="Right" >
         <Box																													Size="2,parent"	Color="46,70,95,128" />
         <Container																			Offset="1,0"	Size="232,parent">
-          <Label		ID="LineItemName"			Style="ReportRowStart"			String="LOC_HUD_DISTRICTS" Offset="36,0" />
+          <Label		ID="LineItemName"			Style="ReportRowStart"			String="LOC_HUD_DISTRICTS" Offset="36,0" >
+            <Image	ID="DistrictIcon" Size="16,16" Anchor="L,C" Offset="-21,-1" Texture="Controls_GradientSmall" Hidden="1" />
+          </Label>
         </Container>
         <Box																													Size="2,parent"	Color="46,70,95,255" />
         <Container																										Size="33,parent" />
