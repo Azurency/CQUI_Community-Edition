@@ -1,6 +1,10 @@
 --CityPanelOverview
 --Triggered by selecting a city
 
+-- Include self contained additional tabs
+g_AdditionalTabData = {};
+include("CityPanelTab_", true);
+
 include( "AdjacencyBonusSupport" );   -- GetAdjacentYieldBonusString()
 include( "Civ6Common" );        -- GetYieldString()
 include( "InstanceManager" );
@@ -58,6 +62,7 @@ local m_kProductionIM   :table  = InstanceManager:new( "ProductionInstance",    
 local m_kReligionsBeliefsIM :table  = InstanceManager:new( "ReligionBeliefsInstance", "Top", Controls.ReligionBeliefsStack );
 local m_kTradingPostsIM   :table  = InstanceManager:new( "TradingPostInstance",   "Top", Controls.TradingPostsStack );
 local m_kWondersIM      :table  = InstanceManager:new( "WonderInstance",      "Top", Controls.WondersStack );
+local m_kTabButtonIM		:table	= InstanceManager:new( "TabButtonInstance",		"Button", Controls.TabContainer );
 
 local m_kData       :table  = nil;
 local m_isDirty       :boolean= false;
@@ -123,6 +128,14 @@ function HideAll()
   --Controls.StrengthButton:SetSelected(false);
   --Controls.StrengthIcon:SetColorByName("White");
 
+  -- Loop through dynamic tab buttons deselecting them and setting them to color White
+  for _,tabData in pairs(g_AdditionalTabData) do
+    if tabData.ButtonInstance then
+      tabData.ButtonInstance.Button:SetSelected(false);
+      tabData.ButtonInstance.Icon:SetColorByName("White");
+    end
+  end
+
   Controls.PanelBreakdown:SetHide(true);
   Controls.PanelReligion:SetHide(true);
   Controls.PanelAmenities:SetHide(true);
@@ -130,6 +143,7 @@ function HideAll()
   Controls.PanelCitizensGrowth:SetHide(true);
   Controls.PanelProductionNow:SetHide(true);
   Controls.PanelQueue:SetHide(true);
+  Controls.PanelDynamicTab:SetHide(true);
 
   --UILens.ToggleLayerOff(LensLayers.ADJACENCY_BONUS_DISTRICTS);
   --UILens.ToggleLayerOff(LensLayers.DISTRICTS);
@@ -333,7 +347,7 @@ function ViewPanelReligion( data:table )
     for _, beliefIndex in ipairs(data.BeliefsOfDominantReligion) do
       local kBeliefInstance :table = m_kReligionsBeliefsIM:GetInstance();
       local kBelief     :table = GameInfo.Beliefs[beliefIndex];
-      kBeliefInstance.Top:SetText( Locale.Lookup(kBelief.Name) );
+      kBeliefInstance.BeliefLabel:SetText( Locale.Lookup(kBelief.Name) );
       kBeliefInstance.Top:SetToolTipString( Locale.Lookup(kBelief.Description) );
     end
 
@@ -733,8 +747,29 @@ function PopulateTabs()
     m_tabs.AddTab( Controls.HealthButton,   OnSelectHealthTab );
     m_tabs.AddTab( Controls.BuildingsButton,  OnSelectBuildingsTab );
     m_tabs.AddTab( Controls.ReligionButton,   OnSelectReligionTab );
-    --m_tabs.AddTab( Controls.QueueButton,    OnSelectQueueTab );
-    --m_tabs.AddTab( Controls.StrengthButton,   OnSelectStrengthTab );
+
+    for _,tabData in pairs(g_AdditionalTabData) do
+      tabData.ButtonInstance = m_kTabButtonIM:GetInstance();
+      tabData.ButtonInstance.Icon:SetIcon(tabData.ButtonIcon);
+      tabData.ButtonInstance.Button:SetToolTipString(Locale.Lookup(tabData.ToolTip));
+
+      m_tabs.AddTab(tabData.ButtonInstance.Button, function()
+        HideAll();
+
+        -- Context has to be shown before CityPanelTabRefresh to ensure a proper Refresh
+        tabData.Context:SetHide(false);
+
+        tabData.ButtonInstance.Button:SetSelected(true);
+        tabData.ButtonInstance.Icon:SetColorByName(tabData.ButtonColor);
+        UI.PlaySound("UI_CityPanel_ButtonClick");
+        LuaEvents.CityPanelTabRefresh();
+
+        Controls.PanelDynamicTab:SetHide(false);
+
+        CalculateSizeAndAccomodate(Controls.PanelScrollPanel, Controls.PanelStack);
+      end);
+    end
+
     m_tabs.CenterAlignTabs(0);
   end
   m_tabs.SelectTab( Controls.HealthButton );
@@ -915,6 +950,11 @@ end
 
 -- ===========================================================================
 function Initialize()
+  -- Initialize dynamic tabs, passing the root control as parameter
+  for _,tabData in pairs(g_AdditionalTabData) do
+    tabData:Initialize(Controls.PanelDynamicTab);
+  end
+
   PopulateTabs();
 
   ContextPtr:SetInputHandler( OnInputHandler, true );

@@ -273,14 +273,14 @@
                     <Label  ID="DominantReligionName"         Anchor="L,T" Offset="2,7"                 Style="CityPanelText"     String="Other Religion Instance" />
                   </Stack>                                                               >
                 </Grid>
-                <Grid                                 Anchor="R,T" Offset="0,42"    Size="parent-24,0" AutoSize="Vertical"  Style="CityPanelSubPanelContainer">
-                  <Stack  ID="ReligionBeliefsStack"                Offset="0,0" />
-                </Grid>
+                <Stack	ID="ReligionBeliefsStack"		Anchor="R,T" Offset="0,42" StackPadding="2"/>
               </Grid>
               <Stack      ID="OtherReligions"                     Offset="0,0" StackPadding="4" />
               <Container  Size="1,1" />
             </Stack>
           </Grid>
+
+          <Grid						ID="PanelDynamicTab"					Anchor="L,T" Offset="0,0"			Size="parent,0"			Style="CityPanelStatPanelGrid" ConsumeAllMouse="1"/>
 
           <Grid                 ID="PanelQueue"           Anchor="L,T"                  Size="parent,0"       Style="CityPanelStatPanelGrid">
             <Grid                                     Anchor="L,T"                  Size="parent,24"    Style="DivHeader">
@@ -360,7 +360,7 @@
           </Button>
         <!--  <Button ID="QueueButton" Offset="0,2" Anchor="L,C" Size="44,44"  Texture="LaunchBar_Hook_ButtonMedium" Style="ButtonNormalText">
             <Image ID="QueueIcon" Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="C,C"  Icon="ICON_QUEUE"/>
-          </Button> -->
+          </Button>-->
           <!--<Button ID="StrengthButton" Offset="0,2" Anchor="L,C" Size="44,44"  Texture="LaunchBar_Hook_ButtonMedium" Style="ButtonNormalText">
             <Image ID="StrengthIcon" Offset="-1,-1" Texture="Stats32" Size="32,32" Anchor="C,C"  Icon="ICON_DEFENSE"/>
           </Button>-->
@@ -439,7 +439,9 @@
   </Instance>
 
   <Instance     Name="ReligionBeliefsInstance">
-    <GridButton ID="Top"                               Offset="0,0" Size="parent,24"  Style="CityPanelSubPanelButton" String="Religion: [ICON_Faith]+0" />
+    <Grid ID="Top"														Size="parent-24,20"	Style="CityPanelSubPanelContainer">
+      <Label ID="BeliefLabel"										Offset="5,3"	Style="CityPanelTextSmall" String="Religion: [ICON_Faith]+0" />
+    </Grid>
   </Instance>
 
   <Instance     Name="TradingPostInstance">
