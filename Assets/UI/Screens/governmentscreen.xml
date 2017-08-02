@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd">
 
+  <Include File="PopupDialog" />
+
   <Container Style="FullScreenVignetteConsumer" />
 
   <ScrollPanel Anchor="C,C" Size="parent,768" FullClip="1">
@@ -31,13 +33,13 @@
                     </Grid>
                     <Grid       ID="GovPercentBonusArea"    Anchor="C,T"  Offset="0,0"    Size="290,35"           Texture="Controls_SubContainer2"      SliceCorner="17,17"   SliceSize="1,1"   SliceTextureSize="36,35" Color="GovBonusSelected" MinSize="36,35" AutoSize="V" AutoSizePadding="0,0">
                       <Container Size="290,35"  Anchor="C,C" MinSize="36,35" AutoSize="V">
-                        <Image    AnchorSide="O,I"                                          Offset="-55,-3"   Size="51,40"            Texture="Governments_PercentWhite" Color="255,255,255,255">
+                        <Image		ID="PercentBubble" AnchorSide="O,I"																			    Offset="-55,-3"		Size="51,40"						Texture="Governments_PercentWhite" Color="255,255,255,255">
                           <Label  ID="BonusPercent"           Anchor="C,C"  Offset="-6,-1"    Color0="9,46,75,255" Color1="9,46,75,20" Style="FontFlair26"  String="0"  KerningAdjustment="-1" />
                         </Image>
-                        <Container  Offset="55,0" Anchor="L,C" Size="200,35" MinSize="36,35" AutoSize="V">
+                        <Container	ID="DescriptionContainer" Offset="55,0" Anchor="L,C" Size="200,35" MinSize="36,35" AutoSize="V">
                           <Label  ID="BonusText"  Anchor="C,C" Color0="9,46,75,255" Color1="9,46,75,20" String="$Bonus Text$" WrapWidth="200" Style="BodyText12"/>
                         </Container>
-                        <Image Texture="Governments_LearnedPolicy" Size="40,47" Anchor="R,T" Offset="-18,-4" AnchorSide="O,I"/>
+                        <Image ID="QuillImage" Texture="Governments_LearnedPolicy" Size="40,47" Anchor="R,T" Offset="-18,-4" AnchorSide="O,I"/>
                       </Container>
                     </Grid>
                     <Container Size="2,2"/>
@@ -82,7 +84,7 @@
               </Stack>
               <Box      ID="MilitaryBlocker"    Anchor="C,B"  Color="0,0,0,190" Size="parent-20,parent-10" Hidden="1"/>
               <Box      ID="MilitaryEmpty"    Anchor="C,B"  Color="0,0,0,80"  Size="parent-20,parent-10" Hidden="1">
-                <Label  String="LOC_GOVT_NO_MILITARY_SLOTS" Style="TabFont" Anchor="C,C" WrapWidth="250"/>
+                <Label  String="LOC_GOVT_NO_MILITARY_SLOTS" Style="TabFont" Anchor="C,C" Align="Center" WrapWidth="250"/>
               </Box>
             </Image>
             <Image      ID="RowEconomic"                      Offset="0,165"  Size="parent,189"       Texture="Governments_CardSlot">
@@ -100,7 +102,7 @@
               </Stack>
               <Box      ID="EconomicBlocker"    Anchor="C,B"  Color="0,0,0,190" Size="parent-20,parent-10" Hidden="1"/>
               <Box      ID="EconomicEmpty"    Anchor="C,B"  Color="0,0,0,80"  Size="parent-20,parent-10" Hidden="1">
-                <Label  String="LOC_GOVT_NO_ECONOMIC_SLOTS" Style="TabFont" Anchor="C,C" WrapWidth="250"/>
+                <Label  String="LOC_GOVT_NO_ECONOMIC_SLOTS" Style="TabFont" Anchor="C,C" Align="Center" WrapWidth="250"/>
               </Box>
             </Image>
             <Image      ID="RowDiplomatic"                      Offset="0,340"  Size="parent,189"       Texture="Governments_CardSlot">
@@ -118,7 +120,7 @@
               </Stack>
               <Box      ID="DiplomaticBlocker"  Anchor="C,B"  Color="0,0,0,190" Size="parent-20,parent-10" Hidden="1"/>
               <Box      ID="DiplomaticEmpty"    Anchor="C,B"  Color="0,0,0,80"  Size="parent-20,parent-10" Hidden="1">
-                <Label  String="LOC_GOVT_NO_DIPLOMACY_SLOTS" Style="TabFont" Anchor="C,C" WrapWidth="250"/>
+                <Label  String="LOC_GOVT_NO_DIPLOMACY_SLOTS" Style="TabFont" Anchor="C,C" Align="Center" WrapWidth="250"/>
               </Box>
             </Image>
             <Image      ID="RowWildcard"                      Offset="0,515"  Size="parent,189"       Texture="Governments_CardSlot">
@@ -136,7 +138,7 @@
               </Stack>
               <Box      ID="WildcardBlocker"    Anchor="C,B"  Color="0,0,0,190" Size="parent-20,parent-10" Hidden="1"/>
               <Box      ID="WildcardEmpty"    Anchor="C,B"  Color="0,0,0,80"  Size="parent-20,parent-10" Hidden="1">
-                <Label  String="LOC_GOVT_NO_WILDCARD_SLOTS" Style="TabFont" Anchor="C,C" WrapWidth="250"/>
+                <Label  String="LOC_GOVT_NO_WILDCARD_SLOTS" Style="TabFont" Anchor="C,C" Align="Center" WrapWidth="250"/>
               </Box>
             </Image>
 
@@ -207,7 +209,7 @@
               </InstanceData>
             </PullDown>
 
-            <Stack                    StackGrowth="Right" Offset="0,5" Anchor="C,T">
+            <Stack ID="FilterStack" StackGrowth="Right" Offset="0,5" Anchor="C,T">
               <GridButton ID="MilitaryFilterButton" Style="ButtonControlTan" String="LOC_GOVT_FILTER_MILITARY" Size="120,24">
                 <Image  ID="MilitaryIconRight" Anchor="L,C"                         Texture="Governments_MilitaryCard_Small" AnchorSide="O,I" Hidden="1"/>
               </GridButton>
@@ -323,23 +325,11 @@
 </Container>
 
 <!-- Are you sure dialog -->
-<Container ID="PopupInputBlocker" Size="full,full" ConsumeMouse="1" Hidden="1" />
-  <Box Style="PopupDialogBox"/>
-
+<MakeInstance Name="PopupDialog" />
 
   <!-- ================================================================== -->
   <!--  Instances                                                         -->
   <!-- ================================================================== -->
-
-  <Instance       Name="PopupButtonInstance">
-    <GridButton   ID="Button"     Size="200,41"   Style="MainButton"/>
-  </Instance>
-  <Instance       Name="PopupTextInstance">
-    <Label        ID="Text"       Anchor="C,T" Style="BodyTextDark18" Align="Center" WrapWidth="parent-20"/>
-  </Instance>
-  <Instance       Name="RowInstance">
-    <Stack        ID="Row"      Anchor="C,T" StackGrowth="Right" StackWrap="Bottom" StackPadding="10" />
-  </Instance>
 
   <Instance           Name="PolicyCard">
     <Container        ID="Content"                                          Size="130,150" >
@@ -415,7 +405,7 @@
               <Container  Offset="55,0" Anchor="L,C" Size="200,35" MinSize="36,35" AutoSize="V">
                 <Label  ID="BonusText"  Anchor="C,C" Color0="9,46,75,255" Color1="9,46,75,20" String="$Bonus Text$" WrapWidth="200" Style="BodyText12"/>
               </Container>
-              <Image Texture="Governments_LearnedPolicy" Size="40,47" Anchor="R,T" Offset="-18,-4" AnchorSide="O,I"/>
+              <Image ID="QuillImage" Texture="Governments_LearnedPolicy" Size="40,47" Anchor="R,T" Offset="-18,-4" AnchorSide="O,I"/>
             </Container>
           </Grid>
           <Container Size="2,5"/>
