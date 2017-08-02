@@ -7,7 +7,7 @@
   </Grid>
   <Image					ID="Backing2"				Style="DropShadow3" Size="300,120" Offset="-50,-80" Anchor="R,T"/>
   <Stack					ID="RightContents"	StackGrowth="Left" Anchor="R,T" Padding="3">
-    <Button				ID="MenuButton"			Size="29,29" Texture="TopBar_MenuButton" ToolTip="LOC_TOP_PANEL_MENU_TOOLTIP"  TutorialActive="1" />
+    <Button				ID="MenuButton"			Size="29,29" Texture="TopBar_MenuButton" ToolTip="LOC_TOP_PANEL_MENU_TOOLTIP"  />
     <Button				ID="CivpediaButton" Size="29,29" Texture="TopBar_CivilopediaButton" ToolTip="LOC_TOP_PANEL_HELP_TOOLTIP" />
     <Container												Size="2,1" />
     <Stack				ID="TimeArea"				Anchor="R,T" Offset="14,8"		StackGrowth="Right" >
@@ -25,41 +25,8 @@
 
   <!-- Civ Yields Display -->
   <Stack					ID="InfoStack" Offset="10,2"  StackGrowth="Right" Padding="2">
-    <Stack				ID="YieldStack"						  StackGrowth="Right" Padding="2">
-      <GridButton	ID="ScienceBacking"																		Size="40,24"		Style="YieldBacking" Color="24,156,216,150"																	ToolTip="LOC_TOP_PANEL_SCIENCE_YIELD" AutoSize="H">
-        <Stack		ID="ScienceStack"					Anchor="L,C" Offset="0,2"	StackGrowth="Right">
-          <Label														Anchor="L,B" Offset="0,4"	String="[ICON_ScienceLarge]"/>
-          <Label	ID="SciencePerTurn"				Anchor="C,T"																Style="FontNormal18" ColorSet="ResScienceLabelCS" FontStyle="Stroke" String="0"/>
-        </Stack>
-      </GridButton>
-      <GridButton	ID="CultureBacking"																		Size="40,24"		Style="YieldBacking" Color="254,42,237,100"																	ToolTip="LOC_TOP_PANEL_CULTURE_YIELD" AutoSize="H">
-        <Stack		ID="CultureStack"					Anchor="L,C" Offset="0,2"	StackGrowth="Right">
-          <Label														Anchor="L,B" Offset="0,4"	String="[ICON_CultureLarge]"/>
-          <Label	ID="CulturePerTurn"				Anchor="C,T"																Style="FontNormal18" ColorSet="ResCultureLabelCS" FontStyle="Stroke" String="0"/>
-        </Stack>
-      </GridButton>
-      <GridButton	ID="FaithBacking"																			Size="40,24"		Style="YieldBacking" Color="99,114,159,200"																	ToolTip="LOC_TOP_PANEL_FAITH" AutoSize="H">
-        <Stack		ID="FaithStack"						Anchor="L,C" Offset="0,2"	StackGrowth="Right">
-          <Label														Anchor="L,B" Offset="0,4"	String="[ICON_FaithLarge]"/>
-          <Label	ID="FaithBalance"					Anchor="C,T"							Style="FontNormal18" ColorSet="ResFaithLabelCS" String="?" />
-          <Label	ID="FaithPerTurn"					Offset="2,-2"																Style="FontNormal14" ColorSet="ResFaithLabelCS" FontStyle="Stroke" String="0"	/>
-        </Stack>
-      </GridButton>
-      <Grid				ID="GoldBacking"																			Size="40,24" Style="YieldBacking" Color="185,176,70,150" AutoSize="H">
-        <Stack		ID="GoldStack"						Anchor="L,C" Offset="0,2"	StackGrowth="Right" >
-          <Label														Anchor="L,B" Offset="0,4"	String="[ICON_GoldLarge]"/>
-          <Label	ID="GoldBalance"					Anchor="C,T"								Style="FontNormal18" ColorSet="ResGoldLabelCS" String="?"	/>
-          <Label	ID="GoldPerTurn"											 Offset="2,-2"									Style="FontNormal14" ColorSet="ResGoldLabelCS" FontStyle="Stroke" String="0" />
-        </Stack>
-      </Grid>
-
-      <Grid				ID="TourismBacking"				Size="40,24" Style="YieldBacking" Color="181,116,102,150" AutoSize="H" ToolTip="LOC_TOP_PANEL_TOURISM">
-        <Stack		ID="TourismStack"					Anchor="L,C" Offset="0,2"	StackGrowth="Right" >
-          <Label														Anchor="L,B" Offset="0,4"	String="[ICON_TourismLarge]"/>
-          <Label	ID="TourismBalance"				Anchor="C,T"                Style="FontNormal18" ColorSet="ResTourismLabelCS" String="?"	/>
-        </Stack>
-      </Grid>
-
+    <Stack				ID="YieldStack"						  StackGrowth="Right" Padding="2"/>
+    <Stack ID="StaticInfoStack" StackGrowth="Right" Padding="2">
       <Grid				ID="TradeRoutes"					Style="SubContainerSmall" Size="48,24" ToolTip="LOC_HUD_TRADEROUTES_TOOLTIP">
         <Stack		ID="TradeStack"						Anchor="L,C"	Offset="0,4" StackGrowth="Right">
           <Label	ID="TradeIcon"						Anchor="L,C"	Style="FontNormal10" ColorSet="ResGoldLabelCS" String="[ICON_TradeRouteLarge]" />
@@ -138,6 +105,29 @@
     <Container	ID="Top"																		Size="50,36" >
       <Image									Anchor="C,C" Offset="0,2"			Size="39,39"		Texture="TopBarRingOtherBG.dds"		/>
       <Image									Anchor="C,C" Offset="0,0"			Size="49,53"		Texture="TopBarRingOther.dds"		/>
+    </Container>
+  </Instance>
+
+  <Instance Name="YieldButton_SingleLabel">
+    <Container ID="Top" Size="auto,auto">
+      <GridButton	ID="YieldBacking" Size="40,24" Style="YieldBacking" Color="24,156,216,150" AutoSize="H">
+        <Stack		ID="YieldButtonStack" Anchor="L,C" Offset="0,2"	StackGrowth="Right">
+          <Label	ID="YieldIconString" Anchor="L,B" Offset="0,4"/>
+          <Label	ID="YieldPerTurn" Anchor="C,T" Style="FontNormal18" ColorSet="ResScienceLabelCS" FontStyle="Stroke" String="0"/>
+        </Stack>
+      </GridButton>
+    </Container>
+  </Instance>
+
+  <Instance Name="YieldButton_DoubleLabel">
+    <Container ID="Top" Size="auto,auto">
+      <GridButton	ID="YieldBacking" Size="40,24" Style="YieldBacking" Color="24,156,216,150" AutoSize="H">
+        <Stack		ID="YieldButtonStack" Anchor="L,C" Offset="0,2"	StackGrowth="Right">
+          <Label	ID="YieldIconString" Anchor="L,B" Offset="0,4"/>
+          <Label	ID="YieldBalance" Anchor="C,T" Style="FontNormal18" ColorSet="ResFaithLabelCS" String="?"/>
+          <Label	ID="YieldPerTurn" Offset="2,-2" Style="FontNormal14" ColorSet="ResFaithLabelCS" FontStyle="Stroke" String="0"/>
+        </Stack>
+      </GridButton>
     </Container>
   </Instance>
 
