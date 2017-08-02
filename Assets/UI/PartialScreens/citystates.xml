@@ -99,54 +99,85 @@
             <Image                                                              Size="parent,parent"        Texture="Controls_Gradient_HalfRadial"                                          Color="170,176,180,35" />
             <Label                                Anchor="C,C"  Offset="0,3"                                Style="FontFlair24"    Color0="170,176,180" String="{LOC_CITY_STATES_REPORT:upper}" SmallCaps="30" SmallCapsType="EveryWord" />
           </Grid>
-          <Box            ID="ReportArea"          Anchor="C,T"  Offset="0,0"    Size="parent-10,120"        Color="40,50,60,255">
-            <Box                                  Anchor="L,T"  Offset="1,1"    Size="parent-2,parent-2"    Color="3,4,5,255" />
-            <Image                                Anchor="L,T"  Offset="1,1"    Size="parent-2,parent-2"    Texture="Controls_Gradient"                                                      Color="30,40,50,255" >
-              <Grid        ID="ReportDecoLeft"                    Offset="5,5"    Size="18,parent-10"          Texture="Controls_Deco"          SliceCorner="9,24"  SliceTextureSize="18,49"    Color="50,56,70,255"   />
-              <Grid        ID="ReportDecoRight"    Anchor="R,T"  Offset="5,5"    Size="20,parent-10"          Texture="Controls_Deco"          SliceCorner="9,24"  SliceTextureSize="18,49"    Color="50,56,70,255" SliceStart="21,0" />
+          <Box						ID="ReportArea"					Anchor="C,T"	Offset="0,0"		Size="parent-10,160"	AutoSize="V"			Color="3,4,5,255">
+            <Image																Anchor="L,T"	Offset="1,1"		Size="parent-2,0"		Texture="Controls_Gradient"																				Color="30,40,50,255" AutoSize="V" AutoSizePadding="0,3">
+              <Box                                Anchor="C,B"  Offset="0,0"    Size="parent,1" Color="40,50,60,255"/>
+              <Grid				ID="ReportDeco"		      Anchor="C,T"	Offset="0,2"    AutoSize="V"                Size="parent-10,0"		Texture="Controls_Deco"					Style="DecoGrid"		Color="50,56,70,255">
+
               <Label                              Anchor="R,T"  Offset="230,10"                              Style="CityStateTextLabel"  String="LOC_CITY_STATES_TYPE" />
               <Label      ID="TypeValue"          Anchor="L,T"  Offset="230,10"                              Style="CityStateTextValue"  String="$TypeValue$" />
               <Label                              Anchor="R,T"  Offset="230,31"                              Style="CityStateTextLabel"  String="LOC_CITY_STATES_SUZERAIN_LIST" />
               <Label      ID="PatronValue"        Anchor="L,T"  Offset="230,31"                              Style="CityStateTextValue"  String="$PatronValue$" />
+
               <GridButton  ID="EnvoysSentButton"    Anchor="R,T"  Offset="224,50"  Size="170,21"                Style="CityStateTinyButton" String="LOC_CITY_STATES_ENVOYS_SENT" />
               <Label      ID="EnvoysSentValue"    Anchor="L,T"  Offset="230,52"                              Style="CityStateTextValue"  String="$EnvoysSentValue$" />
               <GridButton  ID="InfluencedByButton"  Anchor="R,T"  Offset="224,71"  Size="170,21"                Style="CityStateTinyButton" String="LOC_CITY_STATES_INFLUENCED_BY" />
               <Label      ID="InfluencedByValue"  Anchor="L,T"  Offset="230,73"                              Style="CityStateTextValue"  String="$InfluencedByValue$" />
               <GridButton  ID="QuestsButton"        Anchor="R,T"  Offset="224,92"  Size="170,21"                Style="CityStateTinyButton" String="LOC_CITY_STATES_QUESTS" />
               <Label      ID="QuestsValue"        Anchor="L,T"  Offset="230,94"                              Style="CityStateTextValue"  String="$QuestsValue$" />
+                <GridButton	ID="RelationshipsButton"	      Anchor="R,T"	Offset="224,113"	Size="170,21"								Style="CityStateTinyButton" String="LOC_CITY_STATES_RELATIONSHIPS" />
+                <Stack      ID="RelationshipsButtonStack"   Anchor="L,T"	Offset="226,110" StackGrowth="Right" WrapWidth="200"/>
+              </Grid>
             </Image>
           </Box>
-          <Container      ID="EnvoysSentArea"                                    Size="parent,200" >
+        </Stack>
+        <!-- Tab Area -->
+        <Container        ID="ReportTabContainer" Anchor="C,B"  Offset="0,24"                Size="parent,400">
+          <Container			ID="EnvoysSentArea"																		Size="parent,parent">
             <Grid                                                Offset="10,10"  Size="parent-20,40"          Style="CityStateStatHeader" >
               <Label                              Anchor="C,C"                                              Style="FontFlair28"          String="LOC_CITY_STATES_ENVOYS_SENT" Color="170,176,180" />
               <Container                          Anchor="R,C"  Offset="17,1"    Size="1,1">
                 <Label    ID="EnvoysSentValue2"    Anchor="C,C"                                              Style="FontFlair28"          String="0" Color="170,176,180" />
               </Container>
             </Grid>
-            <ScrollPanel  ID="EnvoysBonusScroll"                Offset="7,60"    Size="parent-25,265"        Vertical="1">
+            <ScrollPanel	ID="EnvoysBonusScroll"								Offset="7,60"		Size="parent-25,parent-60"				Vertical="1">
               <Stack      ID="EnvoysBonusStack"    Anchor="L,T"  Offset="0,1"    StackPadding="4" />
               <ScrollBar                          Anchor="R,C"  Offset="0,0"    AnchorSide="O,I"            Style="ScrollVerticalBarAlt" />
             </ScrollPanel>
           </Container>
-          <Container      ID="InfluenceArea"                                    Size="parent,200" Hidden="1">
+          <Container			ID="InfluenceArea"																		Size="parent,parent" Hidden="1">
             <Grid                                                Offset="10,10"  Size="parent-20,40"          Style="CityStateHeader" >
               <Label                              Anchor="C,C"                                              Style="CityStateHeaderText"          String="{LOC_CITY_STATES_ENVOYS_INFLUENCE_BY_CIVILIZATION:upper}" />
             </Grid>
-            <ScrollPanel  ID="InfluenceScroll"                  Offset="7,60"    Size="parent-15,265"        Vertical="1">
+            <ScrollPanel	ID="InfluenceScroll"									Offset="7,60"		Size="parent-15,parent-60"				Vertical="1">
               <Stack      ID="InfluenceStack"      Anchor="L,T"  Offset="0,1"    StackPadding="4" />
               <ScrollBar                          Anchor="R,C"  Offset="4,0"    AnchorSide="O,I"            Style="ScrollVerticalBarAlt" />
             </ScrollPanel>
           </Container>
-          <Container      ID="QuestsArea"                                        Size="parent,200"  Hidden="1" >
+          <Container			ID="QuestsArea"																				Size="parent,parent"	Hidden="1" >
             <Grid                                                Offset="10,10"  Size="parent-20,40"          Style="CityStateHeader" >
               <Label                              Anchor="C,C"                                              Style="CityStateHeaderText"          String="{LOC_CITY_STATES_AVAILABLE_QUESTS:upper}" />
             </Grid>
-            <ScrollPanel  ID="QuestsScroll"                      Offset="7,60"    Size="parent-15,265"        Vertical="1" >
+            <ScrollPanel	ID="QuestsScroll"											Offset="7,60"		Size="parent-15,parent-60"				Vertical="1" >
               <Stack      ID="QuestsStack"        Anchor="L,T"  Offset="0,1"    StackPadding="20" />
               <ScrollBar                          Anchor="R,C"  Offset="-12,0"  AnchorSide="O,I"            Style="ScrollVerticalBarAlt" />
             </ScrollPanel>
           </Container>
+          <Container			ID="RelationshipsArea"																				Size="parent,parent"	Hidden="1" >
+            <Grid																								Offset="10,10"	Size="parent-20,40"					Style="CityStateHeader" >
+              <Label															Anchor="C,C"																							Style="CityStateHeaderText"					String="{LOC_CITY_STATES_RELATIONSHIPS:upper}" />
+            </Grid>
+            <ScrollPanel	ID="RelationshipsScroll"											Offset="7,60"		Size="parent-15,parent-60"				Vertical="1" >
+              <Stack Anchor="C,T" StackGrowth="Down" StackPadding="4">
+                <Container Size="parent,0" AutoSize="V">
+                  <Grid Style="DividerGrid" Size="parent-8,8" Anchor="C,C" Color="34,48,59,255"/>
+                  <Grid Style="DropShadow4" AutoSize="1" Anchor="C,C">
+                    <Label String="{LOC_CITY_STATES_CIVILIZATION_HEADER:upper}" Anchor="C,C"  Style="DiplomacyGossipHeader"/>
+                  </Grid>
+                </Container>
+                <Stack ID="RelationshipsCivsStack" Anchor="C,T" StackGrowth="Right" WrapWidth="400"/>
+                <Container Size="parent,0" AutoSize="V">
+                  <Grid Style="DividerGrid" Size="parent-8,8" Anchor="C,C" Color="34,48,59,255"/>
+                  <Grid Style="DropShadow4" AutoSize="1" Anchor="C,C">
+                    <Label String="{LOC_CITY_STATES_CITY_STATES:upper}" Anchor="C,C"  Style="DiplomacyGossipHeader"/>
+                  </Grid>
+                </Container>
+                <Stack ID="RelationshipsCityStatesStack" Anchor="C,T" StackGrowth="Right" WrapWidth="400"/>
         </Stack>
+              <ScrollBar													Anchor="R,C"	Offset="-12,0"	AnchorSide="O,I"						Style="ScrollVerticalBarAlt" />
+            </ScrollPanel>
+          </Container>
+        </Container>
       </Grid>
     </Container>
 
@@ -271,5 +302,14 @@
     </Container>
   </Instance>
 
+  <!-- An instance of an Icon, with optional Amount Text that overlaps the icon -->
+  <Instance	Name="RelationshipIcon">
+    <Container ID="Background" Size="40,40">
+      <Image ID="Icon" StretchMode="None" Size="32,32" Anchor="R,T">
+        <Image ID="TeamRibbon" Anchor="C,B" Offset="0,-7" Size="30,30" Texture="TeamRibbon32"/>
+      </Image>
+      <Image ID="DiplomacyPip" Anchor="L,B" Size="23,23"	Texture="Diplomacy_RelationshipPips"/>
+    </Container>
+  </Instance>
 
 </Context>
