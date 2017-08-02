@@ -1,6 +1,6 @@
 -- ===========================================================================
---	HUD Launch Bar
---	Controls raising full-screen and "choosers"
+--  HUD Launch Bar
+--  Controls raising full-screen and "choosers"
 -- ===========================================================================
 
 include( "GameCapabilities" );
@@ -11,29 +11,29 @@ g_TrackedInstances = {};
 
 include("LaunchBarItem_", true);
 
-local m_numTreesOpen:number = 0;
-local isTechTreeOpen	:boolean = false;
-local isCivicsTreeOpen	:boolean = false;
-local isGreatPeopleOpen	:boolean = false;
-local isGreatWorksOpen	:boolean = false;
-local isReligionOpen	:boolean = false;
-local isGovernmentOpen	:boolean = false;
+local m_numTreesOpen    :number = 0;
+local isTechTreeOpen    :boolean = false;
+local isCivicsTreeOpen  :boolean = false;
+local isGreatPeopleOpen :boolean = false;
+local isGreatWorksOpen  :boolean = false;
+local isReligionOpen    :boolean = false;
+local isGovernmentOpen  :boolean = false;
 
-local m_isGreatPeopleUnlocked	:boolean = false;
-local m_isGreatWorksUnlocked	:boolean = false;
-local m_isReligionUnlocked		:boolean = false;
-local m_isGovernmentUnlocked	:boolean = false;
+local m_isGreatPeopleUnlocked :boolean = false;
+local m_isGreatWorksUnlocked  :boolean = false;
+local m_isReligionUnlocked    :boolean = false;
+local m_isGovernmentUnlocked  :boolean = false;
 
-local isDebug			:boolean = false;			-- Set to true to force all hook buttons to show on game start
+local isDebug:boolean = false;     -- Set to true to force all hook buttons to show on game start
 
 -- Launchbar Extras. Contains the callback and the button text
 local m_LaunchbarExtras:table = {};
 
 -- ===========================================================================
---	Callbacks
+--  Callbacks
 -- ===========================================================================
 function OnGovernmentClick()
-  local ePlayer		:number = Game.GetLocalPlayer();
+  local ePlayer:number = Game.GetLocalPlayer();
   if ePlayer ~= -1 then
     localPlayer = Players[ePlayer];
     if localPlayer == nil then
@@ -42,7 +42,7 @@ function OnGovernmentClick()
   else
     return;
   end
-  local kCulture:table	= localPlayer:GetCulture();
+  local kCulture:table = localPlayer:GetCulture();
   if isGovernmentOpen then
     LuaEvents.LaunchBar_CloseGovernmentPanel()
   else
@@ -301,15 +301,15 @@ function OnAddLaunchbarIcon(buttonInfo:table)
 end
 
 -- ===========================================================================
---	Lua Event
---	Tutorial system is requesting any screen openned, to be closed.
+--  Lua Event
+--  Tutorial system is requesting any screen openned, to be closed.
 -- ===========================================================================
 function OnTutorialCloseAll()
   CloseAllPopups();
 end
 
 -- ===========================================================================
---	Game Engine Event
+--  Game Engine Event
 -- ===========================================================================
 function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
   if eNewMode == InterfaceModeTypes.VIEW_MODAL_LENS then
@@ -322,7 +322,7 @@ end
 
 
 -- ===========================================================================
---	Refresh Data and View
+--  Refresh Data and View
 -- ===========================================================================
 function RealizeHookVisibility()
 
@@ -389,16 +389,16 @@ function RealizeHookVisibility()
   RefreshView();
 end
 
---	Note on hook show/hide functionality:
---	We do not serialize any of this data, but instead we will check gamestate OnTurnBegin to determine which hooks should be shown.
---	Once the show/hide flags have been set, we return from the function before performing the checks again.
---	For all of the hooks that start in a hidden state, there are two functions needed to correctly capture the event to show/hide the hook:
---	1/2) A function for capturing the event as it happens during a turn of gameplay
---	2/2) A function to check gamestate OnTurnBegin
+--  Note on hook show/hide functionality:
+--  We do not serialize any of this data, but instead we will check gamestate OnTurnBegin to determine which hooks should be shown.
+--  Once the show/hide flags have been set, we return from the function before performing the checks again.
+--  For all of the hooks that start in a hidden state, there are two functions needed to correctly capture the event to show/hide the hook:
+--  1/2) A function for capturing the event as it happens during a turn of gameplay
+--  2/2) A function to check gamestate OnTurnBegin
 
 -- *****************************************************************************
---	Religion Hook
---	1/2) OnFaithChanged - triggered off of the FaithChanged game event
+--  Religion Hook
+--  1/2) OnFaithChanged - triggered off of the FaithChanged game event
 function OnFaithChanged()
   if (m_isReligionUnlocked) then
     return;
@@ -407,7 +407,7 @@ function OnFaithChanged()
   RealizeHookVisibility();
 end
 
---	2/2) RefreshReligion - this function checks to see if any faith has been earned
+--  2/2) RefreshReligion - this function checks to see if any faith has been earned
 function RefreshReligion()
   local ePlayer:number = Game.GetLocalPlayer();
   if ePlayer == -1 then
@@ -418,8 +418,8 @@ function RefreshReligion()
     return;
   end
   local localPlayer = Players[ePlayer];
-  local playerReligion		:table	= localPlayer:GetReligion();
-  local faithYield			:number = playerReligion:GetFaithYield();
+  local playerReligion:table  = localPlayer:GetReligion();
+  local faithYield:number = playerReligion:GetFaithYield();
   if (faithYield > 0) then
     m_isReligionUnlocked = true;
   end
@@ -427,10 +427,10 @@ function RefreshReligion()
 end
 
 -- *****************************************************************************
---	Great Works Hook
---	1/2) OnGreatWorkCreated - triggered off of the GreatWorkCreated game event
---	*Note - a great work can be added and then traded away/ moved.  I think we should still allow the hook to stay
---	open in this case.  I think it would be strange behavior to have the hook be made available and then removed.
+--  Great Works Hook
+--  1/2) OnGreatWorkCreated - triggered off of the GreatWorkCreated game event
+--  *Note - a great work can be added and then traded away/ moved.  I think we should still allow the hook to stay
+--  open in this case.  I think it would be strange behavior to have the hook be made available and then removed.
 function OnGreatWorkCreated()
   if (m_isGreatWorksUnlocked) then
     return;
@@ -446,7 +446,7 @@ function OnDiplomacyDealEnacted()
   end
 end
 
---	2/2) RefreshGreatWorks - go through each building checking for GW slots, then query that slot for a slotted great work
+--  2/2) RefreshGreatWorks - go through each building checking for GW slots, then query that slot for a slotted great work
 function RefreshGreatWorks()
   local ePlayer:number = Game.GetLocalPlayer();
   if ePlayer == -1 then
@@ -501,8 +501,8 @@ function RefreshGreatPeople()
 end
 
 -- *****************************************************************************
---	Government Hook
---	1/2) OnCivicCompleted - triggered off of the CivicCompleted event - check to see if the unlocked civic unlocked our first policy
+--  Government Hook
+--  1/2) OnCivicCompleted - triggered off of the CivicCompleted event - check to see if the unlocked civic unlocked our first policy
 function OnCivicCompleted(player:number, civic:number, isCanceled:boolean)
   local ePlayer:number = Game.GetLocalPlayer();
   if ePlayer == -1 then
@@ -517,7 +517,7 @@ function OnCivicCompleted(player:number, civic:number, isCanceled:boolean)
   end
 end
 
---	2/2) RefreshGovernment - Check against the number of policies unlocked
+--  2/2) RefreshGovernment - Check against the number of policies unlocked
 function RefreshGovernment()
   local ePlayer:number = Game.GetLocalPlayer();
   if ePlayer == -1 then
@@ -575,16 +575,16 @@ end
 
 -- ===========================================================================
 function OnTurnBegin()
-  local localPlayer				= Players[Game.GetLocalPlayer()];
+  local localPlayer = Players[Game.GetLocalPlayer()];
   if (localPlayer == nil) then
     return;
   end
-  local playerTechs				= localPlayer:GetTechs();
-  local currentTechID		:number = playerTechs:GetResearchingTech();
+  local playerTechs = localPlayer:GetTechs();
+  local currentTechID:number = playerTechs:GetResearchingTech();
 
   if(currentTechID >= 0) then
-    local progress			:number = playerTechs:GetResearchProgress(currentTechID);
-    local cost				:number	= playerTechs:GetResearchCost(currentTechID);
+    local progress:number = playerTechs:GetResearchProgress(currentTechID);
+    local cost:number = playerTechs:GetResearchCost(currentTechID);
 
     Controls.ScienceMeter:SetPercent(progress/cost);
     Controls.ScienceTurnsLeft:SetText(playerTechs:GetTurnsLeft());
@@ -602,12 +602,12 @@ function OnTurnBegin()
     end
   end
 
-  local playerCivics				= localPlayer:GetCulture();
-  local currentCivicID    :number = playerCivics:GetProgressingCivic();
+  local playerCivics = localPlayer:GetCulture();
+  local currentCivicID:number = playerCivics:GetProgressingCivic();
 
   if(currentCivicID >= 0) then
-    local civicProgress			:number = playerCivics:GetCulturalProgress(currentCivicID);
-    local civicCost				:number	= playerCivics:GetCultureCost(currentCivicID);
+    local civicProgress:number = playerCivics:GetCulturalProgress(currentCivicID);
+    local civicCost:number = playerCivics:GetCultureCost(currentCivicID);
 
     Controls.CultureMeter:SetPercent(civicProgress/civicCost);
     Controls.CultureTurnsLeft:SetText(playerCivics:GetTurnsLeft());
@@ -665,10 +665,10 @@ end
 
 -- Reset the hooks when the player changes for hotseat.
 function OnLocalPlayerChanged()
-  m_isGreatPeopleUnlocked	= false;
-  m_isGreatWorksUnlocked	= false;
-  m_isReligionUnlocked	= false;
-  m_isGovernmentUnlocked	= false;
+  m_isGreatPeopleUnlocked = false;
+  m_isGreatWorksUnlocked = false;
+  m_isReligionUnlocked = false;
+  m_isGovernmentUnlocked = false;
   RefreshGovernment();
   RefreshGreatPeople();
   RefreshGreatWorks();
@@ -677,27 +677,27 @@ end
 
 -- ===========================================================================
 function InitializeTrackedItems()
-	for i,v in ipairs(g_TrackedItems) do
-		local instance = {};
-		local instance = {};
-		ContextPtr:BuildInstanceForControl( v.InstanceType, instance, Controls.ButtonStack );
-		if (instance.LaunchItemButton) then
-			instance.LaunchItemButton:RegisterCallback(Mouse.eLClick, function() v.SelectFunc() end);
-			table.insert(g_TrackedInstances, instance);
-		end
+  for i,v in ipairs(g_TrackedItems) do
+    local instance = {};
+    local instance = {};
+    ContextPtr:BuildInstanceForControl( v.InstanceType, instance, Controls.ButtonStack );
+    if (instance.LaunchItemButton) then
+      instance.LaunchItemButton:RegisterCallback(Mouse.eLClick, function() v.SelectFunc() end);
+      table.insert(g_TrackedInstances, instance);
+    end
 
-		if (instance.LaunchItemButton and v.Tooltip) then
-			instance.LaunchItemButton:SetToolTipString(Locale.Lookup(v.Tooltip));
-		end
+    if (instance.LaunchItemButton and v.Tooltip) then
+      instance.LaunchItemButton:SetToolTipString(Locale.Lookup(v.Tooltip));
+    end
 
-		if (instance.LaunchItemIcon and v.IconTexture) then
-			instance.LaunchItemIcon:SetTexture(v.IconTexture);
-		end
+    if (instance.LaunchItemIcon and v.IconTexture) then
+      instance.LaunchItemIcon:SetTexture(v.IconTexture);
+    end
 
-		-- Add a pin to the stack for each new item
-		local pinInstance = nil;
-		ContextPtr:BuildInstanceForControl( "LaunchBarPinInstance", pinInstance, Controls.ButtonStack );
-	end
+    -- Add a pin to the stack for each new item
+    local pinInstance = nil;
+    ContextPtr:BuildInstanceForControl( "LaunchBarPinInstance", pinInstance, Controls.ButtonStack );
+  end
 end
 
 -- ===========================================================================
@@ -736,7 +736,7 @@ function Initialize()
 
   Events.TurnBegin.Add( OnTurnBegin );
   Events.VisualStateRestored.Add( OnTurnBegin );
-  Events.CivicCompleted.Add( OnCivicCompleted );				-- To capture when we complete Code of Laws
+  Events.CivicCompleted.Add( OnCivicCompleted );        -- To capture when we complete Code of Laws
   Events.CivicChanged.Add(OnTurnBegin);
   Events.ResearchChanged.Add(OnTurnBegin);
   Events.TreasuryChanged.Add( RefreshGovernment );
