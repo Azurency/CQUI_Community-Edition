@@ -48,14 +48,10 @@
       <Grid                                             Anchor="C,T"                  Size="580,61"         Texture="Controls_TabLedge2"  SliceCorner="194,18" SliceSize="52,26" SliceTextureSize="438,61">
         <Container        ID="TabContainer"                           Offset="50,13"  Size="parent-80,34">
           <GridButton     ID="ButtonGreatPeople"                                      Size="170,34"         Style="TabButton"         FontSize="14" TextOffset="0,2" String="LOC_GREAT_PEOPLE_TAB_GREAT_PEOPLE" >
-            <AlphaAnim    ID="SelectGreatPeople"                      Offset="-2,0"   Size="parent,parent"  Speed="2"                 AlphaBegin="0" AlphaEnd="1" Cycle="Once" Function="Root" Hidden="1" >
-              <GridButton                                                             Size="parent,parent"  Style="TabButtonSelected" ConsumeMouseButton="0" ConsumeMouseOver="1" />
-            </AlphaAnim>
+              <GridButton	ID="SelectGreatPeople"																														Size="parent,parent"	Style="TabButtonSelected" ConsumeMouseButton="0" ConsumeMouseOver="1" />
           </GridButton>
           <GridButton     ID="ButtonPreviouslyRecruited"                              Size="170,34"         Style="TabButton"         FontSize="14" TextOffset="0,2" String="LOC_GREAT_PEOPLE_TAB_PREVIOUSLY_RECRUITED" >
-            <AlphaAnim    ID="SelectPreviouslyRecruited"              Offset="-2,0"   Size="parent,parent"  Speed="2"                 AlphaBegin="0" AlphaEnd="1" Cycle="Once" Function="Root" Hidden="1" >
-              <GridButton                                                             Size="parent,parent"  Style="TabButtonSelected" ConsumeMouseButton="0" ConsumeMouseOver="1" />
-            </AlphaAnim>
+              <GridButton	ID="SelectPreviouslyRecruited"																														Size="parent,parent"	Style="TabButtonSelected" ConsumeMouseButton="0" ConsumeMouseOver="1" />
           </GridButton>
         </Container>
       </Grid>
@@ -164,6 +160,8 @@
         </Stack>
         <Bar ID="ProgressBar"   Size="parent,6" FGColor="220,220,200,255" BGColor="0,0,0,255" Percent="0.5" />
       </Stack>
+      <Label					ID="Amount"							Anchor="R,T"	Offset="0,0"		WrapWidth="160" Style="GreatPeopleSmallText" Color="220,220,200,255" String="X/Y" />
+      <Bar						ID="ProgressBar"											Offset="0,14"		Size="parent,6" FGColor="220,220,200,255" BGColor="0,0,0,255" Percent="0.5" />
       <Image ID="CivBacking" Anchor="L,C" Texture="CircleBacking22" Size="22,22" Offset="-25,0">
           <Image ID="CivIcon" Anchor="C,T" Texture="CivSymbols22" Size="22,22"/>
       </Image>
