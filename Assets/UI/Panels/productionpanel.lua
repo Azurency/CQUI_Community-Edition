@@ -739,6 +739,30 @@ function PopulateList(data, listIM)
       unitListing.TrainUnit:SetToolTipString(item.ToolTip);
       unitListing.Disabled:SetToolTipString(item.ToolTip);
 
+      -- Show/hide religion indicator icon
+      if unitListing.ReligionIcon then
+        local showReligionIcon:boolean = false;
+
+        if item.ReligiousStrength and item.ReligiousStrength > 0 then
+          if unitListing.ReligionIcon then
+            local religionType:number = Players[Game.GetLocalPlayer()]:GetReligion():GetReligionTypeCreated();
+            if religionType > 0 then
+              local religion:table = GameInfo.Religions[religionType];
+              local religionIcon:string = "ICON_" .. religion.ReligionType;
+              local religionColor:number = UI.GetColorValue(religion.Color);
+
+              unitListing.ReligionIcon:SetIcon(religionIcon);
+              unitListing.ReligionIcon:SetColor(religionColor);
+              unitListing.ReligionIcon:LocalizeAndSetToolTip(religion.Name);
+              unitListing.ReligionIcon:SetHide(false);
+              showReligionIcon = true;
+            end
+          end
+        end
+
+        unitListing.ReligionIcon:SetHide(not showReligionIcon);
+      end
+
       -- Set Icon color and backing
       local textureName = TEXTURE_BASE;
       if item.Type ~= -1 then
@@ -2066,7 +2090,7 @@ function Refresh()
           Kind      = row.Kind,
           TurnsLeft   = turnsLeft,
           Disabled    = isDisabled,
-          Repair      = cityDistricts:IsPillaged( row.Index ),
+          Repair      = cityDistricts:IsPillaged( row.Hash ),
           Contaminated  = cityDistricts:IsContaminated( row.Index ),
           Cost      = iProductionCost,
           Progress    = iProductionProgress,
@@ -2269,7 +2293,7 @@ function Refresh()
         end
       end
 
-      if not row.MustPurchase and ( buildQueue:CanProduce( row.Hash, true ) or (doShow and not row.IsWonder) ) then
+      if ( not row.MustPurchase or cityBuildings:IsPillaged(row.Hash) ) and ( buildQueue:CanProduce( row.Hash, true ) or (doShow and not row.IsWonder) ) then
         local isCanStart, results      = buildQueue:CanProduce( row.Hash, false, true );
           local isDisabled      :boolean = false; --not isCanStart;
 

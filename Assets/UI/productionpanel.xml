@@ -73,7 +73,7 @@
                 <ScrollBar        Anchor="R,T" AnchorSide="O,I"  Offset="1,0" Style="ScrollVerticalBar" />
               </ScrollPanel>
 
-              <Tutorial ID="TutTrainBuilders" Style="TutorialContainer" Anchor="L,C"  AnchorSide="O,O" Offset="0,240" TriggerBy="TutorialTrainBuilders">
+              <Tutorial ID="TutTrainBuilders" Style="TutorialContainer" Anchor="L,C"  AnchorSide="O,O" Offset="0,310" TriggerBy="TutorialTrainBuilders">
                 <Grid Style="TutorialCalloutGrid">
                   <Label Style="TutorialHeaderText" String="LOC_META_102_HEAD"/>
                   <Label Style="TutorialBodyText" String="LOC_META_102_BODY" />
@@ -313,6 +313,7 @@
               </Image>
             </Container>
             <Label        ID="LabelText"          WrapWidth="120" String="Industrial Zone" Style="WhiteSemiBold14"  Anchor="L,C"/>
+            <Image ID="ReligionIcon" Size="22,22" IconSize="22" Icon="ICON_RELIGION_ISLAM"/>
           </Container>
           <Stack Anchor="R,C" StackGrowth="Down" Padding="-6">
             <Grid               ID="RecommendedIcon" SliceTextureSize="40,34" SliceCorner="22,15" Size="40,34" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
@@ -417,6 +418,7 @@
               <TextureBar ID="ProductionProgress" Texture="CityPanel_ProductionMeterSmall" Size="92,17" Anchor="C,C" Speed="1" Direction="Right"/>
             </Image>
             <Label        ID="LabelText"           WrapWidth="100" String="Industrial Zone" Style="WhiteSemiBold14" Anchor="L,C"/>
+            <Image ID="ReligionIcon" Size="22,22" IconSize="22" Icon="ICON_RELIGION_ISLAM"/>
           </Container>
           <Stack Anchor="R,C" StackGrowth="Left" Offset="3,0" Padding="2">
             <Label ID="CostText" String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="5,0"/>
