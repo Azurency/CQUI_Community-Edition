@@ -134,6 +134,7 @@
     <File>Assets/UI/ingame.lua</File>
     <File>Assets/UI/launchbar.lua</File>
     <File>Assets/UI/launchbar.xml</File>
+    <File>Assets/UI/leadericon.lua</File>
     <File>Assets/UI/mappinmanager.lua</File>
     <File>Assets/UI/minimappanel.lua</File>
     <File>Assets/UI/minimappanel.xml</File>
@@ -259,6 +260,7 @@
         <File>Assets/UI/ingame.lua</File>
         <File>Assets/UI/launchbar.lua</File>
         <File>Assets/UI/launchbar.xml</File>
+        <File>Assets/UI/leadericon.lua</File>
         <File>Assets/UI/mappinmanager.lua</File>
         <File>Assets/UI/minimappanel.lua</File>
         <File>Assets/UI/minimappanel.xml</File>
