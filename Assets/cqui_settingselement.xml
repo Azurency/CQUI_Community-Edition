@@ -395,7 +395,10 @@
             <GridButton ID="AutoapplyScoutLensCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS"/>
           </Stack>
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-            <GridButton ID="ShowNothingToDoInBuilderLens" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_LENSES_SHOWNOTHINGTODO"/>
+            <GridButton ID="ShowNothingToDoInBuilderLens" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_LENSES_SHOWNOTHINGTODO_BUILDER"/>
+          </Stack>
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <GridButton ID="ShowGenericInBuilderLens" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_LENSES_SHOWGENERIC_BUILDER"/>
           </Stack>
         </Stack>
       </Container>

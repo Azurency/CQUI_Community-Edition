@@ -36,6 +36,7 @@ INSERT OR REPLACE INTO CQUI_Settings -- Don't touch this line!
       ("CQUI_AutoapplyBuilderLens", 1), -- Automatically activates the builder lens when selecting a builder
       ("CQUI_AutoapplyScoutLens", 1), -- Automatically activates the scout lens when selecting a scout
       ("CQUI_ShowNothingToDoBuilderLens", 1), -- Shows nothing to do hexes (red tiles) when in builder lens
+      ("CQUI_ShowGenericBuilderLens", 1), -- Shows generic hexes (white tiles) when in builder lens
       ("CQUI_AutoExpandUnitActions", 1), -- Automatically reveals the secondary unit actions normally hidden inside an expando
       ("CQUI_BlockOnCityAttack", 1), -- Block turn from ending if you have a city that can attack
       ("CQUI_ProductionQueue", 1), -- A production queue appears next to the production panel, allowing multiple constructions to be queued at once

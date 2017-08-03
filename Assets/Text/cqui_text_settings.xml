@@ -156,11 +156,17 @@
     <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="en_US">
       <Text>Autoapply scout lens</Text>
     </Row>
-    <Row Tag="LOC_CQUI_LENSES_SHOWNOTHINGTODO" Language="en_US">
+    <Row Tag="LOC_CQUI_LENSES_SHOWNOTHINGTODO_BUILDER" Language="en_US">
       <Text>Show nothing to do in builder lens</Text>
     </Row>
-    <Row Tag="LOC_CQUI_LENSES_SHOWNOTHINGTODO_TOOLTIP" Language="en_US">
+    <Row Tag="LOC_CQUI_LENSES_SHOWNOTHINGTODO_BUILDER_TOOLTIP" Language="en_US">
       <Text>Shows nothing to do hexes (red tiles) when in builder lens</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWGENERIC_BUILDER" Language="en_US">
+      <Text>Show generic in builder lens</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWGENERIC_BUILDER_TOOLTIP" Language="en_US">
+      <Text>Shows generic hexes (white tiles) when in builder lens</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS" Language="en_US">
       <Text>Popups</Text>
