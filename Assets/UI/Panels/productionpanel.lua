@@ -2052,7 +2052,7 @@ function Refresh()
         end
 
         local allReasons      :string = ComposeFailureReasonStrings( isDisabled, results );
-        local sToolTip        :string = ToolTipHelper..GetToolTip(row.DistrictType, Game.GetLocalPlayer()) .. allReasons;
+        local sToolTip        :string = ToolTipHelper.GetToolTip(row.DistrictType, Game.GetLocalPlayer()) .. allReasons;
 
         local iProductionCost   :number = buildQueue:GetDistrictCost( row.Index );
         local iProductionProgress :number = buildQueue:GetDistrictProgress( row.Index );
