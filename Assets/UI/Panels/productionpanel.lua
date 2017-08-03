@@ -246,13 +246,13 @@ function BuildBuilding(city, buildingEntry)
     return;
   end
 
-	-- If it's a Wonder and the city already has the building then it doesn't need to be replaced.
-	if (bNeedsPlacement) then
-		local cityBuildings = city:GetBuildings();
-		if (cityBuildings:HasBuilding(buildingEntry.Hash)) then
-			bNeedsPlacement = false;
-		end
-	end
+  -- If it's a Wonder and the city already has the building then it doesn't need to be replaced.
+  if (bNeedsPlacement) then
+    local cityBuildings = city:GetBuildings();
+    if (cityBuildings:HasBuilding(buildingEntry.Hash)) then
+      bNeedsPlacement = false;
+    end
+  end
 
   -- Does the building need to be placed?
   if ( bNeedsPlacement ) then
@@ -323,10 +323,10 @@ function PurchaseUnit(city, unitEntry, purchaseType)
   if (purchaseType == nil) then
     if (unitEntry.Yield == "YIELD_GOLD") then
       tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_GOLD"].Index;
-		UI.PlaySound("Purchase_With_Gold");
+    UI.PlaySound("Purchase_With_Gold");
     else
       tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_FAITH"].Index;
-		UI.PlaySound("Purchase_With_Faith");
+    UI.PlaySound("Purchase_With_Faith");
     end
   else
     tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = purchaseType;
@@ -342,10 +342,10 @@ function PurchaseUnitCorps(city, unitEntry, purchaseType)
   if (purchaseType == nil) then
     if (unitEntry.Yield == "YIELD_GOLD") then
       tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_GOLD"].Index;
-		UI.PlaySound("Purchase_With_Gold");
+    UI.PlaySound("Purchase_With_Gold");
     else
       tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_FAITH"].Index;
-		UI.PlaySound("Purchase_With_Faith");
+    UI.PlaySound("Purchase_With_Faith");
     end
   else
     tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = purchaseType;
@@ -361,10 +361,10 @@ function PurchaseUnitArmy(city, unitEntry, purchaseType)
   if (purchaseType == nil) then
     if (unitEntry.Yield == "YIELD_GOLD") then
       tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_GOLD"].Index;
-		UI.PlaySound("Purchase_With_Gold");
+    UI.PlaySound("Purchase_With_Gold");
     else
       tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_FAITH"].Index;
-		UI.PlaySound("Purchase_With_Faith");
+    UI.PlaySound("Purchase_With_Faith");
     end
   else
     tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = purchaseType;
@@ -379,10 +379,10 @@ function PurchaseBuilding(city, buildingEntry, purchaseType)
   if(purchaseType == nil) then
     if (buildingEntry.Yield == "YIELD_GOLD") then
       tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_GOLD"].Index;
-		UI.PlaySound("Purchase_With_Gold");
+    UI.PlaySound("Purchase_With_Gold");
     else
       tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = GameInfo.Yields["YIELD_FAITH"].Index;
-		UI.PlaySound("Purchase_With_Faith");
+    UI.PlaySound("Purchase_With_Faith");
     end
   else
     tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = purchaseType;
@@ -817,8 +817,8 @@ function PopulateList(data, listIM)
         LuaEvents.OpenCivilopedia(item.Type);
       end);
       unitListing.TrainUnit:SetTag(UITutorialManager:GetHash(item.Type));
-      
-      -- Change ToolTip back to item description 
+
+      -- Change ToolTip back to item description
       unitListing.PurchaseButton:RegisterCallback( Mouse.eMouseExit, function() unitListing.TrainUnit:SetToolTipString(item.ToolTip); end);
       unitListing.FaithPurchaseButton:RegisterCallback( Mouse.eMouseExit, function() unitListing.TrainUnit:SetToolTipString(item.ToolTip); end);
 
@@ -932,7 +932,7 @@ function PopulateList(data, listIM)
             unitListing.TrainUnit:SetToolTipString(Locale.Lookup("LOC_BUILDING_CONSTRUCT_NO_SUITABLE_LOCATION"));
           end
         end);
-        
+
         unitListing.CorpsPurchaseButton:RegisterCallback( Mouse.eMouseExit, function() unitListing.TrainUnit:SetToolTipString(item.ToolTip); end);
         unitListing.CorpsFaithPurchaseButton:RegisterCallback( Mouse.eMouseExit, function() unitListing.TrainUnit:SetToolTipString(item.ToolTip); end);
       end
@@ -1012,7 +1012,7 @@ function PopulateList(data, listIM)
             unitListing.TrainUnit:SetToolTipString(Locale.Lookup("LOC_BUILDING_CONSTRUCT_NO_SUITABLE_LOCATION"));
           end
         end);
-        
+
         unitListing.ArmyFaithPurchaseButton:RegisterCallback( Mouse.eLClick, function()
           if data.City:GetGold():CanPlaceUnit(item.Hash) then
             PurchaseUnitArmy(data.City, item, GameInfo.Yields["YIELD_FAITH"].Index);
@@ -1020,7 +1020,7 @@ function PopulateList(data, listIM)
             unitListing.TrainUnit:SetToolTipString(Locale.Lookup("LOC_BUILDING_CONSTRUCT_NO_SUITABLE_LOCATION"));
           end
         end);
-        
+
         unitListing.ArmyPurchaseButton:RegisterCallback( Mouse.eMouseExit, function() unitListing.TrainUnit:SetToolTipString(item.ToolTip); end);
         unitListing.ArmyFaithPurchaseButton:RegisterCallback( Mouse.eMouseExit, function() unitListing.TrainUnit:SetToolTipString(item.ToolTip); end);
       end
