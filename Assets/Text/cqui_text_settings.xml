@@ -199,5 +199,27 @@
       <Text>Autoexpand all actions in the unit panel</Text>
     </Row>
 
+    <Row Tag="LOC_CQUI_TRADER_SCREEN" Language="en_US">
+      <Text>Trader Screen</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_SHOW_SORT_ORDER" Language="en_US">
+      <Text>Show sort order</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_SHOW_SORT_ORDER_TOOLTIP" Language="en_US">
+      <Text>Shows the sort order of the various yields in the trader screens</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_COLOR_YIELDS" Language="en_US">
+      <Text>Color yield values</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_COLOR_YIELDS_TOOLTIP" Language="en_US">
+      <Text>Colors the yield values based on the type of yield. Ex: Food yields are colored green</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_ADD_DIVIDER" Language="en_US">
+      <Text>Add divider between groups</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_ADD_DIVIDER_TOOLTIP" Language="en_US">
+      <Text>Adds a divider between groups in Trade Overview panel</Text>
+    </Row>
+
   </LocalizedText>
 </GameData>

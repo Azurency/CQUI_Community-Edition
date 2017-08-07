@@ -161,6 +161,12 @@ function InitializeGossipCheckboxes()
   PopulateCheckBox(Controls.LOC_GOSSIP_WONDER_STARTEDCheckbox, "CQUI_LOC_GOSSIP_WONDER_STARTED");
 end
 
+function InitializeTraderScreenCheckboxes()
+  PopulateCheckBox(Controls.TraderColorYieldsCheckbox, "CQUI_TraderColorYields", Locale.Lookup("LOC_CQUI_TRADER_COLOR_YIELDS_TOOLTIP"));
+  PopulateCheckBox(Controls.TraderAddDividerCheckbox, "CQUI_TraderAddDivider", Locale.Lookup("LOC_CQUI_TRADER_ADD_DIVIDER_TOOLTIP"));
+  PopulateCheckBox(Controls.TraderShowSortOrderCheckbox, "CQUI_TraderShowSortOrder", Locale.Lookup("LOC_CQUI_TRADER_SHOW_SORT_ORDER_TOOLTIP"));
+end
+
 -- ===========================================================================
 --  Input
 --  UI Event Handler
@@ -241,7 +247,7 @@ local WorkIconSizeConverter = {
   end
 };
 
---Minimum value is 10, maximum is 100. This translates to 91 steps, or 0th step to 90th
+--Minimum value is 0, maximum is 100. This translates to 101 steps, or 0th step to 100th
 local WorkIconAlphaConverter = {
   ToSteps = function(value)
     local out = value;
@@ -270,6 +276,7 @@ function Initialize()
     {Controls.CityviewTab, Controls.CityviewOptions},
     {Controls.LensesTab, Controls.LensesOptions},
     {Controls.UnitsTab, Controls.UnitsOptions},
+    {Controls.TraderScreenTab, Controls.TraderScreenOption},
     {Controls.HiddenTab, Controls.HiddenOptions}
   };
   for i, tab in ipairs(m_tabs) do
@@ -322,6 +329,7 @@ function Initialize()
   PopulateSlider(Controls.SmartWorkIconAlphaSlider, Controls.SmartWorkIconAlphaText, "CQUI_SmartWorkIconAlpha", WorkIconAlphaConverter);
 
   InitializeGossipCheckboxes();
+  InitializeTraderScreenCheckboxes();
 
   --Setting up panel controls
   ShowTab(m_tabs[1][1], m_tabs[1][2]); --Show General Settings on start

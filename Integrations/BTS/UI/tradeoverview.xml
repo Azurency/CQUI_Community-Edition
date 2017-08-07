@@ -10,7 +10,7 @@
         <Grid Anchor="L,T" Size="parent,61" Texture="Controls_TabLedge2"  SliceCorner="194,18" SliceSize="52,26" SliceTextureSize="438,61">
           <!-- My Routes Button -->
           <GridButton ID="MyRoutesButton" Size="150,34" Offset="30,13" Style="TabButton">
-						<GridButton ID="MyRoutesSelected" Size="parent,parent" Style="TabButtonSelected" ConsumeMouseButton="0" ConsumeMouseOver="1" />
+            <GridButton ID="MyRoutesSelected" Size="parent,parent" Style="TabButtonSelected" ConsumeMouseButton="0" ConsumeMouseOver="1" />
             <Label ID="MyRoutesTabLabel" Anchor="C,C" Offset="0,1" Style="TabFont" String="LOC_TRADE_OVERVIEW_MY_ROUTES"/>
             <Image ID="MyRoutesSelectedArrow" Anchor="C,T" Offset="0,0" Texture="Controls_TabSelectArrow.dds"></Image>
             <Label ID="MyRoutesTabSelectedLabel" Anchor="C,C" Offset="0,1" Style="TabSelectedFont" String="LOC_TRADE_OVERVIEW_MY_ROUTES" Hidden="1"/>
@@ -18,7 +18,7 @@
 
           <!-- Routes to Cities Button  -->
           <GridButton ID="RoutesToCitiesButton" Size="166,34" Offset="188,13" Style="TabButton">
-						<GridButton ID="RoutesToCitiesSelected" Size="parent,parent" Style="TabButtonSelected" ConsumeMouseButton="0" ConsumeMouseOver="1" />
+            <GridButton ID="RoutesToCitiesSelected" Size="parent,parent" Style="TabButtonSelected" ConsumeMouseButton="0" ConsumeMouseOver="1" />
             <Label ID="RoutesToCitiesTabLabel" Anchor="C,C" Offset="0,1" Style="TabFont" String="LOC_TRADE_OVERVIEW_ROUTES_TO_MY_CITIES"/>
             <Image ID="RoutesToCitiesSelectedArrow" Anchor="C,T" Offset="0,0" Texture="Controls_TabSelectArrow.dds"/>
             <Label ID="RoutesToCitiesTabSelectedLabel" Anchor="C,C" Offset="0,1" Style="TabSelectedFont" String="LOC_TRADE_OVERVIEW_ROUTES_TO_MY_CITIES" Hidden="1"/>
@@ -26,7 +26,7 @@
 
           <!-- Available Routes Button  -->
           <GridButton ID="AvailableRoutesButton" Size="150,34" Offset="360,13" Style="TabButton">
-						<GridButton ID="AvailableRoutesSelected" Size="parent,parent" Style="TabButtonSelected" ConsumeMouseButton="0" ConsumeMouseOver="1" />
+            <GridButton ID="AvailableRoutesSelected" Size="parent,parent" Style="TabButtonSelected" ConsumeMouseButton="0" ConsumeMouseOver="1" />
             <Label ID="AvailableRoutesTabLabel" Anchor="C,C" Offset="0,1" Style="TabFont" String="LOC_TRADE_OVERVIEW_AVAILABLE_ROUTES"/>
             <Image ID="AvailableRoutesSelectedArrow" Anchor="C,T" Offset="0,0" Texture="Controls_TabSelectArrow.dds"/>
             <Label ID="AvailableRoutesTabSelectedLabel" Anchor="C,C" Offset="0,1" Style="TabSelectedFont" String="LOC_TRADE_OVERVIEW_AVAILABLE_ROUTES" Hidden="1"/>
@@ -178,7 +178,7 @@
         <ScrollBar Anchor="R,C" AnchorSide="O,I"  Offset="0,0" Style="ScrollVerticalBar"/>
 
         <!-- Stack -->
-        <Stack ID="BodyStack" StackGrowth="Down"/>
+        <Stack ID="BodyStack" StackGrowth="Down" StackPadding="4"/>
       </ScrollPanel>
     </Container>
 
@@ -188,14 +188,24 @@
   <!--  Instances                                                         -->
   <!-- ================================================================== -->
 
+  <!-- Section Divider -->
+  <Instance Name="SectionDividerInstance">
+    <Container ID="Top" Size="parent,25" Anchor="C,C" Offset="8,0">
+      <Grid Style="DivHeader" Size="parent,parent" Color="255,255,255,255" Anchor="C,T" Offset="0,0">
+        <!-- <Grid Anchor="C,C" Offset="-9,0" Size="parent-60,8" Texture="Controls_Div2" SliceCorner="27,4" SliceTextureSize="54,8" Color="47,63,76,255" /> -->
+      </Grid>
+    </Container>
+  </Instance>
+
   <!-- Section Header -->
   <Instance Name="HeaderInstance">
-    <Container ID="Top" Size="485,42" Offset="10,4">
-      <GridButton ID="HeaderGrid" Texture="TradeOverview_Subheader" SliceCorner="12,11" SliceSize="2,2" Color="67,70,72,255" Size="parent,parent">
+    <Container ID="Top" Size="485,42" Offset="10,0">
+
+      <GridButton ID="HeaderGrid" Anchor="C,B" Texture="TradeOverview_Subheader" SliceCorner="12,11" SliceSize="2,2" Color="67,70,72,255" Size="parent,parent">
         <!-- <Grid           ID="CityBannerFill2"           Anchor="C,C"                  Size="Parent-7,Parent-6"  Offset="-1,-1" Texture="Banner_Darker"    SliceTextureSize="196,34" SliceCorner="98,17"/> -->
         <Grid           ID="CityBannerFill"           Anchor="C,C"                  Size="Parent-7,Parent-6"  Offset="-1,-1"  Texture="Banner_Base"     SliceTextureSize="196,34" SliceCorner="98,17"/>
 
-      <!--  <Grid           ID="CityBannerFill3"          Anchor="C,C"                  Size="Parent-7,Parent-6"  Offset="-1,-1"  Texture="Banner_Lighter"  SliceTextureSize="196,34" SliceCorner="98,17"/> -->
+       <!--  <Grid           ID="CityBannerFill3"          Anchor="C,C"                  Size="Parent-7,Parent-6"  Offset="-1,-1"  Texture="Banner_Lighter"  SliceTextureSize="196,34" SliceCorner="98,17"/> -->
 
 
         <Label ID="HeaderLabel" Anchor="L,C" Offset="36,0" Style="FontFlair16" SmallCaps="20" SmallCapsType="EveryWord" Color="Beige"/>
@@ -230,9 +240,9 @@
 
   <!-- Route Entry -->
   <Instance Name="RouteInstance">
-    <Container ID="Top" Size="485,78" Offset="10,2">
+    <Container ID="Top" Size="485,78" Offset="10,0">
       <GridButton ID="GridButton" Size="parent,parent" Color="255,255,255,150">
-          <GridData Texture="Controls_ListButton" SliceCorner="209,29"  SliceTextureSize="417,51" StateOffsetIncrement="0,51"/>
+          <GridData Texture="Controls_ListButton" SliceCorner="209,29"  SliceTextureSize="417,51" StateOffsetIncrement="0,102"/>
 
           <!-- Vertical Divider Background -->
           <Stack Size="50,50"  Anchor="C,B" StackGrowth="Right" Offset="0,4">
@@ -264,7 +274,7 @@
           <!-- Route Status Font Icon -->
           <Label ID="RouteStatusFontIcon" Anchor="L,T" Offset="10,8" String="[Icon_TradeRouteLarge]" Hidden="1"/>
 
-          <Grid ID="BannerBase" Size="parent,36" Anchor="C,T" Offset="0,1" Texture="CityPanel_BannerBase"       SliceCorner="20,10" SliceSize="160,1" SliceTextureSize="199,33" Color="150,170,100,255">
+          <Grid ID="BannerBase" Size="parent,37" Anchor="C,T" Offset="0,1" Texture="CityPanel_BannerBase"       SliceCorner="20,10" SliceSize="160,1" SliceTextureSize="199,33" Color="150,170,100,255">
             <Grid             ID="BannerDarker"         Anchor="L,T" Offset="4,2"     Size="parent-8,parent-10"   Texture="CityPanel_BannerDarker"      SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="0,0,0,100" />
               <Grid             ID="BannerLighter"        Anchor="L,T" Offset="4,2"     Size="parent-8,parent-10"   Texture="CityPanel_BannerLighter"     SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="255,255,255,255" />
           </Grid>
@@ -312,10 +322,10 @@
           <!-- Origin Civ Arrow -->
           <Image ID="OriginCivArrow" Anchor="L,B" Size="20,19" Offset="46,25" FlipX="1" Texture="TradeOverview_Benefactor"/>
 
-          <!-- Destination Civ Icon -->
-          <Image ID="DestinationCivIconBacking" Anchor="R,B" Size="30,30" Offset="8,12" Texture="CircleBacking30" Color="100,100,100,255">
-            <Image ID="DestinationCivIcon" Anchor="C,C" Size="30,30" Offset="0,0" Icon="ICON_CIVILIZATION_UNKNOWN" IconSize="30"/>
-          </Image>
+           <!-- Destination Civ Icon -->
+           <Image ID="DestinationCivIconBacking" Anchor="R,B" Size="30,30" Offset="8,12" Texture="CircleBacking30" Color="100,100,100,255">
+             <Image ID="DestinationCivIcon" Anchor="C,C" Size="30,30" Offset="0,0" Icon="ICON_CIVILIZATION_UNKNOWN" IconSize="30"/>
+           </Image>
 
           <!-- Destination Civ Arrow -->
           <Image ID="DestinationCivArrow" Anchor="R,B" Size="20,19" Offset="45,3" Texture="TradeOverview_Benefactor"/>
@@ -324,15 +334,61 @@
           <Box Size="300,2" Anchor="C,C" Offset="0,13" Color="50,53,54,255"/>
 
           <!-- Resource Stack -->
-          <Stack ID="ResourceStack" StackGrowth="Down" Anchor="C,T" Offset="0,31" StackPadding="2">
-            <!-- <Stack ID="DestinationResourceStack" Size="50,50" Offset="2,1" StackGrowth="Right" StackPadding="2"/>
-            <Label ID="DestinationNoBenefitsLabel" Size="50,parent" Offset="0,7" Anchor="C,T" Style="FontNormal14" String="LOC_ROUTECHOOSER_NO_BENEFITS_FROM_ROUTE"/>
+          <Stack ID="ResourceStack" StackGrowth="Down" Anchor="C,T" Offset="0,31" StackPadding="4">
+            <Stack ID="OriginYields" Anchor="C,T" StackGrowth="Right" StackPadding="2">
+              <Container Size="48,20">
+                <Label ID="OriginYieldFoodLabel" Color="Food" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Food]"/>
+              </Container>
 
-            <Stack ID="OriginResourceStack" Size="50,50" Offset="2,-2" Anchor="L,B"StackGrowth="Right" StackPadding="2"/>
-            <Label ID="OriginNoBenefitsLabel" Size="50,parent" Offset="0,4" Anchor="C,B" Style="FontNormal14" String="LOC_ROUTECHOOSER_NO_BENEFITS_FROM_ROUTE"/> -->
+              <Container Size="48,20">
+                <Label ID="OriginYieldProductionLabel" Color="Production" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Production]"/>
+              </Container>
+
+              <Container Size="48,20">
+                <Label ID="OriginYieldGoldLabel" Color="Gold" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Gold]"/>
+              </Container>
+
+              <Container Size="48,20">
+                <Label ID="OriginYieldScienceLabel" Color="Science" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Science]"/>
+              </Container>
+
+              <Container Size="48,20">
+                <Label ID="OriginYieldCultureLabel" Color="Culture" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Culture]"/>
+              </Container>
+
+              <Container Size="48,20">
+                <Label ID="OriginYieldFaithLabel" Color="Faith" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Faith]"/>
+              </Container>
+            </Stack>
+
+            <Stack ID="DestinationYields" Anchor="C,T" StackGrowth="Right" StackPadding="2">
+              <Container Size="48,20">
+                <Label ID="DestinationYieldFoodLabel" Color="Food" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Food]"/>
+              </Container>
+
+              <Container Size="48,20">
+                <Label ID="DestinationYieldProductionLabel" Color="Production" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Production]"/>
+              </Container>
+
+              <Container Size="48,20">
+                <Label ID="DestinationYieldGoldLabel" Color="Gold" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Gold]"/>
+              </Container>
+
+              <Container Size="48,20">
+                <Label ID="DestinationYieldScienceLabel" Color="Science" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Science]"/>
+              </Container>
+
+              <Container Size="48,20">
+                <Label ID="DestinationYieldCultureLabel" Color="Culture" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Culture]"/>
+              </Container>
+
+              <Container Size="48,20">
+                <Label ID="DestinationYieldFaithLabel" Color="Faith" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Faith]"/>
+              </Container>
+            </Stack>
           </Stack>
 
-          <Button ID="CancelAutomation" ToolTip="LOC_TRADE_CANCEL_AUTOMATION_TOOLTIP" Hidden="1" Anchor="L,T" Offset="3,3" Style="BackButtonSmall"/>
+          <Button ID="CancelAutomation" Anchor="L,T" Offset="6,6" Size="21,21" Texture="Controls_CloseButtonAltSmall" StateOffsetIncrement="0,21" ToolTip="LOC_TRADE_CANCEL_AUTOMATION_TOOLTIP" Hidden="1"/>
       </GridButton>
     </Container>
   </Instance>
@@ -344,35 +400,6 @@
         <GridData Texture="Controls_ListButton" SliceCorner="209,29"  SliceTextureSize="417,51" StateOffsetIncrement="0,51"/>
       </GridButton>
     </Container>
-  </Instance>
-
-  <!-- Route Yields Instance -->
-  <Instance Name="RouteYieldInstance">
-    <Stack StackGrowth="Right" StackPadding="2">
-      <Container Size="48,20">
-        <Label ID="YieldFoodLabel" Color="Food" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Food]"/>
-      </Container>
-
-      <Container Size="48,20">
-        <Label ID="YieldProductionLabel" Color="Production" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Production]"/>
-      </Container>
-
-      <Container Size="48,20">
-        <Label ID="YieldGoldLabel" Color="Gold" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Gold]"/>
-      </Container>
-
-      <Container Size="48,20">
-        <Label ID="YieldScienceLabel" Color="Science" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Science]"/>
-      </Container>
-
-      <Container Size="48,20">
-        <Label ID="YieldCultureLabel" Color="Culture" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Culture]"/>
-      </Container>
-
-      <Container Size="48,20">
-        <Label ID="YieldFaithLabel" Color="Faith" Anchor="C,C" Offset="0,0" Style="FontNormal14" FontStyle="Shadow" String="+15[Icon_Faith]"/>
-      </Container>
-    </Stack>
   </Instance>
 
     <!-- Dialog Support -->

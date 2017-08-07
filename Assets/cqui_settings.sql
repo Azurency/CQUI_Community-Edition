@@ -55,7 +55,10 @@ INSERT OR REPLACE INTO CQUI_Settings -- Don't touch this line!
       ("CQUI_ToggleYieldsOnLoad", 1), -- Toggles yields immediately on load
       ('CQUI_ShowCitizenIconsOnCityHover', 0), -- Shows citizen icons when hovering over city banner
       ('CQUI_ShowCityManageAreaOnCityHover', 1), -- Shows citizen management area when hovering over city banner
-      ('CQUI_ShowCityMangeAreaInScreen', 1); -- Shows citizen management area when in city screen
+      ('CQUI_ShowCityMangeAreaInScreen', 1), -- Shows citizen management area when in city screen
+      ('CQUI_TraderColorYields', 1), -- Colors the yield in screen based on their respective type. Ex: Food yields are colored green
+      ('CQUI_TraderAddDivider', 1), -- Adds a divider between groups in TradeOverview panel
+      ('CQUI_TraderShowSortOrder', 0); -- Adds a divider between groups in TradeOverview panel
 
 /*
     ┌────────────────────────────────────────────────────────────────────────────────────────────┐

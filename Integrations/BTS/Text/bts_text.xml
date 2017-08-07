@@ -57,6 +57,22 @@
       <Text>Sort by:</Text>
     </Row>
 
+    <Row Tag="LOC_TRADE_OVERVIEW_ORIGIN_AZ">
+      <Text>Origin A-Z</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_OVERVIEW_ORIGIN_ZA">
+      <Text>Origin Z-A</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_OVERVIEW_DESTINATION_AZ">
+      <Text>Destination A-Z</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_OVERVIEW_DESTINATION_ZA">
+      <Text>Destination Z-A</Text>
+    </Row>
+
     <Row Tag="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT">
       <Text>Exp:</Text>
     </Row>
