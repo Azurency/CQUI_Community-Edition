@@ -153,19 +153,19 @@ function ViewCurrent( data:table )
 
     -- Grab icon of the great person themselves; first try a specific image, if it doesn't exist
     -- then grab a generic representation based on the class.
-    if (kPerson.ClassID ~= nil) and (kPerson.IndividualID ~= nil) then
-      local portrait:string = "ICON_" .. individualData.GreatPersonIndividualType;
-			textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(portrait, 160, true);
-      if textureSheet == nil then   -- Use a default if none found
-        print("WARNING: Could not find icon atlas entry for the individual Great Person '"..portrait.."', using default instead.");
-        portrait = "ICON_GENERIC_" .. classData.GreatPersonClassType .. "_" .. individualData.Gender;
-        portrait = portrait:gsub("_CLASS","_INDIVIDUAL");
-      end
-      local isValid = instance.Portrait:SetIcon(portrait);
-			if (isValid) then
-				instance.BiographyPortrait:SetIcon(portrait);
-      end
-    end
+    --if (kPerson.ClassID ~= nil) and (kPerson.IndividualID ~= nil) then
+      --local portrait:string = "ICON_" .. individualData.GreatPersonIndividualType;
+      --textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(portrait, 160, true);
+      --if textureSheet == nil then   -- Use a default if none found
+        --print("WARNING: Could not find icon atlas entry for the individual Great Person '"..portrait.."', using default instead.");
+        --portrait = "ICON_GENERIC_" .. classData.GreatPersonClassType .. "_" .. individualData.Gender;
+        --portrait = portrait:gsub("_CLASS","_INDIVIDUAL");
+      --end
+      --local isValid = instance.Portrait:SetIcon(portrait);
+      --if (isValid) then
+        --instance.BiographyPortrait:SetIcon(portrait);
+      --end
+    --end
 
     if instance["m_EffectsIM"] ~= nil then
       instance["m_EffectsIM"]:ResetInstances();
@@ -305,7 +305,6 @@ function ViewCurrent( data:table )
 
           local progressPercent :number = Clamp( kPlayerPoints.PointsTotal / kPerson.RecruitCost, 0, 1 );
           recruitInst.ProgressBar:SetPercent( progressPercent );
-
           local recruitColorName:string = "GreatPeopleCS";
           if kPlayerPoints.IsPlayer then
             recruitColorName = "GreatPeopleActiveCS";
@@ -403,6 +402,7 @@ function ViewPast( data:table )
 
   local firstAvailableIndex     :number = 0;
   local localPlayerID         :number = Game.GetLocalPlayer();
+
   local PADDING_FOR_SPACE_AROUND_TEXT :number = 20;
 
   for i, kPerson:table in ipairs(data.Timeline) do
@@ -428,7 +428,6 @@ function ViewPast( data:table )
     instance.ClassName:SetText( Locale.ToUpper(classText) );
     instance.GreatPersonInfo:SetText( kPerson.Name );
     DifferentiateCiv(kPerson.ClaimantID, instance.CivIcon, instance.CivIcon, instance.CivIndicator, nil, nil, localPlayerID);
-
     instance.RecruitedImage:SetHide(true);
     instance.YouIndicator:SetHide(true);
     if (kPerson.ClaimantID ~= nil) then
@@ -597,11 +596,7 @@ function PopulateData( data:table, isPast:boolean )
     return;
   end
 
-	local displayPlayerID :number = GetDisplayPlayerID();
-	if (displayPlayerID == -1) then
-		return;
-	end
-
+  local localPlayerID :number = Game.GetLocalPlayer();
   local pGreatPeople  :table  = Game.GetGreatPeople();
   if pGreatPeople == nil then
     UI.DataError("GreatPeoplePopup received NIL great people object.");
@@ -617,8 +612,8 @@ function PopulateData( data:table, isPast:boolean )
 
 
   for i,entry in ipairs(pTimeline) do
-		-- don't add unclaimed great people to the previously recruited tab
-		if not isPast or entry.Claimant then
+    -- don't add unclaimed great people to the previously recruited tab
+    if not isPast or entry.Claimant then
     local claimantName :string = nil;
     if (entry.Claimant ~= nil) then
       claimantName = Locale.Lookup(PlayerConfigurations[entry.Claimant]:GetCivilizationShortDescription());
@@ -635,19 +630,19 @@ function PopulateData( data:table, isPast:boolean )
     local rejectCost      :number = nil;
     local earnConditions    :string = nil;
     if (entry.Individual ~= nil) then
-				if (Players[displayPlayerID] ~= nil) then
-					canRecruit = pGreatPeople:CanRecruitPerson(displayPlayerID, entry.Individual);
+      if (Players[localPlayerID] ~= nil) then
+        canRecruit = pGreatPeople:CanRecruitPerson(localPlayerID, entry.Individual);
         if (not isPast) then
-						canReject = pGreatPeople:CanRejectPerson(displayPlayerID, entry.Individual);
+          canReject = pGreatPeople:CanRejectPerson(localPlayerID, entry.Individual);
           if (canReject) then
-							rejectCost = pGreatPeople:GetRejectCost(displayPlayerID, entry.Individual);
+            rejectCost = pGreatPeople:GetRejectCost(localPlayerID, entry.Individual);
           end
         end
-					canPatronizeWithGold = pGreatPeople:CanPatronizePerson(displayPlayerID, entry.Individual, YieldTypes.GOLD);
-					patronizeWithGoldCost = pGreatPeople:GetPatronizeCost(displayPlayerID, entry.Individual, YieldTypes.GOLD);
-					canPatronizeWithFaith = pGreatPeople:CanPatronizePerson(displayPlayerID, entry.Individual, YieldTypes.FAITH);
-					patronizeWithFaithCost = pGreatPeople:GetPatronizeCost(displayPlayerID, entry.Individual, YieldTypes.FAITH);
-					earnConditions = pGreatPeople:GetEarnConditionsText(displayPlayerID, entry.Individual);
+        canPatronizeWithGold = pGreatPeople:CanPatronizePerson(localPlayerID, entry.Individual, YieldTypes.GOLD);
+        patronizeWithGoldCost = pGreatPeople:GetPatronizeCost(localPlayerID, entry.Individual, YieldTypes.GOLD);
+        canPatronizeWithFaith = pGreatPeople:CanPatronizePerson(localPlayerID, entry.Individual, YieldTypes.FAITH);
+        patronizeWithFaithCost = pGreatPeople:GetPatronizeCost(localPlayerID, entry.Individual, YieldTypes.FAITH);
+        earnConditions = pGreatPeople:GetEarnConditionsText(localPlayerID, entry.Individual);
       end
       local individualInfo = GameInfo.GreatPersonIndividuals[entry.Individual];
       actionCharges = individualInfo.ActionCharges;
@@ -694,7 +689,7 @@ function PopulateData( data:table, isPast:boolean )
       TurnGranted       = entry.TurnGranted
     };
     table.insert(data.Timeline, kPerson);
-		end
+    end
   end
 
 
@@ -705,10 +700,10 @@ function PopulateData( data:table, isPast:boolean )
     for i, player in ipairs(players) do
       local playerName = "";
       local isPlayer:boolean = false;
-			if (player:GetID() == displayPlayerID) then
+      if (player:GetID() == localPlayerID) then
         playerName = playerName .. Locale.Lookup(PlayerConfigurations[player:GetID()]:GetCivilizationShortDescription());
         isPlayer = true;
-			elseif (Game.GetLocalObserver() == PlayerTypes.OBSERVER or Players[displayPlayerID]:GetDiplomacy():HasMet(player:GetID())) then
+      elseif (Players[localPlayerID]:GetDiplomacy():HasMet(player:GetID())) then
         playerName = playerName .. Locale.Lookup(PlayerConfigurations[player:GetID()]:GetCivilizationShortDescription());
       else
         playerName = playerName .. Locale.Lookup("LOC_DIPLOPANEL_UNMET_PLAYER");
@@ -749,9 +744,6 @@ function Open()
   Refresh();
   UI.PlaySound("UI_Screen_Open");
 
-	-- From ModalScreen_PlayerYieldsHelper
-	RefreshYields();
-
   -- From Civ6_styles: FullScreenVignetteConsumer
   Controls.ScreenAnimIn:SetToBeginning();
   Controls.ScreenAnimIn:Play();
@@ -761,9 +753,9 @@ end
 
 -- =======================================================================================
 function Close()
-	if not ContextPtr:IsHidden() then
-		UI.PlaySound("UI_Screen_Close");
-	end
+  if not ContextPtr:IsHidden() then
+    UI.PlaySound("UI_Screen_Close");
+  end
 
   ContextPtr:SetHide(true);
   LuaEvents.GreatPeople_CloseGreatPeople();
@@ -821,7 +813,7 @@ function OnGoldButtonClick( individualID:number  )
     kParameters[PlayerOperations.PARAM_GREAT_PERSON_INDIVIDUAL_TYPE] = individualID;
     kParameters[PlayerOperations.PARAM_YIELD_TYPE] = YieldTypes.GOLD;
     UI.RequestPlayerOperation(Game.GetLocalPlayer(), PlayerOperations.PATRONIZE_GREAT_PERSON, kParameters);
-		UI.PlaySound("Purchase_With_Gold");
+    UI.PlaySound("Purchase_With_Gold");
     Close();
   end
 end
@@ -834,7 +826,7 @@ function OnFaithButtonClick( individualID:number  )
     kParameters[PlayerOperations.PARAM_GREAT_PERSON_INDIVIDUAL_TYPE] = individualID;
     kParameters[PlayerOperations.PARAM_YIELD_TYPE] = YieldTypes.FAITH;
     UI.RequestPlayerOperation(Game.GetLocalPlayer(), PlayerOperations.PATRONIZE_GREAT_PERSON, kParameters);
-		UI.PlaySound("Purchase_With_Faith");
+    UI.PlaySound("Purchase_With_Faith");
     Close();
   end
 end
@@ -918,9 +910,8 @@ end
 --  Tab callback
 -- ===========================================================================
 function OnGreatPeopleClick()
-	Controls.SelectGreatPeople:SetHide( false );
+  Controls.SelectGreatPeople:SetHide( false );
   Controls.ButtonGreatPeople:SetSelected( true );
-	Controls.SelectPreviouslyRecruited:SetHide( true );
   Controls.ButtonPreviouslyRecruited:SetSelected( false );
   Refresh();
 end
@@ -929,9 +920,8 @@ end
 --  Tab callback
 -- ===========================================================================
 function OnPreviousRecruitedClick()
-	Controls.SelectGreatPeople:SetHide( true );
+  Controls.SelectGreatPeople:SetHide( true );
   Controls.ButtonGreatPeople:SetSelected( false );
-	Controls.SelectPreviouslyRecruited:SetHide( false );
   Controls.ButtonPreviouslyRecruited:SetSelected( true );
   Refresh();
 end
@@ -980,7 +970,6 @@ function OnGameDebugReturn( context:string, contextTable:table )
   local isHidden:boolean = contextTable["isHidden"];
   if not isHidden then
     local isPreviouslyRecruited:boolean = contextTable["isPreviousTab"];
-    -- Open();
     if isPreviouslyRecruited then
       m_tabs.SelectTab( Controls.ButtonPreviouslyRecruited );
     else
@@ -1046,7 +1035,7 @@ function Initialize()
   LuaEvents.GameDebug_Return.Add(             OnGameDebugReturn );
   LuaEvents.LaunchBar_OpenGreatPeoplePopup.Add(     OnOpenViaLaunchBar );
   LuaEvents.NotificationPanel_OpenGreatPeoplePopup.Add( OnOpenViaNotification );
-  LuaEvents.LaunchBar_CloseGreatPeoplePopup.Add(OnClose);
+  LuaEvents.LaunchBar_CloseGreatPeoplePopup.Add(			OnClose );
 
     -- Audio Events
   Controls.ButtonGreatPeople:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
