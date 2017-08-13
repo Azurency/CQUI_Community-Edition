@@ -257,7 +257,7 @@ function RealizeMyGovernmentPage()
 
   -- If bonus exists for current one.
   if bonusName ~= "NO_GOVERNMENTBONUS" then
-		iBonusIndex = GameInfo.GovernmentBonusNames[bonusName].Index;
+    iBonusIndex = GameInfo.GovernmentBonusNames[bonusName].Index;
   end
 
   local isHeritageBonusEmpty :boolean = true;
@@ -266,13 +266,13 @@ function RealizeMyGovernmentPage()
 
     Controls.BonusStack:SetHide( false );
 
-    local iFlatBonus        :number = kPlayerCulture:GetFlatBonus(iBonusIndex);
-    local iIncrementingBonus    :number = kPlayerCulture:GetIncrementingBonus(iBonusIndex);
-    local iBonusIncrement     :number = kPlayerCulture:GetIncrementingBonusIncrement(iBonusIndex);
-    local iTurnsRequiredForBonus  :number = kPlayerCulture:GetIncrementingBonusInterval(iBonusIndex);
-    local iTurnsTillNextBonus   :number = kPlayerCulture:GetIncrementingBonusTurnsUntilNext(iBonusIndex);
-    local accumulatedBonusText    :string = Locale.ToUpper(Locale.Lookup(m_kCurrentGovernment.BonusAccumulatedText));
-    local accumulatedBonusTooltip :string = Locale.Lookup(m_kCurrentGovernment.BonusAccumulatedTooltip);
+    local iFlatBonus				:number = kPlayerCulture:GetFlatBonus(iBonusIndex);
+    local iIncrementingBonus		:number = kPlayerCulture:GetIncrementingBonus(iBonusIndex);
+    local iBonusIncrement			:number = kPlayerCulture:GetIncrementingBonusIncrement(iBonusIndex);
+    local iTurnsRequiredForBonus	:number = kPlayerCulture:GetIncrementingBonusInterval(iBonusIndex);
+    local iTurnsTillNextBonus		:number = kPlayerCulture:GetIncrementingBonusTurnsUntilNext(iBonusIndex);
+    local accumulatedBonusText		:string = Locale.ToUpper(Locale.Lookup(m_kCurrentGovernment.BonusAccumulatedText));
+    local accumulatedBonusTooltip	:string = Locale.Lookup(m_kCurrentGovernment.BonusAccumulatedTooltip);
 
     Controls.BonusPercent:SetText( tostring(iFlatBonus) );
     Controls.BonusText:SetText(accumulatedBonusText );
@@ -284,18 +284,18 @@ function RealizeMyGovernmentPage()
     end
     Controls.GovPercentBonusArea:SetToolTipString( accumulatedBonusTooltip );
 
-		if not HasCapability("CAPABILITY_GOVERNMENTS_LEGACY_BONUSES") then
-			Controls.BonusPercent:SetHide(true);
-			Controls.QuillImage:SetHide(true);
-			Controls.PercentBubble:SetHide(true);
-			Controls.DescriptionContainer:SetOffsetX(40);
-			Controls.BonusText:SetWrapWidth(275);
-		end
+    if not HasCapability("CAPABILITY_GOVERNMENTS_LEGACY_BONUSES") then
+      Controls.BonusPercent:SetHide(true);
+      Controls.QuillImage:SetHide(true);
+      Controls.PercentBubble:SetHide(true);
+      Controls.DescriptionContainer:SetOffsetX(40);
+      Controls.BonusText:SetWrapWidth(275);
+    end
 
-		------------------------------------------------------------
-		--Create Instances
-		------------------------------------------------------------
-		-- Add current heritage/incrementing bonus or extra bonuses
+    ------------------------------------------------------------
+    --Create Instances
+    ------------------------------------------------------------
+    -- Add current heritage/incrementing bonus or extra bonuses
     local heritageInstance  :table = {};
     ContextPtr:BuildInstanceForControl( "HeritageBonusInstance", heritageInstance, Controls.HeritageBonusStack );
     isHeritageBonusEmpty = false;
@@ -312,9 +312,9 @@ function RealizeMyGovernmentPage()
     heritageInstance.Fade:SetHide(false);
     heritageInstance.PolicyMeter:SetPercent((iTurnsRequiredForBonus - iTurnsTillNextBonus) / iTurnsRequiredForBonus);
 
-		------------------------------------------------------------
-		--set visuals and text
-		------------------------------------------------------------
+    ------------------------------------------------------------
+    --set visuals and text
+    ------------------------------------------------------------
     if iIncrementingBonus > 0 then
       heritageInstance.BG:SetSizeY((SIZE_HERITAGE_BONUS * 2) + 2);
       local heritageInstanceCurrent:table = {};
@@ -376,14 +376,14 @@ function RealizeMyGovernmentPage()
     end
   end
 
-	if HasCapability("CAPABILITY_GOVERNMENTS_LEGACY_BONUSES") then
-		Controls.HeritageBonusArea:SetHide(false);
-		Controls.GovernmentTop:SetOffsetY(0);
-	else
-		Controls.HeritageBonusArea:SetHide(true);
-		Controls.GovernmentTop:SetOffsetY(120);
-	end
-	
+  if HasCapability("CAPABILITY_GOVERNMENTS_LEGACY_BONUSES") then
+    Controls.HeritageBonusArea:SetHide(false);
+    Controls.GovernmentTop:SetOffsetY(0);
+  else
+    Controls.HeritageBonusArea:SetHide(true);
+    Controls.GovernmentTop:SetOffsetY(120);
+  end
+
   Controls.GovernmentContentStack:CalculateSize()
   Controls.GovernmentContentStack:ReprocessAnchoring()
   Controls.GovernmentTop:SetSizeY(Controls.GovernmentContentStack:GetSizeY() + 18);
@@ -561,15 +561,15 @@ function RealizeGovernmentsPage()
       end
     end
 
-		--If we don't have legacy enabled, allow for multiple lines of passives that look like
-		--passives, not accumulations
-		if not HasCapability("CAPABILITY_GOVERNMENTS_LEGACY_BONUSES") then
-			inst.PercentImage:SetHide(true);
-			inst.QuillImage:SetHide(true);
-			inst.BonusText:SetWrapWidth(265);
-			inst.BonusText:SetOffsetX(-5);
-		end
-			
+    --If we don't have legacy enabled, allow for multiple lines of passives that look like
+    --passives, not accumulations
+    if not HasCapability("CAPABILITY_GOVERNMENTS_LEGACY_BONUSES") then
+      inst.PercentImage:SetHide(true);
+      inst.QuillImage:SetHide(true);
+      inst.BonusText:SetWrapWidth(265);
+      inst.BonusText:SetOffsetX(-5);
+    end
+
     -- If bonus exists for current one.
     if bonusName ~= "NO_GOVERNMENTBONUS" then
       inst.BonusStack:SetHide( false );
@@ -730,7 +730,7 @@ function OnGovernmentSelected( governmentType:string )
       m_kPopupDialog:AddText(szConfirmString);
       m_kPopupDialog:AddButton(TXT_GOV_POPUP_YES, OnAcceptGovernmentChange);
     end
-		m_kPopupDialog:AddButton(TXT_GOV_POPUP_NO, OnCancelGovernmentChange); 
+    m_kPopupDialog:AddButton(TXT_GOV_POPUP_NO, OnCancelGovernmentChange);
     m_kPopupDialog:Open();
 
     RealizeGovernmentsPage();
@@ -1258,19 +1258,19 @@ end
 -- ===========================================================================
 function Close()
 
-	if ContextPtr:IsHidden() then return; end
-	
-	if Controls.ConfirmPolicies:IsVisible() and Controls.ConfirmPolicies:IsEnabled() then
+  if ContextPtr:IsHidden() then return; end
+
+  if Controls.ConfirmPolicies:IsVisible() and Controls.ConfirmPolicies:IsEnabled() then
     -- Policies confirmation button is enabled (and showing); warn player changes are not saved!
     m_kPopupDialog:AddText(TXT_GOV_POPUP_PROMPT_POLICIES_CLOSE);
     m_kPopupDialog:AddButton(TXT_GOV_POPUP_YES, function() Controls.ConfirmPolicies:SetDisabled(true); Close() end ); -- Set to disabled and call close again.
-		m_kPopupDialog:AddButton(TXT_GOV_POPUP_NO);
+    m_kPopupDialog:AddButton(TXT_GOV_POPUP_NO);
     m_kPopupDialog:Open();
   else
     -- Actual close
-		if not ContextPtr:IsHidden() then
-    UI.PlaySound("UI_Screen_Close");
-		end
+    if not ContextPtr:IsHidden() then
+      UI.PlaySound("UI_Screen_Close");
+    end
     ContextPtr:SetHide(true);
     m_governmentChangeType  = "";
     m_isPoliciesChanged   = false;
@@ -1364,7 +1364,7 @@ function OnConfirmPolicies()
 
   m_kPopupDialog:AddText(TXT_GOV_POPUP_PROMPT_POLICIES_CONFIRM);
   m_kPopupDialog:AddButton(TXT_GOV_POPUP_YES, OnConfirmPolicies_Yes );
-	m_kPopupDialog:AddButton(TXT_GOV_POPUP_NO);
+  m_kPopupDialog:AddButton(TXT_GOV_POPUP_NO);
   m_kPopupDialog:Open();
 end
 
@@ -1806,6 +1806,7 @@ function OnLocalPlayerTurnBegin()
     RefreshAllData();
   end
 end
+
 function OnLocalPlayerTurnEnd()
   m_isLocalPlayerTurn = false;
 
@@ -1855,7 +1856,7 @@ end
 function AllocateUI()
 
   -- Popup setup
-	m_kPopupDialog = PopupDialog:new( "GovernmentScreen" );
+  m_kPopupDialog = PopupDialog:new( "GovernmentScreen" );
 
   -- Setup drag and drop
   SetDropOverlap( DROP_OVERLAP_REQUIRED );
@@ -2484,7 +2485,8 @@ end
 function militaryFilter(policy)   return policy.SlotType == "SLOT_MILITARY";  end
 function economicFilter(policy)   return policy.SlotType == "SLOT_ECONOMIC";  end
 function diplomaticFilter(policy) return policy.SlotType == "SLOT_DIPLOMATIC"; end
-function wildcardFilter(policy)		return policy.SlotType == "SLOT_WILDCARD" or policy.SlotType == "SLOT_GREAT_PERSON" end
+function wildcardFilter(policy)   return policy.SlotType == "SLOT_WILDCARD"; end
+function greatPeopleFilter(policy)  return policy.SlotType == "SLOT_GREAT_PERSON"; end
 
 function PopulatePolicyFilterData()
   m_kPolicyFilters = {};
@@ -2492,6 +2494,7 @@ function PopulatePolicyFilterData()
   table.insert( m_kPolicyFilters, { Func=militaryFilter,    Description="LOC_GOVT_FILTER_MILITARY"  } );
   table.insert( m_kPolicyFilters, { Func=economicFilter,    Description="LOC_GOVT_FILTER_ECONOMIC"  } );
   table.insert( m_kPolicyFilters, { Func=diplomaticFilter,  Description="LOC_GOVT_FILTER_DIPLOMATIC"  } );
+  table.insert( m_kPolicyFilters, { Func=greatPeopleFilter, Description="LOC_GOVT_FILTER_GREAT_PERSON"  } );
   table.insert( m_kPolicyFilters, { Func=wildcardFilter,    Description="LOC_GOVT_FILTER_GREAT_PERSON"  } );
 
   for i,filter in ipairs(m_kPolicyFilters) do
@@ -2651,26 +2654,29 @@ function Initialize()
 
   Controls.MilitaryFilterButton:SetToolTipString(   Locale.Lookup("LOC_GOVT_FILTER_W_DOTS").. "[NEWLINE]" .. Locale.Lookup("LOC_GOVT_FILTER_MILITARY") );
   Controls.EconomicFilterButton:SetToolTipString(   Locale.Lookup("LOC_GOVT_FILTER_W_DOTS").. "[NEWLINE]" .. Locale.Lookup("LOC_GOVT_FILTER_ECONOMIC") );
+  Controls.GreatPeopleFilterButton:SetToolTipString(  Locale.Lookup("LOC_GOVT_FILTER_W_DOTS").. "[NEWLINE]" .. Locale.Lookup("LOC_CATEGORY_GREAT_PEOPLE_NAME") );
   Controls.WildcardFilterButton:SetToolTipString(   Locale.Lookup("LOC_GOVT_FILTER_W_DOTS").. "[NEWLINE]" .. Locale.Lookup("LOC_GOVT_FILTER_NONE") );
 
   AutoSizeGridButton(Controls.MilitaryFilterButton,120,24,4,"H");
   AutoSizeGridButton(Controls.EconomicFilterButton,120,24,4,"H");
+  AutoSizeGridButton(Controls.GreatPeopleFilterButton,180,24,4,"H");
   AutoSizeGridButton(Controls.WildcardFilterButton,120,24,4,"H");
-
 
   Controls.MilitaryFilterButton:RegisterCallback(   Mouse.eLClick,  function() OnPolicyFilterClicked( {Func=militaryFilter,     Description="LOC_GOVT_FILTER_MILITARY"} ); end );
   Controls.EconomicFilterButton:RegisterCallback(   Mouse.eLClick,  function() OnPolicyFilterClicked( {Func=economicFilter,     Description="LOC_GOVT_FILTER_ECONOMIC"} ); end );
   Controls.WildcardFilterButton:RegisterCallback(   Mouse.eLClick,  function() OnPolicyFilterClicked( {Func=nil,          Description="LOC_GOVT_FILTER_NONE"} ); end );
+  Controls.GreatPeopleFilterButton:RegisterCallback(  Mouse.eLClick,  function() OnPolicyFilterClicked( {Func=greatPeopleFilter,    Description="LOC_CATEGORY_GREAT_PEOPLE_NAME"} ); end );
 
-	if GameCapabilities.HasCapability("CAPABILITY_GOVERNMENT_SCREEN_DIPLOMACY_FILTER") then
-		Controls.DiplomacyFilterButton:SetToolTipString(	Locale.Lookup("LOC_GOVT_FILTER_W_DOTS").. "[NEWLINE]" .. Locale.Lookup("LOC_GOVT_FILTER_DIPLOMATIC") );
-		AutoSizeGridButton(Controls.DiplomacyFilterButton,120,24,4,"H");
-		Controls.DiplomacyFilterButton:RegisterCallback(	Mouse.eLClick,	function() OnPolicyFilterClicked( {Func=diplomaticFilter,			Description="LOC_GOVT_FILTER_DIPLOMATIC"} ); end );
-	else
-		Controls.DiplomacyFilterButton:SetHide(true);
-		Controls.FilterStack:CalculateSize();
-		Controls.FilterStack:ReprocessAnchoring();
-	end
+  if GameCapabilities.HasCapability("CAPABILITY_GOVERNMENT_SCREEN_DIPLOMACY_FILTER") then
+    Controls.DiplomacyFilterButton:SetToolTipString(	Locale.Lookup("LOC_GOVT_FILTER_W_DOTS").. "[NEWLINE]" .. Locale.Lookup("LOC_GOVT_FILTER_DIPLOMATIC") );
+    AutoSizeGridButton(Controls.DiplomacyFilterButton,120,24,4,"H");
+    Controls.DiplomacyFilterButton:RegisterCallback(	Mouse.eLClick,	function() OnPolicyFilterClicked( {Func=diplomaticFilter,			Description="LOC_GOVT_FILTER_DIPLOMATIC"} ); end );
+  else
+    Controls.DiplomacyFilterButton:SetHide(true);
+    Controls.FilterStack:CalculateSize();
+    Controls.FilterStack:ReprocessAnchoring();
+  end
+
 
     Controls.ButtonMyGovernment:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
     Controls.ButtonPolicies:RegisterCallback(   Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
