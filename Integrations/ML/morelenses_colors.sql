@@ -4,7 +4,7 @@
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
 VALUES                  (   'COLOR_RESOURCE_BUILDER_LENS',      '0.56',     '0.0',      '0.98',     '0.5');
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
-VALUES                  (   'COLOR_HILL_BUILDER_LENS',          '0',        '1',        '0',        '0.5');
+VALUES                  (   'COLOR_HILL_BUILDER_LENS',          '0',        '0.75',     '0',        '0.5');
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
 VALUES                  (   'COLOR_FEATURE_BUILDER_LENS',       '0.5',      '1',        '0.5',      '0.5');
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)

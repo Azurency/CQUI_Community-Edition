@@ -91,7 +91,7 @@
   <Container  Size="300,200"    ID="MiniMap" Anchor="L,B" Offset="-3,0" ConsumeMouse="0">
     <SlideAnim  Size="parent,parent"  ID="CollapseAnim" Begin="0,0" End="0,195" Function="OutQuint" FunctionPower="1" Speed="2"   Cycle="Once"  Stopped="1">
       <SlideAnim  Size="parent,parent" ID="ExpandAnim" Begin="0,0" End="0,-195" Function="OutQuint" FunctionPower="3" Speed="2"   Cycle="Once"  Stopped="1">
-        <Grid   ID="MinimapBacking" Texture="MiniMap_WoodBacking" Anchor ="L,B" Offset="-5,2" Size="280, 201" SliceCorner="18,94" SliceSize="246,4">
+        <Grid   ID="MinimapBacking" Texture="MiniMap_WoodBacking" Anchor ="L,B" Offset="-5,2" Size="282,201" SliceCorner="18,94" SliceSize="246,4">
           <Image Texture="MiniMap_WoodBackingTile" Anchor="C,C" Size="Parent-25,Parent-100" StretchMode="Tile"/>
         </Grid>
         <Image   ID="MinimapContainer" Anchor ="L,B" Texture="Parchment_Pattern" ToolTip="LOC_HUD_MINIMAP_TOOLTIP" Size="256,256" StretchMode="Tile" Offset="18,21">
