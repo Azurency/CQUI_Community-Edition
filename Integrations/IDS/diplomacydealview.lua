@@ -5,7 +5,7 @@ include( "InstanceManager" );
 include( "CitySupport" );
 include( "Civ6Common" ); -- AutoSizeGridButton
 include( "SupportFunctions" ); -- DarkenLightenColor
-include( "PopupDialogSupport" );
+include( "PopupDialog" );
 include( "ToolTipHelper_PlayerYields" );
 
 -- ===========================================================================
@@ -21,6 +21,9 @@ local ms_IconAndTextIM		:table		= InstanceManager:new( "IconAndText",  "SelectBu
 local ms_IconAndTextWithDetailsIM			:table		= InstanceManager:new( "IconAndTextWithDetails",  "SelectButton", Controls.IconAndTextContainer );
 local ms_LeftRightListIM	:table		= InstanceManager:new( "LeftRightList",  "List", Controls.LeftRightListContainer );
 local ms_TopDownListIM		:table		= InstanceManager:new( "TopDownList",  "List", Controls.TopDownListContainer );
+local ms_AgreementOptionIM	:table		= InstanceManager:new( "AgreementOptionInstance",  "AgreementOptionButton", Controls.ValueEditStack );
+
+local ms_DealAgreementTypesResearchAgreement = nil; -- AZURENCY : hold the type of a research agreement (see hack line 1837)
 
 local ms_ValueEditDealItemID = -1;		-- The ID of the deal item that is being value edited.
 local ms_ValueEditDealItemControlTable = nil; -- The control table of the deal item that is being edited.
@@ -87,31 +90,24 @@ local ms_bForceUpdateOnCommit = false;
 --CQUI Addition
 local YIELD_FONT_ICONS:table = {
         YIELD_FOOD				= "[ICON_FoodLarge]",
-        YIELD_PRODUCTION		= "[ICON_ProductionLarge]",
+        YIELD_PRODUCTION	= "[ICON_ProductionLarge]",
         YIELD_GOLD				= "[ICON_GoldLarge]",
         YIELD_SCIENCE			= "[ICON_ScienceLarge]",
         YIELD_CULTURE			= "[ICON_CultureLarge]",
         YIELD_FAITH				= "[ICON_FaithLarge]",
         TourismYield			= "[ICON_TourismLarge]"
-        };
--- ===========================================================================
-function SetIconToSize(icon, iconName, iconSize)
-  SetSpecifiedIconToSize(icon.Icon, iconName, iconSize);
-end
+};
 
 -- ===========================================================================
-function SetSpecifiedIconToSize(specificIcon, iconName, iconSize)
+function SetIconToSize(iconControl, iconName, iconSize)
   if iconSize == nil then
     iconSize = 64;
   end
-
-  local iconSizeTemp = iconSize;
-
+  
   local x, y, szIconName, iconSize = IconManager:FindIconAtlasNearestSize(iconName, iconSize, true);
-  specificIcon:SetTexture(x, y, szIconName);
-  specificIcon:SetSizeVal(iconSizeTemp, iconSizeTemp);
+  iconControl:SetTexture(x, y, szIconName);
+  iconControl:SetSizeVal(iconSize, iconSize);
 end
-
 
 -- ===========================================================================
 function InitializeDealGroups()
@@ -158,9 +154,9 @@ end
 -- ===========================================================================
 function SetDefaultLeaderDialogText()
   -- if (ms_bIsDemand == true and ms_InitiatedByPlayerID == ms_OtherPlayerID) then
-  -- 	Controls.LeaderDialog:LocalizeAndSetText("LOC_DIPLO_DEMAND_INTRO");
+  -- 	SetLeaderDialog("LOC_DIPLO_DEMAND_INTRO", "");
   -- else
-  -- 	Controls.LeaderDialog:LocalizeAndSetText("LOC_DIPLO_DEAL_INTRO");
+  -- 	SetLeaderDialog("LOC_DIPLO_DEAL_INTRO", "");
   -- end
 end
 
@@ -224,7 +220,7 @@ end
 --	and the icon of the civ with civ colors.  When you mouse over the civ icon, you should see a full list of all cities.
 --	This should help players differentiate between duplicate civs.
 function PopulateSignatureArea(player:table)
--- Set colors for the Civ icon
+  -- Set colors for the Civ icon
   if (player ~= nil) then
     m_primaryColor, m_secondaryColor  = UI.GetPlayerColors( player:GetID() );
     local darkerBackColor = DarkenLightenColor(m_primaryColor,(-85),100);
@@ -367,7 +363,7 @@ function CreatePlayerAvailablePanel(playerType : number, rootControl : table)
 
   --local playerPanel = ms_PlayerPanelIM:GetInstance(rootControl);
 
-  ms_AvailableGroups[AvailableDealItemGroupTypes.GOLD][playerType]				= CreateHorizontalGroup(rootControl, "");
+  ms_AvailableGroups[AvailableDealItemGroupTypes.GOLD][playerType]				= CreateHorizontalGroup(rootControl);
   ms_AvailableGroups[AvailableDealItemGroupTypes.LUXURY_RESOURCES][playerType]	= CreateHorizontalGroup(rootControl, "LOC_DIPLOMACY_DEAL_LUXURY_RESOURCES");
   ms_AvailableGroups[AvailableDealItemGroupTypes.STRATEGIC_RESOURCES][playerType] = CreateHorizontalGroup(rootControl, "LOC_DIPLOMACY_DEAL_STRATEGIC_RESOURCES");
   ms_AvailableGroups[AvailableDealItemGroupTypes.AGREEMENTS][playerType]			= CreateVerticalGroup(rootControl, "LOC_DIPLOMACY_DEAL_AGREEMENTS");
@@ -418,27 +414,27 @@ function OnValuePulldownCommit(forType)
   local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
   if (pDeal ~= nil) then
 
-    local pDealItem = pDeal:FindItemByID(ms_ValueEditDealItemID);
-    if (pDealItem ~= nil) then
-      pDealItem:SetValueType( forType );
+      local pDealItem = pDeal:FindItemByID(ms_ValueEditDealItemID);
+      if (pDealItem ~= nil) then
+        pDealItem:SetValueType( forType );
 
-      local valueName = pDealItem:GetValueTypeNameID();
-      Controls.ValueTypeEditPulldown:GetButton():LocalizeAndSetText(valueName);
-      if (ms_ValueEditDealItemControlTable ~= nil) then
-        -- Keep the text on the icon, that is currently hidden, up to date too.
-        ms_ValueEditDealItemControlTable.ValueText:LocalizeAndSetText(pDealItem:GetValueTypeNameID(valueName));
+        local valueName = pDealItem:GetValueTypeNameID();
+        Controls.ValueTypeEditPulldown:GetButton():LocalizeAndSetText(valueName);
+        if (ms_ValueEditDealItemControlTable ~= nil) then
+          -- Keep the text on the icon, that is currently hidden, up to date too.
+          ms_ValueEditDealItemControlTable.ValueText:LocalizeAndSetText(pDealItem:GetValueTypeNameID(valueName));
+        end
+
+        UpdateDealStatus();
+        UpdateProposedWorkingDeal();
       end
-
-      UpdateDealStatus();
-      UpdateProposedWorkingDeal();
     end
-  end
 
 end
 
 -- ===========================================================================
 function PopulateValuePulldown(pullDown, pDealItem)
-
+  
   local possibleValues = DealManager.GetPossibleDealItems(pDealItem:GetFromPlayerID(), pDealItem:GetToPlayerID(), pDealItem:GetType(), pDealItem:GetSubType());
   if (possibleValues ~= nil) then
     pullDown:ClearEntries();
@@ -450,13 +446,13 @@ function PopulateValuePulldown(pullDown, pDealItem)
       local szItemName = Locale.Lookup(entry.ForTypeDisplayName);
       if (entry.Duration == -1) then
         local eTech = GameInfo.Technologies[entry.ForType].Index;
-          local iTurns = 	ms_LocalPlayer:GetDiplomacy():ComputeResearchAgreementTurns(ms_OtherPlayer, eTech);
+        local iTurns = 	ms_LocalPlayer:GetDiplomacy():ComputeResearchAgreementTurns(ms_OtherPlayer, eTech);
         szDisplayName = Locale.Lookup("LOC_DIPLOMACY_DEAL_PARAMETER_WITH_TURNS", szItemName, iTurns);
       else
         szDisplayName = szItemName;
       end
 
-      entryControlTable.Button:LocalizeAndSetText(szDisplayName);
+      entryControlTable.Button:LocalizeAndSetText(szDisplayName);						
       local eType = entry.ForType;
       entryControlTable.Button:RegisterCallback(Mouse.eLClick, function()
         OnValuePulldownCommit(eType);
@@ -471,7 +467,7 @@ function PopulateValuePulldown(pullDown, pDealItem)
 
     pullDown:SetHide(false);
     pullDown:CalculateInternals();
-  end
+  end	
 end
 
 -- ===========================================================================
@@ -624,7 +620,7 @@ function UpdateDealStatus()
   end
 
   if (bDealValid) then
-    bDealValid = pDeal:IsValid();
+    bDealValid = pDeal:Validate();
   end
 
   Controls.EqualizeDeal:SetHide(ms_bIsDemand);
@@ -690,15 +686,31 @@ function OnProposeOrAcceptDeal()
   if (ms_LastIncomingDealProposalAction == DealProposalAction.PENDING or ms_LastIncomingDealProposalAction == DealProposalAction.REJECTED) then
     ProposeWorkingDeal();
     UpdateDealStatus();
-        UI.PlaySound("Confirm_Bed_Positive");
+    UI.PlaySound("Confirm_Bed_Positive");
   else
     if (ms_LastIncomingDealProposalAction == DealProposalAction.ACCEPTED or ms_LastIncomingDealProposalAction == DealProposalAction.PROPOSED or ms_LastIncomingDealProposalAction == DealProposalAction.ADJUSTED) then
       -- Any adjustments?
       if (DealManager.AreWorkingDealsEqual(ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID())) then
-        -- Yes, we can accept, and exit
-        DealManager.SendWorkingDeal(DealProposalAction.ACCEPTED, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
-        OnContinue();
-        UI.PlaySound("Confirm_Bed_Positive");
+        -- Yes, we can accept
+        -- if deal will trigger war, prompt user before confirming deal
+        local sendDealAndContinue = function()
+          DealManager.SendWorkingDeal(DealProposalAction.ACCEPTED, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+          OnContinue();
+          UI.PlaySound("Confirm_Bed_Positive");
+        end;
+
+        local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+        local pJointWarItem = pDeal:FindItemByType(DealItemTypes.AGREEMENTS, DealAgreementTypes.JOINT_WAR);
+        if pJointWarItem then
+          local targetPlayerID = pJointWarItem:GetValueType();
+          if (targetPlayerID >= 0) then
+            LuaEvents.DiplomacyActionView_ConfirmWarDialog(ms_LocalPlayerID, targetPlayerID, WarTypes.FORMAL_WAR, sendDealAndContinue);
+          else
+            UI.DataError("Invalid Player ID to declare Joint War to: " .. targetPlayerID);
+          end
+        else
+          sendDealAndContinue();
+        end
       else
         -- No, send an adjustment and stay in the deal view.
         DealManager.SendWorkingDeal(DealProposalAction.ADJUSTED, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
@@ -799,15 +811,8 @@ function OnValueAmountEditDelta(delta : number)
 
     local pDealItem = pDeal:FindItemByID(ms_ValueEditDealItemID);
     if (pDealItem ~= nil) then
-      local iNewAmount = pDealItem:GetAmount() + delta;
-      if (iNewAmount < 1) then
-        iNewAmount = 1;
-      end
-
-      local iMaxAmount = pDealItem:GetMaxAmount();
-      if (iNewAmount > iMaxAmount) then
-        iNewAmount = iMaxAmount;
-      end
+      local iNewAmount = tonumber(Controls.ValueAmountEdit:GetText() or 0) + delta;
+      iNewAmount = clip(iNewAmount, 1, pDealItem:GetMaxAmount());
 
       if (iNewAmount ~= pDealItem:GetAmount()) then
         pDealItem:SetAmount(iNewAmount);
@@ -833,15 +838,9 @@ function OnValueAmountEditCommit()
 
     local pDealItem = pDeal:FindItemByID(ms_ValueEditDealItemID);
     if (pDealItem ~= nil) then
-      local iNewAmount = tonumber( Controls.ValueAmountEdit:GetText() );
-      if (iNewAmount < 1) then
-        iNewAmount = 1;
-      end
-
-      local iMaxAmount = pDealItem:GetMaxAmount();
-      if (iNewAmount > iMaxAmount) then
-        iNewAmount = iMaxAmount;
-      end
+      local iNewAmount = tonumber(Controls.ValueAmountEdit:GetText());
+      iNewAmount = clip(iNewAmount, 1, pDealItem:GetMaxAmount());
+      Controls.ValueAmountEdit:SetText(tostring(iNewAmount));
 
       if (iNewAmount ~= pDealItem:GetAmount() or ms_bForceUpdateOnCommit) then
         pDealItem:SetAmount(iNewAmount);
@@ -890,9 +889,11 @@ function ReAttachValueEdit()
       local pDealItem = pDeal:FindItemByID(ms_ValueEditDealItemID);
       if (pDealItem ~= nil) then
 
+        local itemID = pDealItem:GetID();
         local itemType = pDealItem:GetType();
         if (itemType == DealItemTypes.GOLD or itemType == DealItemTypes.RESOURCES) then
-          -- Gold and Resources just edit the amount
+          -- Hide/show everything for GOLD and RESOURCE options
+          ms_AgreementOptionIM:ResetInstances();
           Controls.ValueAmountEditOverlay:SetOffsetVal(x + (w/2), y + h);
           Controls.ValueAmountEditOverlay:SetHide(false);
           Controls.ValueAmountEditOverlayContainer:SetHide(false);
@@ -908,7 +909,7 @@ function ReAttachValueEdit()
         end
 
       end
-    end
+    end			
 
     rootControl:ReprocessAnchoring();
   end
@@ -942,12 +943,11 @@ end
 -- ===========================================================================
 -- Update the deal panel for a player
 function UpdateDealPanel(player)
-  if (player:GetID() == ms_OtherPlayer:GetID()) then
-    PopulatePlayerDealPanel(Controls.TheirOfferStack, ms_OtherPlayer);
-  else
-    PopulatePlayerDealPanel(Controls.MyOfferStack, ms_LocalPlayer);
-  end
+
   UpdateDealStatus();
+
+  PopulatePlayerDealPanel(Controls.TheirOfferStack, ms_OtherPlayer);
+  PopulatePlayerDealPanel(Controls.MyOfferStack, ms_LocalPlayer);
 end
 
 -- ===========================================================================
@@ -965,12 +965,9 @@ function OnClickAvailableOneTimeGold(player, iAddAmount : number)
     if (dealItems ~= nil) then
       for i, pDealItem in ipairs(dealItems) do
         if (pDealItem:GetDuration() == 0) then
-          local iMaxGold = pDealItem:GetMaxAmount();
           -- Already have a one time gold.  Up the amount
           iAddAmount = pDealItem:GetAmount() + iAddAmount;
-          if (iAddAmount > iMaxGold) then
-            iAddAmount = iMaxGold;
-          end
+          iAddAmount = clip(iAddAmount, nil, pDealItem:GetMaxAmount());
           if (iAddAmount ~= pDealItem:GetAmount()) then
             pDealItem:SetAmount(iAddAmount);
             bFound = true;
@@ -992,13 +989,8 @@ function OnClickAvailableOneTimeGold(player, iAddAmount : number)
         -- Set the duration, so the max amount calculation knows what we are doing
         pDealItem:SetDuration(0);
 
-        local iMaxGold = pDealItem:GetMaxAmount();
-
         -- Adjust the gold to our max
-        if (iAddAmount > iMaxGold) then
-          iAddAmount = iMaxGold;
-        end
-
+        iAddAmount = clip(iAddAmount, nil, pDealItem:GetMaxAmount());
         if (iAddAmount > 0) then
           pDealItem:SetAmount(iAddAmount);
           bFound = true;
@@ -1035,12 +1027,9 @@ function OnClickAvailableMultiTurnGold(player, iAddAmount : number, iDuration : 
     if (dealItems ~= nil) then
       for i, pDealItem in ipairs(dealItems) do
         if (pDealItem:GetDuration() ~= 0) then
-          local iMaxGold = pDealItem:GetMaxAmount();
           -- Already have a multi-turn gold.  Up the amount
           iAddAmount = pDealItem:GetAmount() + iAddAmount;
-          if (iAddAmount > iMaxGold) then
-            iAddAmount = iMaxGold;
-          end
+          iAddAmount = clip(iAddAmount, nil, pDealItem:GetMaxAmount());
           if (iAddAmount ~= pDealItem:GetAmount()) then
             pDealItem:SetAmount(iAddAmount);
             bFound = true;
@@ -1061,11 +1050,8 @@ function OnClickAvailableMultiTurnGold(player, iAddAmount : number, iDuration : 
         -- Set the duration, so the max amount calculation knows what we are doing
         pDealItem:SetDuration(iDuration);
 
-        local iMaxGold = pDealItem:GetMaxAmount();
         -- Adjust the gold to our max
-        if (iAddAmount > iMaxGold) then
-          iAddAmount = iMaxGold;
-        end
+        iAddAmount = clip(iAddAmount, nil, pDealItem:GetMaxAmount());
 
         if (iAddAmount > 0) then
           pDealItem:SetAmount(iAddAmount);
@@ -1086,10 +1072,22 @@ function OnClickAvailableMultiTurnGold(player, iAddAmount : number, iDuration : 
 end
 
 -- ===========================================================================
+-- Clip val to be within the range of min and max
+function clip(val: number, min: number, max: number)
+  if min and val < min then
+    val = min;
+  elseif max and val > max then
+    val = max;
+  end
+  return val;
+end
+
+-- ===========================================================================
 -- Check to see if the deal should be auto-proposed.
 function IsAutoPropose()
   if (not ms_OtherPlayerIsHuman) then
     local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+    pDeal:Validate();
     if (pDeal ~= nil and not ms_bIsDemand and pDeal:IsValid() and not DealManager.HasPendingDeal(ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID())) then
       local iItemsFromLocal = pDeal:GetItemCount(ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
       local iItemsFromOther = pDeal:GetItemCount(ms_OtherPlayer:GetID(), ms_LocalPlayer:GetID());
@@ -1120,7 +1118,13 @@ function UpdateProposalButtons(bDealValid)
       if (not ms_bIsDemand) then
         if (not ms_OtherPlayerIsHuman) then
           -- Dealing with an AI
-          if (iItemsFromLocal > 0 and iItemsFromOther == 0) then
+          if (pDeal:HasUnacceptableItems()) then
+            Controls.MyDirections:SetHide(true);
+            Controls.TheirDirections:SetHide(true);
+            Controls.EqualizeDeal:SetHide(true);
+            Controls.AcceptDeal:SetHide(true);
+            --SetLeaderDialog("LOC_DIPLO_DEAL_UNACCEPTABLE_DEAL", "");
+          elseif (iItemsFromLocal > 0 and iItemsFromOther == 0) then
             -- One way gift?
             Controls.MyDirections:SetHide(true);
             Controls.TheirDirections:SetHide(false);
@@ -1130,16 +1134,16 @@ function UpdateProposalButtons(bDealValid)
             Controls.AcceptDeal:SetHide(false);
             Controls.AcceptDeal:LocalizeAndSetText("LOC_DIPLOMACY_DEAL_GIFT_DEAL");
             -- Make sure the leader text is set to something appropriate.
-            --SetDefaultLeaderDialogText();
+            --SetLeaderDialog("LOC_DIPLO_DEAL_LEADER_GIFT", "LOC_DIPLO_DEAL_LEADER_GIFT_EFFECT");
           else
             if (iItemsFromLocal == 0 and iItemsFromOther > 0) then
               Controls.MyDirections:SetHide(false);
               Controls.TheirDirections:SetHide(true);
               Controls.WhatWouldYouGiveMe:SetHide(true);
               Controls.WhatWouldItTakeButton:SetHide(false);
-              Controls.AcceptDeal:SetHide(true);				--If either of the above buttons are showing, disable the main accept button
+              Controls.AcceptDeal:SetHide(true); --If either of the above buttons are showing, disable the main accept button
               -- Make sure the leader text is set to something appropriate.
-              --SetDefaultLeaderDialogText();
+              --SetLeaderDialog("LOC_DIPLO_DEAL_UNFAIR", "");
             else												--Something is being offered on both sides
               Controls.MyDirections:SetHide(true);
               Controls.TheirDirections:SetHide(true);
@@ -1191,17 +1195,18 @@ function UpdateProposalButtons(bDealValid)
         if (ms_InitiatedByPlayerID == ms_OtherPlayerID) then
           Controls.MyDirections:SetHide(true);
           Controls.TheirDirections:SetHide(true);
+          --SetDefaultLeaderDialogText();
         else
           if (iItemsFromOther == 0) then
             Controls.TheirDirections:SetHide(false);
           else
             Controls.TheirDirections:SetHide(true);
           end
+          -- Demand against another player
+          --SetLeaderDialog("LOC_DIPLO_DEAL_LEADER_DEMAND", "LOC_DIPLO_DEAL_LEADER_DEMAND_EFFECT");
         end
         Controls.WhatWouldYouGiveMe:SetHide(true);
         Controls.WhatWouldItTakeButton:SetHide(true);
-        -- Make sure the leader text is set to something appropriate.
-        --SetDefaultLeaderDialogText();
       end
     else
       -- Make sure the leader text is set to something appropriate.
@@ -1230,7 +1235,7 @@ function UpdateProposalButtons(bDealValid)
 
     if (not DealIsEmpty() and not bDealValid) then
       -- Set have the other leader tell them that the deal has invalid items.
-      --Controls.LeaderDialog:LocalizeAndSetText("LOC_DIPLOMACY_DEAL_INVALID");
+      --SetLeaderDialog("LOC_DIPLOMACY_DEAL_INVALID", "");
     else
       --SetDefaultLeaderDialogText();
     end
@@ -1327,7 +1332,7 @@ function PopulateAvailableGold(player : table, iconList : table)
           local icon = ms_IconOnlyIM:GetInstance(iconList.ListStack);
           icon.AmountText:SetText(goldBalance);
           icon.SelectButton:SetToolTipString(nil);		-- We recycle the entries, so make sure this is clear.
-          SetIconToSize(icon, "ICON_YIELD_GOLD_5");
+          SetIconToSize(icon.Icon, "ICON_YIELD_GOLD_5");
           icon.SelectButton:RegisterCallback( Mouse.eLClick, function() OnClickAvailableOneTimeGold(player, ms_DefaultOneTimeGoldAmount); end );
 
           iAvailableItemCount = iAvailableItemCount + 1;
@@ -1340,9 +1345,9 @@ function PopulateAvailableGold(player : table, iconList : table)
         icon = ms_IconOnly_3IM:GetInstance(iconList.ListStack);
         icon.AmountText:SetText(FormatValuePerTurn(goldYield));
         icon.AmountText:SetHide(false);
-        SetSpecifiedIconToSize(icon.Icon1, "ICON_YIELD_GOLD_1");
-        SetSpecifiedIconToSize(icon.Icon2, "ICON_YIELD_GOLD_1");
-        SetSpecifiedIconToSize(icon.Icon3, "ICON_YIELD_GOLD_1");
+        SetIconToSize(icon.Icon1, "ICON_YIELD_GOLD_1");
+        SetIconToSize(icon.Icon2, "ICON_YIELD_GOLD_1");
+        SetIconToSize(icon.Icon3, "ICON_YIELD_GOLD_1");
 
         icon.SelectButton:SetToolTipString(nil);		-- We recycle the entries, so make sure this is clear.
         icon.SelectButton:RegisterCallback( Mouse.eLClick, function() OnClickAvailableMultiTurnGold(player, ms_DefaultMultiTurnGoldAmount, ms_DefaultMultiTurnGoldDuration); end );
@@ -1411,14 +1416,22 @@ end
 -- ===========================================================================
 function OnClickAvailableAgreement(player, agreementType, agreementTurns)
 
-  local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
-  if (pDeal ~= nil) then
+	local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+	if (pDeal ~= nil) then
 
-    -- Already there?
-    local pDealItem = pDeal:FindItemByType(DealItemTypes.AGREEMENTS, agreementType, player:GetID());
-    if (pDealItem == nil) then
+		-- Already there?
+		local pDealItem = pDeal:FindItemByType(DealItemTypes.AGREEMENTS, agreementType, player:GetID());
+		if (pDealItem == nil) then
       -- No
-      pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, player:GetID());
+      -- AZURENCY : Joint War and Research Agreements need special treatment (can be only modified on the player side)
+      -- AZURENCY : Bug ? RESEARCH_AGREEMENT is not in DealAgreementTypes (see hack line 1839)
+			--if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.RESEARCH_AGREEMENT) then
+			if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == ms_DealAgreementTypesResearchAgreement) then
+        pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, ms_LocalPlayer:GetID());
+			else
+				pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, player:GetID());
+      end
+
       if (pDealItem ~= nil) then
         pDealItem:SetSubType(agreementType);
         pDealItem:SetDuration(agreementTurns);
@@ -1427,8 +1440,8 @@ function OnClickAvailableAgreement(player, agreementType, agreementTurns)
         UpdateProposedWorkingDeal();
         UI.PlaySound("UI_GreatWorks_Put_Down");
       end
-    end
-  end
+		end
+	end
 end
 
 -- ===========================================================================
@@ -1758,7 +1771,7 @@ function RenderResourceButton(resource, resourceCategory, iconList, howAcquired)
     icon = ms_IconOnlyIM:GetInstance(iconList.ListStack);
   end
 
-  SetIconToSize(icon, "ICON_" .. resourceDesc.ResourceType, icon.Icon:GetSizeX());
+  SetIconToSize(icon.Icon, "ICON_" .. resourceDesc.ResourceType, icon.Icon:GetSizeX());
   icon.AmountText:SetText(tostring(resource.MaxAmount));
   icon.SelectButton:SetDisabled( buttonDisabled );
 
@@ -1808,7 +1821,11 @@ function PopulateAvailableAgreements(player : table, iconList : table)
 
       local info: table = GameInfo.DiplomaticActions[ agreementType ];
       if (info ~= nil) then
-        SetIconToSize(icon, "ICON_".. info.DiplomaticActionType, 38);
+        -- AZURENCY : Hack to get the agreementType of RESEARCH_AGREEMENT (seems to be a bug ? it's not in DealAgreementTypes)
+        if (ms_DealAgreementTypesResearchAgreement == nil and info.DiplomaticActionType == "DIPLOACTION_RESEARCH_AGREEMENT") then
+          ms_DealAgreementTypesResearchAgreement = agreementType;
+        end
+        SetIconToSize(icon.Icon, "ICON_".. info.DiplomaticActionType, 38);
       end
       icon.AmountText:SetHide(true);
       icon.IconText:LocalizeAndSetText(entry.SubTypeName);
@@ -1890,7 +1907,7 @@ function renderCity(pCity : table, player : table, targetContainer : table)
   local cityData = GetCityData(pCity);
   local otherPlayer = GetOtherPlayer(player);
 
-  SetIconToSize(button, "ICON_BUILDINGS", 30);
+  SetIconToSize(button.Icon, "ICON_BUILDINGS", 30);
   button.IconText:LocalizeAndSetText(cityData.CityName);
   --button.SelectButton:SetDisabled( not entry.IsValid and entry.ValidationResult ~= DealValidationResult.MISSING_DEPENDENCY );	-- Hide if invalid, unless it is just missing a dependency, the user will update that when it is added to the deal.
 
@@ -1922,6 +1939,7 @@ function renderCity(pCity : table, player : table, targetContainer : table)
     button.ScienceLabel:SetText("");
   end
   button.SelectButton:SetToolTipString( MakeCityToolTip(pCity) );
+  button.UnacceptableIcon:SetHide(true); -- AZURENCY : Sometime the icon is shown so always hide it
 
   return button;
 end
@@ -2047,7 +2065,7 @@ function PopulateAvailableGreatWorks(player : table, iconList : table)
       if (greatWorkDesc ~= nil) then
         local type = entry.ForType;
         local icon = ms_IconAndTextIM:GetInstance(iconList.ListStack);
-        SetIconToSize(icon, "ICON_" .. greatWorkDesc.GreatWorkType, 42);
+        SetIconToSize(icon.Icon, "ICON_" .. greatWorkDesc.GreatWorkType, 42);
         icon.AmountText:SetHide(true);
         if (entry.ForTypeName ~= nil ) then
                     icon.IconText:LocalizeAndSetText(entry.ForTypeName);
@@ -2108,7 +2126,7 @@ function PopulateAvailableCaptives(player : table, iconList : table)
 
       local type = entry.ForType;
       local icon = ms_IconAndTextIM:GetInstance(iconList.ListStack);
-      SetIconToSize(icon, "ICON_UNIT_SPY", 38);
+      SetIconToSize(icon.Icon, "ICON_UNIT_SPY", 38);
       icon.AmountText:SetHide(true);
       icon.IconText:LocalizeAndSetText(entry.ForTypeName);
       icon.SelectButton:SetDisabled( not entry.IsValid and entry.ValidationResult ~= DealValidationResult.MISSING_DEPENDENCY );	-- Hide if invalid, unless it is just missing a dependency, the user will update that when it is added to the deal.
@@ -2195,12 +2213,15 @@ function PopulateDealBasic(player : table, iconList : table, populateType : numb
 
         if (type == populateType) then
           local icon = ms_IconAndTextIM:GetInstance(iconList.ListStack);
-          SetIconToSize(icon, iconName, 38);
+          SetIconToSize(icon.Icon, iconName, 38);
           icon.AmountText:SetHide(true);
           local typeName = pDealItem:GetValueTypeNameID();
           if (typeName ~= nil) then
             icon.IconText:LocalizeAndSetText(typeName);
           end
+
+          -- Show/hide unacceptable item notification
+          icon.UnacceptableIcon:SetHide(not pDealItem:IsUnacceptable());
 
           icon.SelectButton:RegisterCallback(Mouse.eRClick, function(void1, void2, self) OnRemoveDealItem(player, dealItemID, self); end);
           icon.SelectButton:RegisterCallback( Mouse.eLClick, function(void1, void2, self) OnSelectValueDealItem(player, dealItemID, self); end );
@@ -2237,17 +2258,21 @@ function PopulateDealGold(player : table, iconList : table)
           if (iDuration == 0) then
             -- One time
             icon = ms_IconOnlyIM:GetInstance(iconList.ListStack);
-            SetIconToSize(icon, "ICON_YIELD_GOLD_5");
+            SetIconToSize(icon.Icon, "ICON_YIELD_GOLD_5");
           else
             -- Multi-turn
             icon = ms_IconOnly_3IM:GetInstance(iconList.ListStack);
-            SetSpecifiedIconToSize(icon.Icon1, "ICON_YIELD_GOLD_1");
-            SetSpecifiedIconToSize(icon.Icon2, "ICON_YIELD_GOLD_1");
-            SetSpecifiedIconToSize(icon.Icon3, "ICON_YIELD_GOLD_1");
+            SetIconToSize(icon.Icon1, "ICON_YIELD_GOLD_1");
+            SetIconToSize(icon.Icon2, "ICON_YIELD_GOLD_1");
+            SetIconToSize(icon.Icon3, "ICON_YIELD_GOLD_1");
           end
 
           icon.AmountText:SetText(tostring(pDealItem:GetAmount()));
           icon.AmountText:SetHide(false);
+
+          -- Show/hide unacceptable item notification
+          icon.UnacceptableIcon:SetHide(not pDealItem:IsUnacceptable());
+
           icon.SelectButton:RegisterCallback(Mouse.eRClick, function(void1, void2, self) OnRemoveDealItem(player, dealItemID, self); end);
           icon.SelectButton:RegisterCallback( Mouse.eLClick, function(void1, void2, self) OnSelectValueDealItem(player, dealItemID, self); end );
           icon.SelectButton:SetToolTipString(nil);		-- We recycle the entries, so make sure this is clear.
@@ -2290,9 +2315,13 @@ function PopulateDealResources(player : table, iconList : table, className)
             pDeal[resourceType] = nil;
           else
             local icon = ms_IconOnlyIM:GetInstance(iconList.ListStack);
-            SetIconToSize(icon, "ICON_" .. resourceDesc.ResourceType);
+            SetIconToSize(icon.Icon, "ICON_" .. resourceDesc.ResourceType);
             icon.AmountText:SetText(tostring(pDealItem:GetAmount()));
             icon.AmountText:SetHide(false);
+
+            -- Show/hide unacceptable item notification
+            icon.UnacceptableIcon:SetHide(not pDealItem:IsUnacceptable());
+
             icon.SelectButton:RegisterCallback(Mouse.eRClick, function(void1, void2, self) OnRemoveDealItem(player, dealItemID, self); end);
             icon.SelectButton:RegisterCallback( Mouse.eLClick, function(void1, void2, self) OnSelectValueDealItem(player, dealItemID, self); end );
             -- Set a tool tip
@@ -2312,7 +2341,6 @@ function PopulateDealResources(player : table, iconList : table, className)
     iconList.ListStack:CalculateSize();
     iconList.ListStack:ReprocessAnchoring();
 
-    ReAttachValueEdit();
   end
 
 end
@@ -2336,7 +2364,7 @@ function PopulateDealAgreements(player : table, iconList : table)
           local icon = ms_IconAndTextIM:GetInstance(iconList.ListStack);
           local info: table = GameInfo.DiplomaticActions[ pDealItem:GetSubType() ];
           if (info ~= nil) then
-            SetIconToSize(icon, "ICON_".. info.DiplomaticActionType, 38);
+            SetIconToSize(icon.Icon, "ICON_".. info.DiplomaticActionType, 38);
           end
 
           icon.AmountText:SetHide(true);
@@ -2346,11 +2374,24 @@ function PopulateDealAgreements(player : table, iconList : table)
           end
           icon.SelectButton:SetToolTipString(nil);		-- We recycle the entries, so make sure this is clear.
 
+          -- Show/hide unacceptable item notification
+          icon.UnacceptableIcon:SetHide(not pDealItem:IsUnacceptable());
+
           -- Populate the value pulldown
           SetValueText(icon, pDealItem);
 
           icon.SelectButton:RegisterCallback(Mouse.eRClick, function(void1, void2, self) OnRemoveDealItem(player, dealItemID, self); end);
-          icon.SelectButton:RegisterCallback( Mouse.eLClick, function(void1, void2, self) OnSelectValueDealItem(player, dealItemID, self); end );
+
+          if(info.DiplomaticActionType == "DIPLOACTION_JOINT_WAR" and pDealItem:GetFromPlayerID() == ms_OtherPlayer:GetID()) then
+            icon.SelectButton:SetDisabled(true);
+            icon.SelectButton:SetToolTipString(Locale.Lookup("LOC_JOINT_WAR_CANNOT_EDIT_THEIRS_TOOLTIP"));
+          elseif(info.DiplomaticActionType == "DIPLOACTION_RESEARCH_AGREEMENT" and pDealItem:GetFromPlayerID() == ms_OtherPlayer:GetID()) then
+            icon.SelectButton:SetDisabled(true);
+            --icon.SelectButton:SetToolTipString(Locale.Lookup("LOC_JOINT_WAR_CANNOT_EDIT_THEIRS_TOOLTIP"));
+          else
+            icon.SelectButton:SetDisabled(false);
+            icon.SelectButton:RegisterCallback( Mouse.eLClick, function(void1, void2, self) OnSelectValueDealItem(player, dealItemID, self); end );
+          end
         end
       end
     end
@@ -2381,7 +2422,7 @@ function PopulateDealGreatWorks(player : table, iconList : table)
           local icon = ms_IconAndTextIM:GetInstance(iconList.ListStack);
 
           local typeID = pDealItem:GetValueTypeID();
-          SetIconToSize(icon, "ICON_" .. typeID, 42);
+          SetIconToSize(icon.Icon, "ICON_" .. typeID, 42);
           icon.AmountText:SetHide(true);
           local typeName = pDealItem:GetValueTypeNameID();
           if (typeName ~= nil) then
@@ -2391,6 +2432,9 @@ function PopulateDealGreatWorks(player : table, iconList : table)
             icon.IconText:SetText(nil);
             icon.SelectButton:SetToolTipString(nil);
           end
+
+          -- Show/hide unacceptable item notification
+          icon.UnacceptableIcon:SetHide(not pDealItem:IsUnacceptable());
 
           icon.SelectButton:RegisterCallback(Mouse.eRClick, function(void1, void2, self) OnRemoveDealItem(player, dealItemID, self); end);
           icon.SelectButton:RegisterCallback( Mouse.eLClick, function(void1, void2, self) OnSelectValueDealItem(player, dealItemID, self); end );
@@ -2437,6 +2481,9 @@ function PopulateDealCities(player : table, iconList : table)
           end
 
           local icon = renderCity(pCity, player, iconList.ListStack);
+
+          -- Show/hide unacceptable item notification
+          icon.UnacceptableIcon:SetHide(not pDealItem:IsUnacceptable());
 
           icon.SelectButton:RegisterCallback(Mouse.eRClick, function(void1, void2, self) OnRemoveDealItem(player, dealItemID, self); end);
           icon.SelectButton:RegisterCallback( Mouse.eLClick, function(void1, void2, self) OnSelectValueDealItem(player, dealItemID, self); end );
@@ -2574,18 +2621,32 @@ function OnDealUpdated(otherPlayerID, eAction, szText)
     OnDiplomacyIncomingDeal( otherPlayerID, Game.GetLocalPlayer(), eAction);
     -- Display some updated text.
     if (szText ~= nil) then
-      Controls.LeaderDialog:LocalizeAndSetText(szText);
+      --SetLeaderDialog(szText, "");
     end
   end
 end
 LuaEvents.DiploPopup_DealUpdated.Add(OnDealUpdated);
 
 -- ===========================================================================
+function SetLeaderDialog(leaderDialog:string, leaderEffect:string)
+  -- Update dialog
+  Controls.LeaderDialog:LocalizeAndSetText(leaderDialog);
+
+  -- Add parentheses to the effect text unless the text is ""
+  if leaderEffect ~= "" then
+    leaderEffect = "(" .. Locale.Lookup(leaderEffect) .. ")";
+  end
+  Controls.LeaderEffect:SetText(leaderEffect);
+
+  -- Recenter text
+  Controls.LeaderDialogStack:CalculateSize();
+  Controls.LeaderDialogStack:ReprocessAnchoring();
+end
+
+-- ===========================================================================
 function StartExitAnimation()
   -- Start the exit animation, it will call OnContinue when complete
   ms_bExiting = true;
-  -- Controls.Signature_Slide:Reverse();
-  -- Controls.Signature_Alpha:Reverse();
   -- Controls.YieldSlide:Reverse();
   -- Controls.YieldAlpha:Reverse();
   -- Controls.TradePanelFade:Reverse();
@@ -2746,11 +2807,11 @@ function OnShow()
     if not m_kPopupDialog:IsOpen() then
       if (ms_bIsDemand) then
         m_kPopupDialog:AddText(Locale.Lookup("LOC_DIPLO_DEMAND_NO_AVAILABLE_ITEMS"));
-        m_kPopupDialog:AddTitle( Locale.ToUpper(Locale.Lookup("LOC_DIPLO_CHOICE_MAKE_DEMAND")), Controls.PopupTitle)
+        m_kPopupDialog:AddTitle( Locale.ToUpper(Locale.Lookup("LOC_DIPLO_CHOICE_MAKE_DEMAND")))
         m_kPopupDialog:AddButton( Locale.Lookup("LOC_OK_BUTTON"), OnRefuseDeal);
       else
         m_kPopupDialog:AddText(	  Locale.Lookup("LOC_DIPLO_DEAL_NO_AVAILABLE_ITEMS"));
-        m_kPopupDialog:AddTitle( Locale.ToUpper(Locale.Lookup("LOC_DIPLO_CHOICE_MAKE_DEAL")), Controls.PopupTitle)
+        m_kPopupDialog:AddTitle( Locale.ToUpper(Locale.Lookup("LOC_DIPLO_CHOICE_MAKE_DEAL")))
         m_kPopupDialog:AddButton( Locale.Lookup("LOC_OK_BUTTON"), OnRefuseDeal);
       end
       m_kPopupDialog:Open("DiplomacyActionView");
@@ -2764,6 +2825,10 @@ function OnShow()
   PopulatePlayerDealPanel(Controls.TheirOfferStack, ms_OtherPlayer);
   PopulatePlayerDealPanel(Controls.MyOfferStack, ms_LocalPlayer);
   UpdateDealStatus();
+  -- We may be coming into this screen with a deal already set, which needs to be sent to the AI for inspection. Check that.
+  if (IsAutoPropose()) then
+    ProposeWorkingDeal(true);
+  end
 
   --Controls.MyOfferScroll:CalculateSize();
   --Controls.TheirOfferScroll:CalculateSize();
@@ -2822,10 +2887,7 @@ function Initialize()
 
   Events.LocalPlayerTurnEnd.Add( OnLocalPlayerTurnEnd );
 
-  m_kPopupDialog = PopupDialogLogic:new( "DealConfirmDialog", Controls.PopupDialog, Controls.PopupStack );
-  --m_kPopupDialog:SetOpenAnimationControls( Controls.PopupAlphaIn, Controls.PopupSlideIn );
-  m_kPopupDialog:SetInstanceNames( nil, nil, "PopupTextInstance", "Text", "RowInstance", "Row");
-  m_kPopupDialog:SetSize(400,200);
+  m_kPopupDialog = PopupDialog:new( "DealConfirmDialog" );
 end
 
 Initialize();

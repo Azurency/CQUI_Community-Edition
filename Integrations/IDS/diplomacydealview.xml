@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Context Style="FontNormal16" ColorSet="BodyTextCool" FontStyle="Shadow" Size="Full,Full" ConsumeMouse="1">
 
+  <Include File="PopupDialog"/>
+
   <!-- Containers for caching instances -->
   <Container ID="IconOnlyContainer" Hidden="1"/>
   <Container ID="IconAndTextContainer" Hidden="1"/>
@@ -20,6 +22,7 @@
                 StateOffsetIncrement="0,24" Anchor="L,T" Offset="0,0" >
       <Image ID="Icon" StretchMode="None" Size="50,50" Anchor="C,C"/>
       <Label ID="AmountText" Style="FontNormalBold16" FontStyle="Stroke" Anchor="R,B" Offset="3,0"/>
+      <Image ID="UnacceptableIcon" Anchor="R,T" Offset="-8,-8" Texture="Alert18" Size="18,18" ToolTip="LOC_DIPLO_DEAL_UNACCEPTABLE_ITEM_TOOLTIP" Hidden="1"/>
     </GridButton>
   </Instance>
 
@@ -38,6 +41,7 @@
           </Stack>
         </Container>
       </Stack>
+      <Image ID="UnacceptableIcon" Anchor="R,T" Offset="-8,-8" Texture="Alert18" Size="18,18" ToolTip="LOC_DIPLO_DEAL_UNACCEPTABLE_ITEM_TOOLTIP" Hidden="1"/>
     </GridButton>
   </Instance>
 
@@ -58,6 +62,7 @@
             </Stack>
         </Container>
       </Stack>
+      <Image ID="UnacceptableIcon" Anchor="R,T" Offset="-8,-8" Texture="Alert18" Size="18,18" ToolTip="LOC_DIPLO_DEAL_UNACCEPTABLE_ITEM_TOOLTIP" Hidden="1"/>
     </GridButton>
   </Instance>
 
@@ -72,6 +77,7 @@
           <Image ID="Icon2" StretchMode="None" Size="50,50" Anchor="C,C" Offset="1,0"/>
           <Image ID="Icon3" StretchMode="None" Size="50,50" Anchor="C,C" Offset="13,10"/>
           <Label ID="AmountText" Style="FontNormalBold16" FontStyle="Stroke" Anchor="R,B" Offset="3,0"/>
+          <Image ID="UnacceptableIcon" Anchor="R,T" Offset="-8,-8" Texture="Alert18" Size="18,18" ToolTip="LOC_DIPLO_DEAL_UNACCEPTABLE_ITEM_TOOLTIP" Hidden="1"/>
       </GridButton>
   </Instance>
 
@@ -83,6 +89,7 @@
                   StateOffsetIncrement="0,24" Anchor="L,T" >
             <Image ID="Icon" StretchMode="None" Size="50,50" Anchor="C,C" />
             <Label ID="AmountText" Style="FontNormalBold16" Anchor="R,B" Offset="3,0" FontStyle="Stroke" Color="224,124,124,230"/>
+            <Image ID="UnacceptableIcon" Anchor="R,T" Offset="-8,-8" Texture="Alert18" Size="18,18" ToolTip="LOC_DIPLO_DEAL_UNACCEPTABLE_ITEM_TOOLTIP" Hidden="1"/>
         </GridButton>
     </Instance>
 
@@ -94,6 +101,7 @@
                   StateOffsetIncrement="0,24" Anchor="L,T" Color="255,255,255,200">
             <Image ID="Icon" StretchMode="None" Size="50,50" Anchor="C,C"/>
             <Label ID="AmountText" Style="FontNormalBold16" Anchor="R,B" Offset="3,0" FontStyle="Stroke" />
+            <Image ID="UnacceptableIcon" Anchor="R,T" Offset="-8,-8" Texture="Alert18" Size="18,18" ToolTip="LOC_DIPLO_DEAL_UNACCEPTABLE_ITEM_TOOLTIP" Hidden="1"/>
         </GridButton>
     </Instance>
 
@@ -105,6 +113,7 @@
                   StateOffsetIncrement="0,24" Anchor="L,T">
             <Image ID="Icon" StretchMode="None" Size="50,50" Anchor="C,C" Color="255,255,255,170" />
             <Label ID="AmountText" Style="FontNormalBold16" Anchor="R,B" Offset="3,0" FontStyle="Stroke" />
+            <Image ID="UnacceptableIcon" Anchor="R,T" Offset="-8,-8" Texture="Alert18" Size="18,18" ToolTip="LOC_DIPLO_DEAL_UNACCEPTABLE_ITEM_TOOLTIP" Hidden="1"/>
         </GridButton>
     </Instance>
 
@@ -342,20 +351,8 @@
     </Container>
   </Container>
 
-  <!-- Customized popup dialog pieces-->
-  <Instance						Name="PopupTextInstance">
-    <Label        ID="Text"       Anchor="C,T" Style="BodyTextDark18" Align="Center" WrapWidth="parent-20"/>
-  </Instance>
-  <Instance						Name="RowInstance">
-    <Stack					  ID="Row"			Anchor="C,T" StackGrowth="Right" StackWrap="Bottom" StackPadding="10" />
-  </Instance>
-
-  <!-- Custom popup dialog -->
-  <Box Style="PopupDialogBox"/>
-  <Instance Name="PopupButtonInstance">
-    <GridButton ID="Button" Style="MainButton" Size="200,41" />
-  </Instance>
-
+  <!-- Dialog Support-->
+  <MakeInstance Name="PopupDialog" />
 
 
 </Context>
