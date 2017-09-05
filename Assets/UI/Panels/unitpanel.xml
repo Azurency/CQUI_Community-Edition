@@ -25,7 +25,7 @@
           <Grid																		Anchor="C,T" Offset="0,38"		Size="169,22"		Texture="CombatPreview_VsFrame.dds"  SliceCorner="8,8" SliceSize="6,6">
             <Label			ID="VersusText"						Anchor="C,C" Offset="0,2"			Style="UnitPanelHeader" String="{LOC_HUD_UNIT_PANEL_VS:upper}"/>
           </Grid>
-          <Label				ID="CombatAssessmentText"	Anchor="C,C" Offset="-6,-76"	Align="Center" WrapWidth="120" Style="UnitPanelHeader" />
+          <Label				ID="CombatAssessmentText"	Anchor="C,C" Offset="-6,-76"	Align="Center" WrapWidth="110" Style="UnitPanelHeader" />
         </Container>
 
         <Stack	ID="PrimaryArtStack"	Anchor="R,T"	Offset="6,-2"	AnchorSide="I,O"	StackGrowth="Right" Padding="2" />
@@ -486,11 +486,6 @@
       <Image			ID="ModifierIcon"			Anchor="L,T"	Icon="ICON_STRENGTH" IconSize="16" Size="16,16" />
       <Label			ID="ModifierText"			Anchor="L,T"  Offset="20,0" WrapWidth="110"	Style="FontNormal12" FontStyle="Shadow" EffectColor="Black"/>
     </Container>
-  </Instance>
-
-  <!-- Confirmation popup -->
-  <Instance						Name="PopupButtonInstance">
-    <GridButton			  ID="Button"									                          Size="160,42"		Style="MainButton" />
   </Instance>
 
   <!-- Action definition -->

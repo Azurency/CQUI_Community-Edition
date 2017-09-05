@@ -382,9 +382,6 @@ function GetUnitActionsTable( pUnit )
           AddActionToTable( actionsTable, commandRow, isDisabled, Locale.Lookup("LOC_UNITPANEL_ESPIONAGE_CANCEL_MISSION"), actionHash, OnUnitActionClicked_CancelSpyMission, UnitCommandTypes.TYPE, actionHash  );
         end
       else
-        if (actionHash == UnitCommandTypes.AIRLIFT) then
-          local foo = true;
-        end
         -- The UI check of an operation is a loose check where it only fails if the unit could never do the command.
         local bCanStart = UnitManager.CanStartCommand( pUnit, actionHash, true);
         if (bCanStart) then
@@ -461,10 +458,6 @@ function GetUnitActionsTable( pUnit )
       local isDisabled  :boolean= IsDisabledByTutorial( unitType, actionHash );
 
       local instance;
-
-			if (operationRow.Index == 53) then
-				local foo = bar;
-			end
 
       -- if unit can build an improvement, show all the buildable improvements for that tile
       if (actionHash == UnitOperationTypes.BUILD_IMPROVEMENT) then
