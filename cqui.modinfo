@@ -2,10 +2,10 @@
 <Mod id="03B8BDDE-DEAD-BEEF-9540-26E685E3156E" version="0.6">
   <!-- Basic Mod Information -->
   <Properties>
-    <Name>Chao's Quick UI</Name>
-    <Teaser>CQUI_TEASER</Teaser>
-    <Description>CQUI_TEASER</Description>
-    <Authors>vans163, chaorace, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek, zeyangl, velit, the-m4a, Frozen-In-Ice, Remolten, bestekov, bolbass, SpaceOgre, cpinter, JHCD, paavohuhtala, Aristos, MarkusKV, apskim</Authors>
+    <Name>CQUI_Community Edition</Name>
+    <Teaser>CQUI_Community Edition</Teaser>
+    <Description>CQUI_Community Edition</Description>
+    <Authors>vans163, chaorace, lordfistas, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek, zeyangl, velit, the-m4a, Frozen-In-Ice, Remolten, bestekov, bolbass, SpaceOgre, cpinter, JHCD, paavohuhtala, Aristos, MarkusKV, apskim</Authors>
     <SpecialThanks>vans163 for his original qui mod.[NEWLINE]astog for his Better Trade Screen mod.[NEWLINE]astog for his More Lenses mod.[NEWLINE]astog for his Better Espionage Screen mod.[NEWLINE]Ace for his Next City Plot mod.[NEWLINE]Divine Yuri for his Custom City Panel mod.[NEWLINE]Greg Miller for his Unit Report Screen mod.[NEWLINE]Lozenged/kblease for his Production Queue mod.[NEWLINE]mironos for his Improved Deal Screen mod.[NEWLINE]HellBlazer for parts of his NQ EUI mod.[NEWLINE]ZhouYzzz for providing the Chinese translation.[NEWLINE]Simone1974 for providing the Italian translation.[NEWLINE]e1ectron for providing the Russian translation.[NEWLINE]sejbr for providing the Polish translation.[NEWLINE]frytom/maxap/JHCD for providing the German translation.[NEWLINE]lctrs for providing a partial French translation.[NEWLINE]wbqd for providing the Korean translation.</SpecialThanks>
     <Stability>CQUI_STABILITY_NIGHTLY</Stability>
   </Properties>
