@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd" Style="FontNormal16" FontStyle="Shadow">
 
+  <Include File="LeaderIcon"/>
+  <Include File="PopupDialog" />
   <!-- Containers for caching instances -->
   <Container ID="IconAndTextContainer" Hidden="1"/>
   <Container ID="TextContainer" Hidden="1"/>
@@ -401,22 +403,12 @@
 
 
 
-  <!-- An instance of the vertical diplomacy ribbon -->
+  <!-- An instance of a diplomacy ribbon leader -->
   <Instance Name="DiplomacyRibbonLeader">
     <Container ID="Root" Size="parent,64">
       <Grid ID="SelectedBackground" Style="DiplomacySelectedLeaderBackgroundGrid" Offset="-5,-2" Size="75,67" />
-      <BoxButton ID="SelectButton" Size="parent,parent" Color="0,0,0,0">
-        <Stack StackGrowth="Right">
-          <Container Size="68,68">
-            <Image Texture="Controls_CircleBacking68" Size="68,68" Anchor="C,C"/>
-            <Image  ID="YouIndicator" Hidden="1" Size="64,62" Texture="Diplomacy_YouIndicator" Anchor="C,C"/>
-            <Image  ID="LeaderIcon" Anchor="C,C" Size="55,55" Texture="Leaders55" />
-            <Image ID="TeamRibbon" Anchor="C,B" Offset="0,-4" Texture="TeamRibbon53" Size="53,53"/>
-            <Button ID="Relationship" StretchMode="None" Style="DiplomacyRelationshipPips" Anchor="L,B" Disabled="1" ConsumeMouse="0"/>
-            <Image ID="CivIndicator" Anchor="L,T" Texture="CircleBacking22" Size="22,22" Offset="0,0" Hidden="1">
-              <Image ID="CivIcon" Anchor="C,C" Texture="CivSymbols22" Size="22,22"/>
-            </Image>
-          </Container>
+       <Stack StackGrowth="Right">
+          <MakeInstance Name="LeaderIcon55"/>
           <Stack StackGrowth="Bottom" Anchor="C,B" Hidden="1">
             <Label ID="Score" Anchor="L,C" Offset="4,0" Style="FontNormal14" Hidden="false" String="0"/>
             <Label ID="GoldPerTurn" Anchor="L,C" Offset="4,0" Style="FontNormal14" ColorSet="ResGoldLabelCS" Hidden="false" String="+0"/>
@@ -424,8 +416,7 @@
               <Stack ID="AvailableResources" StackGrowth="Left" Anchor="C,B"/>
             </Container>
           </Stack>
-        </Stack>
-      </BoxButton>
+       </Stack>
     </Container>
   </Instance>
 
@@ -451,18 +442,6 @@
     </GridButton>
   </Instance>
 
-  <!-- Customized popup dialog pieces-->
-  <Instance						Name="PopupButtonInstance">
-    <GridButton			  ID="Button"									                          Size="160,42"		Style="MainButton" />
-  </Instance>
-  <Instance						Name="PopupTextInstance">
-    <Label						ID="Text"      Anchor="C,T" Style="FontNormal20"  Color="0,0,0,255" WrapWidth="parent-20" />
-  </Instance>
-  <Instance						Name="RowInstance">
-    <Stack					  ID="Row"			Anchor="C,T" StackGrowth="Right" StackWrap="Bottom" StackPadding="10" />
-  </Instance>
-
-
   <!-- Set leader screen offsets on LeaderAnchor in lua -->
   <Container ID="LeaderAnchor" Anchor="L,B" Size="0,0">
     <!-- Fallback texture is set in C++ -->
@@ -477,7 +456,7 @@
   <Image Texture="Controls_Gradient" Color="0,0,0,255" Size="full,180" Anchor="L,B"/>
 
   <!-- Controls for when the local player is overview mode or auction mode. -->
-  <Container ID="OverviewContainer" Size="Full,Full" ConsumeAllMouse="1">
+  <Container ID="OverviewContainer" Size="Full,Full" ConsumeAllMouse="0">
     <AlphaAnim ID="AlphaIn" AlphaBegin="0" AlphaEnd="1" Speed="2" Cycle="Once" Function="Root" Pause=".4">
       <SlideAnim ID="SlideIn" Begin="-200,0" End="0,0" Speed="2" Cycle="Once" Function="Root" Pause=".4">
         <!-- The container for the diplo ribbon instance -->
@@ -505,30 +484,13 @@
 
   <!-- Controls for when the local player is in a diplomacy conversation, the other controls are hidden when these are visible. -->
   <Container ID="ConversationContainer" Size="Full,Full" Hidden="1">
-    <AlphaAnim		ID="Signature_Alpha"					AlphaBegin="0"	AlphaEnd="1"	Speed="2" Function="Root" Cycle="Once" Size="full,full"  >
-      <SlideAnim	ID="Signature_Slide"					Begin="-10,0"		End="0,0"			Speed="2" Function="Root" Cycle="Once" Size="full,full"  >
-        <Stack		ID="SignatureStack" StackGrowth="Left" Offset="10,10" Anchor="R,T">
-          <Container Size="62,62">
-            <Image ID="CivBacking_Base" Texture="Circle44_Base" Size="44,44" Anchor="C,C" Color="49,59,80,255"/>
-            <Image ID="CivBacking_Darker" Texture="Circle44_Darker" Size="44,44" Anchor="C,C" Color="49,59,80,255"/>
-            <Image ID="CivBacking_Lighter" Texture="Circle44_Lighter" Size="44,44" Anchor="C,C" Color="49,59,80,255"/>
-            <Image ID="CivBacking_None" Texture="Circle44_None" Size="44,44" Anchor="C,C"/>
-            <Image ID="CivIcon" Texture="CivSymbols36" Size="36,36" Anchor="C,C"/>
-            <Image Texture="Controls_CircleRim50" Size="50,50" Anchor="C,C" Offset="-1,-1" Color="255,255,255,50"/>
-          </Container>
-          <Stack		StackGrowth="Down" Padding="5" Offset="10,10" Anchor="R,T">
-            <Label	ID="LeaderName"	String="CLEOPATRA"  WrapWidth="400" Align="R" Anchor="R,T" Style="FontBoldFlair18"	SmallCaps="22" FontStyle="glow" Color0="130,130,130,255"	Color1="0,0,0,200"/>
-            <Label	ID="CivName"	  String="EGYPT"      WrapWidth="400" Align="R" Anchor="R,T" Style="FontBoldFlair18"	SmallCaps="22" FontStyle="glow" Color0="130,130,130,255"	Color1="0,0,0,200"/>
-          </Stack>
-        </Stack>
-      </SlideAnim>
-    </AlphaAnim>
-
-
     <AlphaAnim		ID="LeaderResponse_Alpha"			AlphaBegin="0"	AlphaEnd="1"	Speed="2" Function="Root" Cycle="Once" >
       <SlideAnim	ID="LeaderResponse_Slide"			Begin="-10,0"		End="0,0"			Speed="2" Function="Root" Cycle="Once" >
         <Grid			ID="LeaderResponseGrid" Size="650,79" Offset="50,50" Style="DiplomacyWordBubble" AutoSize="V" Color="255,255,255,200">
-          <Label	ID="LeaderResponseText" Anchor="C,C" Align="L,C" String="LOC_DIPLO_GREETING_CLEO" WrapWidth="620" Style="DiplomacyDialogText" />
+          <Stack Anchor="C,C" Size="parent,auto" StackPadding="16">
+            <Label	ID="LeaderResponseText" Anchor="C,C" Align="C,C" String="LOC_DIPLO_GREETING_CLEO" WrapWidth="620" Style="DiplomacyDialogText"/>
+            <Label	ID="LeaderReasonText" Anchor="C,C" Align="C,C" WrapWidth="620" Style="FontNormal18" Color="150,150,150,255"/>
+          </Stack>
         </Grid>
       </SlideAnim>
     </AlphaAnim>
@@ -605,5 +567,8 @@
       </Stack>
     </Container>
   </Instance>
+
+  <!-- Create Popup Dialog -->
+  <MakeInstance Name="PopupDialog"/>
 
 </Context>

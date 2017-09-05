@@ -180,6 +180,7 @@
     <File>Assets/UI/Screens/techtree.lua</File>
     <File>Assets/UI/ToolTips/plottooltip.lua</File>
     <File>Assets/UI/ToolTips/plottooltip.xml</File>
+    <File>Assets/UI/Utilities/extendedrelationship.lua</File>
     <File>Assets/UI/WorldView/citybannermanager.lua</File>
     <File>Assets/UI/WorldView/citybannermanager.xml</File>
     <File>Assets/UI/WorldView/plotinfo.lua</File>
@@ -307,6 +308,7 @@
         <File>Assets/UI/Screens/governmentscreen.xml</File>
         <File>Assets/UI/ToolTips/plottooltip.lua</File>
         <File>Assets/UI/ToolTips/plottooltip.xml</File>
+        <File>Assets/UI/Utilities/extendedrelationship.lua</File>
         <File>Assets/UI/WorldView/citybannermanager.lua</File>
         <File>Assets/UI/WorldView/citybannermanager.xml</File>
         <File>Assets/UI/WorldView/plotinfo.lua</File>

@@ -5,6 +5,7 @@ include("DiplomacyRibbonSupport");
 include("InstanceManager");
 include("TeamSupport");
 include("LeaderIcon");
+include("ExtendedRelationship"); -- Separate Extended Relationship file (code shared)
 
 -- ===========================================================================
 --	CONSTANTS
@@ -23,13 +24,6 @@ local BAR_PADDING			:number	= 50;
 
 local TEAM_RIBBON_SIZE		:number = 53;
 local TEAM_RIBBON_PREFIX	:string = "ICON_TEAM_RIBBON_";
-
-local VALID_RELATIONSHIPS	:table = {
-  "DIPLO_STATE_ALLIED",
-  "DIPLO_STATE_DECLARED_FRIEND",
-  "DIPLO_STATE_DENOUNCED",
-  "DIPLO_STATE_WAR"
-};
 
 -- ===========================================================================
 --	VARIABLES
@@ -158,116 +152,41 @@ function OnLeaderMouseExit()
 end
 
 -- ===========================================================================
-function IsValidRelationship(relationshipType:string)
-  for _:number, tmpType:string in ipairs(VALID_RELATIONSHIPS) do
-    if relationshipType == tmpType then
-      return true;
-    end
-  end
-  return false;
-end
-
--- ===========================================================================
 --	Add a leader (from right to left)
 -- ===========================================================================
 function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean)
   m_leadersMet = m_leadersMet + 1;
 
-  local pPlayer:table = Players[playerID];
   local pPlayerConfig:table = PlayerConfigurations[playerID];
   local isHuman:boolean = pPlayerConfig:IsHuman();
 
   -- Create a new leader instance
-  local instance:table = m_kLeaderIM:GetInstance();
+  local leaderIcon, instance = LeaderIcon:GetInstance(m_kLeaderIM);
   m_uiLeadersByID[playerID] = instance;
 
-  -- Display the civ colors/icon for duplicate civs
-  if(isUniqueLeader == false) then
-    local backColor, frontColor  = UI.GetPlayerColors( playerID );
-    instance.CivIndicator:SetHide(false);
-    instance.CivIndicator:SetColor(backColor);
-    instance.CivIcon:SetColor(frontColor);
-    instance.CivIcon:SetIcon("ICON_"..pPlayerConfig:GetCivilizationTypeName());
-  end
-
-  -- Set leader portrait
-  instance.Portrait:SetIcon(iconName);
-  -- Register the click handler
-  instance.Button:RegisterCallback( Mouse.eLClick, function() OnLeaderClicked(playerID); end );
-  instance.Button:RegisterCallback( Mouse.eRClick, function() OnLeaderRightClicked(playerID); end );
-  instance.Button:RegisterCallback( Mouse.eMouseEnter, function() OnLeaderMouseOver(playerID); end ); --ARISTOS
-  instance.Button:RegisterCallback( Mouse.eMouseExit, function() OnLeaderMouseExit(); end );
-  instance.Button:RegisterCallback( Mouse.eMClick, function() OnLeaderMouseOver(playerID); end ); --ARISTOS
-
-  local bShowRelationshipIcon:boolean = false;
-  local localPlayerID:number = Game.GetLocalPlayer();
-
-  if(playerID == localPlayerID) then
-    instance.YouIndicator:SetHide(false);
-  else
-    -- Set relationship status (for non-local players)
-    local diplomaticAI:table = pPlayer:GetDiplomaticAI();
-    local relationshipStateID:number = diplomaticAI:GetDiplomaticStateIndex(localPlayerID);
-    if relationshipStateID ~= -1 then
-      local relationshipState:table = GameInfo.DiplomaticStates[relationshipStateID];
-      -- Always show relationship icon for AIs, only show player triggered states for humans
-      if not isHuman or IsValidRelationship(relationshipState.StateType) then
-        --!! ARISTOS: to extend relationship tooltip to include diplo modifiers!
-        local extendedRelationshipTooltip:string = Locale.Lookup(relationshipState.Name)
-        .. "[NEWLINE][NEWLINE]" .. RelationshipGet(playerID);
-        -- KWG: This is bad, there is a piece of art that is tied to the order of a database entry.  Please fix!
-        instance.Relationship:SetVisState(relationshipStateID);
-        instance.Relationship:SetToolTipString(extendedRelationshipTooltip);
-        bShowRelationshipIcon = true;
-      end
-    end
-    instance.YouIndicator:SetHide(true);
-  end
+  leaderIcon:UpdateIcon(iconName, playerID, isUniqueLeader);
+  leaderIcon:RegisterCallback(Mouse.eLClick, function() OnLeaderClicked(playerID); end);
+  leaderIcon:RegisterCallback(Mouse.eRClick, function() OnLeaderRightClicked(playerID); end);
+  leaderIcon:RegisterCallback( Mouse.eMouseEnter, function() OnLeaderMouseOver(playerID); end ); --ARISTOS
+  leaderIcon:RegisterCallback( Mouse.eMouseExit, function() OnLeaderMouseExit(); end );
+  leaderIcon:RegisterCallback( Mouse.eMClick, function() OnLeaderMouseOver(playerID); end ); --ARISTOS
 
   -- CQUI: Set score values for DRS display
   instance.CQUI_ScoreOverall:SetText("[ICON_Capital]"..Players[playerID]:GetScore());
   instance.CQUI_ScienceRate:SetText("[ICON_Science]"..Round(Players[playerID]:GetTechs():GetScienceYield(),0));
   instance.CQUI_MilitaryStrength:SetText("[ICON_Strength]"..Players[playerID]:GetStats():GetMilitaryStrength());
 
-  instance.Relationship:SetHide(not bShowRelationshipIcon);
-
   -- Set the tooltip
   if(pPlayerConfig ~= nil) then
     local leaderTypeName:string = pPlayerConfig:GetLeaderTypeName();
     if(leaderTypeName ~= nil) then
-      local leaderDesc:string = pPlayerConfig:GetLeaderName();
-      local civDesc:string = pPlayerConfig:GetCivilizationDescription();
-
-      local civData:string = GetExtendedTooltip(playerID);
-
-      if GameConfiguration.IsAnyMultiplayer() and isHuman then
-        if(playerID ~= localPlayerID and not Players[localPlayerID]:GetDiplomacy():HasMet(playerID)) then
-          instance.Portrait:SetToolTipString(Locale.Lookup("LOC_DIPLOPANEL_UNMET_PLAYER") .. " (" .. pPlayerConfig:GetPlayerName() .. ")");
-        else
-          instance.Portrait:SetToolTipString(Locale.Lookup("LOC_DIPLOMACY_DEAL_PLAYER_PANEL_TITLE", leaderDesc, civDesc) .. " (" .. pPlayerConfig:GetPlayerName() .. ")");
-        end
-      else
-        instance.Portrait:SetToolTipString(Locale.Lookup("LOC_DIPLOMACY_DEAL_PLAYER_PANEL_TITLE", leaderDesc, civDesc)..civData);
+      -- Append GetExtendedTooltip string to the end of the tooltip created by LeaderIcon
+      if (not GameConfiguration.IsAnyMultiplayer() or not isHuman) then
+        local civData:string = GetExtendedTooltip(playerID);
+        local currentTooltipString = instance.Portrait:GetToolTipString();
+        instance.Portrait:SetToolTipString(currentTooltipString..civData);
       end
     end
-  end
-
-  -- Team Ribbon
-  if(playerID == localPlayerID or Players[localPlayerID]:GetDiplomacy():HasMet(playerID)) then
-    -- Show team ribbon for ourselves and civs we've met
-    local teamID:number = pPlayerConfig:GetTeam();
-    if #Teams[teamID] > 1 then
-      local teamRibbonName:string = TEAM_RIBBON_PREFIX .. tostring(teamID);
-      instance.TeamRibbon:SetIcon(teamRibbonName, TEAM_RIBBON_SIZE);
-      instance.TeamRibbon:SetHide(false);
-      instance.TeamRibbon:SetColor(GetTeamColor(teamID));
-    else
-      -- Hide team ribbon if team only contains one player
-      instance.TeamRibbon:SetHide(true);
-    end
-  else
-    -- Hide team ribbon for civs we haven't met
-    instance.TeamRibbon:SetHide(true);
   end
 end
 
@@ -297,59 +216,6 @@ function GetExtendedTooltip(playerID:number)
     ;
 
   return civData;
-end
-
--- Extended Relationship Tooltip creator
--- Aristos and atggta
-function RelationshipGet(nPlayerID :number)
-  local tPlayer :table = Players[nPlayerID];
-  local nLocalPlayerID :number = Game.GetLocalPlayer();
-  local tTooltips :table = tPlayer:GetDiplomaticAI():GetDiplomaticModifiers(nLocalPlayerID);
-
-  if not tTooltips then return ""; end
-
-  local tRelationship :table = {};
-  local nRelationshipSum :number = 0;
-  local sTextColor :string = "";
-
-  for i, tTooltip in ipairs(tTooltips) do
-    local nScore :number = tTooltip.Score;
-    local sText :string = tTooltip.Text;
-
-    if(nScore ~= 0) then
-      if(nScore > 0) then
-        sTextColor = "[COLOR_Civ6Green]";
-      else
-        sTextColor = "[COLOR_Civ6Red]";
-      end
-      table.insert(tRelationship, {nScore, sTextColor .. nScore .. "[ENDCOLOR] - " .. sText .. "[NEWLINE]"});
-      nRelationshipSum = nRelationshipSum + nScore;
-    end
-  end
-
-  table.sort(
-    tRelationship,
-    function(a, b)
-      return a[1] > b[1];
-    end
-  );
-
-  local sRelationshipSum :string = "";
-  local sRelationship :string = "";
-  if(nRelationshipSum >= 0) then
-    sRelationshipSum = "[COLOR_Civ6Green]";
-  else
-    sRelationshipSum = "[COLOR_Civ6Red]";
-  end
-  sRelationshipSum = sRelationshipSum .. nRelationshipSum .. "[ENDCOLOR]"
-  for nKey, tValue in pairs(tRelationship) do
-    sRelationship = sRelationship .. tValue[2];
-  end
-  if sRelationship ~= "" then
-    sRelationship = Locale.Lookup("LOC_DIPLOMACY_INTEL_RELATIONSHIPS") .. " " .. sRelationshipSum .. "[NEWLINE]" .. sRelationship:sub(1, #sRelationship - #"[NEWLINE]");
-  end
-
-  return sRelationship;
 end
 
 -- ===========================================================================
@@ -422,6 +288,7 @@ function RealizeSize( barWidth:number )
   local launchBarWidth = MIN_LEFT_HOOKS;
   local partialScreenBarWidth = RIGHT_HOOKS_INITIAL;
 
+  -- TODO this should somehow be done relative to the other controls
   m_PartialScreenHookBar	= ContextPtr:LookUpControl( "/InGame/PartialScreenHooks/ButtonStack" );
   m_LaunchBar				= ContextPtr:LookUpControl( "/InGame/LaunchBar/ButtonStack" );
 
@@ -457,9 +324,10 @@ function RealizeSize( barWidth:number )
   Controls.LeaderScroll:SetSizeX(size);
   Controls.RibbonContainer:ReprocessAnchoring();
   Controls.RibbonContainer:SetOffsetX(partialScreenBarWidth);
+  Controls.LeaderBGClip:CalculateSize();
+  Controls.LeaderBGClip:ReprocessAnchoring();
   Controls.LeaderScroll:CalculateSize();
   Controls.LeaderScroll:ReprocessAnchoring();
-  Controls.LeaderBG:ReprocessAnchoring();
   RealizeScroll();
 end
 
