@@ -165,6 +165,7 @@ function CQUI_ShowPath(unitID)
     if (unit ~= nil) then
       if (GameInfo.Units[unit:GetUnitType()].UnitType ~= "UNIT_TRADER") then --Since this hijacks the trade layer, be sure to NOT touch it when the game actually needs the trade layer!
           local dest = UnitManager.GetQueuedDestination(unit);
+          if (dest == nil) then return; end
           local pathPlots, turnsToReach, _ = UnitManager.GetMoveToPath(unit, dest); --pathPlots holds the tileIDs for each tile in the path in order. turnsToReach describes how many turns it takes to reach each given tile, also in order
           local last = 1; --The number of turns it takes to reach the last given tile
           for i,v in pairs(turnsToReach) do --Show numbers, but only once for each turn incrememnt

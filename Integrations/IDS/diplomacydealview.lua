@@ -23,7 +23,7 @@ local ms_LeftRightListIM	:table		= InstanceManager:new( "LeftRightList",  "List"
 local ms_TopDownListIM		:table		= InstanceManager:new( "TopDownList",  "List", Controls.TopDownListContainer );
 local ms_AgreementOptionIM	:table		= InstanceManager:new( "AgreementOptionInstance",  "AgreementOptionButton", Controls.ValueEditStack );
 
-local ms_DealAgreementTypesResearchAgreement = nil; -- AZURENCY : hold the type of a research agreement (see hack line 1837)
+local ms_DealAgreementTypesResearchAgreement = nil; -- AZURENCY : hold the type of a research agreement (see hack line 1824)
 
 local ms_ValueEditDealItemID = -1;		-- The ID of the deal item that is being value edited.
 local ms_ValueEditDealItemControlTable = nil; -- The control table of the deal item that is being edited.
@@ -909,7 +909,7 @@ function ReAttachValueEdit()
         end
 
       end
-    end			
+    end
 
     rootControl:ReprocessAnchoring();
   end
@@ -1424,7 +1424,7 @@ function OnClickAvailableAgreement(player, agreementType, agreementTurns)
 		if (pDealItem == nil) then
       -- No
       -- AZURENCY : Joint War and Research Agreements need special treatment (can be only modified on the player side)
-      -- AZURENCY : Bug ? RESEARCH_AGREEMENT is not in DealAgreementTypes (see hack line 1839)
+      -- AZURENCY : Bug ? RESEARCH_AGREEMENT is not in DealAgreementTypes (see hack line 1824)
 			--if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.RESEARCH_AGREEMENT) then
 			if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == ms_DealAgreementTypesResearchAgreement) then
         pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, ms_LocalPlayer:GetID());
