@@ -7,8 +7,8 @@
     </Replace>
 
 	<!-- IDS -->
-	<Replace Tag="LOC_IDS_DEAL_TERMS" Language="de_DE">
-      <Text>Termin umowy</Text>
+	<Replace Tag="LOC_IDS_DEAL_TERMS" Language="pl_PL">
+      <Text>Warunki umowy</Text>
     </Replace>
 	
     <!-- MESSAGES -->

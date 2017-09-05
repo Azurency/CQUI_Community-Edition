@@ -7,7 +7,7 @@
     </Replace>
 
 	<!-- IDS -->
-	<Replace Tag="LOC_IDS_DEAL_TERMS" Language="de_DE">
+	<Replace Tag="LOC_IDS_DEAL_TERMS" Language="es_ES">
       <Text>Término del reparto</Text>
     </Replace>
 	
