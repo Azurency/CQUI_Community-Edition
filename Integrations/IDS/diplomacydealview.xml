@@ -186,7 +186,7 @@
           <Container ID="OfferArea" Size="560,parent" >
             <Image Size="parent,parent" Texture="Controls_BannerWideTint" Color="80,80,80,255">
               <Stack ID="OfferAreaStack" Anchor="C,T" Size="560,parent" Offset="0,30" StackGrowth="Bottom">
-                <Label ID="DealTermsLabel" String="DEAL TERMS" Anchor="C,T" Style="FontBoldFlair26" FontStyle="glow" Color0="GoldMetalDark"  Color1="0,0,0,200"/>
+                <Label ID="DealTermsLabel" String="LOC_IDS_DEAL_TERMS" Anchor="C,T" Style="FontBoldFlair26" FontStyle="glow" Color0="GoldMetalDark"  Color1="0,0,0,200"/>
                 <Container Size="parent,60" Anchor="C,T" Offset="0,20">
                     <!-- Dynamic: Button Area - where we accept the deal-->
                     <Stack ID="DealOptionsStack" StackGrowth="Right" Padding="5" Anchor="C,C">

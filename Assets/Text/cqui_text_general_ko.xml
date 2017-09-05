@@ -6,6 +6,11 @@
       <Text>CQUI</Text>
     </Replace>
 
+	<!-- IDS -->
+	<Replace Tag="LOC_IDS_DEAL_TERMS" Language="de_DE">
+      <Text>거래 기간</Text>
+    </Replace>
+	
     <!-- MESSAGES -->
     <Replace Tag="LOC_CQUI_CIVIC_MESSAGE_S" Language="ko_KR">
       <Text>현재 연구 중인 사회 제도인</Text>
