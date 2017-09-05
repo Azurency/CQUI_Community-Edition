@@ -1,10 +1,4 @@
-
-[![Gitter IRC URL](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/Civ6-CQUI/Help)
-[![Twitter URL](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/realchaorace)
-
-# Civilization 6 - Chao's Quick UI
-
-## The below featurelist and screenshots are outdated! Expect this page to get updated with the next release
+# Civilization 6 - Chao's Quick UI - Community Edition
 
 # Features:
 
@@ -84,6 +78,20 @@
 * [Right clicking the action panel (bottom right button) instantly ends turn](https://gfycat.com/PeacefulSpanishAfricanwildcat) even when things like production/research/unit moves have not been decided
 * Production/Worker recommendations removed
 
+### Improved Deal Screen
+
+* A totally revamped diplomatic deals screen, with an improved and expanded layout, easier to read and navigate offer area, color-coded icons, and more in-depth information.
+
+![](https://i.imgur.com/C0qSacy.jpg)
+
+* City details -- such as population, and food, production and science yields -- are displayed right on the city buttons for easy reference
+
+![](https://i.imgur.com/mSiRY2w.jpg)
+
+* Resource icons have been color-coded and custom sorted
+
+![](https://i.imgur.com/PytRc3E.jpg)
+
 ### Better Trade Screen Features:
 
 * Overhauled trade menus
@@ -115,46 +123,12 @@
 
 ![](http://i.imgur.com/0zAy8gF.png)
 
-## Video (Outdated)
 
-[Version v0.5](https://youtu.be/VY1-1DxWmm8) (Credit ZeusMoltar9)
-
-# How to use
-* Download the latest release from
-https://github.com/chaorace/cqui/releases/
-
-* Find your DLC folder:
-
-  Windows:
-```
-C:\Program Files (x86)\Steam\steamapps\common\Sid Meier's Civilization VI\DLC
-```
-  OSX:
-```
-Library/Application Support/Steam/steamapps/common/Civilization VI
-```
-  ... and then right click, "Show Package Contents", then navigate to...
-```
-Contents/Assets/DLC
-```
-
-* Extract the "cqui" folder to the DLC folder
-
-* In-Game: Enable the mod in the "Additional Content" menu
-
-* Start a new game (existing games cannot have new mods added to them!)
-
-* Visit https://github.com/chaorace/cqui occasionally or follow https://twitter.com/realchaorace to be the first to know about new releases and feature additions!
-
-* NOTE: Until this mod is in a less experimental state, the mod will not remember its "enabled" status after restarting the game. This means that every time you plan to start a new game using CQUI, you'll need to explicitly enable it in the "Additional Content" menu first. Once you've created the game using the mod, it will always load when you start the save, regardless of its current status in the "Additional Content Menu"
-
-### KNOWN ISSUES / SUPPORT:
-
-Please see the [issue tracker](https://github.com/chaorace/cqui/issues) for an up to date list, you can also find help and report bugs at our [Gitter](https://gitter.im/Civ6-CQUI/Help)
+Go see the [issue tracker](https://github.com/chaorace/cqui/issues) for an up to date list, you can also find help and report bugs at our [Gitter](https://gitter.im/Civ6-CQUI/Help)
 
 ### How to contribute
 
-Those looking to contribute to CQUI should visit [the CQUI repo](https://github.com/chaorace/cqui). Those new to using Github should visit the [contributor guide](https://github.com/chaorace/cqui/wiki/How-to-contribute-to-CQUI). ALL new contributors should visit the [style guidelines](https://github.com/chaorace/cqui/wiki/Style-Guideline). All good work is accepted, so long as it falls under the scope of the project and adheres to the styleguide. Contributors are always credited for their work! Those looking for a goal to get started on may want to visit the [issue tracker](https://github.com/chaorace/cqui/issues) for the current list of bugs and feature requests, it's growing every day!
+Those looking to contribute to CQUI - Community Edition should visit [the CQUI - Community Edition repo](https://github.com/sparrow8332/CQUI_Community-Edition). 
 
 # THANKS:
 * @Vans163 for his original QUI mod :heart:
