@@ -8,7 +8,10 @@
 
 	<!-- IDS -->
 	<Replace Tag="LOC_IDS_DEAL_TERMS" Language="de_DE">
-      <Text>Deal Term</Text>
+      <Text>Deal-Konditionen</Text>
+    </Replace>
+	<Replace Tag="LOC_IDS_DEAL_CEDE" Language="de_DE">
+      <Text>Cede</Text>
     </Replace>
 	
     <!-- MESSAGES -->
