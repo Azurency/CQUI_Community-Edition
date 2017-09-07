@@ -120,28 +120,43 @@ function CQUI_WonderModeEnabled()
   UILens.ToggleLayerOff(LensLayers.CITIZEN_MANAGEMENT);
 end
 
+-- AZURENCY : CQUI_CityviewDisableManager() call an unwanted UI.SetInterfaceMode(InterfaceModeTypes.SELECTION), this does not
+function CQUI_HideCityInterface()
+  CQUI_cityview = false;
+  CQUI_wonderMode = false;
+  LuaEvents.CQUI_ProductionPanel_CityviewDisable();
+  Close();
+  UILens.ToggleLayerOff(LensLayers.PURCHASE_PLOT);
+  UILens.ToggleLayerOff(LensLayers.CITIZEN_MANAGEMENT);
+  UI.SetFixedTiltMode(false);
+  LuaEvents.CQUI_CityPanelOverview_CityviewDisable();
+  LuaEvents.CQUI_WorldInput_CityviewDisable();
+  CQUI_ClearGrowthTile(); -- AZURENCY : added the clear ClearGrowthTile() because why might not deselect the city but still want it hidden
+end
+
 LuaEvents.CQUI_CityPanel_CityviewEnable.Add( CQUI_OnCityviewEnabled);
 LuaEvents.CQUI_CityPanel_CityviewDisable.Add( CQUI_OnCityviewDisabled);
-LuaEvents.CQUI_CityviewDisable.Add( CQUI_CityviewDisableManager);
+LuaEvents.CQUI_CityviewDisable.Add( CQUI_CityviewDisableManager); -- AZURENCY : still used ?
 LuaEvents.CQUI_CityviewEnable.Add( CQUI_CityviewEnableManager);
+LuaEvents.CQUI_CityviewHide.Add(CQUI_HideCityInterface);
 LuaEvents.CQUI_Strike_Enter.Add (function() CQUI_usingStrikeButton = true; end)
 LuaEvents.CQUI_Strike_Exit.Add (function() CQUI_usingStrikeButton = false; end)
 
 function CQUI_OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
-  if(eOldMode == InterfaceModeTypes.CITY_MANAGEMENT or eOldMode == InterfaceModeTypes.DISTRICT_PLACEMENT or eOldMode == InterfaceModeTypes.BUILDING_PLACEMENT) then
+  if(eNewMode == InterfaceModeTypes.CITY_MANAGEMENT) then
+    LuaEvents.CQUI_CityviewEnable(); -- AZURENCY : always show the cityview if new mode is CITY_MANAGEMENT
+  elseif(eNewMode == InterfaceModeTypes.CITY_RANGE_ATTACK) then
+    LuaEvents.CQUI_CityviewHide(); -- AZURENCY : always hide the cityview if new mode is CITY_RANGE_ATTACK
+  elseif(eOldMode == InterfaceModeTypes.CITY_MANAGEMENT or eOldMode == InterfaceModeTypes.DISTRICT_PLACEMENT or eOldMode == InterfaceModeTypes.BUILDING_PLACEMENT) then
     if(eNewMode == InterfaceModeTypes.DISTRICT_PLACEMENT or eNewMode == InterfaceModeTypes.BUILDING_PLACEMENT) then
       CQUI_WonderModeEnabled();
     elseif(eNewMode ~= InterfaceModeTypes.CITY_MANAGEMENT) then
       if(CQUI_wonderMode) then
         LuaEvents.CQUI_CityviewEnable();
       else
-        LuaEvents.CQUI_CityviewDisable();
+        LuaEvents.CQUI_CityviewHide();
       end
-    else
-      LuaEvents.CQUI_CityviewEnable();
     end
-  elseif(eOldMode == InterfaceModeTypes.CITY_RANGE_ATTACK) then
-    UI.DeselectAllCities()
   end
 end
 
@@ -173,6 +188,8 @@ function CQUI_OnCitySelectionChanged( ownerPlayerID:number, cityID:number, i:num
       end
       if (CQUI_usingStrikeButton) then
         shouldSwitchToCityview = false;
+        -- AZURENCY : Set the strike mode back to the default value
+        CQUI_usingStrikeButton = false;
       end
       if shouldSwitchToCityview then
         LuaEvents.CQUI_CityviewEnable();

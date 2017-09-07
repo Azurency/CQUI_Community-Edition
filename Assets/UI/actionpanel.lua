@@ -77,6 +77,8 @@ local needArtifactPlayerString    :string = Locale.Lookup("LOC_ACTION_PANEL_CHOO
 local needArtifactPlayerTip     :string = Locale.Lookup("LOC_ACTION_PANEL_CHOOSE_ARTIFACT_PLAYER_TOOLTIP");
 local cityRangedAttackString    :string = Locale.Lookup("LOC_ACTION_PANEL_CITY_RANGED_ATTACK");
 local cityRangedAttackTip     :string = Locale.Lookup("LOC_ACTION_PANEL_CITY_RANGED_ATTACK_TOOLTIP");
+local encampmentRangedAttackString    :string = Locale.Lookup("LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK");
+local encampmentRangedAttackTip     :string = Locale.Lookup("LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK_TOOLTIP");
 local yourTurnToolStr       :string = Locale.Lookup("LOC_KEY_YOUR_TURN_TIME_TOOLTIP");
 local estTilTurnToolStr       :string = Locale.Lookup("LOC_KEY_ESTIMATED_TIME_TIL_YOUR_TURN_TIME_TOOLTIP");
 local estTimeElapsedToolStr     :string = Locale.Lookup("LOC_KEY_ESTIMATED_TIME_ELAPSED_TOOLTIP");
@@ -194,6 +196,13 @@ function OnRefresh()
     message     = cityRangedAttackString;
 		icon            = "ICON_NOTIFICATION_CITY_RANGE_ATTACK";
     toolTipString = cityRangedAttackTip;
+    iFlashingState  = FLASHING_END_TURN;
+  elseif (CQUI_CheckEncampmentRangeAttackState()) then
+    -- Special "Encampment Ranged Attack" state for when there are no end turn blockers but
+    -- there is a Encampment can that perform a ranged attack.
+    message     = encampmentRangedAttackString;
+    icon            = "ICON_NOTIFICATION_CITY_RANGE_ATTACK";
+    toolTipString = encampmentRangedAttackTip;
     iFlashingState  = FLASHING_END_TURN;
   else
     message     = nextTurnString;
@@ -426,6 +435,40 @@ function CheckCityRangeAttackState()
 end
 
 -- ===========================================================================
+function CQUI_CheckEncampmentRangeAttackState()
+  local pPlayer = Players[Game.GetLocalPlayer()];
+  if (pPlayer == nil) then
+    return false;
+  end
+
+  if(not HaveCityRangeAttackStateEnabled()) then
+    return false;
+  end
+
+  for i, district in pPlayer:GetDistricts():Members() do
+    if CityManager.CanStartCommand(district, CityCommandTypes.RANGE_ATTACK) then
+      return true;
+    end
+  end
+  return false;
+end
+
+-- ===========================================================================
+function CQUI_GetFirstRangedAttackEncampment()
+  local pPlayer = Players[Game.GetLocalPlayer()];
+  if (pPlayer == nil) then
+    return nil;
+  end
+
+  for i, district in pPlayer:GetDistricts():Members() do
+    if CityManager.CanStartCommand(district, CityCommandTypes.RANGE_ATTACK) then
+      return district;
+    end
+  end
+  return nil;
+end
+
+-- ===========================================================================
 --  Get the number notifications that are the same type as the currently active blocker
 -- ===========================================================================
 function GetNumNotificationsOfActiveBlocker()
@@ -466,7 +509,7 @@ function CheckAutoEndTurn( eCurrentEndTurnBlockingType:number )
     if eCurrentEndTurnBlockingType == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING
       and (UserConfiguration.IsAutoEndTurn() and not UI.SkipNextAutoEndTurn())
       -- In tactical phases, all units must have orders or used up their movement points.
-			and (not CheckUnitsHaveMovesState() and not CheckCityRangeAttackState()) then 
+			and (not CheckUnitsHaveMovesState() and not CheckCityRangeAttackState() and not CQUI_CheckEncampmentRangeAttackState()) then 
         if not UI.CanEndTurn() then
           error("CheckAutoEndTurn thinks that we can't end turn, but the notification system disagrees");
         end
@@ -498,7 +541,7 @@ function DoEndTurn( optionalNewBlocker:number )
   end
 
   -- If not in selection mode; reset mode before performing the action.
-  if UI.GetInterfaceMode() ~= InterfaceModeTypes.SELECTION then
+  if UI.GetInterfaceMode() ~= InterfaceModeTypes.SELECTION and UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK then
     UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
   end
 
@@ -516,11 +559,20 @@ function DoEndTurn( optionalNewBlocker:number )
     elseif(CheckCityRangeAttackState()) then
       local attackCity = pPlayer:GetCities():GetFirstRangedAttackCity();
       if(attackCity ~= nil) then
-          UI.SelectCity(attackCity);
+          LuaEvents.CQUI_Strike_Enter();
+          LuaEvents.CQUI_CityRangeStrike(Game.GetLocalPlayer(), attackCity:GetID());
       else
         error( "Unable to find selectable attack city while in CheckCityRangeAttackState()" );
       end
+    elseif(CQUI_CheckEncampmentRangeAttackState()) then
+      local attackEncampment = CQUI_GetFirstRangedAttackEncampment();
+      if(attackEncampment ~= nil) then
+        UI.LookAtPlot(attackEncampment:GetX(), attackEncampment:GetY());
+        LuaEvents.CQUI_DistrictRangeStrike(Game.GetLocalPlayer(), attackEncampment:GetID());
       else
+        error( "Unable to find selectable attack encampment while in CQUI_CheckEncampmentRangeAttackState()" );
+      end
+    else
       UI.RequestAction(ActionTypes.ACTION_ENDTURN);
       UI.PlaySound("Stop_Unit_Movement_Master");
     end

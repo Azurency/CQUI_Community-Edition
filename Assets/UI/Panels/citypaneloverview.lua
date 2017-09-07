@@ -932,7 +932,7 @@ function OnShowOverviewPanel( isShowing: boolean )
     UI.PlaySound("UI_CityPanel_Open");
   else
     local offsetx = Controls.OverviewSlide:GetOffsetX();
-    if(offsetx == 0) then
+    if(offsetx == 0 and not Controls.OverviewSlide:IsReversing()) then
       Controls.OverviewSlide:Reverse();
     end
   end

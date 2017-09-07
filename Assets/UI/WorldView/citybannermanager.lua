@@ -528,8 +528,6 @@ function CityBanner.Initialize( self : CityBanner, playerID: number, cityID : nu
     if (bannerStyle == BANNERSTYLE_LOCAL_TEAM) then
       if (playerID == Game.GetLocalPlayer()) then
         self.m_Instance.CityRangeStrikeButton:RegisterCallback( Mouse.eLClick, OnCityRangeStrikeButtonClick );
-        self.m_Instance.CityRangeStrikeButton:RegisterCallback( Mouse.eMouseEnter, function() LuaEvents.CQUI_Strike_Enter(); end );
-        self.m_Instance.CityRangeStrikeButton:RegisterCallback( Mouse.eMouseExit, function() LuaEvents.CQUI_Strike_Exit(); end );
         self.m_Instance.CityRangeStrikeButton:SetVoid1(playerID);
         self.m_Instance.CityRangeStrikeButton:SetVoid2(cityID);
         self.m_Instance.CityProduction:RegisterCallback( Mouse.eLClick, OnProductionClick );
@@ -1353,6 +1351,7 @@ function OnCityBannerClick( playerID:number, cityID:number )
       or localPlayerID == PlayerTypes.NONE
       or pPlayer:GetDiplomacy():HasMet(localPlayerID)) then
 
+    LuaEvents.CQUI_CityviewDisable(); -- Make sure the cityview is disable
     local pPlayerConfig :table    = PlayerConfigurations[playerID];
     local isMinorCiv  :boolean  = pPlayerConfig:GetCivilizationLevelTypeID() ~= CivilizationLevelTypes.CIVILIZATION_LEVEL_FULL_CIV;
     --print("clicked player " .. playerID .. " city.  IsMinor?: ",isMinorCiv);
@@ -2214,12 +2213,19 @@ function OnCityRangeStrikeButtonClick( playerID, cityID )
   if (pCity == nil) then
     return;
   end;
+  -- AZURENCY : Allow to switch between different city range attack (clicking on the range button of one 
+  -- city and after on the range button of another city, without having to ESC or right click) 
+  UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+  -- AZURENCY : Enter the range city mode on click (not on hover of a button, the old workaround)
+  LuaEvents.CQUI_Strike_Enter();
   --ARISTOS: fix for the range strike not showing odds window
   UI.DeselectAll();
   UI.SelectCity( pCity );
   UI.SetInterfaceMode(InterfaceModeTypes.CITY_RANGE_ATTACK);
 
 end
+
+LuaEvents.CQUI_CityRangeStrike.Add( OnCityRangeStrikeButtonClick ); -- AZURENCY : to acces it in the actionpannel on the city range attack button
 
 -- ===========================================================================
 function OnDistrictRangeStrikeButtonClick( playerID, districtID )
@@ -2237,6 +2243,9 @@ function OnDistrictRangeStrikeButtonClick( playerID, districtID )
   UI.SelectDistrict(pDistrict);
   UI.SetInterfaceMode(InterfaceModeTypes.DISTRICT_RANGE_ATTACK);
 end
+
+LuaEvents.CQUI_DistrictRangeStrike.Add( OnDistrictRangeStrikeButtonClick ); -- AZURENCY : to acces it in the actionpannel on the district range attack button
+
 
 -- ===========================================================================
 function OnICBMStrikeButtonClick( iPlotID, eWMD )
