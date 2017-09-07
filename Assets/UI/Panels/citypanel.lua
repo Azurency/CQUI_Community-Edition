@@ -136,7 +136,7 @@ end
 
 LuaEvents.CQUI_CityPanel_CityviewEnable.Add( CQUI_OnCityviewEnabled);
 LuaEvents.CQUI_CityPanel_CityviewDisable.Add( CQUI_OnCityviewDisabled);
-LuaEvents.CQUI_CityviewDisable.Add( CQUI_CityviewDisableManager); -- AZURENCY : still used ?
+LuaEvents.CQUI_CityviewDisable.Add( CQUI_CityviewDisableManager);
 LuaEvents.CQUI_CityviewEnable.Add( CQUI_CityviewEnableManager);
 LuaEvents.CQUI_CityviewHide.Add(CQUI_HideCityInterface);
 LuaEvents.CQUI_Strike_Enter.Add (function() CQUI_usingStrikeButton = true; end)
@@ -145,7 +145,7 @@ LuaEvents.CQUI_Strike_Exit.Add (function() CQUI_usingStrikeButton = false; end)
 function CQUI_OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
   if(eNewMode == InterfaceModeTypes.CITY_MANAGEMENT) then
     LuaEvents.CQUI_CityviewEnable(); -- AZURENCY : always show the cityview if new mode is CITY_MANAGEMENT
-  elseif(eNewMode == InterfaceModeTypes.CITY_RANGE_ATTACK) then
+  elseif(eNewMode == InterfaceModeTypes.CITY_RANGE_ATTACK or CQUI_usingStrikeButton) then
     LuaEvents.CQUI_CityviewHide(); -- AZURENCY : always hide the cityview if new mode is CITY_RANGE_ATTACK
   elseif(eOldMode == InterfaceModeTypes.CITY_MANAGEMENT or eOldMode == InterfaceModeTypes.DISTRICT_PLACEMENT or eOldMode == InterfaceModeTypes.BUILDING_PLACEMENT) then
     if(eNewMode == InterfaceModeTypes.DISTRICT_PLACEMENT or eNewMode == InterfaceModeTypes.BUILDING_PLACEMENT) then
@@ -154,9 +154,11 @@ function CQUI_OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
       if(CQUI_wonderMode) then
         LuaEvents.CQUI_CityviewEnable();
       else
-        LuaEvents.CQUI_CityviewHide();
+        LuaEvents.CQUI_CityviewDisable();
       end
     end
+  elseif(eOldMode == InterfaceModeTypes.CITY_RANGE_ATTACK) then
+    UI.DeselectAllCities();
   end
 end
 

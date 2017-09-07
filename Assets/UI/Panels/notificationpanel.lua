@@ -1144,7 +1144,8 @@ function OnCityRangeAttack( notificationEntry : NotificationType )
 		if pPlayer ~= nil then
 			local attackCity = pPlayer:GetCities():GetFirstRangedAttackCity();
 			if(attackCity ~= nil) then
-				UI.SelectCity(attackCity);
+				LuaEvents.CQUI_Strike_Enter();
+        LuaEvents.CQUI_CityRangeStrike(Game.GetLocalPlayer(), attackCity:GetID());
 			else
 				error( "Unable to find selectable attack city while in OnCityRangeAttack()" );
 			end

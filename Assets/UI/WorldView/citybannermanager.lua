@@ -2213,11 +2213,11 @@ function OnCityRangeStrikeButtonClick( playerID, cityID )
   if (pCity == nil) then
     return;
   end;
+  -- AZURENCY : Enter the range city mode on click (not on hover of a button, the old workaround)
+  LuaEvents.CQUI_Strike_Enter();
   -- AZURENCY : Allow to switch between different city range attack (clicking on the range button of one 
   -- city and after on the range button of another city, without having to ESC or right click) 
   UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-  -- AZURENCY : Enter the range city mode on click (not on hover of a button, the old workaround)
-  LuaEvents.CQUI_Strike_Enter();
   --ARISTOS: fix for the range strike not showing odds window
   UI.DeselectAll();
   UI.SelectCity( pCity );

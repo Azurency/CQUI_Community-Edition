@@ -55,21 +55,26 @@ DefaultMessageHandler[KeyEvents.KeyUp] =
 
     local uiKey = pInputStruct:GetKey();
 
-        if( uiKey == Keys.VK_ESCAPE ) then
+    if( uiKey == Keys.VK_ESCAPE ) then
+      -- AZURENCY : if a unit or a city is selected, deselect and reset interface mode
+      -- instead of showing the option menu immediatly
+      if (UI.GetHeadSelectedCity() or UI.GetHeadSelectedUnit()) then
+        UI.DeselectAll();
+        UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+        return true;
+      end
       if( Controls.TopOptionsMenu:IsHidden() ) then
         OpenInGameOptionsMenu();
         return true;
       end
       return false;	-- Already open, let it handle it.
-
-        elseif( uiKey == Keys.B and pInputStruct:IsShiftDown() and pInputStruct:IsAltDown() and (not UI.IsFinalRelease()) ) then
+    elseif( uiKey == Keys.B and pInputStruct:IsShiftDown() and pInputStruct:IsAltDown() and (not UI.IsFinalRelease()) ) then
       -- DEBUG: Force unhiding
       local msg:string =  "***PLAYER Force Bulk unhiding SHIFT+ALT+B ***";
       UI.DataError(msg);
       m_bulkHideTracker = 1;
       BulkHide(false, msg);
-
-        elseif( uiKey == Keys.J and pInputStruct:IsShiftDown() and pInputStruct:IsAltDown() and (not UI.IsFinalRelease()) ) then
+    elseif( uiKey == Keys.J and pInputStruct:IsShiftDown() and pInputStruct:IsAltDown() and (not UI.IsFinalRelease()) ) then
       if m_bulkHideTracker < 1 then
         BulkHide(true,  "Forced" );
       else
