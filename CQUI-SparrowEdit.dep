@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <AssetObjects::GameDependencyData>
   <ID>
-    <name text="Chao's Quick UI" />
-    <id text="4ffb3526-42c7-4b36-818c-f889d49aec76" />
+    <name text="CQUI Sparrow Edition" />
+    <id text="2603aabf-97f2-4c02-8274-2f6e8f0583a4" />
   </ID>
   <SystemDependencies>
     <Element>
