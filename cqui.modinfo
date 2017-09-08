@@ -11,8 +11,10 @@
   </Properties>
   <Dependencies />
   <References />
-  <!--Incompatible mods.-->
+  <!--Incompatible mods.-->  
   <Blocks>
+    <!-- FinalFreak16's Simplified Gossip mod: Integrated already, doubling up on installed mods is bad! -->
+    <Mod id="9e9923e5-6842-4e7d-97e7-c9a56a85cf03" title="Simplified Gossip" />
     <!-- Divine Yuri's Citypanel mod: Integrated already, doubling up on installed mods is bad! -->
     <Mod id="37b5fdca-2690-96ff-ea23-d8612ae7a757" title="Divine Yuri's Custom City Panel" />
     <!-- Next City Plot: Integrated already, doubling up on installed mods is bad! -->
@@ -97,6 +99,7 @@
 
   <!-- Complete File Manifest -->
   <Files>
+    <File>Assets/Text/Gossip_Text.xml</File>
     <File>cqui.dep</File>
     <File>Assets/cqui_databaseschema.sql</File>
     <File>Assets/cqui_settings.sql</File>
@@ -318,6 +321,7 @@
     <!-- CQUI specific LOCs  -->
     <LocalizedText id="CQUI_TEXT">
       <Items>
+	    <File>Assets/Text/Gossip_Text.xml</File>
         <File>Assets/Text/cqui_text_general.xml</File>
         <File>Assets/Text/cqui_text_general_de.xml</File>
         <File>Assets/Text/cqui_text_general_fr.xml</File>
@@ -372,7 +376,7 @@
         <File>cqui.dep</File>
       </Items>
     </ModArt>
-
+    
     <!-- Mod integrations -->
     <LocalizedText id="BTS_TEXT">
       <Items>

@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by Ed Beach (Firaxis Games) -->
+<GameData>
+	<LocalizedText>
+		<!-- Replace Gossip Source Text -->
+		<Replace Tag="LOC_GOSSIP_SOURCE_TRAIT" Language="en_US">
+			<Text></Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SOURCE_SPY" Language="en_US">
+			<Text></Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SOURCE_RUMOR" Language="en_US">
+			<Text></Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SOURCE_TECH" Language="en_US">
+			<Text></Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SOURCE_TRADER" Language="en_US">
+			<Text></Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SOURCE_DELEGATE" Language="en_US">
+			<Text></Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SOURCE_ALLY" Language="en_US">
+			<Text></Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SOURCE_GREAT_PERSON_JOURNALISM" Language="en_US">
+			<Text></Text>
+		</Replace>
+		<!-- Replace Gossip Text -->
+		<Replace Tag="LOC_GOSSIP_AGENDA_KUDOS" Language="en_US">
+			<Text>[ICON_Declare_friendship] {1_LeaderName} thanked {2_Leadername} for cooperating with agenda: {3_AgendaName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_AGENDA_WARNING" Language="en_US">
+			<Text>[ICON_Denounce] {1_LeaderName} warned {2_Leadername} for interfering with agenda: {3_AgendaName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_ALLIED" Language="en_US">
+			<Text>[ICON_Alliance] {1_CivName} formed an alliance with {2_CivName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_ARTIFACT_EXTRACTED" Language="en_US">
+			<Text>[ICON_Greatwork_relic] {1_CivName} excavated a relic: {2_GreatWork}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_BARBARIAN_INVASION_STARTED" Language="en_US">
+			<Text>[ICON_Barbarian] {1_CivName} is facing a barbarian invasion at {2_CityName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_BARBARIAN_RAID_STARTED" Language="en_US">
+			<Text>[ICON_Barbarian] {1_CivName} is facing a barbarian raid at {2_CityName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_BEACH_RESORT_CREATED" Language="en_US">
+			<Text>[ICON_Production] {1_CivName} built a seaside resort outside {2_CityName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_CHANGE_GOVERNMENT" Language="en_US">
+			<Text>[ICON_Government] {1_CivName} switched governments to {2_Government}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_CITY_BESIEGED" Language="en_US">
+			<Text>[ICON_Razed] {1_CityName} is facing a siege.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_CITY_LIBERATED" Language="en_US">
+			<Text>[ICON_Buildings] {1_CivName} liberated {2_CityName} and returned it to {3_CivName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_CITY_RAZED" Language="en_US">
+			<Text>[ICON_Razed] {1_CivName} razed a city founded by {2_CivName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_CLEAR_CAMP" Language="en_US">
+			<Text>[ICON_Barbarian] {1_CivName} used {LOC_GRAMMAR_A_AN &lt;&lt; {2_UnitName}} to clear {LOC_GRAMMAR_A_AN &lt;&lt; {3_ImprovementName}}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_CITY_STATE_INFLUENCE" Language="en_US">
+			<Text>[ICON_Envoy] {1_CivName} sent an Envoy to {2_CityState}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_CONQUER_CITY" Language="en_US">
+			<Text>[ICON_Razed] {1_CivName} conquered {2_CityName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_CONSTRUCT_BUILDING" Language="en_US">
+			<Text>[ICON_Production] {1_CivName} built {LOC_GRAMMAR_A_AN &lt;&lt; {2_BuildingName}} in {3_CityName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_CONSTRUCT_DISTRICT" Language="en_US">
+			<Text>[ICON_Production] {1_CivName} built {LOC_GRAMMAR_A_AN &lt;&lt; {2_DistrictName}} in {3_CityName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_CREATE_PANTHEON" Language="en_US">
+			<Text>[ICON_Religion] {1_CivName} is worshipping a Pantheon focused on the {2_BeliefName} Belief.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_CULTURVATE_CIVIC" Language="en_US">
+			<Text>[ICON_Culture] {1_CivName} completed development of {2_CivicName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_DECLARED_FRIENDSHIP" Language="en_US">
+			<Text>[ICON_Declare_friendship] {1_CivName} is now friends with {2_CivName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_DELEGATION" Language="en_US">
+			<Text>[ICON_Envoy] {1_CivName} received a foreign delegation from {2_CivName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_DENOUNCED" Language="en_US">
+			<Text>[ICON_Denounce] {1_CivName} denounced {2_CivName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_EMBASSY" Language="en_US">
+			<Text>[ICON_Resident_embassy] New embassy established in {1_CivName} from {2_CivName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_ERA_CHANGED" Language="en_US">
+			<Text>[ICON_Capitallarge] {1_CivName} progressed to the {3_NewEra}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_FIND_NATURAL_WONDER" Language="en_US">
+			<Text>[ICON_Terrain] {1_CivName} discovered the {2_NWName} natural wonder.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_FOUND_CITY" Language="en_US">
+			<Text>[ICON_Buildings] {1_CivName} founded a new city named: {2_CityName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_FOUND_RELIGION" Language="en_US">
+			<Text>[ICON_Religion] {1_CivName} founded a new Religion: {2_ReligionName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_GREATPERSON_CREATED" Language="en_US">
+			<Text>[ICON_Greatperson] {1_CivName} earned the {2_unit} {3_GreatPerson}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_LAUNCHING_ATTACK" Language="en_US">
+			<Text>[ICON_Declare_formal_war] {1_CivName} launched a military assault on {2_CivName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_WAR_PREPARATION" Language="en_US">
+			<Text>[ICON_Declare_formal_war] {1_CivName} is considering a war on {2_CivName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_INQUISITION_LAUNCHED" Language="en_US">
+			<Text>[ICON_Religion] {1_CivName} launched an inquisition rooting out {2_ReligionName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_LAND_UNIT_LEVEL" Language="en_US">
+			<Text>[ICON_Promotion] {1_CivName} has a {2_UnitName} that earned the {3_PromotionName} promotion.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_MAKE_DOW" Language="en_US">
+			<Text>[ICON_Declare_formal_war] {1_CivName} declared war on {2_OtherPlayer}!</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_NATIONAL_PARK_CREATED" Language="en_US">
+			<Text>[ICON_Terrain] {1_CivName} created {2_NationalParkName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_NAVAL_UNIT_LEVEL" Language="en_US">
+			<Text>[ICON_Promotion] {1_CivName} has a {2_UnitName} that earned the {3_PromotionName} promotion.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_NEW_RELIGIOUS_MAJORITY" Language="en_US">
+			<Text>[ICON_Religion] Dominant Religion in {1_CivName} is now: {2_ReligionName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_PILLAGE" Language="en_US">
+			<Text>[ICON_Pillaged] {1_CivName} pillaged an enemy {2_TargetName} with {LOC_GRAMMAR_A_AN &lt;&lt; {3_UnitName}}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_POLICY_ENACTED" Language="en_US">
+			<Text>[ICON_Policy] {1_CivName} adopted the {2_SlotName} policy {3_PolicyName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_RECEIVE_DOW" Language="en_US">
+			<Text>[ICON_Declare_formal_war] {1_CivName} recieved a declaration of war from {2_OtherPlayer}!</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_RELIC_RECEIVED" Language="en_US">
+			<Text>[ICON_Greatwork_religious] {1_CivName} gained new holy relic: {2_RelicName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_RESEARCH_AGREEMENT" Language="en_US">
+			<Text>[ICON_Research_agreement] {1_CivName} and {2_CivName} formed a scientific partnership.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_RESEARCH_TECH" Language="en_US">
+			<Text>[ICON_Science] {1_CivName} completed research on {2_TechName}</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SPY_DISRUPT_ROCKETRY_DETECTED" Language="en_US">
+			<Text>[ICON_Pillaged] {1_CivName}'s Spaceport in {2_CityName} was sabotaged by {3_SpyPlayer}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SPY_DISRUPT_ROCKETRY_UNDETECTED" Language="en_US">
+			<Text>[ICON_Pillaged] {1_CivName}'s Spaceport in {2_CityName} was sabotaged.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SPY_GREAT_WORK_HEIST_DETECTED" Language="en_US">
+			<Text>[ICON_Exclamation] {1_CivName}'s Great Work in {2_CityName} stolen by {3_SpyPlayer}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SPY_GREAT_WORK_HEIST_UNDETECTED" Language="en_US">
+			<Text>[ICON_Exclamation] {1_CivName}'s Great Work in {2_CityName} was stolen.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SPY_RECRUIT_PARTISANS_DETECTED" Language="en_US">
+			<Text>[ICON_Exclamation] {1_CivName} is fighting partisans in {2_CityName} recruited by {3_SpyPlayer}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SPY_RECRUIT_PARTISANS_UNDETECTED" Language="en_US">
+			<Text>[ICON_Exclamation] {1_CivName} is fighting partisans in {2_CityName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SPY_SABOTAGE_PRODUCTION_DETECTED" Language="en_US">
+			<Text>[ICON_Exclamation] {1_CivName}'s Industrial Zone in {2_CityName} sabotaged by {3_SpyPlayer}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SPY_SABOTAGE_PRODUCTION_UNDETECTED" Language="en_US">
+			<Text>[ICON_Exclamation] {1_CivName}'s Industrial Zone in {2_CityName} was sabotaged.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SPY_SIPHON_FUNDS_DETECTED" Language="en_US">
+			<Text>[ICON_Exclamation] {1_CivName} had funds stolen in {2_CityName} by {3_SpyPlayer}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SPY_SIPHON_FUNDS_UNDETECTED" Language="en_US">
+			<Text>[ICON_Exclamation] {1_CivName} had funds stolen in {2_CityName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SPY_STEAL_TECH_BOOST_DETECTED" Language="en_US">
+			<Text>[ICON_Exclamation] {1_CivName} had technology stolen in {2_CityName} by {3_SpyPlayer}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SPY_STEAL_TECH_BOOST_UNDETECTED" Language="en_US">
+			<Text>[ICON_Exclamation] {1_CivName} had technology stolen in {2_CityName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_TRADE_DEAL" Language="en_US">
+			<Text>[ICON_Gold] {1_CivName} is trading with {2_CivName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_TRADE_RENEGE" Language="en_US">
+			<Text>[ICON_Gold] {1_CivName} reneged a deal with {2_CivName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_TRAIN_SETTLER" Language="en_US">
+			<Text>[ICON_Unit] {1_CivName} created a new {2_UnitName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_TRAIN_UNIT" Language="en_US">
+			<Text>[ICON_Unit] {1_CivName} created world's first {2_UnitName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_TRAIN_UNIQUE_UNIT" Language="en_US">
+			<Text>[ICON_Unit] {1_CivName} created unique unit, the {2_UnitName}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_SPACE_RACE_PROJECT_COMPLETED" Language="en_US">
+			<Text>{1_CivName} completed Space Race project {2_ProjectType}.</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_WMD_BUILT" Language="en_US">
+			<Text>[ICON_Nuclear] {1_CivName} built {2_WMDCount} WMDs!</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_WMD_STRIKE" Language="en_US">
+			<Text>[ICON_Nuclear] {1_CivName} unleashed a WMD! A {2_UnitName}!</Text>
+		</Replace>
+		<Replace Tag="LOC_GOSSIP_WONDER_STARTED" Language="en_US">
+			<Text>[ICON_Production] {1_CivName} began construction on {3_BuildingName} in {2_CityName}.</Text>
+		</Replace>
+	</LocalizedText>>
+</GameData>
