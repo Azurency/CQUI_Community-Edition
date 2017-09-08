@@ -2,31 +2,6 @@
 <!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by Ed Beach (Firaxis Games) -->
 <GameData>
 	<LocalizedText>
-		<!-- Replace Gossip Source Text -->
-		<Replace Tag="LOC_GOSSIP_SOURCE_TRAIT" Language="en_US">
-			<Text></Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SOURCE_SPY" Language="en_US">
-			<Text></Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SOURCE_RUMOR" Language="en_US">
-			<Text></Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SOURCE_TECH" Language="en_US">
-			<Text></Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SOURCE_TRADER" Language="en_US">
-			<Text></Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SOURCE_DELEGATE" Language="en_US">
-			<Text></Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SOURCE_ALLY" Language="en_US">
-			<Text></Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SOURCE_GREAT_PERSON_JOURNALISM" Language="en_US">
-			<Text></Text>
-		</Replace>
 		<!-- Replace Gossip Text -->
 		<Replace Tag="LOC_GOSSIP_AGENDA_KUDOS" Language="en_US">
 			<Text>[ICON_Declare_friendship] {1_LeaderName} thanked {2_Leadername} for cooperating with agenda: {3_AgendaName}.</Text>
@@ -214,5 +189,5 @@
 		<Replace Tag="LOC_GOSSIP_WONDER_STARTED" Language="en_US">
 			<Text>[ICON_Production] {1_CivName} began construction on {3_BuildingName} in {2_CityName}.</Text>
 		</Replace>
-	</LocalizedText>>
+	</LocalizedText>
 </GameData>

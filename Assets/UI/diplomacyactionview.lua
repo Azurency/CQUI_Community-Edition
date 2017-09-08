@@ -142,6 +142,17 @@ local m_currentSceneEffect	:string = "";
 local ms_OtherID;
 
 local m_PopupDialog :table = PopupDialog:new("ConfirmDenounce");
+
+--CQUI Members
+local CQUI_trimGossip = true;
+
+function CQUI_OnSettingsUpdate()
+  CQUI_trimGossip = GameConfiguration.GetValue("CQUI_TrimGossip");
+end
+
+LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
+LuaEvents.CQUI_SettingsInitialized.Add( CQUI_OnSettingsUpdate );
+
 -- ===========================================================================
 function GetOtherPlayer(player : table)
   if (player ~= nil and player:GetID() == ms_OtherPlayer:GetID()) then
@@ -1229,6 +1240,10 @@ function OnActivateIntelGossipHistoryPanel(rootControl : table)
         end
 
         if (item ~= nil) then
+          -- AZURENCY : trim the message if the setting is enable
+          if(CQUI_trimGossip) then
+            gossipString = CQUI_TrimGossipMessage(gossipString);
+          end
           item.GossipText:SetText(gossipString);			-- It has already been localized
           AutoSizeGrid(item:GetTopControl(), item.GossipText,25,25);
         end

@@ -4,6 +4,7 @@
 -- ===========================================================================
 include( "InstanceManager" );
 include( "SupportFunctions" );
+include( "Civ6Common" );
 
 -- ===========================================================================
 --  CONSTANTS
@@ -249,13 +250,6 @@ function CQUI_GetIgnoredGossipMessages() --Yeah... as far as I can tell there's 
     ignored[#ignored+1] = Locale.Lookup("LOC_GOSSIP_WONDER_STARTED", "X", "Y", "Z", "1", "2", "3");
   end
   return ignored;
-end
-
---Trims source information from gossip messages. Returns nil if the message couldn't be trimmed (this usually means the provided string wasn't a gossip message at all)
-function CQUI_TrimGossipMessage(str:string)
-  local sourceSample = Locale.Lookup("LOC_GOSSIP_SOURCE_DELEGATE", "X", "Y", "Z"); --Get a sample of a gossip source string
-  _, last = string.match(sourceSample, "(.-)%s(%S+)$"); --Get last word that occurs in the gossip source string. "that" in English. Assumes the last word is always the same, which it is in English, unsure if this holds true in other languages
-  return Split(str, " " .. last .. " " , 2)[2]; --Get the rest of the string after the last word from the gossip source string
 end
 
 -- Returns true if the given message is disabled in settings
