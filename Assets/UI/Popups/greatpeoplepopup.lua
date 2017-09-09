@@ -34,6 +34,10 @@ local m_activeBiographyID :number = -1; -- Only allow one open at a time (or ver
 local m_tabs        :table;
 local m_defaultPastRowHeight    :number = -1; -- Default/mix height (from XML) for a previously recruited row
 local m_screenWidth			:number = -1;
+local _, m_ActscreenHeight = UIManager:GetScreenSizeVal();
+local m_ModalFrameBaseSize = Controls.ModalFrame:GetSizeY();
+local m_WoodPanelingBaseSize = Controls.WoodPaneling:GetSizeY();
+local m_PopupContainerBaseSize = Controls.PopupContainer:GetSizeY();
 
 
 -- ===========================================================================
@@ -94,6 +98,8 @@ function ViewCurrent( data:table )
   Controls.RecruitedArea:SetHide(true);
 
   local firstAvailableIndex :number = 0;
+  local preferedRecruitScrollSize = 0;
+  local isPreferedRecruitScrollSizeComputed:boolean = false;
   for i, kPerson:table in ipairs(data.Timeline) do
 
     local instance    :table = m_greatPersonPanelIM:GetInstance();
@@ -293,6 +299,9 @@ function ViewCurrent( data:table )
         end
         if (canEarnAnotherOfThisClass) then
           local recruitInst:table = instance["m_RecruitIM"]:GetInstance();
+          if not isPreferedRecruitScrollSizeComputed then
+            preferedRecruitScrollSize = preferedRecruitScrollSize + recruitInst.Top:GetSizeY() + 5; -- AZURENCY : 5 is the padding
+          end
           recruitInst.Country:SetText( kPlayerPoints.PlayerName );
           --recruitInst.Amount:SetText( tostring(Round(kPlayerPoints.PointsTotal,1)) .. "/" .. tostring(kPerson.RecruitCost) );
 
@@ -323,6 +332,7 @@ function ViewCurrent( data:table )
           recruitInst.Top:SetToolTipString(recruitDetails);
         end
       end
+      if not isPreferedRecruitScrollSizeComputed then isPreferedRecruitScrollSizeComputed = true; end
 
       local sRecruitText:string = Locale.Lookup("LOC_GREAT_PEOPLE_OR_RECRUIT_WITH_PATRONAGE");
       local sRecruitTooltip:string = "";
@@ -333,7 +343,7 @@ function ViewCurrent( data:table )
       instance.RecruitInfo:SetText(sRecruitText);
       instance.RecruitInfo:SetToolTipString(sRecruitTooltip);
 
-      instance.RecruitScroll:CalculateSize();
+      --instance.RecruitScroll:CalculateSize();
     end
 
     -- Set the biography button.
@@ -356,10 +366,24 @@ function ViewCurrent( data:table )
 
     instance.EffectStack:CalculateSize();
     instance.EffectStackScroller:CalculateSize();
+
+    if (m_PopupContainerBaseSize + preferedRecruitScrollSize - 86) > m_ActscreenHeight then -- AZURENCY : 86 is the default height of the recruit scroll
+      preferedRecruitScrollSize = m_ActscreenHeight - 86 - 582 -- AZURENCY :  (582 = 768 (default popup height) - 186 (default recruit progress box height))
+    end
+
+
+    instance.RecruitScroll:SetSizeY(preferedRecruitScrollSize);
+    instance.RecruitProgressBox:SetSizeY(preferedRecruitScrollSize + 114); -- (114 = 200 - 86)
+    instance.Content:SetSizeY(preferedRecruitScrollSize + 574);
   end
 
   Controls.PeopleStack:CalculateSize();
   Controls.PeopleScroller:CalculateSize();
+
+  local newprefsize = preferedRecruitScrollSize - 96;
+  Controls.PopupContainer:SetSizeY(m_PopupContainerBaseSize + newprefsize);
+  Controls.WoodPaneling:SetSizeY(m_WoodPanelingBaseSize + newprefsize);
+  Controls.ModalFrame:SetSizeY(m_ModalFrameBaseSize + newprefsize);
 
   m_screenWidth = math.max(Controls.PeopleStack:GetSizeX(), 1024);
   Controls.WoodPaneling:SetSizeX( m_screenWidth );
@@ -912,6 +936,7 @@ end
 function OnGreatPeopleClick()
   Controls.SelectGreatPeople:SetHide( false );
   Controls.ButtonGreatPeople:SetSelected( true );
+  Controls.SelectPreviouslyRecruited:SetHide( true );
   Controls.ButtonPreviouslyRecruited:SetSelected( false );
   Refresh();
 end
@@ -922,6 +947,7 @@ end
 function OnPreviousRecruitedClick()
   Controls.SelectGreatPeople:SetHide( true );
   Controls.ButtonGreatPeople:SetSelected( false );
+  Controls.SelectPreviouslyRecruited:SetHide( false );
   Controls.ButtonPreviouslyRecruited:SetSelected( true );
   Refresh();
 end
@@ -984,13 +1010,13 @@ end
 function OnInputActionTriggered( actionId )
   if actionId == m_ToggleGreatPeopleId then
     if UI.QueryGlobalParameterInt("DISABLE_GREAT_PEOPLE_HOTKEY") ~= 1 then
-        UI.PlaySound("Play_UI_Click");
-        if(ContextPtr:IsHidden()) then
-          LuaEvents.LaunchBar_OpenGreatPeoplePopup();
-        else
-          OnClose();
-        end
+      UI.PlaySound("Play_UI_Click");
+      if(ContextPtr:IsHidden()) then
+        LuaEvents.LaunchBar_OpenGreatPeoplePopup();
+      else
+        OnClose();
       end
+    end
   end
 end
 
