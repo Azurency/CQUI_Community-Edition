@@ -432,7 +432,7 @@ end
 --  or an external system call.
 -- ===========================================================================
 function Close()
-  if (Controls.SlideIn:IsStopped()) then      -- Need to check to make sure that we have not already begun the transition before attempting to close the panel.
+  if (not Controls.SlideIn:IsReversing()) then      -- Need to check to make sure that we have not already begun the transition before attempting to close the panel.
     UI.PlaySound("Production_Panel_Closed");
     Controls.SlideIn:Reverse();
     Controls.AlphaIn:Reverse();
@@ -459,9 +459,10 @@ end
 --  Open the panel
 -- ===========================================================================
 function Open()
-  if ContextPtr:IsHidden() then         -- The ContextPtr is only hidden as a callback to the finished SlideIn animation, so this check should be sufficient to ensure that we are not animating.
+  if ContextPtr:IsHidden() or Controls.SlideIn:IsReversing() then         -- The ContextPtr is only hidden as a callback to the finished SlideIn animation, so this check should be sufficient to ensure that we are not animating.
     -- Sets up proper selection AND the associated lens so it's not stuck "on".
     UI.PlaySound("Production_Panel_Open");
+    Controls.PauseDismissWindow:SetToBeginning() -- AZURENCY : fix the callback that hide the pannel to be called during the Openning animation
     LuaEvents.ProductionPanel_Open();
     Refresh();
     ContextPtr:SetHide(false);
@@ -3938,7 +3939,7 @@ function Initialize()
   Events.CityProductionUpdated.Add(OnCityProductionUpdated);
 
   -- CQUI Update production panel
-  Events.CityWorkerChanged.Add(Refresh);
+  Events.CityWorkerChanged.Add(function() if not ContextPtr:IsHidden() and Controls.SlideIn:GetOffsetX() == 0 then Refresh() end end);
   Events.CityFocusChanged.Add(Refresh);
 
   -- CQUI Setting Controls

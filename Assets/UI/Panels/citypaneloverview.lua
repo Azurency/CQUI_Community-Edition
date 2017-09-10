@@ -787,8 +787,10 @@ end
 
 function Close()
   m_isShowingPanel = false;
-  local offsetx = Controls.OverviewSlide:GetOffsetX();
-  if(offsetx == 0) then
+  --local offsetx = Controls.OverviewSlide:GetOffsetX();
+  --if(offsetx == 0) then
+  -- AZURENCY : only check if it's not already reversing
+  if not Controls.OverviewSlide:IsReversing() then
     Controls.OverviewSlide:Reverse();
     UI.PlaySound("UI_CityPanel_Closed");
   end
@@ -881,7 +883,7 @@ function OnLiveCityDataChanged( data:table, isSelected:boolean)
   else
     m_kData = data;
     m_isDirty = true;
-    ContextPtr:SetHide(false);
+    --ContextPtr:SetHide(false);
     Refresh();
   end
 end
@@ -926,16 +928,29 @@ end
 function OnShowOverviewPanel( isShowing: boolean )
   m_isShowingPanel = isShowing;
   if (isShowing) then
-    Refresh();
-    Controls.OverviewSlide:SetToBeginning();
-    Controls.OverviewSlide:Play();
-    UI.PlaySound("UI_CityPanel_Open");
+    if ContextPtr:IsHidden() or Controls.OverviewSlide:IsReversing() then
+      Controls.PauseDismissWindow:SetToBeginning();
+      ContextPtr:SetHide(false);
+      Refresh();
+      Controls.OverviewSlide:SetToBeginning();
+      Controls.OverviewSlide:Play();
+      UI.PlaySound("UI_CityPanel_Open");
+    end
   else
-    local offsetx = Controls.OverviewSlide:GetOffsetX();
-    if(offsetx == 0 and not Controls.OverviewSlide:IsReversing()) then
+    --local offsetx = Controls.OverviewSlide:GetOffsetX();
+    --if(offsetx == 0 and not Controls.OverviewSlide:IsReversing()) then
+    -- AZURENCY : only check if it's not already reversing
+    if not Controls.OverviewSlide:IsReversing() then
+      Controls.PauseDismissWindow:Play();
       Controls.OverviewSlide:Reverse();
     end
   end
+end
+
+-- ===========================================================================
+function OnHide()
+  ContextPtr:SetHide(true);
+  Controls.PauseDismissWindow:SetToBeginning();
 end
 
 function OnShowBreakdownTab()
@@ -950,16 +965,20 @@ end
 
 -- ===========================================================================
 function Initialize()
+  ContextPtr:SetHide(true);
+
   -- Initialize dynamic tabs, passing the root control as parameter
   for _,tabData in pairs(g_AdditionalTabData) do
     tabData:Initialize(Controls.PanelDynamicTab);
   end
 
   PopulateTabs();
+  Controls.PauseDismissWindow:Stop();
 
   ContextPtr:SetInputHandler( OnInputHandler, true );
   Controls.Close:RegisterCallback(Mouse.eLClick, OnCloseButtonClicked);
   Controls.Close:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+  Controls.PauseDismissWindow:RegisterEndCallback( OnHide );
 
   LuaEvents.Tutorial_ResearchOpen.Add(OnClose);
   LuaEvents.ActionPanel_OpenChooseResearch.Add(OnClose);

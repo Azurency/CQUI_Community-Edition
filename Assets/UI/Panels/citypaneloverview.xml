@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Context  ColorSet="BodyTextCool" FontStyle="Shadow">
 
+  <!-- PauseAnim - The amount of time that the window should wait before hiding. -->
+  <!-- AZURENCY : same speed and begin that the slideanim of the panel -->
+  <SlideAnim ID="PauseDismissWindow" Speed="3.5" Start="-330,27" End="0,27" Cycle="Once"/>
+
   <SlideAnim    ID="OverviewSlide"  Anchor="L,T"                  Size="300,full"       Start="-330,27" End="0,27" Cycle="Once" Speed="3.5" Function="OutSine" Stopped="1" >
     <Box          ID="OverviewBackground" Anchor="L,T"                  Size="parent,parent+5" ConsumeMouse="1" Color="8,34,56,255">
       <Image ID="PanelDropShadow" Texture="Controls_GradientSmall" Size="22,parent" AnchorSide="O,I" Anchor="R,T" Color="0,0,0,190" Rotate="270" Offset="-1,0"/>

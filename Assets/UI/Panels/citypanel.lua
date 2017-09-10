@@ -90,17 +90,19 @@ function CQUI_CityviewDisableManager()
 end
 
 function CQUI_OnCityviewEnabled()
-  ContextPtr:SetHide(false);
-  Controls.CityPanelAlpha:SetToBeginning();
-  Controls.CityPanelAlpha:Play();
-  Controls.CityPanelSlide:SetToBeginning();
-  Controls.CityPanelSlide:Play();
-  Refresh();
-  UILens.ToggleLayerOn(LensLayers.PURCHASE_PLOT);
-  UILens.ToggleLayerOn(LensLayers.CITIZEN_MANAGEMENT);
-  UI.SetFixedTiltMode(true);
-  DisplayGrowthTile();
-  UI.SetInterfaceMode(InterfaceModeTypes.CITY_MANAGEMENT);
+  if ContextPtr:IsHidden() or Controls.CityPanelSlide:IsReversing() then
+    ContextPtr:SetHide(false);
+    Controls.CityPanelAlpha:SetToBeginning();
+    Controls.CityPanelAlpha:Play();
+    Controls.CityPanelSlide:SetToBeginning();
+    Controls.CityPanelSlide:Play();
+    Refresh();
+    UILens.ToggleLayerOn(LensLayers.PURCHASE_PLOT);
+    UILens.ToggleLayerOn(LensLayers.CITIZEN_MANAGEMENT);
+    UI.SetFixedTiltMode(true);
+    DisplayGrowthTile();
+    UI.SetInterfaceMode(InterfaceModeTypes.CITY_MANAGEMENT);
+  end
 end
 
 function CQUI_OnCityviewDisabled()
@@ -274,6 +276,10 @@ end
 --
 -- ===========================================================================
 function Close()
+  Controls.CityPanelAlpha:SetToBeginning();
+  Controls.CityPanelAlpha:Play();
+  Controls.CityPanelSlide:SetToBeginning();
+  Controls.CityPanelSlide:Play();
   ContextPtr:SetHide( true );
 end
 

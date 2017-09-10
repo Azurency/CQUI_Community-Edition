@@ -3,7 +3,8 @@
   <!-- PauseAnim - The amount of time that the list should wait before collapsing. -->
   <SlideAnim ID="PauseCollapseList" Speed="10" Begin="-10,0" End="0,0" Cycle="Once"/>
   <!-- PauseAnim - The amount of time that the window should wait before hiding. -->
-  <SlideAnim ID="PauseDismissWindow" Speed="5" Begin="-10,0" End="0,0" Cycle="Once"/>
+  <!-- AZURENCY : same speed and begin that the slideanim of the panel -->
+  <SlideAnim ID="PauseDismissWindow" Speed="3.4" Begin="330,0" End="0,0" Cycle="Once"/>
 
   <!-- Queue Window -->
     <AlphaAnim ID="QueueAlphaIn" Anchor="R,T" Size="350,full" AlphaBegin="0" AlphaEnd="1" Function="OutSine" Speed="3.4" Cycle="Once">
