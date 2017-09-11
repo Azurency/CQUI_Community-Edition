@@ -156,43 +156,14 @@ UnitFlag.__index = UnitFlag;
 local CQUI_ShowingPath = nil; --unitID for the unit whose path is currently being shown. nil for no unit
 local CQUI_SelectionMade = false;
 local CQUI_ShowPaths = true; --Toggle for showing the paths
+local CQUI_IsFlagHover = false; -- if the path is the flag us currently hover or not
 
 --CQUI Functions
---Draws a path with numbers for the given unitID. Hijacks trade layer
-function CQUI_ShowPath(unitID)
-  if(CQUI_ShowPaths) and (Game.GetLocalPlayer() > -1) then
-    local unit = Players[Game.GetLocalPlayer()]:GetUnits():FindID(unitID);
-    if (unit ~= nil) then
-      if (GameInfo.Units[unit:GetUnitType()].UnitType ~= "UNIT_TRADER") then --Since this hijacks the trade layer, be sure to NOT touch it when the game actually needs the trade layer!
-          local dest = UnitManager.GetQueuedDestination(unit);
-          if (dest == nil) then return; end
-          local pathPlots, turnsToReach, _ = UnitManager.GetMoveToPath(unit, dest); --pathPlots holds the tileIDs for each tile in the path in order. turnsToReach describes how many turns it takes to reach each given tile, also in order
-          local last = 1; --The number of turns it takes to reach the last given tile
-          for i,v in pairs(turnsToReach) do --Show numbers, but only once for each turn incrememnt
-              if(v > last) then
-                  UI.AddNumberToPath(last, pathPlots[i - 1]);
-              end
-              last = v;
-          end
-          UI.AddNumberToPath(last, dest); --Show a number on the destination plot unconditionally
-          local variations:table = {};
-          table.insert(variations, {"TradeRoute_Destination", dest} );
-          UILens.SetLayerHexesPath( LensLayers.TRADE_ROUTE, Game.GetLocalPlayer(), pathPlots, variations );
-          CQUI_ShowingPath = unitID;
-      end
-    end
-  end
-end
 --Hides any currently drawn paths.
-function CQUI_HidePath(unitID)
-  if(CQUI_ShowPaths) and (Game.GetLocalPlayer() > -1) then
-    local unit = Players[Game.GetLocalPlayer()]:GetUnits():FindID(unitID);
-    if (unit ~= nil) then
-      if (unitID == nil or GameInfo.Units[unit:GetUnitType()].UnitType ~= "UNIT_TRADER") then
-          UILens.ClearLayerHexes(LensLayers.TRADE_ROUTE); --Hide path
-          UILens.ClearLayerHexes(LensLayers.NUMBERS); --Hide numbers
-      end
-    end
+function CQUI_HidePath()
+  if CQUI_ShowPaths and CQUI_IsFlagHover then
+    LuaEvents.CQUI_clearUnitPath();
+    CQUI_IsFlagHover = false;
   end
 end
 
@@ -381,16 +352,22 @@ function UnitFlag.SetInteractivity( self )
   self.m_Instance.FlagRoot:RegisterMouseEnterCallback(
     function()
       LuaEvents.UnitFlagManager_PointerEntered( flagPlayerID, unitID );
-      if(not CQUI_SelectionMade) then
-        CQUI_ShowPath(unitID);
+      if CQUI_ShowPaths and not CQUI_IsFlagHover then
+        if not CQUI_SelectionMade then
+          LuaEvents.CQUI_showUnitPath(true, unitID);
+        end
+        CQUI_IsFlagHover = true;
       end
     end );
 
   self.m_Instance.FlagRoot:RegisterMouseExitCallback(
     function()
       LuaEvents.UnitFlagManager_PointerExited( flagPlayerID, unitID );
-      if(not CQUI_SelectionMade) then
-        CQUI_HidePath(unitID);
+      if CQUI_ShowPaths and CQUI_IsFlagHover then
+        if not CQUI_SelectionMade then
+          LuaEvents.CQUI_clearUnitPath();
+        end
+        CQUI_IsFlagHover = false;
       end
     end );
 end
@@ -1235,9 +1212,8 @@ function OnUnitSelectionChanged( playerID : number, unitID : number, hexI : numb
       CQUI_SelectionMade = true;
       if(CQUI_ShowingPath ~= unitID) then
         if(CQUI_ShowingPath ~= nil) then
-            CQUI_HidePath(unitID);
+            CQUI_HidePath();
         end
-        CQUI_ShowPath(unitID);
         CQUI_ShowingPath = unitID;
       end
     else
@@ -1246,7 +1222,7 @@ function OnUnitSelectionChanged( playerID : number, unitID : number, hexI : numb
     end
   else
     CQUI_SelectionMade = false;
-    CQUI_HidePath(unitID);
+    CQUI_HidePath();
     CQUI_ShowingPath = nil;
   end
 end

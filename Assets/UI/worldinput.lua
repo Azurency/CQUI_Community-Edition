@@ -739,14 +739,20 @@ end
 -- ===========================================================================
 --  Update the 3D displayed path for a unit.
 -- ===========================================================================
-function RealizeMovementPath(showQueuedPath:boolean)
+-- AZURENCY : added unitID to use this function on hover in unitflagmanager
+function RealizeMovementPath(showQueuedPath:boolean, unitID:number)
 
   if not UI.IsMovementPathOn() or UI.IsGameCoreBusy() then
     return;
   end
 
   -- Bail if no selected unit.
-  local kUnit :table = UI.GetHeadSelectedUnit();
+  local kUnit :table = nil;
+  if unitID then
+    kUnit = Players[Game.GetLocalPlayer()]:GetUnits():FindID(unitID);
+  else
+    kUnit = UI.GetHeadSelectedUnit();
+  end
   if kUnit == nil then
     UILens.SetActive("Default");
     m_cachedPathUnit = nil;
@@ -767,6 +773,8 @@ function RealizeMovementPath(showQueuedPath:boolean)
 		local queuedEndPlotId:number = UnitManager.GetQueuedDestination( kUnit );
 		if queuedEndPlotId then
 			endPlotId = queuedEndPlotId;
+    elseif unitID then -- AZURENCY : bail if the unit have no endplot and we wanted to draw its path
+      return; 
 		end
 	end
 	
@@ -3761,6 +3769,8 @@ function Initialize()
   -- CQUI Events
   LuaEvents.CQUI_WorldInput_CityviewEnable.Add( function() CQUI_cityview = true; end );
   LuaEvents.CQUI_WorldInput_CityviewDisable.Add( function() CQUI_cityview = false; end );
+  LuaEvents.CQUI_showUnitPath.Add(RealizeMovementPath);
+  LuaEvents.CQUI_clearUnitPath.Add(ClearMovementPath);
 
   Controls.DebugStuff:SetHide(not m_isDebuging);
   -- Popup setup
