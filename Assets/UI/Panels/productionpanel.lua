@@ -3465,7 +3465,6 @@ function MoveQueueIndex(city, sourceIndex, destIndex, noMove)
   local cityID = city:GetID();
   local direction = -1;
   local actualDest = 0;
-  local city = UI.GetHeadSelectedCity();
   local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner())
 
   local sourceInfo = prodQueue[productionQueueTableKey][sourceIndex];
