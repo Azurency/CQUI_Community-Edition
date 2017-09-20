@@ -1295,10 +1295,14 @@ function UpdateProposalButtons(bDealValid)
     Controls.TheirOfferBracket:SetHide(false);
   end
 
+  Controls.CenterDealOffersStack:CalculateSize();
+  Controls.CenterDealOffersStack:ReprocessAnchoring();
+
   Controls.TheirOfferStack:CalculateSize();
   Controls.TheirOfferStack:ReprocessAnchoring();
   Controls.TheirOfferBracket:DoAutoSize();
   Controls.TheirOfferBracket:ReprocessAnchoring();
+  Controls.TheirOfferLabel:ReprocessAnchoring();
   --Controls.TheirOfferScroll:CalculateSize();
   --Controls.TheirOfferBracket:ReprocessAnchoring();	-- Because the bracket is centered inside the scroll box, we have to reprocess this again.
 
@@ -1306,6 +1310,7 @@ function UpdateProposalButtons(bDealValid)
   Controls.MyOfferStack:ReprocessAnchoring();
   Controls.MyOfferBracket:DoAutoSize();
   Controls.MyOfferBracket:ReprocessAnchoring();
+  Controls.MyOfferLabel:ReprocessAnchoring();
   --Controls.MyOfferScroll:CalculateSize();
   --Controls.MyOfferBracket:ReprocessAnchoring();		-- Because the bracket is centered inside the scroll box, we have to reprocess this again.
 
