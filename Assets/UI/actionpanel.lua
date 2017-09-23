@@ -672,20 +672,31 @@ function OnEndTurnRightClicked()
     return;
   end
 
-	local activeBlockerId = NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
-	if activeBlockerId == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING then
-		if (CheckUnitsHaveMovesState()) then
-			-- Do Nothing
-		elseif(CheckCityRangeAttackState()) then
-			-- Remove the city range attack notification so the turn can proceed.
-			local pNotification :table = NotificationManager.FindType(NotificationTypes.CITY_RANGE_ATTACK, Game.GetLocalPlayer());
-			if pNotification ~= nil and not pNotification:IsDismissed() then
-				NotificationManager.Dismiss( pNotification:GetPlayerID(), pNotification:GetID() );
-			end
-		else
-			-- Do Nothing
+	-- local activeBlockerId = NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
+	-- if activeBlockerId == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING then
+	-- 	if (CheckUnitsHaveMovesState()) then
+	-- 		-- Do Nothing
+	-- 	elseif(CheckCityRangeAttackState()) then
+	-- 		-- Remove the city range attack notification so the turn can proceed.
+	-- 		local pNotification :table = NotificationManager.FindType(NotificationTypes.CITY_RANGE_ATTACK, Game.GetLocalPlayer());
+	-- 		if pNotification ~= nil and not pNotification:IsDismissed() then
+	-- 			NotificationManager.Dismiss( pNotification:GetPlayerID(), pNotification:GetID() );
+	-- 		end
+	-- 	else
+	-- 		-- Do Nothing
+	-- 	end
+	-- end
+
+  -- AZURENCY : Added the original behavior to skip turn on right click (and kept the notification removal)
+  if(CheckCityRangeAttackState()) then
+		-- Remove the city range attack notification so the turn can proceed.
+		local pNotification :table = NotificationManager.FindType(NotificationTypes.CITY_RANGE_ATTACK, Game.GetLocalPlayer());
+		if pNotification ~= nil and not pNotification:IsDismissed() then
+			NotificationManager.Dismiss( pNotification:GetPlayerID(), pNotification:GetID() );
 		end
-	end
+	else
+	UI.RequestAction(ActionTypes.ACTION_ENDTURN);
+    UI.PlaySound("Stop_Unit_Movement_Master");
 end
 
 -- ===========================================================================

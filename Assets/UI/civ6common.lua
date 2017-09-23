@@ -1016,7 +1016,6 @@ function CQUI_TrimGossipMessage(str:string)
   -- AZURENCY : in some languages, there is no space, in that case, take the last character (often it's a ":")
   if last == nil then
     last = string.match(sourceSample, ".-(.)$");
-    print("le last est là : " .. last)
   end
   return Split(str, " " .. last .. " " , 2)[2]; --Get the rest of the string after the last word from the gossip source string
 end
