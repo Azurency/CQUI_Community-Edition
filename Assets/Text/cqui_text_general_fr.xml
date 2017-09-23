@@ -39,7 +39,7 @@
     <Row Tag="LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK" Language="fr_FR">
       <Text>ATTAQUE À DISTANCE DU CAMPEMENT</Text>
     </Row>
-    <Row Tag="LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK_TOOLTIP" Language="en_US">
+    <Row Tag="LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK_TOOLTIP" Language="fr_FR">
       <Text>Votre campement peut attaquer à distance</Text>
     </Row>
 
