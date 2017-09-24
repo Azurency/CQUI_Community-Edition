@@ -540,17 +540,17 @@ function DoEndTurn( optionalNewBlocker:number )
     return;
   end
 
-  -- If not in selection mode; reset mode before performing the action.
-  if UI.GetInterfaceMode() ~= InterfaceModeTypes.SELECTION and UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK then
-    UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-  end
-
-
   -- Make sure if an active blocker is not set, to do one more check from the engine/authority.
   if optionalNewBlocker ~= nil then
     m_activeBlockerId = optionalNewBlocker;
   else
     m_activeBlockerId = NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
+  end
+
+  -- If not in selection mode; reset mode before performing the action.
+  -- AZURENCY : and if in CITY_MANAGEMENT and the EndTurnBlockingTypes is Production don't change the mode.
+  if UI.GetInterfaceMode() ~= InterfaceModeTypes.SELECTION and UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK and not (UI.GetInterfaceMode() == InterfaceModeTypes.CITY_MANAGEMENT and m_activeBlockerId == EndTurnBlockingTypes.ENDTURN_BLOCKING_PRODUCTION) then
+    UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
   end
 
   if m_activeBlockerId == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING then
