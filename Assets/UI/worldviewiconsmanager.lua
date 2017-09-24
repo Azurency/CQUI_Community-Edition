@@ -229,15 +229,19 @@ end
 
 function CQUI_IsResourceOptimalImproved(resourceInfo, pPlot)
   if table.count(resourceInfo.ImprovementCollection) > 0 then
-    local optimalTileImprovement = resourceInfo.ImprovementCollection[1].ImprovementType; --Represents the tile improvement that utilizes the resource most effectively
-    local tileImprovement = GameInfo.Improvements[pPlot:GetImprovementType()]; --Can be nil if there is no tile improvement
+    for _, improvement in ipairs(resourceInfo.ImprovementCollection) do
+      local optimalTileImprovement = improvement.ImprovementType; --Represents the tile improvement that utilizes the resource most effectively
+      local tileImprovement = GameInfo.Improvements[pPlot:GetImprovementType()]; --Can be nil if there is no tile improvement
 
-    --If the tile improvement isn't nil, find the ImprovementType value
-    if (tileImprovement ~= nil) then
-      tileImprovement = tileImprovement.ImprovementType;
+      --If the tile improvement isn't nil, find the ImprovementType value
+      if (tileImprovement ~= nil) then
+        tileImprovement = tileImprovement.ImprovementType;
+      end
+
+      if tileImprovement == optimalTileImprovement then
+        return true
+      end
     end
-
-    return tileImprovement == optimalTileImprovement;
   end
   return false;
 end
