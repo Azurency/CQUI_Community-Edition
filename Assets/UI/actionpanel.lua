@@ -695,8 +695,9 @@ function OnEndTurnRightClicked()
 			NotificationManager.Dismiss( pNotification:GetPlayerID(), pNotification:GetID() );
 		end
 	else
-	UI.RequestAction(ActionTypes.ACTION_ENDTURN);
+	  UI.RequestAction(ActionTypes.ACTION_ENDTURN);
     UI.PlaySound("Stop_Unit_Movement_Master");
+  end
 end
 
 -- ===========================================================================
