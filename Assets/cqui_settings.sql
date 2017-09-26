@@ -58,7 +58,10 @@ INSERT OR REPLACE INTO CQUI_Settings -- Don't touch this line!
       ('CQUI_ShowCityMangeAreaInScreen', 1), -- Shows citizen management area when in city screen
       ('CQUI_TraderColorYields', 1), -- Colors the yield in screen based on their respective type. Ex: Food yields are colored green
       ('CQUI_TraderAddDivider', 1), -- Adds a divider between groups in TradeOverview panel
-      ('CQUI_TraderShowSortOrder', 0); -- Adds a divider between groups in TradeOverview panel
+      ('CQUI_TraderShowSortOrder', 0), -- Adds a divider between groups in TradeOverview panel
+      ('CQUI_ShowProductionRecommendations', 0), -- Shows the advisor recommendation in the city produciton panel
+      ('CQUI_ShowTechCivicRecommendations', 0), -- Shows the advisor recommendation in the techs/civics tree/panel
+      ('CQUI_ShowImprovementsRecommendations', 0); -- Shows the advisor recommendation for the builder improvements
 
 /*
     ┌────────────────────────────────────────────────────────────────────────────────────────────┐

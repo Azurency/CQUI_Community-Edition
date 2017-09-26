@@ -220,6 +220,17 @@
     <Row Tag="LOC_CQUI_TRADER_ADD_DIVIDER_TOOLTIP" Language="en_US">
       <Text>Adds a divider between groups in Trade Overview panel</Text>
     </Row>
-
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SCREEN" Language="en_US">
+      <Text>Recommendations</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWPRODUCTION" Language="en_US">
+      <Text>Show production recommendations</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWTECH" Language="en_US">
+      <Text>Show tech/civic recommendations</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWIMPROVEMENTS" Language="en_US">
+      <Text>Show improvements recommendations</Text>
+    </Row>
   </LocalizedText>
 </GameData>

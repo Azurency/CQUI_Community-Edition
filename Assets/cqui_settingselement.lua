@@ -17,6 +17,11 @@ local resource_icon_style_options =
   {"LOC_CQUI_GENERAL_HIDDEN", 2}
 };
 
+local boolean_options = {
+		{"LOC_OPTIONS_ENABLED", 1},
+		{"LOC_OPTIONS_DISABLED", 0},
+	};
+
 --Used to switch active panels/tabs in the settings panel
 function ShowTab(button, panel)
   -- Unfocus all tabs and hide panels
@@ -277,6 +282,7 @@ function Initialize()
     {Controls.LensesTab, Controls.LensesOptions},
     {Controls.UnitsTab, Controls.UnitsOptions},
     {Controls.TraderScreenTab, Controls.TraderScreenOption},
+    {Controls.RecommendationsTab, Controls.RecommendationsOptions},
     {Controls.HiddenTab, Controls.HiddenOptions}
   };
   for i, tab in ipairs(m_tabs) do
@@ -287,6 +293,9 @@ function Initialize()
   --Populating/binding comboboxes...
   PopulateComboBox(Controls.BindingsPullDown, bindings_options, "CQUI_BindingsMode", Locale.Lookup("LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP"));
   PopulateComboBox(Controls.ResourceIconStyle, resource_icon_style_options, "CQUI_ResourceDimmingStyle", Locale.Lookup("LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP"));
+  PopulateComboBox(Controls.ProductionRecommendationsPullDown, boolean_options, "CQUI_ShowProductionRecommendations");
+  PopulateComboBox(Controls.TechRecommendationsPullDown, boolean_options, "CQUI_ShowTechCivicRecommendations");
+  PopulateComboBox(Controls.ImprovementsRecommendationsPullDown, boolean_options, "CQUI_ShowImprovementsRecommendations");
 
   --Populating/binding checkboxes...
   PopulateCheckBox(Controls.ProductionQueueCheckbox, "CQUI_ProductionQueue");
