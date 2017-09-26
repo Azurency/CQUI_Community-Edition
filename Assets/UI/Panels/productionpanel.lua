@@ -48,9 +48,15 @@ local PRODUCTION_TYPE :table = {
 --CQUI Members
 local CQUI_INSTANCE_Y :number = 32;
 local CQUI_ProductionQueue :boolean = true;
+local CQUI_ShowProductionRecommendations :boolean = false;
 function CQUI_OnSettingsUpdate()
   CQUI_INSTANCE_Y = GameConfiguration.GetValue("CQUI_ProductionItemHeight");
   CQUI_ProductionQueue = GameConfiguration.GetValue("CQUI_ProductionQueue");
+  if GameConfiguration.GetValue("CQUI_ShowProductionRecommendations") == 0 then
+    CQUI_ShowProductionRecommendations = false
+  else
+    CQUI_ShowProductionRecommendations = true
+  end
   if(not CQUI_ProductionQueue) then
     ResetAllCityQueues();
     Controls.QueueAlphaIn:SetHide(true);
@@ -621,12 +627,14 @@ function PopulateList(data, listIM)
       end
       ResetInstanceVisibility(unitListing);
       unitListing.ButtonContainer:SetSizeY(CQUI_INSTANCE_Y);
-      -- Check to see if this item is recommended           -- CQUI: Remove production recommendations
-      --for _,hash in ipairs( m_recommendedItems) do
-      --  if(item.Hash == hash.BuildItemHash) then
-      --    unitListing.RecommendedIcon:SetHide(false);
-      --  end
-      --end
+      -- Check to see if this item is recommended
+      if CQUI_ShowProductionRecommendations then
+        for _,hash in ipairs( m_recommendedItems) do
+          if(item.Hash == hash.BuildItemHash) then
+            unitListing.RecommendedIcon:SetHide(false);
+          end
+        end
+      end
 
       local costStr = "";
       local costStrTT = "";
@@ -875,12 +883,14 @@ function PopulateList(data, listIM)
       end
 
       if item.Corps then
-        -- Check to see if this item is recommended           -- CQUI: Remove production recommendations
-        --for _,hash in ipairs( m_recommendedItems) do
-          --if(item.Hash == hash.BuildItemHash) then
-            --unitListing.CorpsRecommendedIcon:SetHide(false);
-          --end
-        --end
+        -- Check to see if this item is recommended
+        if CQUI_ShowProductionRecommendations then
+          for _,hash in ipairs( m_recommendedItems) do
+            if(item.Hash == hash.BuildItemHash) then
+              unitListing.CorpsRecommendedIcon:SetHide(false);
+            end
+          end
+        end
         unitListing.CorpsButtonContainer:SetHide(false);
         -- Production meter progress for corps unit
 
@@ -962,12 +972,14 @@ function PopulateList(data, listIM)
         unitListing.CorpsFaithPurchaseButton:RegisterCallback( Mouse.eMouseExit, function() unitListing.TrainUnit:SetToolTipString(item.ToolTip); end);
       end
       if item.Army then
-        -- Check to see if this item is recommended           -- CQUI: Remove production recommendations
-        --for _,hash in ipairs( m_recommendedItems) do
-          --if(item.Hash == hash.BuildItemHash) then
-            --unitListing.ArmyRecommendedIcon:SetHide(false);
-          --end
-        --end
+        -- Check to see if this item is recommended
+        if CQUI_ShowProductionRecommendations then
+          for _,hash in ipairs( m_recommendedItems) do
+            if(item.Hash == hash.BuildItemHash) then
+              unitListing.ArmyRecommendedIcon:SetHide(false);
+            end
+          end
+        end
         unitListing.ArmyButtonContainer:SetHide(false);
 
         -- ProductionQueue: We need to check that there isn't already one of these in the queue
@@ -1168,12 +1180,14 @@ function PopulateList(data, listIM)
       districtListing.ButtonContainer:SetSizeY(CQUI_INSTANCE_Y);
       districtListing.BuildingDrawer:SetOffsetY(CQUI_INSTANCE_Y);
       ResetInstanceVisibility(districtListing);
-      -- Check to see if this district item is one of the items that is recommended:      -- CQUI: Remove production recommendations
-      --for _,hash in ipairs( m_recommendedItems) do
-      --  if(item.Hash == hash.BuildItemHash) then
-      --    districtListing.RecommendedIcon:SetHide(false);
-      --  end
-      --end
+      -- Check to see if this district item is one of the items that is recommended:
+      if CQUI_ShowProductionRecommendations then
+        for _,hash in ipairs( m_recommendedItems) do
+          if(item.Hash == hash.BuildItemHash) then
+            districtListing.RecommendedIcon:SetHide(false);
+          end
+        end
+      end
 
       local nameStr = Locale.Lookup("{1_Name}", item.Name);
       if (item.Repair) then
@@ -1190,7 +1204,7 @@ function PopulateList(data, listIM)
       if(item.HasBeenBuilt and GameInfo.Districts[item.Type].OnePerCity == true and not item.Repair and not item.Contaminated) then
         turnsStrTT = Locale.Lookup("LOC_HUD_CITY_DISTRICT_BUILT_TT");
         turnsStr = "[ICON_Checkmark]";
-        --districtListing.RecommendedIcon:SetHide(true);            -- CQUI: Remove production recommendations
+        districtListing.RecommendedIcon:SetHide(true);            -- CQUI: Remove production recommendations
       else
         if(item.TurnsLeft) then
           turnsStrTT = item.TurnsLeft .. Locale.Lookup("LOC_HUD_CITY_TURNS_TO_COMPLETE", item.TurnsLeft);
@@ -1332,12 +1346,14 @@ function PopulateList(data, listIM)
             CQUI_ProdTable[buildingItem.Hash] = {};
           end
           CQUI_ProdTable[buildingItem.Hash]["time"] = buildingItem.TurnsLeft;
-          -- Check to see if this is one of the recommended items           -- CQUI: Remove production recommendations
-          --for _,hash in ipairs( m_recommendedItems) do
-          --  if(buildingItem.Hash == hash.BuildItemHash) then
-          --    buildingListing.RecommendedIcon:SetHide(false);
-          --  end
-          --end
+          -- Check to see if this is one of the recommended items
+          if CQUI_ShowProductionRecommendations then
+            for _,hash in ipairs( m_recommendedItems) do
+              if(buildingItem.Hash == hash.BuildItemHash) then
+                buildingListing.RecommendedIcon:SetHide(false);
+              end
+            end
+          end
           buildingListing.Root:SetSizeX(305);
           buildingListing.Button:SetSizeX(305);
           local districtBuildingAreaControl = districtList[uniqueDrawerName];
@@ -1456,11 +1472,13 @@ function PopulateList(data, listIM)
         wonderListing.Button:SetSizeY(CQUI_INSTANCE_Y);
         wonderListing.PurchaseButton:SetHide(true);
         wonderListing.FaithPurchaseButton:SetHide(true);
-        --for _,hash in ipairs( m_recommendedItems) do            -- CQUI: Remove production recommendations
-        --  if(item.Hash == hash.BuildItemHash) then
-        --    wonderListing.RecommendedIcon:SetHide(false);
-        --  end
-        --end
+        if CQUI_ShowProductionRecommendations then
+          for _,hash in ipairs( m_recommendedItems) do
+            if(item.Hash == hash.BuildItemHash) then
+              wonderListing.RecommendedIcon:SetHide(false);
+            end
+          end
+        end
         local nameStr = Locale.Lookup("{1_Name}", item.Name);
         if (item.Repair) then
           nameStr = nameStr .. "[NEWLINE]" .. Locale.Lookup("LOC_PRODUCTION_ITEM_REPAIR");
@@ -1543,12 +1561,14 @@ function PopulateList(data, listIM)
     for i, item in ipairs(data.ProjectItems) do
       local projectListing = projectList.projectListIM:GetInstance();
       ResetInstanceVisibility(projectListing);
-      -- Check to see if this item is recommended           -- CQUI: Remove production recommendations
-      --for _,hash in ipairs( m_recommendedItems) do
-      --  if(item.Hash == hash.BuildItemHash) then
-      --    projectListing.RecommendedIcon:SetHide(false);
-      --  end
-      --end
+      -- Check to see if this item is recommended
+      if CQUI_ShowProductionRecommendations then
+        for _,hash in ipairs( m_recommendedItems) do
+          if(item.Hash == hash.BuildItemHash) then
+            projectListing.RecommendedIcon:SetHide(false);
+          end
+        end
+      end
 
       -- ProductionQueue: We need to check that there isn't already one of these in the queue
       if(IsHashInQueue(selectedCity, item.Hash)) then

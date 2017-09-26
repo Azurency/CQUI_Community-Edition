@@ -206,9 +206,9 @@
                       <Container Size="parent-65,parent-15" Anchor="R,C" Offset="32,0">
                           <Label ID="LabelText" WrapWidth="160" String="?Industrial Zone" Style="WhiteSemiBold12" Anchor="L,C" />
                       </Container>
-                      <Stack Anchor="R,C" StackGrowth="Down" Padding="-6">
-                          <Grid ID="RecommendedIcon" SliceTextureSize="40,34" SliceCorner="22,15" Size="40,34" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
-                              <Image Texture="AdvisorRec22" Size="22,22" Anchor="R,T" Offset="6,4">
+                      <Stack Anchor="R,C" StackGrowth="Left" Padding="0">
+                          <Grid ID="RecommendedIcon" SliceTextureSize="36,30" SliceCorner="22,15" Size="36,30" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
+                              <Image Texture="AdvisorRec22" Size="22,22" Anchor="R,T" Offset="2,4">
                                   <FlipAnim Texture="AdvisorRecAnim22" Size="26,26" Anchor="C,C" FrameCount="12" Columns="4" Speed="14" EndPause="3" Color="255,255,255,200" />
                               </Image>
                           </Grid>
@@ -244,9 +244,9 @@
               <Label        ID="LabelText"        WrapWidth="160" String="?Industrial Zone" Style="WhiteSemiBold14"  Anchor="L,C" Offset="10,0"/>
             </Container>
           </Stack>
-          <Stack Anchor="R,C" StackGrowth="Down" Padding="-6">
-            <Grid               ID="RecommendedIcon" SliceTextureSize="40,34" SliceCorner="22,15" Size="40,34" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
-              <Image            Texture="AdvisorRec22"      Size="22,22" Anchor="R,T" Offset="6,4">
+          <Stack Anchor="R,C" StackGrowth="Left" Padding="0">
+            <Grid               ID="RecommendedIcon" SliceTextureSize="36,30" SliceCorner="22,15" Size="36,30" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
+              <Image            Texture="AdvisorRec22"      Size="22,22" Anchor="R,T" Offset="2,4">
                 <FlipAnim       Texture="AdvisorRecAnim22"  Size="26,26" Anchor="C,C" FrameCount="12" Columns="4" Speed="14" EndPause="3" Color="255,255,255,200"/>
               </Image>
             </Grid>
@@ -279,9 +279,9 @@
           <Container                            Anchor="R,C"  Offset="10,0" Size="255,38" >
             <Label      ID="LabelText"          Anchor="L,C"                                      Style="WhiteSemiBold14" String="Industrial Zone" WrapWidth="260" />
           </Container>
-          <Stack Anchor="R,C" StackGrowth="Down" Padding="-6">
-            <Grid               ID="RecommendedIcon" SliceTextureSize="40,34" SliceCorner="22,15" Size="40,34" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
-              <Image            Texture="AdvisorRec22"      Size="22,22" Anchor="R,T" Offset="6,4">
+          <Stack Anchor="R,C" StackGrowth="Left" Padding="0">
+            <Grid               ID="RecommendedIcon" SliceTextureSize="36,30" SliceCorner="22,15" Size="36,30" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
+              <Image            Texture="AdvisorRec22"      Size="22,22" Anchor="R,T" Offset="2,4">
                 <FlipAnim       Texture="AdvisorRecAnim22"  Size="26,26" Anchor="C,C" FrameCount="12" Columns="4" Speed="14" EndPause="3" Color="255,255,255,200"/>
               </Image>
             </Grid>
@@ -316,9 +316,9 @@
             <Label        ID="LabelText"          WrapWidth="120" String="Industrial Zone" Style="WhiteSemiBold14"  Anchor="L,C"/>
             <Image ID="ReligionIcon" Size="22,22" IconSize="22" Icon="ICON_RELIGION_ISLAM"/>
           </Container>
-          <Stack Anchor="R,C" StackGrowth="Down" Padding="-6">
-            <Grid               ID="RecommendedIcon" SliceTextureSize="40,34" SliceCorner="22,15" Size="40,34" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
-              <Image            Texture="AdvisorRec22"      Size="22,22" Anchor="R,T" Offset="6,4">
+          <Stack Anchor="R,C" StackGrowth="Left" Padding="0">
+            <Grid               ID="RecommendedIcon" SliceTextureSize="36,30" SliceCorner="22,15" Size="36,30" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
+              <Image            Texture="AdvisorRec22"      Size="22,22" Anchor="R,T" Offset="2,4">
                 <FlipAnim       Texture="AdvisorRecAnim22"  Size="26,26" Anchor="C,C" FrameCount="12" Columns="4" Speed="14" EndPause="3" Color="255,255,255,200"/>
               </Image>
             </Grid>
@@ -346,9 +346,9 @@
                 <TextureBar ID="ProductionCorpsProgress" Texture="CityPanel_ProductionMeterSmall" Size="67,17" Anchor="C,C" Speed="1" Direction="Right"/>
               </Image>
               <Label ID="CorpsLabelIcon" String="([ICON_Corps]Corps)" Style="WhiteSemiBold14"  Anchor="L,C" Offset="10,0" Color0="217,180,119"/>
-              <Stack Anchor="R,C" StackGrowth="Down" Padding="-6">
-                <Grid               ID="CorpsRecommendedIcon" SliceTextureSize="40,34" SliceCorner="22,15" Size="40,34" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
-                  <Image            Texture="AdvisorRec22"      Size="22,22" Anchor="R,T" Offset="6,4">
+              <Stack Anchor="R,C" StackGrowth="Left" Padding="0">
+                <Grid               ID="CorpsRecommendedIcon" SliceTextureSize="36,30" SliceCorner="22,15" Size="36,30" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
+                  <Image            Texture="AdvisorRec22"      Size="22,22" Anchor="R,T" Offset="2,4">
                     <FlipAnim       Texture="AdvisorRecAnim22"  Size="26,26" Anchor="C,C" FrameCount="12" Columns="4" Speed="14" EndPause="3" Color="255,255,255,200"/>
                   </Image>
                 </Grid>
@@ -372,9 +372,9 @@
                 <TextureBar ID="ProductionArmyProgress" Texture="CityPanel_ProductionMeterSmall" Size="67,17" Anchor="C,C" Speed="1" Direction="Right"/>
               </Image>
               <Label        ID="ArmyLabelIcon" String="([ICON_Army]Army)" Style="WhiteSemiBold14"  Anchor="L,C" Offset="10,0" Color0="217,180,119"/>
-              <Stack Anchor="R,C" StackGrowth="Down" Padding="-6">
-                <Grid               ID="ArmyRecommendedIcon" SliceTextureSize="40,34" SliceCorner="22,15" Size="40,34" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
-                  <Image            Texture="AdvisorRec22"      Size="22,22" Anchor="R,T" Offset="6,4">
+              <Stack Anchor="R,C" StackGrowth="Left" Padding="0">
+                <Grid               ID="ArmyRecommendedIcon" SliceTextureSize="36,30" SliceCorner="22,15" Size="36,30" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
+                  <Image            Texture="AdvisorRec22"      Size="22,22" Anchor="R,T" Offset="2,4">
                     <FlipAnim       Texture="AdvisorRecAnim22"  Size="26,26" Anchor="C,C" FrameCount="12" Columns="4" Speed="14" EndPause="3" Color="255,255,255,200"/>
                   </Image>
                 </Grid>
@@ -406,9 +406,9 @@
             <Container ID="CorpsArmyDropdownArea" Size="30,55" Hidden="1">
               <Box Color="22,27,29,200" Size="1,parent" Anchor="L,C"/>
             </Container>
-            <Stack Anchor="R,C" StackGrowth="Down" Padding="-6">
-              <Grid               ID="RecommendedIcon" SliceTextureSize="40,34" SliceCorner="22,15" Size="40,34" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
-                <Image            Texture="AdvisorRec22"      Size="22,22" Anchor="R,T" Offset="6,4">
+            <Stack Anchor="R,C" StackGrowth="Left" Padding="0">
+              <Grid               ID="RecommendedIcon" SliceTextureSize="36,30" SliceCorner="22,15" Size="36,30" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
+                <Image            Texture="AdvisorRec22"      Size="22,22" Anchor="R,T" Offset="2,4">
                   <FlipAnim       Texture="AdvisorRecAnim22"  Size="26,26" Anchor="C,C" FrameCount="12" Columns="4" Speed="14" EndPause="3" Color="255,255,255,200"/>
                 </Image>
               </Grid>
@@ -446,9 +446,9 @@
           <Container Size="parent-65,parent-15" Anchor="R,C" Offset="10,0">
             <Label String="Industrial Zone" Style="WhiteSemiBold14"  ID="LabelText" Anchor="L,C" WrapWidth="180" />
           </Container>
-          <Stack Anchor="R,C" StackGrowth="Down" Padding="-6">
-            <Grid               ID="RecommendedIcon" SliceTextureSize="40,34" SliceCorner="22,15" Size="40,34" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
-              <Image            Texture="AdvisorRec22"      Size="22,22" Anchor="R,T" Offset="6,4">
+          <Stack Anchor="R,C" StackGrowth="Left" Padding="0">
+            <Grid               ID="RecommendedIcon" SliceTextureSize="36,30" SliceCorner="22,15" Size="36,30" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
+              <Image            Texture="AdvisorRec22"      Size="22,22" Anchor="R,T" Offset="2,4">
                 <FlipAnim       Texture="AdvisorRecAnim22"  Size="26,26" Anchor="C,C" FrameCount="12" Columns="4" Speed="14" EndPause="3" Color="255,255,255,200"/>
               </Image>
             </Grid>
