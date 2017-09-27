@@ -3,6 +3,7 @@
 <!--Custom localized text is broken after reloading right now, so even though cutom localizations are ready, they're commented out-->
 
 <Context Name="CQUI_SettingsElement">
+  <Container Style="FullScreenVignetteConsumer" />
   <Box ID="MainGrid" Style="ShellBGBox">
     <Container ID="MainWindow" Style="ShellWindowContainer">
       <Container ID="Header" Style="ShellHeaderContainer">
@@ -440,8 +441,9 @@
         </Stack>
       </Container>
     </Container>
+    <GridButton ID="ConfirmButton" Style="ButtonConfirm"  AnchorSide="I,O" Anchor="c,b" String="LOC_GENERIC_CONFIRM_BUTTON" Size="300,41"/>
+    <Label Anchor="c,b" AnchorSide="I,O" Style="FontNormal14" String="LOC_CQUI_SETTINGS_REMINDER" Offset="0,50" Color="102,122,145"/>
       </Grid>
-    <Label Anchor="c,b" Style="FontFlair16" String="LOC_CQUI_SETTINGS_REMINDER"/>
     </Container>
   </Box>
 </Context>

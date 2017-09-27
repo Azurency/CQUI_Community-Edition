@@ -204,6 +204,7 @@ function OnInputHandler( pInputStruct:table )
   return false;
 end
 function Close()
+  UI.PlaySound("UI_Pause_Menu_On");
   ContextPtr:SetHide(true);
 end
 
@@ -270,6 +271,13 @@ local WorkIconAlphaConverter = {
   end
 };
 
+function OnShow()
+  UI.PlaySound("UI_Pause_Menu_On");
+  -- From Civ6_styles: FullScreenVignetteConsumer
+  Controls.ScreenAnimIn:SetToBeginning();
+  Controls.ScreenAnimIn:Play();
+end
+
 function Initialize()
   ContextPtr:SetHide(true);
   --Adding/binding tabs...
@@ -290,6 +298,10 @@ function Initialize()
     local panel = tab[2];
     button:RegisterCallback(Mouse.eLClick, function() ShowTab(button, panel); end);
   end
+
+  -- Close callback
+  Controls.ConfirmButton:RegisterCallback(Mouse.eLClick, Close);
+
   --Populating/binding comboboxes...
   PopulateComboBox(Controls.BindingsPullDown, bindings_options, "CQUI_BindingsMode", Locale.Lookup("LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP"));
   PopulateComboBox(Controls.ResourceIconStyle, resource_icon_style_options, "CQUI_ResourceDimmingStyle", Locale.Lookup("LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP"));
@@ -339,6 +351,8 @@ function Initialize()
 
   InitializeGossipCheckboxes();
   InitializeTraderScreenCheckboxes();
+
+  ContextPtr:SetShowHandler( OnShow );
 
   --Setting up panel controls
   ShowTab(m_tabs[1][1], m_tabs[1][2]); --Show General Settings on start
