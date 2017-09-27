@@ -536,7 +536,7 @@ function DoEndTurn( optionalNewBlocker:number )
   end
 
   if UI.IsProcessingMessages() then
-    print("ActionPanel:DoEndTurn() The game is busy processing messages");
+    print("ERROR : ActionPanel:DoEndTurn() The game is busy processing messages");
     return;
   end
 
@@ -668,7 +668,7 @@ function OnEndTurnRightClicked()
   end;
 
   if not pPlayer:IsTurnActive() then
-    print("Player's turn not active");
+    print("ERROR : Player's turn not active");
     return;
   end
 

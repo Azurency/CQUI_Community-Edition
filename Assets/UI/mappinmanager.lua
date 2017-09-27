@@ -275,7 +275,7 @@ function MapPinFlag.SetFlagUnitEmblem( self : MapPinFlag )
     --]]
 
     if (textureSheet == nil) then     --Check to see if the unit has an icon atlas index defined
-      print("Could not find icon for " .. iconName);
+      print("ERROR : Could not find icon for " .. iconName);
       textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas("ICON_MAP_PIN_UNKNOWN_WHITE");   --If not, resolve the index to be a generic unknown index
     end
     if (textureSheetShadow == nil) then

@@ -1009,7 +1009,7 @@ function MovePolicyItemToTop(item:table)
   if newParent then
     item:ChangeParent(newParent);
   else
-    print("Failed to change parent of " .. item:GetID() .. " to " .. parentID);
+    print("ERROR : Failed to change parent of " .. item:GetID() .. " to " .. parentID);
   end
 end
 function MovePolicyItemToStack(item:table)
@@ -1020,7 +1020,7 @@ function MovePolicyItemToStack(item:table)
   if newParent then
     item:ChangeParent(newParent);
   else
-    print("Failed to change parent of " .. item:GetID() .. " to " .. parentID);
+    print("ERROR : Failed to change parent of " .. item:GetID() .. " to " .. parentID);
   end
 end
 

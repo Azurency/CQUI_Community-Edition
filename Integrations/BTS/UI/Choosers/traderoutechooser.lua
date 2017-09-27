@@ -12,6 +12,7 @@ local colorYieldValues = true
 include("InstanceManager");
 include("SupportFunctions");
 include("TradeSupport");
+include("civ6common");
 
 local Game = Game
 local Players = Players
@@ -107,7 +108,7 @@ function Refresh()
 
   -- Handle post open (ie TradeOverview) calls
   if m_postOpenSelectPlayerID ~= -1 and m_postOpenSelectCityID ~= -1 then
-    print("Selecting", m_postOpenSelectCityID)
+    print_debug("Selecting", m_postOpenSelectCityID)
     local pPlayer = Players[m_postOpenSelectPlayerID]
     m_destinationCity = pPlayer:GetCities():FindID(m_postOpenSelectCityID)
     RealizeLookAtDestinationCity();
@@ -282,7 +283,7 @@ function RefreshChooserPanel()
     m_TurnBuiltRouteTable = Game.GetCurrentGameTurn()
     m_RebuildAvailableRoutes = false -- done building routes
   else
-    print("OPT: Not rebuilding routes")
+    print_debug("OPT: Not rebuilding routes")
   end
 
   -- Update Filters
@@ -344,14 +345,14 @@ function RefreshStack()
     -- Filter changed, need to re-sort
     m_SortSettingsChanged = true
   else
-    print("OPT: Not refiltering.")
+    print_debug("OPT: Not refiltering.")
   end
 
   if m_SortSettingsChanged then
     m_TradeRoutes = SortTradeRoutes(m_TradeRoutes, m_SortBySettings);
     m_SortSettingsChanged = false -- done sorting
   else
-    print("OPT: Not resorting.")
+    print_debug("OPT: Not resorting.")
   end
 
   -- for i, tradeRoute in ipairs(tradeRoutes) do
@@ -1063,20 +1064,20 @@ function Open()
   -- Select last route if one exists
   local lastRoute:table = GetLastRouteForTrader(selectedUnitID);
   if lastRoute ~= nil then
-    print("Last route for trader " .. selectedUnitID .. ": " .. GetTradeRouteString(lastRoute));
+    print_debug("Last route for trader " .. selectedUnitID .. ": " .. GetTradeRouteString(lastRoute));
     originCity = Cities.GetCityInPlot(selectedUnit:GetX(), selectedUnit:GetY());
 
     -- Don't select the route, if trader was transferred
     if lastRoute.OriginCityID ~= originCity:GetID() then
-      print("Trader was transferred. Not selecting the last route")
+      print_debug("Trader was transferred. Not selecting the last route")
     elseif IsRoutePossible(originCity:GetOwner(), originCity:GetID(), lastRoute.DestinationCityPlayer, DestinationCityID) then
       local destinationPlayer:table = Players[lastRoute.DestinationCityPlayer];
       m_destinationCity = destinationPlayer:GetCities():FindID(lastRoute.DestinationCityID);
     else
-      print("Route is no longer valid.");
+      print_debug("Route is no longer valid.");
     end
   else
-    print("No last route was found for trader " .. selectedUnitID);
+    print_debug("No last route was found for trader " .. selectedUnitID);
   end
 
   Refresh();

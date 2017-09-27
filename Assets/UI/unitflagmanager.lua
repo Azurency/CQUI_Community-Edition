@@ -294,7 +294,7 @@ function OnUnitFlagClick( playerID : number, unitID : number )
 
   local pUnit = pPlayer:GetUnits():FindID(unitID);
   if (pUnit == nil ) then
-    print("Player clicked a unit flag for unit '"..tostring(unitID).."' but that unit doesn't exist.");
+    print("ERROR : Player clicked a unit flag for unit '"..tostring(unitID).."' but that unit doesn't exist.");
     Controls.PanelTop:ForceAnAssertDueToAboveCondition();
     return;
   end

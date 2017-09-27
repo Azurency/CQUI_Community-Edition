@@ -3,6 +3,7 @@
 --  Includes the main logic to populate the civilopedia.
 -- ===========================================================================
 include( "InstanceManager" );
+include("civ6common");
 
 
 local LOC_TREE_SEARCH_W_DOTS = Locale.Lookup("LOC_TREE_SEARCH_W_DOTS");
@@ -821,7 +822,7 @@ end
 
 -------------------------------------------------------------------------------
 function NavigateTo(SectionId, PageId)
-  print("Navigating to " .. SectionId .. ":" .. PageId);
+  print_debug("Navigating to " .. SectionId .. ":" .. PageId);
 
   local prevSectionId = _CurrentSectionId;
   local prevPageId = _CurrentPageId;
@@ -866,14 +867,14 @@ end
 -------------------------------------------------------------------------------
 function OnOpenCivilopedia(sectionId_or_search, pageId)
 
-  print("Received a request to open the Civilopedia");
+  print_debug("Received a request to open the Civilopedia");
   if(pageId == nil and sectionId_or_search) then
-    print("Searching for " .. sectionId_or_search);
+    print_debug("Searching for " .. sectionId_or_search);
     local results = CivilopediaSearch(sectionId_or_search);
     if(results and #results > 0) then
-		print("Found " .. #results .. " results");
+		print_debug("Found " .. #results .. " results");
 		for i,v in ipairs(results) do
-			print(v.SectionId .. " - " .. v.PageId);
+			print_debug(v.SectionId .. " - " .. v.PageId);
 		end
       NavigateTo(results[1].SectionId, results[1].PageId);
     else

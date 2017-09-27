@@ -2862,7 +2862,7 @@ function OnCityProductionCompleted(playerID, cityID, orderType, unitType, cancel
     end
 
     if(not isComplete) then
-      print("Non matching orderType and/or unitType");
+      print("ERROR : Non matching orderType and/or unitType");
       Refresh();
       return;
     end
@@ -2960,7 +2960,7 @@ function LoadQueues()
       end
 
       if(currentType == 0) then
-        print("Could not find production type for hash: " .. currentProductionHash);
+        print("ERROR : Could not find production type for hash: " .. currentProductionHash);
       end
 
       prodQueue[productionQueueTableKey][1] = {
@@ -3710,7 +3710,7 @@ function CheckAndReplaceQueueForUpgrades(city)
       BuildFirstQueued(city);
       LuaEvents.UpdateBanner(playerID, cityID);
 
-      print("Entire Queue Wiped");
+      print_debug("Entire Queue Wiped");
   end
 
   if (#removeUnits > 0) then
@@ -3718,7 +3718,7 @@ function CheckAndReplaceQueueForUpgrades(city)
       local success = RemoveFromQueue(city, removeUnits[i], true);
 
       if success then
-        print("Removing Item: " .. i);
+        print_debug("Removing Item: " .. i);
       end
 
       if(success and removeUnits[i] == 1) then
@@ -3854,7 +3854,7 @@ function ResetCityQueue(cityID, player)
     end
 
     if(currentType == 0) then
-      print("Could not find production type for hash: " .. currentProductionHash);
+      print("ERROR : Could not find production type for hash: " .. currentProductionHash);
     end
 
     prodQueue[productionQueueTableKey][1] = {

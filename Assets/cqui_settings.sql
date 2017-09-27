@@ -60,9 +60,9 @@ INSERT OR REPLACE INTO CQUI_Settings -- Don't touch this line!
       ('CQUI_TraderAddDivider', 1), -- Adds a divider between groups in TradeOverview panel
       ('CQUI_TraderShowSortOrder', 0), -- Adds a divider between groups in TradeOverview panel
       ('CQUI_ShowProductionRecommendations', 0), -- Shows the advisor recommendation in the city produciton panel
-      ('CQUI_ShowTechCivicRecommendations', 0), -- Shows the advisor recommendation in the techs/civics tree/panel
-      ('CQUI_ShowImprovementsRecommendations', 0); -- Shows the advisor recommendation for the builder improvements
-
+      ('CQUI_ShowTechCivicRecommendations', 1), -- Shows the advisor recommendation in the techs/civics tree/panel
+      ('CQUI_ShowImprovementsRecommendations', 0), -- Shows the advisor recommendation for the builder improvements
+      ('CQUI_ShowDebugPrint', 0); -- Shows print in the console
 /*
     ┌────────────────────────────────────────────────────────────────────────────────────────────┐
     │                                    Combobox settings                                       │
