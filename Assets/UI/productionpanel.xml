@@ -241,18 +241,16 @@
               <Image ID="ProductionProgressArea" Texture="CityPanel_MeterSmallBacking" Size="120,21">
                 <TextureBar ID="ProductionProgress" Texture="CityPanel_ProductionMeterSmall" Size="112,17" Anchor="C,C" Speed="1" Direction="Right"/>
               </Image>
-              <Label        ID="LabelText"        WrapWidth="160" String="?Industrial Zone" Style="WhiteSemiBold14"  Anchor="L,C" Offset="10,0"/>
+              <Label        ID="LabelText"        WrapWidth="150" String="?Industrial Zone" Style="WhiteSemiBold14"  Anchor="L,C" Offset="10,0"/>
             </Container>
           </Stack>
-          <Stack Anchor="R,C" StackGrowth="Left" Padding="0">
+          <Stack Anchor="R,C" StackGrowth="Left" Padding="-3">
             <Grid               ID="RecommendedIcon" SliceTextureSize="36,30" SliceCorner="22,15" Size="36,30" Hidden="1" Texture="Controls_AdvisorRecBacking" ToolTip="LOC_HUD_UNIT_PANEL_RECOMMENDED" Anchor="R,T">
               <Image            Texture="AdvisorRec22"      Size="22,22" Anchor="R,T" Offset="2,4">
                 <FlipAnim       Texture="AdvisorRecAnim22"  Size="26,26" Anchor="C,C" FrameCount="12" Columns="4" Speed="14" EndPause="3" Color="255,255,255,200"/>
               </Image>
             </Grid>
-          </Stack>
-          <Stack Anchor="R,C" StackGrowth="Left" Offset="3,0" Padding="3">
-            <Label        ID="CostText"         String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="5,0"/>
+            <Label        ID="CostText"         String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="8,0"/>
             <GridButton ID="PurchaseButton" Size="62,parent-9" Style="PanelButtonLightweight" Anchor="R,C"/>
             <GridButton ID="FaithPurchaseButton" Size="62,parent-9" Style="PanelButtonLightweight" Anchor="R,C"/>
           </Stack>

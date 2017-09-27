@@ -52,11 +52,7 @@ local CQUI_ShowProductionRecommendations :boolean = false;
 function CQUI_OnSettingsUpdate()
   CQUI_INSTANCE_Y = GameConfiguration.GetValue("CQUI_ProductionItemHeight");
   CQUI_ProductionQueue = GameConfiguration.GetValue("CQUI_ProductionQueue");
-  if GameConfiguration.GetValue("CQUI_ShowProductionRecommendations") == 0 then
-    CQUI_ShowProductionRecommendations = false
-  else
-    CQUI_ShowProductionRecommendations = true
-  end
+  CQUI_ShowProductionRecommendations = GameConfiguration.GetValue("CQUI_ShowProductionRecommendations") == 1
   if(not CQUI_ProductionQueue) then
     ResetAllCityQueues();
     Controls.QueueAlphaIn:SetHide(true);

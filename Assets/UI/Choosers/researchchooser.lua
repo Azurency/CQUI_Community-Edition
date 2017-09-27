@@ -39,6 +39,7 @@ local m_needsRefresh	:boolean = false; --used to track whether a given series of
 
 --CQUI Members
 local CQUI_AlwaysOpenTechTrees = false; --Ignores events calling for this to open when true
+local CQUI_ShowTechCivicRecommendations = false;
 
 -- ===========================================================================
 --	METHODS
@@ -227,7 +228,8 @@ function AddAvailableResearch( playerID:number, kData:table )
   kItemInstance.Top:SetDisabled( isDisabled );
 
   -- Hide/Show Recommendation Icon
-  if kData.IsRecommended and kData.AdvisorType then
+  -- CQUI : only if show tech civ enabled in settings
+  if kData.IsRecommended and kData.AdvisorType and CQUI_ShowTechCivicRecommendations then
     kItemInstance.RecommendedIcon:SetIcon(kData.AdvisorType);
     kItemInstance.RecommendedIcon:SetHide(false);
   else
@@ -276,6 +278,7 @@ function OnOpenPanel()
   if(CQUI_AlwaysOpenTechTrees) then
     LuaEvents.ResearchChooser_RaiseTechTree();
   else
+    Refresh();
     LuaEvents.ResearchChooser_ForceHideWorldTracker();
     UI.PlaySound("Tech_Tray_Slide_Open");
     m_isExpanded = true;
@@ -433,6 +436,7 @@ end
 
 function CQUI_OnSettingsUpdate()
   CQUI_AlwaysOpenTechTrees = GameConfiguration.GetValue("CQUI_AlwaysOpenTechTrees");
+  CQUI_ShowTechCivicRecommendations = GameConfiguration.GetValue("CQUI_ShowTechCivicRecommendations") == 1
 end
 
 -- ===========================================================================

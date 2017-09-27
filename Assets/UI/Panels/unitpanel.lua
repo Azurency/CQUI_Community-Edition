@@ -18,6 +18,13 @@ local SECONDARY_ACTIONS_ART_PADDING :number = -4;
 local MAX_BEFORE_TRUNC_STAT_NAME  :number = 170;
 
 
+--CQUI Members
+local CQUI_ShowImprovementsRecommendations :boolean = false;
+function CQUI_OnSettingsUpdate()
+  CQUI_ShowImprovementsRecommendations = GameConfiguration.GetValue("CQUI_ShowImprovementsRecommendations") == 1
+end
+LuaEvents.CQUI_SettingsUpdate.Add(CQUI_OnSettingsUpdate);
+LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 
 -- ===========================================================================
 --  MEMBERS / VARIABLES
@@ -784,9 +791,8 @@ function View(data)
     Controls.RecommendedActionButton:ReprocessAnchoring();
     Controls.RecommendedActionIcon:ReprocessAnchoring();
 
-    bestBuildAction = nil;
     Controls.RecommendedActionFrame:SetHide( bestBuildAction == nil );
-    if ( bestBuildAction ~= nil ) then
+    if ( bestBuildAction ~= nil and CQUI_ShowImprovementsRecommendations) then -- CQUI : show improvement recommendation only if setting is enabled
       Controls.RecommendedActionButton:SetHide(false);
       Controls.BuildActionsPanel:SetSizeY( buildStackHeight + 20 + BUILD_PANEL_ART_PADDING_Y);
       Controls.BuildActionsStack:SetOffsetY(26);
