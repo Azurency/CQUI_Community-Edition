@@ -7,7 +7,7 @@
 include( "InstanceManager" );
 include( "SupportFunctions" );
 include("Civ6Common"); -- IsTutorialRunning()
-
+include("PopupDialog"); -- Create Popups in game
 
 -- ===========================================================================
 --  CONSTANTS
@@ -523,22 +523,28 @@ end
 -- ===========================================================================
 function DoEndTurn( optionalNewBlocker:number )
 
-  local pPlayer = Players[Game.GetLocalPlayer()];
-  if (pPlayer == nil) then
-    return;
-  end
+	local pPlayer = Players[Game.GetLocalPlayer()];
+	if (pPlayer == nil) then
+		return;
+	end
+	-- Policy Card Popup Reminder 
+	local PRD:table	= pPlayer:GetCulture();
 
-  -- If the player can unready their turn, request that.
-  -- CanUnreadyTurn() is only true when the player should unready their turn instead of turn completing.
-  if pPlayer:CanUnreadyTurn() then
-    UI.RequestAction(ActionTypes.ACTION_UNREADYTURN);
-    return;
-  end
+	if pPlayer:CanUnreadyTurn() then
+		UI.RequestAction(ActionTypes.ACTION_UNREADYTURN);	
+		return;
+	end
 
-  if UI.IsProcessingMessages() then
-    print("ActionPanel:DoEndTurn() The game is busy processing messages");
-    return;
-  end
+	if UI.IsProcessingMessages() then
+		print("ActionPanel:DoEndTurn() The game is busy processing messages");
+		return;
+	end
+
+	-- If not in selection mode; reset mode before performing the action.
+	if UI.GetInterfaceMode() ~= InterfaceModeTypes.SELECTION then
+		UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+	end
+
 
   -- Make sure if an active blocker is not set, to do one more check from the engine/authority.
   if optionalNewBlocker ~= nil then
@@ -572,7 +578,21 @@ function DoEndTurn( optionalNewBlocker:number )
       else
         error( "Unable to find selectable attack encampment while in CQUI_CheckEncampmentRangeAttackState()" );
       end
-    else
+	  
+	  -- Adding in a popup to remind player to change policy cards --
+    elseif(PRD:CivicCompletedThisTurn() and not PRD:PolicyChangeMade()) then		  
+			local prd_PopupDialog:table = PopupDialogInGame:new( "PolicyReminderPrompt" );
+			
+			prd_PopupDialog:AddTitle("Did You Forget Your Policy Changes?");
+			prd_PopupDialog:AddText("New policy cards have been unlocked.[NEWLINE][NEWLINE]Do you want to Make Changes to your Policy[NEWLINE]or[NEWLINE]Continue without changing?");
+			prd_PopupDialog:AddButton("Make Policy Changes", function() LuaEvents.LaunchBar_GovernmentOpenMyGovernment(); end );
+			prd_PopupDialog:AddButton("Continue.", function()
+					
+					UI.RequestAction(ActionTypes.ACTION_ENDTURN);		
+					UI.PlaySound("Stop_Unit_Movement_Master");
+			end );
+			prd_PopupDialog:Open();		
+		else
       UI.RequestAction(ActionTypes.ACTION_ENDTURN);
       UI.PlaySound("Stop_Unit_Movement_Master");
     end
