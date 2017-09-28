@@ -28,11 +28,14 @@
 
 ![](http://i.imgur.com/M11tac6.png)
 
-* Tech/Civic Tree and Civilopedia now autofocus the searchbar
-* Civilopedia remembers the last visited page
+* Tech/Civic Tree and Civilopedia now autofocus the searchbar.
+* Civilopedia remembers the last visited page.
 * Civic/Tech popups can be disabled. Optionally, the voiceover can still be kept even without the popup.
-* Civic/Tech notifications spawned at 50%/100% research progress
-* [Minimap can be toggled between 2x-Mode and original by rightclicking](https://gfycat.com/DefinitiveDependableAfricanharrierhawk)
+* Civic/Tech notifications spawned at 50%/100% research progress.
+* MiniMap Size can be changed in CQUI settings.
+
+![](https://i.imgur.com/a48pAkH.jpg)
+
 * Dedicated mod settings menu with persistent settings
 
 ![](http://i.imgur.com/ePCspFh.png)
