@@ -26,7 +26,7 @@
 
 * Map Pinning system enhanced: new pins, long pinlists are now scrollable, right click in pinlist to quickly delete pins, enter key now bound to finalizing a pin in pin creation menu.
 
-![](https://i.imgur.com/a48pAkH.jpg)
+![](http://i.imgur.com/M11tac6.png)
 
 * Tech/Civic Tree and Civilopedia now autofocus the searchbar.
 * Civilopedia remembers the last visited page.
@@ -34,7 +34,7 @@
 * Civic/Tech notifications spawned at 50%/100% research progress.
 * MiniMap Size can be changed in CQUI settings.
 
-![](http://i.imgur.com/ePCspFh.png)
+![](https://i.imgur.com/a48pAkH.jpg)
 
 * Dedicated mod settings menu with persistent settings
 
