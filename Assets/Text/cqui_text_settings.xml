@@ -232,5 +232,8 @@
     <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWIMPROVEMENTS" Language="en_US">
       <Text>Show improvements recommendations</Text>
     </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWCITYDETAILADVISOR" Language="en_US">
+      <Text>Show city detail advisor</Text>
+    </Row>
   </LocalizedText>
 </GameData>

@@ -308,6 +308,7 @@ function Initialize()
   PopulateComboBox(Controls.ProductionRecommendationsPullDown, boolean_options, "CQUI_ShowProductionRecommendations");
   PopulateComboBox(Controls.TechRecommendationsPullDown, boolean_options, "CQUI_ShowTechCivicRecommendations");
   PopulateComboBox(Controls.ImprovementsRecommendationsPullDown, boolean_options, "CQUI_ShowImprovementsRecommendations");
+  PopulateComboBox(Controls.CityDetailAdvisorPullDown, boolean_options, "CQUI_ShowCityDetailAdvisor");
 
   --Populating/binding checkboxes...
   PopulateCheckBox(Controls.ProductionQueueCheckbox, "CQUI_ProductionQueue");
