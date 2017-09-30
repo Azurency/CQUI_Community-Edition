@@ -118,7 +118,7 @@ local m_lastTurnTickTime  : number  = 0;                    -- When did we last 
 local m_numberVisibleBlockers :number = 0;
 local m_visibleBlockerTypes : table   = {};
 local m_isSlowTurnEnable  : boolean = false;                  -- Tutorial: when active slow to allow clicks when turn raises.
-
+local CQUI_ShowPaths = true;
 
 -- ===========================================================================
 --  UI Event
@@ -559,6 +559,19 @@ function DoEndTurn( optionalNewBlocker:number )
     UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
   end
 
+  function CQUI_HidePRD()
+	if CQUI_ShowPRD then
+	  LuaEvents.CQUI_clearUnitPath();
+	end
+  end
+  
+  function CQUI_OnSettingsUpdate()
+	CQUI_ShowPRD = GameConfiguration.GetValue("CQUI_ShowPolicyReminder");
+  end
+
+	LuaEvents.CQUI_SettingsUpdate.Add(CQUI_OnSettingsUpdate);
+	LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
+	
   if m_activeBlockerId == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING then
     if (CheckUnitsHaveMovesState()) then
       UI.SelectNextReadyUnit();
@@ -580,7 +593,7 @@ function DoEndTurn( optionalNewBlocker:number )
       end
 	  
 	  -- Adding in a popup to remind player to change policy cards --
-    elseif(PRD:CivicCompletedThisTurn() and not PRD:PolicyChangeMade()) then		  
+    elseif(PRD:CivicCompletedThisTurn() and not PRD:PolicyChangeMade() and CQUI_ShowPRD) then		  
 			local prd_PopupDialog:table = PopupDialogInGame:new( "PolicyReminderPrompt" );
 			
 			prd_PopupDialog:AddTitle("Did You Forget Your Policy Changes?");
@@ -588,8 +601,8 @@ function DoEndTurn( optionalNewBlocker:number )
 			prd_PopupDialog:AddButton("Make Policy Changes", function() LuaEvents.LaunchBar_GovernmentOpenMyGovernment(); end );
 			prd_PopupDialog:AddButton("Continue.", function()
 					
-					UI.RequestAction(ActionTypes.ACTION_ENDTURN);		
-					UI.PlaySound("Stop_Unit_Movement_Master");
+				UI.RequestAction(ActionTypes.ACTION_ENDTURN);		
+				UI.PlaySound("Stop_Unit_Movement_Master");
 			end );
 			prd_PopupDialog:Open();		
 		else
