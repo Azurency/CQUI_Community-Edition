@@ -32,7 +32,11 @@ function ShowCompletedPopup(completedPopup:table)
   end
 
   -- Queue Popup through UI Manager
-  UIManager:QueuePopup( ContextPtr, PopupPriority.Low); -- Made low so any Boost popups related will be shown first
+  --UIManager:QueuePopup( ContextPtr, PopupPriority.Low); -- Made low so any Boost popups related will be shown first
+  
+  -- CQUI : changing the priority to Normal, the UIManager would not show Low priority popup from time to time - come back at this next patch to see if it's fixed
+  UIManager:QueuePopup( ContextPtr, PopupPriority.Normal);
+  
   m_isWaitingToShowPopup = true;
 
   RefreshSize();
