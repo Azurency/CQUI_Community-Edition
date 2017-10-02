@@ -1124,7 +1124,7 @@
         <Container Offset="1,0" Size="125,parent">
           <Label ID="UnitExp" Style="ReportValueText" String="0/0" Align="Center" Anchor="C,C" Offset="0,0"/>
           <Button ID="Promotion" Hidden="1" Anchor="R,C" Size="32,32" StateOffsetIncrement="0,0" Offset="10,0">
-            <Image Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="R,C" ToolTip="Promotion Available" Icon="ICON_PROMOTION"/>
+            <Image Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="R,C" ToolTip="LOC_HUD_REPORTS_PROMOTION_AVAILABLE" Icon="ICON_PROMOTION"/>
           </Button>
         </Container>
 
@@ -1134,7 +1134,7 @@
 
         <Container Offset="1,0" Size="125,parent">
           <Label ID="UnitMove" Style="ReportValueText" String="0/0" Align="Center" Anchor="C,C" Offset="0,0"/>
-          <Image ID="Formation" Hidden="1" Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="R,C" ToolTip="In Formation" Icon="ICON_UNITCOMMAND_ENTER_FORMATION"/>
+          <Image ID="Formation" Hidden="1" Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="R,C" ToolTip="LOC_HUD_REPORTS_IN_FORMATION" Icon="ICON_UNITCOMMAND_ENTER_FORMATION"/>
         </Container>
 
         <Container Offset="1,0" Size="100,parent">
@@ -1172,7 +1172,7 @@
 
         <Container Offset="1,0" Size="125,parent">
           <Label ID="UnitMove" Style="ReportValueText" String="0/0" Align="Center" Anchor="C,C" Offset="0,0"/>
-          <Image ID="Formation" Hidden="1" Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="R,C" ToolTip="In Formation" Icon="ICON_UNITCOMMAND_ENTER_FORMATION"/>
+          <Image ID="Formation" Hidden="1" Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="R,C" ToolTip="LOC_HUD_REPORTS_IN_FORMATION" Icon="ICON_UNITCOMMAND_ENTER_FORMATION"/>
         </Container>
 
         <Container Offset="1,0" Size="100,parent">
@@ -1243,7 +1243,7 @@
 
         <Container Offset="1,0" Size="125,parent">
           <Label ID="UnitMove" Style="ReportValueText" String="0/0" Align="Center" Anchor="C,C" Offset="0,0"/>
-          <Image ID="Formation" Hidden="1" Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="R,C" ToolTip="In Formation" Icon="ICON_UNITCOMMAND_ENTER_FORMATION"/>
+          <Image ID="Formation" Hidden="1" Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="R,C" ToolTip="LOC_HUD_REPORTS_IN_FORMATION" Icon="ICON_UNITCOMMAND_ENTER_FORMATION"/>
         </Container>
 
         <Container Offset="1,0" Size="250,parent">
@@ -1279,7 +1279,7 @@
 
         <Container Offset="1,0" Size="125,parent">
           <Label ID="UnitMove" Style="ReportValueText" String="0/0" Align="Center" Anchor="C,C" Offset="0,0"/>
-          <Image ID="Formation" Hidden="1" Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="R,C" ToolTip="In Formation" Icon="ICON_UNITCOMMAND_ENTER_FORMATION"/>
+          <Image ID="Formation" Hidden="1" Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="R,C" ToolTip="LOC_HUD_REPORTS_IN_FORMATION" Icon="ICON_UNITCOMMAND_ENTER_FORMATION"/>
         </Container>
 
         <Container Offset="1,0" Size="100,parent">
@@ -1319,7 +1319,7 @@
 
         <Container Offset="1,0" Size="125,parent">
           <Label ID="UnitMove" Style="ReportValueText" String="0/0" Align="Center" Anchor="C,C" Offset="0,0"/>
-          <Image ID="Formation" Hidden="1" Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="R,C" ToolTip="In Formation" Icon="ICON_UNITCOMMAND_ENTER_FORMATION"/>
+          <Image ID="Formation" Hidden="1" Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="R,C" ToolTip="LOC_HUD_REPORTS_IN_FORMATION" Icon="ICON_UNITCOMMAND_ENTER_FORMATION"/>
         </Container>
 
         <Container Offset="1,0" Size="200,parent">

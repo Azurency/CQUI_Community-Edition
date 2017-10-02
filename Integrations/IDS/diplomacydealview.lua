@@ -1558,7 +1558,7 @@ function getImportedResources(playerID)
                   MaxAmount = pDealResource:GetAmount();
                   ClassType = pClassType;
                   -- ARISTOS: Show the deal's other civ's identity only if it is the local player.
-                  ImportString = "[COLOR_Red]Trade[ENDCOLOR] with " .. ((otherID == Game.GetLocalPlayer() or playerID == Game.GetLocalPlayer())
+                  ImportString = Locale.Lookup("LOC_IDS_DEAL_TRADE") .. " " .. ((otherID == Game.GetLocalPlayer() or playerID == Game.GetLocalPlayer())
                     and Locale.Lookup(PlayerConfigurations[otherID]:GetPlayerName()) or "another civ") .. " (" .. ending .. "[ICON_Turn])" .. " : " .. pDealResource:GetAmount();
                 };
                 -- !!ARISTOS: To group resources imported from different sources into a single icon!!!
@@ -1612,7 +1612,7 @@ function getImportedResources(playerID)
               ForType = kResource.ResourceType;
               MaxAmount = resourceAmount;
               ClassType = kResource.ResourceClassType;
-              ImportString = "[COLOR_Civ6Blue]Suzerain[ENDCOLOR] of " .. Locale.Lookup(PlayerConfigurations[pMinorPlayer:GetID()]:GetPlayerName()) .. " : " .. resourceAmount;
+              ImportString = Locale.Lookup("LOC_IDS_DEAL_SUZERAIN").." " .. Locale.Lookup(PlayerConfigurations[pMinorPlayer:GetID()]:GetPlayerName()) .. " : " .. resourceAmount;
               };
             -- !!ARISTOS: To group resources imported from different sources into a single icon!!!
             local isIncluded:boolean = false;
@@ -1767,10 +1767,10 @@ function RenderResourceButton(resource, resourceCategory, iconList, howAcquired)
     icon = ms_IconOnly_Resource_ScarceIM:GetInstance(iconList.ListStack);
   elseif(resourceCategory == 'duplicate') then
     icon = ms_IconOnly_Resource_DuplicateIM:GetInstance(iconList.ListStack);
-    tooltipAddedText = ' (Duplicate)';
+    tooltipAddedText = ' (' .. Locale.Lookup("LOC_IDS_DEAL_DUPLICATE") .. ')';
   elseif(resourceCategory == 'none' or resourceCategory == 'imported') then
     icon = ms_IconOnly_Resource_UntradeableIM:GetInstance(iconList.ListStack);
-    tooltipAddedText = ' (Untradeable)';
+    tooltipAddedText = ' (' .. Locale.Lookup("LOC_IDS_DEAL_UNTRADEABLE") .. ')';
     buttonDisabled = true;
   else
     icon = ms_IconOnlyIM:GetInstance(iconList.ListStack);
@@ -1919,12 +1919,12 @@ function renderCity(pCity : table, player : table, targetContainer : table)
   if pCity:IsOccupied() then
     -- Cede
     if pCity:GetOwner() == otherPlayer:GetID() then
-      button.IconText:SetText(button.IconText:GetText() .. '[COLOR_Civ6Green] - Cede[ENDCOLOR]');
+      button.IconText:SetText(button.IconText:GetText() .. '[COLOR_Civ6Green] - ' .. Locale.Lookup("LOC_IDS_DEAL_CEDE") .. '[ENDCOLOR]'); 
       button.SelectButton:SetTextureOffsetVal(0, 64);
     -- Return
     else
       if pCity:GetOriginalOwner() == otherPlayer:GetID() then
-        button.IconText:SetText(button.IconText:GetText() .. '[COLOR_Civ6Red] - Return[ENDCOLOR]');
+        button.IconText:SetText(button.IconText:GetText() .. '[COLOR_Civ6Red] - ' .. Locale.Lookup("LOC_IDS_DEAL_RETURN") .. '[ENDCOLOR]'); 
         button.SelectButton:SetTextureOffsetVal(0, 96);
       end
     end

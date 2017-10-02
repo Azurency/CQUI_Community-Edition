@@ -436,7 +436,7 @@ function ViewMain( data:table )
   end
   -- Food p/turn tooltip
   local realFoodPerTurnToolTip = data.FoodPerTurnToolTip .."[NEWLINE]"..
-    toPlusMinusString(-(data.FoodPerTurn - data.FoodSurplus)).." from Population[NEWLINE][NEWLINE]"..
+    toPlusMinusString(-(data.FoodPerTurn - data.FoodSurplus)).." "..Locale.Lookup("LOC_HUD_CITY_FROM_POPULATION").."[NEWLINE][NEWLINE]"..
     GetColorPercentString(1 + data.HappinessGrowthModifier/100, 2) .. " "..Locale.Lookup("LOC_HUD_CITY_HAPPINESS_GROWTH_BONUS").."[NEWLINE]"..
     GetColorPercentString(1 + data.OtherGrowthModifiers, 2) .. " "..Locale.Lookup("LOC_HUD_CITY_OTHER_GROWTH_BONUSES").."[NEWLINE]"..
     GetColorPercentString(data.HousingMultiplier, 2).." "..Locale.Lookup("LOC_HUD_CITY_HOUSING_MULTIPLIER");
@@ -473,7 +473,7 @@ function ViewMain( data:table )
         ReligionTooltip = ReligionTooltip.."[NEWLINE][NEWLINE]"..Locale.Lookup(kBelief.Name).."[NEWLINE]"..Locale.Lookup(kBelief.Description);
       end
       if religiousMinoritiesExist then
-        ReligionTooltip = ReligionTooltip.."[NEWLINE]---------------------[NEWLINE]Religious Minorities[NEWLINE]"..religiousMinorities;
+        ReligionTooltip = ReligionTooltip.."[NEWLINE]---------------------[NEWLINE]"..Locale.Lookup("LOC_HUD_CITY_RELIGIOUS_MINORITIES").."[NEWLINE]"..religiousMinorities;
       end
     end
   else
@@ -485,7 +485,7 @@ function ViewMain( data:table )
     if district.isBuilt then
       local districtName = district.Name;
       if district.isPillaged then
-        districtName = districtName .. " [COLOR:StatBadCS](Pillaged)[ENDCOLOR]"
+        districtName = districtName .. " "..Locale.Lookup("LOC_HUD_CITY_PILLAGED").." "
       end
       if ( i == 1 ) then
         DistrictTooltip = DistrictTooltip..""..districtName;
@@ -497,7 +497,7 @@ function ViewMain( data:table )
         if building.isBuilt then
           local buildingName = building.Name;
           if building.isPillaged then
-            buildingName = buildingName .. " [COLOR:StatBadCS](Pillaged)[ENDCOLOR]"
+            buildingName = buildingName .. " "..Locale.Lookup("LOC_HUD_CITY_PILLAGED").." "
           end
           DistrictTooltip = DistrictTooltip.."[NEWLINE]".."[ICON_BULLET]"..buildingName;
         end

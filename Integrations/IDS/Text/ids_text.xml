@@ -3,9 +3,30 @@
   <BaseGameText>
     <!-- ENGLISH -->
 
-    <!-- HUD Common Text -->
+    <!-- IDS -->
     <Row Tag="LOC_IDS_DUMMY_KEY">
       <Text>Current Deals</Text>
+    </Row>
+    <Row Tag="LOC_IDS_DEAL_TERMS">
+      <Text>Deal Terms</Text>
+    </Row>
+    <Row Tag="LOC_IDS_DEAL_CEDE">
+      <Text>Cede</Text>
+    </Row>
+    <Row Tag="LOC_IDS_DEAL_RETURN">
+      <Text>Return</Text>
+    </Row>
+    <Row Tag="LOC_IDS_DEAL_TRADE">
+      <Text>[COLOR_Red]Trade[ENDCOLOR] with</Text>
+    </Row>
+    <Row Tag="LOC_IDS_DEAL_SUZERAIN">
+      <Text>[COLOR_Civ6Blue]Suzerain[ENDCOLOR] of</Text>
+    </Row>
+    <Row Tag="LOC_IDS_DEAL_UNTRADEABLE">
+      <Text>Untradeable</Text>
+    </Row>
+    <Row Tag="LOC_IDS_DEAL_DUPLICATE">
+      <Text>Duplicate</Text>
     </Row>
 
   </BaseGameText>
