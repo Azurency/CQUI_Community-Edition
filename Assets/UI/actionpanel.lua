@@ -124,7 +124,7 @@ local m_lastTurnTickTime  : number  = 0;                    -- When did we last 
 local m_numberVisibleBlockers :number = 0;
 local m_visibleBlockerTypes : table   = {};
 local m_isSlowTurnEnable  : boolean = false;                  -- Tutorial: when active slow to allow clicks when turn raises.
-local CQUI_ShowPaths = true;
+local CQUI_ShowPRD = true;
 
 -- ===========================================================================
 --  UI Event
