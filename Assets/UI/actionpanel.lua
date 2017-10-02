@@ -31,6 +31,12 @@ local MAX_BEFORE_TRUNC_TURN_STRING  :number = 150;
 
 local START_TURN_TIMER_TICK_SOUND :number = 7;  -- Start making turn timer ticking sounds when the turn timer is lower than this seconds.
 
+--Policy Popup Strings
+local PRDTITLEString        :string = Locale.Lookup("LOC_ACTION_PANEL_POLICY_REMINDER_TITLE");
+local PRDTEXTString         :string = Locale.Lookup("LOC_ACTION_PANEL_POLICY_REMINDER_TEXT");
+local PRDBUTTON1String        :string = Locale.Lookup("LOC_ACTION_PANEL_POLICY_REMINDER_BUTTON1");
+local PRDBUTTON2String           :string = Locale.Lookup("LOC_ACTION_PANEL_POLICY_REMINDER_BUTTON2");
+
 -- End Turn Button Strings
 local pleaseWaitString        :string = Locale.Lookup("LOC_ACTION_PANEL_PLEASE_WAIT");
 local pleaseWaitTip         :string = Locale.Lookup("LOC_ACTION_PANEL_PLEASE_WAIT_TOOLTIP");
