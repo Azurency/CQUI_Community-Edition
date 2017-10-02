@@ -6,6 +6,18 @@
       <Text>CQUI</Text>
     </Row>
 
+	<Row Tag="LOC_ACTION_PANEL_POLICY_REMINDER_TITLE"Language="en_US">
+		<Text>[ICON_Culture]  POLICY REMINDER  [ICON_Culture]</Text>
+	</Row>
+	<Row Tag="LOC_ACTION_PANEL_POLICY_REMINDER_TEXT"Language="en_US">
+		<Text>[NEWLINE]New policy cards have been unlocked.[NEWLINE]Continue without changing?</Text>
+	</Row>
+	<Row Tag="LOC_ACTION_PANEL_POLICY_REMINDER_BUTTON1"Language="en_US">
+		<Text>Change</Text>
+	</Row>
+	<Row Tag="LOC_ACTION_PANEL_POLICY_REMINDER_BUTTON2"Language="en_US">
+		<Text>Confirm</Text>
+	</Row>
 	<!-- IDS -->
 	<Row Tag="LOC_IDS_DEAL_TERMS" Language="en_US">
       <Text>Deal Terms</Text>

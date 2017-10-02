@@ -559,12 +559,6 @@ function DoEndTurn( optionalNewBlocker:number )
     UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
   end
 
-  function CQUI_HidePRD()
-	if CQUI_ShowPRD then
-	  LuaEvents.CQUI_clearUnitPath();
-	end
-  end
-  
   function CQUI_OnSettingsUpdate()
 	CQUI_ShowPRD = GameConfiguration.GetValue("CQUI_ShowPolicyReminder");
   end
@@ -593,21 +587,19 @@ function DoEndTurn( optionalNewBlocker:number )
       end
 	  
 	  -- Adding in a popup to remind player to change policy cards --
-    elseif(PRD:CivicCompletedThisTurn() and not PRD:PolicyChangeMade() and CQUI_ShowPRD) then		  
-			local prd_PopupDialog:table = PopupDialogInGame:new( "PolicyReminderPrompt" );
-			
-			prd_PopupDialog:AddTitle("Did You Forget Your Policy Changes?");
-			prd_PopupDialog:AddText("New policy cards have been unlocked.[NEWLINE][NEWLINE]Do you want to Make Changes to your Policy[NEWLINE]or[NEWLINE]Continue without changing?");
-			prd_PopupDialog:AddButton("Make Policy Changes", function() LuaEvents.LaunchBar_GovernmentOpenMyGovernment(); end );
-			prd_PopupDialog:AddButton("Continue.", function()
-					
-				UI.RequestAction(ActionTypes.ACTION_ENDTURN);		
-				UI.PlaySound("Stop_Unit_Movement_Master");
+    elseif(PRD:CivicCompletedThisTurn() and PRD:PolicyChangeMade() == false and CQUI_ShowPRD) then	
+			local prd_PopupDialog:table = PopupDialogInGame:new("PolicyReminderPrompt");
+			prd_PopupDialog:AddTitle(PRDTITLEString);
+			prd_PopupDialog:AddText(PRDTEXTString);
+			prd_PopupDialog:AddButton(PRDBUTTON1String, function() LuaEvents.LaunchBar_GovernmentOpenMyGovernment(); end );
+			prd_PopupDialog:AddButton(PRDBUTTON2String, function()
+			UI.RequestAction(ActionTypes.ACTION_ENDTURN);
+			UI.PlaySound("Stop_Unit_Movement_Master");
 			end );
 			prd_PopupDialog:Open();		
 		else
-      UI.RequestAction(ActionTypes.ACTION_ENDTURN);
-      UI.PlaySound("Stop_Unit_Movement_Master");
+			UI.RequestAction(ActionTypes.ACTION_ENDTURN);
+			UI.PlaySound("Stop_Unit_Movement_Master");
     end
 
   elseif (   m_activeBlockerId == EndTurnBlockingTypes.ENDTURN_BLOCKING_STACKED_UNITS
