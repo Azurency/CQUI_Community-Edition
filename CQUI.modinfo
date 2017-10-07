@@ -35,7 +35,7 @@
 
   <!-- Complete File Manifest -->
   <Files>
-    <File>cqui.dep</File>
+    <File>CQUI.dep</File>
     <File>Assets/cqui_databaseschema.sql</File>
     <File>Assets/cqui_settings.sql</File>
     <File>Assets/cqui_settings_local.sql</File>
@@ -44,6 +44,7 @@
     <File>Assets/cqui_main.lua</File>
     <File>Assets/cqui_toplayer.xml</File>
     <File>Assets/cqui_toplayer.lua</File>
+    <File>Assets/Text/Gossip_Text.xml</File>
     <File>Assets/Text/cqui_text_general.xml</File>
     <File>Assets/Text/cqui_text_general_de.xml</File>
     <File>Assets/Text/cqui_text_general_fr.xml</File>
@@ -62,7 +63,6 @@
     <File>Assets/Text/cqui_text_settings_ru.xml</File>
     <File>Assets/Text/cqui_text_settings_zh.xml</File>
     <File>Assets/Text/cqui_text_settings_es.xml</File>
-	<File>Assets/Text/Gossip_Text.xml</File>
     <File>Assets/UI/actionpanel.lua</File>
     <File>Assets/UI/citysupport.lua</File>
     <File>Assets/UI/civ6common.lua</File>
@@ -106,6 +106,7 @@
     <File>Assets/UI/Panels/unitpanel.xml</File>
     <File>Assets/UI/PartialScreens/citystates.lua</File>
     <File>Assets/UI/PartialScreens/citystates.xml</File>
+    <File>Assets/UI/Popups/boostunlockedpopup.lua</File>
     <File>Assets/UI/Popups/greatpeoplepopup.lua</File>
     <File>Assets/UI/Popups/greatpeoplepopup.xml</File>
     <File>Assets/UI/Popups/mappinlistpanel.lua</File>
@@ -186,7 +187,6 @@
     <File>Integrations/BES/Text/bes_text_es.xml</File>
   </Files>
 
-  <!-- Describes how each file is used -->
   <Components>
     <ImportFiles id="CQUI_IMPORT_FILES">
       <Items>
@@ -233,6 +233,7 @@
         <File>Assets/UI/Panels/unitpanel.xml</File>
         <File>Assets/UI/PartialScreens/citystates.lua</File>
         <File>Assets/UI/PartialScreens/citystates.xml</File>
+        <File>Assets/UI/Popups/boostunlockedpopup.lua</File>
         <File>Assets/UI/Popups/greatpeoplepopup.lua</File>
         <File>Assets/UI/Popups/greatpeoplepopup.xml</File>
         <File>Assets/UI/Popups/mappinlistpanel.lua</File>
