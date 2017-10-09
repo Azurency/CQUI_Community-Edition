@@ -1,33 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Mod id="1d44b5e7-753e-405b-af24-5ee634ec8a01" version="1">
+
   <!-- Basic Mod Information -->
   <Properties>
-    <Name>CQUI_Community Edition</Name>
-    <Teaser>CQUI_Community Edition</Teaser>
-    <Description>CQUI_Community Edition</Description>
-    <Authors>vans163, chaorace, lordfistas, zgavin, olegbl, jacks0n, OfekA, Proustldee, RatchetJ, kblease, benjaminjackman, LordYanaek, zeyangl, velit, the-m4a, Frozen-In-Ice, Remolten, bestekov, bolbass, SpaceOgre, cpinter, JHCD, paavohuhtala, Aristos, MarkusKV, apskim</Authors>
-    <SpecialThanks>vans163 for his original qui mod.[NEWLINE]astog for his Better Trade Screen mod.[NEWLINE]astog for his More Lenses mod.[NEWLINE]astog for his Better Espionage Screen mod.[NEWLINE]Ace for his Next City Plot mod.[NEWLINE]Divine Yuri for his Custom City Panel mod.[NEWLINE]Greg Miller for his Unit Report Screen mod.[NEWLINE]Lozenged/kblease for his Production Queue mod.[NEWLINE]mironos for his Improved Deal Screen mod.[NEWLINE]HellBlazer for parts of his NQ EUI mod.[NEWLINE]ZhouYzzz for providing the Chinese translation.[NEWLINE]Simone1974 for providing the Italian translation.[NEWLINE]e1ectron for providing the Russian translation.[NEWLINE]sejbr for providing the Polish translation.[NEWLINE]frytom/maxap/JHCD for providing the German translation.[NEWLINE]lctrs for providing a partial French translation.[NEWLINE]wbqd for providing the Korean translation.</SpecialThanks>
-    <Stability>CQUI_STABILITY_NIGHTLY</Stability>
+    <Name>Community Quick User Interface</Name>
+    <Teaser>CQUI</Teaser>
+    <Description>Community Quick User Interface MOD was Formally CQUI Mod [NEWLINE]and is now being updated and improved by its community</Description>
   </Properties>
-  <Dependencies />
-  <References />
+
   <!--Incompatible mods.-->  
   <Blocks>
-    <!-- FinalFreak16's Simplified Gossip mod: Integrated already, doubling up on installed mods is bad! -->
     <Mod id="9e9923e5-6842-4e7d-97e7-c9a56a85cf03" title="Simplified Gossip" />
-    <!-- Divine Yuri's Citypanel mod: Integrated already, doubling up on installed mods is bad! -->
     <Mod id="37b5fdca-2690-96ff-ea23-d8612ae7a757" title="Divine Yuri's Custom City Panel" />
-    <!-- Next City Plot: Integrated already, doubling up on installed mods is bad! -->
     <Mod id="37b5fdca-2690-96ff-ea23-d8612ae7a758" title="Next City Plot by Ace" />
-    <!-- Unit Report Screen: Integrated already, doubling up on installed mods is bad! -->
     <Mod id="4becac48-4a0c-379a-5dd1-33d0c65a471d" title="Unit Report Screen" />
-    <!-- Production Queue: Integrated already, doubling up on installed mods is bad! -->
     <Mod id="2027E5A2-A48D-E606-031F-141E1196975A" title="Production Queue" />
-    <!-- More Lenses: Integrated already, doubling up on installed mods is bad! -->
     <Mod id="35f33319-ad93-4d6b-bf27-406fac382d06" title="More Lenses" />
-    <!-- NQ EUI: Uses some things from CQUI and CQUI uses some things from NQ EUI -->
     <Mod id="c9d28cde-61ee-459c-93f5-c734cd392553" title="NQ Enhanced User Interface" />
   </Blocks>
+  
   <!-- Modinfo Specific LOC -->
   <LocalizedText>
     <Text id="CQUI_TEASER">
@@ -40,67 +31,11 @@
       <it_IT>Riduce i click e facilita la gestione dell'impero.</it_IT>
       <ko_KR>문명 게임 플레이를 더욱 간편하게 해주는 CQUI 모드입니다</ko_KR>
     </Text>
-    <Text id="CQUI_STABILITY_ALPHA">
-      <en_US>Alpha</en_US>
-      <fr_FR>Alpha</fr_FR>
-      <zh_Hans_CN>Alpha测试</zh_Hans_CN>
-      <pl_PL>Alpha</pl_PL>
-      <ru_RU>Альфа</ru_RU>
-      <de_DE>Alpha</de_DE>
-      <it_IT>Alfa</it_IT>
-      <ko_KR>알파</ko_KR>
-      <es_ES>Alfa</es_ES>
-    </Text>
-    <Text id="CQUI_STABILITY_BETA">
-      <en_US>Beta</en_US>
-      <fr_FR>Beta</fr_FR>
-      <zh_Hans_CN>Beta测试</zh_Hans_CN>
-      <pl_PL>Beta</pl_PL>
-      <ru_RU>Бета</ru_RU>
-      <de_DE>Beta</de_DE>
-      <it_IT>Beta</it_IT>
-      <ko_KR>베타</ko_KR>
-      <es_ES>Beta</es_ES>
-    </Text>
-    <Text id="CQUI_STABILITY_RELEASECANDIDATE">
-      <en_US>Release Candidate</en_US>
-      <fr_FR>Release Candidate</fr_FR>
-      <zh_Hans_CN>待发布</zh_Hans_CN>
-      <pl_PL>Kandydat do wydania</pl_PL>
-      <ru_RU>Релиз-кандидат</ru_RU>
-      <de_DE>Release Candidate</de_DE>
-      <it_IT>Release Candidate</it_IT>
-      <ko_KR>릴리즈 후보</ko_KR>
-      <es_ES>Release Candidate</es_ES>
-    </Text>
-    <Text id="CQUI_STABILITY_RELEASE">
-      <en_US>Release</en_US>
-      <fr_FR>Stable</fr_FR>
-      <zh_Hans_CN>发布</zh_Hans_CN>
-      <pl_PL>Wersa stabilna</pl_PL>
-      <ru_RU>Релиз</ru_RU>
-      <de_DE>Release</de_DE>
-      <it_IT>Release</it_IT>
-      <ko_KR>릴리즈</ko_KR>
-      <es_ES>Release</es_ES>
-    </Text>
-    <Text id="CQUI_STABILITY_NIGHTLY">
-      <en_US>Nightly</en_US>
-      <fr_FR>Développement</fr_FR>
-      <zh_Hans_CN>测试中</zh_Hans_CN>
-      <pl_PL>Wersja testowa</pl_PL>
-      <ru_RU>Ночная сборка</ru_RU>
-      <de_DE>Nightly</de_DE>
-      <it_IT>Nightly</it_IT>
-      <ko_KR>나이틀리</ko_KR>
-      <es_ES>Nightly</es_ES>
-    </Text>
   </LocalizedText>
 
   <!-- Complete File Manifest -->
   <Files>
-    <File>Assets/Text/Gossip_Text.xml</File>
-    <File>cqui.dep</File>
+    <File>CQUI.dep</File>
     <File>Assets/cqui_databaseschema.sql</File>
     <File>Assets/cqui_settings.sql</File>
     <File>Assets/cqui_settings_local.sql</File>
@@ -109,6 +44,7 @@
     <File>Assets/cqui_main.lua</File>
     <File>Assets/cqui_toplayer.xml</File>
     <File>Assets/cqui_toplayer.lua</File>
+    <File>Assets/Text/Gossip_Text.xml</File>
     <File>Assets/Text/cqui_text_general.xml</File>
     <File>Assets/Text/cqui_text_general_de.xml</File>
     <File>Assets/Text/cqui_text_general_fr.xml</File>
@@ -251,9 +187,7 @@
     <File>Integrations/BES/Text/bes_text_es.xml</File>
   </Files>
 
-  <!-- Describes how each file is used -->
   <Components>
-    <!-- CQUI changes that override the base game files -->
     <ImportFiles id="CQUI_IMPORT_FILES">
       <Items>
         <File>Assets/UI/actionpanel.lua</File>
@@ -320,6 +254,7 @@
         <File>Assets/UI/WorldView/plotinfo.xml</File>
       </Items>
     </ImportFiles>
+	
     <!-- CQUI specific LOCs  -->
     <LocalizedText id="CQUI_TEXT">
       <Items>
@@ -344,6 +279,7 @@
         <File>Assets/Text/cqui_text_settings_es.xml</File>
       </Items>
     </LocalizedText>
+	
     <!-- CQUI specific settings -->
     <UpdateDatabase id="CQUI_Settings">
       <Properties>
@@ -355,6 +291,7 @@
         <File>Assets/cqui_settings_local.sql</File>
       </Items>
     </UpdateDatabase>
+	
     <!-- CQUI specific UIs -->
     <UserInterface id="CQUI_UI">
       <Properties>
@@ -366,12 +303,14 @@
         <!--the lua files are taken as implied-->
       </Items>
     </UserInterface>
+	
     <!-- CQUI specific scripts -->
     <GameplayScripts id="CQUI_SCRIPTS">
       <Items>
         <File>Assets/cqui_main.lua</File>
       </Items>
     </GameplayScripts>
+	
     <!-- CQUI specific art overrides -->
     <ModArt id="CQUI_MODART">
       <Items>
