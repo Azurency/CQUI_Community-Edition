@@ -8,5 +8,9 @@
       <Text>Transactions actuelles</Text>
     </Replace>
 
+    <Row Tag="LOC_IDS_DEAL_CEDE" Language="fr_FR">
+      <Text>Céder</Text>
+    </Row>
+
   </LocalizedText>
 </GameData>
