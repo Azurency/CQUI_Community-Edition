@@ -48,6 +48,24 @@
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="it_IT">
       <Text>Mostra la gestione dei cittadini, la resa delle caselle e la crescita dei confini al passaggio del mouse</Text>
     </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITIZENICONSONHOVER" Language="it_IT">
+      <Text>Icona cittadino al passaggio del mouse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITIZENICONSONHOVER_TOOLTIP" Language="it_IT">
+      <Text>Mostra l'icona cittadino al passaggio del mouse sul banner della città</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEONHOVER" Language="it_IT">
+      <Text>Area gestione cittadini al passaggio del mouse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEONHOVER_TOOLTIP" Language="it_IT">
+      <Text>Mostra l'area di gestione dei cittadini al passaggio del mouse sul banner della città</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEINSCREEN" Language="it_IT">
+      <Text>Area gestione cittadini nella vista della città</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEINSCREEN_TOOLTIP" Language="it_IT">
+      <Text>Mostra l'area di gestione dei cittadini nella vista della città</Text>
+    </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_HEADER" Language="it_IT">
       <Text>Banner Smart</Text>
     </Row>
@@ -138,6 +156,18 @@
     <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="it_IT">
       <Text>Lente Scout in automatico</Text>
     </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWNOTHINGTODO_BUILDER" Language="it_IT">
+      <Text>Mostra nessuna azione nella Lente Costruttore</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWNOTHINGTODO_BUILDER_TOOLTIP" Language="it_IT">
+      <Text>Mostra gli esagoni su cui non c'è niente da migliorare (caselle rosse) nella Lente Costruttore</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWGENERIC_BUILDER" Language="it_IT">
+      <Text>Mostra generici nella Lente Costruttore</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWGENERIC_BUILDER_TOOLTIP" Language="it_IT">
+      <Text>Mostra gli esagoni generici (caselle bianche) nella Lente Costruttore</Text>
+    </Row>
     <Row Tag="LOC_CQUI_POPUPS" Language="it_IT">
       <Text>Popup</Text>
     </Row>
@@ -167,6 +197,28 @@
     </Row>
     <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="it_IT">
       <Text>Mostra tutte le azioni del pannello unità</Text>
+    </Row>
+
+    <Row Tag="LOC_CQUI_TRADER_SCREEN" Language="it_IT">
+      <Text>Schermata Scambi</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_SHOW_SORT_ORDER" Language="it_IT">
+      <Text>Mostra l'ordinamento</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_SHOW_SORT_ORDER_TOOLTIP" Language="it_IT">
+      <Text>Mostra l'ordinamento delle varie rese nella schermata degli scambi</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_COLOR_YIELDS" Language="it_IT">
+      <Text>Rese colorate</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_COLOR_YIELDS_TOOLTIP" Language="it_IT">
+      <Text>Colora le rese in base al tipo. Es: la resa di cibo è colorata in verde</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_ADD_DIVIDER" Language="it_IT">
+      <Text>Aggiungi separatore tra i gruppi</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_ADD_DIVIDER_TOOLTIP" Language="it_IT">
+      <Text>Aggiungi un separatore tra i gruppi nell'anteprima della Schermata Scambi</Text>
     </Row>
 
   </LocalizedText>
