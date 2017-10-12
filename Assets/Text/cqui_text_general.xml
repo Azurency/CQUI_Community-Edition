@@ -52,5 +52,19 @@
       <Text>Your encampment is able to make a ranged strike</Text>
     </Row>
 
+    <!-- Policyreminderpopup -->
+    <Row Tag="LOC_POLICY_REMINDER_TITLE" Language="en_US">
+		  <Text>POLICY REMINDER</Text>
+    </Row>
+    <Row Tag="LOC_POLICY_REMINDER_TEXT" Language="en_US">
+      <Text>New policy cards have been unlocked.</Text>
+    </Row>
+    <Row Tag="LOC_POLICY_REMINDER_ACTION_BUTTON" Language="en_US">
+      <Text>Policy change</Text>
+    </Row>
+    <Row Tag="LOC_POLICY_REMINDER_ACTION_BUTTON_TOOLTIP" Language="en_US">
+      <Text>You can change your policy this turn.</Text>
+    </Row>
+
   </LocalizedText>
 </GameData>
