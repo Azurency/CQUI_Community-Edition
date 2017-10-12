@@ -28,9 +28,18 @@
       <Text>, è completata.</Text>
     </Replace>
 
-    <!-- CITY PANEL AMENITY -->
+    <!-- CITY PANEL -->
     <Replace Tag="LOC_CQUI_CITY_ENTERTAINMENT" Language="it_IT">
       <Text>Svaghi</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_CITY_FROM_POPULATION" Language="it_IT">
+      <Text>dalla Popolazione</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_CITY_RELIGIOUS_MINORITIES" Language="it_IT">
+      <Text>Minoranze Religiose</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_CITY_PILLAGED" Language="it_IT">
+      <Text>[COLOR:StatBadCS](Saccheggiato)[ENDCOLOR]</Text>
     </Replace>
 
     <!-- POPUPS -->
