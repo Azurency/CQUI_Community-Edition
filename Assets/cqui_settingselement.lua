@@ -342,7 +342,7 @@ function Initialize()
   PopulateCheckBox(Controls.AutoExpandUnitActionsCheckbox, "CQUI_AutoExpandUnitActions");
   PopulateCheckBox(Controls.AlwaysOpenTechTreesCheckbox, "CQUI_AlwaysOpenTechTrees");
   PopulateCheckBox(Controls.SmartWorkIconCheckbox, "CQUI_SmartWorkIcon", Locale.Lookup("LOC_CQUI_CITYVIEW_SMARTWORKICON_TOOLTIP"));
-
+  PopulateCheckBox(Controls.ShowPolicyReminderCheckbox, "CQUI_ShowPolicyReminder", Locale.Lookup("LOC_CQUI_GENERAL_SHOWPRD_TOOLTIP"));
   PopulateSlider(Controls.ProductionItemHeightSlider, Controls.ProductionItemHeightText, "CQUI_ProductionItemHeight", ProductionItemHeightConverter);
   PopulateSlider(Controls.MinimapSizeSlider, Controls.MinimapSizeText, "CQUI_MinimapSize", MinimapSizeConverter);
   PopulateSlider(Controls.WorkIconSizeSlider, Controls.WorkIconSizeText, "CQUI_WorkIconSize", WorkIconSizeConverter);

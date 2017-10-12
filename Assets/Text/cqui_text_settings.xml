@@ -198,7 +198,12 @@
     <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="en_US">
       <Text>Autoexpand all actions in the unit panel</Text>
     </Row>
-
+    <Row Tag="LOC_CQUI_GENERAL_SHOWPRD" Language="en_US">
+      <Text>Show Policy Pop-Up Reminder</Text>
+    </Row>
+	<Row Tag="LOC_CQUI_GENERAL_SHOWPRD_TOOLTIP" Language="en_US">
+      <Text>Enable a Popup to remind you to change your policy cards before end turn</Text>
+    </Row>
     <Row Tag="LOC_CQUI_TRADER_SCREEN" Language="en_US">
       <Text>Trader Screen</Text>
     </Row>

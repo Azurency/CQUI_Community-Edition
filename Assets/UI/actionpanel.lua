@@ -119,7 +119,15 @@ local m_numberVisibleBlockers :number = 0;
 local m_visibleBlockerTypes : table   = {};
 local m_isSlowTurnEnable  : boolean = false;                  -- Tutorial: when active slow to allow clicks when turn raises.
 
+-- CQUI Members
 local CQUI_PolicyReminderClosed = false;
+local CQUI_ShowPolicyReminder = true;
+function CQUI_OnSettingsUpdate()
+  CQUI_ShowPolicyReminder = GameConfiguration.GetValue("CQUI_ShowPolicyReminder");
+end
+
+LuaEvents.CQUI_SettingsUpdate.Add(CQUI_OnSettingsUpdate);
+LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 
 -- ===========================================================================
 --  UI Event
@@ -466,7 +474,7 @@ function CQUI_CheckPolicyCanBeChanged()
     return false
   end
 
-  if CQUI_PolicyReminderClosed then
+  if CQUI_PolicyReminderClosed or not CQUI_ShowPolicyReminder then
     return false
   end
 
@@ -577,7 +585,7 @@ function DoEndTurn( optionalNewBlocker:number )
   if UI.GetInterfaceMode() ~= InterfaceModeTypes.SELECTION and UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK and not (UI.GetInterfaceMode() == InterfaceModeTypes.CITY_MANAGEMENT and m_activeBlockerId == EndTurnBlockingTypes.ENDTURN_BLOCKING_PRODUCTION) then
     UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
   end
-
+	
   if m_activeBlockerId == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING then
     if (CheckUnitsHaveMovesState()) then
       UI.SelectNextReadyUnit();
