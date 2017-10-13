@@ -28,7 +28,7 @@
         </Stack>
 
        <!-- Confirm Button -->
-        <GridButton ID="ChangeGovernmentButton" Size="210,41" Anchor="C,B" Offset="0,25" String="LOC_RESEARCH_COMPLETE_CIVIC_BUTTON" Style="MainButton"/>
+        <GridButton ID="ChangeGovernmentButton" Size="180,35" Anchor="C,B" Offset="0,25" String="LOC_RESEARCH_COMPLETE_CIVIC_BUTTON" Style="MainButton"/>
       </Grid>
     </Image>
   </Grid>
