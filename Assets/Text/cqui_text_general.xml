@@ -60,7 +60,7 @@
       <Text>New policy cards have been unlocked.</Text>
     </Row>
     <Row Tag="LOC_POLICY_REMINDER_ACTION_BUTTON" Language="en_US">
-      <Text>Policy change</Text>
+      <Text>POLICY CHANGE</Text>
     </Row>
     <Row Tag="LOC_POLICY_REMINDER_ACTION_BUTTON_TOOLTIP" Language="en_US">
       <Text>You can change your policy this turn.</Text>
