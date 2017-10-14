@@ -11,11 +11,11 @@
           
        <!-- Research Name Banner -->
         <Container Size="353, 80" Anchor="C,T" Offset="0,0">
-          <Label ID="HeaderLabel" String="LOC_POLICY_REMINDER_TITLE" Anchor="C,C" Align="C,C" Color="92,86,85,255" Offset="0,10" Style="FontFlair20" SmallCaps="26" SmallCapsType="EveryWord" WrapWidth="240" />
+          <Label ID="HeaderLabel" String="LOC_POLICY_REMINDER_TITLE" Anchor="C,C" Align="C,C" Color="EspionagePopup_Header" Offset="0,10" Style="FontFlair20" SmallCaps="26" SmallCapsType="EveryWord" WrapWidth="240" />
         </Container>
 
        <Container ID="CivicMsgLabel" Size="353, 25" Anchor="C,T" Offset="0,80">
-          <Label ID="a" Anchor="C,C" Offset="0,0" Align="center" Color="90,85,82,255" Style="FontNormal14" WrapWidth="300" String="LOC_POLICY_REMINDER_TEXT" />
+          <Label ID="a" Anchor="C,C" Offset="0,0" Align="center" Color="90,85,82,255" Style="FontNormal16" WrapWidth="300" String="LOC_POLICY_REMINDER_TEXT" />
         </Container>
 
        <Stack ID="BottomControlStack" Anchor="C,T" Offset="0,115" StackGrowth="Bottom" StackPadding="5,5">
@@ -28,7 +28,7 @@
         </Stack>
 
        <!-- Confirm Button -->
-        <GridButton ID="ChangeGovernmentButton" Size="180,35" Anchor="C,B" Offset="0,25" String="LOC_RESEARCH_COMPLETE_CIVIC_BUTTON" Style="MainButton"/>
+        <GridButton ID="ChangeGovernmentButton" Size="210,41" Anchor="C,B" Offset="0,25" String="LOC_RESEARCH_COMPLETE_CIVIC_BUTTON" Style="MainButton"/>
       </Grid>
     </Image>
   </Grid>
