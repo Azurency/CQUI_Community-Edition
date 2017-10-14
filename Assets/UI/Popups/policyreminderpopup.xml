@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Context Hidden="0">
-  <Grid ID="PopupDrowShadowGrid" Anchor="C,C" Offset="0,0" AutoSize="1" AutoSizePadding="50,50"    Style="DropShadow" >
+  <Grid ID="PopupDrowShadowGrid" Anchor="C,C" Offset="0,0" AutoSize="1" AutoSizePadding="38,38" Style="DropShadow2" >
     <Image ID="PopupBackgroundImage" Anchor="C,C" AutoSize="1" AutoSizePadding="-10,-10" Texture="Parchment_Pattern"    StretchMode="Tile" ConsumeMouse="1">
       <Grid ID="PopupFrameGrid" Anchor="C,C" AutoSize="1" Offset="0,0" Texture="CompletedPopup_Frame" SliceCorner="112,120" SliceSize="2,1">
         <!-- Corner Icons -->
@@ -11,7 +11,7 @@
           
        <!-- Research Name Banner -->
         <Container Size="353, 80" Anchor="C,T" Offset="0,0">
-          <Label ID="HeaderLabel" String="LOC_POLICY_REMINDER_TITLE" Anchor="C,C" Align="C,C" Color="92,86,85,255" Offset="0,10" Style="FontFlair20" SmallCaps="26" SmallCapsType="EveryWord" WrapWidth="240" />
+          <Label ID="HeaderLabel" String="LOC_POLICY_REMINDER_TITLE" Anchor="C,C" Align="C,C" Color="EspionagePopup_Header" Offset="0,10" Style="FontFlair20" SmallCaps="26" SmallCapsType="EveryWord" WrapWidth="240" />
         </Container>
 
        <Container ID="CivicMsgLabel" Size="353, 25" Anchor="C,T" Offset="0,80">
