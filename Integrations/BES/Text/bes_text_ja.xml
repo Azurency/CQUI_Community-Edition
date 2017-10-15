@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <Replace Tag="LOC_ESPIONAGECHOOSER_FILTER_ALL" Language="ja_JP">
+      <Text>全て</Text>
+    </Replace>
+    <Replace Tag="LOC_ESPIONAGECHOOSER_FILTER_SHOW_CITIES" Language="ja_JP">
+      <Text>都市を表示</Text>
+    </Replace>
+  </LocalizedText>
+</GameData>

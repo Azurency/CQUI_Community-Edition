@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- JAPANESE -->
+
+    <!-- Builder Lens -->
+    <Replace Tag="LOC_HUD_BUILDER_LENS" Language="ja_JP">
+      <Text>労働者</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_BUILDER_LENS_TOOLTIP" Language="ja_JP">
+      <Text>労働者が改善できるタイルを表示します。</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_IMP" Language="ja_JP">
+      <Text>資源/略奪/固有能力</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RECOMFEATURE_LENS_HILL" Language="ja_JP">
+      <Text>改善推奨</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_HILL" Language="ja_JP">
+      <Text>丘陵</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_FEATURE" Language="ja_JP">
+      <Text>除去可能な地物</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_GENERIC" Language="ja_JP">
+      <Text>一般的なタイル</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_NOTHING" Language="ja_JP">
+      <Text>改善不能</Text>
+    </Replace>
+
+    <!-- Archaeologist Lens -->
+    <Replace Tag="LOC_HUD_ARCHAEOLOGIST_LENS" Language="ja_JP">
+      <Text>考古学者</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_ARCHAEOLOGIST_LENS_TOOLTIP" Language="ja_JP">
+      <Text>考古学者が発掘できるタイルを表示します。</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_ARTIFACT" Language="ja_JP">
+      <Text>史跡</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_SHIPWRECK" Language="ja_JP">
+      <Text>沈没船</Text>
+    </Replace>
+
+    <!-- City Overlap Lens -->
+    <Replace Tag="LOC_HUD_CITYOVERLAP_LENS" Language="ja_JP">
+      <Text>都市圏の重複</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_CITYOVERLAP_LENS_TOOLTIP" Language="ja_JP">
+      <Text>各タイルから一定タイル以内に存在する都市数を表示します。[NEWLINE]工場など範囲効果のある建造物を配置する際に有用です。</Text>
+    </Replace>
+    <Replace Tag="LOC_PANEL_CITYOVERLAP_OPTION1" Language="ja_JP">
+      <Text>領外もハイライト</Text>
+    </Replace>
+    <Replace Tag="LOC_PANEL_CITYOVERLAP_NMOUSE" Language="ja_JP">
+      <Text>マウス表示なし</Text>
+    </Replace>
+    <Replace Tag="LOC_PANEL_CITYOVERLAP_RANGE" Language="ja_JP">
+      <Text>マウス表示あり</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_CITYOVERLAP_RANGE" Language="ja_JP">
+      <Text>マウス直下のタイルを基点としてハイライトで表示します。[NEWLINE]範囲は下段の数値に従います。</Text>
+    </Replace>
+    <Replace Tag="LOC_PANEL_CITYOVERLAP_RADIUS" Language="ja_JP">
+      <Text>半径マウス</Text>
+    </Replace>
+
+    <!-- Barbarian Lens -->
+    <Replace Tag="LOC_HUD_BARBARIAN_LENS" Language="ja_JP">
+      <Text>蛮族</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_BARBARIAN_LENS_TOOLTIP" Language="ja_JP">
+      <Text>蛮族の前哨地があるタイルを表示します。</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_BARBARIAN_LENS_ENCAPMENT" Language="ja_JP">
+      <Text>前哨地</Text>
+    </Replace>
+
+    <!-- Resources Lens -->
+    <Replace Tag="LOC_HUD_RESOURCE_LENS" Language="ja_JP">
+      <Text>資源</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_RESOURCE_LENS_TOOLTIP" Language="ja_JP">
+      <Text>資源のあるタイルを表示します。</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_LUXURY" Language="ja_JP">
+      <Text>高級資源</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NLUXURY" Language="ja_JP">
+      <Text>高級資源[NEWLINE] (未改善)</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_STRATEGIC" Language="ja_JP">
+      <Text>戦略資源</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NSTRATEGIC" Language="ja_JP">
+      <Text>戦略資源[NEWLINE] (未改善)</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_BONUS" Language="ja_JP">
+      <Text>ボーナス資源</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_NBONUS" Language="ja_JP">
+      <Text>ボーナス資源[NEWLINE] (未改善)</Text>
+    </Replace>
+
+    <!-- Wonder Lens -->
+    <Replace Tag="LOC_HUD_WONDER_LENS" Language="ja_JP">
+      <Text>遺産</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_WONDER_LENS_TOOLTIP" Language="ja_JP">
+      <Text>自然遺産や世界遺産のあるタイルを表示します。</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_WONDER_LENS_NWONDER" Language="ja_JP">
+      <Text>自然遺産</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_PWONDER" Language="ja_JP">
+      <Text>世界遺産</Text>
+    </Replace>
+
+    <!-- Adjacency Yield Lens -->
+    <Replace Tag="LOC_HUD_ADJYIELD_LENS" Language="ja_JP">
+      <Text>隣接産出量</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_ADJYIELD_LENS_TOOLTIP" Language="ja_JP">
+      <Text>区域の隣接産出量を表示します。</Text>
+    </Replace>
+
+    <!-- Scout Lens -->
+    <Replace Tag="LOC_HUD_SCOUT_LENS" Language="ja_JP">
+      <Text>斥候</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_SCOUT_LENS_TOOLTIP" Language="ja_JP">
+      <Text>原住民の集落があるタイルを表示します。</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_SCOUT_LENS_GHUT" Language="ja_JP">
+      <Text>原住民の集落</Text>
+    </Replace>
+
+    <!-- Naturalist Lens -->
+    <Replace Tag="LOC_HUD_NATURALIST_LENS" Language="ja_JP">
+      <Text>自然主義者</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_NATURALIST_LENS_TOOLTIP" Language="ja_JP">
+      <Text>国立公園が建設できるタイルを表示します。</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_NATURALIST_LENS_NPARK" Language="ja_JP">
+      <Text>国立公園が建設可能</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_NATURALIST_LENS_OK" Language="ja_JP">
+      <Text>他のタイルを修正すれば建設可能</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_NATURALIST_LENS_FIXABLE" Language="ja_JP">
+      <Text>要修正タイル</Text>
+    </Replace>
+
+  </LocalizedText>
+</GameData>
