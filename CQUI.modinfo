@@ -83,6 +83,7 @@
     <File>Assets/UI/productionpanel.xml</File>
     <File>Assets/UI/strategicview_mapplacement.lua</File>
     <File>Assets/UI/supportfunctions.lua</File>
+    <File>Assets/UI/techandcivicsupport.lua</File>
     <File>Assets/UI/toppanel.lua</File>
     <File>Assets/UI/toppanel.xml</File>
     <File>Assets/UI/unitflagmanager.lua</File>
@@ -113,6 +114,8 @@
     <File>Assets/UI/Popups/mappinlistpanel.xml</File>
     <File>Assets/UI/Popups/mappinpopup.lua</File>
     <File>Assets/UI/Popups/mappinpopup.xml</File>
+    <File>Assets/UI/Popups/policyreminderpopup.lua</File>
+    <File>Assets/UI/Popups/policyreminderpopup.xml</File>
     <File>Assets/UI/Popups/techciviccompletedpopup.lua</File>
     <File>Assets/UI/Screens/civicstree.lua</File>
     <File>Assets/UI/Screens/governmentscreen.lua</File>
@@ -210,6 +213,7 @@
         <File>Assets/UI/productionpanel.xml</File>
         <File>Assets/UI/strategicview_mapplacement.lua</File>
         <File>Assets/UI/supportfunctions.lua</File>
+        <File>Assets/UI/techandcivicsupport.lua</File>
         <File>Assets/UI/toppanel.lua</File>
         <File>Assets/UI/toppanel.xml</File>
         <File>Assets/UI/unitflagmanager.lua</File>
@@ -300,6 +304,7 @@
       <Items>
         <File>Assets/cqui_settingselement.xml</File>
         <File>Assets/cqui_toplayer.xml</File>
+        <File>Assets/UI/Popups/policyreminderpopup.xml</File>
         <!--the lua files are taken as implied-->
       </Items>
     </UserInterface>

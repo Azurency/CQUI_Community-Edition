@@ -5,6 +5,7 @@
 
 include( "LocalPlayerActionSupport" );
 include( "InputSupport" );
+include( "civ6common" )
 
 -- ===========================================================================
 --	VARIABLES
@@ -134,7 +135,7 @@ function BulkHide( isHide:boolean, debugWho:string )
 
   -- Tracking for debugging:
   m_bulkHideTracker = m_bulkHideTracker + (isHide and 1 or -1);
-  print("Request to BulkHide( "..tostring(isHide)..", "..debugWho.." ), Show on 0 = "..tostring(m_bulkHideTracker));
+  print_debug("Request to BulkHide( "..tostring(isHide)..", "..debugWho.." ), Show on 0 = "..tostring(m_bulkHideTracker));
 
   if m_bulkHideTracker < 0 then
     UI.DataError("Request to bulk show past limit by "..debugWho..". Last bulk shown by "..m_lastBulkHider);
@@ -202,7 +203,7 @@ function Initialize()
 
   -- Support for Modded Add-in UI's
   for i, addin in ipairs(Modding.GetUserInterfaces("InGame")) do
-    print("Loading InGame UI - " .. addin.ContextPath);
+    print_debug("Loading InGame UI - " .. addin.ContextPath);
     table.insert(g_uiAddins, ContextPtr:LoadNewContext(addin.ContextPath));
   end
 

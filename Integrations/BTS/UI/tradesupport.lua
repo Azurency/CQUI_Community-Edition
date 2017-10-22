@@ -1,3 +1,5 @@
+include("civ6common")
+
 local BACKDROP_DARKER_OFFSET = -85
 local BACKDROP_DARKER_OPACITY = 238
 local BACKDROP_BRIGHTER_OFFSET = 90
@@ -137,7 +139,7 @@ function AddRouteWithTurnsRemaining( routeInfo:table, routesTable:table)
     table.insert(routesTable, routeEntry);
     SaveRunningRoutesInfo();
   else
-    print("AddRouteWithTurnsRemaining: Route already exists in table.");
+    print_debug("AddRouteWithTurnsRemaining: Route already exists in table.");
   end
 end
 
@@ -146,7 +148,7 @@ function UpdateRoutesWithTurnsRemaining( routesTable:table )
   for i=1, #routesTable do
     if routesTable[i].TurnsRemaining ~= nil then
       routesTable[i].TurnsRemaining = routesTable[i].TurnsRemaining - 1;
-      print("Updated route " .. GetTradeRouteString(routesTable[i]) .. " with turns remaining " .. routesTable[i].TurnsRemaining)
+      print_debug("Updated route " .. GetTradeRouteString(routesTable[i]) .. " with turns remaining " .. routesTable[i].TurnsRemaining)
     end
   end
 
@@ -172,7 +174,7 @@ function CheckConsistencyWithMyRunningRoutes( routesTable:table )
     -- Is the route not present?
     if routeIndex == -1 then
       -- Add it to the list
-      print(GetTradeRouteString(route) .. " was not present. Adding it to the table.");
+      print_debug(GetTradeRouteString(route) .. " was not present. Adding it to the table.");
       AddRouteWithTurnsRemaining(route, routesTable, true);
     end
   end
@@ -185,7 +187,7 @@ function CheckConsistencyWithMyRunningRoutes( routesTable:table )
 
     -- Is the route not present?
     if routeIndex == -1 then
-      print("Route " .. GetTradeRouteString(routesTable[i]) .. " is no longer running. Removing it.");
+      print_debug("Route " .. GetTradeRouteString(routesTable[i]) .. " is no longer running. Removing it.");
       table.remove(routesTable, i)
     else
       i = i + 1
@@ -212,7 +214,7 @@ function LoadRunningRoutesInfo()
     loadstring(dataDump)();
     m_LocalPlayerRunningRoutes = localPlayerRunningRoutes;
   else
-    print("No running route data was found, on load.")
+    print_debug("No running route data was found, on load.")
   end
 
   -- Check for consistency
@@ -232,7 +234,7 @@ local function TradeSupportTracker_OnUnitOperationStarted(ownerID:number, unitID
       for _, route in ipairs(outgoingRoutes) do
         if route.TraderUnitID == unitID then
           -- Add it to the local players runnning routes
-          print("Route just started. Adding Route: " .. GetTradeRouteString(route));
+          print_debug("Route just started. Adding Route: " .. GetTradeRouteString(route));
           AddRouteWithTurnsRemaining( route, m_LocalPlayerRunningRoutes );
           return
         end
@@ -256,7 +258,7 @@ local function TradeSupportTracker_OnUnitOperationsCleared(ownerID:number, unitI
         for _, route in ipairs(m_LocalPlayerRunningRoutes) do
           if route.TraderUnitID == unitID then
             if m_TradersAutomatedSettings[unitID] == nil then
-              print("Couldn't find trader automated info. Creating one.")
+              print_debug("Couldn't find trader automated info. Creating one.")
               m_TradersAutomatedSettings[unitID] = { IsAutomated=false };
             end
 
@@ -265,7 +267,7 @@ local function TradeSupportTracker_OnUnitOperationsCleared(ownerID:number, unitI
             -- m_TradersAutomatedSettings[unitID].LastRouteInfo = route;
             -- SaveTraderAutomatedInfo();
 
-            print("Removing route " .. GetTradeRouteString(route) .. " from currently running, since it completed.");
+            print_debug("Removing route " .. GetTradeRouteString(route) .. " from currently running, since it completed.");
 
             -- Remove route from currrently running routes
             RemoveRouteFromTable(route, m_LocalPlayerRunningRoutes, false);
@@ -298,17 +300,17 @@ function AutomateTrader(traderID:number, isAutomated:boolean, sortSettings:table
   m_TradersAutomatedSettings[traderID].IsAutomated = isAutomated
 
   if sortSettings ~= nil and table.count(sortSettings) > 0 then
-    print("Automate trader " .. traderID .. " with top route.")
+    print_debug("Automate trader " .. traderID .. " with top route.")
     m_TradersAutomatedSettings[traderID].SortSettings = sortSettings
   else
-    print("Automate trader " .. traderID)
+    print_debug("Automate trader " .. traderID)
   end
 
   SaveTraderAutomatedInfo();
 end
 
 function CancelAutomatedTrader(traderID:number)
-  print("Cancelling automation for trader " .. traderID);
+  print_debug("Cancelling automation for trader " .. traderID);
 
   LoadTraderAutomatedInfo();
 
@@ -375,14 +377,14 @@ function RenewTradeRoutes()
         local destinationCityID:number;
 
         if m_TradersAutomatedSettings[unitID].SortSettings ~= nil and table.count(m_TradersAutomatedSettings[unitID].SortSettings) > 0 then
-          print("Picking from top sort entry");
+          print_debug("Picking from top sort entry");
 
           -- Get destination based on the top entry
           local topRoute = FindTopRoute(originPlayerID, originCityID, m_TradersAutomatedSettings[unitID].SortSettings)
           destinationPlayerID = topRoute.DestinationCityPlayer
           destinationCityID = topRoute.DestinationCityID
         else
-          print("Picking last route");
+          print_debug("Picking last route");
 
           local lastRouteInfo = GetLastRouteForTrader(unitID)
           if lastRouteInfo ~= nil then
@@ -402,15 +404,15 @@ function RenewTradeRoutes()
           operationParams[UnitOperationTypes.PARAM_Y1] = originCity:GetY();
 
           if (UnitManager.CanStartOperation(pUnit, UnitOperationTypes.MAKE_TRADE_ROUTE, nil, operationParams)) then
-            print("Trader " .. unitID .. " renewed its trade route to " .. L_Lookup(destinationCity:GetName()));
+            print_debug("Trader " .. unitID .. " renewed its trade route to " .. L_Lookup(destinationCity:GetName()));
             -- TODO: Send notification for renewing routes
             UnitManager.RequestOperation(pUnit, UnitOperationTypes.MAKE_TRADE_ROUTE, operationParams);
             renewedRoute = true
           else
-            print("Could not start a route");
+            print("ERROR : Could not start a route");
           end
         else
-          print("Could not renew a route. Missing route info, or the destination is no longer a valid trade route destination.");
+          print("ERROR : Could not renew a route. Missing route info, or the destination is no longer a valid trade route destination.");
         end
       end
     end
@@ -452,7 +454,7 @@ function LoadTraderAutomatedInfo()
     loadstring(dataDump)();
     m_TradersAutomatedSettings = traderAutomatedSettings;
   else
-    print("No running route data was found, on load.")
+    print("ERROR : No running route data was found, on load.")
   end
 end
 
@@ -471,10 +473,10 @@ end
 -- ===========================================================================
 function CacheRoutesInfo(tRoutes)
   if m_Cache.TurnBuilt ~= nil and m_Cache.TurnBuilt >= Game.GetCurrentGameTurn() then
-    print("OPT: Cache table already upto date")
+    print_debug("OPT: Cache table already upto date")
     return false
   else
-    print("Caching routes")
+    print_debug("Caching routes")
     -- for i, routeInfo in ipairs(tRoutes) do
     for i=1, #tRoutes do
       CacheRoute(tRoutes[i])
@@ -573,7 +575,7 @@ end
 function CacheEmpty()
   -- If cache has entry TurnBuilt then the cache is built
   if m_Cache.TurnBuilt ~= nil then
-    print("CACHE Emptying")
+    print_debug("CACHE Emptying")
     m_Cache = {}
   end
 end
@@ -607,7 +609,7 @@ function Cached_GetYieldForOriginCity(yieldIndex:number, routeCacheKey:string)
     -- print("CACHE HIT for " .. routeCacheKey)
     return cacheEntry.Yields[yieldIndex].Origin
   else
-    print("CACHE MISS for " .. routeCacheKey)
+    print_debug("CACHE MISS for " .. routeCacheKey)
     CacheRoute(CacheKeyToRouteInfo(routeCacheKey));
     return m_Cache[routeCacheKey].Yields[yieldIndex].Origin
   end
@@ -619,7 +621,7 @@ function Cached_GetYieldForDestinationCity(yieldIndex:number, routeCacheKey:stri
     -- print("CACHE HIT for " .. routeCacheKey)
     return cacheEntry.Yields[yieldIndex].Destination
   else
-    print("CACHE MISS for " .. routeCacheKey)
+    print_debug("CACHE MISS for " .. routeCacheKey)
     CacheRoute(CacheKeyToRouteInfo(routeCacheKey));
     return m_Cache[routeCacheKey].Yields[yieldIndex].Destination
   end
@@ -630,7 +632,7 @@ function Cached_GetTurnsToComplete(routeCacheKey:string)
     -- print("CACHE HIT for " .. routeCacheKey)
     return m_Cache[routeCacheKey].TurnsToCompleteRoute
   else
-    print("CACHE MISS for " .. routeCacheKey)
+    print_debug("CACHE MISS for " .. routeCacheKey)
     CacheRoute(CacheKeyToRouteInfo(routeCacheKey));
     return m_Cache[routeCacheKey].TurnsToCompleteRoute
   end
@@ -715,7 +717,7 @@ function ScoreComp( scoreInfo1, scoreInfo2, sortSettings )
   local score1 = scoreInfo1.score
   local score2 = scoreInfo2.score
   if #score1 ~= #score2 then
-    print("ERROR = scores unequal in length")
+    print("ERROR : scores unequal in length")
     return false
   end
 
@@ -824,10 +826,10 @@ function GetTradeRouteString( routeInfo:table )
     if originCity ~= nil then
       originCityName = L_Lookup(originCity:GetName());
     else
-      print("CITY", routeInfo.OriginCityID, "NOT FOUND")
+      print("Error : CITY", routeInfo.OriginCityID, "NOT FOUND")
     end
   else
-    print("PLAYER", routeInfo.OriginCityPlayer, "NOT FOUND")
+    print("Error : PLAYER", routeInfo.OriginCityPlayer, "NOT FOUND")
   end
 
   local destinationPlayer:table = Players[routeInfo.DestinationCityPlayer];
@@ -836,10 +838,10 @@ function GetTradeRouteString( routeInfo:table )
     if destinationCity ~= nil then
       destinationCityName = L_Lookup(destinationCity:GetName());
     else
-      print("CITY", routeInfo.DestinationCityID, "NOT FOUND")
+      print("Error : CITY", routeInfo.DestinationCityID, "NOT FOUND")
     end
   else
-    print("PLAYER", routeInfo.DestinationCityPlayer, "NOT FOUND")
+    print("Error : PLAYER", routeInfo.DestinationCityPlayer, "NOT FOUND")
   end
 
   return originCityName .. "-" .. destinationCityName;
@@ -896,7 +898,7 @@ function GetAdvancedRouteInfo(routeInfo)
     local turnsToCompleteRoute = (tradePathLength * 2 * tripsToDestination);
     return tradePathLength, tripsToDestination, turnsToCompleteRoute;
   else
-    print("Speed type index " .. eSpeed);
+    print_debug("Speed type index " .. eSpeed);
     print("Error: Could not find game speed type. Defaulting to first entry in table");
     local iSpeedCostMultiplier =  GameInfo.GameSpeeds[1].CostMultiplier;
     local tradeManager = Game.GetTradeManager();
@@ -979,7 +981,7 @@ function GetNetYieldForOriginCity( routeInfo, checkCache )
       -- print("CACHE HIT for " .. GetTradeRouteString(routeInfo))
       return m_Cache[key].NetOriginYield
     else
-      print("CACHE MISS for " .. GetTradeRouteString(routeInfo))
+      print_debug("CACHE MISS for " .. GetTradeRouteString(routeInfo))
       CacheRoute(routeInfo);
       return m_Cache[key].NetOriginYield
     end
@@ -1000,7 +1002,7 @@ function GetNetYieldForDestinationCity( routeInfo, checkCache )
       -- print("CACHE HIT for " .. GetTradeRouteString(routeInfo))
       return m_Cache[key].NetDestinationYield
     else
-      print("CACHE MISS for " .. GetTradeRouteString(routeInfo))
+      print_debug("CACHE MISS for " .. GetTradeRouteString(routeInfo))
       CacheRoute(routeInfo);
       return m_Cache[key].NetDestinationYield
     end
@@ -1021,7 +1023,7 @@ function GetTurnsToComplete(routeInfo, checkCache)
       -- print("CACHE HIT for " .. GetTradeRouteString(routeInfo))
       return m_Cache[key].TurnsToCompleteRoute
     else
-      print("CACHE MISS for " .. GetTradeRouteString(routeInfo))
+      print_debug("CACHE MISS for " .. GetTradeRouteString(routeInfo))
       CacheRoute(routeInfo);
       return m_Cache[key].TurnsToCompleteRoute
     end
@@ -1038,7 +1040,7 @@ function GetRouteInfo(routeInfo, checkCache)
       -- print("CACHE HIT for " .. GetTradeRouteString(routeInfo))
       return m_Cache[key].TradePathLength, m_Cache[key].TripsToDestination, m_Cache[key].TurnsToCompleteRoute
     else
-      print("CACHE MISS for " .. GetTradeRouteString(routeInfo))
+      print_debug("CACHE MISS for " .. GetTradeRouteString(routeInfo))
       CacheRoute(routeInfo)
       return m_Cache[key].TradePathLength, m_Cache[key].TripsToDestination, m_Cache[key].TurnsToCompleteRoute
     end
@@ -1054,7 +1056,7 @@ function GetRouteHasTradingPost(routeInfo, checkCache)
       -- print("CACHE HIT for " .. GetTradeRouteString(routeInfo))
       return m_Cache[key].HasTradingPost
     else
-      print("CACHE MISS for " .. GetTradeRouteString(routeInfo))
+      print_debug("CACHE MISS for " .. GetTradeRouteString(routeInfo))
       CacheRoute(routeInfo)
       return m_Cache[key].HasTradingPost
     end
@@ -1072,7 +1074,7 @@ function GetHasActiveRoute(playerID, checkCache)
       -- print("CACHE HIT for player " .. playerID)
       return m_Cache.Players[playerID].HasActiveRoute
     else
-      print("CACHE MISS for player " .. playerID)
+      print_debug("CACHE MISS for player " .. playerID)
       CachePlayer(playerID)
       return m_Cache.Players[playerID].HasActiveRoute
     end
@@ -1094,7 +1096,7 @@ function GetVisibilityIndex(playerID, checkCache)
       -- print("CACHE HIT for player " .. playerID)
       return m_Cache.Players[playerID].VisibilityIndex
     else
-      print("CACHE MISS for player " .. playerID)
+      print_debug("CACHE MISS for player " .. playerID)
       CachePlayer(playerID)
       return m_Cache.Players[playerID].VisibilityIndex
     end
@@ -1109,7 +1111,7 @@ function GetPlayerIconInfo(playerID, checkCache)
       -- print("CACHE HIT for player " .. playerID)
       return unpack(m_Cache.Players[playerID].Icon)
     else
-      print("CACHE MISS for player " .. playerID)
+      print_debug("CACHE MISS for player " .. playerID)
       CachePlayer(playerID)
       return unpack(m_Cache.Players[playerID].Icon)
     end
@@ -1156,7 +1158,7 @@ function GetPlayerColorInfo(playerID, checkCache)
       -- print("CACHE HIT for player " .. playerID)
       return unpack(m_Cache.Players[playerID].Colors)
     else
-      print("CACHE MISS for player " .. playerID)
+      print_debug("CACHE MISS for player " .. playerID)
       CachePlayer(playerID)
       return unpack(m_Cache.Players[playerID].Colors)
     end
@@ -1218,7 +1220,7 @@ end
 function RemoveRouteFromTable( routeToDelete:table , routeTable:table, isGrouped:boolean )
   -- If grouping by something, go one level deeper
   if isGrouped then
-    print("Routes grouped")
+    print_debug("Routes grouped")
     local targetIndex:number = -1;
     local targetGroupIndex:number = -1;
 
@@ -1234,7 +1236,7 @@ function RemoveRouteFromTable( routeToDelete:table , routeTable:table, isGrouped
 
     -- Remove route
     if targetIndex ~= -1 and targetGroupIndex ~= -1 then
-      print("REMOVING ROUTE")
+      print_debug("REMOVING ROUTE")
       table.remove(routeTable[targetGroupIndex], targetIndex);
 
       -- If that group is empty, remove that group
@@ -1242,18 +1244,18 @@ function RemoveRouteFromTable( routeToDelete:table , routeTable:table, isGrouped
         table.remove(routeTable, targetGroupIndex);
       end
     else
-      print("COULD NOT FIND ROUTE")
+      print("Error : COULD NOT FIND ROUTE")
     end
   else
-    print("Routes not grouped")
+    print_debug("Routes not grouped")
 
     -- Find and remove route
     local targetIndex:number = findIndex(routeTable, routeToDelete, CheckRouteEquality)
     if targetIndex ~= -1 then
-      print("REMOVING ROUTE")
+      print_debug("REMOVING ROUTE")
       table.remove(routeTable, targetIndex);
     else
-      print("COULD NOT FIND ROUTE")
+      print("Error : COULD NOT FIND ROUTE")
     end
   end
 end
@@ -1311,12 +1313,12 @@ end
 -- Converts 'A' -> 'Z' || 'Z' -> 'A'
 function invert_string(s:string)
   s = s:upper()
-  print("org: " .. s)
+  print_debug("org: " .. s)
   local newS:string = ""
   for i=1, s:len() do
     newS = newS .. string.char(invert_char_code(s:byte(i)))
   end
-  print("inv: " .. newS)
+  print_debug("inv: " .. newS)
   return newS
 end
 

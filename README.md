@@ -1,227 +1,215 @@
-# Civilization 6 - Chao's Quick UI - Community Edition
+# Community Quick User Interface (CQUI)
+> CQUI is an open source Civilization 6 mod that is maintened by it's community
 
-# Features:
+CQUI is an UI mod that helps you manage your empire faster and easier. It's an enhancement of the original UI that gives you the informations you need with less clicks. It also have a lot of usefull fonctionnality that makes the game even better.
 
-### CQUI Features:
+This repository is the official repository of the [CQUI steam mod](http://steamcommunity.com/sharedfiles/filedetails/?id=1125169247).
 
-* Civ V Style Cityview
+![cquiscreens](https://user-images.githubusercontent.com/8012430/31862026-75c5822e-b737-11e7-9ac3-afe993e26eb6.jpg)
 
-![](http://i.imgur.com/X5qBzja.jpg)
+## Installation
 
-* Great Person panel renovated (no more scrolling!)
+### Steam Workshop
+If you want to install the latest official version, you can go to the [steam workshop page](http://steamcommunity.com/sharedfiles/filedetails/?id=1125169247) of CQUI and add it to your game.
 
-![](http://i.imgur.com/FeRTxyh.jpg)
+### Manually
+If you want to have the cutting edge version (that might not be push on steam workshop) you can download this repository and place the cqui folder into your mod folder : 
 
-* Improved amenities city details screen (Clean Icons! No Tutorial UI!)
+```
+Windows : Documents\my games\Sid Meier's Civilization VI\Mods
+Mac : /Users/[user]/Library/Application Support/Sid Meier's Civilization VI
+Linux : ~/.local/share/aspyr-media/Sid Meier's Civilization VI/Mods
+```
 
-![](http://i.imgur.com/UA1NrR5.png)
+## Key Features
 
-* "My Government" tab removed from Government panel
+- Civ V Style Cityview _- [image](https://camo.githubusercontent.com/e39306c882c0f9b95494ea391cee0baa838d3072/687474703a2f2f692e696d6775722e636f6d2f583571427a6a612e6a7067)_
+  - Production panel elements compressed and reordered _- [image](http://i.imgur.com/DpZ0kcn.png)_
+- Great Person panel revamped _- [image](https://user-images.githubusercontent.com/8012430/31862025-75a4cb88-b737-11e7-9b0f-57129f114f59.jpg)_
+  - No more side scrolling
+  - Adapts to the screen height
+- Policy Reminder Popup _- [image](https://user-images.githubusercontent.com/8012430/31861779-17cd1758-b733-11e7-8b16-b4422999c8af.png)_
+- Improved amenities city details screen (Clean Icons) _- [image](http://i.imgur.com/UA1NrR5.png)_
+- "My Government" tab removed from Government panel _- [image](http://i.imgur.com/168ThOx.jpg)_
+- Diplomatic banner shows the scores of the civilizations _- [image](https://user-images.githubusercontent.com/8012430/31861834-15a1db7a-b734-11e7-91dc-22daaa09653b.png)_
+- Leaderheads expanded tooltips _- [image](https://user-images.githubusercontent.com/8012430/31861835-17537960-b734-11e7-8ae4-08e7e3f19cc4.png)_
+- Map Pinning system enhanced _- [image](http://i.imgur.com/M11tac6.png)_
+  - New pins
+  - Long pinlists are now scrollable
+  - Right click in pinlist to quickly delete pins
+  - Enter key now bound to finalizing a pin in pin creation menu
+- Tech/Civic Tree and Civilopedia now autofocus the searchbar
+- Civilopedia remembers the last visited page
+- Dedicated mod settings menu _- [image](https://user-images.githubusercontent.com/8012430/31861832-13bb16d2-b734-11e7-9524-b7292881f7af.png)_
+  - Civic/Tech popups can be disabled. Optionally, the voiceover can still be kept even without the popup.
+  - Recommandation UI can be enabled/disabled
+  - Minimap size can be changed
+- Civic/Tech notifications spawned at 50%/100% research progress
+- Citizen management icons are overhauled to make seeing yield info easier _-[ image](http://i.imgur.com/gbA4z3s.png)_
+- Growth/Production progress is enumerated in the city panel _- [image](http://i.imgur.com/3kYsEIf.png)_
+- Improved resource icons are dimmed to emphasize unutilized resources _- [image](http://i.imgur.com/m32xtQr.png)_
+- Civ V keybinding options
+  - Classic, a faithful recreation of the Civ V binding scheme
+  - Enhanced, Civ V binding scheme with WASD assigned to camera control, Q/E assigned to city/unit cycling, and Shift assigned to shifting focus between city and unit selection modes
+- Unit actions like sell/delete are no longer hidden behind an expando _- [image](http://i.imgur.com/x1xZtyY.png)_
+- Unit XP bars are twice as tall _- [image](http://i.imgur.com/TeWR0VA.png)_
+- Growth/Amenities/Bordergrowth info baked into city banners _- [image](http://i.imgur.com/8CUJSB6.png)_
+- "Smart Banner" Toggleable option to display a green icon indicating non-locked citizens and district icons indicating built districts _- [image](http://i.imgur.com/XLVP92n.png)_
+- Luxury resources are displayed in the top bar alongside strategic resources _-[ image](http://i.imgur.com/ebYO8l4.png)_
+- Right clicking the action panel (bottom right button) instantly ends turn even when things like production/research/unit moves have not been decided
 
-![](http://i.imgur.com/168ThOx.jpg)
+## Integrations
 
-* Production panel elements compressed and reordered
-
-![](http://i.imgur.com/DpZ0kcn.png)
-
-* Map Pinning system enhanced: new pins, long pinlists are now scrollable, right click in pinlist to quickly delete pins, enter key now bound to finalizing a pin in pin creation menu.
-
-![](http://i.imgur.com/M11tac6.png)
-
-* Tech/Civic Tree and Civilopedia now autofocus the searchbar
-* Civilopedia remembers the last visited page
-* Civic/Tech popups can be disabled. Optionally, the voiceover can still be kept even without the popup.
-* Civic/Tech notifications spawned at 50%/100% research progress
-* [Minimap can be toggled between 2x-Mode and original by rightclicking](https://gfycat.com/DefinitiveDependableAfricanharrierhawk)
-* Dedicated mod settings menu with persistent settings
-
-![](http://i.imgur.com/ePCspFh.png)
-
-* Citizen management icons are overhauled to make seeing yield info easier
-
-![](http://i.imgur.com/gbA4z3s.png)
-
-* Growth/Production progress is enumerated in the city panel
-
-![](http://i.imgur.com/3kYsEIf.png)
-
-* Improved resource icons are dimmed to emphasize unutilized resources
-
-![](http://i.imgur.com/m32xtQr.png)
-
-* Civ V keybinds implemented. Two modes: Classic, a faithful recreation of the Civ V binding scheme. Enhanced,  Civ V binding scheme with WASD assigned to camera control, Q/E assigned to city/unit cycling, and Shift assigned to shifting focus between city and unit selection modes.
-
-* Unit actions like sell/delete are no longer hidden behind an expando
-
-![](http://i.imgur.com/x1xZtyY.png)
-
-* Unit XP bars are twice as tall
-
-![](http://i.imgur.com/TeWR0VA.png)
-
-* Tile tooltips spawn nearly instantly
-
-### QUI Features:
-
-* Growth/Amenities/Bordergrowth info baked into city banners
-
-![](http://i.imgur.com/8CUJSB6.png)
-
-* "Smart Banner" Toggleable option to display a green icon indicating non-locked citizens and district icons indicating built districts.
-
-![](http://i.imgur.com/XLVP92n.png)
-
-* Luxury resources are displayed in the top bar alongside strategic resources
-
-![](http://i.imgur.com/ebYO8l4.png)
-
-* [Right clicking the action panel (bottom right button) instantly ends turn](https://gfycat.com/PeacefulSpanishAfricanwildcat) even when things like production/research/unit moves have not been decided
-* Production/Worker recommendations removed
+Over the time, some other UI mods were integrated into CQUI.
 
 ### Improved Deal Screen
+Mod by mironos, from the [steam workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=884220740). It's a totally revamped diplomatic deals screen, with an improved and expanded layout, easier to read and navigate offer area, color-coded icons, and more in-depth information.
 
-* A totally revamped diplomatic deals screen, with an improved and expanded layout, easier to read and navigate offer area, color-coded icons, and more in-depth information.
+![improveddealscreen](https://user-images.githubusercontent.com/8012430/31861685-d060611e-b731-11e7-99ae-e79072d0aa83.jpg)
 
-![](https://i.imgur.com/C0qSacy.jpg)
+- All resources a civilization has access to are now listed, including those acquired via trade with other civs and those imported from city states, to avoid trading for resources you already have
+- Resource icons have been color-coded and custom sorted _- [image](https://i.imgur.com/PytRc3E.jpg)_
+  - Resources you have direct access to are sorted by decreasing quantity
+  - Resources you only have 1 of are considered scarce, and are given a red font
+  - Resources that both you and your trading partner already have are color-coded with a tan button
+  - Resources that you own but that can't be traded (typically, those that are imported from elsewhere) are listed for reference, but cannot be selected
+- Cities are now sorted alphabetically
+- City details are displayed right on the city buttons for easy reference _- [image](https://i.imgur.com/mSiRY2w.jpg)_
+- Additional city information has been added the city tooltips
+- When negotiating peace treaties, currently occupied cities are highlighted and sorted to the top
+- Great works buttons include a 'type' icon
+- All great works with a creator now display that creator
+- Artifacts include civ icons so you can tell at a glance what nation or city state the artifact originated from. It also the displays artifact's era.
 
-* City details -- such as population, and food, production and science yields -- are displayed right on the city buttons for easy reference
-
-![](https://i.imgur.com/mSiRY2w.jpg)
-
-* Resource icons have been color-coded and custom sorted
-
-![](https://i.imgur.com/PytRc3E.jpg)
-
-### Better Trade Screen Features:
-
-* Overhauled trade menus
-
-![](http://i.imgur.com/0IMseO1.png)![](http://i.imgur.com/F7ZRUi7.png)
-
-* New yield/destination filtering options
+### Better Trade Screen
+Mod by [astog](https://github.com/astog), you can find it [on github](https://github.com/astog/BTS). The goal of this mod is to improve the trade screens in Civilization VI and help manage and monitor running trade routes.
 
 ![](http://i.imgur.com/8DXfZx3.png)
 
-* Remembers the last used tab
-* Available Routes shows all possible routes, even if the trade unit is not present in the origin city
-* Clicking on a route where a free trade unit is not present in the origin city takes you to a free trade unit and opens the change city tab
-* City States with Trade Quest have an icon showing they have that quest
-* Tourism and Visibility bonus is now on each trade route
+- Shows turns to complete a trade route rather than the distance between the cities
+- Overhauled Trade Overview screen _- [image](http://i.imgur.com/0IMseO1.png)_
+  - Shows all possible routes, even if the trader is not present in the origin city
+  - Clicking on a route where a free trade unit is not present in the origin city takes you to a free trade unit and opens the Change City screen
+  - Route entry is colored based on destination player
+  - Player/City header are also colored
+  - Shows origin city and destination city yields in the same screen
+  - Added Group and Filter settings
+  - My Routes tab tracks active routes, so you know when a trade route completes
+- Sort bar in Make Trade Route screen and Trade Overview screen. Sort the routes by left clicking on a button _- [image](http://i.imgur.com/F7ZRUi7.png)_
+- Trade Routes can be sorted based on yields, and turns remaining. Queue multiple sorts by holding SHIFT and the left clicking on a sort button. Right click on any sort button to remove it from the sort setting
+- When opening Make Trade Route screen, the last destination is automatically picked
+- Set a trader to repeat its last route by selecting the Repeat Route checkbox when initiating a trade route
+- An additional checkbox is provided that sets the trader to repeat the top route from the sort settings when the trade was initiated. This allows the trade route to always be the best one, hence reducing micromanagent of always checking the trade routes
+- Cancel the automated trader from the My Routes tab in Trade Overview screen
 
-### Divine Yuri's Custom City Panel Features:
+### More Lenses
+Mod by [astog](https://github.com/astog), you can find it [on github](https://github.com/astog/MoreLenses). The goal of this mod is to add more lenses to the game, that help with empire management and in general quality of life improvements.
 
-* New city panel tooltips:
-  * ![Food tooltip](http://i.imgur.com/ZGwznFv.png)
-  * ![Religions tooltip](http://i.imgur.com/Vo8ZVGr.png)
-  * ![Districts tooltip](http://i.imgur.com/DqwAySq.png)
-  * ![Amenities tooltip](http://i.imgur.com/qHjdmUG.png)
-  * ![Housing tooltip](http://i.imgur.com/h5R3Dhh.png)
+![morelenses](https://user-images.githubusercontent.com/8012430/31861684-d04142de-b731-11e7-97c7-6e8359d47f96.jpg)
 
-### Next City Plot Features:
+- Add a Builder Lens to highlight unimproved resources, hills and removable features. This lens auto applies when a builder is selected (can be toggled in the settings)
+- Add an Archaeologist Lens to highlight artifacts and shipwrecks.
+- Add a City Overlap 6 or 9 to show how many cities a particular hex overlaps with
+- Add a Barbarian Lens to highlight barbarian encampments on the map
+- Add a Resource Lens to highlight resources on the map based on their category (Bonus vs Strategic vs Luxury) and if they are connected or not
+- Add a Wonder Lens to highlights natural and player made wonders
+- Add an Adjacency Yield Lens to show the various adjacency bonuses in a gradient, allowing you to relish in your pristine city planning skills
+- Add a Scout Lens to highlight goody huts on the map. Automatically applies when a scout/ranger is selected (can be toggled in the settings)
 
-* Shows target and timing of next cultural border growth
+### Better Espionnage Screen
+Mod by [astog](https://github.com/astog), you can find it [on github](https://github.com/astog/BES). The Espionage Screens are overhauled to reduce the number of clicks and find the right information quickly.
 
-![](http://i.imgur.com/0zAy8gF.png)
+![](https://camo.githubusercontent.com/763167a1fb61481c0e9a60888d30687f51c3e919/687474703a2f2f692e696d6775722e636f6d2f705435617352652e6a7067)
+
+- Disctrict Filter Options
+  - Allows you to filter the cities based on their districts
+  - You can also filter based on civilizations
+- Mission list is shown as a side screen, rather than replacing the destination list
+
+### Production Queue
+Mod by [kblease](https://github.com/kblease), you can find it [on github](https://github.com/kblease/ProductionQueue). It adds production queuing to Civ 6.
+
+![productionqueue](https://user-images.githubusercontent.com/8012430/31861663-7fbc2400-b731-11e7-9a64-fca8e3ef8cfd.jpg)
+
+- Add a production queue to the cityview (can be toggled in the seetings)
+- The production queue can be reordered
+- Units in a city's queue which become obsolete will be automatically switched to the unit that is replacing it
+
+### Unit Report Screen
+Mod by [GMiller7138](https://forums.civfanatics.com/members/gmiller7138.201859/), you can find it [on civfanatics](https://forums.civfanatics.com/resources/unit-report-screen.25396/). This mod enhances the Report Screen.
+
+![reportscreen](https://user-images.githubusercontent.com/8012430/31861662-7f99b9ba-b731-11e7-88de-c24aa4c28b4e.jpg)
+
+- Unit Tab
+  - Breaks down all of your units into groups such as Military (separated by Land/Sea/Air), Civilian and Support, Traders, Spies, and Great People
+  - Unit stats are listed based on which group they are allocated to. For instance, military units will show Health and Movement, while civilian units will show how many charges they have left
+  - You can select and zoom to any unit on the list
+  - Promote/upgrade military units without exiting screen
+  - Sort units by clicking on header of each stat
+- Yields Tab
+  - Added a "Hide City Buildings" checkbox which hides building yields in order to better compare yields between cities
+  - Sorted Yields. Clicking the header in City Income will allow you to sort by descending/ascending order
+  - Building Expenses displays district maintenance costs. These are combined for each city and labeled as "Districts"
+  - Units Expenses added. Units are grouped and will show total cost per type. Policies that reduce unit maintenance costs are taken into account
+- City Status
+  - Sorted Fields
+- Current Deals
+  - Displays current deals you have with other civilizations. Includes duration, what is being traded, etc.
+
+### Divine Yuri's Custom City Panel
+Mod by [Divine Yuri](https://forums.civfanatics.com/members/divine-yuri.263736/), you can find it [on civfanatics](https://forums.civfanatics.com/resources/divine-yuris-custom-city-panel.25430/). The mod add  additional tooltips to the city panel.
+
+![Amenities tooltip](http://i.imgur.com/qHjdmUG.png)
+
+- Hover over the new "Districts" bar show the built districts in the city, and the buildings in each district. As well as telling you when a building or district is pillaged _- [image](http://i.imgur.com/DqwAySq.png)_
+- The tool tip for the religions bar shows how many citizens follow each religion, your pantheon belief, and benefits of the dominant religion in the city _- [image](http://i.imgur.com/Vo8ZVGr.png)_
+- The tool tip for the Amenities bar shows the current mood of the city the benefit/hindrance of that mood, and the breakdown of what's causing the lost/gains of Amenities
+- Hovering over Housing will give the current food modifier from housing _- [image](http://i.imgur.com/h5R3Dhh.png)_
+- Added food lost from population, and modifiers to the food tool tip _- [image](http://i.imgur.com/ZGwznFv.png)_
+- The production bar on the city panel has been changed to show total production on the right side of the bar
+- The Growth bar has been shortened to make room
+- Added a Expansion Bar which will show how long until the city expands it's boarders
+- Expansion Bar that show total Food and Culture
+- Added tooltips to the Growth Bar
+- Added info to current production in the form of a tooltip in the same way a tooltip would be displayed in the production panel
+- Right clicking the current production icon will links to the civilopedia of what ever's being produced
+
+### Simplified Gossip
+Mod by FinalFreak16, from the [steam workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=1126451168). This mod simplifies the gossip history log in the leader diplomacy view.
+
+![gossip](https://user-images.githubusercontent.com/8012430/31861664-7fe2bf8e-b731-11e7-9eae-2ea138b53007.jpg)
+
+- Each message has its own icon to categorise each entry and make it easier to see what happened at a glance
+
+## What's next
+This section should not always be up to date, so don't hesitate to check the milestones and the issues.
+
+- [ ] Add custom notification on a new (or revamped) notification system _- [here](https://github.com/Azurency/CQUI_Community-Edition/issues/104)_
+- [ ] Finish the beta milestone release _- [here](https://github.com/Azurency/CQUI_Community-Edition/milestone/1)_
+- [ ] Plan the next milestone from the multiple enhancement ideas in the issues
+
+## Contributing
+> This part still need some love
+
+You want to contribute to the mod ? We're always welcoming new contributors and the pull request are open if you wish to tacle an issue. Some issues are labeled "easy" it should be a great entry point if you want to join the team.
+
+### Quick coding style
+- Please use 2 spaces for indentation
+- When modifying existing game files, prefix newly added functions, events, and members with "CQUI_"
+- When commenting, it's a good practice to add your username at the beginning of the comment to know who modified this part of the code
+- There should be NO hardcoded strings in CQUI
+
+### Quick git guideline
+- When your commit includes a bugfix or implements a feature that's tracked on the issue tracker, include the phrase "Fixes #X" or "Resolves #X", where X is the tracker number of the issue or feature. This will notify everyone participating in the issue of your change when you push it to your fork, as well as automatically close the issue when the change is merged into the main repo.
 
 
-Go see the [issue tracker](https://github.com/chaorace/cqui/issues) for an up to date list, you can also find help and report bugs at our [Gitter](https://gitter.im/Civ6-CQUI/Help)
+## Credits
+@Vans163 for his original QUI mod, @Chaorace for the Chao's QUI, @Sparrow for this reborn as a Community QUI, @astog, Aristos/@ricanuck, @JHCD, Greg Miller, Ace, Divine Yuri, @ZhouYzzz, @deggesim, @e1ectron, @sejbr, @frytom, @maxap, @lctrs, @wbqd, @jacks0nX, @RatchetJ, @Frozen-In-Ice, @zgavin, @olegbl, @Proustldee, @kblease, @bolbass, @SpaceOgre, @OfekA, @zeyangl, @Remolten, @bestekov, @cpinter, @paavohuhtala, @perseghini, @benjaminjackman, @velit, @the-m4a, @MarkusKV, @apskim, @8h42
 
-### How to contribute
+Firaxis for eventually delivering mod tools and steam workshop. 
 
-Those looking to contribute to CQUI - Community Edition should visit [the CQUI - Community Edition repo](https://github.com/sparrow8332/CQUI_Community-Edition). 
+The lovely folks over at Civfanatics for their guides, knowledge, tools, and resources. 
 
-# THANKS:
-* @Vans163 for his original QUI mod :heart:
-* @astog from the CivFanatics modding community for his [Better Trade Screen mod](http://forums.civfanatics.com/threads/better-trade-screen.602636/) AND his [More Lenses mod](https://forums.civfanatics.com/threads/more-lenses.606150/), which he merged personally in #165
-* Greg Miller (GMiller7138 on Civfanatics) for his [Unit Report Screen mod](https://forums.civfanatics.com/threads/unit-report-screen.602305/)
-* Ace from the CivFanatics modding community for his [Next City Plot mod](http://forums.civfanatics.com/resources/next-city-plot-by-ace.25437/)
-* Divine Yuri from the CivFanatics modding community for his [Custom City Panel mod](http://forums.civfanatics.com/resources/divine-yuris-custom-city-panel.25430/)
-* @ZhouYzzz for providing the Chinese localization in #161
-* @deggesim (Simone1974 on Civfanatics) for providing the Italian localization in #250
-* @e1ectron for providing the Russian localization in #251
-* @sejbr for providing the Polish localization in #253
-* @frytom/@maxap/@JHCD for providing the German localization in #283/#348
-* @lctrs for providing a partial French localization in #273/#339
-* @wbqd for providing a Korean translation in #309
-* @jacks0nX for:
-  * localization in #20
-  * map pin enhancements in PR #21 and #55
-  * UI/Civilopedia improvements in #24 and #32
-  * adding a GP filter to the policy card display in 063d3a668a06b49c9b2394e03cd5deb66b848210
-  * adding a "Create Pin" hotkey in #117
-  * fixing missing translations in #135
-* @RatchetJ for:
-  * providing the civic/tech notifications at 50%/100% completion in #66 and 1148edc7ada9a649c15611ef78dbdc690c8adf30
-  * improper camera centering on load in #86
-  * useless civic/tech notifications in #91
-  * providing the fix for the production panel "forgetting" the last produced item in #105
-  * adding GP/turn to the GP panel
-  * Adding city yield/citizen assignment information on hover in #136
-* @Frozen-In-Ice for:
-  * revamping the Housing section of the City Details panel in #205
-  * adding turns-left indicators to the GP screen in #205
-  * fixing cityview UI bugs in #209 and #238
-  * adding faster diplomacy fadeouts in #217
-  * adding type/yields to the GW trade tooltip in #217
-  * cleaning up the plot tooltip in #232
-* @JHCD for:
-  * fixing a runtime error in #338
-  * fixing missing gov info with upscaling enabled (#96) in #345
-  * fixing the mod's display in the in-game mod menu (#326) in #351 and again in #449
-  * updating URS to version 1.7.3 (#340) in #369
-  * fixing oversized URS tab buttons (#366) in #375
-  * porting some missing Australian patch changes in #402
-  * documenting and advising in the creation of the new default settings method (#430) in #447
-* Aristos / @ricanuck for:
-  * porting GPT + mutually-owned resource highlighting from HB UI in #374
-  * fixing doubled yield expenses in URS yield tab
-  * fixing duplicate row headers in multiple URS tabs
-  * fixing the vanilla civ bug where the World Tracker checkboxes could fail to persist their states
-  * changing URS so that it properly remembers the last-used tab
-  * adding detailed tooltips to the relationship icons in the diplomacy ribbon (in #391) and diplomatic view (in #393)
-  * fixing negative 0 values appearing in the happiness breakdown
-  * fixing an issue where URS tabs could desynchronise (#321) in #397
-  * adding detailed tooltips to the worldtracker science/civics items (#191) in #398
-  * integrating the Improved Deal Screen mod in #404
-  * fixing a deal miscategorization bug in $405
-  * considerably extending the leader portrait tooltips in the diplo ribbon in #414
-  * implementing previewing leader relationships (#269) using ctrl+mouseover in the diplo ribbon in #418
-  * fixing an issue with properly highlighting hostile units (#372) in #424
-  * fixing a vanilla bug that caused promotion indicators to not always be in sync with the XP meter in #442
-  * fixing a serious vanilla bug (!!) affecting the "Cede city" action (#439) in #443
-  * fixing deal view RMB shortcut not working if at war with target (#453) in #460
-* @zgavin for UI bugfixes in #1 and #2
-* @olegbl for the Amenities overview overhaul in #4 and multiple UI bugfixes ( #9 and #12 )
-  * Additional kudos to /u/mateusarc from the Civilization subreddit for his original concept art
-* @Proustldee for:
-  * bringing the BTS mod version up to current in #61
-  * bringing the BTS mod version up to current, again, in #106
-* @kblease for:
-  * fortify until healed hotkey bugfix in #73
-  * unit purchasing fix in #80
-* @bolbass for:
-  * binding recentering functionality to the citypanel emblem in #279
-  * fixing governor not updating on tile changes in the same turn #257
-* @SpaceOgre for:
-  * adding toggles for each individual smartbanner component #280
-  * changing housing to show as a simple difference in the smartbanner #289
-  * fixing a bug that caused Corps to not queue correctly #302
-  * fixing a bug that broke the auto yield icon toggling setting
-  * fixing a bug causing custom map pins to be colored incorrectly (#154) in #428
-  * implementing a workshop-friendly method for creating custom default settings (#329) in #430
-* @OfekA for providing the improved resource dimming feature in #54
-* @zeyangl for adding new options to the resource dimming feature in #146
-* @Remolten for adding the 2nd highest envoy holder info to the main Citystate screen in #208
-* @bestekov for adding score displays to the diplomacy ribbon in #221
-* @cpinter for speeding up the diplomacy scene fadeout in #277
-* @paavohuhtala for a tooltip improvement in #357
-* @perseghini for providing the fix for issue #33
-* @benjaminjackman for fixing a hotkey conflict in #127
-* @velit for a UI bugfix in #138
-* @the-m4a for a patch incompatibility bugfix in #181
-* @MarkusKV for fixing a bug concerning district completion checkboxes
-* @apskim for changing the style of city markers on the minimap
-* Firaxis for eventually delivering mod tools and steam workshop ;)
-* The lovely folks over at Civfanatics for their guides, knowledge, tools, and resources
-* The even lovelier folks over at /r/civ for their input and testing
-* The, arguably, lovely folks back at the Steam Workshop :p
+The even lovelier folks over at /r/civ for their input and testing. 
+
+The, arguably, lovely folks back at the Steam Workshop :p

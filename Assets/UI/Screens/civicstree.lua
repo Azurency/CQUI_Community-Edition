@@ -170,6 +170,13 @@ local m_shiftDown     :boolean = false;
 
 -- CQUI variables
 local CQUI_halfwayNotified  :table = {};
+local CQUI_ShowTechCivicRecommendations = false;
+
+function CQUI_OnSettingsUpdate()
+  CQUI_ShowTechCivicRecommendations = GameConfiguration.GetValue("CQUI_ShowTechCivicRecommendations") == 1
+end
+LuaEvents.CQUI_SettingsUpdate.Add(CQUI_OnSettingsUpdate);
+LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 
 -- ===========================================================================
 -- Return string respresenation of a prereq table
@@ -842,7 +849,8 @@ function View( playerTechData:table )
     end
 
     -- Show/Hide Recommended Icon
-    if live.IsRecommended and live.AdvisorType ~= nil then
+    -- CQUI : only if show tech civ enabled in settings
+    if live.IsRecommended and live.AdvisorType ~= nil and CQUI_ShowTechCivicRecommendations then
       node.RecommendedIcon:SetIcon(live.AdvisorType);
       node.RecommendedIcon:SetHide(false);
     else

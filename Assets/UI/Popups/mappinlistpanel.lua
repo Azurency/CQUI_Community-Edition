@@ -31,7 +31,7 @@ function SetMapPinIcon(imageControl :table, mapPinIconName :string)
     local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(iconName);
 
     if (textureSheet == nil) then     --Check to see if the unit has an icon atlas index defined
-      print("Could not find icon for " .. iconName);
+      print("ERROR : Could not find icon for " .. iconName);
       textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas("ICON_MAP_PIN_SQUARE");    --If not, resolve the index to be a generic unknown index
     end
     if (textureSheet ~= nil) then     --Check to make sure that the unknown index is also defined...

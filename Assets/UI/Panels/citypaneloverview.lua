@@ -77,7 +77,15 @@ local ms_eventID = 0;
 local m_tabs;
 local m_isShowingPanel    :boolean = false;
 
+--CQUI Members
 local CQUI_HousingFromImprovementsTable :table = {};
+local CQUI_ShowCityDetailAdvisor :boolean = false;
+
+function CQUI_OnSettingsUpdate()
+  CQUI_ShowCityDetailAdvisor = GameConfiguration.GetValue("CQUI_ShowCityDetailAdvisor") == 1
+end
+LuaEvents.CQUI_SettingsUpdate.Add(CQUI_OnSettingsUpdate);
+LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 
 -- ====================CQUI Cityview==========================================
 
@@ -444,7 +452,8 @@ end
 
 function ViewPanelAmenities( data:table )
   -- Only show the advisor bubbles during the tutorial
-  Controls.AmenitiesAdvisorBubble:SetHide( IsTutorialRunning() == false );
+  -- AZURENCY : or show the advisor if the setting is enabled
+  Controls.AmenitiesAdvisorBubble:SetHide( IsTutorialRunning() == false and CQUI_ShowCityDetailAdvisor == false );
 
   local colorName:string = GetHappinessColor(data.Happiness);
   Controls.AmenitiesConstructedLabel:SetText( Locale.Lookup( "LOC_HUD_CITY_AMENITY", data.AmenitiesNum) );
@@ -510,7 +519,8 @@ function ViewPanelHousing( data:table )
   local CQUI_HousingFromImprovements = CQUI_HousingFromImprovementsTable[selectedCityID];
 
   -- Only show the advisor bubbles during the tutorial
-  Controls.HousingAdvisorBubble:SetHide( IsTutorialRunning() == false );
+  -- AZURENCY : or show the advisor if the setting is enabled
+  Controls.HousingAdvisorBubble:SetHide( IsTutorialRunning() == false and CQUI_ShowCityDetailAdvisor == false );
 
   m_kHousingIM:ResetInstances();
 

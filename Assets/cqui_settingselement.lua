@@ -17,6 +17,11 @@ local resource_icon_style_options =
   {"LOC_CQUI_GENERAL_HIDDEN", 2}
 };
 
+local boolean_options = {
+		{"LOC_OPTIONS_ENABLED", 1},
+		{"LOC_OPTIONS_DISABLED", 0},
+	};
+
 --Used to switch active panels/tabs in the settings panel
 function ShowTab(button, panel)
   -- Unfocus all tabs and hide panels
@@ -199,6 +204,7 @@ function OnInputHandler( pInputStruct:table )
   return false;
 end
 function Close()
+  UI.PlaySound("UI_Pause_Menu_On");
   ContextPtr:SetHide(true);
 end
 
@@ -265,6 +271,13 @@ local WorkIconAlphaConverter = {
   end
 };
 
+function OnShow()
+  UI.PlaySound("UI_Pause_Menu_On");
+  -- From Civ6_styles: FullScreenVignetteConsumer
+  Controls.ScreenAnimIn:SetToBeginning();
+  Controls.ScreenAnimIn:Play();
+end
+
 function Initialize()
   ContextPtr:SetHide(true);
   --Adding/binding tabs...
@@ -277,6 +290,7 @@ function Initialize()
     {Controls.LensesTab, Controls.LensesOptions},
     {Controls.UnitsTab, Controls.UnitsOptions},
     {Controls.TraderScreenTab, Controls.TraderScreenOption},
+    {Controls.RecommendationsTab, Controls.RecommendationsOptions},
     {Controls.HiddenTab, Controls.HiddenOptions}
   };
   for i, tab in ipairs(m_tabs) do
@@ -284,9 +298,17 @@ function Initialize()
     local panel = tab[2];
     button:RegisterCallback(Mouse.eLClick, function() ShowTab(button, panel); end);
   end
+
+  -- Close callback
+  Controls.ConfirmButton:RegisterCallback(Mouse.eLClick, Close);
+
   --Populating/binding comboboxes...
   PopulateComboBox(Controls.BindingsPullDown, bindings_options, "CQUI_BindingsMode", Locale.Lookup("LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP"));
   PopulateComboBox(Controls.ResourceIconStyle, resource_icon_style_options, "CQUI_ResourceDimmingStyle", Locale.Lookup("LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP"));
+  PopulateComboBox(Controls.ProductionRecommendationsPullDown, boolean_options, "CQUI_ShowProductionRecommendations");
+  PopulateComboBox(Controls.TechRecommendationsPullDown, boolean_options, "CQUI_ShowTechCivicRecommendations");
+  PopulateComboBox(Controls.ImprovementsRecommendationsPullDown, boolean_options, "CQUI_ShowImprovementsRecommendations");
+  PopulateComboBox(Controls.CityDetailAdvisorPullDown, boolean_options, "CQUI_ShowCityDetailAdvisor");
 
   --Populating/binding checkboxes...
   PopulateCheckBox(Controls.ProductionQueueCheckbox, "CQUI_ProductionQueue");
@@ -320,7 +342,7 @@ function Initialize()
   PopulateCheckBox(Controls.AutoExpandUnitActionsCheckbox, "CQUI_AutoExpandUnitActions");
   PopulateCheckBox(Controls.AlwaysOpenTechTreesCheckbox, "CQUI_AlwaysOpenTechTrees");
   PopulateCheckBox(Controls.SmartWorkIconCheckbox, "CQUI_SmartWorkIcon", Locale.Lookup("LOC_CQUI_CITYVIEW_SMARTWORKICON_TOOLTIP"));
-
+  PopulateCheckBox(Controls.ShowPolicyReminderCheckbox, "CQUI_ShowPolicyReminder", Locale.Lookup("LOC_CQUI_GENERAL_SHOWPRD_TOOLTIP"));
   PopulateSlider(Controls.ProductionItemHeightSlider, Controls.ProductionItemHeightText, "CQUI_ProductionItemHeight", ProductionItemHeightConverter);
   PopulateSlider(Controls.MinimapSizeSlider, Controls.MinimapSizeText, "CQUI_MinimapSize", MinimapSizeConverter);
   PopulateSlider(Controls.WorkIconSizeSlider, Controls.WorkIconSizeText, "CQUI_WorkIconSize", WorkIconSizeConverter);
@@ -330,6 +352,8 @@ function Initialize()
 
   InitializeGossipCheckboxes();
   InitializeTraderScreenCheckboxes();
+
+  ContextPtr:SetShowHandler( OnShow );
 
   --Setting up panel controls
   ShowTab(m_tabs[1][1], m_tabs[1][2]); --Show General Settings on start

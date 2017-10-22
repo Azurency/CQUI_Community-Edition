@@ -3,6 +3,7 @@
 <!--Custom localized text is broken after reloading right now, so even though cutom localizations are ready, they're commented out-->
 
 <Context Name="CQUI_SettingsElement">
+  <Container Style="FullScreenVignetteConsumer" />
   <Box ID="MainGrid" Style="ShellBGBox">
     <Container ID="MainWindow" Style="ShellWindowContainer">
       <Container ID="Header" Style="ShellHeaderContainer">
@@ -22,6 +23,7 @@
               <GridButton ID="GossipTab" Style="ShellTabSmall" String="{LOC_CQUI_GOSSIP:upper}" Size="200,32"/>
               <GridButton ID="LensesTab" Style="ShellTabSmall" String="{LOC_CQUI_LENSES:upper}" Size="200,32"/>
               <GridButton ID="TraderScreenTab" Style="ShellTabSmall" String="{LOC_CQUI_TRADER_SCREEN:upper}" Size="200,32"/>
+              <GridButton ID="RecommendationsTab" Style="ShellTabSmall" String="{LOC_CQUI_RECOMMENDATIONS_SCREEN:upper}" Size="200,32"/>
               <GridButton ID="HiddenTab" Style="ShellTabSmall" String="{LOC_CQUI_GENERAL_HIDDEN:upper}" Size="200,32" Hidden="1"/>
             </Stack>
           </Grid>
@@ -31,6 +33,9 @@
         <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <GridButton ID="ShowLuxuryCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_SHOWLUXURY" />
+          </Stack>
+		  <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+			<GridButton ID="ShowPolicyReminderCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_SHOWPRD" />
           </Stack>
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <PullDown ID="ResourceIconStyle" Style="PullDownBlue" ScrollThreshold="400" Size="300,24" Offset="0,0" SpaceForScroll="0"/>
@@ -416,6 +421,26 @@
           </Stack>
         </Stack>
       </Container>
+      <Container ID="RecommendationsOptions" Size="parent,parent" Hidden="1">
+        <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <PullDown ID="ProductionRecommendationsPullDown" Style="PullDownBlue" ScrollThreshold="400" Size="300,24" Offset="0,0" SpaceForScroll="0"/>
+            <Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_RECOMMENDATIONS_SHOWPRODUCTION"/>
+          </Stack>
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <PullDown ID="TechRecommendationsPullDown" Style="PullDownBlue" ScrollThreshold="400" Size="300,24" Offset="0,0" SpaceForScroll="0"/>
+            <Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_RECOMMENDATIONS_SHOWTECH"/>
+          </Stack>
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <PullDown ID="ImprovementsRecommendationsPullDown" Style="PullDownBlue" ScrollThreshold="400" Size="300,24" Offset="0,0" SpaceForScroll="0"/>
+            <Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_RECOMMENDATIONS_SHOWIMPROVEMENTS"/>
+          </Stack>
+          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <PullDown ID="CityDetailAdvisorPullDown" Style="PullDownBlue" ScrollThreshold="400" Size="300,24" Offset="0,0" SpaceForScroll="0"/>
+            <Label Anchor="L,C" Style="ShellOptionText" String="LOC_CQUI_RECOMMENDATIONS_SHOWCITYDETAILADVISOR"/>
+          </Stack>
+        </Stack>
+      </Container>
       <Container ID="HiddenOptions" Size="parent,parent" Hidden="1">
         <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
           <Stack Anchor="R,T" StackGrowth="Down" Padding="5">
@@ -423,8 +448,9 @@
         </Stack>
       </Container>
     </Container>
+    <GridButton ID="ConfirmButton" Style="ButtonConfirm"  AnchorSide="I,O" Anchor="c,b" String="LOC_GENERIC_CONFIRM_BUTTON" Size="300,41"/>
+    <Label Anchor="c,b" AnchorSide="I,O" Style="FontNormal14" String="LOC_CQUI_SETTINGS_REMINDER" Offset="0,50" Color="102,122,145"/>
       </Grid>
-    <Label Anchor="c,b" Style="FontFlair16" String="LOC_CQUI_SETTINGS_REMINDER"/>
     </Container>
   </Box>
 </Context>

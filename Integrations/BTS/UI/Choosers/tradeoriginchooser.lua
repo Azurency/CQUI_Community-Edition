@@ -6,6 +6,7 @@
 include("InstanceManager");
 include("SupportFunctions");
 include("AnimSidePanelSupport");
+include("civ6common")
 
 -- ===========================================================================
 --  CONSTANTS
@@ -138,7 +139,7 @@ function OnChangeOriginCityButton()
       -- print (" cant teleport to the same city")
     end
   else
-    print("cities are nil")
+    print_debug("cities are nil")
   end
 end
 
@@ -190,7 +191,7 @@ function OnChangeOriginCityFromOverview( city:table )
     if (m_AnimSupport:IsVisible()) then
       Refresh();
     else
-      print("open sesame...")
+      print_debug("open sesame...")
       OnOpen();
     end
   end

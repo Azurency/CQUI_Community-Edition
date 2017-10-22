@@ -119,6 +119,15 @@ local m_numberVisibleBlockers :number = 0;
 local m_visibleBlockerTypes : table   = {};
 local m_isSlowTurnEnable  : boolean = false;                  -- Tutorial: when active slow to allow clicks when turn raises.
 
+-- CQUI Members
+local CQUI_PolicyReminderClosed = false;
+local CQUI_ShowPolicyReminder = true;
+function CQUI_OnSettingsUpdate()
+  CQUI_ShowPolicyReminder = GameConfiguration.GetValue("CQUI_ShowPolicyReminder");
+end
+
+LuaEvents.CQUI_SettingsUpdate.Add(CQUI_OnSettingsUpdate);
+LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 
 -- ===========================================================================
 --  UI Event
@@ -203,6 +212,11 @@ function OnRefresh()
     message     = encampmentRangedAttackString;
     icon            = "ICON_NOTIFICATION_CITY_RANGE_ATTACK";
     toolTipString = encampmentRangedAttackTip;
+    iFlashingState  = FLASHING_END_TURN;
+  elseif(CQUI_CheckPolicyCanBeChanged()) then
+    message = Locale.Lookup("LOC_POLICY_REMINDER_ACTION_BUTTON")
+    icon = "ICON_NOTIFICATION_CHOOSE_CIVIC"
+    toolTipString = Locale.Lookup("LOC_POLICY_REMINDER_ACTION_BUTTON_TOOLTIP")
     iFlashingState  = FLASHING_END_TURN;
   else
     message     = nextTurnString;
@@ -454,6 +468,24 @@ function CQUI_CheckEncampmentRangeAttackState()
 end
 
 -- ===========================================================================
+function CQUI_CheckPolicyCanBeChanged()
+  local pPlayer = Players[Game.GetLocalPlayer()]
+  if (pPlayer == nil) then
+    return false
+  end
+
+  if CQUI_PolicyReminderClosed or not CQUI_ShowPolicyReminder then
+    return false
+  end
+
+  local PRD:table	= pPlayer:GetCulture()
+  if(PRD:CivicCompletedThisTurn() and not PRD:PolicyChangeMade()) then
+    return true
+  end
+  return false
+end
+
+-- ===========================================================================
 function CQUI_GetFirstRangedAttackEncampment()
   local pPlayer = Players[Game.GetLocalPlayer()];
   if (pPlayer == nil) then
@@ -514,6 +546,7 @@ function CheckAutoEndTurn( eCurrentEndTurnBlockingType:number )
           error("CheckAutoEndTurn thinks that we can't end turn, but the notification system disagrees");
         end
       UI.RequestAction(ActionTypes.ACTION_ENDTURN);
+      CQUI_PolicyReminderClosed = false;
     end
   end
 end
@@ -536,7 +569,7 @@ function DoEndTurn( optionalNewBlocker:number )
   end
 
   if UI.IsProcessingMessages() then
-    print("ActionPanel:DoEndTurn() The game is busy processing messages");
+    print("ERROR : ActionPanel:DoEndTurn() The game is busy processing messages");
     return;
   end
 
@@ -552,7 +585,7 @@ function DoEndTurn( optionalNewBlocker:number )
   if UI.GetInterfaceMode() ~= InterfaceModeTypes.SELECTION and UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK and not (UI.GetInterfaceMode() == InterfaceModeTypes.CITY_MANAGEMENT and m_activeBlockerId == EndTurnBlockingTypes.ENDTURN_BLOCKING_PRODUCTION) then
     UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
   end
-
+	
   if m_activeBlockerId == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING then
     if (CheckUnitsHaveMovesState()) then
       UI.SelectNextReadyUnit();
@@ -572,9 +605,12 @@ function DoEndTurn( optionalNewBlocker:number )
       else
         error( "Unable to find selectable attack encampment while in CQUI_CheckEncampmentRangeAttackState()" );
       end
+    elseif(CQUI_CheckPolicyCanBeChanged()) then
+      LuaEvents.CQUI_ShowPolicyReminderPopup(Game.GetLocalPlayer(), pPlayer:GetCulture():GetCivicCompletedThisTurn(), false)
     else
       UI.RequestAction(ActionTypes.ACTION_ENDTURN);
       UI.PlaySound("Stop_Unit_Movement_Master");
+      CQUI_PolicyReminderClosed = false;
     end
 
   elseif (   m_activeBlockerId == EndTurnBlockingTypes.ENDTURN_BLOCKING_STACKED_UNITS
@@ -595,6 +631,7 @@ function DoEndTurn( optionalNewBlocker:number )
         return;
       end
       UI.RequestAction(ActionTypes.ACTION_ENDTURN);
+      CQUI_PolicyReminderClosed = false;
       return;
     end
 
@@ -668,7 +705,7 @@ function OnEndTurnRightClicked()
   end;
 
   if not pPlayer:IsTurnActive() then
-    print("Player's turn not active");
+    print("ERROR : Player's turn not active");
     return;
   end
 
@@ -697,6 +734,7 @@ function OnEndTurnRightClicked()
 	else
 	  UI.RequestAction(ActionTypes.ACTION_ENDTURN);
     UI.PlaySound("Stop_Unit_Movement_Master");
+    CQUI_PolicyReminderClosed = false;
   end
 end
 
@@ -978,6 +1016,7 @@ function OnInputHandler( pInputStruct:table )
     if pInputStruct:GetKey() == Keys.VK_RETURN then
       if pInputStruct:IsShiftDown() and not IsTutorialRunning() then
         UI.RequestAction(ActionTypes.ACTION_ENDTURN); -- Shift + Enter = Force End Turn
+        CQUI_PolicyReminderClosed = false;
       else
         DoEndTurn();                  -- Enter = Normal End Turn
       end
@@ -1225,5 +1264,7 @@ function Initialize()
   LuaEvents.AutoPlayStart.Add(        OnAutoPlayStart );    -- Raised by engine AutoPlay_Manager!
   LuaEvents.AutoPlayEnd.Add(          OnAutoPlayEnd );    -- Raised by engine AutoPlay_Manager!
   LuaEvents.Tutorial_SlowNextTurnEnable.Add(  OnTutorialSlowTurnEnable );
+
+  LuaEvents.OnCQUIPolicyReminderClose.Add(function() CQUI_PolicyReminderClosed = true; ContextPtr:RequestRefresh(); end)
 end
 Initialize();
