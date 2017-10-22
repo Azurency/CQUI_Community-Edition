@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Context Hidden="0">
-  <Grid ID="PopupDrowShadowGrid" Anchor="C,C" Offset="0,0" AutoSize="1" AutoSizePadding="38,38" Style="DropShadow2" >
+  <Grid ID="PopupDrowShadowGrid" Anchor="C,C" Offset="0,0" AutoSize="1" AutoSizePadding="50,50" Style="DropShadow" >
     <Image ID="PopupBackgroundImage" Anchor="C,C" AutoSize="1" AutoSizePadding="-10,-10" Texture="Parchment_Pattern"    StretchMode="Tile" ConsumeMouse="1">
       <Grid ID="PopupFrameGrid" Anchor="C,C" AutoSize="1" Offset="0,0" Texture="CompletedPopup_Frame" SliceCorner="112,120" SliceSize="2,1">
         <!-- Corner Icons -->
