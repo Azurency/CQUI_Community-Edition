@@ -1,6 +1,7 @@
 -- Provides info about currently active Modal Lens
 
 include( "InstanceManager" );
+include( "Civ6Common");
 
 -- Similiar to MinimapPanel.lua to control modded lenses
 -- Used to control ModalLensPanel.lua
@@ -456,7 +457,7 @@ function OnLensLayerOn( layerNum:number )
             Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_NATURALIST_LENS")));
             ShowNaturalistLensKey();
         elseif m_CurrentModdedLensOn == MODDED_LENS_ID.CUSTOM then
-            print("Hiding")
+            print_debug("Hiding")
             ContextPtr:SetHide(true);   -- Hide the Modal Panel if custom
         end
     elseif layerNum == LensLayers.HEX_COLORING_GOVERNMENT then
@@ -481,12 +482,12 @@ end
 -- ===========================================================================
 -- Called from MinimapPanel.lua
 function OnModdedLensOn(lensID)
-    print("Current modded lens on " .. lensID);
+    print_debug("Current modded lens on " .. lensID);
     m_CurrentModdedLensOn = lensID;
 end
 
 function OnAreaLensOn(lensID)
-    print("Current area lens on " .. lensID);
+    print_debug("Current area lens on " .. lensID);
     m_CurrentAreaLensOn = lensID;
 end
 
@@ -506,7 +507,7 @@ end
 --  INIT (ModalLensPanel)
 -- ===========================================================================
 function InitializeModalLensPanel()
-    print("Initializing ModalLensPanel")
+    print_debug("Initializing ModalLensPanel")
     if (Game.GetLocalPlayer() == -1) then
         return;
     end

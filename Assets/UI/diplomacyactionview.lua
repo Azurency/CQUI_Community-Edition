@@ -1403,8 +1403,6 @@ function AddIntelPanel(rootControl : table)
       local type = AGREEMENT_TYPES.RESEARCH_AGREEMENT;
       agreement.Icon:SetIcon("ICON_"..type);
       agreement.Icon:SetToolTipString(Locale.Lookup("LOC_DIPLOACTION_RESEARCH_AGREEMENT_NAME"));
-      print(agreement.Icon:GetSizeX());
-      print(agreement.Icon:GetSizeY());
     end
     if(localPlayerDiplomacy:IsFightingAnyJointWarWith(ms_SelectedPlayer:GetID())) then
       local agreement = ms_IconOnlyIM:GetInstance(intelPanel.AgreementStack);

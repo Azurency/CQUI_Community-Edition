@@ -143,7 +143,7 @@ function CQUI_UpdateMinimapSize()
   if size ~= nil then
     CQUI_MapSize = size
   else
-    print("Using previous minimap size")
+    print_debug("Using previous minimap size")
   end
 
   --Cycles the minimap after resizing
@@ -1526,7 +1526,7 @@ function SetResourceLens()
 end
 
 function RefreshResourcePicker()
-    print("Show Resource Picker")
+    print_debug("Show Resource Picker")
     local mapWidth, mapHeight = Map.GetGridSize();
     local localPlayer   :number = Game.GetLocalPlayer();
     local localPlayerVis:table = PlayersVisibility[localPlayer];
@@ -1634,10 +1634,10 @@ end
 
 function ToggleResourceLens_Bonus()
     if not Controls.ShowBonusResource:IsChecked() then
-        print("Hide Bonus Resource")
+        print_debug("Hide Bonus Resource")
         ndup_insert(ResourceCategoryToHide, "Bonus")
     else
-        print("Show Bonus Resource")
+        print_debug("Show Bonus Resource")
         find_and_remove(ResourceCategoryToHide, "Bonus");
     end
 
@@ -1649,10 +1649,10 @@ end
 
 function ToggleResourceLens_Luxury()
     if not Controls.ShowLuxuryResource:IsChecked() then
-        print("Hide Luxury Resource")
+        print_debug("Hide Luxury Resource")
         ndup_insert(ResourceCategoryToHide, "Luxury")
     else
-        print("Show Luxury Resource")
+        print_debug("Show Luxury Resource")
         find_and_remove(ResourceCategoryToHide, "Luxury");
     end
 
@@ -1664,10 +1664,10 @@ end
 
 function ToggleResourceLens_Strategic()
     if not Controls.ShowStrategicResource:IsChecked() then
-        print("Hide Strategic Resource")
+        print_debug("Hide Strategic Resource")
         ndup_insert(ResourceCategoryToHide, "Strategic")
     else
-        print("Show Strategic Resource")
+        print_debug("Show Strategic Resource")
         find_and_remove(ResourceCategoryToHide, "Strategic");
     end
 
@@ -1838,7 +1838,7 @@ end
 
 -- ===========================================================================
 function SetNaturalistLens()
-    print("Show Naturalist lens")
+    print_debug("Show Naturalist lens")
     local localPlayer:number = Game.GetLocalPlayer();
     local localPlayerVis:table = PlayersVisibility[localPlayer];
 
@@ -2010,7 +2010,7 @@ end
 
 -- ===========================================================================
 function ShowCitizenManagementArea(cityID)
-    print("Showing city manage area for " .. cityID)
+    print_debug("Showing city manage area for " .. cityID)
     SetActiveAreaLens(AREA_LENS_ID.CITIZEN_MANAGEMENT)
     UILens.ToggleLayerOn(LensLayers.HEX_COLORING_GOVERNMENT)
 
@@ -2027,7 +2027,7 @@ function ShowCitizenManagementArea(cityID)
     end
 
     if pCity ~= nil then
-        print("Show citizens for " .. Locale.Lookup(pCity:GetName()))
+        print_debug("Show citizens for " .. Locale.Lookup(pCity:GetName()))
         m_tAreaPlotsColored = {}
 
         local tParameters:table = {};
@@ -2040,7 +2040,7 @@ function ShowCitizenManagementArea(cityID)
         -- Get city plot and citizens info
         local tResults:table = CityManager.GetCommandTargets(pCity, CityCommandTypes.MANAGE, tParameters);
         if tResults == nil then
-            print("Could not find plots")
+            print("ERROR : Could not find plots")
             return
         end
 
@@ -2155,7 +2155,7 @@ function ClearModdedLens()
 end
 
 function ClearAreaLens()
-    print("Clearing area lens")
+    print_debug("Clearing area lens")
 
     -- Because of engine limitations, clear previous color of tiles
     local neutralColor:number = UI.GetColorValue("COLOR_AREA_LENS_NEUTRAL");
@@ -2243,7 +2243,7 @@ function HandleMouseForModdedLens( mousex:number, mousey:number )
                 if unitType == "UNIT_SETTLER" then
                     RefreshSettlerLens();
                 else
-                    print(unitType)
+                    print_debug(unitType)
                 end
 
             -- Clear Settler lens, if not in modal screen
@@ -2543,7 +2543,7 @@ function plotCanHaveImprovement(playerID, plotIndex)
                         local featureInfo = GameInfo.Features[validFeatureInfo.FeatureType]
                         if featureInfo ~= nil and pPlot:GetFeatureType() == featureInfo.Index then
                             if playerCanHave(playerID, featureInfo) and playerCanHave(playerID, validFeatureInfo) then
-                                print("(feature) Plot " .. pPlot:GetIndex() .. " can have " .. improvementInfo.ImprovementType)
+                                print_debug("(feature) Plot " .. pPlot:GetIndex() .. " can have " .. improvementInfo.ImprovementType)
                                 improvementValid = true;
                                 break;
                             end
@@ -2559,7 +2559,7 @@ function plotCanHaveImprovement(playerID, plotIndex)
                             local terrainInfo = GameInfo.Terrains[validTerrainInfo.TerrainType]
                             if terrainInfo ~= nil and pPlot:GetTerrainType() == terrainInfo.Index then
                                 if playerCanHave(playerID, terrainInfo) and playerCanHave(playerID, validTerrainInfo)  then
-                                    print("(terrain) Plot " .. pPlot:GetIndex() .. " can have " .. improvementInfo.ImprovementType)
+                                    print_debug("(terrain) Plot " .. pPlot:GetIndex() .. " can have " .. improvementInfo.ImprovementType)
                                     improvementValid = true;
                                     break;
                                 end
@@ -2576,7 +2576,7 @@ function plotCanHaveImprovement(playerID, plotIndex)
                             local resourceInfo = GameInfo.Resources[validResourceInfo.ResourceType]
                             if resourceInfo ~= nil and pPlot:GetResourceType() == resourceInfo.Index then
                                 if playerCanHave(playerID, resourceInfo) and playerCanHave(playerID, validResourceInfo)  then
-                                    print("(resource) Plot " .. pPlot:GetIndex() .. " can have " .. improvementInfo.ImprovementType)
+                                    print_debug("(resource) Plot " .. pPlot:GetIndex() .. " can have " .. improvementInfo.ImprovementType)
                                     improvementValid = true;
                                     break;
                                 end
@@ -2587,7 +2587,7 @@ function plotCanHaveImprovement(playerID, plotIndex)
 
                 -- Special check for coastal requirement
                 if improvementInfo.Coast and (not pPlot:IsCoastalLand()) then
-                    print(plotIndex .. " plot is not coastal")
+                    print_debug(plotIndex .. " plot is not coastal")
                     improvementValid = false;
                 end
 

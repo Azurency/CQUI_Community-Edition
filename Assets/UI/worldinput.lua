@@ -13,6 +13,7 @@
 -- ===========================================================================
 
 include("PopupDialog.lua");
+include("civ6common")
 -- More interface-specific includes before the initialization
 
 -- Include additional logic from any file that starts with "WorldInput_"
@@ -1337,11 +1338,11 @@ function OnMouseDebugEnd( pInputStruct:table )
   -- If a drag was occurring, end it; otherwise attempt selection of whatever
   -- is in the plot the mouse is currently at.
   if m_isMouseDragging then
-    print("Stopping drag");
+    print_debug("Stopping drag");
     m_isMouseDragging = false;
 
   else
-    print("Debug placing!!!");
+    print_debug("Debug placing!!!");
     local plotID:number = UI.GetCursorPlotID();
     if (Map.IsPlot(plotID)) then
       local edge = UI.GetCursorNearestPlotEdge();
@@ -1779,14 +1780,14 @@ function OnTouchDebugEnd( pInputStruct:table )
     m_isTouchDragging = false;
   else
     if m_touchTotalNum == 1 then
-      print("Debug placing!!!");
+      print_debug("Debug placing!!!");
       local plotID:number = UI.GetCursorPlotID();
       if (Map.IsPlot(plotID)) then
         local edge = UI.GetCursorNearestPlotEdge();
         DebugPlacement( plotID, edge );
       end
     else
-      print("Debug removing!!!");
+      print_debug("Debug removing!!!");
       OnDebugCancelPlacement( pInputStruct );
     end
   end

@@ -41,7 +41,8 @@ INSERT OR REPLACE INTO CQUI_Settings -- Don't touch this line!
       ("CQUI_BlockOnCityAttack", 1), -- Block turn from ending if you have a city that can attack
       ("CQUI_ProductionQueue", 1), -- A production queue appears next to the production panel, allowing multiple constructions to be queued at once
       ("CQUI_ShowCultureGrowth", 1), -- Shows cultural growth overlay in cityview
-      ("CQUI_ShowLuxuries", 1), -- Luxury resources will show in the top-bar next to strategic resources
+      ("CQUI_ShowPolicyReminder", 1), 
+	  ("CQUI_ShowLuxuries", 1), -- Luxury resources will show in the top-bar next to strategic resources
       ("CQUI_ShowUnitPaths", 1), -- Shows unit paths on hover and selection
       ("CQUI_ShowYieldsOnCityHover", 1), -- Shows city management info like citizens, tile yields, and tile growth on hover
       ("CQUI_Smartbanner", 1), -- Additional informations such as districts will show in the city banner
@@ -58,8 +59,12 @@ INSERT OR REPLACE INTO CQUI_Settings -- Don't touch this line!
       ('CQUI_ShowCityMangeAreaInScreen', 1), -- Shows citizen management area when in city screen
       ('CQUI_TraderColorYields', 1), -- Colors the yield in screen based on their respective type. Ex: Food yields are colored green
       ('CQUI_TraderAddDivider', 1), -- Adds a divider between groups in TradeOverview panel
-      ('CQUI_TraderShowSortOrder', 0); -- Adds a divider between groups in TradeOverview panel
-
+      ('CQUI_TraderShowSortOrder', 0), -- Adds a divider between groups in TradeOverview panel
+      ('CQUI_ShowProductionRecommendations', 0), -- Shows the advisor recommendation in the city produciton panel
+      ('CQUI_ShowTechCivicRecommendations', 1), -- Shows the advisor recommendation in the techs/civics tree/panel
+      ('CQUI_ShowImprovementsRecommendations', 0), -- Shows the advisor recommendation for the builder improvements
+      ('CQUI_ShowCityDetailAdvisor', 0), -- Shows the advisor recommendation in the city detail panel
+      ('CQUI_ShowDebugPrint', 0); -- Shows print in the console
 /*
     ┌────────────────────────────────────────────────────────────────────────────────────────────┐
     │                                    Combobox settings                                       │

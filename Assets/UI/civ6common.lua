@@ -18,6 +18,18 @@ ProductionType = {
   UNIT    = "UNIT"
 }
 
+-- ===========================================================================
+--  VARIABLES
+-- ===========================================================================
+
+local CQUI_ShowDebugPrint = false;
+
+function CQUI_OnSettingsUpdate()
+  CQUI_ShowDebugPrint = GameConfiguration.GetValue("CQUI_ShowDebugPrint") == 1
+end
+LuaEvents.CQUI_SettingsUpdate.Add(CQUI_OnSettingsUpdate);
+LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
+
 
 -- ===========================================================================
 --  FUNCTIONS
@@ -599,7 +611,6 @@ function GetLeaderUniqueTraits( leaderType:string )
 
   local unique_abilities = {};
   for i, trait in ipairs(traits) do
-    print(trait.InternalOnly);
     if(not_ability[trait.TraitType] ~= true and not trait.InternalOnly) then
       table.insert(unique_abilities, trait);
     end
@@ -1018,4 +1029,10 @@ function CQUI_TrimGossipMessage(str:string)
     last = string.match(sourceSample, ".-(.)$");
   end
   return Split(str, last .. " " , 2)[2]; --Get the rest of the string after the last word from the gossip source string
+end
+
+function print_debug(str)
+  if CQUI_ShowDebugPrint then
+    print(str)
+  end
 end

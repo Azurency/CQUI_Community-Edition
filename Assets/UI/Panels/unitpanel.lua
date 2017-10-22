@@ -18,6 +18,13 @@ local SECONDARY_ACTIONS_ART_PADDING :number = -4;
 local MAX_BEFORE_TRUNC_STAT_NAME  :number = 170;
 
 
+--CQUI Members
+local CQUI_ShowImprovementsRecommendations :boolean = false;
+function CQUI_OnSettingsUpdate()
+  CQUI_ShowImprovementsRecommendations = GameConfiguration.GetValue("CQUI_ShowImprovementsRecommendations") == 1
+end
+LuaEvents.CQUI_SettingsUpdate.Add(CQUI_OnSettingsUpdate);
+LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 
 -- ===========================================================================
 --  MEMBERS / VARIABLES
@@ -261,7 +268,7 @@ function AddActionToTable( actionsTable:table, action:table, disabled:boolean, t
   local wrappedCallback:ifunction =
     function(void1,void2)
       if UI.GetInterfaceMode() ~= InterfaceModeTypes.SELECTION then
-        print("Unit panel forcing interface mode back to selection before performing operation/action"); --Debug
+        print_debug("Unit panel forcing interface mode back to selection before performing operation/action"); --Debug
         UI.SetInterfaceMode( InterfaceModeTypes.SELECTION );
       end
       callbackFunc(void1,void2);
@@ -784,9 +791,8 @@ function View(data)
     Controls.RecommendedActionButton:ReprocessAnchoring();
     Controls.RecommendedActionIcon:ReprocessAnchoring();
 
-    bestBuildAction = nil;
     Controls.RecommendedActionFrame:SetHide( bestBuildAction == nil );
-    if ( bestBuildAction ~= nil ) then
+    if ( bestBuildAction ~= nil and CQUI_ShowImprovementsRecommendations) then -- CQUI : show improvement recommendation only if setting is enabled
       Controls.RecommendedActionButton:SetHide(false);
       Controls.BuildActionsPanel:SetSizeY( buildStackHeight + 20 + BUILD_PANEL_ART_PADDING_Y);
       Controls.BuildActionsStack:SetOffsetY(26);
@@ -2261,7 +2267,7 @@ function OnUnitActionClicked( actionType:number, actionHash:number )
       end
     end
   else
-    print("OnUnitActionClicked() but it's currently not okay to process. (Which is fine; unless it's the player's turn.)");
+    print_debug("OnUnitActionClicked() but it's currently not okay to process. (Which is fine; unless it's the player's turn.)");
   end
 end
 
@@ -2628,7 +2634,7 @@ end
 function OnPlayerChangeClose( ePlayer:number )
 
   local isPaused:boolean = GameConfiguration.IsPaused();
-  print("OnPlayerChangeClose: " .. ePlayer .. ", GameConfiguration.IsPaused()=" .. tostring(isPaused));
+  print_debug("OnPlayerChangeClose: " .. ePlayer .. ", GameConfiguration.IsPaused()=" .. tostring(isPaused));
   if(isPaused) then
     Events.GameConfigChanged.Add(OnGameConfigChanged_Hotseat_Paused);
   end

@@ -198,7 +198,12 @@
     <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="en_US">
       <Text>Autoexpand all actions in the unit panel</Text>
     </Row>
-
+    <Row Tag="LOC_CQUI_GENERAL_SHOWPRD" Language="en_US">
+      <Text>Show Policy Pop-Up Reminder</Text>
+    </Row>
+	<Row Tag="LOC_CQUI_GENERAL_SHOWPRD_TOOLTIP" Language="en_US">
+      <Text>Enable a Popup to remind you to change your policy cards before end turn</Text>
+    </Row>
     <Row Tag="LOC_CQUI_TRADER_SCREEN" Language="en_US">
       <Text>Trader Screen</Text>
     </Row>
@@ -220,6 +225,20 @@
     <Row Tag="LOC_CQUI_TRADER_ADD_DIVIDER_TOOLTIP" Language="en_US">
       <Text>Adds a divider between groups in Trade Overview panel</Text>
     </Row>
-
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SCREEN" Language="en_US">
+      <Text>Recommendations</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWPRODUCTION" Language="en_US">
+      <Text>Show production recommendations</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWTECH" Language="en_US">
+      <Text>Show tech/civic recommendations</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWIMPROVEMENTS" Language="en_US">
+      <Text>Show improvements recommendations</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWCITYDETAILADVISOR" Language="en_US">
+      <Text>Show city detail advisor</Text>
+    </Row>
   </LocalizedText>
 </GameData>
