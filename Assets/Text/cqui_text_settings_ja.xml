@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- JAPANESE -->
+
+    <Row Tag="LOC_CQUI_BINDINGS" Language="ja_JP">
+      <Text>キー割り当て</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="ja_JP">
+      <Text>割り当てモード</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="ja_JP">
+      <Text>標準: 変更なし[NEWLINE]旧作: Civ 5 のキー割り当て[NEWLINE]強化: Civ 5 のキー割り当てに次の変更を加える[NEWLINE]  WASD キー: カメラのコントロール[NEWLINE]  Q/E キー: ユニットや都市の切り替え[NEWLINE]  Shift キー: 都市選択とユニット選択を切り替える[NEWLINE]  Alt + Q: 採石場を建設[NEWLINE]  Alt + S: 空爆[NEWLINE]  注意: ゲーム本体側で WキーとEキー の割り当てを解除しなければ、CQUIのキー割り当てが競合する。</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="ja_JP">
+      <Text>旧作</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="ja_JP">
+      <Text>強化</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="ja_JP">
+      <Text>標準</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW" Language="ja_JP">
+      <Text>都市画面</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK" Language="ja_JP">
+      <Text>都市砲撃が可能な場合はターン終了不可</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK_TOOLTIP" Language="ja_JP">
+      <Text>都市砲撃できる場合はターンを終了できなくする。</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="ja_JP">
+      <Text>生産アイテムの縦幅</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="ja_JP">
+      <Text>生産キューを有効化</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="ja_JP">
+      <Text>国境拡張オーバーレイを表示</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="ja_JP">
+      <Text>都市画面の成長アイコンをクリックする方法でも設定できる</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" Language="ja_JP">
+      <Text>マウスオーバーで都市管理情報を表示</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="ja_JP">
+      <Text>マウスオーバーで市民配置アイコン、タイル産出量、国境拡張を表示する</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITIZENICONSONHOVER" Language="ja_JP">
+      <Text>マウスオーバーで市民配置アイコンを表示</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITIZENICONSONHOVER_TOOLTIP" Language="ja_JP">
+      <Text>都市バナーのマウスオーバーで市民配置アイコンを表示する</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEONHOVER" Language="ja_JP">
+      <Text>マウスオーバーで市民管理エリアを表示</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEONHOVER_TOOLTIP" Language="ja_JP">
+      <Text>都市バナーのマウスオーバーで市民管理エリアを表示する</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEINSCREEN" Language="ja_JP">
+      <Text>都市画面に市民管理エリアを表示</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEINSCREEN_TOOLTIP" Language="ja_JP">
+      <Text>都市画面に市民管理エリアを表示する</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_HEADER" Language="ja_JP">
+      <Text>都市バナー</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="ja_JP">
+      <Text>スマートな都市バナー</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="ja_JP">
+      <Text>都市バナーに新しいアイコンや情報を表示</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="ja_JP">
+      <Text>自動的に配置されている市民がいる場合、[ICON_EXCLAMATION] このアイコンが表示される。</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_DISTRICTS_TOOLTIP" Language="ja_JP">
+      <Text>建設された区域のアイコンを表示</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_POPULATION_TOOLTIP" Language="ja_JP">
+      <Text>人口増加までのターン数、[現在の人口 / 住宅の最大値] を表示</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="ja_JP">
+      <Text>国境拡張までのターン数を表示</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON" Language="ja_JP">
+      <Text>スマートな市民アイコン</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON_TOOLTIP" Language="ja_JP">
+      <Text>配置されている市民アイコンの大きさと不透明度を変更する</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONALPHA" Language="ja_JP">
+      <Text>配置されている市民アイコンの不透明度</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONSIZE" Language="ja_JP">
+      <Text>配置されている市民アイコンの大きさ</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONS_HEADER" Language="ja_JP">
+      <Text>市民アイコン</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONALPHA" Language="ja_JP">
+      <Text>市民アイコンの不透明度</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONSIZE" Language="ja_JP">
+      <Text>市民アイコンの大きさ</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL" Language="ja_JP">
+      <Text>全般</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="ja_JP">
+      <Text>隠蔽</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_MINIMAPSIZE" Language="ja_JP">
+      <Text>ミニマップの大きさ</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="ja_JP">
+      <Text>改善済み資源アイコンの表示方法</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="ja_JP">
+      <Text>表示: 常に資源アイコンを表示する[NEWLINE]透過: 改善した資源アイコンを透過させる[NEWLINE]隠蔽: 改善した資源アイコンを非表示にする</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="ja_JP">
+      <Text>高級資源をトップパネルに表示</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="ja_JP">
+      <Text>表示</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="ja_JP">
+      <Text>デフォルトで産出量を表示する</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TRANSPARENT" Language="ja_JP">
+      <Text>透過</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP" Language="ja_JP">
+      <Text>ゴシップ</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="ja_JP">
+      <Text>ゴシップのメッセージを削減</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="ja_JP">
+      <Text>あまり重要でないゴシップのメッセージを非表示にする。</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES" Language="ja_JP">
+      <Text>レンズ</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="ja_JP">
+      <Text>考古学者レンズを自動適用</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="ja_JP">
+      <Text>労働者レンズを自動適用</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="ja_JP">
+      <Text>斥候レンズを自動適用</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWNOTHINGTODO_BUILDER" Language="ja_JP">
+      <Text>改善できないタイルを表示する</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWNOTHINGTODO_BUILDER_TOOLTIP" Language="ja_JP">
+      <Text>労働者レンズを選択したとき、改善できないタイルを赤色で表示する</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWGENERIC_BUILDER" Language="ja_JP">
+      <Text>一般的なタイルを表示する</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWGENERIC_BUILDER_TOOLTIP" Language="ja_JP">
+      <Text>労働者レンズを選択したとき、一般的なタイルを白色で表示する</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS" Language="ja_JP">
+      <Text>ポップアップ</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_ALWAYSOPENTECHTREES" Language="ja_JP">
+      <Text>研究の選択時、常にツリー全体を開く</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="ja_JP">
+      <Text>技術 / 社会制度 のポップアップを表示する</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="ja_JP">
+      <Text>技術や社会制度の研究完了時にポップアップを表示する</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="ja_JP">
+      <Text>技術 / 社会制度 の音声を再生する</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="ja_JP">
+      <Text>技術や社会制度の研究完了時に音声を再生する[NEWLINE]ポップアップの設定とは無関係</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="ja_JP">
+      <Text>備考: CQUI の設定は個別のセーブに関連づけられています！[NEWLINE]デフォルトの設定を変更したい場合、 [MOD のインストール先]/CQUI/Assets フォルダ内の cqui_settings.sql を読んでください。</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS" Language="ja_JP">
+      <Text>ユニット</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="ja_JP">
+      <Text>マウスオーバーやクリックで移動先を表示</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="ja_JP">
+      <Text>ユニットパネルのアクションを全て表示</Text>
+    </Row>
+
+    <Row Tag="LOC_CQUI_TRADER_SCREEN" Language="ja_JP">
+      <Text>交易画面</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_SHOW_SORT_ORDER" Language="ja_JP">
+      <Text>並べ順を表示</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_SHOW_SORT_ORDER_TOOLTIP" Language="ja_JP">
+      <Text>交易画面において、各種産出量の並べ順を表示する</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_COLOR_YIELDS" Language="ja_JP">
+      <Text>産出量を色つきで表示</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_COLOR_YIELDS_TOOLTIP" Language="ja_JP">
+      <Text>交易画面において、産出量を色つきで表示する[NEWLINE]   例）食料産出量は緑色</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_ADD_DIVIDER" Language="ja_JP">
+      <Text>グループを分けて表示</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_ADD_DIVIDER_TOOLTIP" Language="ja_JP">
+      <Text>交易画面において、グループを分けて表示する</Text>
+    </Row>
+
+  </LocalizedText>
+</GameData>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- JAPANESE -->
+
+   <!-- Common Text -->
+    <Replace Tag="LOC_TRADE_GROUP_SETTINGS" Language="ja_JP">
+      <Text>グループ設定</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FILTER_SETTINGS" Language="ja_JP">
+      <Text>フィルタ設定</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="ja_JP">
+      <Text>[ICON_Food]食料で並べ替え</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_PRODUCTION_TOOLTIP" Language="ja_JP">
+      <Text>[ICON_Production]生産力で並べ替え</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_GOLD_TOOLTIP" Language="ja_JP">
+      <Text>[ICON_Gold]ゴールドで並べ替え</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_SCIENCE_TOOLTIP" Language="ja_JP">
+      <Text>[ICON_Science]科学力で並べ替え</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_CULTURE_TOOLTIP" Language="ja_JP">
+      <Text>[ICON_Culture]文化力で並べ替え</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_FAITH_TOOLTIP" Language="ja_JP">
+      <Text>[ICON_Faith]信仰力で並べ替え</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_TURNS_REMAINING_TOOLTIP" Language="ja_JP">
+      <Text>[ICON_Turn]終了までのターン数で並べ替え</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FILTER_INTERNATIONAL_ROUTES_TEXT" Language="ja_JP">
+      <Text>国外交易路</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FILTER_CS_WITH_QUEST_TOOLTIP" Language="ja_JP">
+      <Text>交易路クエストのある都市国家</Text>
+    </Replace>
+
+    <!-- Trade Overview -->
+    <Replace Tag="LOC_TRADE_NO_BENEFIT_TEXT" Language="ja_JP">
+      <Text>この交易路によるボーナスなし</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_SORT_BY_TEXT" Language="ja_JP">
+      <Text>並べ替え:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_OVERVIEW_ORIGIN_AZ" Language="ja_JP">
+      <Text>出発地 (昇順)</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_OVERVIEW_ORIGIN_ZA" Language="ja_JP">
+      <Text>出発地 (降順)</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_OVERVIEW_DESTINATION_AZ" Language="ja_JP">
+      <Text>到着地 (昇順)</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_OVERVIEW_DESTINATION_ZA" Language="ja_JP">
+      <Text>到着地 (降順)</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT" Language="ja_JP">
+      <Text>開く:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_COLLAPSE_ALL_BUTTON_TEXT" Language="ja_JP">
+      <Text>閉じる:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP" Language="ja_JP">
+      <Text>この交易路が終了するまでの合計[ICON_Turn]ターン数</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_ALT_HELP_TOOLTIP" Language="ja_JP">
+      <Text>この交易路が終了するまで[Icon_Turn]{1_TurnsRemaining}ターン</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER" Language="ja_JP">
+        <Text>----------------------------</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_ROUTE_LENGTH_TOOLTIP" Language="ja_JP">
+      <Text>交易距離: {1_TripsToDestination}タイル</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TRIPS_COUNT_TOOLTIP" Language="ja_JP">
+      <Text>往復回数: {1_TripsToDestination}</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_TOOLTIP" Language="ja_JP">
+      <Text>交易終了: {1_TurnWhenCompleted}ターン目</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_ALT_TOOLTIP" Language="ja_JP">
+      <Text>交易期間: {1_TurnsToComplete}ターン[NEWLINE]交易終了: {2_TurnWhenCompleted}ターン目</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_CANCEL_AUTOMATION_TOOLTIP" Language="ja_JP">
+      <Text>この交易路の自動化を取り消す。次の終了時に割り当て可能。</Text>
+    </Replace>
+
+    <!-- Make Trade Route -->
+    <Replace Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_LABEL" Language="ja_JP">
+      <Text>交易路の繰り返し:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_TOOLTIP" Language="ja_JP">
+      <Text>交易路を繰り返す。デフォルトでは、前回と同じ交易路を選択する。</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_LABEL" Language="ja_JP">
+      <Text>リストの一番上:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_TOOLTIP" Language="ja_JP">
+      <Text>交易路の終了時、リストの一番上にある交易路を選択する。</Text>
+    </Replace>
+
+    <!-- Trade Origin Chooser -->
+    <Replace Tag="LOC_ORIGIN_CHOOSER_HEADER_BACKGROUND_TEXT" Language="ja_JP">
+      <Text>都市を選択</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_ORIGIN_CHOOSER_HEADER_LABEL_TEXT" Language="ja_JP">
+      <Text>交易商の移動先...</Text>
+    </Replace>
+
+    <Replace Tag="LOC_ORIGIN_CHOOSER_CHANGE_DESTINATION_BUTTON" Language="ja_JP">
+      <Text>決定</Text>
+    </Replace>
+
+  </LocalizedText>
+</GameData>
