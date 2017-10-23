@@ -847,6 +847,13 @@ function NavigateTo(SectionId, PageId)
   end
 end
 
+function OnToggleCivilopedia()
+	if(ContextPtr:IsHidden()) then 
+		OnOpenCivilopedia();
+	else
+		OnClose();
+	end
+end
 
 -------------------------------------------------------------------------------
 --
@@ -918,12 +925,8 @@ end
 --  Input Hotkey Event
 -- ===========================================================================
 function OnInputActionTriggered( actionId )
-  if (actionId == m_OpenPediaId) then
-    if(ContextPtr:IsHidden()) then
-      OnOpenCivilopedia();
-    else
-      OnClose();
-    end
+	if (actionId == m_OpenPediaId) then
+		OnToggleCivilopedia();
     end
 end
 
@@ -1008,6 +1011,7 @@ function Initialize()
   Controls.WindowCloseButton:RegisterCallback(Mouse.eLClick, OnClose);
   Controls.WindowCloseButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   LuaEvents.OpenCivilopedia.Add(OnOpenCivilopedia);
+  LuaEvents.ToggleCivilopedia.Add(OnToggleCivilopedia);
 
   -- Hotkey support
   ContextPtr:SetInputHandler( OnInputHandler, true );

@@ -4,6 +4,8 @@
 --	Slideout panel containing available civic options.
 --
 -- ===========================================================================
+g_ExtraIconData = {};
+include("CivicsTreeIconLoader_", true);
 include("ToolTipHelper")
 include("TechAndCivicSupport"); -- Already includes Civ6Common and InstanceManager
 include("AnimSidePanelSupport");
@@ -14,7 +16,6 @@ include("Civ6Common");
 -- ===========================================================================
 --	CONSTANTS
 -- ===========================================================================
-local DATA_FIELD_UNLOCK_IM		:string = "_UnlockIM";
 local RELOAD_CACHE_ID			:string = "CivicChooser";	-- Must be unique (usually the same as the file name)
 local MAX_BEFORE_TRUNC_BOOST_MSG:number = 210;					-- Size in which boost messages will be truncated and tooltipified
 local SIZE_ICON_LARGE			:number = 38;
@@ -30,6 +31,7 @@ local m_currentID		:number = -1;
 local m_isExpanded		:boolean= false;
 local m_lastCompletedID	:number = -1;
 local m_needsRefresh	:boolean = false; --used to track whether a given series of events (terminated by GameCoreEventPublishComplete)
+local m_CachedModifiers	:table = {};
 
 --CQUI Members
 local CQUI_AlwaysOpenTechTrees = false; --Ignores events calling for this to open when true
@@ -103,6 +105,9 @@ end
 function View( playerID:number, kData:table )
 
   m_civicsIM:ResetInstances();
+  for _,iconData in pairs(g_ExtraIconData) do
+		iconData:Reset();
+	end
 
   local kActive : table = GetActiveData(kData);
   if kActive == nil then
@@ -112,12 +117,12 @@ function View( playerID:number, kData:table )
   table.sort(kData, function(a, b) return Locale.Compare(a.Name, b.Name) == -1; end);
   for i, data in ipairs(kData) do
     if data.IsCurrent or data.IsLastCompleted then
-      RealizeCurrentCivic( playerID, data );
+      RealizeCurrentCivic( playerID, data, nil, m_CachedModifiers, extraIconDataCache );
       if (data.Repeatable) then
-        AddAvailableCivic( playerID, data );
+        AddAvailableCivic( playerID, data, extraIconDataCache );
       end
     else
-      AddAvailableCivic( playerID, data );
+      AddAvailableCivic( playerID, data, extraIconDataCache );
     end
   end
   RealizeSize();
@@ -161,8 +166,25 @@ function AddAvailableCivic( playerID:number, kData:table )
     callback = function() ResetOverflowArrow( kItemInstance ); OnChooseCivic(kData.Hash); end;
   end
 
+	-- Include extra icons in total unlocks
+	local extraUnlocks:table = {};
+	local hideDescriptionIcon:boolean = false;
+	local cachedModifier:table = m_CachedModifiers[kData.CivicType];
+	for _,iconData in pairs(g_ExtraIconData) do
+		if iconData.ModifierType == cachedModifier.ModifierType then
+			hideDescriptionIcon = hideDescriptionIcon or iconData.HideDescriptionIcon;
+			table.insert(extraUnlocks, iconData);
+		end
+	end
+
   -- Handle overflow for unlock icons
-  numUnlockables = PopulateUnlockablesForCivic( playerID, kData.ID, unlockIM, nil, callback );
+  numUnlockables = PopulateUnlockablesForCivic( playerID, kData.ID, unlockIM, nil, callback, hideDescriptionIcon );
+
+	-- Initialize extra icons
+	for _,iconData in pairs(extraUnlocks) do
+		iconData:Initialize(kItemInstance.UnlockStack, cachedModifier);
+		numUnlockables = numUnlockables + 1;
+	end
   if numUnlockables ~= nil then
     HandleOverflow(numUnlockables, kItemInstance);
   end
@@ -395,6 +417,36 @@ function OnGameDebugReturn(context:string, contextTable:table)
   end
 end
 
+-- ===========================================================================
+--	Obtain the data from the DB that doesn't change
+--	Base costs and relationships (prerequisites)
+--	RETURN: A table of node data (techs/civics/etc...) with a prereq for each entry.
+-- ===========================================================================
+function PopulateCachedModifiers()	
+	-- Build main item table.
+	for row:table in GameInfo.Civics() do
+		local entry:table	= {};
+		-- Look up and cache any civic modifiers we reward like envoys awarded
+		for civicModifier in GameInfo.CivicModifiers() do
+			if (row.CivicType == civicModifier.CivicType) then
+				for modifierType in GameInfo.Modifiers() do
+					if civicModifier.ModifierId == modifierType.ModifierId then
+						entry.ModifierId	= modifierType.ModifierId;
+						entry.ModifierType	= modifierType.ModifierType;
+					end
+				end
+				for modifierArguments in GameInfo.ModifierArguments() do
+					if civicModifier.ModifierId == modifierArguments.ModifierId then
+						entry.ModifierValue = modifierArguments.Value;
+					end
+				end
+			end
+		end
+
+		
+		m_CachedModifiers[row.CivicType] = entry;
+	end
+
 function CQUI_OnSettingsUpdate()
   CQUI_AlwaysOpenTechTrees = GameConfiguration.GetValue("CQUI_AlwaysOpenTechTrees");
   CQUI_ShowTechCivicRecommendations = GameConfiguration.GetValue("CQUI_ShowTechCivicRecommendations") == 1
@@ -404,6 +456,9 @@ end
 --	INIT
 -- ===========================================================================
 function Initialize()
+
+	-- Cache frequently used / expensive data
+	PopulateCachedModifiers();
 
   -- Hot-reload events
   ContextPtr:SetInitHandler(OnInit);
