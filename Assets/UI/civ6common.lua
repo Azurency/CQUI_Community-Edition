@@ -246,7 +246,7 @@ function FilterUnitStats( hashOrType:number, ignoreStatType:number )
     table.insert(data, {Value = unitInfo.BuildCharges, Type = "BuildCharges",   Label = "LOC_HUD_UNIT_PANEL_BUILDS",        FontIcon="[ICON_Charges_Large]",    IconName="ICON_BUILD_CHARGES"});
   end
   if (unitInfo.ReligiousHealCharges > 0) then
-  table.insert(data, {Value = unitInfo.ReligiousHealCharges, Type = "ReligiousHealCharges",		Label = "LOC_HUD_UNIT_PANEL_HEALS",				FontIcon="[ICON_Charges_Large]",		IconName="ICON_RELIGION"});
+    table.insert(data, {Value = unitInfo.ReligiousHealCharges, Type = "ReligiousHealCharges",		Label = "LOC_HUD_UNIT_PANEL_HEALS",				FontIcon="[ICON_Charges_Large]",		IconName="ICON_RELIGION"});
 	end
 
   -- If we have more than 4 stats then try to remove melee strength
@@ -614,7 +614,6 @@ function GetLeaderUniqueTraits( leaderType:string )
 
   local unique_abilities = {};
   for i, trait in ipairs(traits) do
-    print(trait.InternalOnly);
     if(not_ability[trait.TraitType] ~= true and not trait.InternalOnly) then
       table.insert(unique_abilities, trait);
     end
