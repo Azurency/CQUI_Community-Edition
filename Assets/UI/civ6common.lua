@@ -143,7 +143,7 @@ function RequestMoveOperation( kUnit:table, tParameters:table, plotX:number, plo
     end
   else
     tParameters[UnitOperationTypes.PARAM_MODIFIERS] = UnitOperationMoveModifiers.NONE;
-    if (UnitManager.CanStartOperation( kUnit, UnitOperationTypes.RANGE_ATTACK, nil, tParameters) ) then
+    if (UnitManager.CanStartOperation( kUnit, UnitOperationTypes.RANGE_ATTACK, nil, tParameters) and (kUnit:GetRangedCombat() > kUnit:GetCombat() or kUnit:GetBombardCombat() > kUnit:GetCombat() ) ) then
       UnitManager.RequestOperation(kUnit, UnitOperationTypes.RANGE_ATTACK, tParameters);
     else
       -- Allow for attacking and don't early out if the destination is blocked, etc., but is in the fog.
@@ -245,6 +245,9 @@ function FilterUnitStats( hashOrType:number, ignoreStatType:number )
   if (unitInfo.BuildCharges > 0) then
     table.insert(data, {Value = unitInfo.BuildCharges, Type = "BuildCharges",   Label = "LOC_HUD_UNIT_PANEL_BUILDS",        FontIcon="[ICON_Charges_Large]",    IconName="ICON_BUILD_CHARGES"});
   end
+  if (unitInfo.ReligiousHealCharges > 0) then
+  table.insert(data, {Value = unitInfo.ReligiousHealCharges, Type = "ReligiousHealCharges",		Label = "LOC_HUD_UNIT_PANEL_HEALS",				FontIcon="[ICON_Charges_Large]",		IconName="ICON_RELIGION"});
+	end
 
   -- If we have more than 4 stats then try to remove melee strength
   if (table.count(data) > 4) then
@@ -611,6 +614,7 @@ function GetLeaderUniqueTraits( leaderType:string )
 
   local unique_abilities = {};
   for i, trait in ipairs(traits) do
+    print(trait.InternalOnly);
     if(not_ability[trait.TraitType] ~= true and not trait.InternalOnly) then
       table.insert(unique_abilities, trait);
     end
