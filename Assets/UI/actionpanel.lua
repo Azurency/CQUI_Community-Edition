@@ -8,7 +8,6 @@ include( "InstanceManager" );
 include( "SupportFunctions" );
 include("Civ6Common"); -- IsTutorialRunning()
 
-
 -- ===========================================================================
 --  CONSTANTS
 -- ===========================================================================
@@ -85,24 +84,24 @@ local estTimeElapsedToolStr     :string = Locale.Lookup("LOC_KEY_ESTIMATED_TIME_
 local canUnreadyTurnTip       :string = Locale.Lookup("LOC_ACTION_PANEL_CAN_UNREADY_TOOLTIP");
 
 -- ===========================================================================
-local m_kMessageInfo :table = {};
-m_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_UNITS]           = {Message = unitNeedsOrdersString,     ToolTip = unitNeedsOrdersTip  , Icon="ICON_NOTIFICATION_COMMAND_UNITS"    }
-m_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_STACKED_UNITS]       = {Message = moveStackedUnitString,     ToolTip = moveStackedUnitTip  , Icon="ICON_NOTIFICATION_COMMAND_UNITS"    }
-m_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_UNIT_NEEDS_ORDERS]     = {Message = unitNeedsOrdersString,     ToolTip = unitNeedsOrdersTip  , Icon="ICON_NOTIFICATION_COMMAND_UNITS"    }
-m_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_RESEARCH]          = {Message = needResearchString,      ToolTip = needResearchTip   , Icon="ICON_NOTIFICATION_CHOOSE_TECH"    }
-m_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_CIVIC]           = {Message = needCivicString,       ToolTip = needCivicTip      , Icon="ICON_NOTIFICATION_CHOOSE_CIVIC",  Sound="Notification_New_Civic" }
-m_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_FILL_CIVIC_SLOT]     = {Message = fillCivicString ,        ToolTip = fillCivicTip      , Icon="ICON_NOTIFICATION_CHOOSE_CIVIC"   }
-m_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_CONSIDER_GOVERNMENT_CHANGE]= {Message = considerGovernmentString,    ToolTip = considerGovernmentTip , Icon="ICON_NOTIFICATION_CONSIDER_GOVERNMENT_CHANGE" }
-m_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_CONSIDER_RAZE_CITY]    = {Message = considerRazeCityString,    ToolTip = considerRazeCityTip , Icon="ICON_NOTIFICATION_CONSIDER_RAZE_CITY" }
-m_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_PRODUCTION]        = {Message = needProductionString,      ToolTip = needProductionTip   , Icon="ICON_NOTIFICATION_CHOOSE_CITY_PRODUCTION" }
-m_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_PANTHEON]          = {Message = needPantheonString,      ToolTip = needPantheonTip   , Icon="ICON_NOTIFICATION_CHOOSE_PANTHEON", Sound="Notification_New_Religion" }
-m_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_RELIGION]          = {Message = needReligionString,      ToolTip = needReligionTip   , Icon="ICON_NOTIFICATION_CHOOSE_RELIGION", Sound="Notification_New_Religion" }
-m_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_BELIEF]          = {Message = needBeliefString,        ToolTip = needBeliefTip     , Icon="ICON_NOTIFICATION_CHOOSE_RELIGION", Sound="Notification_New_Religion" }
-m_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_GIVE_INFLUENCE_TOKEN]    = {Message = giveInfluenceTokenString,    ToolTip = giveInfluenceTokenTip , Icon="ICON_NOTIFICATION_GIVE_INFLUENCE_TOKEN" }
-m_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_CLAIM_GREAT_PERSON]    = {Message = claimGreatPersonString,    ToolTip = claimGreatPersonTip , Icon="ICON_NOTIFICATION_CLAIM_GREAT_PERSON",  Sound="Notification_Great_Person_Available" }
-m_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_SPY_CHOOSE_ESCAPE_ROUTE] = {Message = chooseEscapeRouteString,   ToolTip = chooseEscapeRouteTip  , Icon="ICON_NOTIFICATION_SPY_CHOOSE_ESCAPE_ROUTE"  }
-m_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_SPY_CHOOSE_DRAGNET_PRIORITY]={Message = chooseDragnetPriorityString, ToolTip = chooseDragnetPriorityTip  , Icon="ICON_NOTIFICATION_SPY_CHOOSE_DRAGNET_PRIORITY"}
-m_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_ARTIFACT]                   ={Message = needArtifactPlayerString,    ToolTip = needArtifactPlayerTip , Icon="ICON_NOTIFICATION_DISCOVER_ARTIFACT"}
+g_kMessageInfo = {};
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_UNITS]						= {Message = unitNeedsOrdersString,			ToolTip = unitNeedsOrdersTip	, Icon="ICON_NOTIFICATION_COMMAND_UNITS"		}
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_STACKED_UNITS]				= {Message = moveStackedUnitString,			ToolTip = moveStackedUnitTip	, Icon="ICON_NOTIFICATION_COMMAND_UNITS"		}
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_UNIT_NEEDS_ORDERS]			= {Message = unitNeedsOrdersString,			ToolTip = unitNeedsOrdersTip	, Icon="ICON_NOTIFICATION_COMMAND_UNITS"		}
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_RESEARCH]					= {Message = needResearchString,			ToolTip = needResearchTip		, Icon="ICON_NOTIFICATION_CHOOSE_TECH"		}
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_CIVIC]						= {Message = needCivicString,				ToolTip = needCivicTip			, Icon="ICON_NOTIFICATION_CHOOSE_CIVIC",	Sound="Notification_New_Civic" }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_FILL_CIVIC_SLOT]			= {Message = fillCivicString ,				ToolTip = fillCivicTip			, Icon="ICON_NOTIFICATION_CHOOSE_CIVIC"		}
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_CONSIDER_GOVERNMENT_CHANGE]= {Message = considerGovernmentString,		ToolTip = considerGovernmentTip	, Icon="ICON_NOTIFICATION_CONSIDER_GOVERNMENT_CHANGE"	}
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_CONSIDER_RAZE_CITY]		= {Message = considerRazeCityString,		ToolTip = considerRazeCityTip	, Icon="ICON_NOTIFICATION_CONSIDER_RAZE_CITY"	}
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_PRODUCTION]				= {Message = needProductionString,			ToolTip = needProductionTip		, Icon="ICON_NOTIFICATION_CHOOSE_CITY_PRODUCTION"	}
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_PANTHEON]					= {Message = needPantheonString,			ToolTip = needPantheonTip		, Icon="ICON_NOTIFICATION_CHOOSE_PANTHEON",	Sound="Notification_New_Religion" }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_RELIGION]					= {Message = needReligionString,			ToolTip = needReligionTip		, Icon="ICON_NOTIFICATION_CHOOSE_RELIGION",	Sound="Notification_New_Religion" }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_BELIEF]					= {Message = needBeliefString,				ToolTip = needBeliefTip			, Icon="ICON_NOTIFICATION_CHOOSE_RELIGION",	Sound="Notification_New_Religion" }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_GIVE_INFLUENCE_TOKEN]		= {Message = giveInfluenceTokenString,		ToolTip = giveInfluenceTokenTip	, Icon="ICON_NOTIFICATION_GIVE_INFLUENCE_TOKEN"	}
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_CLAIM_GREAT_PERSON]		= {Message = claimGreatPersonString,		ToolTip = claimGreatPersonTip	, Icon="ICON_NOTIFICATION_CLAIM_GREAT_PERSON",	Sound="Notification_Great_Person_Available" }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_SPY_CHOOSE_ESCAPE_ROUTE]	= {Message = chooseEscapeRouteString,		ToolTip = chooseEscapeRouteTip	, Icon="ICON_NOTIFICATION_SPY_CHOOSE_ESCAPE_ROUTE"	}
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_SPY_CHOOSE_DRAGNET_PRIORITY]={Message = chooseDragnetPriorityString,	ToolTip = chooseDragnetPriorityTip	, Icon="ICON_NOTIFICATION_SPY_CHOOSE_DRAGNET_PRIORITY"}
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_ARTIFACT]                   ={Message = needArtifactPlayerString,		ToolTip = needArtifactPlayerTip	, Icon="ICON_NOTIFICATION_DISCOVER_ARTIFACT"}
 
 
 -- ===========================================================================
@@ -185,7 +184,7 @@ function OnRefresh()
   Controls.TickerAnim:Play();
 
   -- Populate current blocker
-  local kInfo :table  = m_kMessageInfo[m_activeBlockerId];
+  local kInfo :table  = g_kMessageInfo[m_activeBlockerId];
   if kInfo ~= nil then
     message     = kInfo.Message;
     icon      = kInfo.Icon;
@@ -245,8 +244,8 @@ function OnRefresh()
         kAlphaControl:Play();
         kSlideControl:Play();
       end
-      local tooltip:string = m_kMessageInfo[endTurnBlockingId].ToolTip;
-      local icon:string = m_kMessageInfo[endTurnBlockingId].Icon;
+      local tooltip:string = g_kMessageInfo[endTurnBlockingId].ToolTip;
+      local icon:string = g_kMessageInfo[endTurnBlockingId].Icon;
       if(icon ~= nil) then
         local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(icon,40);
         kButtonControl:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
@@ -284,10 +283,10 @@ function OnRefresh()
       -- We only want to add blocker buttons for blockers that aren't represented already
       local endTurnBlockingId :number = kAllBlockingTypes[iBlocker];
       if not BlockerIsVisible(endTurnBlockingId) then
-        local title       :string = m_kMessageInfo[endTurnBlockingId].Message;
+        local title       :string = g_kMessageInfo[endTurnBlockingId].Message;
         local kInst       :table  = m_overflowIM:GetInstance();
-        local tooltip     :string = m_kMessageInfo[endTurnBlockingId].ToolTip;
-        local icon        :string = m_kMessageInfo[endTurnBlockingId].Icon;
+        local tooltip     :string = g_kMessageInfo[endTurnBlockingId].ToolTip;
+        local icon        :string = g_kMessageInfo[endTurnBlockingId].Icon;
 
         if(icon ~= nil) then
           local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(icon,40);

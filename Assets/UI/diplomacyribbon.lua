@@ -14,16 +14,10 @@ local SCROLL_SPEED			:number = 3;
 local SIZE_LEADER			:number = 52;
 local PADDING_LEADER		:number = 3;
 local BG_PADDING_EDGE		:number = 20;
-local OFF_LEFT_ARROW		:number = 20;
-local OFF_LEFT_SCREEN		:number = 360;
 local RIGHT_HOOKS_INITIAL	:number	= 163;
 local MIN_LEFT_HOOKS		:number	= 260;
 local MINIMUM_BG_SIZE		:number = 100;
 local WORLD_TRACKER_OFFSET	:number	= 40;
-local BAR_PADDING			:number	= 50;
-
-local TEAM_RIBBON_SIZE		:number = 53;
-local TEAM_RIBBON_PREFIX	:string = "ICON_TEAM_RIBBON_";
 
 -- ===========================================================================
 --	VARIABLES
