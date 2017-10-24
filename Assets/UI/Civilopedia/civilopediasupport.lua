@@ -848,11 +848,11 @@ function NavigateTo(SectionId, PageId)
 end
 
 function OnToggleCivilopedia()
-	if(ContextPtr:IsHidden()) then 
-		OnOpenCivilopedia();
-	else
-		OnClose();
-	end
+    if(ContextPtr:IsHidden()) then 
+      OnOpenCivilopedia();
+    else
+      OnClose();
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -925,8 +925,8 @@ end
 --  Input Hotkey Event
 -- ===========================================================================
 function OnInputActionTriggered( actionId )
-	if (actionId == m_OpenPediaId) then
-		OnToggleCivilopedia();
+    if (actionId == m_OpenPediaId) then
+       OnToggleCivilopedia();
     end
 end
 
