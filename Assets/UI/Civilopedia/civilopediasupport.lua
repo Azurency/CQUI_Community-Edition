@@ -851,7 +851,7 @@ function OnToggleCivilopedia()
     if(ContextPtr:IsHidden()) then 
       OnOpenCivilopedia();
     else
-      OnClose();
+		OnClose();
     end
 end
 
