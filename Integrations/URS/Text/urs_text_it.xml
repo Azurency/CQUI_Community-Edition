@@ -30,8 +30,14 @@
     <Replace Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="it_IT">
       <Text>Trova l'unità sulla mappa.</Text>
     </Replace>
-  <Replace Tag="LOC_HUD_REPORTS_BONUSES_URS" Language="it_IT">
+    <Replace Tag="LOC_HUD_REPORTS_BONUSES_URS" Language="it_IT">
       <Text>Bonus</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_REPORTS_PROMOTION_AVAILABLE" Language="it_IT">
+      <Text>Promozione Disponibile</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_REPORTS_IN_FORMATION" Language="it_IT">
+      <Text>In Formazione</Text>
     </Replace>
 
   </LocalizedText>

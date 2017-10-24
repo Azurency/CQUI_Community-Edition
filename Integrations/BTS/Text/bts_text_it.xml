@@ -7,9 +7,11 @@
     <Replace Tag="LOC_TRADE_GROUP_SETTINGS" Language="it_IT">
         <Text>Impostazioni gruppo</Text>
     </Replace>
+
     <Replace Tag="LOC_TRADE_FILTER_SETTINGS" Language="it_IT">
         <Text>Impostazioni filtro</Text>
     </Replace>
+
     <Replace Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Language="it_IT">
       <Text>Ordina per [ICON_Food]Cibo.</Text>
     </Replace>
@@ -53,6 +55,22 @@
 
     <Replace Tag="LOC_TRADE_SORT_BY_TEXT" Language="it_IT">
       <Text>Ordina per:</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_OVERVIEW_ORIGIN_AZ" Language="it_IT">
+      <Text>Origine A-Z</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_OVERVIEW_ORIGIN_ZA" Language="it_IT">
+      <Text>Origine Z-A</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_OVERVIEW_DESTINATION_AZ" Language="it_IT">
+      <Text>Destinazione A-Z</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_OVERVIEW_DESTINATION_ZA" Language="it_IT">
+      <Text>Destinazione Z-A</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT" Language="it_IT">
