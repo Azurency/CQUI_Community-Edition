@@ -5,7 +5,7 @@
 
   <AlphaAnim ID="ChatIndicatorWaitTimer" Cycle="Once" Speed="0.5" AlphaBegin="0.0" AlphaEnd="1.0" Stopped="1"/>
 
-  <Container ID="RibbonContainer" Size="auto,60" Anchor="R,T" Offset="0,27">
+  <Container ID="RibbonContainer" Size="auto,150" Anchor="R,T" Offset="0,27">
     <ScrollPanel ID="LeaderBGClip" Anchor="R,T" Size="auto,80" Disabled="1" Offset="-20,5" FullClip="1">
       <Grid ID="LeaderBG" Anchor="R,T" Size="500,100" Style="DropShadow2" Offset="0,-30" Color="255,255,255,150"/>
     </ScrollPanel>

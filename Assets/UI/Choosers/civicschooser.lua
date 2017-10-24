@@ -107,7 +107,7 @@ function View( playerID:number, kData:table )
   m_civicsIM:ResetInstances();
   for _,iconData in pairs(g_ExtraIconData) do
 		iconData:Reset();
-	end
+  end
 
   local kActive : table = GetActiveData(kData);
   if kActive == nil then
@@ -166,25 +166,25 @@ function AddAvailableCivic( playerID:number, kData:table )
     callback = function() ResetOverflowArrow( kItemInstance ); OnChooseCivic(kData.Hash); end;
   end
 
-	-- Include extra icons in total unlocks
-	local extraUnlocks:table = {};
-	local hideDescriptionIcon:boolean = false;
-	local cachedModifier:table = m_CachedModifiers[kData.CivicType];
-	for _,iconData in pairs(g_ExtraIconData) do
-		if iconData.ModifierType == cachedModifier.ModifierType then
-			hideDescriptionIcon = hideDescriptionIcon or iconData.HideDescriptionIcon;
-			table.insert(extraUnlocks, iconData);
-		end
+  -- Include extra icons in total unlocks
+  local extraUnlocks:table = {};
+  local hideDescriptionIcon:boolean = false;
+  local cachedModifier:table = m_CachedModifiers[kData.CivicType];
+  for _,iconData in pairs(g_ExtraIconData) do
+	if iconData.ModifierType == cachedModifier.ModifierType then
+		hideDescriptionIcon = hideDescriptionIcon or iconData.HideDescriptionIcon;
+		table.insert(extraUnlocks, iconData);
 	end
+  end
 
   -- Handle overflow for unlock icons
   numUnlockables = PopulateUnlockablesForCivic( playerID, kData.ID, unlockIM, nil, callback, hideDescriptionIcon );
 
-	-- Initialize extra icons
-	for _,iconData in pairs(extraUnlocks) do
-		iconData:Initialize(kItemInstance.UnlockStack, cachedModifier);
-		numUnlockables = numUnlockables + 1;
-	end
+  -- Initialize extra icons
+  for _,iconData in pairs(extraUnlocks) do
+    iconData:Initialize(kItemInstance.UnlockStack, cachedModifier);
+    numUnlockables = numUnlockables + 1;
+  end
   if numUnlockables ~= nil then
     HandleOverflow(numUnlockables, kItemInstance);
   end
@@ -424,28 +424,29 @@ end
 -- ===========================================================================
 function PopulateCachedModifiers()	
 	-- Build main item table.
-	for row:table in GameInfo.Civics() do
-		local entry:table	= {};
+    for row:table in GameInfo.Civics() do
+        local entry:table	= {};
 		-- Look up and cache any civic modifiers we reward like envoys awarded
-		for civicModifier in GameInfo.CivicModifiers() do
-			if (row.CivicType == civicModifier.CivicType) then
-				for modifierType in GameInfo.Modifiers() do
-					if civicModifier.ModifierId == modifierType.ModifierId then
-						entry.ModifierId	= modifierType.ModifierId;
-						entry.ModifierType	= modifierType.ModifierType;
-					end
-				end
-				for modifierArguments in GameInfo.ModifierArguments() do
-					if civicModifier.ModifierId == modifierArguments.ModifierId then
-						entry.ModifierValue = modifierArguments.Value;
-					end
-				end
-			end
-		end
+        for civicModifier in GameInfo.CivicModifiers() do
+    		if (row.CivicType == civicModifier.CivicType) then
+    			for modifierType in GameInfo.Modifiers() do
+    				if civicModifier.ModifierId == modifierType.ModifierId then
+    					entry.ModifierId	= modifierType.ModifierId;
+    					entry.ModifierType	= modifierType.ModifierType;
+    				end
+    			end
+    			for modifierArguments in GameInfo.ModifierArguments() do
+    				if civicModifier.ModifierId == modifierArguments.ModifierId then
+    					entry.ModifierValue = modifierArguments.Value;
+    				end
+                end
+            end
+        end
 
 		
 		m_CachedModifiers[row.CivicType] = entry;
-	end
+    end
+end
 
 function CQUI_OnSettingsUpdate()
   CQUI_AlwaysOpenTechTrees = GameConfiguration.GetValue("CQUI_AlwaysOpenTechTrees");
@@ -457,8 +458,8 @@ end
 -- ===========================================================================
 function Initialize()
 
-	-- Cache frequently used / expensive data
-	PopulateCachedModifiers();
+  -- Cache frequently used / expensive data
+  PopulateCachedModifiers();
 
   -- Hot-reload events
   ContextPtr:SetInitHandler(OnInit);
@@ -493,7 +494,7 @@ function Initialize()
   Controls.OpenTreeButton:RegisterCallback(	Mouse.eLClick,		function() LuaEvents.CivicsChooser_RaiseCivicsTree(); OnClosePanel(); end);
   Controls.OpenTreeButton:RegisterCallback(	Mouse.eMouseEnter,	function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 
--- CQUI events
+  -- CQUI events
   LuaEvents.CQUI_SettingsInitialized.Add( CQUI_OnSettingsUpdate );
   LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
 

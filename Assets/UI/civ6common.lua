@@ -247,7 +247,7 @@ function FilterUnitStats( hashOrType:number, ignoreStatType:number )
   end
   if (unitInfo.ReligiousHealCharges > 0) then
     table.insert(data, {Value = unitInfo.ReligiousHealCharges, Type = "ReligiousHealCharges",		Label = "LOC_HUD_UNIT_PANEL_HEALS",				FontIcon="[ICON_Charges_Large]",		IconName="ICON_RELIGION"});
-	end
+  end
 
   -- If we have more than 4 stats then try to remove melee strength
   if (table.count(data) > 4) then
