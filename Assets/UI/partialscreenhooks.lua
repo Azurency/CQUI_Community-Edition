@@ -21,7 +21,7 @@ local BG_TILE_PADDING     : number = 20;    -- Inner padding to give the tile of
 local BG_TOTAL_OFFSCREEN_OFFSET : number = -126;  -- Amount of negative offset to totally remove the partial hook bar from the screen.  Used so that we can add back the size of the hook stack to the bar when we have < 2 hooks visible
 
 local m_kPartialScreens:table = { -- Screens that are considered "partial" and mutually exclusive in showing.
-  "CityStatesPopup",
+  "CityStates",
   "EspionageOverview",
   "WorldRankings",
   "TradeOverview"
@@ -77,11 +77,11 @@ end
 --  UI Control Callback
 -- ===========================================================================
 function OnToggleCityStates()
-  if IsPartialScreenOpen("CityStatesPopup") then
+  if IsPartialScreenOpen("CityStates") then
     LuaEvents.PartialScreenHooks_CloseCityStates();
   else
     if IsPartialScreenOpen() then       -- Only play open sound if no partial screen is open.
-      LuaEvents.PartialScreenHooks_CloseAllExcept("CityStatesPopup");
+      LuaEvents.PartialScreenHooks_CloseAllExcept("CityStates");
     end
     LuaEvents.PartialScreenHooks_OpenCityStates();
   end
@@ -144,7 +144,7 @@ function Resize()
       Controls.EspionageBolt:SetHide(true);
     end
   end
-  if (m_isCityStatesUnlocked) then
+  if (m_isCityStatesUnlocked and HasCapability("CAPABILITY_CITY_STATES_VIEW") then
     Controls.CityStatesButton:SetHide(false);
     Controls.CityStatesBolt:SetHide(false);
   else
@@ -303,7 +303,7 @@ end
 -- ===========================================================================
 function OnTutorialCloseAll()
   if IsPartialScreenOpen("EspionageOverview") then  LuaEvents.PartialScreenHooks_CloseEspionage(); end
-  if IsPartialScreenOpen("CityStatesPopup") then    LuaEvents.PartialScreenHooks_CloseCityStates(); end
+  if IsPartialScreenOpen("CityStates") then    LuaEvents.PartialScreenHooks_CloseCityStates(); end
   if IsPartialScreenOpen("TradeOverview") then    LuaEvents.PartialScreenHooks_CloseTradeOverview(); end
   if IsPartialScreenOpen("WorldRankings") then    LuaEvents.PartialScreenHooks_CloseWorldRankings(); end
 end
