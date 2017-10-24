@@ -106,7 +106,7 @@ function View( playerID:number, kData:table )
 
   m_civicsIM:ResetInstances();
   for _,iconData in pairs(g_ExtraIconData) do
-		iconData:Reset();
+    iconData:Reset();
   end
 
   local kActive : table = GetActiveData(kData);
@@ -172,9 +172,9 @@ function AddAvailableCivic( playerID:number, kData:table )
   local cachedModifier:table = m_CachedModifiers[kData.CivicType];
   for _,iconData in pairs(g_ExtraIconData) do
 	if iconData.ModifierType == cachedModifier.ModifierType then
-		hideDescriptionIcon = hideDescriptionIcon or iconData.HideDescriptionIcon;
-		table.insert(extraUnlocks, iconData);
-	end
+      hideDescriptionIcon = hideDescriptionIcon or iconData.HideDescriptionIcon;
+      table.insert(extraUnlocks, iconData);
+    end
   end
 
   -- Handle overflow for unlock icons
@@ -442,9 +442,7 @@ function PopulateCachedModifiers()
                 end
             end
         end
-
-		
-		m_CachedModifiers[row.CivicType] = entry;
+      m_CachedModifiers[row.CivicType] = entry;
     end
 end
 
