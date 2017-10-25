@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd">
 
-  <Include File="PopupDialog" />
-
   <Container Style="FullScreenVignetteConsumer" />
 
   <ScrollPanel Anchor="C,C" Size="parent,768" FullClip="1">
@@ -28,15 +26,15 @@
                   </Image>
                   <Stack        ID="BonusStack"             Anchor="C,T"  Offset="0,0" StackGrowth="Down" Padding="4">
                     <Container Size="5,5"/>
-                    <Grid       ID="GovernmentPrimaryBonus" Anchor="C,T"  Offset="0,0"    Size="290,35"           Texture="Controls_SubContainer2"      SliceCorner="17,17"   SliceSize="1,1"   SliceTextureSize="36,35" Color="GovBonusSelected" MinSize="36,35" AutoSize="V" AutoSizePadding="0,3">
+                    <Grid       ID="GovernmentPrimaryBonus" Anchor="C,T"  Offset="0,0"    Size="290,auto"           Texture="Controls_SubContainer2"      SliceCorner="17,17"   SliceSize="1,1"   SliceTextureSize="36,35" Color="GovBonusSelected" MinSize="36,35" AutoSizePadding="0,3">
                       <Label    ID="GovernmentBonus"        Anchor="C,C"  Offset="0,1"    Color0="9,46,75,255" Color1="9,46,75,20" WrapWidth="275" Style="BodyText12"/>
                     </Grid>
-                    <Grid       ID="GovPercentBonusArea"    Anchor="C,T"  Offset="0,0"    Size="290,35"           Texture="Controls_SubContainer2"      SliceCorner="17,17"   SliceSize="1,1"   SliceTextureSize="36,35" Color="GovBonusSelected" MinSize="36,35" AutoSize="V" AutoSizePadding="0,0">
-                      <Container Size="290,35"  Anchor="C,C" MinSize="36,35" AutoSize="V">
+                    <Grid       ID="GovPercentBonusArea"    Anchor="C,T"  Offset="0,0"    Size="290,auto"           Texture="Controls_SubContainer2"      SliceCorner="17,17"   SliceSize="1,1"   SliceTextureSize="36,35" Color="GovBonusSelected" MinSize="36,35" AutoSizePadding="0,0">
+                      <Container Size="290,auto"  Anchor="C,C" MinSize="36,35">
                         <Image		ID="PercentBubble" AnchorSide="O,I"																			    Offset="-55,-3"		Size="51,40"						Texture="Governments_PercentWhite" Color="255,255,255,255">
                           <Label  ID="BonusPercent"           Anchor="C,C"  Offset="-6,-1"    Color0="9,46,75,255" Color1="9,46,75,20" Style="FontFlair26"  String="0"  KerningAdjustment="-1" />
                         </Image>
-                        <Container	ID="DescriptionContainer" Offset="55,0" Anchor="L,C" Size="200,35" MinSize="36,35" AutoSize="V">
+                        <Container	ID="DescriptionContainer" Offset="55,0" Anchor="L,C" Size="200,auto" MinSize="36,35">
                           <Label  ID="BonusText"  Anchor="C,C" Color0="9,46,75,255" Color1="9,46,75,20" String="$Bonus Text$" WrapWidth="200" Style="BodyText12"/>
                         </Container>
                         <Image ID="QuillImage" Texture="Governments_LearnedPolicy" Size="40,47" Anchor="R,T" Offset="-18,-4" AnchorSide="O,I"/>
@@ -62,7 +60,7 @@
                   <Thumb      ID="HeritageTHumb" Style="ScrollThumb"  Color="57,48,42,120"/>
                 </ScrollBar>
                 </ScrollPanel>
-                <Grid ID="HeritageBonusEmpty"  Anchor="C,C" Offset="0,20" Texture="Controls_SubContainer3" SliceCorner="20,20" SliceTextureSize="40,40" Color="GovInkDarkMark,100" MinSize="40,40" AutoSize="1" AutoSizePadding="10,10">
+                <Grid ID="HeritageBonusEmpty"  Anchor="C,C" Offset="0,20" Texture="Controls_SubContainer3" SliceCorner="20,20" SliceTextureSize="40,40" Color="GovInkDarkMark,100" MinSize="40,40" Size="auto,auto" AutoSizePadding="10,10">
                   <Label Color="GovInkDarkMark" EffectColor="GovInkDarkMark,70" FontEffect="Glow" String="LOC_GOVT_NO_LEGACY_BONUS" WrapWidth="280" Style="FontNormal14" Anchor="C,C"/>
                   <Image Texture="Governments_LearnedPolicy" Size="40,47" Anchor="C,B" AnchorSide="I,O" Offset="0,-20"/>
                 </Grid>
@@ -252,7 +250,7 @@
       <Container                                                              Size="parent,parent">
       </Container>
       <Box ID="UnlockGovernmentsContainer" Size="parent,parent" Color="0,0,0,180">
-        <Grid Texture="Controls_LightweightLayer" SliceCorner="38,30" SliceTextureSize="76,60" Size="250,60" Anchor="C,B" AutoSize="H" AutoSizePadding="50" Offset="0,50">
+        <Grid Texture="Controls_LightweightLayer" SliceCorner="38,30" SliceTextureSize="76,60" Size="auto,60" Anchor="C,B" AutoSizePadding="50" Offset="0,50">
           <GridButton     ID="UnlockGovernments"      Anchor="C,C"  Size="200,46" Style="ButtonConfirm"/>
         </Grid>
       </Box>
@@ -324,9 +322,6 @@
 
 </Container>
 
-<!-- Are you sure dialog -->
-<MakeInstance Name="PopupDialog" />
-
   <!-- ================================================================== -->
   <!--  Instances                                                         -->
   <!-- ================================================================== -->
@@ -335,19 +330,20 @@
     <Container        ID="Content"                                          Size="130,150" >
       <Image          ID="CardContainer" Anchor="C,C" Offset="0,0"          Size="parent,parent"  Texture="Governments_CardContainer" Color="GovWaterDarkMark" StretchMode="Fill"/>
       <Button         ID="Button"                                           Size="parent,parent"  Alpha="0"  />
-      <Drag           ID="Draggable"                                        Size="parent,parent"  Buttons="L" SnapBackSpeed="4">
+      <Drag           ID="Draggable"                                        Size="parent,parent"  Buttons="L" SnapBackSpeed="4" DragThreshold="4">
         <Grid         ID="Shadow"                 Offset="-35,-35"          Size="200,238" Style="DropShadow" Hidden="1" />
         <Image        ID="Background"                                       Size="parent,parent"  Texture="Governments_DiplomacyCard">
-          <Stack Size="113,142" StackGrowth="Down" Offset="0,0">
-            <Grid         Style="DropShadow4" Anchor="C,T" AutoSize="V" Size="parent,50" Color="0,0,0,100" AutoSizePadding="0,5">
-              <Label      ID="Title"    Anchor="C,C"  WrapWidth="120" Align="Center" Style="FontNormal12" FontStyle="Stroke" String="$Policy Card$" ColorSet="BodyTextCool"/>
-              <Image Texture="Controls_Div6" Size="parent,2" Color="255,255,255,20" Anchor="C,B" StretchMode="Fill" Offset="0,2"/>
+          <Stack StackGrowth="Down">
+            <Grid Style="DropShadow4" Anchor="C,T" Size="130,auto" Color="0,0,0,100" AutoSizePadding="0,5">
+              <Label ID="Title" Anchor="C,C" WrapWidth="120" Align="Center" Style="FontNormal12" FontStyle="Stroke" String="$Policy Card$" ColorSet="BodyTextCool"/>
+              <Image Texture="Controls_Div6" Anchor="C,B" Offset="0,2" Size="parent,2" Color="255,255,255,20" StretchMode="Fill"/>
             </Grid>
             <Container  ID="DescriptionContainer" Size="parent,parent">
-              <Grid     ID="DescriptionGrid" Anchor="C,C" AutoSize="1" AutoSizePadding="-3,3" Size="50,50" Texture="Controls_ItemContainer2" SliceCorner="11,5" SliceTextureSize="22,22" MinSize="22,22">
-                <Image Texture="Controls_Div6" Size="parent,2" Color="255,255,255,20" Anchor="C,T" StretchMode="Fill" Offset="0,-2"/>
-                <Image Texture="Controls_Div6" Size="parent,2" Color="255,255,255,20" Anchor="C,B" StretchMode="Fill" Offset="0,-2"/>
-                <Label  ID="Description" WrapWidth="115" Anchor="C,C" Style="FontNormal12" ColorSet="BodyTextCool" FontStyle="Stroke" String="$Description$" />
+              <Grid     ID="DescriptionGrid" Anchor="C,C" AutoSizePadding="2,3" Size="auto,auto" MinSize="106,0" InnerOffset="1,0" Texture="Controls_ItemContainer2" SliceCorner="11,5" SliceTextureSize="22,22" MinSize="22,22">
+                <Label  ID="Description" WrapWidth="115" Anchor="L,C" Style="FontNormal12" ColorSet="BodyTextCool" FontStyle="Stroke" String="$Description$">
+                  <Image Texture="Controls_Div6" Size="parent,2" Color="255,255,255,20" Anchor="C,T" StretchMode="Fill" Offset="0,-5"/>
+                  <Image Texture="Controls_Div6" Size="parent,2" Color="255,255,255,20" Anchor="C,B" StretchMode="Fill" Offset="0,-5"/>
+                </Label>
               </Grid>
             </Container>
           </Stack>
@@ -393,16 +389,16 @@
         </Container>
         <Stack        ID="BonusStack"             Anchor="C,T"  Offset="0,-2" StackGrowth="Down" Padding="0">
           <Container Size="2,2"/>
-          <Grid       ID="GovernmentBonusBacking" Anchor="C,T"  Offset="0,0"    Size="290,35"           Texture="Controls_SubContainer2"      SliceCorner="17,17"   SliceSize="1,1"   SliceTextureSize="36,35" Color="GovBonusSelected" MinSize="36,35" AutoSize="V" AutoSizePadding="0,3">
+          <Grid       ID="GovernmentBonusBacking" Anchor="C,T"  Offset="0,0"    Size="290,auto"           Texture="Controls_SubContainer2"      SliceCorner="17,17"   SliceSize="1,1"   SliceTextureSize="36,35" Color="GovBonusSelected" MinSize="36,35" AutoSizePadding="0,3">
             <Label    ID="GovernmentBonus"        Anchor="C,C"  Offset="0,1"    Color0="9,46,75,255" Color1="9,46,75,20" WrapWidth="275" Style="BodyText12"/>
           </Grid>
           <Container Size="2,4"/>
-          <Grid       ID="GovPercentBonusArea"    Anchor="C,T"  Offset="0,0"    Size="290,35"           Texture="Controls_SubContainer2"      SliceCorner="17,17"   SliceSize="1,1"   SliceTextureSize="36,35" Color="GovBonusSelected" MinSize="36,35" AutoSize="V" AutoSizePadding="0,0">
-            <Container Size="290,35"  Anchor="C,C" MinSize="36,35" AutoSize="V">
+          <Grid       ID="GovPercentBonusArea"    Anchor="C,T"  Offset="0,0"    Size="290,auto"           Texture="Controls_SubContainer2"      SliceCorner="17,17"   SliceSize="1,1"   SliceTextureSize="36,35" Color="GovBonusSelected" MinSize="36,35" AutoSizePadding="0,0">
+            <Container Size="290,auto"  Anchor="C,C" MinSize="36,35">
               <Image    ID="PercentImage" AnchorSide="O,I"                                          Offset="-55,-3"   Size="51,40"            Texture="Governments_PercentWhite" Color="255,255,255,255">
                 <Label  ID="BonusPercent"           Anchor="C,C"  Offset="-6,1"   Color0="9,46,75,255" Color1="9,46,75,20" Style="FontFlair26"  String="0"  KerningAdjustment="-2"/>
               </Image>
-              <Container  Offset="55,0" Anchor="L,C" Size="200,35" MinSize="36,35" AutoSize="V">
+              <Container  Offset="55,0" Anchor="L,C" Size="200,auto" MinSize="36,35">
                 <Label  ID="BonusText"  Anchor="C,C" Color0="9,46,75,255" Color1="9,46,75,20" String="$Bonus Text$" WrapWidth="200" Style="BodyText12"/>
               </Container>
               <Image ID="QuillImage" Texture="Governments_LearnedPolicy" Size="40,47" Anchor="R,T" Offset="-18,-4" AnchorSide="O,I"/>
