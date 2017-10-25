@@ -24,10 +24,12 @@ local FLAGSTYLE_CIVILIAN		:number= 1;
 local FLAGSTYLE_SUPPORT			:number= 2;
 local FLAGSTYLE_TRADE			:number= 3;
 local FLAGSTYLE_NAVAL			:number= 4;
+local FLAGSTYLE_RELIGION		:number= 5;
 local FLAGTYPE_UNIT				:number= 0;
 local ZOOM_MULT_DELTA			:number = .01;
 local TEXTURE_BASE				:string = "UnitFlagBase.dds";
 local TEXTURE_CIVILIAN			:string = "UnitFlagCivilian.dds";
+local TEXTURE_RELIGION			:string = "UnitFlagReligion.dds";
 local TEXTURE_EMBARK			:string = "UnitFlagEmbark.dds";
 local TEXTURE_FORTIFY			:string = "UnitFlagFortify.dds";
 local TEXTURE_NAVAL				:string = "UnitFlagNaval.dds";
@@ -35,6 +37,7 @@ local TEXTURE_SUPPORT			:string = "UnitFlagSupport.dds";
 local TEXTURE_TRADE				:string = "UnitFlagTrade.dds";
 local TEXTURE_MASK_BASE			:string = "UnitFlagBaseMask.dds";
 local TEXTURE_MASK_CIVILIAN		:string = "UnitFlagCivilianMask.dds";
+local TEXTURE_MASK_RELIGION		:string = "UnitFlagReligionMask.dds";
 local TEXTURE_MASK_EMBARK		:string = "UnitFlagEmbarkMask.dds";
 local TEXTURE_MASK_FORTIFY		:string = "UnitFlagFortifyMask.dds";
 local TEXTURE_MASK_NAVAL		:string = "UnitFlagNavalMask.dds";
@@ -71,11 +74,12 @@ local m_LinkOffsets :table = {};
 -- so that selected units will always appear above the other objects.
 local m_SelectedContainer			:table = ContextPtr:LookUpControl( "../SelectedUnitContainer" );
 
-local m_MilitaryInstanceManager		:table = InstanceManager:new( "UnitFlag",	"Anchor", Controls.MilitaryFlags );
-local m_CivilianInstanceManager		:table = InstanceManager:new( "UnitFlag",	"Anchor", Controls.CivilianFlags );
-local m_SupportInstanceManager		:table = InstanceManager:new( "UnitFlag",	"Anchor", Controls.SupportFlags );
-local m_TradeInstanceManager		:table = InstanceManager:new( "UnitFlag",	"Anchor", Controls.TradeFlags );
-local m_NavalInstanceManager		:table = InstanceManager:new( "UnitFlag",	"Anchor", Controls.NavalFlags );
+local m_MilitaryInstanceManager   :table = InstanceManager:new( "UnitFlag",	"Anchor", Controls.MilitaryFlags );
+local m_CivilianInstanceManager   :table = InstanceManager:new( "UnitFlag",	"Anchor", Controls.CivilianFlags );
+local m_SupportInstanceManager    :table = InstanceManager:new( "UnitFlag",	"Anchor", Controls.SupportFlags );
+local m_TradeInstanceManager      :table = InstanceManager:new( "UnitFlag",	"Anchor", Controls.TradeFlags );
+local m_NavalInstanceManager      :table = InstanceManager:new( "UnitFlag",	"Anchor", Controls.NavalFlags );
+local m_AttentionMarkerIM         :table = InstanceManager:new( "AttentionMarkerInstance", "Top" );
 
 local m_cameraFocusX				:number = -1;
 local m_cameraFocusY				:number = -1;
@@ -205,18 +209,13 @@ end
 
 ------------------------------------------------------------------
 function UnitFlag.destroy( self )
-    if ( self.m_InstanceManager ~= nil ) then
-        self:UpdateSelected( false );
+  if ( self.m_InstanceManager ~= nil ) then
+    self:UpdateSelected( false );
 
     if (self.m_Instance ~= nil) then
-			--Alert instance needs reset as well
-			if self.m_Instance.FlagRoot["AttentionInstance"] ~= nil then
-				self.m_Instance.FlagRoot:DestroyChild( self.m_Instance.FlagRoot["AttentionInstance"] );
-				self.m_Instance.FlagRoot["AttentionInstance"] = nil;
-			end	
       self.m_InstanceManager:ReleaseInstance( self.m_Instance );
     end
-    end
+  end
 end
 
 ------------------------------------------------------------------
@@ -617,55 +616,58 @@ end
 function UnitFlag.UpdateFlagType( self )
 
   local pUnit = self:GetUnit();
-    if pUnit == nil then
+  if pUnit == nil then
     return;
   end
 
-    local textureName:string;
-    local maskName:string;
+  local textureName:string;
+  local maskName:string;
 
   -- Make this more data driven.  It would be nice to have it so any state the unit could be in could have its own look.
-    if( pUnit:IsEmbarked() ) then
-        textureName = TEXTURE_EMBARK;
-        maskName	= TEXTURE_MASK_EMBARK;
-    elseif( pUnit:GetFortifyTurns() > 0 ) then
+  if( pUnit:IsEmbarked() ) then
+    textureName = TEXTURE_EMBARK;
+    maskName	= TEXTURE_MASK_EMBARK;
+  elseif( pUnit:GetFortifyTurns() > 0 ) then
     textureName = TEXTURE_FORTIFY;
     maskName	= TEXTURE_MASK_FORTIFY;
-    elseif( self.m_Style == FLAGSTYLE_CIVILIAN ) then
-        textureName = TEXTURE_CIVILIAN;
-        maskName	= TEXTURE_MASK_CIVILIAN;
+  elseif( self.m_Style == FLAGSTYLE_CIVILIAN ) then
+    textureName = TEXTURE_CIVILIAN;
+    maskName	= TEXTURE_MASK_CIVILIAN;
+  elseif( self.m_Style == FLAGSTYLE_RELIGION ) then
+    textureName = TEXTURE_RELIGION;
+    maskName	= TEXTURE_MASK_RELIGION;
   elseif( self.m_Style == FLAGSTYLE_NAVAL) then
     textureName = TEXTURE_NAVAL;
-        maskName	= TEXTURE_MASK_NAVAL;
+    maskName	= TEXTURE_MASK_NAVAL;
   elseif( self.m_Style == FLAGSTYLE_SUPPORT) then
     textureName = TEXTURE_SUPPORT;
-        maskName	= TEXTURE_MASK_SUPPORT;
+    maskName	= TEXTURE_MASK_SUPPORT;
   elseif( self.m_Style == FLAGSTYLE_TRADE) then
     textureName = TEXTURE_TRADE;
-        maskName	= TEXTURE_MASK_TRADE;
+    maskName	= TEXTURE_MASK_TRADE;
   else
-        textureName = TEXTURE_BASE;
-        maskName	= TEXTURE_MASK_BASE;
-    end
+    textureName = TEXTURE_BASE;
+    maskName	= TEXTURE_MASK_BASE;
+  end
 
 
   self.m_Instance.FlagBaseDarken:SetTexture( textureName );
   self.m_Instance.FlagBaseLighten:SetTexture( textureName );
-    self.m_Instance.FlagShadow:SetTexture( textureName );
-    self.m_Instance.FlagBase:SetTexture( textureName );
-    self.m_Instance.FlagBaseOutline:SetTexture( textureName );
+  self.m_Instance.FlagShadow:SetTexture( textureName );
+  self.m_Instance.FlagBase:SetTexture( textureName );
+  self.m_Instance.FlagBaseOutline:SetTexture( textureName );
   self.m_Instance.NormalSelectPulse:SetTexture( textureName );
-    self.m_Instance.NormalSelect:SetTexture( textureName );
+  self.m_Instance.NormalSelect:SetTexture( textureName );
   self.m_Instance.FlagOver:SetTexture( textureName );
   self.m_Instance.FlagOverHealthBar:SetTexture( textureName );
-    self.m_Instance.HealthBarSelect:SetTexture( textureName );
-    self.m_Instance.LightEffect:SetTexture( textureName );
-    self.m_Instance.HealthBarBG:SetTexture( textureName );
-    --self.m_Instance.NormalAlphaAnim:SetTexture( textureName );
-    --self.m_Instance.HealthBarAlphaAnim:SetTexture( textureName );
+  self.m_Instance.HealthBarSelect:SetTexture( textureName );
+  self.m_Instance.LightEffect:SetTexture( textureName );
+  self.m_Instance.HealthBarBG:SetTexture( textureName );
+  --self.m_Instance.NormalAlphaAnim:SetTexture( textureName );
+  --self.m_Instance.HealthBarAlphaAnim:SetTexture( textureName );
 
   self.m_Instance.NormalScrollAnim:SetMask( maskName );
-    --self.m_Instance.HealthBarScrollAnim:SetMask( maskName );
+  --self.m_Instance.HealthBarScrollAnim:SetMask( maskName );
 end
 
 ------------------------------------------------------------------
@@ -1117,8 +1119,8 @@ end
 function CreateUnitFlag( playerID: number, unitID : number, unitX : number, unitY : number )
   -- If a flag already exists for this player/unit combo... just return.
   if (m_UnitFlagInstances[ playerID ] ~= nil and m_UnitFlagInstances[ playerID ][ unitID ] ~= nil) then
-      return;
-    end
+    return;
+  end
 
   -- Allocate a new flag.
   local pPlayer	:table = Players[playerID];
@@ -1135,6 +1137,8 @@ function CreateUnitFlag( playerID: number, unitID : number, unitX : number, unit
         UnitFlag:new( playerID, unitID, FLAGTYPE_UNIT, FLAGSTYLE_TRADE );
       elseif "FORMATION_CLASS_SUPPORT" == GameInfo.Units[pUnit:GetUnitType()].FormationClass then
         UnitFlag:new( playerID, unitID, FLAGTYPE_UNIT, FLAGSTYLE_SUPPORT );
+      elseif pUnit:GetReligiousStrength() > 0 then
+        UnitFlag:new( playerID, unitID, FLAGTYPE_UNIT, FLAGSTYLE_RELIGION );
       else
         UnitFlag:new( playerID, unitID, FLAGTYPE_UNIT, FLAGSTYLE_CIVILIAN );
       end
@@ -1488,12 +1492,11 @@ function OnPlayerTurnActivated( ePlayer:number, bFirstTimeThisTurn:boolean )
     return;
   end
 
-  local pPlayer = Players[ ePlayer ];
-  if pPlayer == nil then
+  if Players[ ePlayer ] == nil then
     return;
   end
 
-  if m_UnitFlagInstances[ ePlayer ]==nil then
+  if m_UnitFlagInstances[ ePlayer ] == nil then
     return;
   end
 
@@ -1510,29 +1513,49 @@ function OnPlayerTurnActivated( ePlayer:number, bFirstTimeThisTurn:boolean )
         flag:UpdateReadyState();
       end
     end
-  else
-    -- If a barbarian, update any scout units that have been alerted.
-    if pPlayer:IsBarbarian() then
-      local pPlayerUnits:table = pPlayer:GetUnits();
-      for i, pUnit in pPlayerUnits:Members() do
-        local targetPlayer	:number		= pUnit:GetBarbarianTargetPlayer();
-        local unitID		:number		= pUnit:GetID();
-        local unitOwnerID	:number		= pUnit:GetOwner();
-        local flag				= GetUnitFlag( unitOwnerID, unitID );
 
-        if targetPlayer ~= -1 and targetPlayer == idLocalPlayer then
-          if flag.m_Instance.FlagRoot["AttentionInstance"] == nil then
-            local pInstance		:table = {};
-            ContextPtr:BuildInstanceForControl( "AttentionMarkerInstance", pInstance, flag.m_Instance.FlagRoot );
-            flag.m_Instance.FlagRoot["AttentionInstance"] = pInstance;
-          end
-        else
-          if flag.m_Instance.FlagRoot["AttentionInstance"] ~= nil then
-            flag.m_Instance.FlagRoot:DestroyChild( flag.m_Instance.FlagRoot["AttentionInstance"] );
-            flag.m_Instance.FlagRoot["AttentionInstance"] = nil;
+    -- Hide all attention icons
+    m_AttentionMarkerIM:ResetInstances();
+
+    -- Iterate through barbarian units to determine if they should show an attention icon
+    for _, pPlayer in ipairs(Players) do
+      if pPlayer:IsBarbarian() then
+        local iPlayerID:number = pPlayer:GetID();
+        local pPlayerUnits:table = pPlayer:GetUnits();
+
+        for i, pUnit in pPlayerUnits:Members() do
+          local flag:table = GetUnitFlag(iPlayerID, pUnit:GetID());
+
+          if flag ~= nil then
+
+            local targetPlayer :number = pUnit:GetBarbarianTargetPlayer();
+
+            if targetPlayer ~= -1 and targetPlayer == idLocalPlayer then
+              m_AttentionMarkerIM:GetInstance(flag.m_Instance.FlagRoot);
+              flag.bHasAttentionMarker = true;
+            else
+              flag.bHasAttentionMarker = false;
+            end
           end
         end
       end
+    end
+  end
+end
+
+------------------------------------------------------------------
+function OnBarbarianSpottedCity(iPlayerID:number, iUnitID:number, cityOwner:number, cityID:number)
+  local flag:table = GetUnitFlag(iPlayerID, iUnitID);
+
+  if flag ~= nil and flag.bHasAttentionMarker ~= true then
+    local pPlayer:table = Players[iPlayerID];
+    local pPlayerUnits:table = pPlayer:GetUnits();
+    local pUnit:table = pPlayerUnits:FindID(iUnitID);
+    local targetPlayer:number = pUnit and pUnit:GetBarbarianTargetPlayer() or -1;
+
+    if targetPlayer ~= -1 and targetPlayer == Game.GetLocalPlayer() then
+      m_AttentionMarkerIM:GetInstance(flag.m_Instance.FlagRoot);
+      flag.bHasAttentionMarker = true;
     end
   end
 end
@@ -1818,16 +1841,18 @@ function OnMilitaryFormationChanged( playerID : number, unitID : number )
     local pUnit = pPlayer:GetUnits():FindID(unitID);
     if (pUnit ~= nil) then
       local flagInstance = GetUnitFlag( playerID, unitID );
-      local militaryFormation = pUnit:GetMilitaryFormation();
-      if (militaryFormation == MilitaryFormationTypes.CORPS_FORMATION) then
-        flagInstance.m_Instance.CorpsMarker:SetHide(false);
-        flagInstance.m_Instance.ArmyMarker:SetHide(true);
-      elseif (militaryFormation == MilitaryFormationTypes.ARMY_FORMATION) then
-        flagInstance.m_Instance.CorpsMarker:SetHide(false);
-        flagInstance.m_Instance.ArmyMarker:SetHide(false);
-      else
-        flagInstance.m_Instance.CorpsMarker:SetHide(true);
-        flagInstance.m_Instance.ArmyMarker:SetHide(true);
+      if flagInstance ~= nil then
+        local militaryFormation = pUnit:GetMilitaryFormation();
+        if (militaryFormation == MilitaryFormationTypes.CORPS_FORMATION) then
+          flagInstance.m_Instance.CorpsMarker:SetHide(false);
+          flagInstance.m_Instance.ArmyMarker:SetHide(true);
+        elseif (militaryFormation == MilitaryFormationTypes.ARMY_FORMATION) then
+          flagInstance.m_Instance.CorpsMarker:SetHide(false);
+          flagInstance.m_Instance.ArmyMarker:SetHide(false);
+        else
+          flagInstance.m_Instance.CorpsMarker:SetHide(true);
+          flagInstance.m_Instance.ArmyMarker:SetHide(true);
+        end
       end
     end
   end
@@ -2038,6 +2063,7 @@ function Initialize()
   Events.WorldRenderViewChanged.Add(PositionFlagsToView);
   Events.UnitPromoted.Add(OnUnitPromotionChanged);
   Events.UnitAbilityGained.Add(OnUnitAbilityGained);
+  Events.BarbarianSpottedCity.Add(OnBarbarianSpottedCity);
   --Events.UnitActivityChanged.Add(OnUnitActivityChanged); --Currently only needed for debugging.
   Events.UnitChargesChanged.Add( OnUnitChargesChanged );
 
