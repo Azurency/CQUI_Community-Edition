@@ -3,8 +3,8 @@
 <Context>
 
     <!--UNIT PANEL MAIN-->
-  <AlphaAnim            ID="UnitPanelAlpha"       AlphaBegin="0" AlphaEnd="1" Speed="3"   Function="OutSine" Cycle="Once" Size="full,full">
-    <SlideAnim          ID="UnitPanelSlide"       Start="200,0" End="0,0"     Speed="3.5" Function="OutSine" Cycle="Once" Size="full,full">
+  <AlphaAnim            ID="UnitPanelAlpha"       AlphaBegin="0" AlphaEnd="1" Speed="3"   Function="OutSine" Cycle="Once" Size="parent,parent">
+    <SlideAnim          ID="UnitPanelSlide"       Start="200,0" End="0,0"     Speed="3.5" Function="OutSine" Cycle="Once" Size="parent,parent">
 
       <Grid							ID="BuildActionsPanel"				Anchor="R,B" Offset="501,0"	Size="51,180" Texture="UnitPanel_SpecialActionsFrame" SliceCorner="14,14"  >
         <Button					ID="RecommendedActionButton"	Anchor="C,T" Offset="1,-23" Size="44,53" Texture="UnitPanel_ActionButton"		>
@@ -32,7 +32,7 @@
         <!-- ACTIONS PANEL -->
         <Stack ID="ActionsStack" Anchor="R,T" Offset="2,-4" AnchorSide="I,O" StackGrowth="Left" StackPadding="2">
           <Stack ID="StandardActionsStack" Anchor="C,B" StackGrowth="Right" Padding="2" ConsumeMouse="1" />
-          <Grid ID="ExpandSecondaryActionGrid" Anchor="R,B" Size="50,41" AutoSize="Horizontal" AutoSizePadding="6,0" Texture="SelectionPanel_ActionGroupSlot" SliceCorner="5,19" SliceSize="1,1" SliceTextureSize="12,41" ConsumeMouse="1" Alpha="0.75">
+          <Grid ID="ExpandSecondaryActionGrid" Anchor="R,B" Size="auto,41" AutoSizePadding="6,0" Texture="SelectionPanel_ActionGroupSlot" SliceCorner="5,19" SliceSize="1,1" SliceTextureSize="12,41" ConsumeMouse="1" Alpha="0.75">
             <Stack ID="ExpandSecondaryActionStack" Anchor="C,B" StackGrowth="Right" StackPadding="4">
               <Button ID="ExpandSecondaryActionsButton" Anchor="C,B" Offset="0,4" Size="29,29" Texture="Controls_ExpandButton2" NoStateChange="1" StateOffsetIncrement="0,29" ConsumeMouse="1"/>
               <Stack ID="SecondaryActionsStack"	Anchor="R,T" StackGrowth="Right" Padding="2" Hidden="1"/>
@@ -43,7 +43,6 @@
         <Grid						ID="MainPanel"						Anchor="R,B"  Offset="0,-2"    	Texture="SelectionPanel_MainPanel"  Size="Parent-48,Parent"  SliceCorner="60,60" SliceTextureSize="263,160" />
 
         <Button ID="SelectionPanelUnitPortrait"	Texture="SelectionPanel_Portrait"  Anchor="L,B" Size="107,107" Offset="-2,25" ConsumeMouse="1" NoStateChange="1">
-          <!--<Render					ID="PortraitFrame"				Anchor="L,B"  Offset="0,25"	Size="107,107"	Renderer="UnitPreview" Texture="SelectionPanel_Portrait_Center"  MaskTexture="SelectionPanel_Portrait_Mask"/>-->
         </Button>
         <Container																Anchor="R,T"	Offset="30,13"		Size="Parent-110,32" >
           <Button				ID="PreviousUnitButton"		Anchor="C,T"	Offset="-100,-10"	Size="18,23" Texture="Controls_ArrowButtonLeft"	Hidden="1" />
@@ -77,7 +76,7 @@
         <!--STATS-->
         <Container Anchor="L,B"	Offset="0,28"		Size="Parent,Parent" >
           <Container ID="SubjectStatContainer" Anchor="L,T" Offset="86,56" Size="Parent-105,120">
-            <Stack ID="SubjectStatStack" Anchor="R,T" StackGrowth="Down"/>
+            <Stack ID="SubjectStatStack" Size="parent,auto" Anchor="R,T" StackGrowth="Down"/>
           </Container>
         </Container>
 
@@ -158,7 +157,7 @@
         <!-- Settlement Water Guide -->
         <Container ID="SettlementWaterContainer" Anchor="C,B" Offset="40,26" Size="180,36">
           <Label Anchor="C,T" Style="CityPanelHeader" String="LOC_HUD_UNIT_PANEL_WATER_AVAILABILITY_GUIDE"/>
-          <Grid Anchor="C,B" AutoSize="1" AutoSizePadding="1,1" Texture="Controls_KeySwatch" SliceCorner="6,6" SliceSize="5,5" Color="Black">
+          <Grid Anchor="C,B" Size="auto,auto" AutoSizePadding="1,1" Texture="Controls_KeySwatch" SliceCorner="6,6" SliceSize="5,5" Color="Black">
             <Stack Anchor="C,C" StackGrowth="Right" StackPadding="-1">
               <!-- Fresh Water -->
               <Grid ID="SettlementWaterGrid_FreshWater" Size="46,18" Texture="Controls_KeySwatch" SliceCorner="6,6" SliceSize="5,5" ToolTip="LOC_HUD_UNIT_PANEL_TOOLTIP_FRESH_WATER">
@@ -209,7 +208,7 @@
                 <Image Anchor="C,C" Size="22,22" Texture="Stats22" TextureOffset="154,44"/>
 
                 <!-- Interceptor Health Meters -->
-                <Container Anchor="C,C" Offset="0,-1" AutoSize="1">
+                <Container Anchor="C,C" Offset="0,-1" Size="auto,auto">
                   <AlphaAnim AlphaBegin="1.0" AlphaEnd="0.4" Speed="1.5" Cycle="Bounce">
                     <Meter	ID="InterceptorHealthMeterShadow"	Size="42,42" Texture="CombatPreview_HitMeterSmall" CounterClockwise="true"/>
                   </AlphaAnim>
@@ -281,7 +280,7 @@
           </Container>
 
           <!--STATS-->
-          <Container ID="TargetStatContainer" Size="72,100" Offset="146,47" AutoSize="Vertical">
+          <Container ID="TargetStatContainer" Size="72,auto" Offset="146,47">
             <Stack ID="TargetStatStack" Anchor="L,T" StackGrowth="Down"/>
           </Container>
 
@@ -335,7 +334,7 @@
               <GridButton     ID="RandomNameButton"                 Size="160,38"	Style="CityStateSubMenuButton" String="LOC_UNITNAME_RANDOMIZE_BUTTON_TEXT" />
               <GridButton     ID="RandomSuffixButton"	              Size="50,38"	Style="CityStateSubMenuButton" ToolTip="LOC_UNITNAME_RANDOM_SECOND"/>
             </Stack>
-            <GridButton ID="ConfirmVeteranName" Anchor="C,C" Offset="0,25" Size="200,42" Style="Grid9MainButton" String="LOC_UNITNAME_CONFIRM"/>
+            <GridButton ID="ConfirmVeteranName" Anchor="C,C" Offset="0,25" Size="200,42" Style="Grid9MainButton" FontSize="16" String="LOC_UNITNAME_CONFIRM"/>
           </Stack>
           <Button	ID="VeteranNamingCancelButton"	Anchor="R,T" Offset="-10,-10" Style="CloseButtonSmall"  />
         </Grid>
@@ -482,7 +481,7 @@
 
   <!-- Combat modifier -->
   <Instance				Name="ModifierInstance">
-    <Container		ID="ModifierContainer"			    Size="130,26" AutoSize="Vertical" AutoSizePadding="0,2">
+    <Container		ID="ModifierContainer"			    Size="130,auto" AutoSizePadding="0,2">
       <Image			ID="ModifierIcon"			Anchor="L,T"	Icon="ICON_STRENGTH" IconSize="16" Size="16,16" />
       <Label			ID="ModifierText"			Anchor="L,T"  Offset="20,0" WrapWidth="110"	Style="FontNormal12" FontStyle="Shadow" EffectColor="Black"/>
     </Container>
