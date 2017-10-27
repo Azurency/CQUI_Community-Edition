@@ -14,12 +14,12 @@
       <Grid  ID="Formation3" Anchor="C,C" Size="200,68" Offset="0,0" Texture="UnitFormationTrio.dds" SliceCorner="1,1" SliceSize="98,66" SliceTextureSize="100,68" Hidden="1" />
       <Grid  ID="Formation2" Anchor="C,C" Size="100,36" Offset="0,0" Texture="UnitFormationDuo.dds" SliceCorner="20,17" SliceSize="60,1" SliceTextureSize="100,36" Hidden="1" />
 
-      <AlphaAnim ID="FlagRoot" Anchor="C,C"	Size="48,48" Cycle="Once" Speed="1.5" GlobalUpdate="1">
+      <AlphaAnim ID="FlagRoot" Anchor="C,C"	Size="48,48" Cycle="Once" Speed="1.5">
         <!-- Religious Unit Indicator -->
         <Image ID="ReligionIconBacking" Anchor="C,T" Size="25,35" Offset="0,40" Texture="UnitFlagReligionTag" Hidden="1">
           <Image ID="ReligionIcon" Anchor="C,B" Size="22,22" Offset="0,5" IconSize="22" Icon="ICON_RELIGION_ISLAM"/>
         </Image>
-        
+
           <!-- Flag Shadow -->
           <Image ID="FlagShadow" Anchor="C,C" Size="64,64" TextureOffset="192,64" Texture="UnitFlagBase.dds">
             <Container ID="AirAnchor" Anchor="c,c" Size="64,64"/>
@@ -112,7 +112,7 @@
               </Button>
             </ButtonData>
 
-            <GridData AutoSize="1" AutoSizePadding="6,5" Anchor="C,B" Offset="0,6" AnchorSide="I,O" Texture="Controls_DropdownPanel" SliceCorner="9,9" SliceSize="4,4" SliceTextureSize="22,22"/>
+            <GridData Size="auto,auto" AutoSizePadding="6,5" Anchor="C,B" Offset="0,6" AnchorSide="I,O" Texture="Controls_DropdownPanel" SliceCorner="9,9" SliceSize="4,4" SliceTextureSize="22,22"/>
 
             <ScrollPanelData Anchor="L,T" Vertical="1" Offset="0,0" AutoScrollBar="1">
               <ScrollBar Style="ScrollVerticalBacking" Anchor="L,T" AnchorSide="O,I" Color="28,60,90,255" Offset="1,0">
