@@ -141,22 +141,9 @@
           </Stack>
         </Grid>
 
-        <!-- Religion Meter -->
-        <Container      ID="ReligionMeter"    Anchor="C,C" Offset="5,60" Size="120,120" Hidden="1">
-          <Image                              Anchor="C,C"                                Texture="Religion_MeterPressureBG"/>
-          <AlphaAnim    ID="MeterFade"        Anchor="C,C" AlphaStart="1" AlphaEnd="0" Speed="1" Cycle="Once" Stopped="true">
-            <Image      ID="MeterPressure"    Anchor="C,C" Offset="0,1"                   Texture="Religion_MeterPressureCenter" Color="255,255,255,127">
-              <FlipAnim ID="LowPressureAnim"  Anchor="C,C"                Size="80,80"    Texture="Religion_PressureLowAnim"    FrameCount="71" Columns="10"/>
-              <FlipAnim ID="MedPressureAnim"  Anchor="C,C"                Size="80,80"    Texture="Religion_PressureMediumAnim" FrameCount="41" Columns="8"/>
-              <FlipAnim ID="HighPressureAnim" Anchor="C,C"                Size="80,80"    Texture="Religion_PressureHighAnim"   FrameCount="41" Columns="8"/>
-            </Image>
-            <Image      ID="ReligionIcon"     Anchor="C,C"                Size="100,100"  Texture="Religion_Generic" />
-          </AlphaAnim>
-          <Container    ID="Meters"           Anchor="C,C"                Size="110,110" />
-          <Grid         ID="StackBG"          Anchor="L,C" Offset="120,0" Size="70,1"     Texture="Religion_FollowersPanel"   SliceTextureSize="10,10"  />
-          <Stack        ID="FollowerStack"    Anchor="L,C" Offset="120,0" StackGrowth="Down" />
-          <Container    ID="ReligionChanges"  Anchor="C,C" />
-        </Container>
+        <Container ID="ReligionInfoAnchor" Anchor="C,B"/>
+
+        <Container ID="DynamicContentAnchor" Anchor="C,B"/>
 
       </Container>
     </WorldAnchor>
@@ -264,22 +251,10 @@
           </Stack>
         </Grid>
 
-        <!-- Religion Meter -->
-        <Container      ID="ReligionMeter"    Anchor="C,C" Offset="5,60" Size="120,120" Hidden="1">
-          <Image                              Anchor="C,C" Texture="Religion_MeterPressureBG"/>
-          <AlphaAnim    ID="MeterFade"        Anchor="C,C" AlphaStart="1" AlphaEnd="0" Speed="1" Cycle="Once" Offset="0,0" Stopped="true">
-            <Image      ID="MeterPressure"    Anchor="C,C" Offset="0,1" Texture="Religion_MeterPressureCenter" Color="255,255,255,127">
-              <FlipAnim ID="LowPressureAnim"  Anchor="C,C" Texture="Religion_PressureLowAnim" Size="80,80" FrameCount="71" Columns="10"/>
-              <FlipAnim ID="MedPressureAnim"  Anchor="C,C" Texture="Religion_PressureMediumAnim" Size="80,80" FrameCount="41" Columns="8"/>
-              <FlipAnim ID="HighPressureAnim" Anchor="C,C" Texture="Religion_PressureHighAnim" Size="80,80" FrameCount="41" Columns="8"/>
-            </Image>
-            <Image      ID="ReligionIcon"     Anchor="C,C" Texture="Religion_Generic" Size="100,100"/>
-          </AlphaAnim>
-          <Container    ID="Meters"           Anchor="C,C" Size="110,110" />
-          <Grid         ID="StackBG"          Anchor="L,C" Offset="120,0" Size="70,1" SliceTextureSize="10,10" Texture="Religion_FollowersPanel" />
-          <Stack        ID="FollowerStack"    Anchor="L,C" Offset="120,0" StackGrowth="Down" />
-          <Container    ID="ReligionChanges"  Anchor="C,C" />
-        </Container>
+        <Container ID="ReligionInfoAnchor" Anchor="C,B"/>
+
+        <Container ID="DynamicContentAnchor" Anchor="C,B"/>
+
       </Container>
     </WorldAnchor>
   </Instance>
@@ -316,7 +291,7 @@
           </Button>
         </ButtonData>
 
-        <GridData AutoSize="1" AutoSizePadding="6,5" Anchor="C,B" Offset="0,6" AnchorSide="I,O" Texture="Controls_DropdownPanel" SliceCorner="9,9" SliceSize="4,4" SliceTextureSize="22,22"/>
+        <GridData Size="auto,auto" AutoSizePadding="6,5" Anchor="C,B" Offset="0,6" AnchorSide="I,O" Texture="Controls_DropdownPanel" SliceCorner="9,9" SliceSize="4,4" SliceTextureSize="22,22"/>
 
         <ScrollPanelData Anchor="L,T" Vertical="1" Offset="0,0" AutoScrollBar="1">
           <ScrollBar Style="ScrollVerticalBacking" Anchor="L,T" AnchorSide="O,I" Color="28,60,90,255" Offset="1,0">
@@ -425,22 +400,30 @@
     <Image ID="ReligionIcon" Size="22,22" Anchor="C,C" Texture="Religions22" >
       <Stack ID="FollowerStack" StackGrowth="Right">
         <Label ID="NumFollowers" Offset ="25,0" Anchor="L,C" Style="FontFlair22" Text="NumFollowers" />
-        <Container ID="PressureContainer" Anchor="C,C" Offset="3,0" AutoSize="1"/>
+        <Container ID="PressureContainer" Anchor="C,C" Offset="3,0" Size="auto,auto"/>
       </Stack>
     </Image>
   </Instance>
 
-  <Instance Name="ReligionMeterNone">
-    <Meter ID="Meter" Size="110,110" Texture="Religion_MeterPressureNone" />
+  <Instance Name="ReligionIconInstance">
+    <Image ID="ReligionIconButtonBacking" Texture="Religion_FollowersSlot" Size="30,30">
+      <Image ID="ReligionIconButton" Anchor="C,C" Size="22,22" IconSize="22"/>
+    </Image>
   </Instance>
-  <Instance Name="ReligionMeterLow">
-    <Meter ID="Meter" Size="110,110" Texture="Religion_MeterPressureLow" Follow="1" />
+
+  <Instance Name="ReligionFollowerListInstance">
+    <Container ID="ReligionFollowerListContainer" Size="80,30">
+      <Image ID="ReligionFollowerIconBacking" Anchor="L,C" Offset="0,0" Texture="Religion_FollowersSlot" Size="30,30">
+        <Image ID="ReligionFollowerIcon" Anchor="C,C" Size="22,22" IconSize="22"/>
+      </Image>
+      <Label ID="ReligionFollowerCount" Anchor="L,C" Offset="30,0" Style="FontNormal16" String="22"/>
+      <Label Anchor="L,C" Offset="45,3" FontSize="16" String="[Icon_PressureLeft]"/>
+      <Label ID="ReligionFollowerPressure" Anchor="L,C" Offset="65,0" Style="FontNormal16" String="22"/>
+    </Container>
   </Instance>
-  <Instance Name="ReligionMeterMedium">
-    <Meter ID="Meter" Size="110,110" Texture="Religion_MeterPressureMedium" Follow="1" />
-  </Instance>
-  <Instance Name="ReligionMeterHigh">
-    <Meter ID="Meter" Size="110,110" Texture="Religion_MeterPressureHigh" Follow="1" />
+
+  <Instance Name="ReligionPopChartInstance">
+    <Meter ID="PopChartMeter" Anchor="C,C" Size="74,74" Texture="Religion_PieFill" Speed="0"/>
   </Instance>
 
   <Instance Name="PressureLow">
@@ -451,6 +434,52 @@
   </Instance>
   <Instance Name="PressureHigh">
     <Image ID="PressureIcon" Size="16,19" Anchor="C,C" Texture="PressureHigh" />
+  </Instance>
+
+  <Instance Name="ReligionInfoInstance">
+    <!-- Religion Info Dropdown -->
+    <Container ID="ReligionInfoContainer" Anchor="C,B" AnchorSide="I,O" Offset="0,-2" Size="200,200">
+      <GridButton ID="ReligionInfoButton" Anchor="C,T" Size="auto,auto" MinSize="160,0" AutoSizePadding="0,2" Texture="Banner_DataFrame" NoStateChange="1" SliceCorner="23,14" SliceSize="76,3" SliceTextureSize="122,31">
+        <Stack Anchor="C,C" Offset="0,2" StackGrowth="Down" StackPadding="0">
+          <Stack ID="ReligionInfoIconStack" Anchor="C,T" StackGrowth="Right" StackPadding="6"/>
+          <Stack ID="ReligionConversionTurnsStack" Anchor="C,T" StackGrowth="Right" StackPadding="4">
+            <Image ID="ConvertingReligionIconBacking" Anchor="C,C" Texture="Religion_FollowersSlot" Size="30,30">
+              <Image ID="ConvertingReligionIcon" Anchor="C,C" Size="22,22" IconSize="22"/>
+            </Image>
+            <AlphaAnim ID="ConvertingSoonAlphaAnim" Size="auto,auto" Anchor="C,C" AlphaBegin="1.0" AlphaEnd="0.3" Speed="2" Cycle="Bounce" Stopped="1">
+              <Label ID="ConvertingReligionLabel" Style="FontNormal16"/>
+            </AlphaAnim>
+            <Label Anchor="C,C" Offset="0,-2" Style="FontNormal16" String="[Icon_Turn]"/>
+          </Stack>
+        </Stack>
+        <Image Anchor="C,T" Offset="0,-2" Size="160,8" Style="Divider3Grid"/>
+      </GridButton>
+      <GridButton ID="ReligionInfoDetailedButton" Anchor="C,T" Size="240,150" Texture="Banner_DataFrameExtended" SliceCorner="19,9" SliceSize="53,4" Hidden="1">
+        <!-- Religion Follower List -->
+        <ScrollPanel ID="ReligionFollowerListScrollPanel" Offset="12,14" Size="100,120" Vertical="1" AutoScrollBar="1">
+          <ScrollBar Anchor="L,C" AnchorSide="O,I" Offset="-2,0" Style="ScrollVerticalBar"/>
+          <Stack ID="ReligionFollowerListStack"/>
+        </ScrollPanel>
+
+        <!-- Divider -->
+        <Box Anchor="C,C" Size="2,parent-12" Color="0,0,0,255"/>
+
+        <!-- Religious Pressure by this City -->
+        <Stack Anchor="C,T" Offset="54,16" StackGrowth="Right" StackPadding="0">
+          <Label Offset="0,3" FontSize="16" String="[Icon_PressureRight]"/>
+          <Label ID="ExertedReligiousPressure" Anchor="L,C" Offset="0,-1" Style="FontNormal16" String="+22"/>
+        </Stack>
+
+        <!-- Religion Follower Chart -->
+        <Container Anchor="C,T" Offset="54,30" Size="110,parent" >
+          <Image Anchor="C,T" Offset="0,14" Size="74,74" Texture="Religion_PieFill" Color="0,0,0,200"/>
+          <Container ID="ReligionPopChartContainer" Anchor="C,T" Offset="0,14" Size="74,74"/>
+          <Image ID="ReligionPopChartIcon" Anchor="C,T" Offset="0,25" Size="50,50" IconSize="50" Icon="ICON_RELIGION_BUDDHISM" Alpha="0.5"/>
+        </Container>
+      </GridButton>
+
+      <Image Anchor="C,T" Offset="0,-4" Size="23,15" Texture="Banner_DataFrameArrow"/>
+    </Container>
   </Instance>
 
 </Context>
