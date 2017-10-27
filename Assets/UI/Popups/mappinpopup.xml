@@ -7,13 +7,13 @@
     <AlphaAnim        ID="PopupAlphaIn" AlphaBegin="0" AlphaEnd="1" Speed="3" Function="Root" Cycle="Once" Size="parent,parent">
       <SlideAnim      ID="PopupSlideIn" Start="0,-20" End="0,0" Speed="3" Function="Root" Cycle="Once" Size="parent,parent">
 
-        <Grid           ID="WindowContainer" Size="350,300" Anchor="C,C" Offset="0,0" Style="DropShadow2"     Color="255,255,255,200" AutoSize="1" AutoSizePadding="25,25" ConsumeMouse="1">
-          <Grid         ID="Window"      Size="365,250" Anchor="C,C" Offset="0,0" Style="WindowFrameTitle" AutoSize="V" AutoSizePadding="0,12">
-            <Stack      ID="WindowStack" StackGrowth="Down" Padding="10" AutoSize="1" Anchor="C,T">
+        <Grid           ID="WindowContainer" Size="auto,auto" Anchor="C,C" Offset="0,0" Style="DropShadow2"     Color="255,255,255,200" AutoSizePadding="25,25" ConsumeMouse="1">
+          <Grid         ID="Window"      Size="365,auto" Anchor="C,C" Offset="0,0" Style="WindowFrameTitle" AutoSizePadding="0,12">
+            <Stack      ID="WindowStack" StackGrowth="Down" Padding="10" Size="auto,auto" Anchor="C,T">
               <Container                 Size="330,42" Anchor="C,T">
                 <Label  ID="TitleText"   Style="WindowHeader"        Anchor="C,C" String="{LOC_MAP_PIN_POPUP_TITLE:upper}" />
               </Container>
-              <Container AutoSize="1" Anchor="C,T">
+              <Container Size="auto,auto" Anchor="C,T">
                 <Stack    ID="WindowContentsStack"  Anchor="L,T" StackGrowth="Bottom" Padding="0">
                   <!-- Name -->
                   <Grid Style="EditTextButton" Anchor="C,T" Size="315,26">
