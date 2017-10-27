@@ -145,17 +145,17 @@ function ViewCurrent( data:table )
     end
 
     -- Grab icon representing type of class
-    if (kPerson.ClassID ~= nil) then
-      local icon:string = "ICON_" .. classData.GreatPersonClassType;
-      local textureOffsetX:number, textureOffsetY:number, textureSheet:string = IconManager:FindIconAtlas(icon, 90);
-      if textureSheet == nil then   -- Use default if none found
-        print("WARNING: Could not find icon atlas entry for the class of Great Person '"..icon.."', using default instead.");
-        textureOffsetX = 0;
-        textureOffsetY = 0;
-        textureSheet = "GreatPeopleClass90";
-      end
+    -- if (kPerson.ClassID ~= nil) then
+      -- local icon:string = "ICON_" .. classData.GreatPersonClassType;
+      -- local textureOffsetX:number, textureOffsetY:number, textureSheet:string = IconManager:FindIconAtlas(icon, 90);
+      -- if textureSheet == nil then   -- Use default if none found
+        -- print("WARNING: Could not find icon atlas entry for the class of Great Person '"..icon.."', using default instead.");
+        -- textureOffsetX = 0;
+        -- textureOffsetY = 0;
+        -- textureSheet = "GreatPeopleClass90";
+      -- end
       -- instance.ClassImage:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
-    end
+    -- end
 
     -- Grab icon of the great person themselves; first try a specific image, if it doesn't exist
     -- then grab a generic representation based on the class.
