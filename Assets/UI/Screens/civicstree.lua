@@ -111,7 +111,7 @@ local TXT_BOOSTED         :string = Locale.Lookup("LOC_BOOST_BOOSTED");
 local TXT_TO_BOOST          :string = Locale.Lookup("LOC_BOOST_TO_BOOST");
 local VERTICAL_CENTER       :number = (SIZE_NODE_Y) / 2;
 local MAX_BEFORE_TRUNC_GOV_TITLE  :number = 165;
-local MAX_BEFORE_TRUNC_TO_BOOST   :number = 385;
+local MAX_BEFORE_TRUNC_TO_BOOST   :number = 335;
 
 -- CQUI CONSTANTS
 local CQUI_STATUS_MESSAGE_CIVIC          :number = 3;    -- Number to distinguish civic messages
@@ -431,6 +431,10 @@ function AllocateUI()
   end
 
 	local extraIconDataCache:table = {};
+  -- Reset extra icon instances
+  for _,iconData in pairs(g_ExtraIconData) do
+    iconData:Reset();
+  end
 
   -- Actually build UI nodes
   for _,item in pairs(m_kItemDefaults) do
@@ -455,10 +459,10 @@ function AllocateUI()
       end
     end
 
-    -- Determine if we award envoys and add to numUnlocks to ensure proper sizing
-    if item.ModifierType == "MODIFIER_PLAYER_GRANT_INFLUENCE_TOKEN" then
-      numUnlocks = numUnlocks + 1;
-    end
+    -- -- Determine if we award envoys and add to numUnlocks to ensure proper sizing
+    -- if item.ModifierType == "MODIFIER_PLAYER_GRANT_INFLUENCE_TOKEN" then
+      -- numUnlocks = numUnlocks + 1;
+    -- end
 
 		-- Include extra icons in total unlocks
 		for _,iconData in pairs(g_ExtraIconData) do
@@ -504,24 +508,24 @@ function AllocateUI()
 		end
 		PopulateUnlockablesForCivic(playerId, civic.Index, node["unlockIM"], node["unlockGOV"], item.Callback, hideDescriptionIcon);
 
-    if node["unlockEnvoy"] == nil then
-      node["unlockEnvoy"] = InstanceManager:new( "EnvoyAwardedInstance", "EnvoyAwardedGrid", node.UnlockStack );
-    else
-      node["unlockEnvoy"]:DestroyInstances()
-    end
+    -- if node["unlockEnvoy"] == nil then
+      -- node["unlockEnvoy"] = InstanceManager:new( "EnvoyAwardedInstance", "EnvoyAwardedGrid", node.UnlockStack );
+    -- else
+      -- node["unlockEnvoy"]:DestroyInstances()
+    -- end
 
-    -- Create envoy unlocked instnace if this civic awards it
-    if item.ModifierType == "MODIFIER_PLAYER_GRANT_INFLUENCE_TOKEN" then
-      local envoyInstance:table = node["unlockEnvoy"]:GetInstance();
-      envoyInstance.EnvoyAwardedLabel:SetText(item.ModifierValue);
-      envoyInstance.EnvoyAwardedGrid:SetToolTipString(Locale.Lookup("LOC_CIVIC_ENVOY_AWARDED_TOOLTIP", tonumber(item.ModifierValue)));
-			envoyInstance.EnvoyAwardedGrid:RegisterCallback(Mouse.eLClick, item.Callback);
-		end
+    -- -- Create envoy unlocked instnace if this civic awards it
+    -- if item.ModifierType == "MODIFIER_PLAYER_GRANT_INFLUENCE_TOKEN" then
+      -- local envoyInstance:table = node["unlockEnvoy"]:GetInstance();
+      -- envoyInstance.EnvoyAwardedLabel:SetText(item.ModifierValue);
+      -- envoyInstance.EnvoyAwardedGrid:SetToolTipString(Locale.Lookup("LOC_CIVIC_ENVOY_AWARDED_TOOLTIP", tonumber(item.ModifierValue)));
+			-- envoyInstance.EnvoyAwardedGrid:RegisterCallback(Mouse.eLClick, item.Callback);
+		-- end
 
 		-- Initialize extra icons
 		for _,iconData in pairs(extraUnlocks) do
-			iconData:Initialize(node.UnlockStack);
-			extraIconDataCache[iconData.Context.CData] = item;
+			iconData:Initialize(node.UnlockStack, item);
+			-- extraIconDataCache[iconData.Context.CData] = item;
     end
 
     -- What happens when clicked
@@ -529,7 +533,7 @@ function AllocateUI()
       LuaEvents.OpenCivilopedia(civicType);
     end
 
-		node.NodeButton:RegisterCallback( Mouse.eLClick, item.Callback);		
+		node.NodeButton:RegisterCallback( Mouse.eLClick, item.Callback);
 		node.OtherStates:RegisterCallback( Mouse.eLClick, item.Callback);
 
     -- Only wire up Civilopedia handlers if not in a on-rails tutorial.
@@ -538,13 +542,13 @@ function AllocateUI()
       node.OtherStates:RegisterCallback( Mouse.eRClick, OpenPedia);
     end
 
-    -- Set position and save.
+    -- Set position and save
     node.Top:SetOffsetVal( horizontal, vertical);
     m_uiNodes[item.Type] = node;
   end
 
-	-- Refresh extra icons
-	LuaEvents.CivicsTreeIconRefresh(extraIconDataCache);
+	-- -- Refresh extra icons
+	-- LuaEvents.CivicsTreeIconRefresh(extraIconDataCache);
 
   if Controls.TreeStart ~= nil then
     local h,v = ColumnRowToPixelXY( TREE_START_COLUMN, TREE_START_ROW );
@@ -994,7 +998,7 @@ end
 -- ===========================================================================
 --  Load all the 'live' data for a player.
 -- ===========================================================================
-function GetLivePlayerData( ePlayer:number, eCompletedCivic:number )
+function GetLivePlayerData( ePlayer:number )
 
   -- If first time, initialize player data tables.
   local data  :table = m_kAllPlayersTechData[ePlayer];
@@ -1037,7 +1041,7 @@ function GetLivePlayerData( ePlayer:number, eCompletedCivic:number )
 		local civicID	:number = GameInfo.Civics[item.Type].Index;
     local status  :number = ITEM_STATUS.BLOCKED;
     local turnsLeft :number = 0;
-		if eCompletedCivic == civicID or playerCulture:HasCivic(civicID) then
+		if playerCulture:HasCivic(civicID) then
       status = ITEM_STATUS.RESEARCHED;
 		elseif civicID == currentCivicID then
       status = ITEM_STATUS.CURRENT;
@@ -1187,36 +1191,38 @@ function GetLivePlayerData( ePlayer:number, eCompletedCivic:number )
   return data;
 end
 
+-- Optional parameter
+function RefreshDataIfNeeded( )
+  if ContextPtr:IsVisible() then
+    m_kCurrentData = GetLivePlayerData( m_ePlayer );
+    View( m_kCurrentData );
+  end
+end
+
+function UpdateLocalPlayer()
+  local ePlayer :number = Game.GetLocalPlayer();
+  if ePlayer ~= -1 and m_ePlayer ~= ePlayer then
+    m_ePlayer = ePlayer;
+    RefreshDataIfNeeded( );
+  end
+end
+
 -- ===========================================================================
 function OnGovernmentChanged()
-  local ePlayer :number = Game.GetLocalPlayer();
-  if ePlayer ~= -1 then
-      if m_ePlayer ~= ePlayer then
-        m_ePlayer = ePlayer;
-        m_kCurrentData = GetLivePlayerData( ePlayer, -1 );
-      end
-    end
+  UpdateLocalPlayer()
 end
 
 -- ===========================================================================
 function OnGovernmentPolicyChanged()
-  local ePlayer :number = Game.GetLocalPlayer();
-  if ePlayer ~= -1 then
-      if m_ePlayer ~= ePlayer then
-        m_ePlayer = ePlayer;
-        m_kCurrentData = GetLivePlayerData( ePlayer, -1 );
-      end
-    end
+  UpdateLocalPlayer()
 end
 
 -- ===========================================================================
 function OnLocalPlayerTurnBegin()
   local ePlayer :number = Game.GetLocalPlayer();
-  if ePlayer ~= -1 then
-    if m_ePlayer ~= ePlayer then
-      m_ePlayer = ePlayer;
-      m_kCurrentData = GetLivePlayerData( ePlayer, -1 );
-    end
+  if ePlayer ~= -1 and m_ePlayer ~= ePlayer then  -- Please see definition of UpdateLocalPlayer() for these 3 lines.
+    m_ePlayer = ePlayer;                          -- 
+    RefreshDataIfNeeded( );                       -- 
 
     --------------------------------------------------------------------------
     -- CQUI Check for Civic Progress
@@ -1289,10 +1295,7 @@ end
 function OnCivicChanged( ePlayer:number, eTech:number )
   if ePlayer == Game.GetLocalPlayer() then
     m_ePlayer = ePlayer;
-    m_kCurrentData = GetLivePlayerData( m_ePlayer, -1 );
-    if not ContextPtr:IsHidden() then
-      View( m_kCurrentData );
-    end
+    RefreshDataIfNeeded( );
   end
 end
 
@@ -1300,10 +1303,7 @@ end
 function OnCivicComplete( ePlayer:number, eTech:number)
   if ePlayer == Game.GetLocalPlayer() then
     m_ePlayer = ePlayer;
-    m_kCurrentData = GetLivePlayerData( m_ePlayer, eTech );
-    if not ContextPtr:IsHidden() then
-      View( m_kCurrentData );
-    end
+    RefreshDataIfNeeded( );
 
     --------------------------------------------------------------------------
     -- CQUI Civic Complete
@@ -1350,7 +1350,7 @@ function Resize()
   -- First obtain the size of the tree by taking the visible size and multiplying it by the ratio of the full content
   local scrollPanelX:number = (Controls.NodeScroller:GetSizeX() / Controls.NodeScroller:GetRatio());
 
-  local artAndEraScrollWidth:number = scrollPanelX * (1/PARALLAX_SPEED);
+  local artAndEraScrollWidth:number = math.max(scrollPanelX * (1/PARALLAX_SPEED), m_width);
   Controls.ArtParchmentDecoTop:SetSizeX( artAndEraScrollWidth );
   Controls.ArtParchmentDecoBottom:SetSizeX( artAndEraScrollWidth );
   Controls.ArtParchmentRippleTop:SetSizeX( artAndEraScrollWidth );
@@ -1361,7 +1361,7 @@ function Resize()
   Controls.ArtCornerGrungeBR:ReprocessAnchoring();
 
 
-  Controls.Background:SetSizeX( artAndEraScrollWidth + 100 );
+  Controls.Background:SetSizeX( math.max(artAndEraScrollWidth + 100, m_width) );
   Controls.Background:SetSizeY( SIZE_WIDESCREEN_HEIGHT - (SIZE_TIMELINE_AREA_Y - 8) );
   Controls.FarBackArtScroller:CalculateSize();
 
@@ -1679,6 +1679,7 @@ function OnOpen()
   end
 
   UI.PlaySound("UI_Screen_Open");
+  m_kCurrentData = GetLivePlayerData( m_ePlayer );
   View( m_kCurrentData );
   ContextPtr:SetHide(false);
 
@@ -1729,15 +1730,14 @@ end
 --  Show the Key panel based on the state
 -- ===========================================================================
 function RealizeGovernmentPanel()
-
   m_kDiplomaticPolicyIM:DestroyInstances();
   m_kEconomicPolicyIM:DestroyInstances();
   m_kMilitaryPolicyIM:DestroyInstances();
   m_kWildcardPolicyIM:DestroyInstances();
-  m_kDiplomaticPolicyIM = InstanceManager:new( "DiplomaticPolicyInstance",  "DiplomaticPolicy",   Controls.DiplomaticStack );
-  m_kEconomicPolicyIM = InstanceManager:new( "EconomicPolicyInstance",  "EconomicPolicy",   Controls.EconomicStack );
-  m_kMilitaryPolicyIM = InstanceManager:new( "MilitaryPolicyInstance",  "MilitaryPolicy",   Controls.MilitaryStack );
-  m_kWildcardPolicyIM = InstanceManager:new( "WildcardPolicyInstance",  "WildcardPolicy",   Controls.WildcardStack );
+  -- m_kDiplomaticPolicyIM = InstanceManager:new( "DiplomaticPolicyInstance",  "DiplomaticPolicy",   Controls.DiplomaticStack );
+  -- m_kEconomicPolicyIM = InstanceManager:new( "EconomicPolicyInstance",  "EconomicPolicy",   Controls.EconomicStack );
+  -- m_kMilitaryPolicyIM = InstanceManager:new( "MilitaryPolicyInstance",  "MilitaryPolicy",   Controls.MilitaryStack );
+  -- m_kWildcardPolicyIM = InstanceManager:new( "WildcardPolicyInstance",  "WildcardPolicy",   Controls.WildcardStack );
 
   if UserConfiguration.GetShowCivicsTreeGovernment() then
     Controls.GovernmentPanel:SetHide( false );
@@ -1809,9 +1809,6 @@ function RealizeGovernmentPanel()
       local wildInst:table = m_kWildcardPolicyIM:GetInstance();
       local policyType:string = GameInfo.Policies[policy].Name;
       local slotType:string =  GameInfo.Policies[policy].GovernmentSlotType;
-      if numWildResults > 3 then
-        wildInst.WildcardPolicy:SetSizeVal(111/numWildResults, 44 * (3/numWildResults));
-      end
       if slotType == "SLOT_DIPLOMATIC" then
         wildInst.WildcardPolicy:SetTexture("Governments_DiplomacyCard_Small");
       else
@@ -1822,6 +1819,9 @@ function RealizeGovernmentPanel()
             wildInst.WildcardPolicy:SetTexture("Governments_MilitaryCard_Small");
           end
         end
+      end
+      if numWildResults > 3 then
+        wildInst.WildcardPolicy:SetSizeVal(111/numWildResults, 44 * (3/numWildResults));
       end
       wildInst.WildcardPolicy:SetToolTipString(m_kPolicyCatalogData[policyType].Name .. ": " .. m_kPolicyCatalogData[policyType].Description);
       wildInst.WildcardPolicy:RegisterCallback( Mouse.eLClick, function() OnClickCurrentPolicy(policy) end );
@@ -2136,14 +2136,14 @@ end
 -- ===========================================================================
 function OnCityInitialized(owner, ID)
   if (owner == m_ePlayer) then
-    m_kCurrentData = GetLivePlayerData( m_ePlayer, -1 );
+    RefreshDataIfNeeded( );
   end
 end
 
 -- ===========================================================================
 function OnBuildingChanged( plotX:number, plotY:number, buildingIndex:number, playerID:number, iPercentComplete:number )
   if playerID == m_ePlayer then
-    m_kCurrentData = GetLivePlayerData( m_ePlayer, -1 ); -- Buildings can change culture/science yield which can effect "turns to complete" values
+    RefreshDataIfNeeded( ); -- Buildings can change culture/science yield which can effect "turns to complete" values
   end
 end
 
@@ -2170,7 +2170,7 @@ function Initialize()
 
   Resize(); -- Now that view has been called once, size of tree is known.
 
-  m_kCurrentData = GetLivePlayerData( m_ePlayer, -1 );
+  m_kCurrentData = GetLivePlayerData( m_ePlayer );
   View( m_kCurrentData );
 
 
@@ -2189,10 +2189,8 @@ function Initialize()
   pullDownButton:RegisterCallback(Mouse.eLClick, OnClickToggleFilter);
 
   -- LUA Events
-  if HasCapability("CAPABILITY_CIVICS_CHOOSER") then
-    LuaEvents.CivicsChooser_RaiseCivicsTree.Add( OnOpen );
-    LuaEvents.LaunchBar_RaiseCivicsTree.Add( OnOpen );
-  end
+  LuaEvents.CivicsChooser_RaiseCivicsTree.Add( OnOpen );
+  LuaEvents.LaunchBar_RaiseCivicsTree.Add( OnOpen );
   LuaEvents.LaunchBar_CloseCivicsTree.Add( OnClose );
 
   -- Game engine Event
@@ -2213,4 +2211,7 @@ function Initialize()
   CQUI_halfwayNotified["LOC_CIVIC_CODE_OF_LAWS_NAME"] = true;
 
 end
-Initialize();
+
+if HasCapability("CAPABILITY_CIVICS_CHOOSER") then
+  Initialize();
+end
