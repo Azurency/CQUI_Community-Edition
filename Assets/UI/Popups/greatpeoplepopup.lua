@@ -154,23 +154,24 @@ function ViewCurrent( data:table )
         textureOffsetY = 0;
         textureSheet = "GreatPeopleClass90";
       end
+      -- instance.ClassImage:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
     end
 
     -- Grab icon of the great person themselves; first try a specific image, if it doesn't exist
     -- then grab a generic representation based on the class.
-    --if (kPerson.ClassID ~= nil) and (kPerson.IndividualID ~= nil) then
-      --local portrait:string = "ICON_" .. individualData.GreatPersonIndividualType;
-      --textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(portrait, 216, true);
-      --if textureSheet == nil then   -- Use a default if none found
-        --print("WARNING: Could not find icon atlas entry for the individual Great Person '"..portrait.."', using default instead.");
-        --portrait = "ICON_GENERIC_" .. classData.GreatPersonClassType .. "_" .. individualData.Gender;
-        --portrait = portrait:gsub("_CLASS","_INDIVIDUAL");
-      --end
-      --local isValid = instance.Portrait:SetIcon(portrait);
+    if (kPerson.ClassID ~= nil) and (kPerson.IndividualID ~= nil) then
+      local portrait:string = "ICON_" .. individualData.GreatPersonIndividualType;
+      textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(portrait, 216, true);
+      if textureSheet == nil then   -- Use a default if none found
+        -- print("WARNING: Could not find icon atlas entry for the individual Great Person '"..portrait.."', using default instead.");
+        portrait = "ICON_GENERIC_" .. classData.GreatPersonClassType .. "_" .. individualData.Gender;
+        portrait = portrait:gsub("_CLASS","_INDIVIDUAL");
+      end
+      local isValid = instance.Portrait:SetIcon(portrait);
       --if (isValid) then
         --instance.BiographyPortrait:SetIcon(portrait);
       --end
-    --end
+    end
 
     if instance["m_EffectsIM"] ~= nil then
       instance["m_EffectsIM"]:ResetInstances();

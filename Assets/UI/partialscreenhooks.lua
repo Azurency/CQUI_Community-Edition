@@ -144,7 +144,7 @@ function Resize()
       Controls.EspionageBolt:SetHide(true);
     end
   end
-  if (m_isCityStatesUnlocked and HasCapability("CAPABILITY_CITY_STATES_VIEW") then
+  if (m_isCityStatesUnlocked and HasCapability("CAPABILITY_CITY_STATES_VIEW")) then
     Controls.CityStatesButton:SetHide(false);
     Controls.CityStatesBolt:SetHide(false);
   else
