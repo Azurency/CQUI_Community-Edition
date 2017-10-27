@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Context Hidden="0">
-  <Grid ID="PopupDrowShadowGrid" Anchor="C,C" Offset="0,0" AutoSize="1" AutoSizePadding="50,50" Style="DropShadow" >
-    <Image ID="PopupBackgroundImage" Anchor="C,C" AutoSize="1" AutoSizePadding="-10,-10" Texture="Parchment_Pattern"    StretchMode="Tile" ConsumeMouse="1">
-      <Grid ID="PopupFrameGrid" Anchor="C,C" AutoSize="1" Offset="0,0" Texture="CompletedPopup_Frame" SliceCorner="112,120" SliceSize="2,1">
+  <Grid ID="PopupDrowShadowGrid" Anchor="C,C" Offset="0,0" Size="auto,auto" AutoSizePadding="50,50" Style="DropShadow" >
+    <Image ID="PopupBackgroundImage" Anchor="C,C" Size="auto,auto" AutoSizePadding="-10,-10" Texture="Parchment_Pattern"    StretchMode="Tile" ConsumeMouse="1">
+      <Grid ID="PopupFrameGrid" Anchor="C,C" Size="auto,auto" Offset="0,0" Texture="CompletedPopup_Frame" SliceCorner="112,120" SliceSize="2,1">
         <!-- Corner Icons -->
         <Button    ID="CloseButton"        Texture="Controls_CloseLarge" Size="44,44" Anchor="R,T"    Offset="11,11"    />
         <Image ID="TopLeftIcon"     Texture="CompletedPopup_TechTheme1" Anchor="L,T" Offset="15,18"/>
