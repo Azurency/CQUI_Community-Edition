@@ -945,9 +945,6 @@ function View( playerTechData:table )
   RealizeGovernmentPanel();
 end
 
---
---
---
 function GetPlayerGovernment(ePlayer:number)
   local kPlayer   :table  = Players[ePlayer];
   local playerCulture :table  = kPlayer:GetCulture();
@@ -1219,10 +1216,11 @@ end
 
 -- ===========================================================================
 function OnLocalPlayerTurnBegin()
+  -- CQUI comment: We do not use UpdateLocalPlayer() here, because of Check for Civic Progress
   local ePlayer :number = Game.GetLocalPlayer();
-  if ePlayer ~= -1 and m_ePlayer ~= ePlayer then  -- Please see definition of UpdateLocalPlayer() for these 3 lines.
-    m_ePlayer = ePlayer;                          -- 
-    RefreshDataIfNeeded( );                       -- 
+  if ePlayer ~= -1 and m_ePlayer ~= ePlayer then
+    m_ePlayer = ePlayer;
+    RefreshDataIfNeeded( );
 
     --------------------------------------------------------------------------
     -- CQUI Check for Civic Progress
@@ -1266,7 +1264,6 @@ function OnLocalPlayerTurnBegin()
       end
 
     end -- end of if currentCivivID ~= -1
-
     --------------------------------------------------------------------------
 
   end -- end of ePlayer ~= -1

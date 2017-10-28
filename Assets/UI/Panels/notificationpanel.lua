@@ -1174,8 +1174,6 @@ function OnCityRangeAttack( notificationEntry : NotificationType )
 	end
 end
 
-
-
 -- =======================================================================================
 --  Look at the next unit.
 -- =======================================================================================
@@ -1407,7 +1405,6 @@ function MakeDebugNotification( name:string, fakeID:number )
   handler.Add( name, fakeID );
 end
 
-
 -- ===========================================================================
 --  ENGINE Event
 --  A notification was added, if it doesn't block the end-turn; add to notification list.
@@ -1510,7 +1507,6 @@ function OnPhaseBegin()
   end
 end
 
-
 -- ===========================================================================
 --  LUA Event
 --  A request to activate a notification from another Lua file.
@@ -1603,14 +1599,11 @@ function ClearNotifications()
 
 end
 
-
 -- ===========================================================================
 --  UI Event
 -- ===========================================================================
 function OnShutdown()
-
   ClearNotifications();
-
 end
 
 -- ===========================================================================
