@@ -2,15 +2,15 @@
 
 <Context Name="StatusMessagePanel" >
 
-  <Container Size="full,full">
+  <Container Size="parent,parent">
     <Stack ID="StackOfMessages" Anchor="C,T" StackGrowth="Bottom" Offset="0,120"/>
   </Container>
 
   <Instance             Name="StatusMessageInstance">
-    <Container          ID="Root"         Anchor="C,T" Size="650,40" AutoSize="V">
-      <AlphaAnim        ID="Anim"         Anchor="C,T" AlphaBegin="0" AlphaEnd="1" Speed="3"  Size="650,parent" Cycle="OneBounce" EndPause="10" AutoSize="V">
-        <Button ID="StatusButton" Anchor="C,T" Size="parent,parent" AutoSize="V">
-          <Grid           ID="StatusGrid"   Anchor="C,T" Style="EnhancedToolTip" MinSize="54,54" Size="parent+10,parent-10" Color="255,255,255,255" AutoSize="V" InnerPadding="10,30">
+    <Container          ID="Root"         Anchor="C,T" Size="650,auto">
+      <AlphaAnim        ID="Anim"         Anchor="C,T" AlphaBegin="0" AlphaEnd="1" Speed="3"  Size="650,auto" Cycle="OneBounce" EndPause="10">
+        <Button ID="StatusButton" Anchor="C,T" Size="parent,auto">
+          <Grid           ID="StatusGrid"   Anchor="C,T" Style="EnhancedToolTip" MinSize="54,54" Size="parent+10,auto" Color="255,255,255,255" InnerPadding="10,30">
             <Label        ID="StatusLabel"  Anchor="C,C" Style="BodyText18" Offset="0,-2" WrapWidth="parent-20" />
           </Grid>
         </Button>
@@ -19,10 +19,10 @@
   </Instance>
 
   <Instance             Name="GossipMessageInstance">
-    <Container          ID="Root"         Anchor="C,T" Size="650,40" AutoSize="V">
-      <AlphaAnim        ID="Anim"         Anchor="C,T" AlphaBegin="0" AlphaEnd="1" Speed="3"  Size="650,parent" Cycle="OneBounce" EndPause="10" AutoSize="V">
-        <Button ID="StatusButton" Anchor="C,T" Size="parent,parent" AutoSize="V">
-          <Grid           ID="StatusGrid"   Anchor="C,T" Style="EnhancedToolTip" MinSize="54,54" Size="parent+10,parent-10" Color="255,200,100,255" AutoSize="V" InnerPadding="10,30">
+    <Container          ID="Root"         Anchor="C,T" Size="650,auto">
+      <AlphaAnim        ID="Anim"         Anchor="C,T" AlphaBegin="0" AlphaEnd="1" Speed="3"  Size="650,auto" Cycle="OneBounce" EndPause="10">
+        <Button ID="StatusButton" Anchor="C,T" Size="parent,auto">
+          <Grid           ID="StatusGrid"   Anchor="C,T" Style="EnhancedToolTip" MinSize="54,54" Size="parent+10,auto" Color="255,200,100,255" InnerPadding="10,30">
             <Label        ID="StatusLabel"  Anchor="C,C" Style="BodyText18" Offset="0,-2" WrapWidth="parent-20" />
           </Grid>
         </Button>

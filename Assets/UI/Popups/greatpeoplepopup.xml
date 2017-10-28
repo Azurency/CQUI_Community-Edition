@@ -3,9 +3,9 @@
 
   <Container Style="FullScreenVignetteConsumer" />
 
-  <Container              ID="PopupContainer"           Anchor="C,C"                  Size="full,768">
+  <Container              ID="PopupContainer"           Anchor="C,C"                  Size="parent,768">
     <ScrollPanel          ID="PeopleScroller"                         Offset="0,0"    Size="parent,parent"  Vertical="0" AutoScrollBar="1">
-      <Image              ID="WoodPaneling"                                           Size="full,768"       Texture="Wood_Pattern" StretchMode="Tile"/>
+      <Image              ID="WoodPaneling"                                           Size="256,768"       Texture="Wood_Pattern" StretchMode="Tile"/>
       <Stack              ID="PeopleStack"                            Offset="0,78"   StackGrowth="Right"   StackPadding="0" />
       <ScrollBar                                        Anchor="L,B"  Offset="0,0"   Size="parent-10,8"    Style="ScrollHorizontalBackingAlt">
         <Thumb                                                                                              Style="ScrollThumbHAlt" />
@@ -75,7 +75,7 @@
       <Label          ID="EraName"            Anchor="C,T"  Offset="0,90"   Style="GreatPeopleLargeText"  String="$EraName$"/>
       <Container      ID="MainInfo"           Anchor="C,T"                  Size="parent,parent-16">
         <Image ID="ClassImage" Anchor="C,T" Offset="0,120" Size="90,90"   Texture="GreatPeopleClass90" />
-        <Image        ID="Portrait"           Anchor="C,T"  Offset="0,120"  Size="160,160"  Texture="GreatPeople160" Hidden="1"/>
+        <Image        ID="Portrait"           Anchor="C,T"  Offset="0,120"  Size="120,120"  Texture="GreatPeople160" Hidden="0"/>
         <Image        ID="CircleFlare"        Anchor="C,T"  Offset="0,20"   Texture="GreatPeople_SlotOn" Hidden="1"/>
         <ScrollPanel  ID="EffectStackScroller"              Offset="0,250" Size="280,185" Vertical="1" AutoScrollBar="1" >
           <Stack      ID="EffectStack"                      Offset="0,0" StackPadding="18"/>
@@ -140,7 +140,7 @@
 
 
   <Instance           Name="EffectInstance">
-    <Container        ID="Top"                AutoSize="V"                  Size="213,50" >
+    <Container        ID="Top"                Size="213,auto" >
       <Image          ID="EffectTypeIcon"                                   Size="54,54" Texture="Controls_SlotCircle2" >
         <Image ID="ActiveAbilityIcon" Size="38,38" Anchor="C,C" Texture="UnitActions38" Hidden="1"/>
         <Image ID="PassiveAbilityIcon" Size="38,38" Anchor="C,C" Texture="GreatPeoplePassiveBonus" Hidden="1"/>
@@ -150,7 +150,7 @@
   </Instance>
 
   <Instance           Name="RecruitInstance">
-    <Container ID="Top" AutoSize="V" Size="160,70" >
+    <Container ID="Top" Size="160,auto" >
       <Stack StackGrowth="Down" StackPadding="5">
         <Stack StackGrowth="Right">
           <Image ID="WinnerIcon" Offset="0,0" Texture="Controls_Winner12" Hidden="1" />

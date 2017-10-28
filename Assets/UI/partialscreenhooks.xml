@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Context>
-  <Container               ID="RootContainer" Offset="65,-5" Size="full,full">
+  <Container               ID="RootContainer" Offset="65,-5" Size="parent,parent">
     <Grid   Anchor="R,T"   ID="LaunchBackingDropShadow" Offset="40,25"    Texture="Controls_Glow2"                  Size="165,70"   SliceCorner="25,25" SliceTextureSize="50,50" Color="0,0,0,200"/>
     <Image  Anchor="R,T"   ID="LaunchBackingTile"       Offset ="65,34"   Texture="LaunchBar_Backing_Tile"          Size="140,41"   StretchMode="Tile"/>
     <Grid   Anchor="R,T"   ID="LaunchBacking"                             Texture="LaunchBar_BackingRight_Backing"  Size="285, 77"  SliceCorner="114,32" SliceSize="1,1" SliceTextureSize="226,77"/>
 
-    <Stack ID="ButtonStack" Anchor="R,T" StackGrowth="Left" Offset="65,38" Padding="-3">
+    <Stack ID="ButtonStack" ConsumeMouseOver="1" Anchor="R,T" StackGrowth="Left" Offset="65,38" Padding="-3">
       <Button ID="TradeRoutesButton" Anchor="L,C" Size="40,40"  Texture="LaunchBar_Hook_ButtonSmall.dds" Style="ButtonDisabledText" ToolTip="LOC_PARTIALSCREEN_TRADEROUTES_TOOLTIP">
         <Image Texture="LaunchBar_Hook_Trade" Size="26,26" Anchor="C,C" Offset="0,-1"/>
       </Button>

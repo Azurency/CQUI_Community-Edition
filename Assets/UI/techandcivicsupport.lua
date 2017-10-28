@@ -428,7 +428,6 @@ end
 function GetUnlockIM( kControl:table )
   local unlockIM :table = kControl[DATA_FIELD_UNLOCK_IM];
   if unlockIM ~= nil then
-    -- Reset prior
     unlockIM:ResetInstances();
   else
     -- Create
@@ -695,8 +694,13 @@ end
 --	the current research, the recently completed research or NIL if player
 --	has just started the game.
 -- ===========================================================================
-function RealizeCurrentCivic( playerID:number, kData:table, kControl:table )
+function RealizeCurrentCivic( playerID:number, kData:table, kControl:table, cachedModifiers:table, resetExtraIcons:boolean )
 
+  if resetExtraIcons then
+    for _,iconData in pairs(g_ExtraIconData) do
+      iconData:Reset();
+    end
+  end
   -- If a control instance is passed in, use that for the controls, otherwise
   -- assume the control exists off of the main control set of the context.
   if kControl == nil then
@@ -725,7 +729,25 @@ function RealizeCurrentCivic( playerID:number, kData:table, kControl:table )
     RealizeMeterAndBoosts( kControl, kData );
     RealizeIcon( kControl.Icon, kData.CivicType, SIZE_ICON_CIVIC_LARGE );		
 
-    numUnlockables = PopulateUnlockablesForCivic( playerID, kData.ID, techUnlockIM, nil );
+    -- Include extra icons in total unlocks
+    local extraUnlocks:table = {};
+    local hideDescriptionIcon:boolean = false;
+    local cachedModifier:table = cachedModifiers[kData.CivicType];
+    for _,iconData in pairs(g_ExtraIconData) do
+      if iconData.ModifierType == cachedModifier.ModifierType then
+        hideDescriptionIcon = hideDescriptionIcon or iconData.HideDescriptionIcon;
+        table.insert(extraUnlocks, iconData);
+      end
+    end
+    
+    numUnlockables = PopulateUnlockablesForCivic( playerID, kData.ID, techUnlockIM, nil, nil, hideDescriptionIcon );
+    
+    -- Initialize extra icons
+    for _,iconData in pairs(extraUnlocks) do
+      iconData:Initialize(kControl.UnlockStack, cachedModifier);
+      numUnlockables = numUnlockables + 1;
+    end
+    
     if numUnlockables ~= nil then
       HandleOverflow(numUnlockables, kControl);
     end
