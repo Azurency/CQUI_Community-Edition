@@ -5,16 +5,16 @@
 
   <AlphaAnim ID="ChatIndicatorWaitTimer" Cycle="Once" Speed="0.5" AlphaBegin="0.0" AlphaEnd="1.0" Stopped="1"/>
 
-  <Container ID="RibbonContainer" Size="500,150" Anchor="R,T" Offset="0,27" AutoSize="H">
-    <ScrollPanel ID="LeaderBGClip" Anchor="R,T" Size="full,80" Disabled="1" Offset="-20,5" FullClip="1">
+  <Container ID="RibbonContainer" Size="auto,150" Anchor="R,T" Offset="0,27">
+    <ScrollPanel ID="LeaderBGClip" Anchor="R,T" Size="auto,80" Disabled="1" Offset="-20,5" FullClip="1">
       <Grid ID="LeaderBG" Anchor="R,T" Size="500,100" Style="DropShadow2" Offset="0,-30" Color="255,255,255,150"/>
     </ScrollPanel>
-    <ScrollPanel ID="LeaderScroll" Anchor="R,T" Size="10,parent" FullClip="1">
+    <ScrollPanel ID="LeaderScroll" Anchor="R,T" Size="10,parent">
       <Stack ID="LeaderStack" Anchor="R,T" StackGrowth="Left" StackPadding="2" Offset="3,4"/>
       <Image    ID="NextButtonContainer" Texture="ActionPanel_Badge" Offset="-32,-45" Size="40,37" Anchor="R,B" AnchorSide="O,O">
         <Button ID="NextButton" Anchor="R,B" Offset="4,2" Style="ArrowButtonRight"/>
       </Image>
-      <Container ID="PreviousButtonContainer" Offset="-32,-45" Size="40,37" Anchor="L,B" AnchorSide="O,O">
+      <Container ID="PreviousButtonContainer" Offset="-32,-52" Size="40,37" Anchor="L,B" AnchorSide="O,O">
         <Image Texture="DiploRibbon_Separator" Size="62,34" Offset="-22,-29"/>
         <Image     Texture="ActionPanel_Badge" Size="40,37" FlipX="1">
           <Button ID="PreviousButton" Anchor="L,B" Offset="4,2" Style="ArrowButtonLeft"/>

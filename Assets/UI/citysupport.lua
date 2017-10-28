@@ -400,6 +400,7 @@ function GetCityData( pCity:table )
     local plotID :number = kPlot:GetIndex();
     local districtTable :table = {
       Name = Locale.Lookup(districtInfo.Name),
+      Type		= districtType,
       YieldBonus = GetDistrictYieldText( district ),
       isPillaged = pCityDistricts:IsPillaged(district:GetType());
       isBuilt = pCityDistricts:HasDistrict(districtInfo.Index, true);

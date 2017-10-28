@@ -52,16 +52,16 @@ function ConfirmPlaceWonder( pInputStruct:table )
           sConfirmText = sConfirmText .. "[NEWLINE]" .. Locale.Lookup(v);
         end
       end
-			local pPopupDialog :table = PopupDialogInGame:new("PlaceWonderAt_X" .. kPlot:GetX() .. "_Y" .. kPlot:GetY()); -- unique identifier
+      local pPopupDialog :table = PopupDialogInGame:new("PlaceWonderAt_X" .. kPlot:GetX() .. "_Y" .. kPlot:GetY()); -- unique identifier
       pPopupDialog:AddText(sConfirmText);
-      pPopupDialog:AddButton(Locale.Lookup("LOC_YES"), function()
+      pPopupDialog:AddConfirmButton(Locale.Lookup("LOC_YES"), function()
         --CityManager.RequestOperation(pSelectedCity, CityOperationTypes.BUILD, tParameters);
         local tProductionQueueParameters = { tParameters=tParameters, plotId=plotId, pSelectedCity=pSelectedCity, buildingHash=eBuilding }
         LuaEvents.StrageticView_MapPlacement_ProductionClose(tProductionQueueParameters);
         UI.PlaySound("Build_Wonder");
         ExitPlacementMode();
       end);
-      pPopupDialog:AddButton(Locale.Lookup("LOC_NO"), nil);
+      pPopupDialog:AddCancelButton(Locale.Lookup("LOC_NO"), nil);
       pPopupDialog:Open();
     end
   else
@@ -182,6 +182,11 @@ function ConfirmPlaceDistrict(pInputStruct:table)
   local kPlot = Map.GetPlotByIndex(plotId);
 
   local districtHash:number = UI.GetInterfaceModeParameter(CityOperationTypes.PARAM_DISTRICT_TYPE);
+  local purchaseYield = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_YIELD_TYPE);
+  local bIsPurchase:boolean = false;
+  if (purchaseYield ~= nil and purchaseYield == YieldTypes.GOLD) then
+    bIsPurchase = true;
+  end
 
   local tParameters = {};
   tParameters[CityOperationTypes.PARAM_X] = kPlot:GetX();
@@ -191,7 +196,13 @@ function ConfirmPlaceDistrict(pInputStruct:table)
 
   if (pSelectedCity ~= nil) then
     local pDistrictInfo = GameInfo.Districts[districtHash];
-    local bCanStart, tResults = CityManager.CanStartOperation( pSelectedCity, CityOperationTypes.BUILD, tParameters, true);
+    local bCanStart;
+    local tResults;
+    if (bIsPurchase) then
+      bCanStart, tResults = CityManager.CanStartCommand( pSelectedCity, CityCommandTypes.PURCHASE, tParameters, true);
+    else
+      bCanStart, tResults = CityManager.CanStartOperation( pSelectedCity, CityOperationTypes.BUILD, tParameters, true);
+    end
     if pDistrictInfo ~= nil and bCanStart then
 
       local sConfirmText	:string = Locale.Lookup("LOC_DISTRICT_ZONE_CONFIRM_DISTRICT_POPUP", pDistrictInfo.Name);
@@ -204,16 +215,24 @@ function ConfirmPlaceDistrict(pInputStruct:table)
           sConfirmText = sConfirmText .. "[NEWLINE]" .. Locale.Lookup(v);
         end
       end
-			local pPopupDialog :table = PopupDialogInGame:new("PlaceDistrictAt_X" .. kPlot:GetX() .. "_Y" .. kPlot:GetY()); -- unique identifier
+      local pPopupDialog :table = PopupDialogInGame:new("PlaceDistrictAt_X" .. kPlot:GetX() .. "_Y" .. kPlot:GetY()); -- unique identifier
       pPopupDialog:AddText(sConfirmText);
-      pPopupDialog:AddButton(Locale.Lookup("LOC_YES"), function()
-        --CityManager.RequestOperation(pSelectedCity, CityOperationTypes.BUILD, tParameters);
-        local tProductionQueueParameters = { tParameters=tParameters, plotId=plotId, pSelectedCity=pSelectedCity, buildingHash=districtHash }
-        LuaEvents.StrageticView_MapPlacement_ProductionClose(tProductionQueueParameters);
-        ExitPlacementMode();
-        LuaEvents.CQUI_CityPanel_CityviewEnable();
-      end);
-      pPopupDialog:AddButton(Locale.Lookup("LOC_NO"), nil);
+      if (bIsPurchase) then
+        pPopupDialog:AddConfirmButton(Locale.Lookup("LOC_YES"), function()
+          CityManager.RequestCommand(pSelectedCity, CityCommandTypes.PURCHASE, tParameters);
+          ExitPlacementMode();
+          LuaEvents.CQUI_CityPanel_CityviewEnable();
+        end);
+      else
+        pPopupDialog:AddConfirmButton(Locale.Lookup("LOC_YES"), function()
+          --CityManager.RequestOperation(pSelectedCity, CityOperationTypes.BUILD, tParameters);
+          local tProductionQueueParameters = { tParameters=tParameters, plotId=plotId, pSelectedCity=pSelectedCity, buildingHash=districtHash }
+          LuaEvents.StrageticView_MapPlacement_ProductionClose(tProductionQueueParameters);
+          ExitPlacementMode();
+          LuaEvents.CQUI_CityPanel_CityviewEnable();
+        end);
+      end
+      pPopupDialog:AddCancelButton(Locale.Lookup("LOC_NO"), nil);
       pPopupDialog:Open();
     end
   else
@@ -366,9 +385,8 @@ function RealizePlotArtForDistrictPlacement()
 
         -- Only highlight certain plots (usually if there is a bonus to be gained).
         local kPlot		:table			= Map.GetPlotByIndex(plotId);
-        local isValid	:boolean		= IsShownIfPlotPurchaseable( district.Index, pSelectedCity, kPlot );
 
-        if isValid and kPlot:CanHaveDistrict(district.DistrictType, pSelectedCity:GetOwner(), pSelectedCity:GetID()) then
+        if kPlot:CanHaveDistrict(district.Index, pSelectedCity:GetOwner(), pSelectedCity:GetID()) then
           local plotInfo	:table			= GetViewPlotInfo( kPlot );
           plotInfo.hexArtdef				= "Placement_Purchase";
           plotInfo.selectable				= true;

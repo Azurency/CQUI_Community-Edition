@@ -19,58 +19,36 @@ function TruncateString(control, resultSize, longStr, trailingText)
   -- Ensure this has the actual text control
   if control.GetTextControl ~= nil then
     control = control:GetTextControl();
+    UI.AssertMsg(control.SetTruncateWidth ~= nil, "Calling TruncateString with an unsupported control");
   end
 
-  local isTruncated = false;
-  if(longStr == nil)then
+  
+  -- TODO if trailingText is ever used, add a way to do it to TextControl
+  UI.AssertMsg(trailingText == nil or trailingText == "", "trailingText is not supported");
+  
+  if(longStr == nil) then
     longStr = control:GetText();
-
-    if(trailingText == nil)then
-      longStr = "";
-    end
   end
 
+  --TODO a better solution than this function would be ideal
+    --calling SetText implicitly truncates if the flag is set
+    --a AutoToolTip flag could be made to avoid setting the tooltip from lua
+    --trailingText could be added, right now its just an ellipsis but it could be arbitrary
+    --this would avoid the weird type shenanigans when truncating TextButtons, TextControls, etc
+  
   if(control ~= nil)then
-
-    -- Determine full length of control.
+    control:SetTruncateWidth(resultSize);
     control:SetText(longStr);
-    local fullStrExtent = control:GetSizeX();
-
-    -- Determine how long a trailing text portion will be.
-    if(trailingText == nil)then
-      trailingText = "";
-    end
-    control:SetText(trailingText);
-    local trailingExtent = control:GetSizeX();
-
-    local sizeAfterTruncate = resultSize - trailingExtent;
-    if(sizeAfterTruncate > 0)then
-      local truncatedSize = fullStrExtent;
-      local newString = longStr;
-
-      local ellipsis = "";
-
-      if( sizeAfterTruncate < truncatedSize ) then
-        ellipsis = m_strEllipsis;
-        isTruncated = true;
-      end
-
-      control:SetText(ellipsis);
-      local ellipsisExtent = control:GetSizeX();
-      sizeAfterTruncate = sizeAfterTruncate - ellipsisExtent;
-
-      while (sizeAfterTruncate < truncatedSize and Locale.Length(newString) > 1) do
-        newString = Locale.SubString(newString, 1, Locale.Length(newString) - 1);
-        control:SetText(newString);
-        truncatedSize = control:GetSizeX();
-      end
-
-      control:SetText(newString .. ellipsis .. trailingText);
-    end
   else
-    UI.DataError("Attempt to TruncateString but NIL control passed in!. string=", longStr);
+    UI.AssertMsg(false, "Attempting to truncate a NIL control");
   end
-  return isTruncated;
+  
+  if control.IsTextTruncated ~= nil then
+    return control:IsTextTruncated();
+  else
+    UI.AssertMsg(false, "Calling IsTextTruncated with an unsupported control");
+    return true;
+  end
 end
 
 

@@ -188,52 +188,39 @@ function ShowPurchases()
         (isUsingDistrictPlacementFilter and kPlot:CanHaveDistrict(district.Index, pSelectedCity:GetOwner(), pSelectedCity:GetID())) or
         (isUsingBuildingPlacementFilter and kPlot:CanHaveWonder(building.Index, pSelectedCity:GetOwner(), pSelectedCity:GetID())) then
 
-        -- If district placement mode, one more check to only show purchasable tiles
-        -- that will give a bonus.
-        local isValid :boolean= true;
-        if isUsingDistrictPlacementFilter then
-          isValid = IsShownIfPlotPurchaseable(district.Index, pSelectedCity, kPlot);
-        end
-
-        if isValid then
-          local index:number = kPlot:GetIndex();
-          local pInstance:table = GetInstanceAt( index );
-          if pInstance ~= nil then
-            local goldCost = cityGold:GetPlotPurchaseCost( index );
-            pInstance.PurchaseButton:SetText(tostring(goldCost));
-            AutoSizeGridButton(pInstance.PurchaseButton,51,30,25,"H");
-            pInstance.PurchaseButton:SetDisabled( goldCost > playerGold );
-            if( goldCost > playerGold) then
-              pInstance.PurchaseButton:GetTextControl():SetColorByName("TopBarValueCS");
-            else
-              pInstance.PurchaseButton:GetTextControl():SetColorByName("ResGoldLabelCS");
-            end
-            pInstance.PurchaseButton:RegisterCallback( Mouse.eLClick, function() OnClickPurchasePlot( index ); end );
-            pInstance.PurchaseAnim:SetColor( (goldCost > playerGold ) and 0xbb808080 or 0xffffffff ) ;
-            pInstance.PurchaseAnim:RegisterEndCallback( OnSpinningCoinAnimDone );
-            if (goldCost > playerGold ) then
-              pInstance.PurchaseButton:ClearMouseEnterCallback();
-              pInstance.PurchaseButton:SetToolTipString( Locale.Lookup("LOC_PLOTINFO_YOU_NEED_MORE_GOLD_TO_PURCHASE", goldCost - math.floor(playerGold) ));
-            else
-              pInstance.PurchaseButton:RegisterMouseEnterCallback( function() OnSpinningCoinAnimMouseEnter(pInstance.PurchaseAnim); end );
-              pInstance.PurchaseButton:SetToolTipString("");
-            end
-            if (index == pNextPlotID ) then
-              CQUI_SetupNextPlotButton(pInstance, pCityCulture, TurnsUntilExpansion);
-            end
-            pInstance.PurchaseButton:SetHide( false );
-            table.insert( m_uiPurchase, pInstance );
+        local index:number = kPlot:GetIndex();
+        local pInstance:table = GetInstanceAt( index );
+        if pInstance ~= nil then
+          local goldCost = cityGold:GetPlotPurchaseCost( index );
+          pInstance.PurchaseButton:SetText(tostring(goldCost));
+          AutoSizeGridButton(pInstance.PurchaseButton,51,30,25,"H");
+          pInstance.PurchaseButton:SetDisabled( goldCost > playerGold );
+          if( goldCost > playerGold) then
+            pInstance.PurchaseButton:GetTextControl():SetColorByName("TopBarValueCS");
           else
-            UI.DataError("Failed to get instance for plot purchase button with index #"..tostring(kPlot:GetIndex()));
+            pInstance.PurchaseButton:GetTextControl():SetColorByName("ResGoldLabelCS");
           end
-          table.insert(m_kLensMask[KEY_PLOT_PURCHASE], plotId);
+          pInstance.PurchaseButton:RegisterCallback( Mouse.eLClick, function() OnClickPurchasePlot( index ); end );
+          pInstance.PurchaseAnim:SetColor( (goldCost > playerGold ) and 0xbb808080 or 0xffffffff ) ;
+          pInstance.PurchaseAnim:RegisterEndCallback( OnSpinningCoinAnimDone );
+          if (goldCost > playerGold ) then
+            pInstance.PurchaseButton:ClearMouseEnterCallback();
+            pInstance.PurchaseButton:SetToolTipString( Locale.Lookup("LOC_PLOTINFO_YOU_NEED_MORE_GOLD_TO_PURCHASE", goldCost - math.floor(playerGold) ));
+          else
+            pInstance.PurchaseButton:RegisterMouseEnterCallback( function() OnSpinningCoinAnimMouseEnter(pInstance.PurchaseAnim); end );
+            pInstance.PurchaseButton:SetToolTipString("");
+          end
+          pInstance.PurchaseButton:SetHide( false );
+          table.insert( m_uiPurchase, pInstance );
+        else
+          UI.DataError("Failed to get instance for plot purchase button with index #"..tostring(kPlot:GetIndex()));
         end
+        table.insert(m_kLensMask[KEY_PLOT_PURCHASE], plotId);
       end
     end
   else
     local pInstance:table = GetInstanceAt( pNextPlotID );
     if pInstance ~= nil then
-      CQUI_SetupNextPlotButton(pInstance, pCityCulture, TurnsUntilExpansion);
       table.insert( m_uiPurchase, pInstance );
     end
   end
@@ -259,15 +246,6 @@ function ShowPurchases()
       end
     end
   end
-end
-
--- ===========================================================================
-function CQUI_SetupNextPlotButton(pInstance:table, pCityCulture:table, TurnsUntilExpansion:number)
-  pInstance.CQUI_NextPlotLabel:SetString("[ICON_Turn]" .. Locale.Lookup("LOC_HUD_CITY_IN_TURNS" , TurnsUntilExpansion ) .. "   ");
-  pInstance.CQUI_NextPlotLabel:SetToolTipString( " " .. Round(pCityCulture:GetCurrentCulture(), 1) .. "/" .. pCityCulture:GetNextPlotCultureCost()
-    .. " (+" .. Round(pCityCulture:GetCultureYield(), 1) .. "[ICON_CULTURE]) " .. Locale.Lookup( "LOC_HUD_CITY_BORDER_EXPANSION" , TurnsUntilExpansion ).."[ICON_Turn]");
-  pInstance.CQUI_NextPlotButton:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_ToggleGrowthTile() end);
-  pInstance.CQUI_NextPlotButton:SetHide( false );
 end
 
 -- ===========================================================================

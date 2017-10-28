@@ -17,11 +17,15 @@ local COLOR_CITY_YELLOW           :number = 0xFF2DFFF8;
 local COLOR_HOLY_SITE           :number = 0xFFFFFFFF;
 local COLOR_NO_MAJOR_RELIGION       :number = 0x00000000;
 local COLOR_RELIGION_DEFAULT        :number = 0x02000000;
-local DATA_FIELD_RELIGION_CHANGES_IM    :string = "m_ChangesIM";
-local DATA_FIELD_RELIGION_FOLLOWERS_IM    :string = "m_FollowersIM";
-local DATA_FIELD_RELIGION_METERS_IM     :string = "m_MetersIM";
-local DATA_FIELD_RELIGION_PRESSURE_CHANGES  :string = "m_PressureChanges";
+
+local DATA_FIELD_RELIGION_FOLLOWERS_IM :string = "m_FollowersIM";
+local DATA_FIELD_RELIGION_METERS_IM :string = "m_MetersIM";
+local DATA_FIELD_RELIGION_PRESSURE_CHANGES :string = "m_PressureChanges";
 local DATA_FIELD_RELIGION_PREV_FILL_PERCENT :string = "m_FillPercent";
+local DATA_FIELD_RELIGION_ICONS_IM :string = "m_IconsIM";
+local DATA_FIELD_RELIGION_FOLLOWER_LIST_IM :string = "m_FollowerListIM";
+local DATA_FIELD_RELIGION_POP_CHART_IM :string = "m_PopChartIM";
+local DATA_FIELD_RELIGION_INFO_INSTANCE :string = "m_ReligionInfoInst";
 local OFFSET_RELIGION_BANNER  :number = 25;
 local ICON_HOLY_SITE      :string = "Faith";
 local ICON_PRESSURE_DOWN    :string = "PressureDown";
@@ -46,6 +50,7 @@ local ZOOM_MULT_DELTA     :number = .01;
 local ALPHA_DIM         :number = 0.45;
 
 local m_pDirtyCityComponents  :table = {};
+local m_pReligionInfoInstance   :table = nil; -- tracks the most recently opened religion detail panel
 local m_isReligionLensActive  :boolean = false;
 local m_refreshLocalPlayerRangeStrike:boolean = false;
 
@@ -77,9 +82,6 @@ hstructure CityBannerMeta
   UpdateStats           : ifunction;
   Resize              : ifunction;
   SetHealthBarColor       : ifunction;
-  GetReligionMeter        : ifunction;
-  AddReligionPressureChange   : ifunction;
-  ProcessNextReligionPressureChange:ifunction;
   CreateAerodromeBanner     :ifunction;
   UpdateAerodromeBanner     :ifunction;
   CreateWMDBanner         :ifunction;
@@ -248,6 +250,7 @@ function CityBanner.new( self : CityBannerMeta, playerID: number, cityID : numbe
     MiniBannerInstances[playerID][districtID] = o;
   end
 
+  return o;
 end
 
 -- ===========================================================================
@@ -564,7 +567,7 @@ function CityBanner.Initialize( self : CityBanner, playerID: number, cityID : nu
   if(self.m_Instance.CityAttackContainer ~= nil) then self:UpdateRangeStrike(); end
 
   -- Only call UpdateReligion if we have a religion meter (if we're not a MiniBanner)
-  if(self.m_Instance.ReligionMeter ~= nil) then self:UpdateReligion(); end
+  if(self.m_Instance.ReligionInfoAnchor ~= nil) then self:UpdateReligion(); end
   self:UpdateStats();
   self:SetColor();
   self:Resize();
@@ -611,10 +614,10 @@ function CityBanner.UpdateAerodromeBanner( self : CityBanner )
         self.m_Instance.UnitListPopup:BuildEntry( "UnitListEntry", unitEntry );
 
         -- Update name
-				unitEntry.UnitName:SetText( Locale.ToUpper( unit:GetName() ) );
+        unitEntry.UnitName:SetText( Locale.ToUpper( unit:GetName() ) );
 
         -- Update icon
-				local iconInfo:table = GetUnitIcon(unit, 22);
+        local iconInfo:table = GetUnitIcon(unit, 22);
         if iconInfo.textureSheet then
           unitEntry.UnitTypeIcon:SetTexture( iconInfo.textureOffsetX, iconInfo.textureOffsetY, iconInfo.textureSheet );
         end
@@ -627,14 +630,14 @@ function CityBanner.UpdateAerodromeBanner( self : CityBanner )
         -- Increment count
         iAirUnitCount = iAirUnitCount + 1;
 
-				-- Fade out the button icon and text if the unit is not able to move
-				if unit:IsReadyToMove() then
-					unitEntry.UnitName:SetAlpha(1.0);
-					unitEntry.UnitTypeIcon:SetAlpha(1.0);
-				else
-					unitEntry.UnitName:SetAlpha(ALPHA_DIM);
-					unitEntry.UnitTypeIcon:SetAlpha(ALPHA_DIM);
-				end
+        -- Fade out the button icon and text if the unit is not able to move
+        if unit:IsReadyToMove() then
+          unitEntry.UnitName:SetAlpha(1.0);
+          unitEntry.UnitTypeIcon:SetAlpha(1.0);
+        else
+          unitEntry.UnitName:SetAlpha(ALPHA_DIM);
+          unitEntry.UnitTypeIcon:SetAlpha(ALPHA_DIM);
+        end
       end
     end
   else
@@ -653,10 +656,10 @@ function CityBanner.UpdateAerodromeBanner( self : CityBanner )
         self.m_Instance.UnitListPopup:BuildEntry( "UnitListEntry", unitEntry );
 
         -- Update name
-				unitEntry.UnitName:SetText( Locale.ToUpper(unit:GetName()) );
+        unitEntry.UnitName:SetText( Locale.ToUpper(unit:GetName()) );
 
         -- Update icon
-				local iconInfo:table = GetUnitIcon(unit, 22, true);
+        local iconInfo:table = GetUnitIcon(unit, 22, true);
         if iconInfo.textureSheet then
           unitEntry.UnitTypeIcon:SetTexture( iconInfo.textureOffsetX, iconInfo.textureOffsetY, iconInfo.textureSheet );
         end
@@ -669,14 +672,14 @@ function CityBanner.UpdateAerodromeBanner( self : CityBanner )
         -- Increment count
         iAirUnitCount = iAirUnitCount + 1;
 
-				-- Fade out the button icon and text if the unit is not able to move
-				if unit:IsReadyToMove() then
-					unitEntry.UnitName:SetAlpha(1.0);
-					unitEntry.UnitTypeIcon:SetAlpha(1.0);
-				else
-					unitEntry.UnitName:SetAlpha(ALPHA_DIM);
-					unitEntry.UnitTypeIcon:SetAlpha(ALPHA_DIM);
-				end
+        -- Fade out the button icon and text if the unit is not able to move
+        if unit:IsReadyToMove() then
+          unitEntry.UnitName:SetAlpha(1.0);
+          unitEntry.UnitTypeIcon:SetAlpha(1.0);
+        else
+          unitEntry.UnitName:SetAlpha(ALPHA_DIM);
+          unitEntry.UnitTypeIcon:SetAlpha(ALPHA_DIM);
+        end
       end
     end
   end
@@ -1032,6 +1035,26 @@ function CityBanner.SetHealthBarColor( self : CityBanner )
 end
 
 -- ===========================================================================
+-- Non-instance function so it can be overwritten by mods
+  function GetPopulationTooltip(self:CityBanner, turnsUntilGrowth:number, currentPopulation:number, foodSurplus:number)
+    --- POPULATION AND GROWTH INFO ---
+    local popTooltip:string = Locale.Lookup("LOC_CITY_BANNER_POPULATION") .. ": " .. currentPopulation;
+    if turnsUntilGrowth > 0 then
+      popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_TURNS_GROWTH", turnsUntilGrowth);
+      popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_FOOD_SURPLUS", round(foodSurplus,1));
+    elseif turnsUntilGrowth < 0 then
+      popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_TURNS_STARVATION", -turnsUntilGrowth);
+    end
+    return popTooltip;
+  end
+  
+  -- ===========================================================================
+  -- Non-instance function so it can be overwritten by mods
+  function GetCityPopulationText(self:CityBanner, currentPopulation:number)
+    return tostring(currentPopulation);
+  end
+
+-- ===========================================================================
 function CityBanner.UpdateStats( self : CityBanner)
   self:UpdateName();
   local pDistrict:table = self:GetDistrict();
@@ -1061,17 +1084,14 @@ function CityBanner.UpdateStats( self : CityBanner)
       elseif isStarving then
         turnsUntilGrowth = -pCityGrowth:GetTurnsUntilStarvation();  -- Make negative
       end
-      --- POPULATION AND GROWTH INFO ---
-      self.m_Instance.CityPopulation:SetText(currentPopulation);
+      
+      self.m_Instance.CityPopulation:SetText(GetCityPopulationText(self, currentPopulation));
+
       if (self.m_Player == Players[localPlayerID]) then --Only show growth data if the player is you
-        local popTooltip :string = Locale.Lookup("LOC_CITY_BANNER_POPULATION") .. ": " .. currentPopulation;
         local popTurnLeftColor = "";
         if turnsUntilGrowth > 0 then
-          popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_TURNS_GROWTH", turnsUntilGrowth);
-          popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_FOOD_SURPLUS", round(foodSurplus,1));
           popTurnLeftColor = "StatGoodCS";
         elseif turnsUntilGrowth < 0 then
-          popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_TURNS_STARVATION", -turnsUntilGrowth);
           popTurnLeftColor = "StatBadCS";
         else
           popTurnLeftColor = "StatNormalCS";
@@ -1094,6 +1114,7 @@ function CityBanner.UpdateStats( self : CityBanner)
         if g_smartbanner and g_smartbanner_population then
           local CQUI_HousingFromImprovements = CQUI_HousingFromImprovementsTable[pCityID];
           if CQUI_HousingFromImprovements ~= nil then    -- CQUI real housing from improvements fix to show correct values when waiting for the next turn
+            local popTooltip:string = GetPopulationTooltip(self, turnsUntilGrowth, currentPopulation, foodSurplus);
             self.m_Instance.CityPopulation:SetToolTipString(popTooltip);
             local housingLeft = pCityGrowth:GetHousing() - pCityGrowth:GetHousingFromImprovements() + CQUI_HousingFromImprovements - currentPopulation;    -- CQUI calculate real housing
             local housingLeftText = housingLeft;
@@ -1134,6 +1155,16 @@ function CityBanner.UpdateStats( self : CityBanner)
 
       self.m_Instance.CityPopulationMeter:SetPercent(foodpct);
       self.m_Instance.CityPopulationNextTurn:SetPercent(foodpctNextTurn);
+
+      -- Update insufficient housing icon
+      if self.m_Instance.CityHousingInsufficientIcon ~= nil then
+        self.m_Instance.CityHousingInsufficientIcon:SetToolTipString(Locale.Lookup("LOC_CITY_BANNER_HOUSING_INSUFFICIENT"));
+        if pCityGrowth:GetHousing() < pCity:GetPopulation() then
+          self.m_Instance.CityHousingInsufficientIcon:SetHide(false);
+        else
+          self.m_Instance.CityHousingInsufficientIcon:SetHide(true);
+        end
+      end
 
       --- CITY PRODUCTION ---
       if (localPlayerID == pCity:GetOwner()) then
@@ -1292,6 +1323,30 @@ function CityBanner.UpdateStats( self : CityBanner)
       self.m_Instance.DefenseStack:ReprocessAnchoring();
       self.m_Instance.BannerStrengthBacking:SetSizeX(self.m_Instance.DefenseStack:GetSizeX()+30);
       self.m_Instance.BannerStrengthBacking:SetToolTipString(defTooltip);
+
+      -- Update under siege icon
+      if pDistrict:IsUnderSiege() then
+        self.m_Instance.CityUnderSiegeIcon:SetHide(false);
+      else
+        self.m_Instance.CityUnderSiegeIcon:SetHide(true);
+      end
+
+      -- Update occupied icon
+      if pCity:IsOccupied() then
+        self.m_Instance.CityOccupiedIcon:SetHide(false);
+      else
+        self.m_Instance.CityOccupiedIcon:SetHide(true);
+      end
+
+      -- Update insufficient amenities icon
+      if self.m_Instance.CityAmenitiesInsufficientIcon ~= nil then
+        self.m_Instance.CityAmenitiesInsufficientIcon:SetToolTipString(Locale.Lookup("LOC_CITY_BANNER_AMENITIES_INSUFFICIENT"));
+        if pCityGrowth:GetAmenitiesNeeded() > pCityGrowth:GetAmenities() then
+          self.m_Instance.CityAmenitiesInsufficientIcon:SetHide(false);
+        else
+          self.m_Instance.CityAmenitiesInsufficientIcon:SetHide(true);
+        end
+      end
       --------------------------------------
     else -- it should be a miniBanner
 
@@ -1463,7 +1518,7 @@ function CityBanner.UpdateName( self : CityBanner )
 
       if not self:IsTeam() then
         local leader:string = PlayerConfigurations[owner]:GetLeaderTypeName();
-				if leader ~= nil then
+        if leader ~= nil then
         if GameInfo.CivilizationLeaders[leader] == nil then
           UI.DataError("Banners found a leader \""..leader.."\" which is not/no longer in the game; icon may be whack.");
         else
@@ -1474,7 +1529,7 @@ function CityBanner.UpdateName( self : CityBanner )
           end
         end
       end
-			end
+      end
 
       local questsManager : table = Game.GetQuestsManager();
       local questTooltip  : string = Locale.Lookup("LOC_CITY_STATES_QUESTS");
@@ -1654,6 +1709,7 @@ function CityBanner.UpdateReligion( self : CityBanner )
   local pCity       :table = self:GetCity();
   local pCityReligion   :table = pCity:GetReligion();
   local eMajorityReligion :number = pCityReligion:GetMajorityReligion();
+  local religionsInCity	:table = pCityReligion:GetReligionsInCity();
   self.m_eMajorityReligion = eMajorityReligion;
 
   if (eMajorityReligion > 0) then
@@ -1680,40 +1736,20 @@ function CityBanner.UpdateReligion( self : CityBanner )
     self.m_Instance.ReligionBannerIconContainer:SetHide(true);
   end
 
+  self:Resize();
+
   -- Hide the meter and bail out if the religion lens isn't active
-  if(not m_isReligionLensActive or eMajorityReligion < 0) then
-    cityInst.ReligionMeter:SetHide(true);
+  if(not m_isReligionLensActive or table.count(religionsInCity) == 0) then
+    if cityInst[DATA_FIELD_RELIGION_INFO_INSTANCE] then
+      cityInst[DATA_FIELD_RELIGION_INFO_INSTANCE].ReligionInfoContainer:SetHide(true);
+    end
     return;
   end
 
   -- Update religion icon + religious pressure animation
   local majorityReligionColor:number = COLOR_RELIGION_DEFAULT;
   if(eMajorityReligion >= 0) then
-
     majorityReligionColor = UI.GetColorValue(GameInfo.Religions[eMajorityReligion].Color);
-    local majorityReligionIcon = "ICON_" .. GameInfo.Religions[eMajorityReligion].ReligionType;
-
-    local textureOffsetX:number, textureOffsetY:number, textureSheet:string = IconManager:FindIconAtlas(majorityReligionIcon, SIZE_RELIGION_ICON_LARGE);
-    if(textureSheet == nil or textureSheet == "") then
-      UI.DataError("Could not find icon in CityBanner.UpdateReligion: icon=\""..majorityReligionIcon.."\", iconSize="..tostring(SIZE_RELIGION_ICON_LARGE) );
-    else
-      cityInst.ReligionIcon:SetTexture(textureOffsetX, textureOffsetY, textureSheet);
-    end
-    cityInst.ReligionIcon:SetColor(majorityReligionColor);
-    cityInst.LowPressureAnim:SetColor(majorityReligionColor);
-    cityInst.MedPressureAnim:SetColor(majorityReligionColor);
-    cityInst.HighPressureAnim:SetColor(majorityReligionColor);
-    cityInst.ReligionIcon:SetHide(false);
-
-    local cityPressure:number = CalculateFinalReligionPressure(pCityReligion:GetPressureFromCity());
-    cityInst.LowPressureAnim:SetHide(cityPressure ~= RELIGION_PRESSURE.LOW);
-    cityInst.MedPressureAnim:SetHide(cityPressure ~= RELIGION_PRESSURE.MEDIUM);
-    cityInst.HighPressureAnim:SetHide(cityPressure ~= RELIGION_PRESSURE.HIGH);
-    cityInst.MeterPressure:SetHide(false);
-  else
-    cityInst.ReligionIcon:SetHide(true);
-    cityInst.MeterPressure:SetHide(true);
-    religionColor = COLOR_NO_MAJOR_RELIGION;
   end
 
   -- Preallocate total fill so we can stagger the meters
@@ -1733,358 +1769,225 @@ function CityBanner.UpdateReligion( self : CityBanner )
       table.insert(activeReligions, {
         Religion=religion,
         Followers=followers,
+        Pressure=pCityReligion:GetTotalPressureOnCity(religion),
         FillPercent=fillPercent,
         Color=GameInfo.Religions[religion].Color });
     end
   end
 
   -- Sort religions by largest number of followers
-  table.sort(activeReligions, function(a,b) return a.Followers < b.Followers; end);
+  table.sort(activeReligions, function(a,b) return a.Followers > b.Followers; end);
 
-  -- Reset any meters previously spawned on this banner
-  local metersIM:table = cityInst[DATA_FIELD_RELIGION_METERS_IM];
-  if(metersIM ~= nil) then
-    for _, meterIM in pairs(metersIM) do
-      meterIM:ResetInstances();
-    end
+  -- After sort update accumulative fill percent
+  local accumulativeFillPercent = 0.0;
+  for i, religion in ipairs(activeReligions) do
+    accumulativeFillPercent = accumulativeFillPercent + religion.FillPercent;
+    religion.AccumulativeFillPercent = accumulativeFillPercent;
   end
-  -- Reset any followers previously spawned on this banner
-  local followersIM:table = cityInst[DATA_FIELD_RELIGION_FOLLOWERS_IM];
-  if(followersIM ~= nil) then
-    followersIM:ResetInstances();
-  else
-    followersIM = InstanceManager:new("ReligionFollowers", "ReligionIcon", self.m_Instance.FollowerStack);
-    cityInst[DATA_FIELD_RELIGION_FOLLOWERS_IM] = followersIM;
-  end
-  -- Reset any changes previously spawned on this banner
-  local changesIM:table = cityInst[DATA_FIELD_RELIGION_CHANGES_IM];
-  if(changesIM ~= nil) then
-    changesIM:ResetInstances();
-  end
-  -- Reset any cached pressure changes
-  local pressureChanges = cityInst[DATA_FIELD_RELIGION_PRESSURE_CHANGES];
-  if(pressureChanges ~= nil and table.count(pressureChanges.changes) > 0) then
-    cityInst[DATA_FIELD_RELIGION_PRESSURE_CHANGES] = { bProcessingChanges = false, changes={} };
-  end
-
-  -- Spawn a meter for each religion
-  for _, religionData in pairs(activeReligions) do
-
-    local pressure:number = -1;
-    local religionColor:number = UI.GetColorValue(religionData.Color);
-    if(religionData.FillPercent > 0) then
-
-      local meterInst:table = nil;
-      if(religionData.Religion == eMajorityReligion) then
-        meterInst = self:GetReligionMeter("ReligionMeterNone", religionColor);
-      else
-        pressure = pCityReligion:GetTotalPressureOnCity(religionData.Religion);
-        pressure = CalculateFinalReligionPressure(pressure);
-        local meterType:string = CalculateMeterTypeFromPressure(pressure);
-        meterInst = self:GetReligionMeter(meterType, religionColor);
-      end
-
-      if(meterInst ~= nil) then
-        meterInst.Meter:SetPercent(totalFillPercent);
-
-        -- Cache data so we can detect future pressure changes
-        local cachedData:table = cityInst[DATA_FIELD_RELIGION_PREV_FILL_PERCENT];
-        if(cachedData == nil) then
-          cachedData = {};
-          cityInst[DATA_FIELD_RELIGION_PREV_FILL_PERCENT] = cachedData;
-        elseif(cachedData[religionData.Religion] ~= nil) then
-          local prevFill:number = cachedData[religionData.Religion];
-          if(totalFillPercent > prevFill or totalFillPercent < prevFill) then
-            self:AddReligionPressureChange(prevFill, totalFillPercent, religionData.Religion);
-          end
-        end
-        cachedData[religionData.Religion] = totalFillPercent;
-        totalFillPercent = totalFillPercent - religionData.FillPercent;
-      end
-    end
-
-    local followerInst:table = followersIM:GetInstance();
-    local szReligionIcon:string = GameInfo.Religions[religionData.Religion].ReligionType;
-    local szReligionName:string = Game.GetReligion():GetName(religionData.Religion);
-    local textureOffsetX:number, textureOffsetY:number, textureSheet:string = IconManager:FindIconAtlas("ICON_" .. szReligionIcon, SIZE_RELIGION_ICON_SMALL);
-    if(textureSheet == nil or textureSheet == "") then
-      UI.DataError("Could not find icon in CityBanner.UpdateReligion: icon=\""..szReligionIcon.."\", iconSize="..tostring(SIZE_RELIGION_ICON_SMALL) );
-    else
-      followerInst.ReligionIcon:SetTexture(textureOffsetX, textureOffsetY, textureSheet);
-    end
-    followerInst.ReligionIcon:SetToolTipString(Locale.Lookup("LOC_UI_RELIGION_NUM_FOLLOWERS_TT", szReligionName, religionData.Followers));
-    followerInst.ReligionIcon:SetColor(religionColor);
-    followerInst.NumFollowers:SetText(religionData.Followers);
-
-    -- Clear out previous pressure icon if it doesn't match the current pressure
-    if followerInst.Pressure ~= pressure then
-      followerInst.Pressure = pressure;
-      if followerInst.PressureIcon then
-        followerInst.PressureContainer:DestroyChild(followerInst.PressureIcon);
-        followerInst.PressureIcon = nil;
-      end
-
-      if pressure ~= -1 then
-        local pressureInstance:string;
-        if(pressure == RELIGION_PRESSURE.LOW) then
-          pressureInstance = "PressureLow";
-        elseif(pressure == RELIGION_PRESSURE.MEDIUM) then
-          pressureInstance = "PressureMedium";
-        elseif(pressure == RELIGION_PRESSURE.HIGH) then
-          pressureInstance = "PressureHigh";
-        else
-          UI.DataError("Unknown pressure type '" .. pressure .."'.");
-        end
-
-        local container:table = {};
-        ContextPtr:BuildInstanceForControl(pressureInstance, container, followerInst.PressureContainer);
-        followerInst.PressureIcon = container.PressureIcon;
-      end
-    end
-
-    if followerInst.PressureIcon then
-      followerInst.PressureIcon:SetColor(religionColor);
-      followerInst.FollowerStack:CalculateSize();
-    end
-  end
-
   if(table.count(activeReligions) > 0) then
-    cityInst.StackBG:SetHide(false);
-    cityInst.FollowerStack:SetHide(false);
-    cityInst.FollowerStack:CalculateSize();
-    cityInst.FollowerStack:ReprocessAnchoring();
-    cityInst.StackBG:SetSizeY(cityInst.FollowerStack:GetSizeY() + PADDING_FOLLOWERS_BG);
-
-    -- Holy sites get a different color and texture
-    local holySitePlotIDs:table = {};
-    local cityDistricts:table = pCity:GetDistricts();
-    local playerDistricts:table = self.m_Player:GetDistricts();
-    for i, district in cityDistricts:Members() do
-      local districtType:string = GameInfo.Districts[district:GetType()].DistrictType;
-      if(districtType == "DISTRICT_HOLY_SITE") then
-        local locX:number = district:GetX();
-        local locY:number = district:GetY();
-        local plot:table  = Map.GetPlot(locX, locY);
-        local holySiteFaithYield:number = district:GetReligionHealRate();
-        SpawnHolySiteIconAtLocation(locX, locY, "+" .. holySiteFaithYield);
-        holySitePlotIDs[plot:GetIndex()] = true;
-        break;
-      end
-    end
-
-    -- Color hexes in this city the same color as religion
     local localPlayerVis:table = PlayersVisibility[Game.GetLocalPlayer()];
     if (localPlayerVis ~= nil) then
-      local visiblePlots:table = Map.GetCityPlots():GetVisiblePurchasedPlots(pCity);
+      -- Holy sites get a different color and texture
+      local holySitePlotIDs:table = {};
+      local cityDistricts:table = pCity:GetDistricts();
+      local playerDistricts:table = self.m_Player:GetDistricts();
+      for i, district in cityDistricts:Members() do
+        local districtType:string = GameInfo.Districts[district:GetType()].DistrictType;
+        if(districtType == "DISTRICT_HOLY_SITE") then
+          local locX:number = district:GetX();
+          local locY:number = district:GetY();
+          if localPlayerVis:IsVisible(locX, locY) then
+            local plot:table  = Map.GetPlot(locX, locY);
+            local holySiteFaithYield:number = district:GetReligionHealRate();
+            SpawnHolySiteIconAtLocation(locX, locY, "+" .. holySiteFaithYield);
+            holySitePlotIDs[plot:GetIndex()] = true;
+          end
+          break;
+        end
+      end
 
+      -- Color hexes in this city the same color as religion
+      local visiblePlots:table = Map.GetCityPlots():GetVisiblePurchasedPlots(pCity);
       if(table.count(visiblePlots) > 0) then
         UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_RELIGION, Game.GetLocalPlayer(), visiblePlots, majorityReligionColor );
       end
     end
-  else
-    cityInst.StackBG:SetHide(true);
-    cityInst.FollowerStack:SetHide(true);
   end
 
-  cityInst.ReligionMeter:SetHide(false);
+  -- Find or create religion info instance
+  local religionInfoInst = {};
+  if cityInst.ReligionInfoAnchor and cityInst[DATA_FIELD_RELIGION_INFO_INSTANCE] == nil then
+    ContextPtr:BuildInstanceForControl( "ReligionInfoInstance", religionInfoInst, cityInst.ReligionInfoAnchor );
+    cityInst[DATA_FIELD_RELIGION_INFO_INSTANCE] = religionInfoInst;
+  else
+    religionInfoInst = cityInst[DATA_FIELD_RELIGION_INFO_INSTANCE];
+  end
+
+  -- Update religion info instance
+  if religionInfoInst and religionInfoInst.ReligionInfoContainer then
+    -- Create or reset icon instance manager
+    local iconIM:table = cityInst[DATA_FIELD_RELIGION_ICONS_IM];
+    if(iconIM == nil) then
+      iconIM = InstanceManager:new("ReligionIconInstance", "ReligionIconButtonBacking", religionInfoInst.ReligionInfoIconStack);
+      cityInst[DATA_FIELD_RELIGION_ICONS_IM] = iconIM;
+    else
+      iconIM:ResetInstances();
+    end
+
+    -- Create or reset follower list instance manager
+    local followerListIM:table = cityInst[DATA_FIELD_RELIGION_FOLLOWER_LIST_IM];
+    if(followerListIM == nil) then
+      followerListIM = InstanceManager:new("ReligionFollowerListInstance", "ReligionFollowerListContainer", religionInfoInst.ReligionFollowerListStack);
+      cityInst[DATA_FIELD_RELIGION_FOLLOWER_LIST_IM] = followerListIM;
+    else
+      followerListIM:ResetInstances();
+    end
+
+    -- Create or reset pop chart instance manager
+    local popChartIM:table = cityInst[DATA_FIELD_RELIGION_POP_CHART_IM];
+    if(popChartIM == nil) then
+      popChartIM = InstanceManager:new("ReligionPopChartInstance", "PopChartMeter", religionInfoInst.ReligionPopChartContainer);
+      cityInst[DATA_FIELD_RELIGION_POP_CHART_IM] = popChartIM;
+    else
+      popChartIM:ResetInstances();
+    end
+
+    -- Add religion icons for each active religion
+    for i,religionInfo in ipairs(activeReligions) do
+      local religionDef:table = GameInfo.Religions[religionInfo.Religion];
+
+      local icon = "ICON_" .. religionDef.ReligionType;
+      local religionColor = UI.GetColorValue(religionDef.Color);
+      local religionName = Game.GetReligion():GetName(religionDef.Index);
+
+      -- Add icon to main icon list
+      local iconInst:table = iconIM:GetInstance();
+      iconInst.ReligionIconButton:SetIcon(icon);
+      iconInst.ReligionIconButton:SetColor(religionColor);
+      iconInst.ReligionIconButtonBacking:SetColor(religionColor);
+      iconInst.ReligionIconButtonBacking:SetToolTipString(religionName);
+
+      -- Add followers to detailed info list
+      local followerListInst:table = followerListIM:GetInstance();
+      followerListInst.ReligionFollowerIcon:SetIcon(icon);
+      followerListInst.ReligionFollowerIcon:SetColor(religionColor);
+      followerListInst.ReligionFollowerIconBacking:SetColor(religionColor);
+      followerListInst.ReligionFollowerIconBacking:SetToolTipString(religionName);
+      followerListInst.ReligionFollowerCount:SetText(religionInfo.Followers);
+      followerListInst.ReligionFollowerPressure:SetText(Locale.Lookup("LOC_CITY_BANNER_RELIGIOUS_PRESSURE", religionInfo.Pressure));
+    end
+
+    religionInfoInst.ReligionFollowerListStack:CalculateSize();
+    religionInfoInst.ReligionFollowerListScrollPanel:CalculateInternalSize();
+    religionInfoInst.ReligionFollowerListScrollPanel:ReprocessAnchoring();
+
+    -- Add populations to pie chart in reverse order
+    for i = #activeReligions, 1, -1 do
+      local religionInfo = activeReligions[i];
+      local religionColor = UI.GetColorValue(religionInfo.Color);
+
+      local popChartInst:table = popChartIM:GetInstance();
+      popChartInst.PopChartMeter:SetPercent(religionInfo.AccumulativeFillPercent);
+      popChartInst.PopChartMeter:SetColor(religionColor);
+    end
+
+    -- Update population pie chart majority religion icon
+    if (eMajorityReligion > 0) then
+      local iconName : string = "ICON_" .. GameInfo.Religions[eMajorityReligion].ReligionType;
+      religionInfoInst.ReligionPopChartIcon:SetIcon(iconName);
+      religionInfoInst.ReligionPopChartIcon:SetHide(false);
+    else
+      religionInfoInst.ReligionPopChartIcon:SetHide(true);
+    end
+
+    -- Show what religion we will eventually turn into
+    local nextReligion = pCityReligion:GetNextReligion();
+    local turnsTillNextReligion:number = pCityReligion:GetTurnsToNextReligion();
+    if nextReligion and nextReligion ~= -1 and turnsTillNextReligion > 0 then
+      local pNextReligionDef:table = GameInfo.Religions[nextReligion];
+
+      -- Religion icon
+      if religionInfoInst.ConvertingReligionIcon then
+        local religionIcon = "ICON_" .. pNextReligionDef.ReligionType;
+        religionInfoInst.ConvertingReligionIcon:SetIcon(religionIcon);
+        local religionColor = UI.GetColorValue(pNextReligionDef.Color);
+        religionInfoInst.ConvertingReligionIcon:SetColor(religionColor);
+        religionInfoInst.ConvertingReligionIconBacking:SetColor(religionColor);
+        religionInfoInst.ConvertingReligionIconBacking:SetToolTipString(Locale.Lookup(pNextReligionDef.Name));
+      end
+
+      -- Converting text
+      local convertString = Locale.Lookup("LOC_CITY_BANNER_CONVERTS_IN_X_TURNS", turnsTillNextReligion);
+      religionInfoInst.ConvertingReligionLabel:SetText(convertString);
+      religionInfoInst.ReligionConversionTurnsStack:SetHide(false);
+
+      -- If the turns till conversion are less than 10 play the warning flash animation
+      religionInfoInst.ConvertingSoonAlphaAnim:SetToBeginning();
+      if turnsTillNextReligion <= 10 then
+        religionInfoInst.ConvertingSoonAlphaAnim:Play();
+      else
+        religionInfoInst.ConvertingSoonAlphaAnim:Stop();
+      end
+    else
+      religionInfoInst.ReligionConversionTurnsStack:SetHide(true);
+    end
+
+    -- Show how much religion this city is exerting outwards
+    local outwardReligiousPressure = pCityReligion:GetPressureFromCity();
+    religionInfoInst.ExertedReligiousPressure:SetText(Locale.Lookup("LOC_CITY_BANNER_RELIGIOUS_PRESSURE", outwardReligiousPressure));
+
+    -- Reset buttons to default state
+    religionInfoInst.ReligionInfoButton:SetHide(false);
+    religionInfoInst.ReligionInfoDetailedButton:SetHide(true);
+
+    -- Register callbacks to open/close detailed info
+    religionInfoInst.ReligionInfoButton:RegisterCallback( Mouse.eLClick, function() OnReligionInfoButtonClicked(religionInfoInst, pCity); end);
+    religionInfoInst.ReligionInfoDetailedButton:RegisterCallback( Mouse.eLClick, function() OnReligionInfoDetailedButtonClicked(religionInfoInst, pCity); end);
+
+    religionInfoInst.ReligionInfoContainer:SetHide(false);
+  end
 end
 
+-- ===========================================================================
+function OnReligionInfoButtonClicked( religionInfoInstance:table, pCity:table )
+  if (m_pReligionInfoInstance ~= nil) then
+    m_pReligionInfoInstance.ReligionInfoButton:SetHide(false);
+    m_pReligionInfoInstance.ReligionInfoDetailedButton:SetHide(true);
+  end
+
+  religionInfoInstance.ReligionInfoButton:SetHide(true);
+  religionInfoInstance.ReligionInfoDetailedButton:SetHide(false);
+  UILens.FocusCity(LensLayers.HEX_COLORING_RELIGION, pCity);
+  m_pReligionInfoInstance = religionInfoInstance;
+end
+
+-- ===========================================================================
+function OnReligionInfoDetailedButtonClicked( religionInfoInstance:table, pCity:table )
+  UI.AssertMsg(m_pReligionInfoInstance == religionInfoInstance, "more than one panel was open");
+  religionInfoInstance.ReligionInfoButton:SetHide(false);
+  religionInfoInstance.ReligionInfoDetailedButton:SetHide(true);
+  UILens.UnFocusCity(LensLayers.HEX_COLORING_RELIGION, pCity);
+  m_pReligionInfoInstance = nil;
+end
+
+-- ===========================================================================
 function SpawnHolySiteIconAtLocation( locX : number, locY:number, label:string )
   local iconInst:table = m_HolySiteIconsIM:GetInstance();
 
-  local xOffset:number = -4;  --offset to center UI element on tile
-  local yOffset:number = 4; --offset to center UI element on tile
-  local zOffset:number = 10;  --offset for 3D world view
+  local xOffset:number = -4;	--offset to center UI element on tile
+  local yOffset:number = 4;	--offset to center UI element on tile
+  local zOffset:number = 10;	--offset for 3D world view
   if (UI.GetWorldRenderView() == WorldRenderView.VIEW_2D) then
     zOffset = 0;
   end
 
   local worldX:number, worldY:number, worldZ:number = UI.GridToWorld( locX, locY );
   iconInst.Anchor:SetWorldPositionVal( worldX + xOffset, worldY + yOffset, worldZ + zOffset );
-  iconInst.HolySiteLabel:SetText(label);
+  iconInst.HolySiteLabel:SetText("[ICON_FaithLarge]"..label);
   iconInst.HolySiteIcon:SetTexture(198, 88, "FontIcons");
 
   iconInst.Anchor:SetSizeX(iconInst.HolySiteIcon:GetSizeX() + iconInst.HolySiteLabel:GetSizeX());
   iconInst.Anchor:SetToolTipString(Locale.Lookup("LOC_UI_RELIGION_HOLY_SITE_BONUS_TT", label));
-end
-
-function CalculateMeterTypeFromPressure( pressure : number )
-  if(pressure == RELIGION_PRESSURE.LOW) then
-    return "ReligionMeterLow";
-  elseif(pressure == RELIGION_PRESSURE.MEDIUM) then
-    return "ReligionMeterMedium";
-  elseif(pressure == RELIGION_PRESSURE.HIGH) then
-    return "ReligionMeterHigh";
-  else
-    return "ReligionMeterNone";
-  end
-  return"INVALID";
-end
-
-function CalculateFinalReligionPressure( pressure : number )
-
-  local eSpeed = GameConfiguration.GetGameSpeedType();
-  local iSpeedCostMultiplier = GameInfo.GameSpeeds[eSpeed].CostMultiplier;
-  local iFinalPressure = pressure * 100 / iSpeedCostMultiplier;
-
-  local result:number = RELIGION_PRESSURE.NONE;
-  if(iFinalPressure > (PRESSURE_THRESHOLD_HIGH / iSpeedCostMultiplier)) then
-    result = RELIGION_PRESSURE.HIGH;
-  elseif(iFinalPressure > (PRESSURE_THRESHOLD_MEDIUM / iSpeedCostMultiplier)) then
-    result = RELIGION_PRESSURE.MEDIUM;
-  else
-    result = RELIGION_PRESSURE.LOW;
-  end
-
-  return result;
-end
-
-function CityBanner.AddReligionPressureChange( self : CityBanner, prevFill : number, newFill : number, religion : number )
-
-  local cityInst:table = self.m_Instance;
-  local cachedData:table = cityInst[DATA_FIELD_RELIGION_PRESSURE_CHANGES];
-  if(cachedData == nil) then
-    cachedData = { bProcessingChanges = false, changes={} };
-    cityInst[DATA_FIELD_RELIGION_PRESSURE_CHANGES] = cachedData;
-  end
-
-  table.insert(cachedData.changes, { prevFill=prevFill, newFill=newFill, religion=religion });
-
-  if(not cachedData.bProcessingChanges) then
-    self:ProcessNextReligionPressureChange();
-  end
-end
-
-function CityBanner.ProcessNextReligionPressureChange( self : CityBanner )
-
-  local cityInst:table = self.m_Instance;
-  local cachedData:table = cityInst[DATA_FIELD_RELIGION_PRESSURE_CHANGES];
-
-  -- Bail out if we don't have the necessary data
-  if(cachedData == nil or cachedData.changes == nil or table.count(cachedData.changes) == 0) then
-    UI.DataError("ProcessNextReligionPressureChange: Invalid or missing data!");
-    return;
-  end
-
-  local processNextReligionCallback = function()
-    local cachedData:table = cityInst[DATA_FIELD_RELIGION_PRESSURE_CHANGES];
-    if(table.count(cachedData.changes) > 0) then
-      self:ProcessNextReligionPressureChange();
-    else
-      cachedData.bProcessingChanges = false;
-      -- Fade religion symbol back in and restore the meter to its proper state
-      cityInst.MeterFade:RegisterEndCallback(function() end);
-      cityInst.MeterFade:Reverse();
-      self:UpdateReligion();
-    end
-  end
-
-  if(not cachedData.bProcessingChanges) then
-    cachedData.bProcessingChanges = true;
-    -- Fade out religion symbol before playing change animations
-    cityInst.MeterFade:RegisterEndCallback(processNextReligionCallback);
-    cityInst.MeterFade:SetToBeginning();
-    cityInst.MeterFade:Play();
-  else
-    local change:table = table.remove(cachedData.changes, 1);
-    local newFill:number = change.newFill;
-    local prevFill:number = change.prevFill;
-
-    -- Set Religion Icon
-    local religion:number = change.religion;
-    local religionColor:number = UI.GetColorValue(GameInfo.Religions[religion].Color);
-
-    -- Create or reset changes instance manager
-    local changesIM:table = cityInst[DATA_FIELD_RELIGION_CHANGES_IM];
-    if(changesIM == nil) then
-      changesIM = InstanceManager:new("ReligionChange", "FadeAnim", cityInst.ReligionChanges);
-      cityInst[DATA_FIELD_RELIGION_CHANGES_IM] = changesIM;
-    else
-      changesIM:ResetInstances();
-    end
-    local changeInst:table = changesIM:GetInstance();
-
-    local icon = GameInfo.Religions[religion].ReligionType;
-    local textureOffsetX:number, textureOffsetY:number, textureSheet:string = IconManager:FindIconAtlas("ICON_" .. icon, SIZE_RELIGION_ICON_SMALL);
-    if(textureSheet == nil or textureSheet == "") then
-      UI.DataError("Could not find icon in CityBanner.UpdateReligion: icon=\""..icon.."\", iconSize="..tostring(SIZE_RELIGION_ICON_SMALL) );
-    else
-      changeInst.ReligionIcon:SetTexture(textureOffsetX, textureOffsetY, textureSheet);
-    end
-    changeInst.ReligionIcon:SetColor(religionColor);
-    changeInst.ReligionIcon:SetHide(false);
-
-    -- Set Change Icon
-    if(newFill > prevFill) then
-      changeInst.ChangeIcon:SetTexture(ICON_PRESSURE_UP);
-    else
-      changeInst.ChangeIcon:SetTexture(ICON_PRESSURE_DOWN);
-    end
-    changeInst.ChangeIcon:SetHide(false);
-
-    changeInst.FadeAnim:RegisterEndCallback(function()
-      changeInst.FadeAnim:RegisterEndCallback(processNextReligionCallback);
-      changeInst.SlideAnim:Reverse();
-      changeInst.FadeAnim:Reverse();
-    end);
-    changeInst.SlideAnim:SetToBeginning();
-    changeInst.FadeAnim:SetToBeginning();
-    changeInst.SlideAnim:Play();
-    changeInst.FadeAnim:Play();
-
-    -- Reset any meters previously spawned on this banner
-    local metersIM:table = cityInst[DATA_FIELD_RELIGION_METERS_IM];
-    if(metersIM ~= nil) then
-      for _, meterIM in pairs(metersIM) do
-        meterIM:ResetInstances();
-      end
-    end
-
-    -- Set Changed Meters
-    local newMeter:table = nil;
-    local prevMeter:table = nil;
-    if(newFill > prevFill) then
-      newMeter = self:GetReligionMeter(CalculateMeterTypeFromPressure(newFill), COLOR_CITY_GREEN, true);
-      prevMeter = self:GetReligionMeter(CalculateMeterTypeFromPressure(prevFill), religionColor);
-
-      SetMeterPercent(prevMeter, prevFill);
-      SetMeterPercent(newMeter, newFill, ANIM_SPEED_RELIGION_CHANGE);
-    else
-      prevMeter = self:GetReligionMeter(CalculateMeterTypeFromPressure(prevFill), COLOR_CITY_RED);
-      newMeter = self:GetReligionMeter(CalculateMeterTypeFromPressure(newFill), religionColor, true);
-
-      SetMeterPercent(prevMeter, prevFill);
-      SetMeterPercent(newMeter, prevFill);
-      SetMeterPercent(newMeter, newFill, ANIM_SPEED_RELIGION_CHANGE);
-    end
-  end
-end
-
-function SetMeterPercent( meterInst : table, fillPercent : number, animTime : number )
-  if(animTime == nil) then
-    animTime = 0;
-  end
-  meterInst.Meter:SetAnimationSpeed(animTime);
-  meterInst.Meter:SetPercent(fillPercent);
-end
-
-function CityBanner.GetReligionMeter( self : CityBanner, meterType : string, religionColor : number )
-
-  local metersIM:table = self.m_Instance[DATA_FIELD_RELIGION_METERS_IM];
-  if(metersIM == nil) then
-    metersIM = {};
-    self.m_Instance[DATA_FIELD_RELIGION_METERS_IM] = metersIM;
-  end
-
-  local meterIM:table = metersIM[meterType];
-  if(meterIM == nil) then
-    meterIM = InstanceManager:new(meterType, "Meter", self.m_Instance.Meters);
-    metersIM[meterType] = meterIM;
-  end
-
-  local meterInst:table = meterIM:GetInstance();
-  meterInst.Meter:SetColor(religionColor);
-  return meterInst;
 end
 
 -- ===========================================================================
@@ -2272,11 +2175,20 @@ function AddCityBannerToMap( playerID: number, cityID : number )
   if (pCity ~= nil) then
     local idDistrict = pCity:GetDistrictID();
     if (idLocalPlayer == playerID) then
-      CityBanner:new( playerID, cityID, idDistrict, BANNERTYPE_CITY_CENTER, BANNERSTYLE_LOCAL_TEAM );
+      return CityBanner:new( playerID, cityID, idDistrict, BANNERTYPE_CITY_CENTER, BANNERSTYLE_LOCAL_TEAM );
     else
-      CityBanner:new( playerID, cityID, idDistrict, BANNERTYPE_CITY_CENTER, BANNERSTYLE_OTHER_TEAM );
+      return CityBanner:new( playerID, cityID, idDistrict, BANNERTYPE_CITY_CENTER, BANNERSTYLE_OTHER_TEAM );
     end
   end
+end
+
+-- ===========================================================================
+function DestroyCityBanner( playerID: number, cityID : number )
+	local bannerInstance = GetCityBanner( playerID, cityID );
+	if (bannerInstance ~= nil) then
+		bannerInstance:destroy();
+		CityBannerInstances[ playerID ][ cityID ] = nil;
+	end	
 end
 
 -- ===========================================================================
@@ -2285,9 +2197,9 @@ function AddMiniBannerToMap( playerID: number, cityID: number, districtID: numbe
   local pPlayer   :table  = Players[playerID];
 
   if (idLocalPlayer == playerID) then
-    CityBanner:new( playerID, cityID, districtID, styleEnum, BANNERSTYLE_LOCAL_TEAM );
+    return CityBanner:new( playerID, cityID, districtID, styleEnum, BANNERSTYLE_LOCAL_TEAM );
   else
-    CityBanner:new( playerID, cityID, districtID, styleEnum, BANNERSTYLE_OTHER_TEAM );
+    return CityBanner:new( playerID, cityID, districtID, styleEnum, BANNERSTYLE_OTHER_TEAM );
   end
 end
 
@@ -2405,11 +2317,7 @@ end
 -- ===========================================================================
 function OnCityRemovedFromMap( playerID: number, cityID : number )
 
-    local bannerInstance = GetCityBanner( playerID, cityID );
-  if (bannerInstance ~= nil) then
-    bannerInstance:destroy();
-    CityBannerInstances[ playerID ][ cityID ] = nil;
-  end
+  DestroyCityBanner(playerID, cityID);
 
 end
 
@@ -2449,7 +2357,7 @@ end
 
 -- ===========================================================================
 function OnCityPopulationChanged( playerID: number, cityID : number )
-	RefreshBanner( playerID, cityID );
+  RefreshBanner( playerID, cityID );
 end
 
 -- ===========================================================================
@@ -2516,7 +2424,7 @@ end
 
 -- ===========================================================================
 function OnCityNameChange( playerID: number, cityID : number)
-	
+  
   local banner:CityBanner = GetCityBanner( playerID, cityID );
   if (banner ~= nil ) then
     banner:UpdateName();
@@ -2530,10 +2438,10 @@ function OnCapitalCityChanged( playerID: number, cityID : number )
     return;
   end
 
-    local banner:CityBanner = GetCityBanner( playerID, cityID );
+  local banner:CityBanner = GetCityBanner( playerID, cityID );
   if (banner ~= nil ) then
     banner:UpdateName();
-    end
+  end
 end
 
 -- ===========================================================================
@@ -2544,10 +2452,10 @@ function OnCityReligionChanged( playerID: number, cityID : number, eVisibility :
     return;
   end
 
-    local banner:CityBanner = GetCityBanner( playerID, cityID );
-  if (banner ~= nil and banner.m_Instance.ReligionMeter ~= nil and banner:IsVisible()) then
+  local banner:CityBanner = GetCityBanner( playerID, cityID );
+  if (banner ~= nil and banner.m_Instance.ReligionInfoAnchor ~= nil and banner:IsVisible()) then
     banner:UpdateReligion();   -- For now religion is shown in name
-    end
+  end
 end
 
 -- ===========================================================================
@@ -2832,14 +2740,14 @@ end
 function OnUnitMoved( playerID:number, unitID:number )
   local localPlayer = Game.GetLocalPlayer();
   if localPlayer ~= -1 and localPlayer ~= playerID and Players[localPlayer]:IsTurnActive() then
-		m_refreshLocalPlayerRangeStrike = true;
-	end
+    m_refreshLocalPlayerRangeStrike = true;
+  end
 end
 
 function FlushChanges()
-	if m_refreshLocalPlayerRangeStrike then
-		RefreshPlayerRangeStrike( Game.GetLocalPlayer() );
-		m_refreshLocalPlayerRangeStrike = false;
+  if m_refreshLocalPlayerRangeStrike then
+    RefreshPlayerRangeStrike( Game.GetLocalPlayer() );
+    m_refreshLocalPlayerRangeStrike = false;
   end
 end
 
@@ -2889,7 +2797,7 @@ end
 function OnDiplomacyDeclareWar( firstPlayerID:number, secondPlayerID:number )
   local localPlayer = Game.GetLocalPlayer();
   if firstPlayerID == localPlayer or secondPlayerID == localPlayer then
-		m_refreshLocalPlayerRangeStrike = true;
+    m_refreshLocalPlayerRangeStrike = true;
   end
 end
 
@@ -2899,7 +2807,7 @@ end
 function OnDiplomacyMakePeace( firstPlayerID:number, secondPlayerID:number )
   local localPlayer = Game.GetLocalPlayer();
   if firstPlayerID == localPlayer or secondPlayerID == localPlayer then
-		m_refreshLocalPlayerRangeStrike = true;
+    m_refreshLocalPlayerRangeStrike = true;
   end
 end
 
@@ -3046,7 +2954,7 @@ function OnLocalPlayerChanged( localPlayerID:number , prevLocalPlayerID:number )
   --  Rebuild all city banner instances in the context of the new local player.
   for iPlayer,kCityBanners in pairs(CityBannerInstances) do
     for iCity,kCityBanner in pairs(kCityBanners) do
-      kCityBanner:destroy();
+      DestroyCityBanner( iPlayer, iCity );
       AddCityBannerToMap( iPlayer, iCity );
     end
   end
@@ -3055,8 +2963,9 @@ function OnLocalPlayerChanged( localPlayerID:number , prevLocalPlayerID:number )
     for iMini,kMiniBanner in pairs(kMiniBanners) do
       local districtID:number = kMiniBanner.m_DistrictID;
       local typeID  :number = kMiniBanner.m_Type;
+      local cityID	:number = kMiniBanner.m_CityID;
       kMiniBanner:destroy();
-      AddMiniBannerToMap( iPlayer, iMini, districtID, typeID );
+      AddMiniBannerToMap( iPlayer, cityID, districtID, typeID );
     end
   end
 
@@ -3115,7 +3024,7 @@ function RealizeReligion()
 
   for _, playerBannerInstances in pairs(CityBannerInstances) do
     for id, banner in pairs(playerBannerInstances) do
-      if (banner ~= nil and banner.m_Instance.ReligionMeter ~= nil and banner:IsVisible()) then
+      if (banner ~= nil and banner.m_Instance.ReligionInfoAnchor ~= nil and banner:IsVisible()) then
         banner:UpdateReligion();
         banner:UpdatePosition();
       end
@@ -3400,7 +3309,7 @@ function Initialize()
   Events.CityUnitsChanged.Add(                OnCityUnitsChanged );
   Events.CityVisibilityChanged.Add(     OnCityVisibilityChanged );
   Events.CityOccupationChanged.Add(     OnCityOccupationChanged );
-	Events.CityPopulationChanged.Add(			OnCityPopulationChanged );
+  Events.CityPopulationChanged.Add(			OnCityPopulationChanged );
   Events.DiplomacyDeclareWar.Add(       OnDiplomacyDeclareWar );
   Events.DiplomacyMakePeace.Add(        OnDiplomacyMakePeace );
   Events.DistrictAddedToMap.Add(        OnDistrictAddedToMap );
@@ -3427,6 +3336,7 @@ function Initialize()
   Events.UnitMoved.Add(           OnUnitMoved );
   Events.UnitRemovedFromMap.Add(        OnUnitRemovedFromMap );
   Events.UnitUpgraded.Add(          OnUnitUpgraded );
+  Events.UnitVisibilityChanged.Add( OnUnitMoved );
   Events.WorldRenderViewChanged.Add(      OnRefreshBannerPositions);
   Events.WMDCountChanged.Add(         OnWMDCountChanged);
   Events.PlayerTurnActivated.Add(             OnTurnActivated);
