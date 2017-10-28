@@ -305,7 +305,7 @@ end
 function OnStackSizeChanged()
 	local stacksize = Controls.ScrollStack:GetSizeY();
   if (m_lastStackSize == 0 and stacksize ~= m_lastStackSize) then
-  -- Notifications were added to the stack at the beginning of the turn
+    -- Notifications were added to the stack at the beginning of the turn
     Controls.RailImage:SetSizeY(stacksize+ ACTION_CORNER_OFFSET);
     Controls.RailAnim:SetSizeY(ACTION_CORNER_OFFSET-stacksize);
     Controls.RailAnim:SetBeginVal(0,0);

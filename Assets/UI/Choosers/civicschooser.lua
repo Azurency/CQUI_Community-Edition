@@ -108,7 +108,7 @@ function View( playerID:number, kData:table )
   m_civicsIM:ResetInstances();
 
   for _,iconData in pairs(g_ExtraIconData) do
-      iconData:Reset();
+    iconData:Reset();
   end
   
   local kActive : table = GetActiveData(kData);

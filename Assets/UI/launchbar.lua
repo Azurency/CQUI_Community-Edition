@@ -548,10 +548,8 @@ function UpdateTechMeter( localPlayer:table )
       local cost:number = playerTechs:GetResearchCost(currentTechID);
 
       Controls.ScienceMeter:SetPercent(progress/cost);
-      Controls.ScienceTurnsLeft:SetText(playerTechs:GetTurnsLeft());
     else
       Controls.ScienceMeter:SetPercent(0);
-      Controls.ScienceTurnsLeft:SetText("");
     end
 
 
@@ -592,10 +590,8 @@ function UpdateCivicMeter( localPlayer:table)
         Controls.CultureIcon:SetTexture(civictextureOffsetX, civictextureOffsetY, civictextureSheet);
       end
     end
-    Controls.CultureTurnsLeft:SetText(playerCivics:GetTurnsLeft());
   else
     Controls.CultureIcon:SetTexture(0, 0, "LaunchBar_Hook_CivicsTree");
-    Controls.CultureTurnsLeft:SetText("");
   end
 end
   
