@@ -14,6 +14,7 @@ include( "TeamSupport" );
 include( "GameCapabilities" );
 include( "LeaderIcon" );
 include( "PopupDialog" );
+
 -- ===========================================================================
 --	CONSTANTS
 -- ===========================================================================
@@ -57,7 +58,7 @@ local ms_PlayerPanelIM		:table		= InstanceManager:new( "PlayerPanel",  "Root" );
 local ms_DiplomacyRibbonIM	:table		= InstanceManager:new( "DiplomacyRibbonVert",  "Root" );
 local ms_DiplomacyRibbonLeaderIM	:table		= InstanceManager:new( "DiplomacyRibbonLeader",  "Root" );
 local ms_IconOnlyIM			:table		= InstanceManager:new( "IconOnly",  "Icon");
-local ms_TextOnlyIM			:table		= InstanceManager:new( "TextOnly",  "Text", Controls.TextContainer );
+
 local ms_IconAndTextIM		:table		= InstanceManager:new( "IconAndText",  "SelectButton", Controls.IconAndTextContainer );
 local ms_LeftRightListIM	:table		= InstanceManager:new( "LeftRightList",  "List", Controls.LeftRightListContainer );
 local ms_TopDownListIM		:table		= InstanceManager:new( "TopDownList",  "List", Controls.TopDownListContainer );
@@ -65,25 +66,37 @@ local ms_TopDownListIM		:table		= InstanceManager:new( "TopDownList",  "List", C
 local ms_ActionListIM		:table		= InstanceManager:new( "ActionButton",  "Button" );
 local ms_SubActionListIM	:table		= InstanceManager:new( "ActionButton",  "Button" );
 
-local ms_IntelPanelIM				:table	= InstanceManager:new( "IntelPanel",  "Panel" );
-local ms_IntelAccessLevelPanelIM	:table	= InstanceManager:new( "IntelAccessLevelPanel",  "Background" );
-local ms_IntelRelationshipPanelIM	:table	= InstanceManager:new( "IntelRelationshipPanel",  "Background" );
+local ms_IntelPanelIM				:table = InstanceManager:new( "IntelPanel",  "Panel" );
+local ms_IntelTabButtonIM			:table = InstanceManager:new( "IntelTabButtonInstance", "Button" );
+
+-- Intel panel instances
+local ms_IntelOverviewIM			:table = InstanceManager:new( "IntelOverviewInstance", "Top" );
+local ms_IntelGossipIM				:table = InstanceManager:new( "IntelGossipHistoryPanel", "Top" );
+local ms_IntelAccessLevelIM			:table = InstanceManager:new( "IntelAccessLevelPanel", "Top" );
+local ms_IntelRelationshipIM		:table = InstanceManager:new( "IntelRelationshipPanel", "Top" );
+local ms_IntelTabAnchorIM			:table = InstanceManager:new( "IntelTabAnchorInstance", "Anchor" );
+
+-- Intel overview row instances
+local ms_IntelOverviewDividerIM				:table = InstanceManager:new( "IntelOverviewDividerInstance", "Top" );
+local ms_IntelOverviewGossipIM				:table = InstanceManager:new( "IntelOverviewGossipInstance", "Top" );
+local ms_IntelOverviewAccessLevelIM			:table = InstanceManager:new( "IntelOverviewAccessLevelInstance", "Top" );
+local ms_IntelOverviewGovernmentIM			:table = InstanceManager:new( "IntelOverviewGovernmentInstance", "Top" );
+local ms_IntelOverviewAgendasIM				:table = InstanceManager:new( "IntelOverviewAgendasInstance", "Top" );
+local ms_IntelOverviewAgendaEntryIM			:table = InstanceManager:new( "IntelOverviewAgendaEntryInstance", "Top" );
+local ms_IntelOverviewAgreementsIM			:table = InstanceManager:new( "IntelOverviewAgreementsInstance", "Top" );
+local ms_IntelOverviewOurRelationshipIM		:table = InstanceManager:new( "IntelOverviewOurRelationshipInstance", "Top" );
+local ms_IntelOverviewOtherRelationshipsIM	:table = InstanceManager:new( "IntelOverviewOtherRelationshipsInstance", "Top" );
+local ms_IntelOverviewAnchorIM				:table = InstanceManager:new( "IntelOverviewAnchorInstance", "Anchor" );
+
 local ms_IntelRelationshipReasonIM	:table	= InstanceManager:new( "IntelRelationshipReasonEntry",  "Background" );
 local ms_RelationshipIconsIM		:table	= InstanceManager:new( "RelationshipIcon",  "Background" );
 
 local ms_IntelGossipHistoryPanelEntryIM	:table	= InstanceManager:new( "IntelGossipHistoryPanelEntry",  "Background" );
-local ms_IntelGossipHistoryPanelIM		:table	= InstanceManager:new( "IntelGossipHistoryPanel",  "Background" );
-
-local ms_IntelAgendaPanelEntryIM	:table	= InstanceManager:new( "IntelAgendaPanelEntry",  "Background" );
-local ms_IntelAgendaPanelIM			:table	= InstanceManager:new( "IntelAgendaPanel",  "Background" );
 
 local ms_ConversationSelectionIM :table		= InstanceManager:new( "ConversationSelectionInstance",  "SelectionButton", Controls.ConversationSelectionStack );
 
 local ms_uniqueIconIM :table	= InstanceManager:new("IconInfoInstance", "Top", Controls.FeaturesStack );
 local ms_uniqueTextIM :table	= InstanceManager:new("TextInfoInstance", "Top", Controls.FeaturesStack );
-
-local ms_ValueEditDealItemID = -1;		-- The ID of the deal item that is being value edited.
-local ms_ValueEditDealItemControlTable = nil; -- The control table of the deal item that is being edited.
 
 local OTHER_PLAYER = 0;
 local LOCAL_PLAYER = 1;
@@ -91,17 +104,12 @@ local LOCAL_PLAYER = 1;
 local ms_PlayerPanel =		nil;
 local ms_DiplomacyRibbon =	nil;
 
-local ms_LocalPlayer =		nil;
-local ms_LocalPlayerID =	-1;
 local ms_LocalPlayerLeaderID = -1;
 
 -- The 'other' player who may have contacted local player, which brought us to this view.  Can be nil.
 local ms_OtherPlayer =		nil;
 local ms_OtherPlayerID =	-1;
 
--- The selected player. This can be any player, including the local player
-local ms_SelectedPlayer		= nil;
-local ms_SelectedPlayerID	= -1;
 local ms_SelectedPlayerLeaderTypeName = nil;
 
 local ms_showingLeaderName = "";
@@ -114,8 +122,6 @@ local ms_InitiatedByPlayerID = -1;
 
 local ms_bIsViewInitialized = false;
 
-local ms_ActiveSessionID = nil;
-
 local ms_currentViewMode = -1;
 
 local ms_bShowingDeal = false;
@@ -124,7 +130,6 @@ local m_isInHotload = false;
 
 local m_bCloseSessionOnFadeComplete = false;
 
-local m_bottomPanelHeight = 0;
 local PADDING_FOR_SCROLLPANEL = 220;
 local m_GossipThisTurnCount = 0;
 local m_firstOpened = true;
@@ -141,7 +146,19 @@ local m_currentSceneEffect	:string = "";
 
 local ms_OtherID;
 
-local m_PopupDialog :table = PopupDialog:new("ConfirmDenounce");
+-- ===========================================================================
+--	GLOBALS (accessible in scripts that include this file)
+-- ===========================================================================
+ms_IntelPanel = nil;
+ms_LocalPlayer = nil;
+ms_LocalPlayerID = -1;
+-- The selected player. This can be any player, including the local player
+ms_SelectedPlayerID = -1;
+ms_SelectedPlayer = nil;
+ms_ActiveSessionID = nil;
+m_bottomPanelHeight = 0;
+
+m_PopupDialog = PopupDialog:new("DiplomacyActionViewPopup");
 
 --CQUI Members
 local CQUI_trimGossip = true;
@@ -266,7 +283,7 @@ function CreatePlayerPanel(rootControl : table)
   local playerPanel = ms_PlayerPanelIM:GetInstance(rootControl);
 
   playerPanel.ContentStack:CalculateSize();
-  playerPanel.SubOptionsStack:CalculateSize();
+  playerPanel.SubContainerStack:CalculateSize();
   playerPanel.RootStack:ReprocessAnchoring();
   playerPanel.RootStack:CalculateSize();
   playerPanel.RootStack:ReprocessAnchoring();
@@ -285,21 +302,7 @@ function CreateDiplomacyRibbon(rootControl : table)
 end
 
 -- ===========================================================================
-function CreateValueEditOverlay()
-
-  Controls.ValueEditLeft:RegisterCallback( Mouse.eLClick, function() OnValueEditDelta(-1); end );
-    Controls.ValueEditLeft:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.ValueEditRight:RegisterCallback( Mouse.eLClick, function() OnValueEditDelta(1); end );
-    Controls.ValueEditRight:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-
-  Controls.ValueEdit:RegisterCommitCallback( OnValueEditCommit );
-
-end
-
--- ===========================================================================
 function CreatePanels()
-
-  CreateValueEditOverlay();
 
   -- Create the Player Panel
   ms_PlayerPanel = CreatePlayerPanel(Controls.PlayerContainer);
@@ -307,82 +310,6 @@ function CreatePanels()
   ms_DiplomacyRibbon = CreateDiplomacyRibbon(Controls.DiplomacyRibbonContainer);
 
 end
-
--- ===========================================================================
--- Show or hide the "amount text" sub-control of the supplied control instance
-function SetHideAmountText(controlTable : table, bHide : boolean)
-
-  if (controlTable ~= nil) then
-    if (controlTable.AmountText ~= nil) then
-      controlTable.AmountText:SetHide(bHide);
-    end
-  end
-end
-
--- ===========================================================================
--- Detach the value edit overlay from anything it is attached to.
-function ClearValueEdit()
-
-  SetHideAmountText(ms_ValueEditDealItemControlTable, false);
-
-  ms_ValueEditDealItemControlTable = nil
-  ms_ValueEditDealItemID = -1;
-
-  Controls.ValueEditOverlay:SetHide(true);
-
-end
-
--- ===========================================================================
--- Clamp the input value to the max the value can have for the type of item
--- Do we want to have this as a function on the item?
-function ClampValueAmount(playerID : number, eDealItemType : number, eValueType : number, iAmount : number)
-
-  return iAmount;
-end
-
--- ===========================================================================
--- Change the value edit by a delta
-function OnValueEditDelta(delta : number)
-
-end
-
--- ===========================================================================
--- Commit the value in the edit control to the deal item
-function OnValueEditCommit()
-
-end
-
--- ===========================================================================
--- Detach the value edit if it is attached to the control
-function DetachValueEdit(itemID: number)
-
-  if (itemID == ms_ValueEditDealItemID) then
-    ClearValueEdit();
-  end
-
-end
-
--- ===========================================================================
--- Reattach the value edit overlay to the control set it is editing.
-function ReAttachValueEdit()
-
-  if (ms_ValueEditDealItemControlTable ~= nil) then
-
-    local rootControl = ms_ValueEditDealItemControlTable.SelectButton;
-
-    -- Position over the deal item.  We do this, rather than attaching to the item as a child, because we want to always be on top over everything.
-    local x, y = rootControl:GetScreenOffset();
-    local w, h = rootControl:GetSizeVal();
-    Controls.ValueEditOverlay:SetOffsetVal(x + (w/2), y + h);
-    Controls.ValueEditOverlay:SetHide(false);
-
-    SetHideAmountText(ms_ValueEditDealItemControlTable, true);
-
-    rootControl:ReprocessAnchoring();
-  end
-
-end
-
 
 -- ===========================================================================
 -- Make sure the active session is still there.
@@ -485,12 +412,17 @@ function IsPeaceChoice(key)
   return isPeace;
 end
 
+function CanInitiateDiplomacyStatement()
+  return ms_LocalPlayerID ~= ms_SelectedPlayerID and ms_SelectedPlayerID >= 0 and not GameConfiguration.IsPaused();
+end
+
+
 -- ===========================================================================
 -- Handle a statement selection from the OVERVIEW_MODE.  We are not
 -- in a session with the other player yet, this will start one.
 function OnSelectInitialDiplomacyStatement(key)
 
-  if (ms_LocalPlayerID ~= ms_SelectedPlayerID and ms_SelectedPlayerID >= 0 and not GameConfiguration.IsPaused()) then
+  if CanInitiateDiplomacyStatement() then
 
     if (key == "CHOICE_DECLARE_SURPRISE_WAR") then
       DiplomacyManager.RequestSession(ms_LocalPlayerID, ms_SelectedPlayerID, "DECLARE_SURPRISE_WAR");
@@ -707,13 +639,22 @@ function ApplyStatement(handler : table, statementTypeName : string, statementSu
 end
 
 -- ===========================================================================
+function GetStatementButtonTooltip(pActionDef)
+  if pActionDef and pActionDef.Description then -- Make sure everything is there, Description is optional!
+    return Locale.Lookup(pActionDef.Description);
+  end
+  return nil;
+end
+
+
+-- ===========================================================================
 function PopulateStatementList( options: table, rootControl: table, isSubList: boolean )
   local buttonIM:table;
   local stackControl:table;
   local selectionText :string = "[SIZE_16]";	-- Resetting the string size for the new button instance
   if (isSubList) then
     buttonIM = ms_ActionListIM;
-    stackControl = rootControl.SubOptionsStack;
+    stackControl = rootControl.SubContainerStack;
   else
     buttonIM = ms_SubActionListIM;
     stackControl = rootControl.ContentStack;
@@ -729,13 +670,7 @@ function PopulateStatementList( options: table, rootControl: table, isSubList: b
       callback	= function() OnSelectInitialDiplomacyStatement( selection.Key ) end;
 
       local pActionDef = GameInfo.DiplomaticActions[selection.DiplomaticActionType];
-      if (pActionDef ~= nil and pActionDef.Description ~= nil) then		-- Make sure everything is there, Description is optional!
-        local toolTip = pActionDef.Description;
-        tooltipString = Locale.Lookup(toolTip);
-        instance.Button:SetToolTipString(tooltipString);
-      else
-        instance.Button:SetToolTipString(nil);		-- Clear any existing
-      end
+      instance.Button:SetToolTipString(GetStatementButtonTooltip(pActionDef));
 
       -- If costs gold add text
       local iCost = GetGoldCost(selection.Key);
@@ -765,7 +700,8 @@ function PopulateStatementList( options: table, rootControl: table, isSubList: b
           local playerConfig = PlayerConfigurations[ms_SelectedPlayer:GetID()];
           if (playerConfig ~= nil) then
 
-            selectedCivName = Locale.Lookup(playerConfig:GetCivilizationShortDescription());					
+            selectedCivName = Locale.Lookup(playerConfig:GetCivilizationShortDescription());
+            m_PopupDialog:Reset();					
             m_PopupDialog:AddText(Locale.Lookup("LOC_DENOUNCE_POPUP_BODY", selectedCivName));
             m_PopupDialog:AddButton(Locale.Lookup("LOC_CANCEL"), nil);
             m_PopupDialog:AddButton(Locale.Lookup("LOC_DIPLO_CHOICE_DENOUNCE"), denounceFn, nil, nil, "PopupButtonInstanceRed");
@@ -828,8 +764,8 @@ function PopulateStatementList( options: table, rootControl: table, isSubList: b
     instance.Button:RegisterCallback( Mouse.eLClick,	function()
                                 rootControl.ContentStack:CalculateSize();
                                 rootControl.ContentStack:ReprocessAnchoring();
-                                rootControl.ContentStack:SetHide(false);
-                                rootControl.SubOptionsStack:SetHide(true);
+                                rootControl.RootStack:SetHide(false);
+                                rootControl.SubContainerStack:SetHide(true);
                               end );
   end
   stackControl:CalculateSize();
@@ -837,15 +773,70 @@ function PopulateStatementList( options: table, rootControl: table, isSubList: b
 end
 
 -- ===========================================================================
-function AddStatmentOptions(rootControl : table)
-  if (ms_LocalPlayerID ~= -1 and ms_SelectedPlayerID ~= -1) then
-    local useStatementType = "";
-    if (ms_LocalPlayerID ~= ms_SelectedPlayerID) then
-      useStatementType = "GREETING";
-    else
-      useStatementType = "NO_TARGET";
-    end
+-- This function allows modders to prevent certain options from showing up
+-- on the top level statement list. By overwritting this and the function
+-- below, they can have fine grained control over the initial options.
+function ShouldAddTopLevelStatementOption(pActionDef)
+  return true;
+end
 
+-- ===========================================================================
+function GetInitialStatementOptions(parsedStatements, rootControl)
+  local discussOptions: table = {};
+  local warOptions: table = {};
+  local topOptions: table = {};
+
+  for _, selection in ipairs(parsedStatements) do
+    local uiGroup = nil;
+    local pActionDef = GameInfo.DiplomaticActions[selection.DiplomaticActionType];
+    if pActionDef  and pActionDef.UIGroup then -- Make sure everything is there before accessing!
+      uiGroup = pActionDef.UIGroup;
+    end
+    if uiGroup == "DISCUSS" then
+      table.insert(discussOptions, selection);
+    elseif uiGroup == "FORMALWAR" then
+      table.insert(warOptions, selection);
+    elseif ShouldAddTopLevelStatementOption(pActionDef) then
+      table.insert(topOptions, selection);
+    end
+  end
+
+  if(table.count(discussOptions) > 0) then
+    table.insert(topOptions, {
+      Text = Locale.Lookup("LOC_DIPLOMACY_DISCUSS").. " [ICON_List]", 
+      Callback = 
+        function() 
+          rootControl.RootStack:SetHide(true); 
+          rootControl.SubContainerStack:SetHide(false); 
+          PopulateStatementList( discussOptions, rootControl, true ); 
+        end, 
+    });
+  end
+
+  if(table.count(warOptions) > 0) then
+    table.insert(topOptions, {
+      Text = Locale.Lookup("LOC_DIPLOMACY_CASUS_BELLI").. " [ICON_List]", 
+      Callback = 
+        function() 
+          rootControl.RootStack:SetHide(true); 
+          rootControl.SubContainerStack:SetHide(false); 
+          PopulateStatementList( warOptions, rootControl, true ); 
+        end, 
+      ToolTip = "LOC_DIPLOMACY_CASUS_BELLI_TT"
+    });
+  end
+
+  return topOptions;
+end
+
+-- ===========================================================================
+function AddStatmentOptions(rootControl : table)
+
+  ms_ActionListIM:ResetInstances();
+  ms_SubActionListIM:ResetInstances();
+
+  if (ms_LocalPlayerID ~= -1 and ms_SelectedPlayerID ~= -1) then
+    local useStatementType:string = (ms_LocalPlayerID ~= ms_SelectedPlayerID) and "GREETING" or "NO_TARGET";
     -- Get the handler for the specific statement we will be using to fill in the initial statements
     -- The normal statement that the initial selections are taken from is the GREETING statement
     -- This usually contains all the possible selections, then they are filtered out if that are not applicable
@@ -857,124 +848,22 @@ function AddStatmentOptions(rootControl : table)
     -- Don't need the exit choice at this time
     DiplomacySupport_RemoveSelectionByKey(kParsedStatement, "CHOICE_EXIT");
 
-    ms_ActionListIM:ResetInstances();
-    ms_SubActionListIM:ResetInstances();
-
-    local discussOptions:	table = {};
-    local warOptions:		table = {};
-    local topOptions:		table = {};
-
-    if (kParsedStatement.Selections ~= nil) then
-      for _, selection in ipairs(kParsedStatement.Selections) do
-        local uiGroup = nil;
-        local pActionDef = GameInfo.DiplomaticActions[selection.DiplomaticActionType];
-        if (pActionDef ~= nil and pActionDef.UIGroup ~= nil) then		-- Make sure everything is there before accessing!
-          uiGroup = pActionDef.UIGroup;
-        end
-
-        if ( uiGroup == "DISCUSS") then
-          table.insert(discussOptions, selection);
-        elseif (uiGroup == "FORMALWAR") then
-          table.insert(warOptions, selection);
-        else
-          table.insert(topOptions, selection)
-        end
-      end
-      if(table.count(discussOptions) > 0) then
-        table.insert(topOptions, {
-                Text			= Locale.Lookup("LOC_DIPLOMACY_DISCUSS").. " [ICON_List]",
-                Callback		=
-                  function()
-                    rootControl.ContentStack:SetHide(true);
-                    rootControl.SubOptionsStack:SetHide(false);
-                    PopulateStatementList( discussOptions, rootControl, true );
-                  end,
-                });
-      end
-      if(table.count(warOptions) > 0) then
-        table.insert(topOptions, {
-                Text			= Locale.Lookup("LOC_DIPLOMACY_CASUS_BELLI").. " [ICON_List]",
-                Callback		=
-                  function()
-                    rootControl.ContentStack:SetHide(true);
-                    rootControl.SubOptionsStack:SetHide(false);
-                    PopulateStatementList( warOptions, rootControl, true );
-                  end,
-                ToolTip			= "LOC_DIPLOMACY_CASUS_BELLI_TT"
-                });
-      end
+    if kParsedStatement and kParsedStatement.Selections then
+      local topOptions:table = GetInitialStatementOptions(kParsedStatement.Selections, rootControl);
       PopulateStatementList(topOptions, rootControl, false);
     end
-    rootControl.ContentStack:CalculateSize();
-    rootControl.ContentStack:ReprocessAnchoring();
-    rootControl.SubOptionsStack:CalculateSize();
-    rootControl.SubOptionsStack:ReprocessAnchoring();
-  else
-    ms_ActionListIM:ResetInstances();
-    ms_SubActionListIM:ResetInstances();
   end
+
+  rootControl.ContentStack:CalculateSize();
+  rootControl.ContentStack:ReprocessAnchoring();
+  rootControl.SubContainerStack:CalculateSize();
+  rootControl.SubContainerStack:ReprocessAnchoring();
 end
 
 -- ===========================================================================
-function SetSelectedIntelSubPanelButton(ePanelType, selectedState)
+function OnActivateIntelRelationshipPanel(relationshipInstance : table)
 
-  local intelPanel = ms_IntelPanelIM:GetAllocatedInstance();
-  if (intelPanel ~= nil) then
-    if (ePanelType == INTEL_ACCESS_LEVEL_PANEL and selectedState == true) then
-      SetButtonSelected(intelPanel.AccessLevelButton,true);
-    else
-      SetButtonSelected(intelPanel.AccessLevelButton,false);
-      ms_IntelAccessLevelPanelIM:ResetInstances();
-    end
-
-    if (ePanelType == INTEL_RELATIONSHIP_PANEL and selectedState == true) then
-      SetButtonSelected(intelPanel.RelationshipButton,true);
-    else
-      SetButtonSelected(intelPanel.RelationshipButton,false);
-      ms_IntelRelationshipPanelIM:ResetInstances();
-    end
-
-    if (ePanelType == INTEL_GOSSIP_HISTORY_PANEL and selectedState == true) then
-      SetButtonSelected(intelPanel.GossipButton,true);
-    else
-      SetButtonSelected(intelPanel.GossipButton,false);
-      ms_IntelGossipHistoryPanelIM:ResetInstances();
-    end
-
-    if (ePanelType == INTEL_AGENDAY_PANEL and selectedState == true) then
-    else
-      ms_IntelAgendaPanelIM:ResetInstances();
-    end
-  end
-end
-
--- ===========================================================================
-function OnCloseIntelAccessLevelPanel(rootControl)
-  OnActivateIntelGossipHistoryPanel(rootControl);
-end
-
--- ===========================================================================
-function OnCloseIntelRelationshipPanel(rootControl)
-  OnActivateIntelGossipHistoryPanel(rootControl);
-end
-
--- ===========================================================================
-function OnCloseIntelAgendaPanel(rootControl)
-  OnActivateIntelGossipHistoryPanel(rootControl);
-end
-
--- ===========================================================================
-function OnCloseIntelGossipPanel()
-  SetSelectedIntelSubPanelButton(INTEL_GOSSIP_HISTORY_PANEL, false);
-end
-
--- ===========================================================================
-function OnActivateIntelRelationshipPanel(rootControl : table)
-
-  SetSelectedIntelSubPanelButton(INTEL_RELATIONSHIP_PANEL, true);
-
-  ms_IntelRelationshipPanelIM:ResetInstances();
-  local intelSubPanel = ms_IntelRelationshipPanelIM:GetInstance(rootControl);
+  local intelSubPanel = relationshipInstance;
 
   -- Get the selected player's Diplomactic AI
   local selectedPlayerDiplomaticAI = ms_SelectedPlayer:GetDiplomaticAI();
@@ -1039,65 +928,57 @@ function OnActivateIntelRelationshipPanel(rootControl : table)
     intelSubPanel.NoReasons:SetHide(true);
   end
 
-  -- Set the advisor icon
-  intelSubPanel.AdvisorIcon:SetTexture(IconManager:FindIconAtlas("ADVISOR_GENERIC", 32));
+  if GameCapabilities.HasCapability("CAPABILITY_DIPLOMACY_RELATIONSHIP_INFO") then
+    -- Set the advisor icon
+    intelSubPanel.AdvisorIcon:SetTexture(IconManager:FindIconAtlas("ADVISOR_GENERIC", 32));
 
-  -- Get the advisor text
-  local advisorText = "";
-  local selectedCivName = "";
-  -- HACK: This is completely faked in for now... Ultimately this list will need to be much smarter
-  local playerConfig = PlayerConfigurations[ms_SelectedPlayer:GetID()];
-  if (playerConfig ~= nil) then
-    selectedCivName = Locale.ToUpper( Locale.Lookup(playerConfig:GetCivilizationDescription()));
-  end
+    -- Get the advisor text
+    local advisorText = "";
+    local selectedCivName = "";
+    -- HACK: This is completely faked in for now... Ultimately this list will need to be much smarter
+    local playerConfig = PlayerConfigurations[ms_SelectedPlayer:GetID()];
+    if (playerConfig ~= nil) then
+      selectedCivName = Locale.ToUpper( Locale.Lookup(playerConfig:GetCivilizationDescription()));
+    end
 
-  local advisorTextlower = "[COLOR_Grey]";
-  advisorTextlower = advisorTextlower .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_OFFER");
-  advisorTextlower = advisorTextlower .. "[NEWLINE]";
---	advisorTextlower = advisorTextlower .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_DENOUNCE", selectedCivName);
---	advisorTextlower = advisorTextlower .. "[NEWLINE]";
-  advisorTextlower = advisorTextlower .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_TRADE_ROUTE", selectedCivName);
-  advisorTextlower = advisorTextlower .. "[NEWLINE]";
-  if (not ms_SelectedPlayer:GetDiplomacy():HasOpenBordersFrom(ms_LocalPlayer:GetID())) then
-    advisorTextlower = advisorTextlower .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_OPEN_BORDERS", selectedCivName);
+    local advisorTextlower = "[COLOR_Grey]";
+    advisorTextlower = advisorTextlower .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_OFFER");
     advisorTextlower = advisorTextlower .. "[NEWLINE]";
-  end
-  if (not ms_LocalPlayer:GetDiplomacy():HasDelegationAt(ms_SelectedPlayer:GetID()) and not ms_LocalPlayer:GetDiplomacy():HasEmbassyAt(ms_SelectedPlayer:GetID())) then
-    advisorTextlower = advisorTextlower .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_DELEGATION_EMBASSY");
+  --	advisorTextlower = advisorTextlower .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_DENOUNCE", selectedCivName);
+  --	advisorTextlower = advisorTextlower .. "[NEWLINE]";
+    advisorTextlower = advisorTextlower .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_TRADE_ROUTE", selectedCivName);
     advisorTextlower = advisorTextlower .. "[NEWLINE]";
+    if (not ms_SelectedPlayer:GetDiplomacy():HasOpenBordersFrom(ms_LocalPlayer:GetID())) then
+      advisorTextlower = advisorTextlower .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_OPEN_BORDERS", selectedCivName);
+      advisorTextlower = advisorTextlower .. "[NEWLINE]";
+    end
+    if (not ms_LocalPlayer:GetDiplomacy():HasDelegationAt(ms_SelectedPlayer:GetID()) and not ms_LocalPlayer:GetDiplomacy():HasEmbassyAt(ms_SelectedPlayer:GetID())) then
+      advisorTextlower = advisorTextlower .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_DELEGATION_EMBASSY");
+      advisorTextlower = advisorTextlower .. "[NEWLINE]";
+    end
+    advisorTextlower = advisorTextlower .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_POSITIVE_AGENDA", selectedCivName);
+    advisorTextlower = advisorTextlower .. "[NEWLINE]";
+    advisorTextlower = advisorTextlower .. "[ENDCOLOR]";
+    local advisorTextRaise = "[COLOR_Grey]";
+  --	advisorTextRaise = advisorTextRaise .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_DENOUNCE_FRIEND", selectedCivName);
+  --	advisorTextRaise = advisorTextRaise .. "[NEWLINE]";
+  --	advisorTextRaise = advisorTextRaise .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_DECLARE_FRIENDSHIP", selectedCivName);
+  --	advisorTextRaise = advisorTextRaise .. "[NEWLINE]";
+    advisorTextRaise = advisorTextRaise .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_NEGATIVE_AGENDA", selectedCivName);
+    advisorTextRaise = advisorTextRaise .. "[NEWLINE]";
+    advisorTextRaise = advisorTextRaise .. "[ENDCOLOR]";
+
+    intelSubPanel.AdvisorTextRaise:SetText(advisorTextlower);
+    intelSubPanel.AdvisorTextLower:SetText(advisorTextRaise);
+    intelSubPanel.Advisor:SetHide(false);
   end
-  advisorTextlower = advisorTextlower .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_POSITIVE_AGENDA", selectedCivName);
-  advisorTextlower = advisorTextlower .. "[NEWLINE]";
-  advisorTextlower = advisorTextlower .. "[ENDCOLOR]";
-  local advisorTextRaise = "[COLOR_Grey]";
---	advisorTextRaise = advisorTextRaise .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_DENOUNCE_FRIEND", selectedCivName);
---	advisorTextRaise = advisorTextRaise .. "[NEWLINE]";
---	advisorTextRaise = advisorTextRaise .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_DECLARE_FRIENDSHIP", selectedCivName);
---	advisorTextRaise = advisorTextRaise .. "[NEWLINE]";
-  advisorTextRaise = advisorTextRaise .. Locale.Lookup("LOC_DIPLOMACY_ADVISOR_NEGATIVE_AGENDA", selectedCivName);
-  advisorTextRaise = advisorTextRaise .. "[NEWLINE]";
-  advisorTextRaise = advisorTextRaise .. "[ENDCOLOR]";
-
-  intelSubPanel.AdvisorTextRaise:SetText(advisorTextlower);
-  intelSubPanel.AdvisorTextLower:SetText(advisorTextRaise);
-  intelSubPanel.Advisor:SetHide(false);
-
-  intelSubPanel.Background:SetSizeY(m_bottomPanelHeight);
-  intelSubPanel.RelationshipScrollPanel:SetSizeY(m_bottomPanelHeight);
-  rootControl:CalculateSize();
-  rootControl:ReprocessAnchoring();
-  intelSubPanel.RelationshipScrollPanel:CalculateSize();
 end
 
 -- ===========================================================================
-function OnActivateIntelAccessLevelPanel(rootControl : table)
+function OnActivateIntelAccessLevelPanel(accessLevelInstance : table)
 
-  SetSelectedIntelSubPanelButton(INTEL_ACCESS_LEVEL_PANEL, true);
+  local intelSubPanel = accessLevelInstance;
 
-  ms_IntelAccessLevelPanelIM:ResetInstances();
-  local intelSubPanel = ms_IntelAccessLevelPanelIM:GetInstance(rootControl);
-
-  --intelSubPanel.Close:RegisterCallback( Mouse.eLClick, function() OnCloseIntelAccessLevelPanel(rootControl); end );
   -- Get the selected player's Diplomactic AI
   local selectedPlayerDiplomaticAI = ms_SelectedPlayer:GetDiplomaticAI();
 
@@ -1146,56 +1027,51 @@ function OnActivateIntelAccessLevelPanel(rootControl : table)
 
   intelSubPanel.InformationSharedText:SetText(szInfoSharedText);
 
-  -- Set what we will gain at the next access level
-  local szNextAccessLevelText = "";
-  iNumAdded = 0;
-  for row in GameInfo.Gossips () do
-    if (row.VisibilityLevel == iAccessLevel + 1) then
-      if (row.Description ~= nil) then
-        if (iNumAdded > 0) then
-          szNextAccessLevelText = szNextAccessLevelText .. "[NEWLINE]";
+  if GameCapabilities.HasCapability("CAPABILITY_DIPLOMACY_ACCESS_LEVEL_INFO") then
+    -- Set what we will gain at the next access level
+    local szNextAccessLevelText = "";
+    iNumAdded = 0;
+    for row in GameInfo.Gossips () do
+      if (row.VisibilityLevel == iAccessLevel + 1) then
+        if (row.Description ~= nil) then
+          if (iNumAdded > 0) then
+            szNextAccessLevelText = szNextAccessLevelText .. "[NEWLINE]";
+          end
+          szNextAccessLevelText = szNextAccessLevelText .. "   " .. Locale.Lookup(row.Description);
+          iNumAdded = iNumAdded + 1;
         end
-        szNextAccessLevelText = szNextAccessLevelText .. "   " .. Locale.Lookup(row.Description);
-        iNumAdded = iNumAdded + 1;
       end
     end
-  end
-  intelSubPanel.NextAccessLevelText:SetText(szNextAccessLevelText);
+    intelSubPanel.NextAccessLevelText:SetText(szNextAccessLevelText);
+    intelSubPanel.NextAccessLevelStack:SetHide(false);
 
-  -- Set the advisor icon
-  intelSubPanel.AdvisorIcon:SetTexture(IconManager:FindIconAtlas("ADVISOR_GENERIC", 32));
+    -- Set the advisor icon
+    intelSubPanel.AdvisorIcon:SetTexture(IconManager:FindIconAtlas("ADVISOR_GENERIC", 32));
 
-  -- Get the advisor text
-  local advisorText = "";
-  for row in GameInfo.DiplomaticVisibilitySources () do
-    if (not localPlayerDiplomacy:IsVisibilitySourceActive(ms_SelectedPlayerID, row.Index)) then
-      if (row.ActionDescription ~= nil) then
-        advisorText = advisorText .. Locale.Lookup(row.ActionDescription).."[NEWLINE]";
+    -- Get the advisor text
+    local advisorText = "";
+    for row in GameInfo.DiplomaticVisibilitySources () do
+      if (not localPlayerDiplomacy:IsVisibilitySourceActive(ms_SelectedPlayerID, row.Index)) then
+        if (row.ActionDescription ~= nil) then
+          advisorText = advisorText .. Locale.Lookup(row.ActionDescription).."[NEWLINE]";
+        end
       end
     end
-  end
 
-  if (#advisorText > 0) then
-    intelSubPanel.AdvisorText:SetText(advisorText);
-    intelSubPanel.Advisor:SetHide(false);
-  else
-    intelSubPanel.Advisor:SetHide(true);
+    if (#advisorText > 0) then
+      intelSubPanel.AdvisorText:SetText(advisorText);
+      intelSubPanel.Advisor:SetHide(false);
+    else
+      intelSubPanel.Advisor:SetHide(true);
+    end
   end
-
-  intelSubPanel.Background:SetSizeY(m_bottomPanelHeight);
-  intelSubPanel.AccessLevelScrollPanel:SetSizeY(m_bottomPanelHeight);
-  rootControl:CalculateSize();
-  rootControl:ReprocessAnchoring();
-  intelSubPanel.AccessLevelScrollPanel:CalculateSize();
 end
 
 -- ===========================================================================
-function OnActivateIntelGossipHistoryPanel(rootControl : table)
+function OnActivateIntelGossipHistoryPanel(gossipInstance : table)
 
-  SetSelectedIntelSubPanelButton(INTEL_GOSSIP_HISTORY_PANEL, true);
   m_GossipThisTurnCount = 0;
-  ms_IntelGossipHistoryPanelIM:ResetInstances();
-  local intelSubPanel = ms_IntelGossipHistoryPanelIM:GetInstance(rootControl);
+  local intelSubPanel = gossipInstance;
 
   -- Get the selected player's Diplomactic AI
   local selectedPlayerDiplomaticAI = ms_SelectedPlayer:GetDiplomaticAI();
@@ -1265,13 +1141,8 @@ function OnActivateIntelGossipHistoryPanel(rootControl : table)
   else
     intelSubPanel.OlderHeader:SetHide(false);
   end
-
-  intelSubPanel.Background:SetSizeY(m_bottomPanelHeight);
-  intelSubPanel.GossipScrollPanel:SetSizeY(m_bottomPanelHeight);
-  rootControl:CalculateSize();
-  rootControl:ReprocessAnchoring();
-  intelSubPanel.GossipScrollPanel:CalculateSize();
 end
+
 -- ===========================================================================
 function AutoSizeGrid(gridControl: table, labelControl: table, padding:number, minSize:number)
   local sizeY: number = labelControl:GetSizeY() + padding;
@@ -1282,284 +1153,479 @@ function AutoSizeGrid(gridControl: table, labelControl: table, padding:number, m
 end
 
 -- ===========================================================================
+function GetSelectedPlayerID()
+  return ms_SelectedPlayerID;
+end
+
+-- ===========================================================================
 function AddIntelPanel(rootControl : table)
 
-  SetSelectedIntelSubPanelButton(INTEL_NO_SUB_PANEL, false);
-
+  -- Reset panel instance
+  ms_IntelPanel = nil;
   ms_IntelPanelIM:ResetInstances();
 
   if (ms_LocalPlayerID ~= -1 and ms_SelectedPlayerID ~= -1 and ms_LocalPlayerID ~= ms_SelectedPlayerID) then
+    -- Create main intel panel
+    ms_IntelPanel = ms_IntelPanelIM:GetInstance(rootControl);
 
-    local intelPanel = ms_IntelPanelIM:GetInstance(rootControl);
+    -- Setup tab button instance manager
+    ms_IntelTabButtonIM:ResetInstances();
+    ms_IntelTabAnchorIM:ResetInstances();
+
+    PopulateIntelPanels(ms_IntelPanel.IntelPanelContainer);
+
+    ShowOverviewPanel();
+  end
+end
+
+-- ===========================================================================
+function PopulateIntelPanels(tabContainer:table)
+  AddIntelOverview();
+  AddIntelGossip();
+  AddIntelAccessLevel();
+  AddIntelRelationship();
+end
+
+-- ===========================================================================
+function CreateTabButton()
+  return ms_IntelTabButtonIM:GetInstance(ms_IntelPanel.IntelTabButtonStack);
+end
+
+-- ===========================================================================
+function SetIntelPanelHeader(header:string)
+  if ms_IntelPanel == nil then
+    return
+  end
+
+  ms_IntelPanel.IntelHeader:SetText(header);
+end
+
+-- ===========================================================================
+function AddIntelTab(tabPanelIM:table, buttonTooltip:string, headerText:string, buttonIcon:string)
+  -- Create tab panel
+  tabPanelIM:ResetInstances();
+  local tabPanelInstance:table = tabPanelIM:GetInstance(ms_IntelPanel.IntelPanelContainer);
+
+  -- Create tab button
+  local tabButtonInstance:table = ms_IntelTabButtonIM:GetInstance(ms_IntelPanel.IntelTabButtonStack);
+  tabButtonInstance.Button:RegisterCallback( Mouse.eLClick, function() ShowPanel(tabPanelInstance:GetTopControl()); end );
+  tabButtonInstance.Button:SetToolTipString(buttonTooltip);
+  tabButtonInstance.ButtonIcon:SetIcon(buttonIcon);
+
+  -- Cacahe references to the button instance and header text on the panel instance
+  tabPanelInstance:GetTopControl().m_ButtonInstance = tabButtonInstance;
+  tabPanelInstance:GetTopControl().m_HeaderText = headerText;
+
+  -- Return the panel instance the calling function needs it
+  return tabPanelInstance;
+end
+
+-- ===========================================================================
+function AddIntelOverview()
+  local overviewInstance:table = AddIntelTab(ms_IntelOverviewIM, Locale.Lookup("LOC_DIPLOMACY_INTEL_OVERVIEW_COLON_TOOLTIP"), Locale.ToUpper("LOC_DIPLOMACY_INTEL_REPORT_OVERVIEW"), "ICON_OVERVIEW");
+  ms_IntelOverviewDividerIM:ResetInstances();
+  ms_IntelOverviewAnchorIM:ResetInstances();
+  PopulateIntelOverview(overviewInstance);
+end
+
+-- ===========================================================================
+function AddIntelOverviewDivider(overviewInstance:table)
+  ms_IntelOverviewDividerIM:GetInstance(overviewInstance.IntelOverviewStack);
+end
+
+-- ===========================================================================
+function PopulateIntelOverview(overviewInstance:table)
+  -- Add overview rows in the order you want them displayed
+  AddOverviewGossip(overviewInstance);
+  AddIntelOverviewDivider(overviewInstance);
+  AddOverviewAccessLevel(overviewInstance);
+  AddIntelOverviewDivider(overviewInstance);
+  AddOverviewGovernment(overviewInstance);
+  AddIntelOverviewDivider(overviewInstance);
+  if (AddOverviewAgendas(overviewInstance)) then
+    -- Only add divider if we're visible
+    AddIntelOverviewDivider(overviewInstance);
+  end
+  if (AddOverviewAgreements(overviewInstance)) then
+    -- Only add divider if we're visible
+    AddIntelOverviewDivider(overviewInstance);
+  end
+  if (AddOverviewOurRelationship(overviewInstance)) then
+    -- Only add divider if we're visible
+    AddIntelOverviewDivider(overviewInstance);
+  end
+  AddOverviewOtherRelationships(overviewInstance);
+end
+
+-- ===========================================================================
+function GetOverviewAnchor(parent:table)
+  return ms_IntelOverviewAnchorIM:GetInstance(parent);
+end
+
+-- ===========================================================================
+function GetTabAnchor(parent:table)
+  return ms_IntelTabAnchorIM:GetInstance(parent);
+end
+
+-- ===========================================================================
+function AddOverviewGossip(overviewInstance:table)
+  ms_IntelOverviewGossipIM:ResetInstances();
+  local overviewGossipInst:table = ms_IntelOverviewGossipIM:GetInstance(overviewInstance.IntelOverviewStack);
+
+  if (m_GossipThisTurnCount > 0) then
+    overviewGossipInst.GossipText:SetText(Locale.Lookup("LOC_DIPLOMACY_GOSSIP_ITEM_COUNT", m_GossipThisTurnCount));
+  else
+    overviewGossipInst.GossipText:SetText(Locale.Lookup("LOC_DIPLOMACY_GOSSIP_ITEM_NONE_THIS_TURN"));
+  end
+end
+
+-- ===========================================================================
+function AddOverviewAccessLevel(overviewInstance:table)
+  ms_IntelOverviewAccessLevelIM:ResetInstances();
+  local overviewAccessLevelInst:table = ms_IntelOverviewAccessLevelIM:GetInstance(overviewInstance.IntelOverviewStack);
+
+  local localPlayerDiplomacy = ms_LocalPlayer:GetDiplomacy();
+  local iAccessLevel = localPlayerDiplomacy:GetVisibilityOn(ms_SelectedPlayerID);
+
+  -- Shift to the correct place in the icon strip, using the vis states.
+  if( iAccessLevel == 0) then
+    overviewAccessLevelInst.AccessLevelIcon:SetHide(true);
+  else
+    overviewAccessLevelInst.AccessLevelIcon:SetHide(false);
+    overviewAccessLevelInst.AccessLevelIcon:SetVisState( iAccessLevel-1 );
+  end
+
+  overviewAccessLevelInst.AccessLevelText:LocalizeAndSetText(GameInfo.Visibilities[iAccessLevel].Name);
+end
+
+-- ===========================================================================
+function AddOverviewGovernment(overviewInstance:table)
+  ms_IntelOverviewGovernmentIM:ResetInstances();
+  local overviewGovernmentInst:table = ms_IntelOverviewGovernmentIM:GetInstance(overviewInstance.IntelOverviewStack);
+
+  -- What Government does the selected player have?
+  local eSelectePlayerGovernment:number = ms_SelectedPlayer:GetCulture():GetCurrentGovernment();
+  if eSelectePlayerGovernment ~= -1 then
+    overviewGovernmentInst.GovernmentText:LocalizeAndSetText( GameInfo.Governments[eSelectePlayerGovernment].Name );
+  else
+      overviewGovernmentInst.GovernmentText:LocalizeAndSetText( "LOC_GOVERNMENT_ANARCHY_NAME" );
+  end
+end
+
+-- ===========================================================================
+function AddOverviewAgendas(overviewInstance:table)
+  ms_IntelOverviewAgendasIM:ResetInstances();
+  local overviewAgendasInst:table = ms_IntelOverviewAgendasIM:GetInstance(overviewInstance.IntelOverviewStack);
+
+  ms_IntelOverviewAgendaEntryIM:ResetInstances();
+
+  if (PlayerConfigurations[ms_SelectedPlayerID]:IsHuman()) then
+    -- Humans don't have agendas, at least ones we can show
+    overviewAgendasInst.Top:SetHide(true);
+  else
+    overviewAgendasInst.Top:SetHide(false);
+    -- What Historical Agenda does the selected player have?
+    local leader:string = PlayerConfigurations[ms_SelectedPlayerID]:GetLeaderTypeName();
+    local hasHistoricalAgenda = false;
+
+    for row in GameInfo.HistoricalAgendas() do
+      if(row.LeaderType == leader) then
+        local agendaType = row.AgendaType;
+        local agenda = GameInfo.Agendas[agendaType];
+        if(agenda) then
+          local historicalAgenda = ms_IntelOverviewAgendaEntryIM:GetInstance(overviewAgendasInst.OverviewAgendasStack);
+          historicalAgenda.Text:LocalizeAndSetText( GameInfo.Agendas[agendaType].Name );
+          historicalAgenda.Text:LocalizeAndSetToolTip( GameInfo.Agendas[agendaType].Description );
+          hasHistoricalAgenda = true;
+          break;
+        end
+      end
+    end
 
     local localPlayerDiplomacy = ms_LocalPlayer:GetDiplomacy();
     local iAccessLevel = localPlayerDiplomacy:GetVisibilityOn(ms_SelectedPlayerID);
 
-    -- Gossip button
-    intelPanel.GossipButton:RegisterCallback( Mouse.eLClick, function() OnActivateIntelGossipHistoryPanel(rootControl); end );
-        intelPanel.GossipButton:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-    SetButtonSelected( intelPanel.GossipButton, true);
-
-    -- Access Level button and icon
-    intelPanel.AccessLevelText:LocalizeAndSetText(GameInfo.Visibilities[iAccessLevel].Name);
-    -- Shift to the correct place in the icon strip, using the vis states.
-    if( iAccessLevel == 0) then
-      intelPanel.AccessLevelIcon:SetHide(true);
-    else
-      intelPanel.AccessLevelIcon:SetHide(false);
-      intelPanel.AccessLevelIcon:SetVisState( iAccessLevel-1 );
-    end
-    intelPanel.AccessLevelButton:RegisterCallback( Mouse.eLClick, function() OnActivateIntelAccessLevelPanel(rootControl); end );
-        intelPanel.AccessLevelButton:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-    SetButtonSelected(intelPanel.AccessLevelButton, false);
-
-    -- Relationship Panel Button
-    if (PlayerConfigurations[ms_SelectedPlayerID]:IsHuman()) then
-      -- Don't show any calculated relationship with a human
-      intelPanel.RelationshipStack:SetHide(true);
-    else
-      intelPanel.RelationshipStack:SetHide(false);
-      intelPanel.RelationshipButton:RegisterCallback( Mouse.eLClick, function() OnActivateIntelRelationshipPanel(rootControl); end );
-            intelPanel.RelationshipButton:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-      SetButtonSelected(intelPanel.RelationshipButton, false);
-
-      -- Get the selected player's Diplomactic AI
-      local selectedPlayerDiplomaticAI = ms_SelectedPlayer:GetDiplomaticAI();
-      -- What do they think of us?
-      local iState :number = selectedPlayerDiplomaticAI:GetDiplomaticStateIndex(ms_LocalPlayerID);
-      local relationshipString:string = Locale.Lookup(GameInfo.DiplomaticStates[iState].Name);
-      -- Add team name to relationship text for our own teams
-      if Players[ms_LocalPlayerID]:GetTeam() == Players[ms_SelectedPlayerID]:GetTeam() then
-        relationshipString = "(" .. Locale.Lookup("LOC_WORLD_RANKINGS_TEAM", Players[ms_LocalPlayerID]:GetTeam()) .. ") " .. relationshipString;
+    -- What randomly assigned agendas does the selected player have? 
+    -- Determine whether our Diplomatic Visibility allows us to see random agendas
+    local bRevealRandom = false;
+    for row in GameInfo.Visibilities() do
+      if (row.Index <= iAccessLevel and row.RevealAgendas == true) then
+        bRevealRandom = true;
       end
-      intelPanel.RelationshipText:SetText( relationshipString );
-
-      if (GameInfo.DiplomaticStates[iState].StateType == "DIPLO_STATE_DENOUNCED") then
-          local szDenounceTooltip;
-        local iRemainingTurns;
-        local iOurDenounceTurn = localPlayerDiplomacy:GetDenounceTurn(ms_SelectedPlayerID);
-        local iTheirDenounceTurn = Players[ms_SelectedPlayerID]:GetDiplomacy():GetDenounceTurn(ms_LocalPlayerID);
-
-        -- *** REPLACE GOSSIP STRING WHEN POSSIBLE -- SHOULD BE STORED WITH DIPLO STRINGS ***
-        if (iOurDenounceTurn >= iTheirDenounceTurn) then
-            iRemainingTurns = iOurDenounceTurn + GlobalParameters.DIPLOMACY_DENOUNCE_TIME_LIMIT - Game.GetCurrentGameTurn();
-          szDenounceTooltip = Locale.Lookup("LOC_GOSSIP_DENOUNCED", PlayerConfigurations[ms_LocalPlayerID]:GetCivilizationShortDescription(), PlayerConfigurations[ms_SelectedPlayerID]:GetCivilizationShortDescription());
-        else
-            iRemainingTurns = iTheirDenounceTurn + GlobalParameters.DIPLOMACY_DENOUNCE_TIME_LIMIT - Game.GetCurrentGameTurn();
-          szDenounceTooltip = Locale.Lookup("LOC_GOSSIP_DENOUNCED", PlayerConfigurations[ms_SelectedPlayerID]:GetCivilizationShortDescription(), PlayerConfigurations[ms_LocalPlayerID]:GetCivilizationShortDescription());
+    end
+    local kAgendaTypes = {};
+    kAgendaTypes = ms_SelectedPlayer:GetAgendaTypes();
+    --GetAgendaTypes() returns ALL of my agendas, including the historical agenda. 
+    --To retrieve only the randomly assigned agendas, delete the first entry from the table.  
+    table.remove(kAgendaTypes,1);
+    local numRandomAgendas = table.count(kAgendaTypes);
+    if (numRandomAgendas > 0) then
+      if(bRevealRandom) then
+        -- If our visibility allows, display the agendas 
+        -- At present, we are displaying ALL random agendas, if we have reached the SECRET level.
+        local bFirst = true;
+        for i, agendaType in ipairs(kAgendaTypes) do 
+          local randomAgenda = ms_IntelOverviewAgendaEntryIM:GetInstance(overviewAgendasInst.OverviewAgendasStack);
+          randomAgenda.Text:LocalizeAndSetText( GameInfo.Agendas[agendaType].Name );
+          randomAgenda.Text:LocalizeAndSetToolTip( GameInfo.Agendas[agendaType].Description );
         end
-        szDenounceTooltip = szDenounceTooltip .. " [" .. Locale.Lookup("LOC_ESPIONAGEPOPUP_TURNS_REMAINING", iRemainingTurns) .. "]";
-        intelPanel.RelationshipText:SetToolTipString(szDenounceTooltip);
       else
-        intelPanel.RelationshipText:SetToolTipString(nil);
+        --Otherwise, display that how many hidden agendas there are, and incentivize player to gain visibility to see them!
+        local hiddenAgenda = ms_IntelOverviewAgendaEntryIM:GetInstance(overviewAgendasInst.OverviewAgendasStack);
+        hiddenAgenda.Text:LocalizeAndSetText("LOC_DIPLOMACY_HIDDEN_AGENDAS",numRandomAgendas, numRandomAgendas>1);
+        hiddenAgenda.Text:LocalizeAndSetToolTip("LOC_DIPLOMACY_HIDDEN_AGENDAS_TT");
       end
-      intelPanel.RelationshipIcon:SetVisState(GetVisStateFromDiplomaticState(iState));
-      -- IF the Diplomacy State is Neutral, hide the icon, otherwise, display.
-      if (GameInfo.DiplomaticStates[iState].Hash == DiplomaticStates.NEUTRAL ) then
-        intelPanel.RelationshipIcon:SetHide(true);
-      else
-        intelPanel.RelationshipIcon:SetHide(false);
-      end
-      intelPanel.RelationshipStack:CalculateSize();
-      intelPanel.RelationshipStack:ReprocessAnchoring();
-    end
-
-    ms_IconOnlyIM:ResetInstances();
-    intelPanel.AgreementsOuterStack:SetHide(false);
-    intelPanel.AgreementStack:SetHide(false);
-    local AGREEMENT_TYPES: table = {DIPLO_DELEGATION = "DIPLOACTION_DIPLOMATIC_DELEGATION",
-                    RESIDENT_EMBASSY = "DIPLOACTION_RESIDENT_EMBASSY",
-                    DEFENSIVE_PACT = "DIPLOACTION_DEFENSIVE_PACT",
-                    OPEN_BORDERS = "DIPLOACTION_OPEN_BORDERS",
-                    RESEARCH_AGREEMENT = "DIPLOACTION_RESEARCH_AGREEMENT",
-                    JOINT_WAR = "DIPLOACTION_JOINT_WAR"};
-
-    if (localPlayerDiplomacy:HasDelegationAt(ms_SelectedPlayer:GetID())) then
-      local agreement = ms_IconOnlyIM:GetInstance(intelPanel.AgreementStack);
-      local type = AGREEMENT_TYPES.DIPLO_DELEGATION;
-      agreement.Icon:SetIcon("ICON_"..type);
-      agreement.Icon:SetToolTipString(Locale.Lookup("LOC_DIPLO_MODIFIER_DELEGATION"));
-    end
-    if(localPlayerDiplomacy:HasEmbassyAt(ms_SelectedPlayer:GetID())) then
-      local agreement = ms_IconOnlyIM:GetInstance(intelPanel.AgreementStack);
-      local type = AGREEMENT_TYPES.RESIDENT_EMBASSY;
-      agreement.Icon:SetIcon("ICON_"..type);
-      agreement.Icon:SetToolTipString(Locale.Lookup("LOC_DIPLO_MODIFIER_RESIDENT_EMBASSY"));
-    end
-    if(localPlayerDiplomacy:HasDefensivePact(ms_SelectedPlayer:GetID())) then
-      local agreement = ms_IconOnlyIM:GetInstance(intelPanel.AgreementStack);
-      local type = AGREEMENT_TYPES.DEFENSIVE_PACT;
-      agreement.Icon:SetIcon("ICON_"..type);
-      agreement.Icon:SetToolTipString(Locale.Lookup("LOC_DIPLO_MODIFIER_DEFENSIVE_PACT"));
-    end
-    if(localPlayerDiplomacy:HasOpenBordersFrom(ms_SelectedPlayer:GetID())) then
-      local agreement = ms_IconOnlyIM:GetInstance(intelPanel.AgreementStack);
-      local type = AGREEMENT_TYPES.OPEN_BORDERS;
-      agreement.Icon:SetIcon("ICON_"..type);
-      agreement.Icon:SetToolTipString(Locale.Lookup("LOC_DIPLO_MODIFIER_OPEN_BORDERS"));
-    end
-    if(localPlayerDiplomacy:GetResearchAgreementTech(ms_SelectedPlayer:GetID()) ~= -1) then
-      local agreement = ms_IconOnlyIM:GetInstance(intelPanel.AgreementStack);
-      local type = AGREEMENT_TYPES.RESEARCH_AGREEMENT;
-      agreement.Icon:SetIcon("ICON_"..type);
-      agreement.Icon:SetToolTipString(Locale.Lookup("LOC_DIPLOACTION_RESEARCH_AGREEMENT_NAME"));
-    end
-    if(localPlayerDiplomacy:IsFightingAnyJointWarWith(ms_SelectedPlayer:GetID())) then
-      local agreement = ms_IconOnlyIM:GetInstance(intelPanel.AgreementStack);
-      local type = AGREEMENT_TYPES.JOINT_WAR;
-      agreement.Icon:SetIcon("ICON_"..type);
-      agreement.Icon:SetToolTipString(Locale.Lookup("LOC_DIPLOACTION_JOINT_WAR_NAME"));
-    end
-
-    intelPanel.AgreementStack:CalculateSize();
-    intelPanel.AgreementStack:ReprocessAnchoring();
-    if(intelPanel.AgreementStack:GetSizeX() == 0) then
-      intelPanel.AgreementsOuterStack:SetHide(true);
-    else
-      intelPanel.AgreementsOuterStack:SetHide(false);
-    end
-
-    ms_TextOnlyIM:ResetInstances();
-    if (PlayerConfigurations[ms_SelectedPlayerID]:IsHuman()) then
-      -- Humans don't have agendas, at least ones we can show
-      intelPanel.AgendaOuterStack:SetHide(true);
-    else
-      intelPanel.AgendaOuterStack:SetHide(false);
-      -- What Historical Agenda does the selected player have?
-      local leader:string = PlayerConfigurations[ms_SelectedPlayerID]:GetLeaderTypeName();
-      local hasHistoricalAgenda = true;
-      if GameInfo.HistoricalAgendas[leader] ~= nil then
-        local agendaType = GameInfo.HistoricalAgendas[leader].AgendaType;
-        local historicalAgenda = ms_TextOnlyIM:GetInstance(intelPanel.AgendaStack);
-        historicalAgenda.Text:LocalizeAndSetText( GameInfo.Agendas[agendaType].Name );
-        historicalAgenda.Text:LocalizeAndSetToolTip( GameInfo.Agendas[agendaType].Description );
-      else
-        hasHistoricalAgenda = false;
-      end
-
-      -- What randomly assigned agendas does the selected player have?
-      -- Determine whether our Diplomatic Visibility allows us to see random agendas
-      local bRevealRandom = false;
-      for row in GameInfo.Visibilities() do
-        if (row.Index <= iAccessLevel and row.RevealAgendas == true) then
-          bRevealRandom = true;
-        end
-      end
-      local kAgendaTypes = {};
-      kAgendaTypes = ms_SelectedPlayer:GetAgendaTypes();
-      --GetAgendaTypes() returns ALL of my agendas, including the historical agenda.
-      --To retrieve only the randomly assigned agendas, delete the first entry from the table.
-      table.remove(kAgendaTypes,1);
-      local numRandomAgendas = table.count(kAgendaTypes);
-      if (numRandomAgendas > 0) then
-        if(bRevealRandom) then
-          -- If our visibility allows, display the agendas
-          -- At present, we are displaying ALL random agendas, if we have reached the SECRET level.
-          local bFirst = true;
-          for i, agendaType in ipairs(kAgendaTypes) do
-            local randomAgenda = ms_TextOnlyIM:GetInstance(intelPanel.AgendaStack);
-            randomAgenda.Text:LocalizeAndSetText( GameInfo.Agendas[agendaType].Name );
-            randomAgenda.Text:LocalizeAndSetToolTip( GameInfo.Agendas[agendaType].Description );
-          end
-        else
-          --Otherwise, display that how many hidden agendas there are, and incentivize player to gain visibility to see them!
-          local hiddenAgenda = ms_TextOnlyIM:GetInstance(intelPanel.AgendaStack);
-          hiddenAgenda.Text:LocalizeAndSetText("LOC_DIPLOMACY_HIDDEN_AGENDAS",numRandomAgendas, numRandomAgendas>1);
-          hiddenAgenda.Text:LocalizeAndSetToolTip("LOC_DIPLOMACY_HIDDEN_AGENDAS_TT");
-        end
-      elseif (numRandomAgendas == 0) then
-        local noRandomAgendas = ms_TextOnlyIM:GetInstance(intelPanel.AgendaStack);
-        noRandomAgendas.Text:LocalizeAndSetText("LOC_DIPLOMACY_RANDOM_AGENDA_NONE");
-      end
-    end
-
-    -- What Government does the selected player have?
-    local eSelectePlayerGovernment :number = ms_SelectedPlayer:GetCulture():GetCurrentGovernment();
-    if eSelectePlayerGovernment ~= -1 then
-      intelPanel.GovernmentText:LocalizeAndSetText( GameInfo.Governments[eSelectePlayerGovernment].Name );
-    else
-        intelPanel.GovernmentText:LocalizeAndSetText( "LOC_GOVERNMENT_ANARCHY_NAME" );
-    end
-
-    --Set data for relationship area
-    local selectedPlayerConfig = PlayerConfigurations[ms_SelectedPlayer:GetID()];
-    local leaderDesc = selectedPlayerConfig:GetLeaderName();
-    --intelPanel.TheirRelationships:SetText(Locale.Lookup(leaderDesc).."'s Relationships");
-    ms_RelationshipIconsIM:ResetInstances();
-    -- Get who the selected player has met
-    local selectedPlayerDiplomacy = ms_SelectedPlayer:GetDiplomacy();
-    --Does GetPlayersMet necessarily give me the correct thing?...
-    --local aPlayers = selectedPlayerDiplomacy:GetPlayersMet();
-    local aPlayers = PlayerManager.GetAliveMajors();
-    for _, pPlayer in ipairs(aPlayers) do
-      if (pPlayer:IsMajor() and pPlayer:GetID() ~= ms_LocalPlayerID and pPlayer:GetID() ~= ms_SelectedPlayer:GetID() and selectedPlayerDiplomacy:HasMet(pPlayer:GetID())) then
-        local playerConfig = PlayerConfigurations[pPlayer:GetID()];
-        local leaderTypeName = playerConfig:GetLeaderTypeName();
-        if (leaderTypeName ~= nil) then
-          local relationshipIcon = ms_RelationshipIconsIM:GetInstance(intelPanel.RelationshipsStack);
-          local iPlayerDiploState = pPlayer:GetDiplomaticAI():GetDiplomaticStateIndex(ms_SelectedPlayer:GetID());
-          relationshipIcon.Status:SetVisState( iPlayerDiploState );
-          local relationshipState = GameInfo.DiplomaticStates[iPlayerDiploState];
-          -- No diplo state icon if both players are human, except for the war state
-          if ( ((ms_SelectedPlayer:IsAI() or pPlayer:IsAI()) and relationshipState.Hash ~= DiplomaticStates.NEUTRAL) or IsValidRelationship(relationshipState.StateType)) then
-            relationshipIcon.Status:SetToolTipString(Locale.Lookup(GameInfo.DiplomaticStates[iPlayerDiploState].Name));
-          end
-          if(localPlayerDiplomacy:HasMet(pPlayer:GetID())) then
-            relationshipIcon.Icon:SetTexture(IconManager:FindIconAtlas("ICON_" .. playerConfig:GetLeaderTypeName(), 32));
-            -- Tool tip
-            local leaderDesc = playerConfig:GetLeaderName();
-            relationshipIcon.Background:LocalizeAndSetToolTip("LOC_DIPLOMACY_DEAL_PLAYER_PANEL_TITLE", leaderDesc, playerConfig:GetCivilizationDescription());
-
-            -- Show team ribbon for ourselves and civs we've met
-            local teamID:number = playerConfig:GetTeam();
-            if #Teams[teamID] > 1 then
-              local teamRibbonName:string = TEAM_RIBBON_PREFIX .. tostring(teamID);
-              relationshipIcon.TeamRibbon:SetIcon(teamRibbonName, TEAM_RIBBON_SMALL_SIZE);
-              relationshipIcon.TeamRibbon:SetHide(false);
-              relationshipIcon.TeamRibbon:SetColor(GetTeamColor(teamID));
-            else
-              -- Hide team ribbon if team only contains one player
-              relationshipIcon.TeamRibbon:SetHide(true);
-            end
-          else
-            -- IF the local player has not met the civ that this civ has a relationship, do not reveal that information through this icon.  Instead, set to generic leader and "Unmet Civ"
-            relationshipIcon.Icon:SetTexture(IconManager:FindIconAtlas("ICON_LEADER_DEFAULT", 32));
-            relationshipIcon.Background:LocalizeAndSetToolTip("LOC_DIPLOPANEL_UNMET_PLAYER");
-            relationshipIcon.TeamRibbon:SetHide(true);
-          end
-        end
-      end
-    end
-    intelPanel.RelationshipsStack:CalculateSize();
-    intelPanel.RelationshipsStack:ReprocessAnchoring();
-    --IF this civ hasn't met anyone but you, hide the relationship stack
-    if ( intelPanel.RelationshipsStack:GetSizeY() == 0) then
-      intelPanel.RelationshipSectionStack:SetHide(true);
-    else
-      intelPanel.RelationshipSectionStack:SetHide(false);
-    end
-    -- Calculate the size of the scrollpanel
-    rootControl:CalculateSize();
-    rootControl:ReprocessAnchoring();
-    local _, screenY:number = UIManager:GetScreenSizeVal();
-    m_bottomPanelHeight = screenY - rootControl:GetSizeY() - PADDING_FOR_SCROLLPANEL;
-    -- Default to showing the Gossip History
-    OnActivateIntelGossipHistoryPanel(rootControl);
-    if (m_GossipThisTurnCount > 0) then
-      intelPanel.GossipText:SetText(Locale.Lookup("LOC_DIPLOMACY_GOSSIP_ITEM_COUNT", m_GossipThisTurnCount));
-    else
-      intelPanel.GossipText:SetText(Locale.Lookup("LOC_DIPLOMACY_GOSSIP_ITEM_NONE_THIS_TURN"));
+    elseif (numRandomAgendas == 0) then
+      local noRandomAgendas = ms_IntelOverviewAgendaEntryIM:GetInstance(overviewAgendasInst.OverviewAgendasStack);
+      noRandomAgendas.Text:LocalizeAndSetText("LOC_DIPLOMACY_RANDOM_AGENDA_NONE");
     end
   end
+
+  return not overviewAgendasInst.Top:IsHidden();
 end
+
+-- ===========================================================================
+function AddOverviewAgreements(overviewInstance:table)
+  ms_IntelOverviewAgreementsIM:ResetInstances();
+  local overviewAgreementsInst:table = ms_IntelOverviewAgreementsIM:GetInstance(overviewInstance.IntelOverviewStack);
+
+  local localPlayerDiplomacy = ms_LocalPlayer:GetDiplomacy();
+  ms_IconOnlyIM:ResetInstances();
+
+  if (localPlayerDiplomacy:HasDelegationAt(ms_SelectedPlayer:GetID())) then
+    AddAgreementEntry(overviewAgreementsInst, "ICON_DIPLOACTION_DIPLOMATIC_DELEGATION", "LOC_DIPLO_MODIFIER_DELEGATION");
+  end
+  if(localPlayerDiplomacy:HasEmbassyAt(ms_SelectedPlayer:GetID())) then
+    AddAgreementEntry(overviewAgreementsInst, "ICON_DIPLOACTION_RESIDENT_EMBASSY", "LOC_DIPLO_MODIFIER_RESIDENT_EMBASSY");
+  end
+  if(localPlayerDiplomacy:HasDefensivePact(ms_SelectedPlayer:GetID())) then
+    AddAgreementEntry(overviewAgreementsInst, "ICON_DIPLOACTION_DEFENSIVE_PACT", "LOC_DIPLO_MODIFIER_DEFENSIVE_PACT");
+  end
+  if(localPlayerDiplomacy:HasOpenBordersFrom(ms_SelectedPlayer:GetID())) then
+    AddAgreementEntry(overviewAgreementsInst, "ICON_DIPLOACTION_OPEN_BORDERS", "LOC_DIPLO_MODIFIER_OPEN_BORDERS");
+  end
+  if(localPlayerDiplomacy:GetResearchAgreementTech(ms_SelectedPlayer:GetID()) ~= -1) then
+    AddAgreementEntry(overviewAgreementsInst, "ICON_DIPLOACTION_RESEARCH_AGREEMENT", "LOC_DIPLOACTION_RESEARCH_AGREEMENT_NAME");
+  end
+  if(localPlayerDiplomacy:IsFightingAnyJointWarWith(ms_SelectedPlayer:GetID())) then
+    AddAgreementEntry(overviewAgreementsInst, "ICON_DIPLOACTION_JOINT_WAR", "LOC_DIPLOACTION_JOINT_WAR_NAME");
+  end
+
+  if(ms_IconOnlyIM.m_iAllocatedInstances <= 0) then
+    overviewAgreementsInst.Top:SetHide(true);
+  else
+    overviewAgreementsInst.Top:SetHide(false);
+  end
+
+  return not overviewAgreementsInst.Top:IsHidden();
+end
+
+-- ===========================================================================
+function AddAgreementEntry(agreementInstance, icon, tooltip)
+  local agreement = ms_IconOnlyIM:GetInstance(agreementInstance.AgreementStack);
+  agreement.Icon:SetIcon(icon);
+  agreement.Icon:SetToolTipString(Locale.Lookup(tooltip));
+end
+
+-- ===========================================================================
+function AddOverviewOurRelationship(overviewInstance:table)
+  ms_IntelOverviewOurRelationshipIM:ResetInstances();
+  local overviewOurRelationshipInst:table = ms_IntelOverviewOurRelationshipIM:GetInstance(overviewInstance.IntelOverviewStack);
+
+  -- Relationship Panel Button
+  if (PlayerConfigurations[ms_SelectedPlayerID]:IsHuman()) then
+    -- Don't show any calculated relationship with a human
+    overviewOurRelationshipInst.Top:SetHide(true);
+  else
+    -- Get the selected player's Diplomactic AI
+    local selectedPlayerDiplomaticAI = ms_SelectedPlayer:GetDiplomaticAI();
+    -- What do they think of us?
+    local iState :number = selectedPlayerDiplomaticAI:GetDiplomaticStateIndex(ms_LocalPlayerID);
+    local relationshipString:string = Locale.Lookup(GameInfo.DiplomaticStates[iState].Name);
+    -- Add team name to relationship text for our own teams
+    if Players[ms_LocalPlayerID]:GetTeam() == Players[ms_SelectedPlayerID]:GetTeam() then
+      relationshipString = "(" .. Locale.Lookup("LOC_WORLD_RANKINGS_TEAM", Players[ms_LocalPlayerID]:GetTeam()) .. ") " .. relationshipString;
+    end
+    overviewOurRelationshipInst.RelationshipText:SetText( relationshipString );
+
+    local localPlayerDiplomacy = ms_LocalPlayer:GetDiplomacy();
+
+    if (GameInfo.DiplomaticStates[iState].StateType == "DIPLO_STATE_DENOUNCED") then
+      local szDenounceTooltip;
+      local iRemainingTurns;
+      local iOurDenounceTurn = localPlayerDiplomacy:GetDenounceTurn(ms_SelectedPlayerID);
+      local iTheirDenounceTurn = Players[ms_SelectedPlayerID]:GetDiplomacy():GetDenounceTurn(ms_LocalPlayerID);
+
+      -- *** REPLACE GOSSIP STRING WHEN POSSIBLE -- SHOULD BE STORED WITH DIPLO STRINGS ***
+      if (iOurDenounceTurn >= iTheirDenounceTurn) then  
+        iRemainingTurns = iOurDenounceTurn + GlobalParameters.DIPLOMACY_DENOUNCE_TIME_LIMIT - Game.GetCurrentGameTurn();
+        szDenounceTooltip = Locale.Lookup("LOC_GOSSIP_DENOUNCED", PlayerConfigurations[ms_LocalPlayerID]:GetCivilizationShortDescription(), PlayerConfigurations[ms_SelectedPlayerID]:GetCivilizationShortDescription());
+      else
+        iRemainingTurns = iTheirDenounceTurn + GlobalParameters.DIPLOMACY_DENOUNCE_TIME_LIMIT - Game.GetCurrentGameTurn();
+        szDenounceTooltip = Locale.Lookup("LOC_GOSSIP_DENOUNCED", PlayerConfigurations[ms_SelectedPlayerID]:GetCivilizationShortDescription(), PlayerConfigurations[ms_LocalPlayerID]:GetCivilizationShortDescription());
+      end
+      szDenounceTooltip = szDenounceTooltip .. " [" .. Locale.Lookup("LOC_ESPIONAGEPOPUP_TURNS_REMAINING", iRemainingTurns) .. "]";
+      overviewOurRelationshipInst.RelationshipText:SetToolTipString(szDenounceTooltip);
+    else
+      overviewOurRelationshipInst.RelationshipText:SetToolTipString(nil);
+    end
+    overviewOurRelationshipInst.RelationshipIcon:SetVisState(GetVisStateFromDiplomaticState(iState));
+  end
+
+  return not overviewOurRelationshipInst.Top:IsHidden();
+end
+
+-- ===========================================================================
+function AddOverviewOtherRelationships(overviewInstance:table)
+  ms_IntelOverviewOtherRelationshipsIM:ResetInstances();
+  local overviewOtherRelationshipsInst:table = ms_IntelOverviewOtherRelationshipsIM:GetInstance(overviewInstance.IntelOverviewStack);
+
+  --Set data for relationship area
+  local localPlayerDiplomacy = ms_LocalPlayer:GetDiplomacy();
+  local selectedPlayerConfig = PlayerConfigurations[ms_SelectedPlayer:GetID()];
+  local leaderDesc = selectedPlayerConfig:GetLeaderName();
+  
+  ms_RelationshipIconsIM:ResetInstances();
+
+  -- Get who the selected player has met
+  local selectedPlayerDiplomacy = ms_SelectedPlayer:GetDiplomacy();
+  local aPlayers = PlayerManager.GetAliveMajors();
+  for _, pPlayer in ipairs(aPlayers) do
+    if (pPlayer:IsMajor() and pPlayer:GetID() ~= ms_LocalPlayerID and pPlayer:GetID() ~= ms_SelectedPlayer:GetID() and selectedPlayerDiplomacy:HasMet(pPlayer:GetID())) then
+      local playerConfig = PlayerConfigurations[pPlayer:GetID()];
+      local leaderTypeName = playerConfig:GetLeaderTypeName();
+      if (leaderTypeName ~= nil) then
+        local relationshipIcon = ms_RelationshipIconsIM:GetInstance(overviewOtherRelationshipsInst.RelationshipsStack);
+        local iPlayerDiploState = pPlayer:GetDiplomaticAI():GetDiplomaticStateIndex(ms_SelectedPlayer:GetID());
+        relationshipIcon.Status:SetVisState( iPlayerDiploState );
+        local relationshipState = GameInfo.DiplomaticStates[iPlayerDiploState];
+        -- No diplo state icon if both players are human, except for the war state
+        if ( ((ms_SelectedPlayer:IsAI() or pPlayer:IsAI()) and relationshipState.Hash ~= DiplomaticStates.NEUTRAL) or IsValidRelationship(relationshipState.StateType)) then
+          relationshipIcon.Status:SetToolTipString(Locale.Lookup(GameInfo.DiplomaticStates[iPlayerDiploState].Name));
+        end
+        if(localPlayerDiplomacy:HasMet(pPlayer:GetID())) then
+          relationshipIcon.Icon:SetTexture(IconManager:FindIconAtlas("ICON_" .. playerConfig:GetLeaderTypeName(), 32));
+          -- Tool tip
+          local leaderDesc = playerConfig:GetLeaderName();
+          relationshipIcon.Background:LocalizeAndSetToolTip("LOC_DIPLOMACY_DEAL_PLAYER_PANEL_TITLE", leaderDesc, playerConfig:GetCivilizationDescription());
+          
+          -- Show team ribbon for ourselves and civs we've met
+          local teamID:number = playerConfig:GetTeam();
+          if #Teams[teamID] > 1 then
+            local teamRibbonName:string = TEAM_RIBBON_PREFIX .. tostring(teamID);
+            relationshipIcon.TeamRibbon:SetIcon(teamRibbonName, TEAM_RIBBON_SMALL_SIZE);
+            relationshipIcon.TeamRibbon:SetHide(false);
+            relationshipIcon.TeamRibbon:SetColor(GetTeamColor(teamID));
+          else
+            -- Hide team ribbon if team only contains one player
+            relationshipIcon.TeamRibbon:SetHide(true);
+          end
+        else
+          -- IF the local player has not met the civ that this civ has a relationship, do not reveal that information through this icon.  Instead, set to generic leader and "Unmet Civ"
+          relationshipIcon.Icon:SetTexture(IconManager:FindIconAtlas("ICON_LEADER_DEFAULT", 32));
+          relationshipIcon.Background:LocalizeAndSetToolTip("LOC_DIPLOPANEL_UNMET_PLAYER");
+          relationshipIcon.TeamRibbon:SetHide(true);
+        end
+      end				
+    end
+  end
+
+  overviewOtherRelationshipsInst.RelationshipsStack:CalculateSize();
+  overviewOtherRelationshipsInst.RelationshipsStack:ReprocessAnchoring();
+
+  --IF this civ hasn't met anyone but you, hide the relationship stack
+  if ( overviewOtherRelationshipsInst.RelationshipsStack:GetSizeY() == 0) then
+    overviewOtherRelationshipsInst.Top:SetHide(true);
+  else
+    overviewOtherRelationshipsInst.Top:SetHide(false);
+  end
+
+  return not overviewOtherRelationshipsInst.Top:IsHidden();
+end
+
+-- ===========================================================================
+function AddIntelGossip()
+  local gossipInstance:table = AddIntelTab(ms_IntelGossipIM, Locale.Lookup("LOC_DIPLOMACY_INTEL_GOSSIP_COLON_TOOLTIP"), Locale.ToUpper("LOC_DIPLOMACY_INTEL_REPORT_GOSSIP"), "ICON_GOSSIP");
+  OnActivateIntelGossipHistoryPanel(gossipInstance);
+end
+
+-- ===========================================================================
+function AddIntelAccessLevel()
+  local accessLevelInstance:table = AddIntelTab(ms_IntelAccessLevelIM, Locale.Lookup("LOC_DIPLOMACY_INTEL_ACCESS_LEVEL_COLON_TOOLTIP"), Locale.ToUpper("LOC_DIPLOMACY_INTEL_REPORT_ACCESS_LEVEL"), "ICON_ACCESS_LEVEL");
+  OnActivateIntelAccessLevelPanel(accessLevelInstance);
+end
+
+-- ===========================================================================
+function AddIntelRelationship()
+  local relationshipInstance:table = AddIntelTab(ms_IntelRelationshipIM, Locale.Lookup("LOC_DIPLOMACY_INTEL_OUR_RELATIONSHIP_TOOLTIP"), Locale.ToUpper("LOC_DIPLOMACY_INTEL_REPORT_RELATIONSHIP"), "ICON_RELATIONSHIP");
+  OnActivateIntelRelationshipPanel(relationshipInstance);
+end
+
+-- ===========================================================================
+function ShowOverviewPanel()
+  local overviewInstance:table = ms_IntelOverviewIM:GetAllocatedInstance();
+  if overviewInstance ~= nil then
+    ShowPanel(overviewInstance:GetTopControl());
+  end
+end
+
+-- ===========================================================================
+function ShowPanel(panelInstance:table)
+  if ms_IntelPanel == nil then
+    return;
+  end
+
+  -- Show panel
+  if panelInstance then
+    panelInstance:SetHide(false);
+  end
+
+  -- Hide other panels
+  local intelPanelList = ms_IntelPanel.IntelPanelContainer:GetChildren();
+  for i, child in ipairs(intelPanelList) do
+    if child ~= panelInstance then
+      child:SetHide(true);
+    end
+  end
+
+  -- Selected passed in tab button and deselect all others
+  if panelInstance.m_ButtonInstance ~= nil then
+    for i=1, ms_IntelTabButtonIM.m_iCount, 1 do
+      local buttonInstance:table = ms_IntelTabButtonIM:GetAllocatedInstance(i);
+      if buttonInstance then
+        if buttonInstance == panelInstance.m_ButtonInstance then
+          buttonInstance.Button:SetSelected(true);
+        else
+          buttonInstance.Button:SetSelected(false);
+        end
+      end
+    end
+  end
+
+  -- Update intel panel header
+  if panelInstance.m_HeaderText then
+    ms_IntelPanel.IntelHeader:SetText(panelInstance.m_HeaderText);
+  end
+
+  -- Recalculate scroll panel for container
+  ms_IntelPanel.IntelPanelContainer:CalculateSize();
+end
+
 -- ===========================================================================
 function PopulatePlayerPanel(rootControl : table, player : table)
-
   if (player ~= nil) then
+    -- Add statements so we can use the size of that
+    -- stack to determine the size of the intel container
     AddStatmentOptions(rootControl);
-    AddIntelPanel(rootControl.ContentStack);
+
+    -- Resize IntelContainer to fill stack
+    local fillSize:number = rootControl.ContentContainer:GetSizeY() - rootControl.ContentStack:GetSizeY();
+    rootControl.IntelContainer:SetSizeY(fillSize);
+
+    AddIntelPanel(rootControl.IntelContainer);
+
     rootControl.RootStack:CalculateSize();
-    rootControl.RootStack:ReprocessAnchoring();
+    rootControl.RootStack:ReprocessAnchoring();	
   end
 end
 
@@ -1569,8 +1635,6 @@ function PopulatePlayerPanelHeader(rootControl : table, player : table)
   if (player ~= nil) then
     local playerConfig = PlayerConfigurations[player:GetID()];
     if (playerConfig ~= nil) then
-      -- Set the icon
-      rootControl.LeaderIcon:SetIcon("ICON_" .. playerConfig:GetLeaderTypeName());
       -- Set the leader name
       local leaderDesc = playerConfig:GetLeaderName();
       rootControl.PlayerNameText:LocalizeAndSetText( Locale.ToUpper( Locale.Lookup(leaderDesc)));
@@ -1953,7 +2017,7 @@ function ShowLeader(player : table )
     ms_showingLeaderName = leaderName;
     ms_LastDealResponseAnimation = nil;
     ms_bLeaderShowRequested = true;
-    Events.ShowLeaderScreen(leaderName);
+    Events.ShowLeaderScreen(leaderName, player:GetID() == Game.GetLocalPlayer());
     -- TODO: unhide after we know there is a valid image -KS
     Controls.FallbackLeaderImage:SetHide(true); -- Hide until we are loaded
     Controls.LeaderAlpha:SetToBeginning();
@@ -1993,7 +2057,6 @@ function UninitializeView()
 
   if (ms_bIsViewInitialized) then
     ContextPtr:SetHide(true);
-    LuaEvents.DiplomacyActionView_ShowIngameUI();
 
     if (LeaderSupport_IsLeaderVisible() or ms_bLeaderShowRequested) then
       Events.HideLeaderScreen();
@@ -2191,18 +2254,18 @@ function OnLeaderLoaded()
   end
 
   LeaderSupport_OnLeaderLoaded();
-    local bDoAudio = false;
+  local bDoAudio = false;
 
   -- The leader has loaded, show the screen
   if (ContextPtr:IsHidden()) then
     ContextPtr:SetHide(false);
-        bDoAudio = true;
-        m_lastLeaderPlayedMusicFor = -1;
+    bDoAudio = true;
+    m_lastLeaderPlayedMusicFor = -1;
   end
   Controls.FallbackLeaderImage:SetHide(false);
 
   if (ms_ActiveSessionID == nil) then
-        bDoAudio = true;
+    bDoAudio = true;
     local ePlayerMood = DiplomacySupport_GetPlayerMood(ms_SelectedPlayer, ms_LocalPlayerID);
     -- What do they think of us?
     if (ePlayerMood == DiplomacyMoodTypes.HAPPY) then
@@ -2214,26 +2277,28 @@ function OnLeaderLoaded()
     end
   end
 
-    if (bDoAudio == true) then
+  if (bDoAudio == true) then
     -- if current civ is unknown, give mods a chance to handle it
     if (UI.GetCivilizationSoundSwitchValueByLeader(ms_LocalPlayerLeaderID) == -1) then
       UI.PauseModCivMusic();
     end
 
     -- if leader IDs don't match
-        if (m_lastLeaderPlayedMusicFor ~= ms_OtherLeaderID) then
+    if (m_lastLeaderPlayedMusicFor ~= ms_OtherLeaderID) then
 
       -- stop modder civ's leader music if necessary
       if (m_lastLeaderPlayedMusicFor ~= -1) then
         UI.StopModCivLeaderMusic(m_lastLeaderPlayedMusicFor);
       end
 
+      -- always duck ambience here
+      UI.SetSoundStateValue("Game_Views", "Leader_Screen");
+
       -- and Wwise IDs don't match
       if (UI.GetCivilizationSoundSwitchValueByLeader(m_lastLeaderPlayedMusicFor) ~= UI.GetCivilizationSoundSwitchValueByLeader(ms_OtherLeaderID)) then
         -- if new leader is also a modder civ, take care of that
         UI.SetSoundSwitchValue("LEADER_SCREEN_CIVILIZATION", UI.GetCivilizationSoundSwitchValueByLeader(ms_OtherLeaderID));
         UI.SetSoundSwitchValue("Game_Location", UI.GetNormalEraSoundSwitchValue(ms_OtherID));
-        UI.SetSoundStateValue("Game_Views", "Leader_Screen");
         UI.PlaySound("Play_Leader_Music");
         m_lastLeaderPlayedMusicFor = ms_OtherLeaderID;
       end
@@ -2243,8 +2308,8 @@ function OnLeaderLoaded()
         UI.PlayModCivLeaderMusic(ms_OtherID);
         m_lastLeaderPlayedMusicFor = ms_OtherID;
       end
-        end
     end
+  end
 end
 
 -- ===========================================================================
@@ -2296,6 +2361,7 @@ function OnDiplomacySessionClosed(sessionID)
       ms_ActiveSessionID = nil;
 
       if (ms_currentViewMode == DEAL_MODE) then
+        ResetPlayerPanel();
         LuaEvents.DiploPopup_HideDeal();
         ms_bShowingDeal = false;
       end
@@ -2487,6 +2553,10 @@ end
 
 -- ===========================================================================
 function HandleESC()
+  if m_PopupDialog:IsOpen() then
+    m_PopupDialog:Close();
+    return;
+  end
   if (ms_currentViewMode == CONVERSATION_MODE) then
     if (ms_ActiveSessionID ~= nil) then
       if (Controls.BlackFadeAnim:IsStopped()) then
@@ -2503,11 +2573,7 @@ function HandleESC()
   elseif (ms_currentViewMode == DEAL_MODE) then
       -- No handling ESC while transitioning to/from deal mode.  The deal screen will handle it if it is up.
   else
-    if(m_PopupDialog:IsOpen())then
-      m_PopupDialog:Close()
-    else
     Close();
-    end
   end
 end
 
@@ -2526,12 +2592,6 @@ function OnInputHandler( pInputStruct:table )
   local uiMsg = pInputStruct:GetMessageType();
   if uiMsg == KeyEvents.KeyUp then
     return KeyHandler( pInputStruct:GetKey() );
-  end
-  if (uiMsg == MouseEvents.LButtonUp or
-    uiMsg == MouseEvents.RButtonUp or
-    uiMsg == MouseEvents.MButtonUp or
-    uiMsg == MouseEvents.PointerUp) then
-    ClearValueEdit();
   end
 
   return false;
@@ -2622,8 +2682,8 @@ function ResetPlayerPanel()
   if (ms_PlayerPanel ~= nil) then
     ms_PlayerPanel.ContentStack:CalculateSize();
     ms_PlayerPanel.ContentStack:ReprocessAnchoring();
-    ms_PlayerPanel.ContentStack:SetHide(false);
-    ms_PlayerPanel.SubOptionsStack:SetHide(true);
+    ms_PlayerPanel.RootStack:SetHide(false);
+    ms_PlayerPanel.SubContainerStack:SetHide(true);
   end
 end
 
@@ -2656,6 +2716,8 @@ function Close()
 
     UI.PlaySound("Exit_Leader_Screen");
     UI.SetSoundStateValue("Game_Views", "Normal_View");
+
+    LuaEvents.DiplomacyActionView_ShowIngameUI();
 end
 
 
@@ -2741,11 +2803,13 @@ end
 -- ===========================================================================
 function OnUserRequestClose()
   -- Is this showing; if so then it needs to raise dialog to handle close
-  if ContextPtr:IsHidden()==false then
-    if Controls.QuitPopupDialog:IsHidden() then
-      Controls.QuitPopupDialog:SetHide( false );
+    if (not ContextPtr:IsHidden() and ms_currentViewMode ~= DEAL_MODE) then
+      m_PopupDialog:Reset();
+      m_PopupDialog:AddText(Locale.Lookup("LOC_CONFIRM_EXIT_TXT"));
+      m_PopupDialog:AddButton(Locale.Lookup("LOC_NO"), nil);
+      m_PopupDialog:AddButton(Locale.Lookup("LOC_YES"), OnQuitYes, nil, nil, "PopupButtonInstanceRed");
+      m_PopupDialog:Open();
     end
-  end
 end
 
 -- ===========================================================================
@@ -2756,21 +2820,12 @@ function OnQuitYes()
 end
 
 -- ===========================================================================
---	UI Callback
--- ===========================================================================
-function OnQuitNo()
-  Controls.QuitPopupDialog:SetHide( true );
-end
-
--- ===========================================================================
 --	HOTLOADING UI EVENTS
 -- ===========================================================================
 function OnInit(isHotload:boolean)
   CreatePanels();
   if isHotload and not ContextPtr:IsHidden() then
     LuaEvents.GameDebug_GetValues( "DiplomacyActionView" );
-    InitializeView();
-    OnShow();
   end
 end
 
@@ -2778,12 +2833,13 @@ end
 function OnShutdown()
   -- Cache values for hotloading...
   LuaEvents.GameDebug_AddValue("DiplomacyActionView", "isHidden", ContextPtr:IsHidden());
+  LuaEvents.GameDebug_AddValue("DiplomacyActionView", "otherPlayerID", ms_OtherPlayerID);
 end
 
 -- LUA EVENT:  Set cached values back after a hotload.
 function OnGameDebugReturn( context:string, contextTable:table )
   if context == "DiplomacyActionView" and contextTable["isHidden"] ~= nil and not contextTable["isHidden"] then
-    CreatePanels();
+    OnOpenDiplomacyActionView(contextTable["otherPlayerID"]);
   end
 end
 
@@ -2803,7 +2859,7 @@ function Initialize()
   ContextPtr:SetShutdown( OnShutdown );
   ContextPtr:SetShowHandler( OnShow );
   ContextPtr:SetHideHandler( OnHide );
-  LuaEvents.GameDebug_Return.Add(OnGameDebugReturn);
+  LuaEvents.GameDebug_Return.Add( OnGameDebugReturn );
 
   -- Game Core Events
   Events.DiplomacySessionClosed.Add( OnDiplomacySessionClosed );
@@ -2820,20 +2876,14 @@ function Initialize()
   LuaEvents.TopPanel_OpenDiplomacyActionView.Add(OnOpenDiplomacyActionView);
   LuaEvents.DiploScene_SetDealAnimation.Add(OnSetDealAnimation);
 
-  --LuaEvents.Tutorial_ViewDiploIntel.Add(OnActivateIntelRelationshipPanel(Controls.PlayerContainer));
-  --LuaEvents.Tutorial_ViewDiploAccessLevel.Add(OnActivateIntelAccessLevelPanel(Controls.PlayerContainer));
-  --LuaEvents.Tutorial_ViewDiploRelationship.Add(OnActivateIntelGossipHistoryPanel(Controls.PlayerContainer));
-  --LuaEvents.Tutorial_CloseDiploActionView.Add(Close);
-
   Controls.CloseButton:RegisterCallback( Mouse.eLClick, OnClose );
   Controls.CloseButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.YesButton:RegisterCallback( Mouse.eLClick, OnQuitYes );
-  Controls.NoButton:RegisterCallback( Mouse.eLClick, OnQuitNo );
 
   -- Size controls for screen:
   local screenX, screenY:number = UIManager:GetScreenSizeVal();
   local leaderResponseX = math.floor(screenX * CONVO_X_MULTIPLIER);
   Controls.LeaderResponseGrid:SetSizeX(leaderResponseX);
   Controls.LeaderResponseText:SetWrapWidth(leaderResponseX-40);
+  Controls.LeaderReasonText:SetWrapWidth(leaderResponseX-40);
 end
 Initialize();
