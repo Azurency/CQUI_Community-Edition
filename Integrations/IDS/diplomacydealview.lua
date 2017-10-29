@@ -98,6 +98,11 @@ local YIELD_FONT_ICONS:table = {
         TourismYield			= "[ICON_TourismLarge]"
 };
 
+local CQUI_GreatWork_YieldChanges = {}
+for row in GameInfo.GreatWork_YieldChanges() do
+  CQUI_GreatWork_YieldChanges[row.GreatWorkType] = row
+end
+
 -- ===========================================================================
 function SetIconToSize(iconControl, iconName, iconSize)
   if iconSize == nil then
@@ -209,7 +214,7 @@ function UpdateProposedWorkingDeal()
       UpdateDealStatus();
     else
       if (IsAutoPropose()) then
-        ProposeWorkingDeal(IsAutoPropose());
+        ProposeWorkingDeal(true);
       end
     end
   end
@@ -683,7 +688,9 @@ function OnProposeOrAcceptDeal()
 
   ClearValueEdit();
 
-  if (ms_LastIncomingDealProposalAction == DealProposalAction.PENDING or ms_LastIncomingDealProposalAction == DealProposalAction.REJECTED) then
+  if (ms_LastIncomingDealProposalAction == DealProposalAction.PENDING or 
+        ms_LastIncomingDealProposalAction == DealProposalAction.REJECTED or 
+        ms_LastIncomingDealProposalAction == DealProposalAction.EQUALIZE_FAILED) then
     ProposeWorkingDeal();
     UpdateDealStatus();
     UI.PlaySound("Confirm_Bed_Positive");
@@ -944,6 +951,9 @@ end
 -- Update the deal panel for a player
 function UpdateDealPanel(player)
 
+  -- If we modify the deal without sending it to the AI then reset the status to PENDING
+  ms_LastIncomingDealProposalAction = DealProposalAction.PENDING;
+
   UpdateDealStatus();
 
   PopulatePlayerDealPanel(Controls.TheirOfferStack, ms_OtherPlayer);
@@ -1115,38 +1125,50 @@ function UpdateProposalButtons(bDealValid)
       local iItemsFromLocal = pDeal:GetItemCount(ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
       local iItemsFromOther = pDeal:GetItemCount(ms_OtherPlayer:GetID(), ms_LocalPlayer:GetID());
 
+      -- Hide/show directions if either side has no items
+      Controls.MyDirections:SetHide( iItemsFromLocal > 0);
+      Controls.TheirDirections:SetHide( iItemsFromOther > 0);
+
       if (not ms_bIsDemand) then
         if (not ms_OtherPlayerIsHuman) then
           -- Dealing with an AI
           if (pDeal:HasUnacceptableItems()) then
-            Controls.MyDirections:SetHide(true);
-            Controls.TheirDirections:SetHide(true);
             Controls.EqualizeDeal:SetHide(true);
             Controls.AcceptDeal:SetHide(true);
-            --SetLeaderDialog("LOC_DIPLO_DEAL_UNACCEPTABLE_DEAL", "");
           elseif (iItemsFromLocal > 0 and iItemsFromOther == 0) then
             -- One way gift?
-            Controls.MyDirections:SetHide(true);
-            Controls.TheirDirections:SetHide(false);
             Controls.WhatWouldYouGiveMe:SetHide(false);
             Controls.WhatWouldItTakeButton:SetHide(true);
-            Controls.EqualizeDeal:SetHide(true);
-            Controls.AcceptDeal:SetHide(false);
+            -- If the AI rejects after trying to equalize a gift then hide equalize button
+            local canAccept = true;
+            if ms_LastIncomingDealProposalAction == DealProposalAction.EQUALIZE_FAILED then
+              Controls.EqualizeDeal:SetHide(true);
+            elseif ms_LastIncomingDealProposalAction == DealProposalAction.REJECTED then
+              canAccept = false;
+              Controls.EqualizeDeal:SetHide(true);
+            else
+              Controls.EqualizeDeal:SetHide(false);
+            end
+            Controls.AcceptDeal:SetHide(not canAccept);
             Controls.AcceptDeal:LocalizeAndSetText("LOC_DIPLOMACY_DEAL_GIFT_DEAL");
-            -- Make sure the leader text is set to something appropriate.
-            --SetLeaderDialog("LOC_DIPLO_DEAL_LEADER_GIFT", "LOC_DIPLO_DEAL_LEADER_GIFT_EFFECT");
           else
             if (iItemsFromLocal == 0 and iItemsFromOther > 0) then
-              Controls.MyDirections:SetHide(false);
-              Controls.TheirDirections:SetHide(true);
               Controls.WhatWouldYouGiveMe:SetHide(true);
               Controls.WhatWouldItTakeButton:SetHide(false);
+              -- AI was unable to equalize for the requested items so hide the equalize button
+              if ms_LastIncomingDealProposalAction == DealProposalAction.EQUALIZE_FAILED then
+                Controls.EqualizeDeal:SetHide(true);
+              else
+                Controls.EqualizeDeal:SetHide(false);
+              end
               Controls.AcceptDeal:SetHide(true); --If either of the above buttons are showing, disable the main accept button
-              -- Make sure the leader text is set to something appropriate.
-              --SetLeaderDialog("LOC_DIPLO_DEAL_UNFAIR", "");
-            else												--Something is being offered on both sides
-              Controls.MyDirections:SetHide(true);
-              Controls.TheirDirections:SetHide(true);
+            else --Something is being offered on both sides
+              -- Show equalize button if the accept button is hidden and the AI already hasn't attempted to equalize the deal
+              if Controls.AcceptDeal:IsHidden() and ms_LastIncomingDealProposalAction ~= DealProposalAction.EQUALIZE_FAILED then
+                Controls.EqualizeDeal:SetHide(false);
+              else
+                Controls.EqualizeDeal:SetHide(true);
+              end
               Controls.WhatWouldYouGiveMe:SetHide(true);
               Controls.WhatWouldItTakeButton:SetHide(true);
               Controls.AcceptDeal:LocalizeAndSetText("LOC_DIPLOMACY_DEAL_ACCEPT_DEAL");
@@ -1299,17 +1321,17 @@ function UpdateProposalButtons(bDealValid)
   Controls.CenterDealOffersStack:ReprocessAnchoring();
 
   Controls.TheirOfferStack:CalculateSize();
-  Controls.TheirOfferStack:ReprocessAnchoring();
+  --Controls.TheirOfferStack:ReprocessAnchoring();
   Controls.TheirOfferBracket:DoAutoSize();
-  Controls.TheirOfferBracket:ReprocessAnchoring();
+  --Controls.TheirOfferBracket:ReprocessAnchoring();
   Controls.TheirOfferLabel:ReprocessAnchoring();
   --Controls.TheirOfferScroll:CalculateSize();
   --Controls.TheirOfferBracket:ReprocessAnchoring();	-- Because the bracket is centered inside the scroll box, we have to reprocess this again.
 
   Controls.MyOfferStack:CalculateSize();
-  Controls.MyOfferStack:ReprocessAnchoring();
+  --Controls.MyOfferStack:ReprocessAnchoring();
   Controls.MyOfferBracket:DoAutoSize();
-  Controls.MyOfferBracket:ReprocessAnchoring();
+  --Controls.MyOfferBracket:ReprocessAnchoring();
   Controls.MyOfferLabel:ReprocessAnchoring();
   --Controls.MyOfferScroll:CalculateSize();
   --Controls.MyOfferBracket:ReprocessAnchoring();		-- Because the bracket is centered inside the scroll box, we have to reprocess this again.
@@ -1383,7 +1405,7 @@ function OnClickAvailableBasic(itemType, player, valueType)
       if (pDealItem ~= nil) then
         pDealItem:SetValueType(valueType);
         UpdateDealPanel(player);
-        UpdateProposedWorkingDeal();
+        DealManager.SendWorkingDeal(DealProposalAction.INSPECT, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
       end
     end
   end
@@ -1409,9 +1431,8 @@ function OnClickAvailableResource(player, resourceType)
           pDealItem:SetDuration(30);	-- Default to this many turns
 
           UpdateDealPanel(player);
-          UpdateProposedWorkingDeal();
           UI.PlaySound("UI_GreatWorks_Put_Down");
-
+          DealManager.SendWorkingDeal(DealProposalAction.INSPECT, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
         end
       end
     end
@@ -1421,20 +1442,20 @@ end
 -- ===========================================================================
 function OnClickAvailableAgreement(player, agreementType, agreementTurns)
 
-	local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
-	if (pDeal ~= nil) then
+  local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+  if (pDeal ~= nil) then
 
-		-- Already there?
-		local pDealItem = pDeal:FindItemByType(DealItemTypes.AGREEMENTS, agreementType, player:GetID());
-		if (pDealItem == nil) then
+    -- Already there?
+    local pDealItem = pDeal:FindItemByType(DealItemTypes.AGREEMENTS, agreementType, player:GetID());
+    if (pDealItem == nil) then
       -- No
       -- AZURENCY : Joint War and Research Agreements need special treatment (can be only modified on the player side)
       -- AZURENCY : Bug ? RESEARCH_AGREEMENT is not in DealAgreementTypes (see hack line 1824)
-			--if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.RESEARCH_AGREEMENT) then
-			if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == ms_DealAgreementTypesResearchAgreement) then
+      if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.RESEARCH_AGREEMENT) then
+      --if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == ms_DealAgreementTypesResearchAgreement) then
         pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, ms_LocalPlayer:GetID());
-			else
-				pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, player:GetID());
+      else
+        pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, player:GetID());
       end
 
       if (pDealItem ~= nil) then
@@ -1442,11 +1463,11 @@ function OnClickAvailableAgreement(player, agreementType, agreementTurns)
         pDealItem:SetDuration(agreementTurns);
 
         UpdateDealPanel(player);
-        UpdateProposedWorkingDeal();
         UI.PlaySound("UI_GreatWorks_Put_Down");
+        DealManager.SendWorkingDeal(DealProposalAction.INSPECT, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
       end
-		end
-	end
+    end
+  end
 end
 
 -- ===========================================================================
@@ -1484,7 +1505,7 @@ function OnClickAvailableCity(player, valueType, subType)
           pDeal:RemoveItemByID(pDealItem:GetID());
         end
         UpdateDealPanel(player);
-        UpdateProposedWorkingDeal();
+        DealManager.SendWorkingDeal(DealProposalAction.INSPECT, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
       end
     end
   end
@@ -1510,7 +1531,7 @@ function OnRemoveDealItem(player, itemID)
       if (not pDealItem:IsLocked()) then
         if (pDeal:RemoveItemByID(itemID)) then
           UpdateDealPanel(player);
-          UpdateProposedWorkingDeal();
+          DealManager.SendWorkingDeal(DealProposalAction.INSPECT, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
           UI.PlaySound("UI_GreatWorks_Pick_Up");
         end
       end
@@ -2084,8 +2105,8 @@ function PopulateAvailableGreatWorks(player : table, iconList : table)
 
 
         --CQUI Changes
-        local yieldType:string = GameInfo.GreatWork_YieldChanges[greatWorkDesc.GreatWorkType].YieldType;
-        local yieldValue:number = GameInfo.GreatWork_YieldChanges[greatWorkDesc.GreatWorkType].YieldChange;
+        local yieldType:string = CQUI_GreatWork_YieldChanges[greatWorkDesc.GreatWorkType].YieldType;
+        local yieldValue:number = CQUI_GreatWork_YieldChanges[greatWorkDesc.GreatWorkType].YieldChange;
         local greatWorkYields:string = YIELD_FONT_ICONS[yieldType] .. yieldValue .. " [ICON_TourismLarge]" .. greatWorkDesc.Tourism;
         local tooltipText:string;
         local greatWorkTypeName:string;
@@ -2526,7 +2547,9 @@ end
 -- ===========================================================================
 function HandleESC()
   -- Were we just viewing the deal?
-  if (not Controls.ResumeGame:IsHidden()) then
+  if ( m_kPopupDialog:IsOpen()) then
+    m_kPopupDialog:Close();
+  elseif (not Controls.ResumeGame:IsHidden()) then
     OnResumeGame();
   else
     OnRefuseDeal();
@@ -2623,11 +2646,12 @@ Events.DiplomacyIncomingDeal.Add(OnDiplomacyIncomingDeal);
 
 function OnDealUpdated(otherPlayerID, eAction, szText)
   if (not ContextPtr:IsHidden()) then
-    OnDiplomacyIncomingDeal( otherPlayerID, Game.GetLocalPlayer(), eAction);
     -- Display some updated text.
-    if (szText ~= nil) then
+    if (szText ~= nil and szText ~= "") then
       --SetLeaderDialog(szText, "");
     end
+    -- Update deal and possible override text from szText
+    OnDiplomacyIncomingDeal( otherPlayerID, Game.GetLocalPlayer(), eAction);
   end
 end
 LuaEvents.DiploPopup_DealUpdated.Add(OnDealUpdated);
@@ -2807,20 +2831,19 @@ function OnShow()
   Controls.MyInventoryScroll:CalculateSize();
   Controls.TheirInventoryScroll:CalculateSize();
 
+  m_kPopupDialog:Close(); -- Close and reset the popup in case it's open
+
   if (iAvailableItemCount == 0) then
-    -- Nothing to trade/demand
-    if not m_kPopupDialog:IsOpen() then
-      if (ms_bIsDemand) then
-        m_kPopupDialog:AddText(Locale.Lookup("LOC_DIPLO_DEMAND_NO_AVAILABLE_ITEMS"));
-        m_kPopupDialog:AddTitle( Locale.ToUpper(Locale.Lookup("LOC_DIPLO_CHOICE_MAKE_DEMAND")))
-        m_kPopupDialog:AddButton( Locale.Lookup("LOC_OK_BUTTON"), OnRefuseDeal);
-      else
-        m_kPopupDialog:AddText(	  Locale.Lookup("LOC_DIPLO_DEAL_NO_AVAILABLE_ITEMS"));
-        m_kPopupDialog:AddTitle( Locale.ToUpper(Locale.Lookup("LOC_DIPLO_CHOICE_MAKE_DEAL")))
-        m_kPopupDialog:AddButton( Locale.Lookup("LOC_OK_BUTTON"), OnRefuseDeal);
-      end
-      m_kPopupDialog:Open("DiplomacyActionView");
+    if (ms_bIsDemand) then
+      m_kPopupDialog:AddText(Locale.Lookup("LOC_DIPLO_DEMAND_NO_AVAILABLE_ITEMS"));
+      m_kPopupDialog:AddTitle( Locale.ToUpper(Locale.Lookup("LOC_DIPLO_CHOICE_MAKE_DEMAND")))
+      m_kPopupDialog:AddButton( Locale.Lookup("LOC_OK_BUTTON"), OnRefuseDeal);
+    else
+      m_kPopupDialog:AddText(	  Locale.Lookup("LOC_DIPLO_DEAL_NO_AVAILABLE_ITEMS"));
+      m_kPopupDialog:AddTitle( Locale.ToUpper(Locale.Lookup("LOC_DIPLO_CHOICE_MAKE_DEAL")))
+      m_kPopupDialog:AddButton( Locale.Lookup("LOC_OK_BUTTON"), OnRefuseDeal);
     end
+    m_kPopupDialog:Open();
   else
     if m_kPopupDialog:IsOpen() then
       m_kPopupDialog:Close();
@@ -2830,8 +2853,10 @@ function OnShow()
   PopulatePlayerDealPanel(Controls.TheirOfferStack, ms_OtherPlayer);
   PopulatePlayerDealPanel(Controls.MyOfferStack, ms_LocalPlayer);
   UpdateDealStatus();
+
   -- We may be coming into this screen with a deal already set, which needs to be sent to the AI for inspection. Check that.
-  if (IsAutoPropose()) then
+  -- Don't send AI proposals for inspection or they will think the player was the creator of the deal
+  if (IsAutoPropose() and (ms_InitiatedByPlayerID ~= ms_OtherPlayerID or ms_OtherPlayerIsHuman)) then
     ProposeWorkingDeal(true);
   end
 
@@ -2882,6 +2907,23 @@ function OnLocalPlayerTurnEnd()
 end
 
 -- ===========================================================================
+--	Engine Event
+-- ===========================================================================
+function OnUserRequestClose()
+  -- Is this showing; if so then it needs to raise dialog to handle close
+  if (not ContextPtr:IsHidden()) then
+    m_kPopupDialog:Reset();
+    m_kPopupDialog:AddText(Locale.Lookup("LOC_CONFIRM_EXIT_TXT"));
+    m_kPopupDialog:AddButton(Locale.Lookup("LOC_NO"), nil);
+    m_kPopupDialog:AddButton(Locale.Lookup("LOC_YES"), OnQuitYes, nil, nil, "PopupButtonInstanceRed");
+    m_kPopupDialog:Open();
+  end
+end
+function OnQuitYes()
+  Events.UserConfirmedClose();
+end
+
+-- ===========================================================================
 function Initialize()
 
   ContextPtr:SetInitHandler( OnInit );
@@ -2891,8 +2933,9 @@ function Initialize()
   ContextPtr:SetHideHandler( OnHide );
 
   Events.LocalPlayerTurnEnd.Add( OnLocalPlayerTurnEnd );
+  Events.UserRequestClose.Add( OnUserRequestClose );
 
-  m_kPopupDialog = PopupDialog:new( "DealConfirmDialog" );
+  m_kPopupDialog = PopupDialog:new( "DiplomacyDealView" );
 end
 
 Initialize();
