@@ -69,9 +69,9 @@ function Refresh()
   end
 
   -- Calculate Control Size
-  Controls.CityScrollPanel:CalculateInternalSize();
   Controls.CityStack:CalculateSize();
   Controls.CityStack:ReprocessAnchoring();
+  Controls.CityScrollPanel:CalculateInternalSize();
 end
 
 -- ===========================================================================
@@ -114,7 +114,9 @@ end
 -- ===========================================================================
 function AddCity(cityID:number)
   local city = Players[Game.GetLocalPlayer()]:GetCities():FindID(cityID)
+  print_debug("Adding city " .. Locale.Lookup(city:GetName()))
   local cityInstance:table = m_cityIM:GetInstance();
+  cityInstance.CityButton:SetHide(false);
   cityInstance.CityButton:SetText(Locale.ToUpper(city:GetName()));
 
   if m_newOriginCity ~= nil and m_newOriginCity:GetID() == cityID then
@@ -172,6 +174,8 @@ function TeleportToCity(city:table)
   local pSelectedUnit = UI.GetHeadSelectedUnit();
   if (UnitManager.CanStartOperation( pSelectedUnit, eOperation, nil, tParameters)) then
     UnitManager.RequestOperation( pSelectedUnit, eOperation, tParameters);
+    UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+    UI.PlaySound("Unit_Relocate");
     OnClose();
   end
 end

@@ -203,12 +203,39 @@ function RefreshTopPanel()
       end
     end
 
-    Controls.OriginResources:SetToolTipString("");
-    Controls.DestinationResources:SetToolTipString("");
-
     Controls.OriginResourceHeader:SetText(L_Lookup("LOC_ROUTECHOOSER_RECEIVES_RESOURCE", L_Lookup(m_originCity:GetName())));
     Controls.DestinationResourceHeader:SetText(L_Lookup("LOC_ROUTECHOOSER_RECEIVES_RESOURCE", L_Lookup(m_destinationCity:GetName())));
+    local originTooltipText = ""
+    local destinationTooltipText:string = "";
 
+    -- Handle Religion pressure icons
+    local destinationMajorityReligion = m_destinationCity:GetReligion():GetMajorityReligion();
+    if (destinationMajorityReligion > 0) then
+      local pressureValue, sourceText = GetReligiousPressureForCity(destinationMajorityReligion, m_destinationCity, true);
+      if (pressureValue ~= 0) then
+        if (originTooltipText ~= "") then
+          originTooltipText = originTooltipText .. "[NEWLINE]";
+        end
+        originTooltipText = originTooltipText .. sourceText;
+        AddReligiousPressureResourceEntry(GameInfo.Religions[destinationMajorityReligion], pressureValue, true, sourceText, originYieldInstance);
+        originReceivedResources = true;
+      end
+    end
+    Controls.OriginResources:SetToolTipString(originTooltipText);
+
+    local originMajorityReligion = m_originCity:GetReligion():GetMajorityReligion();
+    if (originMajorityReligion > 0) then
+      local pressureValue, sourceText = GetReligiousPressureForCity(originMajorityReligion, m_originCity, false);
+      if (pressureValue ~= 0) then
+        if (destinationTooltipText ~= "") then
+          destinationTooltipText = destinationTooltipText .. "[NEWLINE]";
+        end
+        destinationTooltipText = destinationTooltipText .. sourceText;
+        AddReligiousPressureResourceEntry(GameInfo.Religions[originMajorityReligion], pressureValue, false, sourceText, destinationYieldInstance);
+        destinationReceivedResources = true;
+      end
+    end
+    Controls.DestinationResources:SetToolTipString(destinationTooltipText);
 
     if originReceivedResources then
       Controls.OriginReceivesNoBenefitsLabel:SetHide(true);
@@ -385,6 +412,8 @@ function AddRouteToDestinationStack(routeInfo:table)
 
   local destinationPlayer:table = Players[routeInfo.DestinationCityPlayer];
   local destinationCity:table = destinationPlayer:GetCities():FindID(routeInfo.DestinationCityID);
+  local originPlayer:table = Players[routeInfo.OriginCityPlayer];
+  local originCity:table = originPlayer:GetCities():FindID(routeInfo.OriginCityID);
 
   -- Update Selector Brace
   if m_destinationCity ~= nil and destinationCity:GetName() == m_destinationCity:GetName() then
@@ -464,6 +493,30 @@ function AddRouteToDestinationStack(routeInfo:table)
     SetRouteInstanceYields(destinationYieldInstance, yieldIndex, destinationYieldValue)
   end
 
+  local destinationMajorityReligion = destinationCity:GetReligion():GetMajorityReligion();
+  if (destinationMajorityReligion > 0) then
+    local pressureValue, sourceText = GetReligiousPressureForCity(destinationMajorityReligion, destinationCity, true);
+    if (pressureValue ~= 0) then
+      if (tooltipText ~= "") then
+        tooltipText = tooltipText .. "[NEWLINE]";
+      end
+      tooltipText = tooltipText .. sourceText;
+      AddReligiousPressureResourceEntry(GameInfo.Religions[destinationMajorityReligion], pressureValue, true, sourceText, originYieldInstance);
+    end
+  end
+
+  local originMajorityReligion = originCity:GetReligion():GetMajorityReligion();
+  if (originMajorityReligion > 0) then
+    local pressureValue, sourceText = GetReligiousPressureForCity(originMajorityReligion, destinationCity, false);
+    if (pressureValue ~= 0) then
+      if (tooltipText ~= "") then
+        tooltipText = tooltipText .. "[NEWLINE]";
+      end
+      tooltipText = tooltipText .. sourceText;
+      AddReligiousPressureResourceEntry(GameInfo.Religions[originMajorityReligion], pressureValue, false, sourceText, destinationYieldInstance);
+    end
+  end
+
   -- Cleanup
   cityEntry.ResourceList:CalculateSize();
   cityEntry.ResourceList:ReprocessAnchoring();
@@ -479,6 +532,7 @@ end
 -- Route button helpers
 -- ---------------------------------------------------------------------------
 
+-- ===========================================================================
 function SetRouteInstanceYields(yieldsInstance, yieldIndex, yieldValue)
   local iconString, text = FormatYieldText(yieldIndex, yieldValue);
 
@@ -495,36 +549,70 @@ function SetRouteInstanceYields(yieldsInstance, yieldIndex, yieldValue)
   elseif (yieldIndex == FAITH_INDEX) then
     yieldsInstance.YieldFaithLabel:SetText(text .. iconString);
   end
+end
 
-  if colorYieldValues then
-    if (yieldIndex == FOOD_INDEX) then
-      yieldsInstance.YieldFoodLabel:SetColorByName("Food");
-    elseif (yieldIndex == PRODUCTION_INDEX) then
-      yieldsInstance.YieldProductionLabel:SetColorByName("Production");
-    elseif (yieldIndex == GOLD_INDEX) then
-      yieldsInstance.YieldGoldLabel:SetColorByName("Gold");
-    elseif (yieldIndex == SCIENCE_INDEX) then
-      yieldsInstance.YieldScienceLabel:SetColorByName("Science");
-    elseif (yieldIndex == CULTURE_INDEX) then
-      yieldsInstance.YieldCultureLabel:SetColorByName("Culture");
-    elseif (yieldIndex == FAITH_INDEX) then
-      yieldsInstance.YieldFaithLabel:SetColorByName("Faith");
+-- ===========================================================================
+function GetReligiousPressureForCity(religionIndex:number, destinationCity:table, forOriginCity:boolean)
+  local pressureValue = 0;
+  local pressureIconString = "";
+  local cityName = "";
+  local tradeManager = Game.GetTradeManager();
+
+  if m_originCity == nil or destinationCity == nil then
+    return 0, "";
     end
+
+  if (forOriginCity) then
+    pressureValue = tradeManager:CalculateOriginReligiousPressureFromPotentialRoute(m_originCity:GetOwner(), m_originCity:GetID(), destinationCity:GetOwner(), destinationCity:GetID(), religionIndex);
+    pressureIconString = "[ICON_PressureLeft]";
+    cityName = destinationCity:GetName();
   else
-    if (yieldIndex == FOOD_INDEX) then
-      yieldsInstance.YieldFoodLabel:SetColorByName("White");
-    elseif (yieldIndex == PRODUCTION_INDEX) then
-      yieldsInstance.YieldProductionLabel:SetColorByName("White");
-    elseif (yieldIndex == GOLD_INDEX) then
-      yieldsInstance.YieldGoldLabel:SetColorByName("White");
-    elseif (yieldIndex == SCIENCE_INDEX) then
-      yieldsInstance.YieldScienceLabel:SetColorByName("White");
-    elseif (yieldIndex == CULTURE_INDEX) then
-      yieldsInstance.YieldCultureLabel:SetColorByName("White");
-    elseif (yieldIndex == FAITH_INDEX) then
-      yieldsInstance.YieldFaithLabel:SetColorByName("White");
+    pressureValue = tradeManager:CalculateDestinationReligiousPressureFromPotentialRoute(m_originCity:GetOwner(), m_originCity:GetID(), destinationCity:GetOwner(), destinationCity:GetID(), religionIndex);
+    pressureIconString = "[ICON_PressureRight]";
+    cityName = m_originCity:GetName();
+    end
+  local sourceText = Locale.Lookup("LOC_ROUTECHOOSER_RELIGIOUS_PRESSURE_SOURCE_MAJORITY_RELIGION", pressureValue, pressureIconString, Game.GetReligion():GetName(religionIndex), cityName);
+  return pressureValue, sourceText;
+  end
+
+-- ===========================================================================
+function AddReligiousPressureResourceEntry(religionInfo:table, pressureValue:number, forOriginCity:boolean, sourceText:string, instanceControl:table)
+  -- local entryInstance:table = {};
+  -- ContextPtr:BuildInstanceForControl( "ReligionPressureEntryInstance", entryInstance, stackControl );
+  instanceControl.RouteReligionContainer:SetHide(false);
+
+  local religionColor = UI.GetColorValue(religionInfo.Color);
+  local religionName = Game.GetReligion():GetName(religionInfo.Index);
+  instanceControl.ReligionIcon:SetIcon("ICON_" .. religionInfo.ReligionType);
+  instanceControl.ReligionIcon:SetColor(religionColor);
+  instanceControl.ReligionIconBacking:SetColor(religionColor);
+  instanceControl.ReligionIconBacking:SetToolTipString(religionName);
+
+  local icon:string, text:string = FormatReligiousPressureText(religionInfo, pressureValue, forOriginCity);
+  instanceControl.ResourceEntryText:SetText(text);
+  -- instanceControl.RouteReligionContainer:CalculateSize();
+  -- instanceControl.RouteReligionContainer:ReprocessAnchoring();
+end
+
+-- ===========================================================================
+function FormatReligiousPressureText(religionInfo, pressureValue, forOriginCity:boolean)
+  local text:string = "";
+
+  local iconString = "";
+  if (religionInfo ~= nil) then
+    if (forOriginCity) then
+      iconString = "[ICON_PressureLeft]";
+    else
+      iconString = "[ICON_PressureRight]";
     end
   end
+
+  if (pressureValue >= 0) then
+    text = text .. "+";
+  end
+
+  text = text .. pressureValue;
+  return iconString, text;
 end
 
 -- ===========================================================================

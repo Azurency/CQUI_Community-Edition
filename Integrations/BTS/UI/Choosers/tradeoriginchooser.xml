@@ -31,7 +31,7 @@
       </Container>
 
       <!-- Body Container -->
-      <Container ID="RouteOriginChooserBody" Anchor="C,T" Offset="0,0" Size="parent,0" AutoSize="V">
+      <Container ID="RouteOriginChooserBody" Anchor="C,T" Offset="0,0" Size="parent,parent">
         <ScrollPanel    ID="CityScrollPanel"  Offset="18,10" Size="parent-22,parent-35" Vertical="1" AutoScrollBar="0">
           <ScrollBar    Anchor="L,T" Size="11,parent-125" AnchorSide="O,I" Offset="4,0" Style="ScrollVerticalBar" />
           <Stack        ID="CityStack" StackGrowth="Bottom" StackPadding="2" />
