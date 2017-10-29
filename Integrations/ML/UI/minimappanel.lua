@@ -4,6 +4,7 @@
 include( "InstanceManager" );
 include( "Civ6Common.lua" ); -- GetCivilizationUniqueTraits, GetLeaderUniqueTraits
 include( "SupportFunctions" );
+--include( "TradeSupport" )
 
 -- ===========================================================================
 --  CONSTANTS
@@ -709,6 +710,13 @@ end
 -- ===========================================================================
 function ResizeBacking()
   Controls.MinimapBacking:SetSizeY(Controls.MinimapImage:GetSizeY() + MINIMAP_BACKING_PADDING_SIZEY);
+
+  -- if the minimap is collapsed, shift it accordingly
+  if ( m_isCollapsed ) then
+    Controls.Pause:Play();
+    Controls.CollapseAnim:SetEndVal(0, Controls.MinimapContainer:GetOffsetY() + Controls.MinimapContainer:GetSizeY());
+    Controls.CollapseAnim:SetToEnd();
+  end
 end
 
 -- ===========================================================================
@@ -725,6 +733,7 @@ end
 function OnLensLayerOn( layerNum:number )
   if layerNum == LensLayers.HEX_COLORING_RELIGION then
     UI.PlaySound("UI_Lens_Overlay_On");
+    UILens.SetDesaturation(1.0);
   elseif layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL then
     if m_CurrentModdedLensOn == MODDED_LENS_ID.APPEAL then
       SetAppealHexes();
@@ -772,8 +781,10 @@ end
 
 -- ===========================================================================
 function OnLensLayerOff( layerNum:number )
-  if (layerNum == LensLayers.HEX_COLORING_RELIGION or
-      layerNum == LensLayers.HEX_COLORING_CONTINENT or
+  if layerNum == LensLayers.HEX_COLORING_RELIGION then
+    UILens.SetDesaturation(0.0);
+
+  elseif (layerNum == LensLayers.HEX_COLORING_CONTINENT or
       layerNum == LensLayers.HEX_COLORING_OWING_CIV) then
     UI.PlaySound("UI_Lens_Overlay_Off");
 
@@ -2673,24 +2684,20 @@ function playerCanHave(playerID, xmlEntry)
     end
 
     for traitInfo in GameInfo.CivilizationTraits() do
-      if traitInfo.TraitType == xmlEntry.TraitType then
-        if traitInfo.CivilizationType ~= nil then
-          if civilizationType ~= traitInfo.CivilizationType then
-            -- print(civilizationType .. " ~= " .. traitInfo.CivilizationType)
-            return false
-          end
-        end
+      if traitInfo.TraitType == xmlEntry.TraitType and
+          traitInfo.CivilizationType ~= nil and
+          civilizationType ~= traitInfo.CivilizationType then
+        -- print(civilizationType .. " ~= " .. traitInfo.CivilizationType)
+        return false
       end
     end
 
     for traitInfo in GameInfo.LeaderTraits() do
-      if traitInfo.TraitType == xmlEntry.TraitType then
-        if traitInfo.LeaderType ~= nil then
-          if leaderType ~= traitInfo.LeaderType then
-            -- print(civilizationType .. " ~= " .. traitInfo.LeaderType)
-            return false
-          end
-        end
+      if traitInfo.TraitType == xmlEntry.TraitType and
+          traitInfo.LeaderType ~= nil and
+          leaderType ~= traitInfo.LeaderType then
+        -- print(civilizationType .. " ~= " .. traitInfo.LeaderType)
+        return false
       end
     end
 
@@ -2700,49 +2707,14 @@ function playerCanHave(playerID, xmlEntry)
 end
 
 function playerHasBuilderWonderModifier(playerID)
-  -- Get civ, and leader type name
-  local civTypeName = PlayerConfigurations[playerID]:GetCivilizationTypeName();
-  local leaderTypeName = PlayerConfigurations[playerID]:GetLeaderTypeName();
-
-  local civUA = GetCivilizationUniqueTraits(civTypeName);
-  local leaderUA = GetLeaderUniqueTraits(leaderTypeName);
-
-  for _, item in ipairs(civUA) do
-    local traitModifier = GameInfo.TraitModifiers[item.Hash];
-    -- dump(traitModifier);
-
-    -- Not hashed, so find the modifier id
-    for row in GameInfo.Modifiers() do
-      if row.ModifierId == GameInfo.TraitModifiers[item.Hash].ModifierId then
-        -- dump(row);
-
-        if row.ModifierType == "MODIFIER_PLAYER_ADJUST_UNIT_WONDER_PERCENT" then
-          -- print("Player has a modifier for wonder")
-          return true;
-        end
-      end
-    end
-  end
-
-  for _, item in ipairs(leaderUA) do
-    local traitModifier = GameInfo.TraitModifiers[item.Hash];
-    -- dump(traitModifier);
-
-    -- Not hashed, so find the modifier id
-    for row in GameInfo.Modifiers() do
-      if row.ModifierId == GameInfo.TraitModifiers[item.Hash].ModifierId then
-        -- dump(row);
-
-        if row.ModifierType == "MODIFIER_PLAYER_ADJUST_UNIT_WONDER_PERCENT" then
-          -- print("Player has a modifier for wonder")
-          return true;
-        end
-      end
-    end
-  end
+  return playerHasModifier(playerID, "MODIFIER_PLAYER_ADJUST_UNIT_WONDER_PERCENT");
 end
 
 function playerHasBuilderDistrictModifier(playerID)
+  return playerHasModifier(playerID, "MODIFIER_PLAYER_ADJUST_UNIT_DISTRICT_PERCENT");
+end
+
+function playerHasModifier(playerID, modifierType)
   -- Get civ, and leader
   local civTypeName = PlayerConfigurations[playerID]:GetCivilizationTypeName();
   local leaderTypeName = PlayerConfigurations[playerID]:GetLeaderTypeName();
@@ -2751,34 +2723,48 @@ function playerHasBuilderDistrictModifier(playerID)
   local leaderUA = GetLeaderUniqueTraits(leaderTypeName);
 
   for _, item in ipairs(civUA) do
-    local traitModifier = GameInfo.TraitModifiers[item.Hash];
-    -- dump(traitModifier);
+    local traitType = civUA[1].TraitType
+    -- print("Trait type: " .. traitType)
 
-    -- Not hashed, so find the modifier id
-    for row in GameInfo.Modifiers() do
-      if row.ModifierId == GameInfo.TraitModifiers[item.Hash].ModifierId then
-        -- dump(row);
+    -- Find the modifier ID
+    local modifierID;
+    for row in GameInfo.TraitModifiers() do
+      if row.TraitType == traitType then
+        local modifierID = row.ModifierId;
 
-        if row.ModifierType == "MODIFIER_PLAYER_ADJUST_UNIT_DISTRICT_PERCENT" then
-          -- print("Player has a modifier for district")
-          return true;
+        -- Find the matching modifier type
+        if modifierID ~= nil then
+          -- print("Modifier ID: " .. modifierID)
+          for row in GameInfo.Modifiers() do
+            if row.ModifierId == modifierID and row.ModifierType == modifierType then
+              -- print("Player has a modifier for district")
+              return true;
+            end
+          end
         end
       end
     end
   end
 
   for _, item in ipairs(leaderUA) do
-    local traitModifier = GameInfo.TraitModifiers[item.Hash];
-    -- dump(traitModifier);
+    local traitType = leaderUA[1].TraitType
+    -- print("Trait type: " .. traitType)
 
-    -- Not hashed, so find the modifier id
-    for row in GameInfo.Modifiers() do
-      if row.ModifierId == GameInfo.TraitModifiers[item.Hash].ModifierId then
-        -- dump(row);
+    -- Find the modifier ID
+    local modifierID;
+    for row in GameInfo.TraitModifiers() do
+      if row.TraitType == traitType then
+        local modifierID = row.ModifierId;
 
-        if row.ModifierType == "MODIFIER_PLAYER_ADJUST_UNIT_DISTRICT_PERCENT" then
-          -- print("Player has a modifier for district")
-          return true;
+        -- Find the matching modifier type
+        if modifierID ~= nil then
+          -- print("Modifier ID: " .. modifierID)
+          for row in GameInfo.Modifiers() do
+            if row.ModifierId == modifierID and row.ModifierType == modifierType then
+              -- print("Player has a modifier for district")
+              return true;
+            end
+          end
         end
       end
     end
@@ -3489,10 +3475,10 @@ function Initialize()
 
   -- Hide buttons not needed for the world builder
   if GameConfiguration.IsWorldBuilderEditor() then
-  Controls.LensButton:SetHide(true);
-  Controls.MapPinListButton:SetHide(true);
-  Controls.StrategicSwitcherButton:SetHide(true);
-  Controls.OptionsStack:ReprocessAnchoring();
+    Controls.LensButton:SetHide(true);
+    Controls.MapPinListButton:SetHide(true);
+    Controls.StrategicSwitcherButton:SetHide(true);
+    Controls.OptionsStack:ReprocessAnchoring();
   end
 
   --CQUI Options Button

@@ -95,7 +95,7 @@
           <Image Texture="MiniMap_WoodBackingTile" Anchor="C,C" Size="Parent-25,Parent-100" StretchMode="Tile"/>
         </Grid>
         <Image   ID="MinimapContainer" Anchor ="L,B" Texture="Parchment_Pattern" ToolTip="LOC_HUD_MINIMAP_TOOLTIP" Size="256,256" StretchMode="Tile" Offset="18,21">
-          <Image ID="MinimapImage"     Anchor ="L,B" Offset="0,0" Texture="MiniMap_BG.dds"    ToolTip="LOC_HUD_MINIMAP_TOOLTIP" Size="parent,parent" StretchMode="Fill" Sampler="Linear"/>
+          <Image ID="MinimapImage"     Anchor ="C,C" Texture="MiniMap_BG.dds"    ToolTip="LOC_HUD_MINIMAP_TOOLTIP" Size="256,256" StretchMode="Fill" Sampler="Linear"/>
 
           <Button ID="CollapseButton" Anchor="R,T" AnchorSide="I,O" Offset="3,3"  Size="47,16"  Hidden="0" Texture="Controls_Collapse.dds" ToolTip="LOC_HUD_MINIMAP_COLLAPSE_TOOLTIP" />
           <Button ID="ExpandButton" Anchor="R,T" AnchorSide="I,O" Offset="3,3"  Size="47,16"  Hidden="1" ConsumeAllMouse="1" Texture="Controls_ButtonExtend.dds" ToolTip="LOC_HUD_MINIMAP_EXPAND_TOOLTIP" />
@@ -116,7 +116,7 @@
             <Image                       Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip" Color="255,255,255,200" Offset="0,-2"/>
             <CheckBox ID="MapPinListButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="LOC_HUD_MAP_TOGGLE_MAP_PIN_LIST" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
               <Image Texture="MiniMap_MapPins" Size="24,24" Anchor="C,C"/>
-              <Container ID="MapPinListPanel" Anchor="L,T" AnchorSide="I,O" Offset="-9,-5" Size="320,219" Hidden="1" AutoSize="1">
+              <Container ID="MapPinListPanel" Anchor="L,T" Offset="-9,-35" Size="auto,auto" Hidden="1">
                 <LuaContext  FileName="MapPinListPanel"/>
               </Container>
             </CheckBox>
@@ -140,6 +140,10 @@
       <CheckBox ID="ResourceCheckbox" IsChecked="1" Anchor="L,C" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
       <Label ID="ResourceLabel" String="$Resource$" Anchor="L,C" Offset="17,1" Style="WhiteSemiBold14"/>
     </Container>
+  </Instance>
+
+  <Instance Name="LensButtonInstance">
+    <RadioButton ID="LensButton" RadioGroup="ActiveLens" TextOffset="-5,0" String="$LensName$" AllowClickOff="1" Style="WhiteSemiBold14" Offset="10,4"  ButtonTexture="Controls_RadioButtonLarge.dds" ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,35" Anchor="L,T" BoxOnLeft="1"/>
   </Instance>
 
 </Context>

@@ -118,6 +118,36 @@ function ShowSettlerLensKey()
 end
 
 --============================================================================
+function ShowReligionLensKey()
+    m_KeyStackIM:ResetInstances();
+
+    -- Track which types we've added so we don't add duplicates
+    local visibleTypes:table = {};
+    local visibleTypesCount:number = 0;
+
+    local numFoundedReligions   :number = 0;
+    local pAllReligions         :table = Game.GetReligion():GetReligions();
+
+    for _, religionInfo in ipairs(pAllReligions) do
+        local religionType:number = religionInfo.Religion;
+        religionData = GameInfo.Religions[religionType];
+        if(religionData.Pantheon == false and Game.GetReligion():HasBeenFounded(religionType)) then
+            -- Add key entry
+            AddKeyEntry(Game.GetReligion():GetName(religionType), UI.GetColorValue(religionData.Color));
+            visibleTypesCount = visibleTypesCount + 1;
+
+        end
+    end
+
+    if visibleTypesCount > 0 then
+        Controls.KeyPanel:SetHide(false);
+        Controls.KeyScrollPanel:CalculateSize();
+    else
+        Controls.KeyPanel:SetHide(true);
+    end
+end
+
+--============================================================================
 function ShowGovernmentLensKey()
     m_KeyStackIM:ResetInstances();
 
@@ -130,8 +160,9 @@ function ShowGovernmentLensKey()
     if playerDiplomacy then
         local players = Game.GetPlayers();
         for i, player in ipairs(players) do
-            -- Only show goverments for players we've met
-            if playerDiplomacy:HasMet(i) then
+            -- Only show goverments for players we've met (and ourselves)
+            local visiblePlayer = (player == localPlayer) or playerDiplomacy:HasMet(player:GetID());
+            if visiblePlayer then
                 local culture = player:GetCulture();
                 local governmentIndex = culture:GetCurrentGovernment();
                 local government = GameInfo.Governments[governmentIndex];
@@ -172,8 +203,7 @@ function ShowPoliticalLensKey()
                 local primaryColor, secondaryColor = UI.GetPlayerColors( player:GetID() );
                 local playerConfig:table = PlayerConfigurations[player:GetID()];
 
-                local playerInfluence:table = player:GetInfluence();
-                if not playerInfluence:CanReceiveInfluence() then
+                if player:IsMajor() then
                     -- Add key entry for civilization
                     AddKeyEntry(playerConfig:GetPlayerName(), primaryColor);
                 elseif hasAddedCityStateEntry == false then -- Only city states can receive influence
@@ -419,7 +449,7 @@ end
 function OnLensLayerOn( layerNum:number )
     if layerNum == LensLayers.HEX_COLORING_RELIGION then
         Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_RELIGION_LENS")));
-        Controls.KeyPanel:SetHide(true);
+        ShowReligionLensKey();
     elseif layerNum == LensLayers.HEX_COLORING_CONTINENT then
         Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_CONTINENT_LENS")));
         Controls.KeyPanel:SetHide(true);
