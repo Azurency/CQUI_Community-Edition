@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd">
 
-  <SlideAnim            ID="SlideAnim"          Anchor="R,T"                  Size="514,full"        Start="-514,27" End="-1,27" Cycle="Once"  Speed="3.4" Function="OutSine" Stopped="1" >
+  <SlideAnim            ID="SlideAnim"          Anchor="R,T"                  Size="514,parent"        Start="-514,27" End="-1,27" Cycle="Once"  Speed="3.4" Function="OutSine" Stopped="1" >
 
     <Grid                                        Anchor="R,T"                  Size="parent,parent+5"  Texture="Controls_BannerWide" SliceTextureSize="514,Sli" StretchMode="Tile" ConsumeMouse="1" >
       <Image Texture="Controls_GradientSmall" Size="22,parent" AnchorSide="O,I" Anchor="L,T" Color="0,0,0,255" Rotate="90" Offset="-2,0"/>
@@ -14,7 +14,7 @@
         <Grid                                    Anchor="C,T"  Offset="22,60"  Size="396,58"          Texture="Controls_DecoFrame" SliceCorner="20,19" SliceTextureSize="40,38" Color="30,43,52,255">
           <Label        ID="Header"              Anchor="C,C"  Offset="0,-7"                          Style="CityStateHeaderText"    String="{LOC_CITY_STATES_OVERVIEW:upper}" />
           <Label        ID="EnvoyDetails"        Anchor="C,C"  Offset="0,14"                          Style="CityStateColumnHeaderText" String=""/>
-          <Container    ID="Envoys"              Anchor="R,C"  AutoSize="H"    Size="24,24"          ToolTip="LOC_TOP_PANEL_INFLUENCE" Offset="5,2">
+          <Container    ID="Envoys"              Anchor="R,C"  Size="auto,24"          ToolTip="LOC_TOP_PANEL_INFLUENCE" Offset="5,2">
             <Stack      ID="EnvoysStack"        Anchor="L,C"  Offset="0,-2"    StackGrowth="Right" >
               <Image    ID="EnvoysBacking"                                    Size="24,24"          Texture="Controls_MeterTinyBacking">
                 <Label                          Anchor="L,C"  Offset="1,1"    Style="FontNormal14"  ColorSet="TopBarValueCS" String="[ICON_Envoy]" />
@@ -99,10 +99,10 @@
             <Image                                                              Size="parent,parent"        Texture="Controls_Gradient_HalfRadial"                                          Color="170,176,180,35" />
             <Label                                Anchor="C,C"  Offset="0,3"                                Style="FontFlair24"    Color0="170,176,180" String="{LOC_CITY_STATES_REPORT:upper}" SmallCaps="30" SmallCapsType="EveryWord" />
           </Grid>
-          <Box						ID="ReportArea"					Anchor="C,T"	Offset="0,0"		Size="parent-10,160"	AutoSize="V"			Color="3,4,5,255">
-            <Image																Anchor="L,T"	Offset="1,1"		Size="parent-2,0"		Texture="Controls_Gradient"																				Color="30,40,50,255" AutoSize="V" AutoSizePadding="0,3">
+          <Box						ID="ReportArea"					Anchor="C,T"	Offset="0,0"	Size="parent-10,auto"			Color="3,4,5,255">
+            <Image																Anchor="L,T"	Offset="1,1"	Size="parent-2,auto"		Texture="Controls_Gradient"																				Color="30,40,50,255" AutoSize="V" AutoSizePadding="0,3">
               <Box                                Anchor="C,B"  Offset="0,0"    Size="parent,1" Color="40,50,60,255"/>
-              <Grid				ID="ReportDeco"		      Anchor="C,T"	Offset="0,2"    AutoSize="V"                Size="parent-10,0"		Texture="Controls_Deco"					Style="DecoGrid"		Color="50,56,70,255">
+              <Grid				ID="ReportDeco"		      Anchor="C,T"	Offset="0,2"                   Size="parent-10,auto"		Texture="Controls_Deco"					Style="DecoGrid"		Color="50,56,70,255">
 
               <Label                              Anchor="R,T"  Offset="230,10"                              Style="CityStateTextLabel"  String="LOC_CITY_STATES_TYPE" />
               <Label      ID="TypeValue"          Anchor="L,T"  Offset="230,10"                              Style="CityStateTextValue"  String="$TypeValue$" />
@@ -159,16 +159,16 @@
             </Grid>
             <ScrollPanel	ID="RelationshipsScroll"											Offset="7,60"		Size="parent-15,parent-60"				Vertical="1" >
               <Stack Anchor="C,T" StackGrowth="Down" StackPadding="4">
-                <Container Size="parent,0" AutoSize="V">
+                <Container Size="parent,auto">
                   <Grid Style="DividerGrid" Size="parent-8,8" Anchor="C,C" Color="34,48,59,255"/>
-                  <Grid Style="DropShadow4" AutoSize="1" Anchor="C,C">
+                  <Grid Style="DropShadow4" Size="auto,auto" Anchor="C,C">
                     <Label String="{LOC_CITY_STATES_CIVILIZATION_HEADER:upper}" Anchor="C,C"  Style="DiplomacyGossipHeader"/>
                   </Grid>
                 </Container>
                 <Stack ID="RelationshipsCivsStack" Anchor="C,T" StackGrowth="Right" WrapWidth="400"/>
-                <Container Size="parent,0" AutoSize="V">
+                <Container Size="parent,auto">
                   <Grid Style="DividerGrid" Size="parent-8,8" Anchor="C,C" Color="34,48,59,255"/>
-                  <Grid Style="DropShadow4" AutoSize="1" Anchor="C,C">
+                  <Grid Style="DropShadow4" Size="auto,auto" Anchor="C,C">
                     <Label String="{LOC_CITY_STATES_CITY_STATES:upper}" Anchor="C,C"  Style="DiplomacyGossipHeader"/>
                   </Grid>
                 </Container>
@@ -247,7 +247,7 @@
   </Instance>
 
   <Instance        Name="BonusCityHeaderInstance">
-    <Container    ID="Top"      Anchor="L,C" AutoSize="H" Size="parent,16" >
+    <Container    ID="Top"      Anchor="L,C" Size="parent,16" >
       <Grid                      Anchor="C,C"              Size="parent,8" Texture="Controls_Div2"  SliceCorner="27,4" SliceTextureSize="54,8" Color="27,40,48,255" />
       <Image                    Anchor="C,C"              Size="parent,16"      Texture="Controls_Glow"    Color="0,0,0,255" StretchMode="Fill" />
       <Label      ID="CityName" Anchor="C,C" String="$City$" Style="FontFlair14" SmallCaps="18" SmallCapsType="EveryWord"   Color="255,255,255,120" />
@@ -287,7 +287,7 @@
   </Instance>
 
   <Instance        Name="QuestInstance">
-    <Container    ID="Top"              Anchor="L,C" AutoSize="V"    Size="parent-15,24" >
+    <Container    ID="Top"              Anchor="L,C"	Size="parent-15,auto" >
       <Image                                                        Size="42,33" Texture="CityStateQuest42">
         <Label    ID="Callout"          Anchor="C,T"  Offset="0,3" String="[ICON_Government]" Style="FontNormal16" Color="10,20,30,200" />
       </Image>
