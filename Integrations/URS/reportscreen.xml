@@ -97,28 +97,28 @@
           </Container>
           <Container Size="6,1" />
           <Grid																					 Offset="0,-4"	Size="94,29"	Style="YieldBacking" Color="24,156,216,150">
-            <Label													Anchor="L,C" Offset="-9,0"								String="[ICON_ScienceLarge]"/>
+            <Label													Anchor="L,C"              								String="[ICON_ScienceLarge]"/>
             <Label		ID="ScienceBalance"		Anchor="C,C"															Style="ReportEndTotalText" ColorSet="ResScienceLabelCS" FontStyle="Stroke" String="0"/>
           </Grid>
           <Container Size="9,1" />
           <Grid																					 Offset="0,-4"	Size="94,30"	Style="YieldBacking" Color="254,42,237,100">
-            <Label													Anchor="L,C" Offset="-9,0"								String="[ICON_CultureLarge]"/>
+            <Label													Anchor="L,C"              								String="[ICON_CultureLarge]"/>
             <Label		ID="CultureBalance"		Anchor="C,C"															Style="ReportEndTotalText" ColorSet="ResCultureLabelCS" FontStyle="Stroke" String="0"/>
           </Grid>
           <Container Size="9,1" />
           <Grid																					 Offset="0,-4"	Size="94,30"	Style="YieldBacking" Color="181,116,102,150" >
-            <Label													Anchor="L,C" Offset="-9,0"								String="[ICON_TourismLarge]"/>
+            <Label													Anchor="L,C"              								String="[ICON_TourismLarge]"/>
             <Label		ID="TourismBalance"		Anchor="C,C"															Style="ReportEndTotalText" ColorSet="ResTourismLabelCS" String="0"	/>
           </Grid>
         </Stack>
 
         <Stack																					 Offset="-4,85"	  StackGrowth="Right" Padding="4">
           <Grid																													Size="101,26"	Style="YieldBacking" Color="185,176,70,150">
-            <Label													Anchor="L,C" Offset="-9,0"								String="[ICON_GoldLarge]"/>
+            <Label													Anchor="L,C"              								String="[ICON_GoldLarge]"/>
             <Label		ID="GoldBalance"			Anchor="C,C"															Style="ReportEndTotalText" ColorSet="ResGoldLabelCS" String="0"	/>
           </Grid>
           <Grid																													Size="101,26"	Style="YieldBacking" Color="99,114,159,200"	>
-            <Label													Anchor="L,C" Offset="-9,0"								String="[ICON_FaithLarge]"/>
+            <Label													Anchor="L,C"              								String="[ICON_FaithLarge]"/>
             <Label		ID="FaithBalance"			Anchor="C,C"															Style="ReportEndTotalText" ColorSet="ResFaithLabelCS" String="0" />
           </Grid>
         </Stack>
@@ -131,17 +131,17 @@
         <Grid			ID="StrategicGrid"											Offset="5,10"		Size="parent-515,40"				Style="SubContainer4"				Color="36,50,62,255" InnerPadding="2,2">
           <!-- <Label																					Offset="5,0"																Style="ReportResourceText"	String="LOC_HUD_REPORTS_STRATEGICS" /> -->
           <GridButton   ID="StrategicCheckbox"  Anchor="L,C" Style="CheckBoxControl" String="LOC_HUD_REPORTS_STRATEGICS" Size="120,25" Offset="5,0" Hidden="0" />
-          <Stack	ID="StrategicResources"		Anchor="L,C"	Offset="150,-9"	WrapWidth="340"	WrapGrowth="Down"	StackGrowth="Right" />
+          <Stack	ID="StrategicResources"		Anchor="L,C"	Offset="150,0"	WrapWidth="340"	WrapGrowth="Down"	StackGrowth="Right" />
         </Grid>
         <Grid			ID="BonusGrid"													Offset="510,10"	Size="parent-515,40"				Style="SubContainer4"				Color="36,50,62,255" InnerPadding="2,2">
           <!-- <Label																					Offset="5,0"																Style="ReportResourceText"	String="LOC_HUD_REPORTS_BONUSES" /> -->
           <GridButton   ID="BonusCheckbox"  Anchor="L,C" Style="CheckBoxControl" String="LOC_HUD_REPORTS_BONUSES_URS" Size="120,25" Offset="5,0" Hidden="0" />
-          <Stack	ID="BonusResources"				Anchor="L,C"	Offset="150,-9"	WrapWidth="340"	WrapGrowth="Down"	StackGrowth="Right" />
+          <Stack	ID="BonusResources"				Anchor="L,C"	Offset="150,0"	WrapWidth="340"	WrapGrowth="Down"	StackGrowth="Right" />
         </Grid>
         <Grid			ID="LuxuryGrid"													Offset="5,55"		Size="parent-10,40"					Style="SubContainer4"				Color="36,50,62,255" InnerPadding="2,2">
           <!-- <Label																					Offset="5,0"																Style="ReportResourceText"	String="LOC_HUD_REPORTS_LUXURIES" /> -->
           <GridButton   ID="LuxuryCheckbox"  Anchor="L,C" Style="CheckBoxControl" String="LOC_HUD_REPORTS_LUXURIES" Size="120,25" Offset="5,0" Hidden="0" />
-          <Stack	ID="LuxuryResources"			Anchor="L,C"	Offset="150,-9"	WrapWidth="840"	WrapGrowth="Down"	StackGrowth="Right" />
+          <Stack	ID="LuxuryResources"			Anchor="L,C"	Offset="150,0"	WrapWidth="840"	WrapGrowth="Down"	StackGrowth="Right" />
         </Grid>
       </Image>
     </Container>
@@ -168,13 +168,13 @@
 
   <!-- Collapsable Row(s) area -->
   <Instance						Name="GroupInstance">
-    <Container				ID="Top"																					Size="1003,10"	AutoSize="V">
+    <Container				ID="Top"																					Size="1003,auto">
       <GridButton			ID="RowHeaderButton"								Offset="0,0"	Size="parent,30"		Style="RowButton"		String="$RowHeaderButton" >
         <Label ID="RowHeaderLabel" Anchor="R,C" Offset="50,0" Style="RowButton" String="Ends in ## turns (###)" Hidden="1" />
       </GridButton>
       <Image					ID="RowExpandCheck"		Anchor="R,T"	Offset="5,5"	Size="22,22"				Texture="Controls_ExpandButton" />
-      <ScrollPanel		ID="CollapseScroll"									Offset="0,31"	Size="parent,20"		StackGrowth="Bottom" FullClip="1" >
-        <SlideAnim		ID="CollapseAnim"			Start="0,0"	EndOffset="0,0" Speed="4" Cycle="Once" Stopped="1">
+      <ScrollPanel		ID="CollapseScroll"									Offset="0,31"	Size="parent,auto"	StackGrowth="Bottom" FullClip="1" >
+        <SlideAnim		ID="CollapseAnim"			Start="0,0"	EndOffset="0,0" Size="parent,auto"  Speed="4" Cycle="Once" Stopped="1">
           <Stack			ID="ContentStack"										Offset="0,0"	StackGrowth="Bottom" />
         </SlideAnim>
       </ScrollPanel>
@@ -243,7 +243,7 @@
   </Instance>
 
   <Instance					Name="CityIncomeInstance">
-    <Grid						ID="Top"														Offset="0,-1"	Size="1003,100"		SliceCorner="16,16" SliceSize="1,1" SliceTextureSize="32,32" Texture="Controls_LineItem" Color="200,199,212,255" AutoSize="V" >
+    <Grid						ID="Top"														Offset="0,-1"	Size="1003,auto"		SliceCorner="16,16" SliceSize="1,1" SliceTextureSize="32,32" Texture="Controls_LineItem" Color="200,199,212,255" >
       <Stack																						Offset="8,6"	StackGrowth="Right">
         <Box																													Size="2,40"	Color="46,70,95,128" />
         <Container																			Offset="1,0"	Size="232,40" />

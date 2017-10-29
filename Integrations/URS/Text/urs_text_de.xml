@@ -2,7 +2,6 @@
 <GameData>
   <LocalizedText>
     <!-- GERMAN -->
-
     <!-- HUD Common Text -->
     <Replace Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="de_DE">
       <Text>Handelsübersicht</Text>
@@ -28,11 +27,10 @@
       <Text>Militär (Marine)</Text>
     </Replace>
     <Replace Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="de_DE">
-      <Text>Zeige Einheit auf der Karte.</Text>
+      <Text>Zeige Einheit auf der Karte</Text>
     </Replace>
-  <Replace Tag="LOC_HUD_REPORTS_BONUSES_URS" Language="de_DE">
-      <Text>Bonusse</Text>
+    <Replace Tag="LOC_HUD_REPORTS_BONUSES_URS" Language="de_DE">
+      <Text>Boni</Text>
     </Replace>
-
   </LocalizedText>
 </GameData>
