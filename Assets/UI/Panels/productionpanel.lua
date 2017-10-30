@@ -197,8 +197,9 @@ function OnExpand(instance:table)
   instance.HeaderOn:SetHide(false);
   instance.Header:SetHide(true);
   instance.List:SetHide(false);
-  instance.ListSlide:SetSizeY(instance.List:GetSizeY());
-  instance.ListAlpha:SetSizeY(instance.List:GetSizeY());
+  -- CQUI : fix the list flickering when it's refreshed
+  --instance.ListSlide:SetSizeY(instance.List:GetSizeY());
+  --instance.ListAlpha:SetSizeY(instance.List:GetSizeY());
   instance.ListSlide:SetToBeginning();
   instance.ListAlpha:SetToBeginning();
   instance.ListSlide:Play();

@@ -85,6 +85,7 @@
       <SlideAnim Anchor="C,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad">
         <Image Texture="Tutorial_ArrowV" Offset="-42,-15" Size="44,58" FlipY="true"/>
       </SlideAnim>
+    </Tutorial>
 
     <Tutorial ID="TutOpenCivics" Style="TutorialContainer" Anchor="L,B" AnchorSide="O,O" Offset="-220, 120" TriggerBy="TutorialOpenCivicsTree">
       <Grid Style="TutorialCalloutGrid">
