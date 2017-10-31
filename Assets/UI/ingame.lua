@@ -204,7 +204,9 @@ function Initialize()
   -- Support for Modded Add-in UI's
   for i, addin in ipairs(Modding.GetUserInterfaces("InGame")) do
     print_debug("Loading InGame UI - " .. addin.ContextPath);
-    table.insert(g_uiAddins, ContextPtr:LoadNewContext(addin.ContextPath));
+    local newContext:table = ContextPtr:LoadNewContext(addin.ContextPath);
+    newContext:ChangeParent(Controls.AdditionalUserInterfaces);
+    table.insert(g_uiAddins, newContext);
   end
 
   ContextPtr:SetInputHandler( OnInputHandler, true );

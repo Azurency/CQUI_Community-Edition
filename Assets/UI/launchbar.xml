@@ -1,21 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Context FontStyle="Stroke">
 
-  <Container ID="LaunchContainer" Offset="-65,-5">
-    <Grid       ID="LaunchBarDropShadow"               Offset="0,35"  Size="310,60"   Texture="Controls_Glow2"  SliceCorner="25,25" SliceTextureSize="50,50" Color="0,0,0,200"/>
-    <Image      ID="LaunchBackingTile"                 Offset="65,34" Size ="200,41"  Texture="LaunchBar_Backing_Tile"    StretchMode="Tile"/>
-    <Grid       ID="LaunchBacking"                                    Size="350,77"   Texture="LaunchBar_BackingLeft_Backing"   SliceCorner="114,32" SliceSize="1,1" SliceTextureSize="226,77"/>
+  <Container ID="LaunchContainer" Offset="-65,-5" ConsumeMouseOver="1">
+    <Grid ID="LaunchBarDropShadow" Offset="0,35" Size="310,60" Texture="Controls_Glow2" SliceCorner="25,25" SliceTextureSize="50,50" Color="0,0,0,200"/>
+    <Image ID="LaunchBackingTile" Offset="65,34" Size="200,41" Texture="LaunchBar_Backing_Tile" StretchMode="Tile"/>
+    <Grid ID="LaunchBacking" Size="350,77" Texture="LaunchBar_BackingLeft_Backing" SliceCorner="114,32" SliceSize="1,1" SliceTextureSize="226,77"/>
 
     <Stack StackGrowth="Right">
-      <Stack      ID="ButtonStack"                       Offset="63,32" Padding="-2"    StackGrowth="Right">
-        <Image                            Anchor="L,C" Offset="0,-2"  Size="7,7"      Texture="LaunchBar_TrackPip"    Color="255,255,255,200"/>
-        <Button ID="ScienceButton"        Anchor="L,C" Offset="0,2"    Size="51,51"   Texture="LaunchBar_Hook_ScienceButton" Style="ButtonNormalText"     TextureOffset="4,9"   StateOffsetIncrement="0,60" ToolTip="LOC_HUD_TECHTREE_TOOLTIP">
-          <Image Texture="LaunchBar_Hook_TechTree" Size="35,35" Anchor="C,T" Offset="0,5"/>
+      <Stack ID="ButtonStack" Offset="63,32" Padding="-2" StackGrowth="Right">
+        <Image Anchor="L,C" Offset="0,-2" Size="7,7" Texture="LaunchBar_TrackPip" Color="255,255,255,200"/>
+        <Button ID="ScienceButton" Anchor="L,C" Offset="0,2" Size="51,51" Texture="LaunchBar_Hook_ScienceButton" Style="ButtonNormalText" TextureOffset="4,9" StateOffsetIncrement="0,60" ToolTip="LOC_HUD_TECHTREE_TOOLTIP">
+          <Image ID="ResearchIcon" Anchor="C,T" Offset="0,4" Size="38,38" Texture="LaunchBar_Hook_TechTree"/>
+          <Image ID="ScienceHookWithMeter" Anchor="C,C" Offset="0,-5" Size="57,57" Hidden="1" Texture="LaunchBar_Hook_ScienceMeter_Backing.dds">
+            <Meter ID="ScienceMeter" Anchor="C,C" Size="57,57" Percent="0" Speed="1.0" Follow="1" Texture="LaunchBar_Hook_ScienceMeter_Fill.dds"/>
+          </Image>
+            
         </Button>
-        <Image  ID="ScienceBolt"        Anchor="L,C" Offset="0,-2"  Size="7,7"      Texture="LaunchBar_TrackPip"    Color="255,255,255,200" />
+        <Image ID="ScienceBolt" Anchor="L,C" Offset="0,-2" Size="7,7" Texture="LaunchBar_TrackPip" Color="255,255,255,200"/>
 
-        <Button ID="CultureButton"        Anchor="L,C" Offset="0,2"   Size="51,51"    Texture="LaunchBar_Hook_CultureButton" Style="ButtonNormalText"     TextureOffset="4,9"   StateOffsetIncrement="0,60" ToolTip="LOC_HUD_CIVICSTREE_TOOLTIP">
-          <Image Texture="LaunchBar_Hook_CivicsTree" Size="35,35" Anchor="C,T" Offset="0,5"/>
+        <Button ID="CultureButton" Anchor="L,C" Offset="0,2" Size="51,51" Texture="LaunchBar_Hook_CultureButton" Style="ButtonNormalText" TextureOffset="4,9" StateOffsetIncrement="0,60" ToolTip="LOC_HUD_CIVICSTREE_TOOLTIP">
+          <Image ID="CultureIcon" Anchor="C,T" Offset="0,4" Size="38,38" Texture="LaunchBar_Hook_CivicsTree"/>
+          <Image ID="CultureHookWithMeter" Anchor="C,C" Offset="0,-5" Size="57,57" Hidden="1" Texture="LaunchBar_Hook_CultureMeter_Backing.dds">
+            <Meter ID="CultureMeter" Anchor="C,C" Size="57,57" Percent="0" Speed="1.0" Follow="1" Texture="LaunchBar_Hook_CultureMeter_Fill.dds"/>
+          </Image>
+            
         </Button>
         <Image  ID="CultureBolt"      Anchor="L,C" Offset="0,-2"  Size="7,7"      Texture="LaunchBar_TrackPip"    Color="255,255,255,200" />
 
@@ -40,7 +48,7 @@
         </Button>
         <Image  ID="GreatWorksBolt"     Anchor="L,C" Offset="0,-2"  Size="7,7"      Texture="LaunchBar_TrackPip"     Color="255,255,255,200" />
       </Stack>
-
+      
       <!-- Toggle Show/Hide Button -->
       <CheckBox ID="LaunchExtraShow" Offset="-4,49" Anchor="R,T" ButtonSize="35,35" ButtonTexture="Controls_RadioButtonLarge" CheckTexture="Controls_RadioButtonLarge" CheckSize="35,35" CheckTextureOffset="0,35"/>
     </Stack>
@@ -68,92 +76,71 @@
         </SlideAnim>
       </AlphaAnim>
     </Container>
-
-
-    <Tutorial ID="TutOpenGovernment" Style="TutorialContainer" Anchor="L,B" AnchorSide="O,O" Offset="-220, 120" TriggerBy="TutorialOpenGovernment" >
+    
+    <Tutorial ID="TutOpenGovernment" Style="TutorialContainer" Anchor="L,B" AnchorSide="O,O" Offset="-220, 120" TriggerBy="TutorialOpenGovernment">
       <Grid Style="TutorialCalloutGrid">
-        <Label Style="TutorialHeaderText" String="LOC_META_93b_HEAD" />
-        <Label Style="TutorialBodyText" String="LOC_META_93b_BODY" />
+        <Label Style="TutorialHeaderText" String="LOC_META_93b_HEAD"/>
+        <Label Style="TutorialBodyText" String="LOC_META_93b_BODY"/>
       </Grid>
-      <SlideAnim Anchor="C,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad" >
+      <SlideAnim Anchor="C,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad">
         <Image Texture="Tutorial_ArrowV" Offset="-42,-15" Size="44,58" FlipY="true"/>
       </SlideAnim>
     </Tutorial>
 
-    <Tutorial  ID="TutOpenCivics" Style="TutorialContainer" Anchor="L,B" AnchorSide="O,O" Offset="-220, 120" TriggerBy="TutorialOpenCivicsTree" >
+    <Tutorial ID="TutOpenCivics" Style="TutorialContainer" Anchor="L,B" AnchorSide="O,O" Offset="-220, 120" TriggerBy="TutorialOpenCivicsTree">
       <Grid Style="TutorialCalloutGrid">
-        <Label Style="TutorialHeaderText" String="LOC_META_99b_HEAD" />
-        <Label Style="TutorialBodyText" String="LOC_META_99b_BODY" />
+        <Label Style="TutorialHeaderText" String="LOC_META_99b_HEAD"/>
+        <Label Style="TutorialBodyText" String="LOC_META_99b_BODY"/>
       </Grid>
-      <SlideAnim Anchor="C,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad" >
+      <SlideAnim Anchor="C,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad">
         <Image Texture="Tutorial_ArrowV" Offset="-95,-15" Size="44,58" FlipY="true"/>
       </SlideAnim>
     </Tutorial>
 
-    <Tutorial  ID="TutOpenReligion" Style="TutorialContainer" Anchor="L,B" AnchorSide="O,O" Offset="-220, 120" TriggerBy="TutorialOpenReligionScreen" >
+    <Tutorial ID="TutOpenReligion" Style="TutorialContainer" Anchor="L,B" AnchorSide="O,O" Offset="-220, 120" TriggerBy="TutorialOpenReligionScreen">
       <Grid Style="TutorialCalloutGrid">
-        <Label Style="TutorialHeaderText" String="LOC_META_129b_HEAD" />
-        <Label Style="TutorialBodyText" String="LOC_META_129b_BODY" />
+        <Label Style="TutorialHeaderText" String="LOC_META_129b_HEAD"/>
+        <Label Style="TutorialBodyText" String="LOC_META_129b_BODY"/>
       </Grid>
-      <SlideAnim Anchor="C,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad" >
+      <SlideAnim Anchor="C,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad">
         <Image Texture="Tutorial_ArrowV" Offset="5,-15" Size="44,58" FlipY="true"/>
       </SlideAnim>
     </Tutorial>
-
-    <Tutorial  ID="TutOpenTechs" Style="TutorialContainer" Anchor="L,B" AnchorSide="O,O" Offset="-220, 120" TriggerBy="TutorialOpenTechTree" >
+    
+    <Tutorial ID="TutOpenTechs" Style="TutorialContainer" Anchor="L,B" AnchorSide="O,O" Offset="-220, 120" TriggerBy="TutorialOpenTechTree">
       <Grid Style="TutorialCalloutGrid">
-        <Label Style="TutorialHeaderText" String="LOC_META_46a_HEAD" />
-        <Label Style="TutorialBodyText" String="LOC_META_46a_BODY" />
+        <Label Style="TutorialHeaderText" String="LOC_META_46a_HEAD"/>
+        <Label Style="TutorialBodyText" String="LOC_META_46a_BODY"/>
       </Grid>
-      <SlideAnim Anchor="C,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad" >
+      <SlideAnim Anchor="C,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad">
+        <Image Texture="Tutorial_ArrowV" Offset="-148,-15" Size="44,58" FlipY="true"/>
+      </SlideAnim>
+    </Tutorial>
+    
+    <Tutorial ID="TutOpenGP" Style="TutorialContainer" Anchor="L,B" AnchorSide="O,O" Offset="-374, 120" TriggerBy="TutorialOpenGP">
+      <Grid Style="TutorialCalloutGrid">
+        <Label Style="TutorialHeaderText" String="LOC_META_136b_HEAD"/>
+        <Label Style="TutorialBodyText" String="LOC_META_136b_BODY"/>
+      </Grid>
+      <SlideAnim Anchor="C,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad">
         <Image Texture="Tutorial_ArrowV" Offset="-148,-15" Size="44,58" FlipY="true"/>
       </SlideAnim>
     </Tutorial>
 
-    <Tutorial  ID="TutOpenGP" Style="TutorialContainer" Anchor="L,B" AnchorSide="O,O" Offset="-374, 120" TriggerBy="TutorialOpenGP" >
-      <Grid Style="TutorialCalloutGrid">
-        <Label Style="TutorialHeaderText" String="LOC_META_136b_HEAD" />
-        <Label Style="TutorialBodyText" String="LOC_META_136b_BODY" />
-      </Grid>
-      <SlideAnim Anchor="C,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad" >
-        <Image Texture="Tutorial_ArrowV" Offset="-148,-15" Size="44,58" FlipY="true"/>
-      </SlideAnim>
-    </Tutorial>
-
-  </Container>
-
-  <Container ID="ScienceHookWithMeter"  Anchor="L,T" Offset="1,25" Size="57,57" Hidden="1">
-    <Button  ID="ScienceMeterButton"  Anchor="C,C"   Offset="0,1"    Size="51,51"   Texture="LaunchBar_Hook_ScienceButton" Style="ButtonNormalText"     TextureOffset="4,9"   StateOffsetIncrement="0,60" ToolTip="LOC_HUD_TECHTREE_TOOLTIP" Hidden="0">
-      <Image                          Anchor="C,C" Size="57,57" Texture="LaunchBar_Hook_CultureMeter_Backing.dds" Hidden="0" Offset="-1,-5">
-        <Meter  ID="ScienceMeter"     Anchor="C,C"                Size="57,57"  Texture="LaunchBar_Hook_ScienceMeter_Fill.dds" Percent="0" Speed="1.0" Follow="1" Offset="0,1"/>
-        <Image  ID="ResearchIcon"     Anchor="C,C"  Size="38,38"  Texture="Tech38" Alpha="0.7"/>
-        <Label  ID="ScienceTurnsLeft" Anchor="C,C" String="" FontStyle="stroke" Color0="160,188,220,255"  Color1="0,0,0,200" Color2="255,255,255,255" Style="FontNormal20"/>
-      </Image>
-    </Button>
-  </Container>
-
-  <Container ID="CultureHookWithMeter"  Anchor="L,T" Offset="54,25" Size="57,57" Hidden="1">
-    <Button   ID="CultureMeterButton" Anchor="C,C"   Offset="0,1"         Size="51,51"  Texture="LaunchBar_Hook_CultureButton" Style="ButtonNormalText"     TextureOffset="4,9"   StateOffsetIncrement="0,60" ToolTip="LOC_HUD_CIVICSTREE_TOOLTIP" Hidden="0">
-      <Image                          Anchor="C,C"  Size="57,57"  Texture="LaunchBar_Hook_CultureMeter_Backing.dds" Hidden="0" Offset="-1,-5">
-        <Meter  ID="CultureMeter"     Anchor="C,C"  Size="57,57"  Texture="LaunchBar_Hook_CultureMeter_Fill.dds" Percent="0" Speed="1.0" Follow="1"/>
-        <Image  ID="CultureIcon"      Anchor="C,C"  Size="38,38"  Texture="Civics38" Alpha="0.8" />
-        <Label  ID="CultureTurnsLeft" Anchor="C,C" String="" FontStyle="stroke" Color0="160,188,220,255"  Color1="0,0,0,200" Color2="255,255,255,255" Style="FontNormal20"/>
-      </Image>
-    </Button>
   </Container>
 
   <!-- INSTANCES -->
-
+  
   <Instance Name="LaunchBarItem">
     <Container ID="Content" Size="49,49">
-      <Button ID="LaunchItemButton" Anchor="L,C"  Size="49,49"  Texture="LaunchBar_Hook_GovernmentButton" Style="ButtonNormalText"  StateOffsetIncrement="0,49" >
+      <Button ID="LaunchItemButton" Anchor="L,C" Size="49,49" Texture="LaunchBar_Hook_GovernmentButton" Style="ButtonNormalText" StateOffsetIncrement="0,49">
         <Image ID="LaunchItemIcon" Size="35,35" Anchor="C,C" Offset="0,0"/>
       </Button>
     </Container>
   </Instance>
 
   <Instance Name="LaunchBarPinInstance">
-    <Image Anchor="L,C" Offset="0,-2" Size="7,7" Texture="LaunchBar_TrackPip" Color="255,255,255,200" />
+    <Image ID="Pin" Anchor="L,C" Offset="0,-2" Size="7,7" Texture="LaunchBar_TrackPip" Color="255,255,255,200" />
   </Instance>
 
   <Instance Name="LaunchExtraEntry">

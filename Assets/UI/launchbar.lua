@@ -4,12 +4,12 @@
 -- ===========================================================================
 
 include( "GameCapabilities" );
-include( "InstanceManager" );
+-- include( "InstanceManager" );
 
-g_TrackedItems = {}; -- Populated by LaunchBarItems_* scripts;
-g_TrackedInstances = {};
+-- g_TrackedItems = {}; -- Populated by LaunchBarItems_* scripts;
+-- g_TrackedInstances = {};
 
-include("LaunchBarItem_", true);
+-- include("LaunchBarItem_", true);
 
 local m_numTreesOpen    :number = 0;
 local isTechTreeOpen    :boolean = false;
@@ -325,66 +325,29 @@ end
 --  Refresh Data and View
 -- ===========================================================================
 function RealizeHookVisibility()
+  local isShown:boolean = isDebug or HasCapability("CAPABILITY_TECH_TREE");
+  Controls.ScienceButton:SetShow(isShown);
+  Controls.ScienceBolt:SetShow(isShown);
 
-  if (HasCapability("CAPABILITY_TECH_TREE")) then
-    Controls.ScienceButton:SetHide(false);
-    Controls.ScienceBolt:SetHide(false);
-  else
-    if (not isDebug) then
-      Controls.ScienceButton:SetHide(true);
-      Controls.ScienceBolt:SetHide(true);
-    end
-  end
+  isShown = isDebug or HasCapability("CAPABILITY_CIVICS_TREE");
+  Controls.CultureButton:SetShow(isShown);
+  Controls.CultureBolt:SetShow(isShown);
 
-  if (HasCapability("CAPABILITY_CIVICS_TREE")) then
-    Controls.CultureButton:SetHide(false);
-    Controls.CultureBolt:SetHide(false);
-  else
-    if (not isDebug) then
-      Controls.CultureButton:SetHide(true);
-      Controls.CultureBolt:SetHide(true);
-    end
-  end
+  isShown = isDebug or (m_isGreatPeopleUnlocked and HasCapability("CAPABILITY_GREAT_PEOPLE_VIEW"));
+  Controls.GreatPeopleButton:SetShow(isShown);
+  Controls.GreatPeopleBolt:SetShow(isShown);
 
-  if (m_isGreatPeopleUnlocked and HasCapability("CAPABILITY_GREAT_PEOPLE_VIEW")) then
-    Controls.GreatPeopleButton:SetHide(false);
-    Controls.GreatPeopleBolt:SetHide(false);
-  else
-    if (not isDebug) then
-      Controls.GreatPeopleButton:SetHide(true);
-      Controls.GreatPeopleBolt:SetHide(true);
-    end
-  end
-
-  if (m_isReligionUnlocked and HasCapability("CAPABILITY_RELIGION_VIEW")) then
-    Controls.ReligionButton:SetHide(false);
-    Controls.ReligionBolt:SetHide(false);
-  else
-    if (not isDebug) then
-      Controls.ReligionButton:SetHide(true);
-      Controls.ReligionBolt:SetHide(true);
-    end
-  end
-
-  if (m_isGreatWorksUnlocked and HasCapability("CAPABILITY_GREAT_WORKS_VIEW")) then
-    Controls.GreatWorksButton:SetHide(false);
-    Controls.GreatWorksBolt:SetHide(false);
-  else
-    if (not isDebug) then
-      Controls.GreatWorksButton:SetHide(true);
-      Controls.GreatWorksBolt:SetHide(true);
-    end
-  end
-
-  if (m_isGovernmentUnlocked and HasCapability("CAPABILITY_GOVERNMENTS_VIEW")) then
-    Controls.GovernmentButton:SetHide(false);
-    Controls.GovernmentBolt:SetHide(true);
-  else
-    if (not isDebug) then
-      Controls.GovernmentButton:SetHide(true);
-      Controls.GovernmentBolt:SetHide(true);
-    end
-  end
+  isShown = isDebug or (m_isReligionUnlocked and HasCapability("CAPABILITY_RELIGION_VIEW"));
+  Controls.ReligionButton:SetShow(isShown);
+  Controls.ReligionBolt:SetShow(isShown);
+  
+  isShown = isDebug or (m_isGreatWorksUnlocked and HasCapability("CAPABILITY_GREAT_WORKS_VIEW"));
+  Controls.GreatWorksButton:SetShow(isShown);
+  Controls.GreatWorksBolt:SetShow(isShown);
+  
+  isShown = isDebug or (m_isGovernmentUnlocked and HasCapability("CAPABILITY_GOVERNMENTS_VIEW"));
+  Controls.GovernmentButton:SetShow(isShown);
+  Controls.GovernmentBolt:SetShow(isShown);
 
   RefreshView();
 end
@@ -419,8 +382,10 @@ function RefreshReligion()
   end
   local localPlayer = Players[ePlayer];
   local playerReligion:table  = localPlayer:GetReligion();
-  local faithYield:number = playerReligion:GetFaithYield();
-  if (faithYield > 0) then
+    
+  local hasFaithYield			:boolean = playerReligion:GetFaithYield() > 0;
+  local hasFaithBalance		:boolean = playerReligion:GetFaithBalance() > 0;
+  if (hasFaithYield or hasFaithBalance) then
     m_isReligionUnlocked = true;
   end
   RealizeHookVisibility();
@@ -574,57 +539,73 @@ function RefreshView()
 end
 
 -- ===========================================================================
+function UpdateTechMeter( localPlayer:table )
+  if ( localPlayer ~= nil and Controls.ScienceHookWithMeter:IsVisible() ) then
+    local playerTechs          = localPlayer:GetTechs();
+    local currentTechID:number = playerTechs:GetResearchingTech();
+    if(currentTechID >= 0) then
+      local progress:number = playerTechs:GetResearchProgress(currentTechID);
+      local cost:number = playerTechs:GetResearchCost(currentTechID);
+
+      Controls.ScienceMeter:SetPercent(progress/cost);
+    else
+      Controls.ScienceMeter:SetPercent(0);
+    end
+
+
+    local techInfo:table = GameInfo.Technologies[currentTechID];
+    if (techInfo ~= nil) then
+      local textureString = "ICON_" .. techInfo.TechnologyType;
+      local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(textureString,38);
+      if textureSheet ~= nil then
+        Controls.ResearchIcon:SetTexture(textureOffsetX, textureOffsetY, textureSheet);
+      end
+    end
+  else
+    Controls.ResearchIcon:SetTexture(0, 0, "LaunchBar_Hook_TechTree");
+  end
+end
+  -- local playerCivics = localPlayer:GetCulture();
+  -- local currentCivicID:number = playerCivics:GetProgressingCivic();
+
+function UpdateCivicMeter( localPlayer:table)
+  if ( localPlayer ~= nil and Controls.CultureHookWithMeter:IsVisible() ) then
+    local playerCivics				= localPlayer:GetCulture();
+    local currentCivicID    :number = playerCivics:GetProgressingCivic();
+
+    if(currentCivicID >= 0) then
+      local civicProgress:number = playerCivics:GetCulturalProgress(currentCivicID);
+      local civicCost:number = playerCivics:GetCultureCost(currentCivicID);
+      
+      Controls.CultureMeter:SetPercent(civicProgress/civicCost);
+    else
+      Controls.CultureMeter:SetPercent(0);
+    end
+    
+    local CivicInfo:table = GameInfo.Civics[currentCivicID];
+    if (CivicInfo ~= nil) then
+      local civictextureString = "ICON_" .. CivicInfo.CivicType;
+      local civictextureOffsetX, civictextureOffsetY, civictextureSheet = IconManager:FindIconAtlas(civictextureString,38);
+      if civictextureSheet ~= nil then
+        Controls.CultureIcon:SetTexture(civictextureOffsetX, civictextureOffsetY, civictextureSheet);
+      end
+    end
+  else
+    Controls.CultureIcon:SetTexture(0, 0, "LaunchBar_Hook_CivicsTree");
+  end
+end
+  
+  
+-- ===========================================================================
 function OnTurnBegin()
-  local localPlayer = Players[Game.GetLocalPlayer()];
+  local localPlayer	= Players[Game.GetLocalPlayer()];
   if (localPlayer == nil) then
     return;
   end
-  local playerTechs = localPlayer:GetTechs();
-  local currentTechID:number = playerTechs:GetResearchingTech();
 
-  if(currentTechID >= 0) then
-    local progress:number = playerTechs:GetResearchProgress(currentTechID);
-    local cost:number = playerTechs:GetResearchCost(currentTechID);
-
-    Controls.ScienceMeter:SetPercent(progress/cost);
-    Controls.ScienceTurnsLeft:SetText(playerTechs:GetTurnsLeft());
-  else
-    Controls.ScienceMeter:SetPercent(0);
-    Controls.ScienceTurnsLeft:SetText("");
-  end
-
-  local techInfo:table = GameInfo.Technologies[currentTechID];
-  if (techInfo ~= nil) then
-    local textureString = "ICON_" .. techInfo.TechnologyType;
-    local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(textureString,38);
-    if textureSheet ~= nil then
-      Controls.ResearchIcon:SetTexture(textureOffsetX, textureOffsetY, textureSheet);
-    end
-  end
-
-  local playerCivics = localPlayer:GetCulture();
-  local currentCivicID:number = playerCivics:GetProgressingCivic();
-
-  if(currentCivicID >= 0) then
-    local civicProgress:number = playerCivics:GetCulturalProgress(currentCivicID);
-    local civicCost:number = playerCivics:GetCultureCost(currentCivicID);
-
-    Controls.CultureMeter:SetPercent(civicProgress/civicCost);
-    Controls.CultureTurnsLeft:SetText(playerCivics:GetTurnsLeft());
-  else
-    Controls.CultureMeter:SetPercent(0);
-    Controls.CultureTurnsLeft:SetText("");
-  end
-
-  local CivicInfo:table = GameInfo.Civics[currentCivicID];
-  if (CivicInfo ~= nil) then
-    local civictextureString = "ICON_" .. CivicInfo.CivicType;
-    local civictextureOffsetX, civictextureOffsetY, civictextureSheet = IconManager:FindIconAtlas(civictextureString,38);
-    if civictextureSheet ~= nil then
-      Controls.CultureIcon:SetTexture(civictextureOffsetX, civictextureOffsetY, civictextureSheet);
-    end
-  end
-
+  UpdateTechMeter(localPlayer);
+  UpdateCivicMeter(localPlayer);
+  
   RefreshGovernment();
   RefreshGreatWorks();
   RefreshGreatPeople();
@@ -649,18 +630,20 @@ function CloseTree()
   end
   if m_numTreesOpen == 0 then
     Controls.LaunchContainer:SetOffsetY(-5);
-    Controls.ScienceHookWithMeter:SetOffsetY(25);
-    Controls.CultureHookWithMeter:SetOffsetY(25);
+    -- Controls.ScienceHookWithMeter:SetOffsetY(25);
+    -- Controls.CultureHookWithMeter:SetOffsetY(25);
   end
 end
 
 -- ===========================================================================
 function OnToggleResearchPanel(hideResearch)
   Controls.ScienceHookWithMeter:SetHide(not hideResearch);
+  UpdateTechMeter(Players[Game.GetLocalPlayer()]);
 end
 
 function OnToggleCivicPanel(hideResearch)
   Controls.CultureHookWithMeter:SetHide(not hideResearch);
+  UpdateCivicMeter(Players[Game.GetLocalPlayer()]);
 end
 
 -- Reset the hooks when the player changes for hotseat.
@@ -676,44 +659,44 @@ function OnLocalPlayerChanged()
 end
 
 -- ===========================================================================
-function InitializeTrackedItems()
-  for i,v in ipairs(g_TrackedItems) do
-    local instance = {};
-    local instance = {};
-    ContextPtr:BuildInstanceForControl( v.InstanceType, instance, Controls.ButtonStack );
-    if (instance.LaunchItemButton) then
-      instance.LaunchItemButton:RegisterCallback(Mouse.eLClick, function() v.SelectFunc() end);
-      table.insert(g_TrackedInstances, instance);
-    end
+-- function InitializeTrackedItems()
+  -- for i,v in ipairs(g_TrackedItems) do
+    -- local instance = {};
+    -- local instance = {};
+    -- ContextPtr:BuildInstanceForControl( v.InstanceType, instance, Controls.ButtonStack );
+    -- if (instance.LaunchItemButton) then
+      -- instance.LaunchItemButton:RegisterCallback(Mouse.eLClick, function() v.SelectFunc() end);
+      -- table.insert(g_TrackedInstances, instance);
+    -- end
 
-    if (instance.LaunchItemButton and v.Tooltip) then
-      instance.LaunchItemButton:SetToolTipString(Locale.Lookup(v.Tooltip));
-    end
+    -- if (instance.LaunchItemButton and v.Tooltip) then
+      -- instance.LaunchItemButton:SetToolTipString(Locale.Lookup(v.Tooltip));
+    -- end
 
-    if (instance.LaunchItemIcon and v.IconTexture) then
-      instance.LaunchItemIcon:SetTexture(v.IconTexture);
-    end
+    -- if (instance.LaunchItemIcon and v.IconTexture) then
+      -- instance.LaunchItemIcon:SetTexture(v.IconTexture);
+    -- end
 
-    -- Add a pin to the stack for each new item
-    local pinInstance = nil;
-    ContextPtr:BuildInstanceForControl( "LaunchBarPinInstance", pinInstance, Controls.ButtonStack );
-  end
-end
+    -- -- Add a pin to the stack for each new item
+    -- local pinInstance = nil;
+    -- ContextPtr:BuildInstanceForControl( "LaunchBarPinInstance", pinInstance, Controls.ButtonStack );
+  -- end
+-- end
 
 -- ===========================================================================
 function Initialize()
 
-  -- Icon added in reportscreen.lua
+  -- -- Icon added in reportscreen.lua
   -- local iconName = "ICON_CIVIC_FUTURE_CIVIC";
   -- local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(iconName,38);
   -- if (textureOffsetX ~= nil) then
   --   Controls.ReportsImage:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
   -- end
 
-  InitializeTrackedItems();
+  -- InitializeTrackedItems();
   Controls.CultureButton:RegisterCallback(Mouse.eLClick, OnOpenCulture);
   Controls.CultureButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.CultureMeterButton:RegisterCallback(Mouse.eLClick, OnOpenCulture);
+  -- Controls.CultureMeterButton:RegisterCallback(Mouse.eLClick, OnOpenCulture);
   Controls.GovernmentButton:RegisterCallback( Mouse.eLClick, OnGovernmentClick );
   Controls.GovernmentButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.GreatPeopleButton:RegisterCallback( Mouse.eLClick, OnOpenGreatPeople );
@@ -724,7 +707,7 @@ function Initialize()
   Controls.ReligionButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.ScienceButton:RegisterCallback(Mouse.eLClick, OnOpenResearch);
   Controls.ScienceButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.ScienceMeterButton:RegisterCallback(Mouse.eLClick, OnOpenResearch);
+  -- Controls.ScienceMeterButton:RegisterCallback(Mouse.eLClick, OnOpenResearch);
 
   -- CQUI --
   Controls.LaunchExtraShow:RegisterCallback( Mouse.eLClick, OnToggleExtras );
@@ -773,7 +756,6 @@ function Initialize()
   end
 
   OnTurnBegin();
-
 
   -- TESTS
   --------------------------------

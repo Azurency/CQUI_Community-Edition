@@ -2,7 +2,7 @@
 
 <Context Style="FontNormal16">
   <!-- Map Pin List Panel -->
-  <Grid Anchor="L,B" ID="MapPinPanel" Size="320,119" Texture="Tracker_OptionsBacking" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" MinSize="121,119" AutoSize="V" AutoSizePadding="0,15">
+  <Grid Anchor="L,B" ID="MapPinPanel" Size="320,auto" Texture="Tracker_OptionsBacking" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" MinSize="121,119" AutoSizePadding="0,15">
 
     <Label Anchor="C,T" String="{LOC_HUD_MAP_PIN_LIST:upper}" Offset="0,12" Style="FontFlair16" Color0="106,93,69,255" Color1="0,0,0,150" Color2="146,133,109,255" FontStyle="Glow" SmallCaps="20" SmallCapsLeading="0" SmallCapsType="EveryWord" KerningAdjustment="0"/>
 
@@ -29,7 +29,7 @@
 
     </Stack>
 
-        <Container  Size="200,30" AutoSize="V">
+        <Container  Size="200,auto">
         <CheckBox ID="ChatCheck"        Anchor="R,T"  Style="WorldTrackerCheckBox" TextOffset="-5" String="LOC_HIDE_CHAT_PANEL" WrapWidth="180" Align="Right"/>
       </Container>
       -->

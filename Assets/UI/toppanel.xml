@@ -68,7 +68,7 @@
     </Stack>
 
     <Grid    ID="Resources" Style="SubContainerSmall"  Size="48,24">
-      <Stack ID="ResourceStack" StackGrowth="Right" StackPadding="4" Anchor="L,C" Offset="0,-5"/>
+      <Stack ID="ResourceStack" StackGrowth="Right" StackPadding="4" Anchor="L,C" />
     </Grid>
 
   </Stack>
@@ -110,7 +110,7 @@
 
   <Instance Name="YieldButton_SingleLabel">
     <Container ID="Top" Size="auto,auto">
-      <GridButton	ID="YieldBacking" Size="40,24" Style="YieldBacking" Color="24,156,216,150" AutoSize="H">
+      <GridButton	ID="YieldBacking" Size="auto,24" AutoSizePadding="1,0" Style="YieldBacking" Color="24,156,216,150">
         <Stack		ID="YieldButtonStack" Anchor="L,C" Offset="0,2"	StackGrowth="Right">
           <Label	ID="YieldIconString" Anchor="L,B" Offset="0,4"/>
           <Label	ID="YieldPerTurn" Anchor="C,T" Style="FontNormal18" ColorSet="ResScienceLabelCS" FontStyle="Stroke" String="0"/>
@@ -121,7 +121,7 @@
 
   <Instance Name="YieldButton_DoubleLabel">
     <Container ID="Top" Size="auto,auto">
-      <GridButton	ID="YieldBacking" Size="40,24" Style="YieldBacking" Color="24,156,216,150" AutoSize="H">
+      <GridButton	ID="YieldBacking" Size="auto,24" AutoSizePadding="1,0" Style="YieldBacking" Color="24,156,216,150">
         <Stack		ID="YieldButtonStack" Anchor="L,C" Offset="0,2"	StackGrowth="Right">
           <Label	ID="YieldIconString" Anchor="L,B" Offset="0,4"/>
           <Label	ID="YieldBalance" Anchor="C,T" Style="FontNormal18" ColorSet="ResFaithLabelCS" String="?"/>

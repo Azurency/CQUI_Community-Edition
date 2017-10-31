@@ -8,14 +8,11 @@ include( "ToolTipHelper_PlayerYields" );
 -- ===========================================================================
 -- Yield handles
 -- ===========================================================================
-local m_YieldButtonSingleManager = InstanceManager:new( "YieldButton_SingleLabel", "Top", Controls.YieldStack );
-local m_YieldButtonDoubleManager = InstanceManager:new( "YieldButton_DoubleLabel", "Top", Controls.YieldStack );
-g_ExtraYieldLoaders = {};
-include("TopPanelLoader_", true);
+m_YieldButtonSingleManager = InstanceManager:new( "YieldButton_SingleLabel", "Top", Controls.YieldStack );
+m_YieldButtonDoubleManager = InstanceManager:new( "YieldButton_DoubleLabel", "Top", Controls.YieldStack )
 
 -- ===========================================================================
 local m_kResourceIM :table = InstanceManager:new( "ResourceInstance", "ResourceText", Controls.ResourceStack );
-local YIELD_PADDING_Y = 20;
 local META_PADDING    = 100;  -- The amount of padding to give the meta area to make enough room for the (+) when there is resource overflow
 local FONT_MULTIPLIER = 11; -- The amount to multiply times the string length to approximate the width in pixels of the label control
 local m_OpenPediaId;
@@ -90,15 +87,6 @@ end
 -- end
 
 -- ===========================================================================
---  Callback
--- ===========================================================================
-
-function OnOpenCivilopedia()
-  LuaEvents.OpenCivilopedia();
-end
-
-
--- ===========================================================================
 --  Takes a value and returns the string verison with +/- and rounded to
 --  the tenths decimal place.
 -- ===========================================================================
@@ -142,7 +130,6 @@ function RefreshYields()
 	m_ScienceYieldButton.YieldBacking:SetToolTipString( GetScienceTooltip() );
 	m_ScienceYieldButton.YieldIconString:SetText("[ICON_ScienceLarge]");
 	m_ScienceYieldButton.YieldButtonStack:CalculateSize();
-	m_ScienceYieldButton.YieldBacking:SetSizeX(m_ScienceYieldButton.YieldButtonStack:GetSizeX() + YIELD_PADDING_Y);
 
 
   ---- CULTURE----
@@ -156,7 +143,6 @@ function RefreshYields()
 	m_CultureYieldButton.YieldBacking:SetColor(0x99fe2aec);
 	m_CultureYieldButton.YieldIconString:SetText("[ICON_CultureLarge]");
 	m_CultureYieldButton.YieldButtonStack:CalculateSize();
-	m_CultureYieldButton.YieldBacking:SetSizeX(m_CultureYieldButton.YieldButtonStack:GetSizeX() + YIELD_PADDING_Y);
 
 	---- FAITH ----
 	m_FaithYieldButton = m_FaithYieldButton or m_YieldButtonDoubleManager:GetInstance();
@@ -168,23 +154,23 @@ function RefreshYields()
 	m_FaithYieldButton.YieldBacking:SetToolTipString( GetFaithTooltip() );
 	m_FaithYieldButton.YieldIconString:SetText("[ICON_FaithLarge]");
 	m_FaithYieldButton.YieldButtonStack:CalculateSize();	
-	m_FaithYieldButton.YieldBacking:SetSizeX(m_FaithYieldButton.YieldButtonStack:GetSizeX() + YIELD_PADDING_Y);
 
-	---- GOLD ----
-	m_GoldYieldButton = m_GoldYieldButton or m_YieldButtonDoubleManager:GetInstance();
-	local playerTreasury:table	= localPlayer:GetTreasury();
-	local goldYield		:number = playerTreasury:GetGoldYield() - playerTreasury:GetTotalMaintenance();
-	local goldBalance	:number = math.floor(playerTreasury:GetGoldBalance());
-	m_GoldYieldButton.YieldBalance:SetText( Locale.ToNumber(goldBalance, "#,###.#") );
-	m_GoldYieldButton.YieldBalance:SetColorByName("ResGoldLabelCS");	
-	m_GoldYieldButton.YieldPerTurn:SetText( FormatValuePerTurn(goldYield) );
-	m_GoldYieldButton.YieldIconString:SetText("[ICON_GoldLarge]");
-	m_GoldYieldButton.YieldPerTurn:SetColorByName("ResGoldLabelCS");	
+  ---- GOLD ----
+  if GameCapabilities.HasCapability("CAPABILITY_GOLD") then
+    m_GoldYieldButton = m_GoldYieldButton or m_YieldButtonDoubleManager:GetInstance();
+    local playerTreasury:table	= localPlayer:GetTreasury();
+    local goldYield		:number = playerTreasury:GetGoldYield() - playerTreasury:GetTotalMaintenance();
+    local goldBalance	:number = math.floor(playerTreasury:GetGoldBalance());
+    m_GoldYieldButton.YieldBalance:SetText( Locale.ToNumber(goldBalance, "#,###.#") );
+    m_GoldYieldButton.YieldBalance:SetColorByName("ResGoldLabelCS");	
+    m_GoldYieldButton.YieldPerTurn:SetText( FormatValuePerTurn(goldYield) );
+    m_GoldYieldButton.YieldIconString:SetText("[ICON_GoldLarge]");
+    m_GoldYieldButton.YieldPerTurn:SetColorByName("ResGoldLabelCS");	
 
-	m_GoldYieldButton.YieldBacking:SetToolTipString( GetGoldTooltip() );
-	m_GoldYieldButton.YieldBacking:SetColorByName("ResGoldLabelCS");
-	m_GoldYieldButton.YieldButtonStack:CalculateSize();	
-	m_GoldYieldButton.YieldBacking:SetSizeX(m_GoldYieldButton.YieldButtonStack:GetSizeX() + YIELD_PADDING_Y);
+    m_GoldYieldButton.YieldBacking:SetToolTipString( GetGoldTooltip() );
+    m_GoldYieldButton.YieldBacking:SetColorByName("ResGoldLabelCS");
+    m_GoldYieldButton.YieldButtonStack:CalculateSize();
+  end
 
 
 
@@ -209,10 +195,6 @@ function RefreshYields()
 			m_TourismYieldButton.Top:SetHide(true);
 		end 
   end
-
-	for _, loader in pairs(g_ExtraYieldLoaders) do
-		loader:RefreshExtraYields(m_YieldButtonSingleManager, m_YieldButtonDoubleManager);
-	end
 
 	Controls.YieldStack:CalculateSize();
 	Controls.StaticInfoStack:CalculateSize();
@@ -262,7 +244,6 @@ function RefreshTrade()
 
   Controls.TradeStack:CalculateSize();
   Controls.TradeStack:ReprocessAnchoring();
-  --Controls.TradeBacking:SetSizeX(Controls.TradeStack:GetSizeX() + YIELD_PADDING_Y);
 end
 
 -- ===========================================================================
@@ -573,7 +554,7 @@ function Initialize()
 
   -- UI Callbacks
   ContextPtr:SetRefreshHandler( OnRefresh );
-  Controls.CivpediaButton:RegisterCallback( Mouse.eLClick, OnOpenCivilopedia );
+  Controls.CivpediaButton:RegisterCallback( Mouse.eLClick, function() LuaEvents.ToggleCivilopedia(); end );
   Controls.CivpediaButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.MenuButton:RegisterCallback( Mouse.eLClick, OnMenu );
   Controls.MenuButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);

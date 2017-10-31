@@ -120,6 +120,7 @@ end
 -- ===========================================================================
 function ClearView()
   Controls.TooltipMain:SetHide(true);
+  m_plotId = -1;
 end
 
 
@@ -136,7 +137,7 @@ function RealizePositionAt( x:number, y:number )
   if UserConfiguration.GetValue("PlotToolTipFollowsMouse") == 1 then
     -- If tool tip manager is showing a *real* tooltip, don't show this plot tooltip to avoid potential overlap.
     if TTManager:IsTooltipShowing() then
-      Controls.TooltipMain:SetHide(true);
+      ClearView();
     else
       if m_isValidPlot then
         local offsetx:number = x + m_offsetX;
@@ -170,6 +171,7 @@ function TooltipOn()
     return;
   end
 
+  Controls.TooltipMain:SetHide(false);
   Controls.TooltipMain:SetToBeginning();
   Controls.TooltipMain:Play();
 
@@ -370,7 +372,12 @@ function View(data:table, bIsUpdate:boolean)
   end
 
   -- Appeal
-  if (not data.IsWater) then
+  local feature = nil;
+  if (data.FeatureType ~= nil) then
+      feature = GameInfo.Features[data.FeatureType];
+  end
+
+  if ((data.FeatureType ~= nil and feature.NaturalWonder) or not data.IsWater) then
     local strAppealDescriptor;
     for row in GameInfo.AppealHousingChanges() do
       local iMinimumValue = row.MinimumValue;
@@ -510,7 +517,6 @@ function View(data:table, bIsUpdate:boolean)
 
   -- NATURAL WONDER TILE
   if(data.FeatureType ~= nil) then
-    local feature = GameInfo.Features[data.FeatureType];
     if(feature.NaturalWonder) then
       table.insert(details, "------------------");
       table.insert(details, Locale.Lookup(feature.Description));
@@ -874,7 +880,6 @@ end
 function OnShowLeaderScreen()
   m_isActive = false;
   ClearView();
-  m_plotId = -1;
 end
 
 
@@ -952,7 +957,7 @@ end
 -- ===========================================================================
 function OnTouchPlotTooltipHide()
   m_touchIdForPoint = -1;
-  Controls.TooltipMain:SetHide(true);
+  ClearView();
 end
 
 -- ===========================================================================
@@ -981,7 +986,7 @@ end
 --  over a piece of 2D UI.
 -- ===========================================================================
 function OnToolTipShow( pToolTip:table )
-  Controls.TooltipMain:SetHide(true);
+  ClearView();
 end
 
 -- ===========================================================================

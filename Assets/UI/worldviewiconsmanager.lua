@@ -556,6 +556,7 @@ end
 
 ----------------------------------------------------------------
 function OnLocalPlayerChanged( eLocalPlayer:number , ePrevLocalPlayer:number )
+  ClearImprovementRecommendations();
   for key, pIconSet in pairs(g_MapIcons) do
     if (pIconSet ~= nil) then
       g_InstanceManager:ReleaseInstance( pIconSet );
