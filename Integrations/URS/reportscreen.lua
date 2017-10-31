@@ -65,24 +65,26 @@ function spairs( t, order )
 --	VARIABLES
 -- ===========================================================================
 
-local m_groupIM				:table = InstanceManager:new("GroupInstance",			"Top",		Controls.Stack);				-- Collapsable
-local m_simpleIM			:table = InstanceManager:new("SimpleInstance",			"Top",		Controls.Stack);				-- Non-Collapsable, simple
-local m_tabIM				:table = InstanceManager:new("TabInstance",				"Button",	Controls.TabContainer);
-local m_bonusResourcesIM	:table = InstanceManager:new("ResourceAmountInstance",	"Info",		Controls.BonusResources);
-local m_luxuryResourcesIM	:table = InstanceManager:new("ResourceAmountInstance",	"Info",		Controls.LuxuryResources);
+local m_groupIM				      :table = InstanceManager:new("GroupInstance",			"Top",		Controls.Stack);				-- Collapsable
+local m_simpleIM			      :table = InstanceManager:new("SimpleInstance",			"Top",		Controls.Stack);				-- Non-Collapsable, simple
+local m_tabIM				        :table = InstanceManager:new("TabInstance",				"Button",	Controls.TabContainer);
+local m_bonusResourcesIM	  :table = InstanceManager:new("ResourceAmountInstance",	"Info",		Controls.BonusResources);
+local m_luxuryResourcesIM	  :table = InstanceManager:new("ResourceAmountInstance",	"Info",		Controls.LuxuryResources);
 local m_strategicResourcesIM:table = InstanceManager:new("ResourceAmountInstance",	"Info",		Controls.StrategicResources);
 
-local m_tabs				:table;
-local m_kCityData			:table = nil;
-local m_kCityTotalData		:table = nil;
-local m_kUnitData			:table = nil;	-- TODO: Show units by promotion class
+local m_tabs				    :table;
+local m_kCityData			  :table = nil;
+local m_kCityTotalData	:table = nil;
+local m_kUnitData			  :table = nil;	-- TODO: Show units by promotion class
 local m_kResourceData		:table = nil;
-local m_kDealData			:table = nil;
-local m_uiGroups			:table = nil;	-- Track the groups on-screen for collapse all action.
+local m_kDealData			  :table = nil;
+local m_uiGroups			  :table = nil;	-- Track the groups on-screen for collapse all action.
+
+local m_isCollapsing		:boolean = true;
 
 -- !! new variables
-local m_kCultureData	:table = nil;
-local m_kCurrentDeals	:table = nil;
+local m_kCultureData	  :table = nil;
+local m_kCurrentDeals	  :table = nil;
 -- !!
 
 -- Remember last tab variable: ARISTOS
@@ -153,12 +155,14 @@ function OnCollapseAllButton()
   end
 
   for i,instance in ipairs( m_uiGroups ) do
-    if instance["isCollapsed"] == false then
-      instance["isCollapsed"] = true;
+    if instance["isCollapsed"] ~= m_isCollapsing then
+      instance["isCollapsed"] = m_isCollapsing;
       instance.CollapseAnim:Reverse();
       RealizeGroup( instance );
     end
   end
+  Controls.CollapseAll:LocalizeAndSetText(m_isCollapsing and "LOC_HUD_REPORTS_EXPAND_ALL" or "LOC_HUD_REPORTS_COLLAPSE_ALL");
+  m_isCollapsing = not m_isCollapsing;
 end
 
 -- ===========================================================================
@@ -745,7 +749,6 @@ function OnAnimGroupCollapse( instance:table)
   local progress		:number = instance.CollapseAnim:GetProgress();
   local sizeY			:number = lerp(startY,endY,progress);
 
-  instance.CollapseAnim:SetSizeY( groupHeight );
   instance.CollapseScroll:SetSizeY( sizeY );
   instance.ContentStack:ReprocessAnchoring();
   instance.Top:ReprocessAnchoring()
@@ -766,6 +769,8 @@ function ResetTabForNewPageContent()
   m_uiGroups = {};
   m_simpleIM:ResetInstances();
   m_groupIM:ResetInstances();
+  m_isCollapsing = true;
+  Controls.CollapseAll:LocalizeAndSetText("LOC_HUD_REPORTS_COLLAPSE_ALL");
   Controls.Scroll:SetScrollValue( 0 );
 end
 
@@ -915,12 +920,6 @@ function cityincome_fields( kCityData, pCityInstance )
 
   if not Controls.CityBuildingsCheckbox:IsSelected() then
     -- Compute tiles worked by setting to total and subtracting all the things...
-    local productionTilesWorked :number = kCityData.ProductionPerTurn;
-    local foodTilesWorked		:number = kCityData.FoodPerTurn;
-    local goldTilesWorked		:number = kCityData.GoldPerTurn;
-    local faithTilesWorked		:number = kCityData.FaithPerTurn;
-    local scienceTilesWorked	:number = kCityData.SciencePerTurn;
-    local cultureTilesWorked	:number = kCityData.CulturePerTurn;
 
     for i,kDistrict in ipairs(kCityData.BuildingsAndDistricts) do
       for i,kBuilding in ipairs(kDistrict.Buildings) do
@@ -935,12 +934,6 @@ function cityincome_fields( kCityData, pCityInstance )
         pLineItemInstance.Science:SetText( toPlusMinusNoneString(kBuilding.SciencePerTurn) );
         pLineItemInstance.Culture:SetText( toPlusMinusNoneString(kBuilding.CulturePerTurn) );
 
-        productionTilesWorked	= productionTilesWorked - kBuilding.ProductionPerTurn;
-        foodTilesWorked			= foodTilesWorked		- kBuilding.FoodPerTurn;
-        goldTilesWorked			= goldTilesWorked		- kBuilding.GoldPerTurn;
-        faithTilesWorked		= faithTilesWorked		- kBuilding.FaithPerTurn;
-        scienceTilesWorked		= scienceTilesWorked	- kBuilding.SciencePerTurn;
-        cultureTilesWorked		= cultureTilesWorked	- kBuilding.CulturePerTurn;
       end
     end
 
@@ -974,7 +967,7 @@ end
 --	Tab Callback
 -- ===========================================================================
 function yieldsCityFields( kCityData, pCityInstance )
-  pCityInstance.CityName:SetText( Locale.Lookup(kCityData.CityName) );
+  TruncateStringWithTooltip(pCityInstance.CityName, 230, Locale.Lookup(kCityData.CityName)); 
 
   --Great works
   local greatWorks:table = GetGreatWorksForCity(kCityData.City);
@@ -1010,13 +1003,6 @@ function yieldsCityFields( kCityData, pCityInstance )
 
   if not Controls.CityBuildingsCheckbox:IsSelected() then
   -- Compute tiles worked by setting to total and subtracting all the things...
-  local productionTilesWorked :number = kCityData.ProductionPerTurn;
-  local foodTilesWorked   :number = kCityData.FoodPerTurn;
-  local goldTilesWorked   :number = kCityData.GoldPerTurn;
-  local faithTilesWorked    :number = kCityData.FaithPerTurn;
-  local scienceTilesWorked  :number = kCityData.SciencePerTurn;
-  local cultureTilesWorked  :number = kCityData.CulturePerTurn;
-
   -- AZURENCY : clear buildings yield detail stack
   pCityInstance.LineItemStack:DestroyAllChildren();
 
@@ -1064,13 +1050,6 @@ function yieldsCityFields( kCityData, pCityInstance )
                   kBuilding.SciencePerTurn,
                   kBuilding.CulturePerTurn,
                   kBuilding.FaithPerTurn);
-
-      productionTilesWorked = productionTilesWorked - kBuilding.ProductionPerTurn;
-      foodTilesWorked     = foodTilesWorked   - kBuilding.FoodPerTurn;
-      goldTilesWorked     = goldTilesWorked   - kBuilding.GoldPerTurn;
-      faithTilesWorked    = faithTilesWorked    - kBuilding.FaithPerTurn;
-      scienceTilesWorked    = scienceTilesWorked  - kBuilding.SciencePerTurn;
-      cultureTilesWorked    = cultureTilesWorked  - kBuilding.CulturePerTurn;
 
       --Add great works
       if greatWorks[kBuilding.Type] ~= nil then
@@ -1309,7 +1288,7 @@ function ViewYieldsPage()
       if kBuilding.Maintenance > 0 then
         local pBuildingInstance:table = {};
         ContextPtr:BuildInstanceForControl( "BuildingExpensesEntryInstance", pBuildingInstance, instance.ContentStack ) ;
-        pBuildingInstance.CityName:SetText( Locale.Lookup(cityName) );
+        TruncateStringWithTooltip(pBuildingInstance.CityName, 224, Locale.Lookup(cityName)); 
         pBuildingInstance.BuildingName:SetText( Locale.Lookup(kBuilding.Name) );
 				pBuildingInstance.Gold:SetText( "-"..tostring(kBuilding.Maintenance));
         iTotalBuildingMaintenance = iTotalBuildingMaintenance - kBuilding.Maintenance;
@@ -1334,7 +1313,7 @@ function ViewYieldsPage()
           if kBuilding.Name == Locale.Lookup( GameInfo.Districts[i].Name ) and GameInfo.Districts[i].Maintenance > 0 then
             local pBuildingInstance:table = {};
             ContextPtr:BuildInstanceForControl( "BuildingExpensesEntryInstance", pBuildingInstance, instance.ContentStack );
-            pBuildingInstance.CityName:SetText( Locale.Lookup(cityName) );
+            TruncateStringWithTooltip(pBuildingInstance.CityName, 224, Locale.Lookup(cityName)); 
             pBuildingInstance.BuildingName:SetText( Locale.Lookup( GameInfo.Districts[i].Name ) );
             pBuildingInstance.Gold:SetText( "-" .. tostring( GameInfo.Districts[i].Maintenance ) );
             iTotalBuildingMaintenance = iTotalBuildingMaintenance - GameInfo.Districts[i].Maintenance;
@@ -1352,99 +1331,101 @@ function ViewYieldsPage()
   RealizeGroup( instance );
 
   -- ========== !! Unit Expenses ==========
+  if GameCapabilities.HasCapability("CAPABILITY_REPORTS_UNIT_EXPENSES") then
+    instance = NewCollapsibleGroupInstance();
+    instance.RowHeaderButton:SetText( Locale.Lookup( Locale.Lookup("LOC_HUD_REPORTS_ROW_UNIT_EXPENSES") ) );
+    instance.RowHeaderLabel:SetHide( true )
 
-  instance = NewCollapsibleGroupInstance();
-  instance.RowHeaderButton:SetText( Locale.Lookup( Locale.Lookup("LOC_HUD_REPORTS_ROW_UNIT_EXPENSES") ) );
-  instance.RowHeaderLabel:SetHide( true )
+    local pHeader:table = {};
+    ContextPtr:BuildInstanceForControl( "UnitExpensesHeaderInstance", pHeader, instance.ContentStack ) ;
 
-  local pHeader:table = {};
-  ContextPtr:BuildInstanceForControl( "UnitExpensesHeaderInstance", pHeader, instance.ContentStack ) ;
+    local iTotalUnitMaintenance : number = 0
+    local conscript_levee : number = 0
 
-  local iTotalUnitMaintenance : number = 0
-  local conscript_levee : number = 0
+    iTotalUnitMaintenance = 0
 
-  iTotalUnitMaintenance = 0
+    local numSlots : number = m_kCultureData:GetNumPolicySlots()
 
-  local numSlots : number = m_kCultureData:GetNumPolicySlots()
-
-  for i = 0, numSlots - 1, 1 do
-    local iPolicyId	:number = m_kCultureData:GetSlotPolicy(i);
-    if iPolicyId ~= -1 then
-      if GameInfo.Policies[iPolicyId].PolicyType == "POLICY_CONSCRIPTION" then
-        conscript_levee = 1
-      elseif GameInfo.Policies[iPolicyId].PolicyType == "POLICY_LEVEE_EN_MASSE" then
-        conscript_levee = 2
+    for i = 0, numSlots - 1, 1 do
+      local iPolicyId	:number = m_kCultureData:GetSlotPolicy(i);
+      if iPolicyId ~= -1 then
+        if GameInfo.Policies[iPolicyId].PolicyType == "POLICY_CONSCRIPTION" then
+          conscript_levee = 1
+        elseif GameInfo.Policies[iPolicyId].PolicyType == "POLICY_LEVEE_EN_MASSE" then
+          conscript_levee = 2
+        end
       end
     end
-  end
 
-  for _, kUnitGroup in pairs( m_kUnitData["Unit_Expenses"] ) do
-    if kUnitGroup.Cost - conscript_levee > 0 then
-      local pUnitInstance:table = {}
-      ContextPtr:BuildInstanceForControl( "UnitExpensesEntryInstance", pUnitInstance, instance.ContentStack )
-      pUnitInstance.UnitName:SetText( kUnitGroup.Name )
-      pUnitInstance.Gold:SetText( "-"..tostring( kUnitGroup.Amount * ( kUnitGroup.Cost - conscript_levee ) ) )
-      iTotalUnitMaintenance = iTotalUnitMaintenance - kUnitGroup.Amount * ( kUnitGroup.Cost - conscript_levee )
+    for _, kUnitGroup in pairs( m_kUnitData["Unit_Expenses"] ) do
+      if kUnitGroup.Cost - conscript_levee > 0 then
+        local pUnitInstance:table = {}
+        ContextPtr:BuildInstanceForControl( "UnitExpensesEntryInstance", pUnitInstance, instance.ContentStack )
+        pUnitInstance.UnitName:SetText( kUnitGroup.Name )
+        pUnitInstance.Gold:SetText( "-"..tostring( kUnitGroup.Amount * ( kUnitGroup.Cost - conscript_levee ) ) )
+        iTotalUnitMaintenance = iTotalUnitMaintenance - kUnitGroup.Amount * ( kUnitGroup.Cost - conscript_levee )
+      end
     end
+
+    local pBuildingFooterInstance : table = {};
+    ContextPtr:BuildInstanceForControl( "GoldFooterInstance", pBuildingFooterInstance, instance.ContentStack ) ;
+    pBuildingFooterInstance.Gold:SetText( "[ICON_Gold]" .. tostring( iTotalUnitMaintenance ) );
+
+    SetGroupCollapsePadding(instance, pBuildingFooterInstance.Top:GetSizeY() );
+    RealizeGroup( instance );
   end
-
-  local pBuildingFooterInstance : table = {};
-  ContextPtr:BuildInstanceForControl( "GoldFooterInstance", pBuildingFooterInstance, instance.ContentStack ) ;
-  pBuildingFooterInstance.Gold:SetText( "[ICON_Gold]" .. tostring( iTotalUnitMaintenance ) );
-
-  SetGroupCollapsePadding(instance, pBuildingFooterInstance.Top:GetSizeY() );
-  RealizeGroup( instance );
-
   -- Unit Expense END!!
 
 
   -- ========== Diplomatic Deals Income and Expenses ==========
   -- ARISTOS: A precise Diplomatic Deals Gold Yields report
 
+  
+  if GameCapabilities.HasCapability("CAPABILITY_REPORTS_DIPLOMATIC_DEALS") then 
 
-  instance = NewCollapsibleGroupInstance();
-  instance.RowHeaderButton:SetText( Locale.Lookup("LOC_HUD_REPORTS_ROW_DIPLOMATIC_DEALS") );
-  instance.RowHeaderLabel:SetHide( true )
+    instance = NewCollapsibleGroupInstance();
+    instance.RowHeaderButton:SetText( Locale.Lookup("LOC_HUD_REPORTS_ROW_DIPLOMATIC_DEALS") );
+    instance.RowHeaderLabel:SetHide( true )
 
-  local pHeader:table = {};
-  ContextPtr:BuildInstanceForControl( "DealHeaderInstance", pHeader, instance.ContentStack ) ;
+    local pHeader:table = {};
+    ContextPtr:BuildInstanceForControl( "DealHeaderInstance", pHeader, instance.ContentStack ) ;
 
-  local iTotalDealGold :number = 0;
-  for i,kDeal in ipairs(m_kCurrentDeals) do
-    local ending = kDeal.EndTurn - Game.GetCurrentGameTurn()
+    local iTotalDealGold :number = 0;
+    for i,kDeal in ipairs(m_kCurrentDeals) do
+      local ending = kDeal.EndTurn - Game.GetCurrentGameTurn()
 
-    for i, pDealItem in pairs( kDeal.Sending ) do
-      if pDealItem.Icon == "[ICON_GOLD]" then
-        local pDealInstance:table = {};
-        ContextPtr:BuildInstanceForControl( "DealEntryInstance", pDealInstance, instance.ContentStack ) ;
+      for i, pDealItem in pairs( kDeal.Sending ) do
+        if pDealItem.Icon == "[ICON_GOLD]" then
+          local pDealInstance:table = {};
+          ContextPtr:BuildInstanceForControl( "DealEntryInstance", pDealInstance, instance.ContentStack ) ;
 
-        pDealInstance.Civilization:SetText( kDeal.WithCivilization );
-        pDealInstance.Duration:SetText( tostring(ending) .. "[ICON_Turn]" );
-        pDealInstance.Gold:SetText( "-"..tostring(pDealItem.Amount) );
-        iTotalDealGold = iTotalDealGold - pDealItem.Amount;
+          pDealInstance.Civilization:SetText( kDeal.WithCivilization );
+          pDealInstance.Duration:SetText( tostring(ending) .. "[ICON_Turn]" );
+          pDealInstance.Gold:SetText( "-"..tostring(pDealItem.Amount) );
+          iTotalDealGold = iTotalDealGold - pDealItem.Amount;
+        end
+      end
+
+      for i, pDealItem in pairs( kDeal.Receiving ) do
+        if pDealItem.Icon == "[ICON_GOLD]" then
+          local pDealInstance:table = {};
+          ContextPtr:BuildInstanceForControl( "DealEntryInstance", pDealInstance, instance.ContentStack ) ;
+
+          pDealInstance.Civilization:SetText( kDeal.WithCivilization );
+          pDealInstance.Duration:SetText( tostring(ending) .. "[ICON_Turn]" );
+          pDealInstance.Gold:SetText( "+"..tostring(pDealItem.Amount) );
+          iTotalDealGold = iTotalDealGold + pDealItem.Amount;
+        end
       end
     end
-
-    for i, pDealItem in pairs( kDeal.Receiving ) do
-      if pDealItem.Icon == "[ICON_GOLD]" then
-        local pDealInstance:table = {};
-        ContextPtr:BuildInstanceForControl( "DealEntryInstance", pDealInstance, instance.ContentStack ) ;
-
-        pDealInstance.Civilization:SetText( kDeal.WithCivilization );
-        pDealInstance.Duration:SetText( tostring(ending) .. "[ICON_Turn]" );
-        pDealInstance.Gold:SetText( "+"..tostring(pDealItem.Amount) );
-        iTotalDealGold = iTotalDealGold + pDealItem.Amount;
-      end
-    end
-
+    
+    local pDealFooterInstance:table = {};		
+    ContextPtr:BuildInstanceForControl( "GoldFooterInstance", pDealFooterInstance, instance.ContentStack ) ;		
+    pDealFooterInstance.Gold:SetText("[ICON_Gold]"..tostring(iTotalDealGold) );
+    
+    SetGroupCollapsePadding(instance, pDealFooterInstance.Top:GetSizeY() );
+    RealizeGroup( instance );
   end
-
-  local pDealFooterInstance:table = {};
-  ContextPtr:BuildInstanceForControl( "GoldFooterInstance", pDealFooterInstance, instance.ContentStack ) ;
-  pDealFooterInstance.Gold:SetText("[ICON_Gold]"..tostring(iTotalDealGold) );
-
-  SetGroupCollapsePadding(instance, pDealFooterInstance.Top:GetSizeY() );
-  RealizeGroup( instance );
 
   -- END ARISTOS Diplomatic Deals
 
@@ -1484,6 +1465,7 @@ function ViewYieldsPage()
 	Controls.TourismIncome:SetText( toPlusMinusNoneString( m_kCityTotalData.Income["TOURISM"] ));	
   Controls.TourismBalance:SetText( m_kCityTotalData.Treasury["TOURISM"] );
 
+  Controls.CollapseAll:SetHide(false);
   Controls.BottomYieldTotals:SetHide( false );
   Controls.BottomYieldTotals:SetSizeY( SIZE_HEIGHT_BOTTOM_YIELDS );
   Controls.BottomResourceTotals:SetHide( true );
@@ -1608,6 +1590,7 @@ function ViewResourcesPage()
   Controls.Stack:CalculateSize();
   Controls.Scroll:CalculateSize();
 
+  Controls.CollapseAll:SetHide(false);
   Controls.BottomYieldTotals:SetHide( true );
   Controls.BottomResourceTotals:SetHide( false );
   Controls.Scroll:SetSizeY( Controls.Main:GetSizeY() - (Controls.BottomResourceTotals:GetSizeY() + SIZE_HEIGHT_PADDING_BOTTOM_ADJUST ) );
@@ -1618,7 +1601,7 @@ end
 -- ===========================================================================
 function city_fields( kCityData, pCityInstance )
 
-  pCityInstance.CityName:SetText( Locale.Lookup( kCityData.CityName ) );
+  TruncateStringWithTooltip(pCityInstance.CityName, 130, Locale.Lookup(kCityData.CityName)); 
   pCityInstance.Population:SetText( tostring(kCityData.Population) );
 
 		if kCityData.HousingMultiplier == 0 or kCityData.Occupied then
@@ -1643,8 +1626,9 @@ function city_fields( kCityData, pCityInstance )
   local warWearyValue:number = kCityData.AmenitiesLostFromWarWeariness;
   pCityInstance.WarWeariness:SetText( (warWearyValue==0) and "0" or "-"..tostring(warWearyValue) );
 
-  pCityInstance.Status:SetText( kCityData.IsUnderSiege and Locale.Lookup("LOC_HUD_REPORTS_STATUS_UNDER_SEIGE") or Locale.Lookup("LOC_HUD_REPORTS_STATUS_NORMAL") );
-
+  local statusText:string = kCityData.IsUnderSiege and Locale.Lookup("LOC_HUD_REPORTS_STATUS_UNDER_SEIGE") or Locale.Lookup("LOC_HUD_REPORTS_STATUS_NORMAL");
+  TruncateStringWithTooltip(pCityInstance.Status, 80, statusText); 
+    
   pCityInstance.Strength:SetText( tostring(kCityData.Defense) );
   pCityInstance.Damage:SetText( tostring(kCityData.Damage) );
 
@@ -1695,6 +1679,7 @@ function ViewCityStatusPage()
   Controls.Stack:CalculateSize();
   Controls.Scroll:CalculateSize();
 
+  Controls.CollapseAll:SetHide(true);
   Controls.BottomYieldTotals:SetHide( true );
   Controls.BottomResourceTotals:SetHide( true );
   Controls.Scroll:SetSizeY( Controls.Main:GetSizeY() - 88);
@@ -2097,6 +2082,7 @@ function ViewDealsPage()
   Controls.Stack:CalculateSize();
   Controls.Scroll:CalculateSize();
 
+  Controls.CollapseAll:SetHide(true); -- same as on other pages
   Controls.BottomYieldTotals:SetHide( true )
   Controls.BottomResourceTotals:SetHide( true )
   Controls.Scroll:SetSizeY( Controls.Main:GetSizeY() - 88 )
@@ -2165,6 +2151,7 @@ function ViewUnitsPage()
   Controls.Stack:CalculateSize();
   Controls.Scroll:CalculateSize();
 
+  Controls.CollapseAll:SetHide(true); -- same as on other pages
   Controls.BottomYieldTotals:SetHide( true )
   Controls.BottomResourceTotals:SetHide( true )
   Controls.Scroll:SetSizeY( Controls.Main:GetSizeY() - 88 )
