@@ -4,6 +4,8 @@
 
 local showSortOrdersPermanently = false
 local colorYieldValues = true
+local RoutePanelBaseOffsetX = 8;
+local RoutePanelScrollPanelExtraOffset = 9;
 
 -- ===========================================================================
 --  INCLUDES and Local Functions
@@ -390,13 +392,11 @@ function RefreshStack()
   Controls.RouteChoiceStack:CalculateSize();
   Controls.RouteChoiceScrollPanel:CalculateSize();
 
-  -- Adjust offset to center destination scrollpanel/stack
+  -- Adjust offset based on scroll bar
   if Controls.RouteChoiceScrollPanel:GetScrollBar():IsHidden() then
-    Controls.RouteChoiceScrollPanel:SetOffsetX(11);
-    Controls.SortBarStack:SetOffsetX(2);
+    Controls.RouteContainer:SetOffsetX(RoutePanelBaseOffsetX);
   else
-    Controls.RouteChoiceScrollPanel:SetOffsetX(19);
-    Controls.SortBarStack:SetOffsetX(8);
+    Controls.RouteContainer:SetOffsetX(RoutePanelBaseOffsetX + RoutePanelScrollPanelExtraOffset);
   end
 
   -- Show No Available Trade Routes message if nothing to select
@@ -560,7 +560,7 @@ function GetReligiousPressureForCity(religionIndex:number, destinationCity:table
 
   if m_originCity == nil or destinationCity == nil then
     return 0, "";
-    end
+  end
 
   if (forOriginCity) then
     pressureValue = tradeManager:CalculateOriginReligiousPressureFromPotentialRoute(m_originCity:GetOwner(), m_originCity:GetID(), destinationCity:GetOwner(), destinationCity:GetID(), religionIndex);
@@ -570,10 +570,10 @@ function GetReligiousPressureForCity(religionIndex:number, destinationCity:table
     pressureValue = tradeManager:CalculateDestinationReligiousPressureFromPotentialRoute(m_originCity:GetOwner(), m_originCity:GetID(), destinationCity:GetOwner(), destinationCity:GetID(), religionIndex);
     pressureIconString = "[ICON_PressureRight]";
     cityName = m_originCity:GetName();
-    end
+  end
   local sourceText = Locale.Lookup("LOC_ROUTECHOOSER_RELIGIOUS_PRESSURE_SOURCE_MAJORITY_RELIGION", pressureValue, pressureIconString, Game.GetReligion():GetName(religionIndex), cityName);
   return pressureValue, sourceText;
-  end
+end
 
 -- ===========================================================================
 function AddReligiousPressureResourceEntry(religionInfo:table, pressureValue:number, forOriginCity:boolean, sourceText:string, instanceControl:table)

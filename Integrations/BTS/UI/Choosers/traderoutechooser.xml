@@ -102,66 +102,68 @@
             </PullDown>
 
             <!-- Sort Yield Stack -->
-            <Stack Anchor="L,T" ID="SortBarStack" StackGrowth="Right" Offset="0,34" StackPadding="2">
-              <GridButton ID="FoodSortButton" ToolTip="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Offset="17,0" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
-                <Label ID="FoodSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Food]"/>
-                <Label ID="FoodSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
-                <Image ID="FoodDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
-                <Image ID="FoodAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
-              </GridButton>
+            <Container ID="RouteContainer" Anchor="L,T" Offset="17,0">
+              <Stack Anchor="L,T" ID="SortBarStack" StackGrowth="Right" Offset="11,34" StackPadding="2">
+                <GridButton ID="FoodSortButton" ToolTip="LOC_TRADE_SORT_BY_FOOD_TOOLTIP" Offset="0,0" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
+                  <Label ID="FoodSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Food]"/>
+                  <Label ID="FoodSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
+                  <Image ID="FoodDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
+                  <Image ID="FoodAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
+                </GridButton>
 
-              <GridButton ID="ProductionSortButton" ToolTip="LOC_TRADE_SORT_BY_PRODUCTION_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
-                <Label ID="ProductionSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Production]"/>
-                <Label ID="ProductionSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
-                <Image ID="ProductionDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
-                <Image ID="ProductionAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
-              </GridButton>
+                <GridButton ID="ProductionSortButton" ToolTip="LOC_TRADE_SORT_BY_PRODUCTION_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
+                  <Label ID="ProductionSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Production]"/>
+                  <Label ID="ProductionSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
+                  <Image ID="ProductionDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
+                  <Image ID="ProductionAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
+                </GridButton>
 
-              <GridButton ID="GoldSortButton" ToolTip="LOC_TRADE_SORT_BY_GOLD_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
-                <Label ID="GoldSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Gold]"/>
-                <Label ID="GoldSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
-                <Image ID="GoldDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
-                <Image ID="GoldAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
-              </GridButton>
+                <GridButton ID="GoldSortButton" ToolTip="LOC_TRADE_SORT_BY_GOLD_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
+                  <Label ID="GoldSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Gold]"/>
+                  <Label ID="GoldSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
+                  <Image ID="GoldDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
+                  <Image ID="GoldAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
+                </GridButton>
 
-              <GridButton ID="ScienceSortButton" ToolTip="LOC_TRADE_SORT_BY_SCIENCE_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
-                <Label ID="ScienceSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Science]"/>
-                <Label ID="ScienceSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
-                <Image ID="ScienceDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
-                <Image ID="ScienceAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
-              </GridButton>
+                <GridButton ID="ScienceSortButton" ToolTip="LOC_TRADE_SORT_BY_SCIENCE_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
+                  <Label ID="ScienceSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Science]"/>
+                  <Label ID="ScienceSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
+                  <Image ID="ScienceDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
+                  <Image ID="ScienceAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
+                </GridButton>
 
-              <GridButton ID="CultureSortButton" ToolTip="LOC_TRADE_SORT_BY_CULTURE_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
-                <Label ID="CultureSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Culture]"/>
-                <Label ID="CultureSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
-                <Image ID="CultureDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
-                <Image ID="CultureAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
-              </GridButton>
+                <GridButton ID="CultureSortButton" ToolTip="LOC_TRADE_SORT_BY_CULTURE_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
+                  <Label ID="CultureSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Culture]"/>
+                  <Label ID="CultureSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
+                  <Image ID="CultureDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
+                  <Image ID="CultureAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
+                </GridButton>
 
-              <GridButton ID="FaithSortButton" ToolTip="LOC_TRADE_SORT_BY_FAITH_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
-                <Label ID="FaithSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Faith]"/>
-                <Label ID="FaithSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
-                <Image ID="FaithDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
-                <Image ID="FaithAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
-              </GridButton>
+                <GridButton ID="FaithSortButton" ToolTip="LOC_TRADE_SORT_BY_FAITH_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
+                  <Label ID="FaithSortLabel" Anchor="R,C" Offset="-2,1" Style="FontNormal12" String="[Icon_Faith]"/>
+                  <Label ID="FaithSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
+                  <Image ID="FaithDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
+                  <Image ID="FaithAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
+                </GridButton>
 
-              <GridButton ID="TurnsToCompleteSortButton" ToolTip="LOC_TRADE_SORT_BY_TURNS_REMAINING_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
-                <Label ID="TurnsToCompleteSortLabel" Anchor="R,C" Offset="-2,0" Style="FontNormal14" String="[Icon_Turn]"/>
-                <Label ID="TurnsToCompleteSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
-                <Image ID="TurnsToCompleteDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
-                <Image ID="TurnsToCompleteAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
-              </GridButton>
-            </Stack>
+                <GridButton ID="TurnsToCompleteSortButton" ToolTip="LOC_TRADE_SORT_BY_TURNS_REMAINING_TOOLTIP" Size="48,18" Color="255,255,255,255" Style="PanelButtonLightweight">
+                  <Label ID="TurnsToCompleteSortLabel" Anchor="R,C" Offset="-2,0" Style="FontNormal14" String="[Icon_Turn]"/>
+                  <Label ID="TurnsToCompleteSortOrder" Hidden="1" Anchor="C,C" Offset="0,0" String="9" Style="FontNormal12"/>
+                  <Image ID="TurnsToCompleteDescArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,C" Offset="2,0"/>
+                  <Image ID="TurnsToCompleteAscArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,C" Offset="2,-5"/>
+                </GridButton>
+              </Stack>
 
-            <!-- Destination List -->
-            <ScrollPanel ID="RouteChoiceScrollPanel" Anchor="L,T" Offset="1,54" Size="parent,parent-54" Vertical="1" AutoScrollBar="1" AutoSizeScrollBar="1">
-              <ScrollBar Style="ScrollVerticalBacking" Anchor="L,T" AnchorSide="O,I" Color="28,60,90,255" Offset="-7,2">
-                <Thumb Style="ScrollThumbAlt" Color="28,60,90,255" />
-              </ScrollBar>
+              <!-- Destination List -->
+              <ScrollPanel ID="RouteChoiceScrollPanel" Anchor="L,T" Offset="0,54" Size="parent,parent-54" Vertical="1" AutoScrollBar="1" AutoSizeScrollBar="1">
+                <ScrollBar Style="ScrollVerticalBacking" Anchor="L,T" Color="28,60,90,255" Offset="-6,2">
+                  <Thumb Style="ScrollThumbAlt" Color="28,60,90,255" />
+                </ScrollBar>
 
-              <!-- Destination Stack -->
-              <Stack ID="RouteChoiceStack" Anchor="L,T" Offset="0,0" StackGrowth="Down"/>
-            </ScrollPanel>
+                <!-- Destination Stack -->
+                <Stack ID="RouteChoiceStack" Anchor="L,T" Offset="5,0" StackGrowth="Down"/>
+              </ScrollPanel>
+            </Container>
 
             <!-- Bottom Divider -->
             <Grid Size="parent+5,10" Anchor="C,B" Offset="0,-8" Style="Divider3Grid" />
@@ -204,10 +206,10 @@
   </SlideAnim>
 
   <!-- ======================= -->
-  <!-- Instances -->
+  <!--        Instances        -->
   <!-- ======================= -->
   <Instance       Name="RouteChoiceInstance">
-    <Container ID="Top" Size="380,110" Offset="0,2">
+    <Container ID="Top" Size="375,110" Offset="0,2">
       <GridButton ID="Button" Size="parent,parent" Anchor="C,T">
         <GridData Texture="DestinationChooser_Button" StateOffsetIncrement="0,76" SliceCorner="14,14" SliceSize="19,44" SliceTextureSize="48,76"/>
 
@@ -272,7 +274,7 @@
       </Container>
 
       <Container ID="RouteReligionContainer" Size="56,20" Hidden="1">
-        <Container Anchor="C,C" Offset="1,0" >
+        <Container Anchor="C,C" Offset="0,0" >
           <Image ID="ReligionIconBacking" Anchor="R,C" Texture="Religion_FollowersSlot" Size="30,30">
             <Image ID="ReligionIcon" Anchor="C,C" Size="22,22" IconSize="22"/>
           </Image>
