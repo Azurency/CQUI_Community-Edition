@@ -1,0 +1,326 @@
+[1mdiff --git a/Integrations/BES/UI/Choosers/espionagechooser.lua b/Integrations/BES/UI/Choosers/espionagechooser.lua[m
+[1mindex 1fe0ae9..068b408 100644[m
+[1m--- a/Integrations/BES/UI/Choosers/espionagechooser.lua[m
+[1m+++ b/Integrations/BES/UI/Choosers/espionagechooser.lua[m
+[36m@@ -540,8 +540,6 @@[m [mfunction AddDestination(city:table)[m
+   local destinationInstance:table = m_RouteChoiceIM:GetInstance();[m
+ [m
+   -- Update city name and banner color[m
+[31m-  TruncateStringWithTooltip(destinationInstance.CityName, 185, Locale.ToUpper(city:GetName()));[m
+[31m-[m
+   local backColor:number, frontColor:number  = UI.GetPlayerColors( city:GetOwner() );[m
+   local darkerBackColor:number = DarkenLightenColor(backColor,(-85),238);[m
+   local brighterBackColor:number = DarkenLightenColor(backColor,90,255);[m
+[36m@@ -551,6 +549,13 @@[m [mfunction AddDestination(city:table)[m
+   destinationInstance.BannerLighter:SetColor( brighterBackColor );[m
+   destinationInstance.CityName:SetColor( frontColor );[m
+ [m
+[32m+[m[32m  -- Update capital indicator[m
+[32m+[m[32m  if city:IsCapital() then[m
+[32m+[m[32m    TruncateStringWithTooltip(destinationInstance.CityName, 185, "[ICON_Capital] " .. Locale.ToUpper(city:GetName()));[m
+[32m+[m[32m  else[m
+[32m+[m[32m    TruncateStringWithTooltip(destinationInstance.CityName, 185, Locale.ToUpper(city:GetName()));[m
+[32m+[m[32m  end[m
+[32m+[m
+   -- Update travel time[m
+   local travelTime:number = UnitManager.GetTravelTime(m_spy, city);[m
+   local establishTime:number = UnitManager.GetEstablishInCityTime(m_spy, city);[m
+[36m@@ -612,22 +617,12 @@[m [mfunction TeleportToSelectedCity()[m
+ end[m
+ [m
+ -- ===========================================================================[m
+[31m-function IsCityState(player:table)[m
+[31m-  local playerInfluence:table = player:GetInfluence();[m
+[31m-  if  playerInfluence:CanReceiveInfluence() then[m
+[31m-    return true[m
+[31m-  end[m
+[31m-[m
+[31m-  return false[m
+[31m-end[m
+[31m-[m
+[31m--- ===========================================================================[m
+ function HasMetAndAlive(player:table)[m
+[32m+[m[32m  local localPlayerID = Game.GetLocalPlayer()[m
+   if localPlayerID == player:GetID() then[m
+     return true[m
+   end[m
+ [m
+[31m-  local localPlayerID = Game.GetLocalPlayer()[m
+   local localPlayer = Players[localPlayerID];[m
+   local localPlayerDiplomacy = localPlayer:GetDiplomacy();[m
+ [m
+[36m@@ -653,7 +648,7 @@[m [mfunction RefreshFilters()[m
+   -- Add Players Filter[m
+   local players:table = Game.GetPlayers();[m
+   for i, pPlayer in ipairs(players) do[m
+[31m-    if not IsCityState(pPlayer) and HasMetAndAlive(pPlayer) and not pPlayer:IsBarbarian() then[m
+[32m+[m[32m    if pPlayer:IsMajor() and HasMetAndAlive(pPlayer) and not pPlayer:IsBarbarian() then[m
+       local playerConfig:table = PlayerConfigurations[pPlayer:GetID()];[m
+       local name = Locale.Lookup(GameInfo.Civilizations[playerConfig:GetCivilizationTypeID()].Name);[m
+       AddFilter(name, function(a) return a:GetID() == pPlayer:GetID() end);[m
+[1mdiff --git a/Integrations/BES/UI/Choosers/espionagechooser.xml b/Integrations/BES/UI/Choosers/espionagechooser.xml[m
+[1mindex aa04700..08880b4 100644[m
+[1m--- a/Integrations/BES/UI/Choosers/espionagechooser.xml[m
+[1m+++ b/Integrations/BES/UI/Choosers/espionagechooser.xml[m
+[36m@@ -54,7 +54,7 @@[m
+     <Button         ID="CloseButton"        Anchor="L,T"  Offset="265,2" Style="CloseButtonSmall"/>[m
+ [m
+     <!-- Destination Panel -->[m
+[31m-    <PullDown ID="DestinationFilterPulldown" ConsumeMouse="0" Offset="0,157" Anchor="C,T" Size="parent-10,25" AutoSizePopUp="1" AutoFlip="1" ScrollThreshold="400">[m
+[32m+[m[32m    <PullDown ID="DestinationFilterPulldown" ConsumeMouse="0" Offset="0,157" Anchor="C,T" Size="280,25" AutoSizePopUp="1" AutoFlip="1" ScrollThreshold="400">[m
+       <ButtonData>[m
+         <GridButton   ID="FilterButton" TextAnchor="R,C" TextOffset="15,0" Style="FontNormal14" FontStyle="Shadow" EffectColor="0,0,0,255" Offset="0,-25" Size="50,-20" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" />[m
+       </ButtonData>[m
+[36m@@ -122,7 +122,7 @@[m
+     </ScrollPanel>[m
+ [m
+     <!-- Mission Panel -->[m
+[31m-    <Grid ID="MissionGrid" Size="parent,0" AutoSize="V" Offset="296,0" AutoSizePadding="0,2" Texture="Controls_ContainerBlue" SliceStart="0,0" SliceCorner="3,3" SliceSize="9,9" SliceTextureSize="16,16" ConsumeMouse="1">[m
+[32m+[m[32m    <Grid ID="MissionGrid" Size="parent,auto" Offset="296,0" AutoSizePadding="0,2" Texture="Controls_ContainerBlue" SliceStart="0,0" SliceCorner="3,3" SliceSize="9,9" SliceTextureSize="16,16" ConsumeMouse="1">[m
+       <Stack ID="MissionPanel" Offset="0,6" StachGrowth="Down" StackPadding="2">[m
+         <Grid ID="PossibleMissionsLabel" Size="parent+2,50" Offset="0,-7" Texture="Controls_SubHeader3" SliceCorner="10,10" SliceSize="14,14" SliceTextureSize="34,34">[m
+           <Label Anchor="C,C" Style="FontFlair20" SmallCaps="26" SmallCapsType="EveryWord" String="LOC_ESPIONAGECHOOSER_POSSIBLE_MISSIONS"/>[m
+[36m@@ -175,25 +175,25 @@[m
+         <Box Size="32,parent" Offset="96,0" Color="255,255,255,10"/>[m
+         <Box Size="32,parent" Offset="161,0" Color="255,255,255,10"/>[m
+ [m
+[31m-        <Stack Anchor="C,C" StackGrowth="Right">[m
+[31m-          <Image ID="CityCenterIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="0,0"/>[m
+[31m-          <Image ID="CommericalIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="192,0"/>[m
+[31m-          <Image ID="TheaterIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="0,32"/>[m
+[31m-          <Image ID="ScienceIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="64,0"/>[m
+[31m-          <Image ID="IndustrialIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="32,32"/>[m
+[31m-          <Image ID="NeighborhoodIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="64,32"/>[m
+[31m-          <Image ID="SpaceIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="128,32"/>[m
+[32m+[m[32m        <Stack Anchor="L,C" StackGrowth="Right">[m
+[32m+[m[32m          <Container Size="32,32"><Image ID="CityCenterIcon"    Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="0,0"   /> </Container>[m
+[32m+[m[32m          <Container Size="32,32"><Image ID="CommericalIcon"    Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="192,0" /> </Container>[m
+[32m+[m[32m          <Container Size="32,32"><Image ID="TheaterIcon"       Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="0,32"  /> </Container>[m
+[32m+[m[32m          <Container Size="32,32"><Image ID="ScienceIcon"       Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="64,0"  /> </Container>[m
+[32m+[m[32m          <Container Size="32,32"><Image ID="IndustrialIcon"    Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="32,32" /> </Container>[m
+[32m+[m[32m          <Container Size="32,32"><Image ID="NeighborhoodIcon"  Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="64,32" /> </Container>[m
+[32m+[m[32m          <Container Size="32,32"><Image ID="SpaceIcon"         Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="128,32"/> </Container>[m
+         </Stack>[m
+       </Grid>[m
+     </GridButton>[m
+   </Instance>[m
+ [m
+   <Instance Name="MissionInstance">[m
+[31m-    <GridButton ID="MissionButton" Size="parent,70" Offset="0,0" Anchor="C,T" AutoSize="Vertical">[m
+[32m+[m[32m    <GridButton ID="MissionButton" Size="parent,auto" Offset="0,0" Anchor="C,T">[m
+       <GridData Texture="DestinationChooser_Button" StateOffsetIncrement="0,76" SliceCorner="14,14" SliceSize="19,44" SliceTextureSize="48,76" NoStateChange="0"/>[m
+ [m
+       <!-- Selector Brace -->[m
+[31m-      <Grid ID="SelectorBrace" Anchor="C,C" Size="parent,90" AutoSize="Vertical" AutoSizePadding="6,3" Texture="Controls_SelectorBrace" SliceCorner="29,29" SliceSize="2,2" SliceTextureSize="64,64" Color="255,255,255,0">[m
+[32m+[m[32m      <Grid ID="SelectorBrace" Anchor="C,C" Size="parent,auto" AutoSizePadding="6,3" Texture="Controls_SelectorBrace" SliceCorner="29,29" SliceSize="2,2" SliceTextureSize="64,64" Color="255,255,255,0">[m
+         <!-- Mission Icon -->[m
+         <Grid Size="55,55" Offset="7,7" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">[m
+           <Image ID="MissionIcon" Anchor="C,C" Size="40,40" Texture="EspionageMissions40"/>[m
+[36m@@ -212,7 +212,7 @@[m
+ [m
+         <!-- Stack used to manage operation district, turns to complete, and success chance information -->[m
+         <Stack ID="MissionStatsStack" Anchor="R,B" Offset="8,5" StackGrowth="Right" StackPadding="4">[m
+[31m-          <Grid AutoSize="1" AutoSizePadding="-4,0" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">[m
+[32m+[m[32m          <Grid Size="auto,auto" AutoSizePadding="-4,0" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">[m
+             <Stack Offset="-2,0" StackGrowth="Right" StackPadding="-3">[m
+               <Label Offset="0,4" Style="FontNormal14" String="[Icon_LocationPip]"/>[m
+               <Label ID="MissionDistrictName" Offset="0,2" Style="FontNormal14" String="City Center"/>[m
+[36m@@ -220,14 +220,14 @@[m
+             </Stack>[m
+           </Grid>[m
+ [m
+[31m-          <Grid ID="TurnsToCompleteGrid" AutoSize="1" AutoSizePadding="2,1" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">[m
+[32m+[m[32m          <Grid ID="TurnsToCompleteGrid" Size="auto,auto" AutoSizePadding="2,1" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">[m
+             <Stack Offset="0,2" StackGrowth="Right" StackPadding="-3">[m
+               <Label Offset="0,0" Style="FontNormal14" String="[Icon_Turn]"/>[m
+               <Label ID="TurnsToCompleteLabel" Offset="0,0" Style="FontNormal14" String="4"/>[m
+             </Stack>[m
+           </Grid>[m
+ [m
+[31m-          <Grid ID="ProbabilityGrid" AutoSize="1" AutoSizePadding="1,1" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">[m
+[32m+[m[32m          <Grid ID="ProbabilityGrid" Size="auto,auto" AutoSizePadding="1,1" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">[m
+             <Label ID="ProbabilityLabel" Offset="3,2" Style="FontNormal14" String="5%"/>[m
+           </Grid>[m
+         </Stack>[m
+[1mdiff --git a/Integrations/BES/UI/PartialScreens/espionageoverview.lua b/Integrations/BES/UI/PartialScreens/espionageoverview.lua[m
+[1mindex e12f052..34bf64b 100644[m
+[1m--- a/Integrations/BES/UI/PartialScreens/espionageoverview.lua[m
+[1m+++ b/Integrations/BES/UI/PartialScreens/espionageoverview.lua[m
+[36m@@ -12,8 +12,9 @@[m [minclude( "TabSupport" );[m
+ -- ===========================================================================[m
+ [m
+ local RELOAD_CACHE_ID:string = "EspionageOverview"; -- Must be unique (usually the same as the file name)[m
+[31m-local MAX_BEFORE_TRUNC_MISSION_NAME     :number = 170;[m
+[31m-local MAX_BEFORE_TRUNC_ASK_FOR_TRADE        :number = 135;[m
+[32m+[m[32mlocal MAX_BEFORE_TRUNC_MISSION_NAME   :number = 170;[m
+[32m+[m[32mlocal MAX_BEFORE_TRUNC_ASK_FOR_TRADE  :number = 135;[m
+[32m+[m[32mlocal TRAVEL_DEST_TRUNCATE_WIDTH      :number = 170;[m
+ [m
+ local EspionageTabs:table = {[m
+   OPERATIVES      = 0;[m
+[36m@@ -500,22 +501,12 @@[m [mfunction OnDistrickFilterCheckbox(pControl)[m
+ end[m
+ [m
+ -- ===========================================================================[m
+[31m-function IsCityState(player:table)[m
+[31m-  local playerInfluence:table = player:GetInfluence();[m
+[31m-  if  playerInfluence:CanReceiveInfluence() then[m
+[31m-    return true[m
+[31m-  end[m
+[31m-[m
+[31m-  return false[m
+[31m-end[m
+[31m-[m
+[31m--- ===========================================================================[m
+ function HasMetAndAlive(player:table)[m
+[32m+[m[32m  local localPlayerID = Game.GetLocalPlayer()[m
+   if localPlayerID == player:GetID() then[m
+     return true[m
+   end[m
+ [m
+[31m-  local localPlayerID = Game.GetLocalPlayer()[m
+   local localPlayer = Players[localPlayerID];[m
+   local localPlayerDiplomacy = localPlayer:GetDiplomacy();[m
+ [m
+[36m@@ -541,7 +532,7 @@[m [mfunction RefreshFilters()[m
+   -- Add Players Filter[m
+   local players:table = Game.GetPlayers();[m
+   for i, pPlayer in ipairs(players) do[m
+[31m-    if not IsCityState(pPlayer) and HasMetAndAlive(pPlayer) and not pPlayer:IsBarbarian() then[m
+[32m+[m[32m    if pPlayer:IsMajor() and HasMetAndAlive(pPlayer) and not pPlayer:IsBarbarian() then[m
+       local playerConfig:table = PlayerConfigurations[pPlayer:GetID()];[m
+       local name = Locale.Lookup(GameInfo.Civilizations[playerConfig:GetCivilizationTypeID()].Name);[m
+       AddFilter(name, function(a) return a:GetID() == pPlayer:GetID() end);[m
+[36m@@ -599,6 +590,17 @@[m [mfunction OnFilterSelected( index:number, filterIndex:number )[m
+ end[m
+ [m
+ -- ===========================================================================[m
+[32m+[m[32mfunction AddTopDistrictToolTips()[m
+[32m+[m[32m  Controls.FilterCityCenterCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_CITY_CENTER_NAME"));[m
+[32m+[m[32m  Controls.FilterCommericalHubCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_COMMERCIAL_HUB_NAME"));[m
+[32m+[m[32m  Controls.FilterTheaterCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_THEATER_NAME"));[m
+[32m+[m[32m  Controls.FilterCampusCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_CAMPUS_NAME"));[m
+[32m+[m[32m  Controls.FilterIndustrialCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_INDUSTRIAL_ZONE_NAME"));[m
+[32m+[m[32m  Controls.FilterNeighborhoodCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_NEIGHBORHOOD_NAME"));[m
+[32m+[m[32m  Controls.FilterSpaceportCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_SPACEPORT_NAME"));[m
+[32m+[m[32mend[m
+[32m+[m
+[32m+[m[32m-- ===========================================================================[m
+ --  Called once during Init[m
+ -- ===========================================================================[m
+ function PopulateTabs()[m
+[36m@@ -819,7 +821,7 @@[m [mfunction AddOffMapOperative(spy:table)[m
+   local spyPlot:table = Map.GetPlot(spy.XLocation, spy.YLocation);[m
+   local targetCity:table = Cities.GetPlotPurchaseCity(spyPlot);[m
+   if targetCity then[m
+[31m-    operativeInstance.TravelDestinationName:SetText(Locale.Lookup("LOC_ESPIONAGEOVERVIEW_TRANSIT_TO", targetCity:GetName()));[m
+[32m+[m[32m    TruncateStringWithTooltip(operativeInstance.TravelDestinationName, TRAVEL_DEST_TRUNCATE_WIDTH, Locale.Lookup("LOC_ESPIONAGEOVERVIEW_TRANSIT_TO", targetCity:GetName()));[m
+   end[m
+ [m
+   operativeInstance.CityBanner:SetHide(true);[m
+[36m@@ -1114,5 +1116,6 @@[m [mfunction Initialize()[m
+   LuaEvents.GameDebug_Return.Add(OnGameDebugReturn);[m
+ [m
+   PopulateTabs();[m
+[32m+[m[32m  AddTopDistrictToolTips();[m
+ end[m
+ Initialize();[m
+[1mdiff --git a/Integrations/BES/UI/PartialScreens/espionageoverview.xml b/Integrations/BES/UI/PartialScreens/espionageoverview.xml[m
+[1mindex 0512317..bc035c9 100644[m
+[1m--- a/Integrations/BES/UI/PartialScreens/espionageoverview.xml[m
+[1m+++ b/Integrations/BES/UI/PartialScreens/espionageoverview.xml[m
+[36m@@ -103,11 +103,11 @@[m
+     <!-- ================================================================== -->[m
+     <Container ID="MissionHistoryTabContainer" Anchor="C,B" Size="parent-2,parent-88" Offset="0,8">[m
+       <Stack ID="MissionHistoryTabStack" StackGrowth="Down">[m
+[31m-        <Container ID="CapturedEnemyOperativeContainer" Size="parent,100" AutoSize="Vertical" AutoSizePadding="0,4">[m
+[32m+[m[32m        <Container ID="CapturedEnemyOperativeContainer" Size="parent,auto" AutoSizePadding="0,4">[m
+           <Label Offset="12,2" Style="FontFlair22" SmallCaps="28" SmallCapsType="EveryWord" String="LOC_ESPIONAGEOVERVIEW_CAPTURED_SPIES"/>[m
+           <Stack ID="CapturedEnemyOperativeStack" Anchor="C,T" Offset="0,30" StackGrowth="Down" StackPadding="4"/>[m
+         </Container>[m
+[31m-        <Container ID="MissionHistoryContainer" Size="parent,100" AutoSize="Vertical" AutoSizePadding="0,4">[m
+[32m+[m[32m        <Container ID="MissionHistoryContainer" Size="parent,auto" AutoSizePadding="0,4">[m
+           <Grid Anchor="C,T" Size="Parent-2,40" Texture="Controls_TitleBarDark" SliceCorner="14,11" SliceSize="14, 12" SliceTextureSize="42,34">[m
+             <Label Anchor="C,C" Offset="0,2" Style="FontFlair22" SmallCaps="28" SmallCapsType="EveryWord" String="LOC_ESPIONAGEOVERVIEW_MISSION_HISTORY_SUBHEADER"/>[m
+           </Grid>[m
+[36m@@ -127,7 +127,7 @@[m
+     <!-- ================================================================== -->[m
+     <!--  Tabs                                                      -->[m
+     <!-- ================================================================== -->[m
+[31m-    <Container ID="TabContainer" Anchor="C,T" Offset="0,44" Size="514,31">[m
+[32m+[m[32m    <Container ID="TabContainer" Anchor="C,T" Offset="0,44" Size="514,35">[m
+       <Grid Size="parent,parent" Texture="Controls_TabLedgeCaps"  SliceCorner="20,3" SliceSize="203,24" SliceTextureSize="243,31">[m
+         <Image Texture="Controls_TabLedgeFill" Size="parent-200,23" StretchMode="Tile" Anchor="C,C"/>[m
+         <GridButton ID="OperativesTabButton" Size="130,34" Style="TabButton" FontSize="14" TextOffset="0,2" String="LOC_ESPIONAGEOVERVIEW_OPERATIVES_HEADER">[m
+[36m@@ -160,7 +160,7 @@[m
+ [m
+   <!-- Operative Instance -->[m
+   <Instance Name="OperativeInstance">[m
+[31m-    <Grid ID="Top" Size="489,73" AutoSize="Vertical" AutoSizePadding="0,4" Texture="Espionage_Item" SliceCorner="13,36" SliceSize="463,25" SliceTextureSize="489,73" NoStateChange="1">[m
+[32m+[m[32m    <Grid ID="Top" Size="489,auto" AutoSizePadding="0,4" Texture="Espionage_Item" SliceCorner="13,36" SliceSize="463,25" SliceTextureSize="489,73" NoStateChange="1">[m
+       <!-- Operative Name -->[m
+       <Label ID="OperativeName" Offset="12,10" Style="FontFlair18" SmallCaps="24" SmallCapsType="EveryWord" FontStyle="Glow" EffectColor="EspionageOverview_EffectBlue"/>[m
+ [m
+[36m@@ -207,7 +207,7 @@[m
+             <Label Anchor="L,C" Offset="8,1" ID="TravelMethodName" Style="FontNormal18" String="LOC_ESPIONAGEOVERVIEW_TRAVELING"/>[m
+             <Label Anchor="R,C" Offset="8,0" ID="TravelTurnsRemaining" Style="FontNormal16" Color="EspionageOverview_EffectBlue"/>[m
+           </Image>[m
+[31m-          <Label ID="TravelDestinationName" Anchor="R,C" Offset="6,0" Style="FontNormal14" TruncateWidth="200" />[m
+[32m+[m[32m          <Label ID="TravelDestinationName" Anchor="R,C" Offset="6,0" Style="FontNormal14" />[m
+         </Grid>[m
+       </Container>[m
+ [m
+[36m@@ -229,7 +229,7 @@[m
+       </Container>[m
+ [m
+       <!-- City Banner -->[m
+[31m-      <GridButton ID="CityBanner" Anchor="R,T" Offset="6,38"  Size="80,28" AutoSize="Horizontal" AutoSizePadding="14,0">[m
+[32m+[m[32m      <GridButton ID="CityBanner" Anchor="R,T" Offset="6,38" Size="auto,28" AutoSizePadding="14,0">[m
+         <GridData Texture="Controls_CityBannerSmall" SliceCorner="14,9" SliceSize="5,4" SliceTextureSize="33,28" Color="150,170,100,255"/>[m
+         <Stack ID="CityBannerStack" Anchor="C,C" StackGrowth="Right" StackPadding="4">[m
+           <Label ID="CityName" Offset="0,3" Style="FontFlair12" FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="EveryWord" />[m
+[36m@@ -257,7 +257,7 @@[m
+ [m
+   <!-- Mission History Instance -->[m
+   <Instance Name="MissionHistoryInstance">[m
+[31m-    <Grid ID="Top" Size="489,73" AutoSize="Vertical" AutoSizePadding="0,4" Texture="Espionage_Item" SliceCorner="13,36" SliceSize="463,25" SliceTextureSize="489,73" NoStateChange="1">[m
+[32m+[m[32m    <Grid ID="Top" Size="489,auto" AutoSizePadding="0,4" Texture="Espionage_Item" SliceCorner="13,36" SliceSize="463,25" SliceTextureSize="489,73" NoStateChange="1">[m
+       <!-- Operative Name -->[m
+       <Label ID="OperativeName" Offset="12,10" Style="FontFlair18" SmallCaps="24" SmallCapsType="EveryWord" String="NANCY DREW"/>[m
+ [m
+[36m@@ -281,14 +281,14 @@[m
+           </Grid>[m
+         </Container>[m
+ [m
+[31m-        <Container ID="OperationDetailsContainer" Size="Parent-10,48" AutoSize="V">[m
+[32m+[m[32m        <Container ID="OperationDetailsContainer" Size="Parent-10,auto">[m
+           <!-- Operation Icon -->[m
+           <Grid ID="OperationIconGrid" Size="46,46" Offset="0,0" Texture="Espionage_Container" SliceCorner="2,2" SliceSize="28,28">[m
+             <Image ID="OperationIcon" Anchor="C,C" Size="40,40" Color="Grey" Texture="EspionageMissions40"/>[m
+           </Grid>[m
+ [m
+           <!-- Operation Details -->[m
+[31m-          <Grid Anchor="C,T" Size="381,46" AutoSize="V" MinSize="100,46" AutoSizePadding="0,4" Offset="0,0" Texture="Espionage_Container" SliceCorner="2,2" SliceSize="28,28">[m
+[32m+[m[32m          <Grid Anchor="C,T" Size="381,auto" MinSize="100,46" AutoSizePadding="0,4" Offset="0,0" Texture="Espionage_Container" SliceCorner="2,2" SliceSize="28,28">[m
+             <Label ID="OperationDetails" Anchor="C,C" Offset="0,0" Style="FontNormal16" Align="Center" WrapWidth="parent-6" String="This is a test string. This is a test string. This is a test string. This is a test string. This is a test string. This is a test string."/>[m
+           </Grid>[m
+ [m
+[36m@@ -321,14 +321,14 @@[m
+       </GridButton>[m
+ [m
+       <!-- District Icons -->[m
+[31m-      <Stack ID="CityDistrictStack" Anchor="C,C" Offset="10,-16" StackGrowth="Right">[m
+[32m+[m[32m      <Stack ID="CityDistrictStack" Anchor="L,C" Offset="252,0" StackGrowth="Right">[m
+       </Stack>[m
+     </Grid>[m
+   </Instance>[m
+ [m
+   <!-- District Instance -->[m
+   <Instance Name="CityDistrictInstance">[m
+[31m-    <Image ID="DistrictIcon" Size="32,32" Texture="Districts32" Color="255,255,255,128">[m
+[32m+[m[32m    <Image ID="DistrictIcon" Size="32,32" Texture="Districts32" Color="255,255,255,255">[m
+       <Image ID="SpyIconBack" Anchor="C,C" Size="34,31" Offset="0,0" Texture="Espionage_SpyIconBack">[m
+         <Image ID="SpyIconFront" Anchor="C,C" Size="30,27" Offset="0,0" Texture="Espionage_SpyIconFront"/>[m
+       </Image>[m
+warning: LF will be replaced by CRLF in Integrations/BES/UI/PartialScreens/espionageoverview.lua.
+The file will have its original line endings in your working directory.

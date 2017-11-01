@@ -540,8 +540,6 @@ function AddDestination(city:table)
   local destinationInstance:table = m_RouteChoiceIM:GetInstance();
 
   -- Update city name and banner color
-  TruncateStringWithTooltip(destinationInstance.CityName, 185, Locale.ToUpper(city:GetName()));
-
   local backColor:number, frontColor:number  = UI.GetPlayerColors( city:GetOwner() );
   local darkerBackColor:number = DarkenLightenColor(backColor,(-85),238);
   local brighterBackColor:number = DarkenLightenColor(backColor,90,255);
@@ -550,6 +548,13 @@ function AddDestination(city:table)
   destinationInstance.BannerDarker:SetColor( darkerBackColor );
   destinationInstance.BannerLighter:SetColor( brighterBackColor );
   destinationInstance.CityName:SetColor( frontColor );
+
+  -- Update capital indicator
+  if city:IsCapital() then
+    TruncateStringWithTooltip(destinationInstance.CityName, 185, "[ICON_Capital] " .. Locale.ToUpper(city:GetName()));
+  else
+    TruncateStringWithTooltip(destinationInstance.CityName, 185, Locale.ToUpper(city:GetName()));
+  end
 
   -- Update travel time
   local travelTime:number = UnitManager.GetTravelTime(m_spy, city);
@@ -612,22 +617,12 @@ function TeleportToSelectedCity()
 end
 
 -- ===========================================================================
-function IsCityState(player:table)
-  local playerInfluence:table = player:GetInfluence();
-  if  playerInfluence:CanReceiveInfluence() then
-    return true
-  end
-
-  return false
-end
-
--- ===========================================================================
 function HasMetAndAlive(player:table)
+  local localPlayerID = Game.GetLocalPlayer()
   if localPlayerID == player:GetID() then
     return true
   end
 
-  local localPlayerID = Game.GetLocalPlayer()
   local localPlayer = Players[localPlayerID];
   local localPlayerDiplomacy = localPlayer:GetDiplomacy();
 
@@ -653,7 +648,7 @@ function RefreshFilters()
   -- Add Players Filter
   local players:table = Game.GetPlayers();
   for i, pPlayer in ipairs(players) do
-    if not IsCityState(pPlayer) and HasMetAndAlive(pPlayer) and not pPlayer:IsBarbarian() then
+    if pPlayer:IsMajor() and HasMetAndAlive(pPlayer) and not pPlayer:IsBarbarian() then
       local playerConfig:table = PlayerConfigurations[pPlayer:GetID()];
       local name = Locale.Lookup(GameInfo.Civilizations[playerConfig:GetCivilizationTypeID()].Name);
       AddFilter(name, function(a) return a:GetID() == pPlayer:GetID() end);

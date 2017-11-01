@@ -103,11 +103,11 @@
     <!-- ================================================================== -->
     <Container ID="MissionHistoryTabContainer" Anchor="C,B" Size="parent-2,parent-88" Offset="0,8">
       <Stack ID="MissionHistoryTabStack" StackGrowth="Down">
-        <Container ID="CapturedEnemyOperativeContainer" Size="parent,100" AutoSize="Vertical" AutoSizePadding="0,4">
+        <Container ID="CapturedEnemyOperativeContainer" Size="parent,auto" AutoSizePadding="0,4">
           <Label Offset="12,2" Style="FontFlair22" SmallCaps="28" SmallCapsType="EveryWord" String="LOC_ESPIONAGEOVERVIEW_CAPTURED_SPIES"/>
           <Stack ID="CapturedEnemyOperativeStack" Anchor="C,T" Offset="0,30" StackGrowth="Down" StackPadding="4"/>
         </Container>
-        <Container ID="MissionHistoryContainer" Size="parent,100" AutoSize="Vertical" AutoSizePadding="0,4">
+        <Container ID="MissionHistoryContainer" Size="parent,auto" AutoSizePadding="0,4">
           <Grid Anchor="C,T" Size="Parent-2,40" Texture="Controls_TitleBarDark" SliceCorner="14,11" SliceSize="14, 12" SliceTextureSize="42,34">
             <Label Anchor="C,C" Offset="0,2" Style="FontFlair22" SmallCaps="28" SmallCapsType="EveryWord" String="LOC_ESPIONAGEOVERVIEW_MISSION_HISTORY_SUBHEADER"/>
           </Grid>
@@ -127,7 +127,7 @@
     <!-- ================================================================== -->
     <!--  Tabs                                                      -->
     <!-- ================================================================== -->
-    <Container ID="TabContainer" Anchor="C,T" Offset="0,44" Size="514,31">
+    <Container ID="TabContainer" Anchor="C,T" Offset="0,44" Size="514,35">
       <Grid Size="parent,parent" Texture="Controls_TabLedgeCaps"  SliceCorner="20,3" SliceSize="203,24" SliceTextureSize="243,31">
         <Image Texture="Controls_TabLedgeFill" Size="parent-200,23" StretchMode="Tile" Anchor="C,C"/>
         <GridButton ID="OperativesTabButton" Size="130,34" Style="TabButton" FontSize="14" TextOffset="0,2" String="LOC_ESPIONAGEOVERVIEW_OPERATIVES_HEADER">
@@ -160,7 +160,7 @@
 
   <!-- Operative Instance -->
   <Instance Name="OperativeInstance">
-    <Grid ID="Top" Size="489,73" AutoSize="Vertical" AutoSizePadding="0,4" Texture="Espionage_Item" SliceCorner="13,36" SliceSize="463,25" SliceTextureSize="489,73" NoStateChange="1">
+    <Grid ID="Top" Size="489,auto" AutoSizePadding="0,4" Texture="Espionage_Item" SliceCorner="13,36" SliceSize="463,25" SliceTextureSize="489,73" NoStateChange="1">
       <!-- Operative Name -->
       <Label ID="OperativeName" Offset="12,10" Style="FontFlair18" SmallCaps="24" SmallCapsType="EveryWord" FontStyle="Glow" EffectColor="EspionageOverview_EffectBlue"/>
 
@@ -207,7 +207,7 @@
             <Label Anchor="L,C" Offset="8,1" ID="TravelMethodName" Style="FontNormal18" String="LOC_ESPIONAGEOVERVIEW_TRAVELING"/>
             <Label Anchor="R,C" Offset="8,0" ID="TravelTurnsRemaining" Style="FontNormal16" Color="EspionageOverview_EffectBlue"/>
           </Image>
-          <Label ID="TravelDestinationName" Anchor="R,C" Offset="6,0" Style="FontNormal14" TruncateWidth="200" />
+          <Label ID="TravelDestinationName" Anchor="R,C" Offset="6,0" Style="FontNormal14" />
         </Grid>
       </Container>
 
@@ -229,7 +229,7 @@
       </Container>
 
       <!-- City Banner -->
-      <GridButton ID="CityBanner" Anchor="R,T" Offset="6,38"  Size="80,28" AutoSize="Horizontal" AutoSizePadding="14,0">
+      <GridButton ID="CityBanner" Anchor="R,T" Offset="6,38" Size="auto,28" AutoSizePadding="14,0">
         <GridData Texture="Controls_CityBannerSmall" SliceCorner="14,9" SliceSize="5,4" SliceTextureSize="33,28" Color="150,170,100,255"/>
         <Stack ID="CityBannerStack" Anchor="C,C" StackGrowth="Right" StackPadding="4">
           <Label ID="CityName" Offset="0,3" Style="FontFlair12" FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="EveryWord" />
@@ -257,7 +257,7 @@
 
   <!-- Mission History Instance -->
   <Instance Name="MissionHistoryInstance">
-    <Grid ID="Top" Size="489,73" AutoSize="Vertical" AutoSizePadding="0,4" Texture="Espionage_Item" SliceCorner="13,36" SliceSize="463,25" SliceTextureSize="489,73" NoStateChange="1">
+    <Grid ID="Top" Size="489,auto" AutoSizePadding="0,4" Texture="Espionage_Item" SliceCorner="13,36" SliceSize="463,25" SliceTextureSize="489,73" NoStateChange="1">
       <!-- Operative Name -->
       <Label ID="OperativeName" Offset="12,10" Style="FontFlair18" SmallCaps="24" SmallCapsType="EveryWord" String="NANCY DREW"/>
 
@@ -281,14 +281,14 @@
           </Grid>
         </Container>
 
-        <Container ID="OperationDetailsContainer" Size="Parent-10,48" AutoSize="V">
+        <Container ID="OperationDetailsContainer" Size="Parent-10,auto">
           <!-- Operation Icon -->
           <Grid ID="OperationIconGrid" Size="46,46" Offset="0,0" Texture="Espionage_Container" SliceCorner="2,2" SliceSize="28,28">
             <Image ID="OperationIcon" Anchor="C,C" Size="40,40" Color="Grey" Texture="EspionageMissions40"/>
           </Grid>
 
           <!-- Operation Details -->
-          <Grid Anchor="C,T" Size="381,46" AutoSize="V" MinSize="100,46" AutoSizePadding="0,4" Offset="0,0" Texture="Espionage_Container" SliceCorner="2,2" SliceSize="28,28">
+          <Grid Anchor="C,T" Size="381,auto" MinSize="100,46" AutoSizePadding="0,4" Offset="0,0" Texture="Espionage_Container" SliceCorner="2,2" SliceSize="28,28">
             <Label ID="OperationDetails" Anchor="C,C" Offset="0,0" Style="FontNormal16" Align="Center" WrapWidth="parent-6" String="This is a test string. This is a test string. This is a test string. This is a test string. This is a test string. This is a test string."/>
           </Grid>
 
@@ -321,14 +321,14 @@
       </GridButton>
 
       <!-- District Icons -->
-      <Stack ID="CityDistrictStack" Anchor="C,C" Offset="10,-16" StackGrowth="Right">
+      <Stack ID="CityDistrictStack" Anchor="L,C" Offset="252,0" StackGrowth="Right">
       </Stack>
     </Grid>
   </Instance>
 
   <!-- District Instance -->
   <Instance Name="CityDistrictInstance">
-    <Image ID="DistrictIcon" Size="32,32" Texture="Districts32" Color="255,255,255,128">
+    <Image ID="DistrictIcon" Size="32,32" Texture="Districts32" Color="255,255,255,255">
       <Image ID="SpyIconBack" Anchor="C,C" Size="34,31" Offset="0,0" Texture="Espionage_SpyIconBack">
         <Image ID="SpyIconFront" Anchor="C,C" Size="30,27" Offset="0,0" Texture="Espionage_SpyIconFront"/>
       </Image>
