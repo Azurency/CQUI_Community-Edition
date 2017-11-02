@@ -12,8 +12,9 @@ include( "TabSupport" );
 -- ===========================================================================
 
 local RELOAD_CACHE_ID:string = "EspionageOverview"; -- Must be unique (usually the same as the file name)
-local MAX_BEFORE_TRUNC_MISSION_NAME     :number = 170;
-local MAX_BEFORE_TRUNC_ASK_FOR_TRADE        :number = 135;
+local MAX_BEFORE_TRUNC_MISSION_NAME   :number = 170;
+local MAX_BEFORE_TRUNC_ASK_FOR_TRADE  :number = 135;
+local TRAVEL_DEST_TRUNCATE_WIDTH      :number = 170;
 
 local EspionageTabs:table = {
   OPERATIVES      = 0;
@@ -500,22 +501,12 @@ function OnDistrickFilterCheckbox(pControl)
 end
 
 -- ===========================================================================
-function IsCityState(player:table)
-  local playerInfluence:table = player:GetInfluence();
-  if  playerInfluence:CanReceiveInfluence() then
-    return true
-  end
-
-  return false
-end
-
--- ===========================================================================
 function HasMetAndAlive(player:table)
+  local localPlayerID = Game.GetLocalPlayer()
   if localPlayerID == player:GetID() then
     return true
   end
 
-  local localPlayerID = Game.GetLocalPlayer()
   local localPlayer = Players[localPlayerID];
   local localPlayerDiplomacy = localPlayer:GetDiplomacy();
 
@@ -541,7 +532,7 @@ function RefreshFilters()
   -- Add Players Filter
   local players:table = Game.GetPlayers();
   for i, pPlayer in ipairs(players) do
-    if not IsCityState(pPlayer) and HasMetAndAlive(pPlayer) and not pPlayer:IsBarbarian() then
+    if pPlayer:IsMajor() and HasMetAndAlive(pPlayer) and not pPlayer:IsBarbarian() then
       local playerConfig:table = PlayerConfigurations[pPlayer:GetID()];
       local name = Locale.Lookup(GameInfo.Civilizations[playerConfig:GetCivilizationTypeID()].Name);
       AddFilter(name, function(a) return a:GetID() == pPlayer:GetID() end);
@@ -596,6 +587,17 @@ function OnFilterSelected( index:number, filterIndex:number )
   Controls.FilterButton:SetText(m_filterList[m_filterSelected].FilterText);
 
   Refresh();
+end
+
+-- ===========================================================================
+function AddTopDistrictToolTips()
+  Controls.FilterCityCenterCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_CITY_CENTER_NAME"));
+  Controls.FilterCommericalHubCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_COMMERCIAL_HUB_NAME"));
+  Controls.FilterTheaterCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_THEATER_NAME"));
+  Controls.FilterCampusCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_CAMPUS_NAME"));
+  Controls.FilterIndustrialCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_INDUSTRIAL_ZONE_NAME"));
+  Controls.FilterNeighborhoodCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_NEIGHBORHOOD_NAME"));
+  Controls.FilterSpaceportCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_SPACEPORT_NAME"));
 end
 
 -- ===========================================================================
@@ -819,7 +821,7 @@ function AddOffMapOperative(spy:table)
   local spyPlot:table = Map.GetPlot(spy.XLocation, spy.YLocation);
   local targetCity:table = Cities.GetPlotPurchaseCity(spyPlot);
   if targetCity then
-    operativeInstance.TravelDestinationName:SetText(Locale.Lookup("LOC_ESPIONAGEOVERVIEW_TRANSIT_TO", targetCity:GetName()));
+    TruncateStringWithTooltip(operativeInstance.TravelDestinationName, TRAVEL_DEST_TRUNCATE_WIDTH, Locale.Lookup("LOC_ESPIONAGEOVERVIEW_TRANSIT_TO", targetCity:GetName()));
   end
 
   operativeInstance.CityBanner:SetHide(true);
@@ -1114,5 +1116,6 @@ function Initialize()
   LuaEvents.GameDebug_Return.Add(OnGameDebugReturn);
 
   PopulateTabs();
+  AddTopDistrictToolTips();
 end
 Initialize();

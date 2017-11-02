@@ -405,23 +405,21 @@ function ViewRoutesToCities()
   local routesSortedByPlayer:table = {};
   local players = Game.GetPlayers{ Alive=true };
   for _, player in ipairs(players) do
-    if m_filterList[m_filterSelected].FilterFunction and m_filterList[m_filterSelected].FilterFunction(player) then
-      for _, city in player:GetCities():Members() do
-        local outgoingRoutes = city:GetTrade():GetOutgoingRoutes();
-        for _, route in ipairs(outgoingRoutes) do
-          -- Check that the destination city owner is the local palyer
-          local isDestinationOwnedByLocalPlayer:boolean = false;
-          if route.DestinationCityPlayer == Game.GetLocalPlayer() then
-            isDestinationOwnedByLocalPlayer = true;
-          end
+    -- Don't show domestic routes
+    if player:GetID() ~= Game.GetLocalPlayer() then
+      if m_filterList[m_filterSelected].FilterFunction and m_filterList[m_filterSelected].FilterFunction(player) then
+        for _, city in player:GetCities():Members() do
+          local outgoingRoutes = city:GetTrade():GetOutgoingRoutes();
+          for _, route in ipairs(outgoingRoutes) do
+            -- Make sure the destination city is owned by the local player
+            if route.DestinationCityPlayer == Game.GetLocalPlayer() then
+              -- Make sure we have a table for each destination player
+              if routesSortedByPlayer[route.OriginCityPlayer] == nil then
+                routesSortedByPlayer[route.OriginCityPlayer] = {};
+              end
 
-          if isDestinationOwnedByLocalPlayer then
-            -- Make sure we have a table for each destination player
-            if routesSortedByPlayer[route.OriginCityPlayer] == nil then
-              routesSortedByPlayer[route.OriginCityPlayer] = {};
+              tinsert(routesSortedByPlayer[route.OriginCityPlayer], route);
             end
-
-            tinsert(routesSortedByPlayer[route.OriginCityPlayer], route);
           end
         end
       end

@@ -54,7 +54,7 @@
     <Button         ID="CloseButton"        Anchor="L,T"  Offset="265,2" Style="CloseButtonSmall"/>
 
     <!-- Destination Panel -->
-    <PullDown ID="DestinationFilterPulldown" ConsumeMouse="0" Offset="0,157" Anchor="C,T" Size="parent-10,25" AutoSizePopUp="1" AutoFlip="1" ScrollThreshold="400">
+    <PullDown ID="DestinationFilterPulldown" ConsumeMouse="0" Offset="0,157" Anchor="C,T" Size="280,25" AutoSizePopUp="1" AutoFlip="1" ScrollThreshold="400">
       <ButtonData>
         <GridButton   ID="FilterButton" TextAnchor="R,C" TextOffset="15,0" Style="FontNormal14" FontStyle="Shadow" EffectColor="0,0,0,255" Offset="0,-25" Size="50,-20" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" />
       </ButtonData>
@@ -122,7 +122,7 @@
     </ScrollPanel>
 
     <!-- Mission Panel -->
-    <Grid ID="MissionGrid" Size="parent,0" AutoSize="V" Offset="296,0" AutoSizePadding="0,2" Texture="Controls_ContainerBlue" SliceStart="0,0" SliceCorner="3,3" SliceSize="9,9" SliceTextureSize="16,16" ConsumeMouse="1">
+    <Grid ID="MissionGrid" Size="parent,auto" Offset="296,0" AutoSizePadding="0,2" Texture="Controls_ContainerBlue" SliceStart="0,0" SliceCorner="3,3" SliceSize="9,9" SliceTextureSize="16,16" ConsumeMouse="1">
       <Stack ID="MissionPanel" Offset="0,6" StachGrowth="Down" StackPadding="2">
         <Grid ID="PossibleMissionsLabel" Size="parent+2,50" Offset="0,-7" Texture="Controls_SubHeader3" SliceCorner="10,10" SliceSize="14,14" SliceTextureSize="34,34">
           <Label Anchor="C,C" Style="FontFlair20" SmallCaps="26" SmallCapsType="EveryWord" String="LOC_ESPIONAGECHOOSER_POSSIBLE_MISSIONS"/>
@@ -175,25 +175,25 @@
         <Box Size="32,parent" Offset="96,0" Color="255,255,255,10"/>
         <Box Size="32,parent" Offset="161,0" Color="255,255,255,10"/>
 
-        <Stack Anchor="C,C" StackGrowth="Right">
-          <Image ID="CityCenterIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="0,0"/>
-          <Image ID="CommericalIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="192,0"/>
-          <Image ID="TheaterIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="0,32"/>
-          <Image ID="ScienceIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="64,0"/>
-          <Image ID="IndustrialIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="32,32"/>
-          <Image ID="NeighborhoodIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="64,32"/>
-          <Image ID="SpaceIcon" Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="128,32"/>
+        <Stack Anchor="L,C" StackGrowth="Right">
+          <Container Size="32,32"><Image ID="CityCenterIcon"    Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="0,0"   /> </Container>
+          <Container Size="32,32"><Image ID="CommericalIcon"    Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="192,0" /> </Container>
+          <Container Size="32,32"><Image ID="TheaterIcon"       Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="0,32"  /> </Container>
+          <Container Size="32,32"><Image ID="ScienceIcon"       Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="64,0"  /> </Container>
+          <Container Size="32,32"><Image ID="IndustrialIcon"    Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="32,32" /> </Container>
+          <Container Size="32,32"><Image ID="NeighborhoodIcon"  Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="64,32" /> </Container>
+          <Container Size="32,32"><Image ID="SpaceIcon"         Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="128,32"/> </Container>
         </Stack>
       </Grid>
     </GridButton>
   </Instance>
 
   <Instance Name="MissionInstance">
-    <GridButton ID="MissionButton" Size="parent,70" Offset="0,0" Anchor="C,T" AutoSize="Vertical">
+    <GridButton ID="MissionButton" Size="parent,auto" Offset="0,0" Anchor="C,T">
       <GridData Texture="DestinationChooser_Button" StateOffsetIncrement="0,76" SliceCorner="14,14" SliceSize="19,44" SliceTextureSize="48,76" NoStateChange="0"/>
 
       <!-- Selector Brace -->
-      <Grid ID="SelectorBrace" Anchor="C,C" Size="parent,90" AutoSize="Vertical" AutoSizePadding="6,3" Texture="Controls_SelectorBrace" SliceCorner="29,29" SliceSize="2,2" SliceTextureSize="64,64" Color="255,255,255,0">
+      <Grid ID="SelectorBrace" Anchor="C,C" Size="parent,auto" AutoSizePadding="6,3" Texture="Controls_SelectorBrace" SliceCorner="29,29" SliceSize="2,2" SliceTextureSize="64,64" Color="255,255,255,0">
         <!-- Mission Icon -->
         <Grid Size="55,55" Offset="7,7" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">
           <Image ID="MissionIcon" Anchor="C,C" Size="40,40" Texture="EspionageMissions40"/>
@@ -212,7 +212,7 @@
 
         <!-- Stack used to manage operation district, turns to complete, and success chance information -->
         <Stack ID="MissionStatsStack" Anchor="R,B" Offset="8,5" StackGrowth="Right" StackPadding="4">
-          <Grid AutoSize="1" AutoSizePadding="-4,0" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">
+          <Grid Size="auto,auto" AutoSizePadding="-4,0" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">
             <Stack Offset="-2,0" StackGrowth="Right" StackPadding="-3">
               <Label Offset="0,4" Style="FontNormal14" String="[Icon_LocationPip]"/>
               <Label ID="MissionDistrictName" Offset="0,2" Style="FontNormal14" String="City Center"/>
@@ -220,14 +220,14 @@
             </Stack>
           </Grid>
 
-          <Grid ID="TurnsToCompleteGrid" AutoSize="1" AutoSizePadding="2,1" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">
+          <Grid ID="TurnsToCompleteGrid" Size="auto,auto" AutoSizePadding="2,1" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">
             <Stack Offset="0,2" StackGrowth="Right" StackPadding="-3">
               <Label Offset="0,0" Style="FontNormal14" String="[Icon_Turn]"/>
               <Label ID="TurnsToCompleteLabel" Offset="0,0" Style="FontNormal14" String="4"/>
             </Stack>
           </Grid>
 
-          <Grid ID="ProbabilityGrid" AutoSize="1" AutoSizePadding="1,1" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">
+          <Grid ID="ProbabilityGrid" Size="auto,auto" AutoSizePadding="1,1" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16">
             <Label ID="ProbabilityLabel" Offset="3,2" Style="FontNormal14" String="5%"/>
           </Grid>
         </Stack>

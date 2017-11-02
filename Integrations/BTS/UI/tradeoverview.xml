@@ -50,7 +50,7 @@
       <!-- ================================================================== -->
 
       <!-- Group by Pulldown -->
-      <PullDown ID="OverviewGroupByPulldown" ConsumeMouse="0" Anchor="L,B" Offset="18,5" Size="parent-360,26" AutoSizePopUp="1" AutoFlip="1" ScrollThreshold="400">
+      <PullDown ID="OverviewGroupByPulldown" ConsumeMouse="0" Anchor="L,B" Offset="18,5" Size="155,26" AutoSizePopUp="1" AutoFlip="1" ScrollThreshold="400">
         <ButtonData>
           <GridButton ID="OverviewGroupByButton" ToolTip="LOC_TRADE_GROUP_SETTINGS" TextAnchor="C,C" TextOffset="8,0" Style="FontNormal12" FontStyle="Shadow" EffectColor="0,0,0,255" Offset="0,-25" Size="parnet,parnet" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" />
         </ButtonData>
@@ -75,7 +75,7 @@
       </PullDown>
 
       <!-- Filter Pulldown -->
-      <PullDown ID="OverviewDestinationFilterPulldown" ConsumeMouse="0" Anchor="C,B" Offset="30,5" Size="parent-280,26" AutoSizePopUp="1" AutoFlip="1" ScrollThreshold="400">
+      <PullDown ID="OverviewDestinationFilterPulldown" ConsumeMouse="0" Anchor="C,B" Offset="30,5" Size="220,26" AutoSizePopUp="1" AutoFlip="1" ScrollThreshold="400">
         <ButtonData>
           <GridButton ID="OverviewFilterButton" ToolTip="LOC_TRADE_FILTER_SETTINGS" TextAnchor="C,C" TextOffset="8,0" Style="FontNormal12" FontStyle="Shadow" EffectColor="0,0,0,255" Offset="0,-25" Size="parnet,parnet" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" />
         </ButtonData>

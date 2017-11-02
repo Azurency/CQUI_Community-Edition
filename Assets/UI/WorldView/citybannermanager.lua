@@ -166,6 +166,7 @@ local SIZEOFPOPANDPRODMETERS    :number = 15; --The amount to add to the city ba
 
 local CQUI_ShowCitizenIconsOnCityHover:boolean = false;
 local CQUI_ShowCityManageAreaOnCityHover:boolean = true;
+local CQUI_CityManageAreaShown:boolean = false;
 
 -- ===========================================================================
 --  QUI
@@ -272,8 +273,11 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
 
     CQUI_Hovering = true;
 
-    if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) then
+    -- Astog: Fix for lens being shown when other lenses are on
+    if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)
+        and UI.GetInterfaceMode() == InterfaceModeTypes.SELECTION then
       LuaEvents.Area_ShowCitizenManagement(cityID);
+      CQUI_CityManageAreaShown = true;
     end
 
     local kPlayer = Players[playerID];
@@ -425,8 +429,11 @@ function CQUI_OnBannerMouseExit(playerID: number, cityID: number)
     return;
   end
 
-  if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) then
+  -- Astog: Fix for lens being cleared when having other lenses on
+  if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)
+      and CQUI_CityManageAreaShown then
     LuaEvents.Area_ClearCitizenManagement();
+    CQUI_CityManageAreaShown = false;
   end
 
   local tPlots    :table = tResults[CityCommandResults.PLOTS];
@@ -1047,7 +1054,7 @@ end
     end
     return popTooltip;
   end
-  
+
   -- ===========================================================================
   -- Non-instance function so it can be overwritten by mods
   function GetCityPopulationText(self:CityBanner, currentPopulation:number)
@@ -1084,7 +1091,7 @@ function CityBanner.UpdateStats( self : CityBanner)
       elseif isStarving then
         turnsUntilGrowth = -pCityGrowth:GetTurnsUntilStarvation();  -- Make negative
       end
-      
+
       self.m_Instance.CityPopulation:SetText(GetCityPopulationText(self, currentPopulation));
 
       if (self.m_Player == Players[localPlayerID]) then --Only show growth data if the player is you
@@ -2118,8 +2125,8 @@ function OnCityRangeStrikeButtonClick( playerID, cityID )
   end;
   -- AZURENCY : Enter the range city mode on click (not on hover of a button, the old workaround)
   LuaEvents.CQUI_Strike_Enter();
-  -- AZURENCY : Allow to switch between different city range attack (clicking on the range button of one 
-  -- city and after on the range button of another city, without having to ESC or right click) 
+  -- AZURENCY : Allow to switch between different city range attack (clicking on the range button of one
+  -- city and after on the range button of another city, without having to ESC or right click)
   UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
   --ARISTOS: fix for the range strike not showing odds window
   UI.DeselectAll();
@@ -2188,7 +2195,7 @@ function DestroyCityBanner( playerID: number, cityID : number )
 	if (bannerInstance ~= nil) then
 		bannerInstance:destroy();
 		CityBannerInstances[ playerID ][ cityID ] = nil;
-	end	
+	end
 end
 
 -- ===========================================================================
@@ -2424,7 +2431,7 @@ end
 
 -- ===========================================================================
 function OnCityNameChange( playerID: number, cityID : number)
-  
+
   local banner:CityBanner = GetCityBanner( playerID, cityID );
   if (banner ~= nil ) then
     banner:UpdateName();
