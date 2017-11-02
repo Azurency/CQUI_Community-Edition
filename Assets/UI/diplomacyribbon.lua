@@ -151,6 +151,7 @@ end
 function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean)
   m_leadersMet = m_leadersMet + 1;
 
+  local pPlayer:table = Players[playerID];	  
   local pPlayerConfig:table = PlayerConfigurations[playerID];
   local isHuman:boolean = pPlayerConfig:IsHuman();
 
@@ -165,11 +166,37 @@ function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean
   leaderIcon:RegisterCallback( Mouse.eMouseExit, function() OnLeaderMouseExit(); end );
   leaderIcon:RegisterCallback( Mouse.eMClick, function() OnLeaderMouseOver(playerID); end ); --ARISTOS
 
+  local bShowRelationshipIcon:boolean = false;
+  local localPlayerID:number = Game.GetLocalPlayer();
+
+  if(playerID == localPlayerID) then
+    instance.YouIndicator:SetHide(false);
+  else
+    -- Set relationship status (for non-local players)
+    local diplomaticAI:table = pPlayer:GetDiplomaticAI();
+    local relationshipStateID:number = diplomaticAI:GetDiplomaticStateIndex(localPlayerID);
+    if relationshipStateID ~= -1 then
+      local relationshipState:table = GameInfo.DiplomaticStates[relationshipStateID];
+      -- Always show relationship icon for AIs, only show player triggered states for humans
+      if not isHuman or IsValidRelationship(relationshipState.StateType) then
+        --!! ARISTOS: to extend relationship tooltip to include diplo modifiers!
+        local extendedRelationshipTooltip:string = Locale.Lookup(relationshipState.Name)
+        .. "[NEWLINE][NEWLINE]" .. RelationshipGet(playerID);
+        -- KWG: This is bad, there is a piece of art that is tied to the order of a database entry.  Please fix!
+        instance.Relationship:SetVisState(relationshipStateID);
+        instance.Relationship:SetToolTipString(extendedRelationshipTooltip);
+        bShowRelationshipIcon = true;
+      end
+    end
+    instance.YouIndicator:SetHide(true);
+  end
+
   -- CQUI: Set score values for DRS display
   instance.CQUI_ScoreOverall:SetText("[ICON_Capital]"..Players[playerID]:GetScore());
   instance.CQUI_ScienceRate:SetText("[ICON_Science]"..Round(Players[playerID]:GetTechs():GetScienceYield(),0));
   instance.CQUI_MilitaryStrength:SetText("[ICON_Strength]"..Players[playerID]:GetStats():GetMilitaryStrength());
 
+  instance.Relationship:SetHide(not bShowRelationshipIcon);
   -- Set the tooltip
   if(pPlayerConfig ~= nil) then
     local leaderTypeName:string = pPlayerConfig:GetLeaderTypeName();
