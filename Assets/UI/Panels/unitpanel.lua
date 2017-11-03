@@ -694,8 +694,8 @@ function View(data)
 
   -- TODO: Explore what (if anything) could be done with prior values so Reset can be utilized instead of destory; this would gain LUA side pooling
   m_buildActionsIM:DestroyInstances();
-    m_standardActionsIM:ResetInstances();
-    m_secondaryActionsIM:ResetInstances();
+  m_standardActionsIM:ResetInstances();
+  m_secondaryActionsIM:ResetInstances();
   m_groupArtIM:ResetInstances();
   m_buildActionsIM:ResetInstances();
 
@@ -816,10 +816,10 @@ function View(data)
   end
 
   Controls.StandardActionsStack:CalculateSize();
-    Controls.StandardActionsStack:ReprocessAnchoring();
+  Controls.StandardActionsStack:ReprocessAnchoring();
 
   Controls.SecondaryActionsStack:CalculateSize();
-    Controls.SecondaryActionsStack:ReprocessAnchoring();
+  Controls.SecondaryActionsStack:ReprocessAnchoring();
 
   ResizeUnitPanelToFitActionButtons();
 
@@ -2104,7 +2104,9 @@ function Refresh(player, unitId)
           Controls.ExpandSecondaryActionStack:CalculateSize();
           Controls.ExpandSecondaryActionStack:ReprocessAnchoring();
         end
-
+        
+        -- AZURENCY : fix for the size not updating correcly (fall 2017), we calculate the size manually, 4 is the StackPadding
+        Controls.ExpandSecondaryActionStack:SetSizeX(Controls.ExpandSecondaryActionsButton:GetSizeX() + Controls.SecondaryActionsStack:GetSizeX() + 4);
         ResizeUnitPanelToFitActionButtons();
       end
 

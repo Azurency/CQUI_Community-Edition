@@ -1031,6 +1031,11 @@ function CQUI_TrimGossipMessage(str:string)
   if last == nil then
     last = string.match(sourceSample, ".-(.)$");
   end
+  -- AZURENCY : if last is still nill, it's not normal, print an error but still allow the code to run
+  if last == nil then
+    print("ERROR : LOC_GOSSIP_SOURCE_DELEGATE seems to be empty as last was still nil after the second pattern matching.")
+    last = ""
+  end
   return Split(str, last .. " " , 2)[2]; --Get the rest of the string after the last word from the gossip source string
 end
 
