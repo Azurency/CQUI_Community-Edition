@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GameData>
   <LocalizedText>
-    <!-- SPANISH -->
+    <!-- GERMAN -->
     <Replace Tag="LOC_ESPIONAGECHOOSER_FILTER_ALL" Language="de_DE">
       <Text>Alle</Text>
     </Replace>
