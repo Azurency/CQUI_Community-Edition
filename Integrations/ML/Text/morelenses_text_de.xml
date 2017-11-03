@@ -11,7 +11,7 @@
       <Text>Zeigt besondere Felder auf der Karte an, wo gebaut werden kann.</Text>
     </Replace>
     <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_IMP" Language="de_DE">
-      <Text>Res. Geplündert Einzigartig</Text>
+      <Text>Res. geplündert Einzigartig</Text>
     </Replace>
     <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_HILL" Language="de_DE">
       <Text>Hügel</Text>
@@ -41,19 +41,26 @@
     </Replace>
 
     <!-- City Overlap Lens -->
-    <Replace Tag="LOC_HUD_CITYOVERLAP6_LENS" Language="de_DE">
-      <Text>Neue Stadt 6Feld</Text>
+    <Replace Tag="LOC_HUD_CITYOVERLAP_LENS" Language="de_DE">
+      <Text>Städteüberschneidungen</Text>
     </Replace>
-    <Replace Tag="LOC_HUD_CITYOVERLAP6_LENS_TOOLTIP" Language="de_DE">
-      <Text>Zeigt Felder für Städtegründungen mit einem 6 Hexfelder Abstand.</Text>
+    <Replace Tag="LOC_HUD_CITYOVERLAP_LENS_TOOLTIP" Language="de_DE">
+      <Text>Zeigt, wie viele Städte überlappen (Abstand: 6 Felder)</Text>
     </Replace>
-
-    <!-- City Overlap Lens -->
-    <Replace Tag="LOC_HUD_CITYOVERLAP9_LENS" Language="de_DE">
-      <Text>Neue Stadt 9Feld</Text>
+    <Replace Tag="LOC_PANEL_CITYOVERLAP_OPTION1" Language="de_DE">
+      <Text>Zeige äußere Grenze</Text>
     </Replace>
-    <Replace Tag="LOC_HUD_CITYOVERLAP9_LENS_TOOLTIP" Language="de_DE">
-      <Text>Zeigt Felder für Städtegründungen mit einem 9 Hexfelder Abstand.</Text>
+    <Replace Tag="LOC_PANEL_CITYOVERLAP_NMOUSE" Language="de_DE">
+        <Text>Keine Maus</Text>
+    </Replace>
+    <Replace Tag="LOC_PANEL_CITYOVERLAP_RANGE" Language="de_DE">
+      <Text>Überlapp-Maus</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_CITYOVERLAP_RANGE" Language="de_DE">
+      <Text>Zeigt Felder und Städte innerhalb des Abstands (s.u.) vom Feld unter der Maus.</Text>
+    </Replace>
+    <Replace Tag="LOC_PANEL_CITYOVERLAP_RADIUS" Language="de_DE">
+      <Text>Radius-Maus</Text>
     </Replace>
 
     <!-- Barbarian Lens -->
@@ -61,10 +68,10 @@
       <Text>Barbaren</Text>
     </Replace>
     <Replace Tag="LOC_HUD_BARBARIAN_LENS_TOOLTIP" Language="de_DE">
-      <Text>Zeigt Barbaren-Außenposten auf der Karte.</Text>
+      <Text>Zeigt Barbaren-Lager auf der Karte.</Text>
     </Replace>
     <Replace Tag="LOC_TOOLTIP_BARBARIAN_LENS_ENCAPMENT" Language="de_DE">
-      <Text>Barbaren- Außenposten</Text>
+      <Text>Barbaren-Lager</Text>
     </Replace>
 
     <!-- Resources Lens -->
@@ -98,21 +105,21 @@
       <Text>Wunder</Text>
     </Replace>
     <Replace Tag="LOC_HUD_WONDER_LENS_TOOLTIP" Language="de_DE">
-      <Text>Zeigt Naturwunder und gebaute Wunder auf der Karte.</Text>
+      <Text>Zeigt Naturwunder und errichtete Wunder auf der Karte.</Text>
     </Replace>
     <Replace Tag="LOC_TOOLTIP_WONDER_LENS_NWONDER" Language="de_DE">
       <Text>Naturwunder</Text>
     </Replace>
     <Replace Tag="LOC_TOOLTIP_RESOURCE_LENS_PWONDER" Language="de_DE">
-      <Text>Gebaute Wunder</Text>
+      <Text>Errichtete Wunder</Text>
     </Replace>
 
     <!-- Adjacency Yield Lens -->
     <Replace Tag="LOC_HUD_ADJYIELD_LENS" Language="de_DE">
-      <Text>Nachbarerträge</Text>
+      <Text>Nachbarschafts-Erträge</Text>
     </Replace>
     <Replace Tag="LOC_HUD_ADJYIELD_LENS_TOOLTIP" Language="de_DE">
-      <Text>Zeigt die Nachbarschaftserträge der Bezirke.</Text>
+      <Text>Zeigt die Erträge durch die Nachbarschaft der Bezirke.</Text>
     </Replace>
 
     <!-- Scout Lens -->

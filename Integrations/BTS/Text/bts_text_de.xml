@@ -29,7 +29,7 @@
     </Replace>
 
     <Replace Tag="LOC_TRADE_SORT_BY_CULTURE_TOOLTIP" Language="de_DE">
-        <Text>Sort.n. [ICON_Culture] Kultur</Text>
+        <Text>Sort. n. [ICON_Culture] Kultur</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_SORT_BY_FAITH_TOOLTIP" Language="de_DE">
@@ -50,7 +50,7 @@
 
     <!-- Trade Overview -->
     <Replace Tag="LOC_TRADE_NO_BENEFIT_TEXT" Language="de_DE">
-        <Text>erhält keine Bonusse durch Handelsroute</Text>
+        <Text>erhält keine Boni durch Handelsroute</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_SORT_BY_TEXT" Language="de_DE">
@@ -66,7 +66,7 @@
     </Replace>
 
     <Replace Tag="LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP" Language="de_DE">
-        <Text>Gesamtbetrag an[ICON_Turn] bis zur Erstellung der Handelsroute</Text>
+        <Text>Gesamtbetrag an [ICON_Turn] bis zur Erstellung der Handelsroute</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_TURNS_REMAINING_ALT_HELP_TOOLTIP" Language="de_DE">
@@ -89,7 +89,7 @@
     </Replace>
 
     <Replace Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_ALT_TOOLTIP" Language="de_DE">
-        <Text>Die begonnene Route benötigt {1_TurnsToComplete} Runden und wird fertiggestellt in Runde {2_TurnWhenCompleted}</Text>
+        <Text>Die begonnene Route benötigt {1_TurnsToComplete} Runde(n) und wird fertiggestellt in Runde {2_TurnWhenCompleted}</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_CANCEL_AUTOMATION_TOOLTIP" Language="de_DE">
@@ -106,11 +106,11 @@
     </Replace>
 
     <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_LABEL" Language="de_DE">
-        <Text>Von oben sort.Einträge:</Text>
+        <Text>Von oben sort. Einträge:</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_TOOLTIP" Language="de_DE">
-        <Text>Die wiederholte Route ist die oberste Route in der Sortierliste. Die Route wird gewählt, sobald der Händler die Vorige abgeschlossen hat.</Text>
+        <Text>Die wiederholte Route ist die oberste Route in der Sortierliste. Die Route wird gewählt, sobald der Händler die vorherige abgeschlossen hat.</Text>
     </Replace>
 
     <!-- Trade Origin Chooser -->
