@@ -30,6 +30,7 @@
       <de_DE>Reduziert die Anzahl der Klicks und macht das CIV-Management einfach.</de_DE>
       <it_IT>Riduce i click e facilita la gestione dell'impero.</it_IT>
       <ko_KR>문명 게임 플레이를 더욱 간편하게 해주는 CQUI 모드입니다</ko_KR>
+      <pt_BR>Reduz cliques e facilita o gerencimento do império</pt_BR>
     </Text>
   </LocalizedText>
 
@@ -45,6 +46,7 @@
     <File>Assets/cqui_toplayer.xml</File>
     <File>Assets/cqui_toplayer.lua</File>
     <File>Assets/Text/Gossip_Text.xml</File>
+    <File>Assets/Text/Gossip_Text_pt.xml</File>
     <File>Assets/Text/cqui_text_general.xml</File>
     <File>Assets/Text/cqui_text_general_de.xml</File>
     <File>Assets/Text/cqui_text_general_fr.xml</File>
@@ -54,6 +56,7 @@
     <File>Assets/Text/cqui_text_general_ru.xml</File>
     <File>Assets/Text/cqui_text_general_zh.xml</File>
     <File>Assets/Text/cqui_text_general_es.xml</File>
+    <File>Assets/Text/cqui_text_general_pt.xml</File>
     <File>Assets/Text/cqui_text_settings.xml</File>
     <File>Assets/Text/cqui_text_settings_de.xml</File>
     <File>Assets/Text/cqui_text_settings_fr.xml</File>
@@ -63,6 +66,7 @@
     <File>Assets/Text/cqui_text_settings_ru.xml</File>
     <File>Assets/Text/cqui_text_settings_zh.xml</File>
     <File>Assets/Text/cqui_text_settings_es.xml</File>
+    <File>Assets/Text/cqui_text_settings_pt.xml</File>
     <File>Assets/UI/actionpanel.lua</File>
     <File>Assets/UI/citysupport.lua</File>
     <File>Assets/UI/civ6common.lua</File>
@@ -144,6 +148,7 @@
     <File>Integrations/BTS/Text/bts_text_ru.xml</File>
     <File>Integrations/BTS/Text/bts_text_zh.xml</File>
     <File>Integrations/BTS/Text/bts_text_es.xml</File>
+    <File>Integrations/BTS/Text/bts_text_pt.xml</File>
     <File>Integrations/URS/reportscreen.lua</File>
     <File>Integrations/URS/reportscreen.xml</File>
     <File>Integrations/URS/unitpromotionpopup.lua</File>
@@ -156,6 +161,7 @@
     <File>Integrations/URS/Text/urs_text_ru.xml</File>
     <File>Integrations/URS/Text/urs_text_zh.xml</File>
     <File>Integrations/URS/Text/urs_text_es.xml</File>
+    <File>Integrations/URS/Text/urs_text_pt.xml</File>
     <File>Integrations/IDS/diplomacydealview.lua</File>
     <File>Integrations/IDS/diplomacydealview.xml</File>
     <File>Integrations/IDS/Text/ids_text.xml</File>
@@ -167,6 +173,7 @@
     <File>Integrations/IDS/Text/ids_text_ru.xml</File>
     <File>Integrations/IDS/Text/ids_text_zh.xml</File>
     <File>Integrations/IDS/Text/ids_text_es.xml</File>
+    <File>Integrations/IDS/Text/ids_text_pt.xml</File>
     <File>Integrations/ML/UI/minimappanel.lua</File>
     <File>Integrations/ML/UI/minimappanel.xml</File>
     <File>Integrations/ML/UI/Panels/modallenspanel.lua</File>
@@ -181,6 +188,7 @@
     <File>Integrations/ML/Text/morelenses_text_ru.xml</File>
     <File>Integrations/ML/Text/morelenses_text_zh.xml</File>
     <File>Integrations/ML/Text/morelenses_text_es.xml</File>
+    <File>Integrations/ML/Text/morelenses_text_pt.xml</File>
     <File>Integrations/BES/UI/espionagesupport.lua</File>
     <File>Integrations/BES/UI/Choosers/espionagechooser.lua</File>
     <File>Integrations/BES/UI/Choosers/espionagechooser.xml</File>
@@ -188,6 +196,7 @@
     <File>Integrations/BES/UI/PartialScreens/espionageoverview.xml</File>
     <File>Integrations/BES/Text/bes_text.xml</File>
     <File>Integrations/BES/Text/bes_text_es.xml</File>
+    <File>Integrations/BES/Text/bes_text_pt.xml</File>
   </Files>
 
   <Components>
@@ -263,6 +272,7 @@
     <LocalizedText id="CQUI_TEXT">
       <Items>
 	    <File>Assets/Text/Gossip_Text.xml</File>
+        <File>Assets/Text/Gossip_Text_pt.xml</File>
         <File>Assets/Text/cqui_text_general.xml</File>
         <File>Assets/Text/cqui_text_general_de.xml</File>
         <File>Assets/Text/cqui_text_general_fr.xml</File>
@@ -272,6 +282,7 @@
         <File>Assets/Text/cqui_text_general_ru.xml</File>
         <File>Assets/Text/cqui_text_general_zh.xml</File>
         <File>Assets/Text/cqui_text_general_es.xml</File>
+        <File>Assets/Text/cqui_text_general_pt.xml</File>
         <File>Assets/Text/cqui_text_settings.xml</File>
         <File>Assets/Text/cqui_text_settings_de.xml</File>
         <File>Assets/Text/cqui_text_settings_fr.xml</File>
@@ -281,6 +292,7 @@
         <File>Assets/Text/cqui_text_settings_ru.xml</File>
         <File>Assets/Text/cqui_text_settings_zh.xml</File>
         <File>Assets/Text/cqui_text_settings_es.xml</File>
+        <File>Assets/Text/cqui_text_settings_pt.xml</File>
       </Items>
     </LocalizedText>
 	
@@ -335,6 +347,7 @@
         <File>Integrations/BTS/Text/bts_text_ru.xml</File>
         <File>Integrations/BTS/Text/bts_text_zh.xml</File>
         <File>Integrations/BTS/Text/bts_text_es.xml</File>
+        <File>Integrations/BTS/Text/bts_text_pt.xml</File>
       </Items>
     </LocalizedText>
     <ImportFiles id="BTS_IMPORT_FILES">
@@ -359,6 +372,7 @@
         <File>Integrations/URS/Text/urs_text_ru.xml</File>
         <File>Integrations/URS/Text/urs_text_zh.xml</File>
         <File>Integrations/URS/Text/urs_text_es.xml</File>
+        <File>Integrations/URS/Text/urs_text_pt.xml</File>
       </Items>
     </LocalizedText>
     <ImportFiles id="UNITREPORT_IMPORT_FILES">
@@ -385,6 +399,7 @@
         <File>Integrations/IDS/Text/ids_text_ru.xml</File>
         <File>Integrations/IDS/Text/ids_text_zh.xml</File>
         <File>Integrations/IDS/Text/ids_text_es.xml</File>
+        <File>Integrations/IDS/Text/ids_text_pt.xml</File>
       </Items>
     </LocalizedText>
   <ImportFiles id="BES_IMPORT_FILES">
@@ -420,6 +435,7 @@
         <File>Integrations/ML/Text/morelenses_text_ru.xml</File>
         <File>Integrations/ML/Text/morelenses_text_zh.xml</File>
         <File>Integrations/ML/Text/morelenses_text_es.xml</File>
+        <File>Integrations/ML/Text/morelenses_text_pt.xml</File>
       </Items>
     </LocalizedText>
     <UpdateDatabase id="MORELENSES_DATABASE">

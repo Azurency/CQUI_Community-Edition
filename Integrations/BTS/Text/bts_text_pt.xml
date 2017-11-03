@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <BaseGameText>
+    <!-- ENGLISH -->
+
+    <!-- Common Text -->
+    <Row Tag="LOC_TRADE_GROUP_SETTINGS">
+      <Text>Configurações de Grupo</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_FILTER_SETTINGS">
+      <Text>Configurações de Filtro</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_SORT_BY_FOOD_TOOLTIP">
+      <Text>Ordenar por [ICON_Food]Comida.</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_SORT_BY_PRODUCTION_TOOLTIP">
+      <Text>Ordenar por [ICON_Production]Production.</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_SORT_BY_GOLD_TOOLTIP">
+      <Text>Ordenar por [ICON_Gold]Ouro.</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_SORT_BY_SCIENCE_TOOLTIP">
+      <Text>Ordenar por [ICON_Science]Ciência.</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_SORT_BY_CULTURE_TOOLTIP">
+      <Text>Ordenar por [ICON_Culture]Cultura.</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_SORT_BY_FAITH_TOOLTIP">
+      <Text>Ordenar por [ICON_Faith]Fé.</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_SORT_BY_TURNS_REMAINING_TOOLTIP">
+      <Text>Ordenar por [ICON_Turn]turnos para completar rota.</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_FILTER_INTERNATIONAL_ROUTES_TEXT">
+      <Text>Rotas Internationais</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_FILTER_CS_WITH_QUEST_TOOLTIP">
+      <Text>Cidades-Estados com quests de comércio</Text>
+    </Row>
+
+    <!-- Trade Overview -->
+    <Row Tag="LOC_TRADE_NO_BENEFIT_TEXT">
+      <Text>sem benefícios dessa rota.</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_SORT_BY_TEXT">
+      <Text>Ordenar por:</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_OVERVIEW_ORIGIN_AZ">
+      <Text>Origem A-Z</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_OVERVIEW_ORIGIN_ZA">
+      <Text>Origem Z-A</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_OVERVIEW_DESTINATION_AZ">
+      <Text>Destino A-Z</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_OVERVIEW_DESTINATION_ZA">
+      <Text>Destino Z-A</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT">
+      <Text>Exp:</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_COLLAPSE_ALL_BUTTON_TEXT">
+      <Text>Col:</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP">
+      <Text>Quantidade total de [ICON_Turn]para completar esta rota comercial</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_TURNS_REMAINING_ALT_HELP_TOOLTIP">
+      <Text>Essa rota levará{1_TurnsRemaining}[Icon_Turn] para completar.</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER">
+      <Text>----------------------------</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_TURNS_REMAINING_ROUTE_LENGTH_TOOLTIP">
+      <Text>Rota Comercial[ICON_Movement]: {1_TripsToDestination}</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_TURNS_REMAINING_TRIPS_COUNT_TOOLTIP">
+      <Text>Viagens para destino: {1_TripsToDestination}</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_TOOLTIP">
+      <Text>Rota irá completar em [ICON_Turn]{1_TurnWhenCompleted}</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_ALT_TOOLTIP">
+      <Text>Se iniciado, rota levará {1_TurnsToComplete} turnos e irá se completar no turno {2_TurnWhenCompleted}</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_CANCEL_AUTOMATION_TOOLTIP">
+      <Text>Cancelar a automação dessa rota comercial. O comerciante estará disponível, uma vez que esta rota seja concluída.</Text>
+    </Row>
+
+    <!-- Make Trade Route -->
+    <Row Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_LABEL">
+      <Text>Repetir rota:</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_REPEAT_ROUTE_CHECKBOX_TOOLTIP">
+      <Text>Habilitar para que este comerciante repita sua rota. Por padrão, a rota repetida é a última feita pelo comerciante.</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_LABEL">
+      <Text>Da ordenação da entrada superior:</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_FROM_TOP_SORT_ENTRY_CHECKBOX_TOOLTIP">
+      <Text>A rota repetida é a rota superior das configurações da ordenação atual. A rota é escolhida quando o comerciante completar sua última.</Text>
+    </Row>
+
+    <!-- Trade Origin Chooser -->
+    <Row Tag="LOC_ORIGIN_CHOOSER_HEADER_BACKGROUND_TEXT">
+      <Text>Escolha uma cidade</Text>
+    </Row>
+
+    <Row Tag="LOC_TRADE_ORIGIN_CHOOSER_HEADER_LABEL_TEXT">
+      <Text>TRANSFERIR COMERCIANTE PARA...</Text>
+    </Row>
+
+    <Row Tag="LOC_ORIGIN_CHOOSER_CHANGE_DESTINATION_BUTTON">
+      <Text>CONFIRMAR</Text>
+    </Row>
+
+  </BaseGameText>
+</GameData>
