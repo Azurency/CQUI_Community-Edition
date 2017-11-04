@@ -82,6 +82,7 @@ end
 -- ===========================================================================
 function OnChangePolicy()
   Close();
+  LuaEvents.OnCQUIPolicyReminderOpenedChangePolicy()
   LuaEvents.TechCivicCompletedPopup_GovernmentOpenPolicies();   -- Open Government Screen
   UI.PlaySound("Stop_Speech_Civics");
 end

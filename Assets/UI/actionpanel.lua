@@ -545,7 +545,6 @@ function CheckAutoEndTurn( eCurrentEndTurnBlockingType:number )
           error("CheckAutoEndTurn thinks that we can't end turn, but the notification system disagrees");
         end
       UI.RequestAction(ActionTypes.ACTION_ENDTURN);
-      CQUI_PolicyReminderClosed = false;
     end
   end
 end
@@ -609,7 +608,6 @@ function DoEndTurn( optionalNewBlocker:number )
     else
       UI.RequestAction(ActionTypes.ACTION_ENDTURN);
       UI.PlaySound("Stop_Unit_Movement_Master");
-      CQUI_PolicyReminderClosed = false;
     end
 
   elseif (   m_activeBlockerId == EndTurnBlockingTypes.ENDTURN_BLOCKING_STACKED_UNITS
@@ -630,7 +628,6 @@ function DoEndTurn( optionalNewBlocker:number )
         return;
       end
       UI.RequestAction(ActionTypes.ACTION_ENDTURN);
-      CQUI_PolicyReminderClosed = false;
       return;
     end
 
@@ -733,7 +730,6 @@ function OnEndTurnRightClicked()
 	else
 	  UI.RequestAction(ActionTypes.ACTION_ENDTURN);
     UI.PlaySound("Stop_Unit_Movement_Master");
-    CQUI_PolicyReminderClosed = false;
   end
 end
 
@@ -891,6 +887,8 @@ function OnLocalPlayerTurnBegin()
   -- if auto-cycle is OFF, play this sound to indicate "start of turn"
   if (not UserConfiguration.IsAutoUnitCycle()) then
       UI.PlaySound("SP_Turn_Start");
+      -- AZURENCY : also reset the policy reminder shown status
+      CQUI_PolicyReminderClosed = false
   end
 end
 
@@ -1015,7 +1013,6 @@ function OnInputHandler( pInputStruct:table )
     if pInputStruct:GetKey() == Keys.VK_RETURN then
       if pInputStruct:IsShiftDown() and not IsTutorialRunning() then
         UI.RequestAction(ActionTypes.ACTION_ENDTURN); -- Shift + Enter = Force End Turn
-        CQUI_PolicyReminderClosed = false;
       else
         DoEndTurn();                  -- Enter = Normal End Turn
       end
@@ -1265,5 +1262,6 @@ function Initialize()
   LuaEvents.Tutorial_SlowNextTurnEnable.Add(  OnTutorialSlowTurnEnable );
 
   LuaEvents.OnCQUIPolicyReminderClose.Add(function() CQUI_PolicyReminderClosed = true; ContextPtr:RequestRefresh(); end)
+  LuaEvents.OnCQUIPolicyReminderOpenedChangePolicy.Add(function() CQUI_PolicyReminderClosed = true; ContextPtr:RequestRefresh(); end)
 end
 Initialize();
