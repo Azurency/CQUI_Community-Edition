@@ -273,9 +273,12 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
 
     CQUI_Hovering = true;
 
-    -- Astog: Fix for lens being shown when other lenses are on
+    -- Astog: Fix for lens being shown when other lenses are on.
+    -- Astog: Don't show this lens if any unit is selected.
+    -- This prevents the need to check if every lens is on or not, like builder, religious lens.
     if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)
-        and UI.GetInterfaceMode() == InterfaceModeTypes.SELECTION then
+        and UI.GetInterfaceMode() == InterfaceModeTypes.SELECTION
+        and UI.GetHeadSelectedUnit() == nil then
       LuaEvents.Area_ShowCitizenManagement(cityID);
       CQUI_CityManageAreaShown = true;
     end
