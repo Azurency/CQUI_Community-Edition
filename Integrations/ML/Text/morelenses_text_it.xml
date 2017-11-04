@@ -13,6 +13,9 @@
     <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_IMP" Language="it_IT">
       <Text>Risorsa/Casella Saccheggiata/Abilità Unica</Text>
     </Replace>
+    <Replace Tag="LOC_TOOLTIP_RECOMFEATURE_LENS_HILL" Language="it_IT">
+      <Text>Miglioramenti Consigliati</Text>
+    </Replace>
     <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_HILL" Language="it_IT">
       <Text>Collina</Text>
     </Replace>
@@ -41,19 +44,26 @@
     </Replace>
 
     <!-- City Overlap Lens -->
-    <Replace Tag="LOC_HUD_CITYOVERLAP6_LENS" Language="it_IT">
-      <Text>6 Caselle</Text>
+    <Replace Tag="LOC_HUD_CITYOVERLAP_LENS" Language="it_IT">
+      <Text>Sovrapposizione Città</Text>
     </Replace>
-    <Replace Tag="LOC_HUD_CITYOVERLAP6_LENS_TOOLTIP" Language="it_IT">
-      <Text>Mostra l'intersezione di una casella con città nel raggio di 6 caselle</Text>
+    <Replace Tag="LOC_HUD_CITYOVERLAP_LENS_TOOLTIP" Language="it_IT">
+      <Text>Mostra con quante città (nel raggio di 6 caselle) si sovrappone una casella</Text>
     </Replace>
-
-    <!-- City Overlap Lens -->
-    <Replace Tag="LOC_HUD_CITYOVERLAP9_LENS" Language="it_IT">
-      <Text>9 Caselle</Text>
+    <Replace Tag="LOC_PANEL_CITYOVERLAP_OPTION1" Language="it_IT">
+      <Text>Evidenzia i bordi esterni</Text>
     </Replace>
-    <Replace Tag="LOC_HUD_CITYOVERLAP9_LENS_TOOLTIP" Language="it_IT">
-      <Text>Mostra l'intersezione di una casella con città nel raggio di 9 caselle</Text>
+    <Replace Tag="LOC_PANEL_CITYOVERLAP_NMOUSE" Language="it_IT">
+      <Text>No mouse</Text>
+    </Replace>
+    <Replace Tag="LOC_PANEL_CITYOVERLAP_RANGE" Language="it_IT">
+      <Text>Al passaggio del mouse</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_CITYOVERLAP_RANGE" Language="it_IT">
+      <Text>Mostra le caselle ed evidenzia le città nel raggio d'azione della casella puntata dal mouse (impostazione in basso)</Text>
+    </Replace>
+    <Replace Tag="LOC_PANEL_CITYOVERLAP_RADIUS" Language="it_IT">
+      <Text>Raggio d'azione del mouse</Text>
     </Replace>
 
     <!-- Barbarian Lens -->
@@ -124,6 +134,23 @@
     </Replace>
     <Replace Tag="LOC_TOOLTIP_SCOUT_LENS_GHUT" Language="it_IT">
       <Text>Villaggi Tribali</Text>
+    </Replace>
+
+    <!-- Naturalist Lens -->
+    <Replace Tag="LOC_HUD_NATURALIST_LENS" Language="it_IT">
+      <Text>Naturalista</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_NATURALIST_LENS_TOOLTIP" Language="it_IT">
+      <Text>Evidenzia le caselle dove è possibile costruire Parchi Nazionali</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_NATURALIST_LENS_NPARK" Language="it_IT">
+      <Text>L'area è pronta per il Parco Nazionale</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_NATURALIST_LENS_OK" Language="it_IT">
+      <Text>La casella può essere usata solo dopo la lavorazione di altre</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_NATURALIST_LENS_FIXABLE" Language="it_IT">
+      <Text>Necessita una lavorazione per poterci costruire il Parco Nazionale</Text>
     </Replace>
 
   </LocalizedText>

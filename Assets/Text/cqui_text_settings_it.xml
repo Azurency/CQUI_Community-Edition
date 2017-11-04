@@ -198,7 +198,12 @@
     <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="it_IT">
       <Text>Mostra tutte le azioni del pannello unità</Text>
     </Row>
-
+    <Row Tag="LOC_CQUI_GENERAL_SHOWPRD" Language="it_IT">
+      <Text>Mostra il promemoria del cambio politiche</Text>
+    </Row>
+	<Row Tag="LOC_CQUI_GENERAL_SHOWPRD_TOOLTIP" Language="it_IT">
+      <Text>Apre un popup per ricordare che è possibile modificare le politiche sociali prima del cambio turno</Text>
+    </Row>
     <Row Tag="LOC_CQUI_TRADER_SCREEN" Language="it_IT">
       <Text>Schermata Scambi</Text>
     </Row>
@@ -220,6 +225,20 @@
     <Row Tag="LOC_CQUI_TRADER_ADD_DIVIDER_TOOLTIP" Language="it_IT">
       <Text>Aggiungi un separatore tra i gruppi nell'anteprima della Schermata Scambi</Text>
     </Row>
-
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SCREEN" Language="it_IT">
+      <Text>Raccomandazioni</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWPRODUCTION" Language="it_IT">
+      <Text>Mostra i consigli sulla produzione</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWTECH" Language="it_IT">
+      <Text>Mostra i consigli su tecnologie/politiche sociali</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWIMPROVEMENTS" Language="it_IT">
+      <Text>Mostra i consigli sui miglioramenti</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWCITYDETAILADVISOR" Language="it_IT">
+      <Text>Mostra il consigliere cittadino</Text>
+    </Row>
   </LocalizedText>
 </GameData>

@@ -3,14 +3,31 @@
   <LocalizedText>
     <!-- ITALIAN -->
 
-    <!-- HUD Common Text -->
+    <!-- IDS -->
     <Replace Tag="LOC_IDS_DUMMY_KEY" Language="it_IT">
       <Text>Scambi correnti</Text>
     </Replace>
-
-    <Row Tag="LOC_IDS_DEAL_CEDE" Language="it_IT">
+    <Replace Tag="LOC_IDS_DEAL_TERMS" Language="it_IT">
+      <Text>Termini dell'accordo</Text>
+    </Replace>
+    <Replace Tag="LOC_IDS_DEAL_CEDE" Language="it_IT">
       <Text>Ci cede</Text>
-    </Row>
+    </Replace>
+    <Replace Tag="LOC_IDS_DEAL_RETURN" Language="it_IT">
+      <Text>Ritorna</Text>
+    </Replace>
+    <Replace Tag="LOC_IDS_DEAL_TRADE" Language="it_IT">
+      <Text>[COLOR_Red]Commercia[ENDCOLOR] con</Text>
+    </Replace>
+    <Replace Tag="LOC_IDS_DEAL_SUZERAIN" Language="it_IT">
+      <Text>[COLOR_Civ6Blue]Sovrano[ENDCOLOR] di</Text>
+    </Replace>
+    <Replace Tag="LOC_IDS_DEAL_UNTRADEABLE" Language="it_IT">
+      <Text>Non trattabile</Text>
+    </Replace>
+    <Replace Tag="LOC_IDS_DEAL_DUPLICATE" Language="it_IT">
+      <Text>Duplicato</Text>
+    </Replace>
 
   </LocalizedText>
 </GameData>

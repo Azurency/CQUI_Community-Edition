@@ -6,14 +6,6 @@
       <Text>CQUI</Text>
     </Replace>
 
-	<!-- IDS -->
-	<Replace Tag="LOC_IDS_DEAL_TERMS" Language="it_IT">
-      <Text>Termine Deal</Text>
-    </Replace>
-    <Row Tag="LOC_IDS_DEAL_CEDE" Language="it_IT">
-      <Text>Ci cede</Text>
-    </Row>
-	
     <!-- MESSAGES -->
     <Replace Tag="LOC_CQUI_CIVIC_MESSAGE_S" Language="it_IT">
       <Text>Progresso civico corrente, </Text>
@@ -42,6 +34,11 @@
       <Text>[COLOR:StatBadCS](Saccheggiato)[ENDCOLOR]</Text>
     </Replace>
 
+    <!-- CITY VIEW -->
+    <Replace Tag="LOC_HUD_CITY_NEXT_PLOT" Language="it_IT">
+      <Text>La città si espanderà in questa casella alla prossima crescita dei confini culturali</Text>
+    </Replace>
+
     <!-- POPUPS -->
     <Replace Tag="LOC_CQUI_GREAT_PERSON_PROGRESS" Language="it_IT">
       <Text>Progresso:</Text>
@@ -53,6 +50,20 @@
     </Replace>
     <Replace Tag="LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK_TOOLTIP" Language="it_IT">
       <Text>Il tuo accampamento è in grado di eseguire un attacco a distanza</Text>
+    </Replace>
+
+    <!-- Policyreminderpopup -->
+    <Replace Tag="LOC_POLICY_REMINDER_TITLE" Language="it_IT">
+      <Text>PROMEMORIA POLITICHE</Text>
+    </Replace>
+    <Replace Tag="LOC_POLICY_REMINDER_TEXT" Language="it_IT">
+      <Text>Sono state sbloccate nuove politiche sociali.</Text>
+    </Replace>
+    <Replace Tag="LOC_POLICY_REMINDER_ACTION_BUTTON" Language="it_IT">
+      <Text>CAMBIA POLITICHE</Text>
+    </Replace>
+    <Replace Tag="LOC_POLICY_REMINDER_ACTION_BUTTON_TOOLTIP" Language="it_IT">
+      <Text>In questo turno puoi modificare le tue politiche sociali.</Text>
     </Replace>
 
   </LocalizedText>
