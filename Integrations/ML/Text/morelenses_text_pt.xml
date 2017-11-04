@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <BaseGameText>
+    <!-- PORTUGUESE -->
+
+    <!-- Builder Lens -->
+    <Row Tag="LOC_HUD_BUILDER_LENS">
+      <Text>Construtor</Text>
+    </Row>
+    <Row Tag="LOC_HUD_BUILDER_LENS_TOOLTIP">
+      <Text>Destaques sobre quais hexagonos o construtor pode trabalhar</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_IMP">
+      <Text>Recurso/Saqueado/Habilidade Única</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_RECOMFEATURE_LENS_HILL">
+      <Text>Recomendado Melhorar o Recurso</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_HILL">
+      <Text>Colina</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_FEATURE">
+      <Text>Recurso Removível</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_GENERIC">
+      <Text>Lote genérico</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_NOTHING">
+      <Text>Nada para fazer</Text>
+    </Row>
+
+    <!-- Archaeologist Lens -->
+    <Row Tag="LOC_HUD_ARCHAEOLOGIST_LENS">
+      <Text>Arqueologista</Text>
+    </Row>
+    <Row Tag="LOC_HUD_ARCHAEOLOGIST_LENS_TOOLTIP">
+      <Text>Destaques de sites de escavação do arqueologista.</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_ARTIFACT">
+      <Text>Artefato</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_SHIPWRECK">
+      <Text>Naufrágio</Text>
+    </Row>
+
+    <!-- City Overlap Lens -->
+    <Row Tag="LOC_HUD_CITYOVERLAP_LENS">
+      <Text>Sobreposição de Cidade</Text>
+    </Row>
+    <Row Tag="LOC_HUD_CITYOVERLAP_LENS_TOOLTIP">
+      <Text>Mostra quantas cidades (no intervalo de 6 hexagonos) um hex se sobrepõe</Text>
+    </Row>
+    <Row Tag="LOC_PANEL_CITYOVERLAP_OPTION1">
+      <Text>Destaca fronteiras externas</Text>
+    </Row>
+    <Row Tag="LOC_PANEL_CITYOVERLAP_NMOUSE">
+        <Text>Sem Mouse</Text>
+    </Row>
+    <Row Tag="LOC_PANEL_CITYOVERLAP_RANGE">
+      <Text>Alcance com mouse</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_CITYOVERLAP_RANGE">
+      <Text>Mostra lotes e destaca cidades dentro do alcance (definido abaixo) a partir do lote sob o mouse.</Text>
+    </Row>
+    <Row Tag="LOC_PANEL_CITYOVERLAP_RADIUS">
+      <Text>Raio Mouse</Text>
+    </Row>
+
+    <!-- Barbarian Lens -->
+    <Row Tag="LOC_HUD_BARBARIAN_LENS">
+      <Text>Bárbaros</Text>
+    </Row>
+    <Row Tag="LOC_HUD_BARBARIAN_LENS_TOOLTIP">
+      <Text>Destaca acampamentos bárbaros no mapa</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_BARBARIAN_LENS_ENCAPMENT">
+      <Text>Acampamento Bárbaro</Text>
+    </Row>
+
+    <!-- Resources Lens -->
+    <Row Tag="LOC_HUD_RESOURCE_LENS">
+      <Text>Recursos</Text>
+    </Row>
+    <Row Tag="LOC_HUD_RESOURCE_LENS_TOOLTIP">
+      <Text>Destaca recursos no mapa</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_LUXURY">
+      <Text>Recursos de Luxo</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_NLUXURY">
+      <Text>Luxo Desconectado</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_STRATEGIC">
+      <Text>Recursos Estratégicos</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_NSTRATEGIC">
+      <Text>Recurso Estratégico Desconectado</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_BONUS">
+      <Text>Recursos bônus</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_NBONUS">
+      <Text>Recurso bônus desconectado</Text>
+    </Row>
+
+    <!-- Wonder Lens -->
+    <Row Tag="LOC_HUD_WONDER_LENS">
+      <Text>Maravilhas</Text>
+    </Row>
+    <Row Tag="LOC_HUD_WONDER_LENS_TOOLTIP">
+      <Text>Destaca maravilhas naturais e maravilhas construída por jogadores</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_WONDER_LENS_NWONDER">
+      <Text>Maravilha Natural</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_PWONDER">
+      <Text>Maravilha feita por jogador</Text>
+    </Row>
+
+    <!-- Adjacency Yield Lens -->
+    <Row Tag="LOC_HUD_ADJYIELD_LENS">
+      <Text>Rendimento adjacentes</Text>
+    </Row>
+    <Row Tag="LOC_HUD_ADJYIELD_LENS_TOOLTIP">
+      <Text>Mostra o rendimento adjacentes para os distritos</Text>
+    </Row>
+
+    <!-- Scout Lens -->
+    <Row Tag="LOC_HUD_SCOUT_LENS">
+      <Text>Batedor</Text>
+    </Row>
+    <Row Tag="LOC_HUD_SCOUT_LENS_TOOLTIP">
+      <Text>Destaca as aldeias no mapa</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_SCOUT_LENS_GHUT">
+      <Text>Aldeias</Text>
+    </Row>
+
+    <!-- Naturalist Lens -->
+    <Row Tag="LOC_HUD_NATURALIST_LENS">
+      <Text>Naturalista</Text>
+    </Row>
+    <Row Tag="LOC_HUD_NATURALIST_LENS_TOOLTIP">
+      <Text>Destaca lugares onde Parques Nacionais podem ser construídos</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_NATURALIST_LENS_NPARK">
+      <Text>Área pronta para Parque Nacional</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_NATURALIST_LENS_OK">
+      <Text>Lote pode ser usado, se outro ponto for corrigido</Text>
+    </Row>
+    <Row Tag="LOC_TOOLTIP_NATURALIST_LENS_FIXABLE">
+      <Text>Precisa de correção se for usado para um parque</Text>
+    </Row>
+
+  </BaseGameText>
+</GameData>

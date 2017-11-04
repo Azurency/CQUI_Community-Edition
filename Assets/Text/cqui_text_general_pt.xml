@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- PORTUGUESE -->
+    <Row Tag="LOC_CQUI_NAME" Language="pt_BR">
+      <Text>CQUI</Text>
+    </Row>
+
+    <!-- MESSAGES -->
+    <Row Tag="LOC_CQUI_CIVIC_MESSAGE_S" Language="pt_BR">
+      <Text>O atual cívico, </Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TECH_MESSAGE_S" Language="pt_BR">
+      <Text>A atual tecnologia, </Text>
+    </Row>
+    <Row Tag="LOC_CQUI_HALF_MESSAGE_E" Language="pt_BR">
+      <Text>, está a um turno do máximo potencial de Inspiração.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_FINISH_MESSAGE_E" Language="pt_BR">
+      <Text>, está completado.</Text>
+    </Row>
+
+    <!-- CITY PANEL -->
+    <Row Tag="LOC_CQUI_CITY_ENTERTAINMENT" Language="pt_BR">
+      <Text>Entretenimento</Text>
+    </Row>
+    <Row Tag="LOC_HUD_CITY_FROM_POPULATION" Language="pt_BR">
+      <Text>da População</Text>
+    </Row>
+    <Row Tag="LOC_HUD_CITY_RELIGIOUS_MINORITIES" Language="pt_BR">
+      <Text>Minorias Religiosas</Text>
+    </Row>
+    <Row Tag="LOC_HUD_CITY_PILLAGED" Language="pt_BR">
+      <Text>[COLOR:StatBadCS](Saqueado)[ENDCOLOR]</Text>
+    </Row>
+
+    <!-- CITY VIEW -->
+    <Row Tag="LOC_HUD_CITY_NEXT_PLOT" Language="pt_BR">
+      <Text>A cidade se expandirá para este lote no próximo crescimento cultural das fronteiras</Text>
+    </Row>
+
+    <!-- POPUPS -->
+    <Row Tag="LOC_CQUI_GREAT_PERSON_PROGRESS" Language="pt_BR">
+      <Text>Progresso:</Text>
+    </Row>
+
+    <!-- ActionPanel -->
+    <Row Tag="LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK" Language="pt_BR">
+      <Text>Ataque à distância do Acampamento</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK_TOOLTIP" Language="pt_BR">
+      <Text>Seu acampamento é capaz de realizar um ataque à distância</Text>
+    </Row>
+
+    <!-- Policyreminderpopup -->
+    <Row Tag="LOC_POLICY_REMINDER_TITLE" Language="pt_BR">
+		  <Text>LEMBRETE DE POLÍTICA</Text>
+    </Row>
+    <Row Tag="LOC_POLICY_REMINDER_TEXT" Language="pt_BR">
+      <Text>Novos cartões de política foram desbloqueados.</Text>
+    </Row>
+    <Row Tag="LOC_POLICY_REMINDER_ACTION_BUTTON" Language="pt_BR">
+      <Text>MUDANÇA POLÍTICA</Text>
+    </Row>
+    <Row Tag="LOC_POLICY_REMINDER_ACTION_BUTTON_TOOLTIP" Language="pt_BR">
+      <Text>Você pode mudar sua política neste turno.</Text>
+    </Row>
+
+  </LocalizedText>
+</GameData>

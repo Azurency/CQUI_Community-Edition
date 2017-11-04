@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <BaseGameText>
+    <!-- PORTUGUESE -->
+
+    <!-- HUD Common Text -->
+    <Row Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS">
+      <Text>Ofertas Atuais</Text>
+    </Row>
+    <Row Tag="LOC_HUD_REPORTS_TAB_HIDE_CITY_BUILDINGS">
+      <Text>Esconder edificações da cidade</Text>
+    </Row>
+    <!-- Current Deals -->
+    <Row Tag="LOC_CURRENT_DEALS_OUTGOING">
+      <Text>Saindo</Text>
+    </Row>
+    <Row Tag="LOC_CURRENT_DEALS_INCOMING">
+      <Text>Entrando</Text>
+    </Row>
+    <!-- Units Overview -->
+    <Row Tag="LOC_UNITS_MILITARY_LAND">
+      <Text>Militar (Terra)</Text>
+    </Row>
+    <Row Tag="LOC_UNITS_MILITARY_AIR">
+      <Text>Militar (Ar)</Text>
+    </Row>
+    <Row Tag="LOC_UNITS_MILITARY_SEA">
+      <Text>Militar (Oceano)</Text>
+    </Row>
+    <Row Tag="LOC_UNITS_VIEW_ON_THE_MAP">
+      <Text>Veja esta unidade no mapa.</Text>
+    </Row>
+    <Row Tag="LOC_HUD_REPORTS_BONUSES_URS">
+      <Text>Bônus</Text>
+    </Row>
+    <Row Tag="LOC_HUD_REPORTS_PROMOTION_AVAILABLE">
+      <Text>Promoção Disponível</Text>
+    </Row>
+    <Row Tag="LOC_HUD_REPORTS_IN_FORMATION">
+      <Text>Em formação</Text>
+    </Row>
+
+  </BaseGameText>
+</GameData>

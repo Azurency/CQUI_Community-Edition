@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <BaseGameText>
+    <!-- PORTUGUESE -->
+
+    <!-- IDS -->
+    <Row Tag="LOC_IDS_DUMMY_KEY">
+      <Text>Ofertas atuais</Text>
+    </Row>
+    <Row Tag="LOC_IDS_DEAL_TERMS">
+      <Text>Termos da oferta</Text>
+    </Row>
+    <Row Tag="LOC_IDS_DEAL_CEDE">
+      <Text>Ceder</Text>
+    </Row>
+    <Row Tag="LOC_IDS_DEAL_RETURN">
+      <Text>Retornar</Text>
+    </Row>
+    <Row Tag="LOC_IDS_DEAL_TRADE">
+      <Text>[COLOR_Red]Comércio[ENDCOLOR] com</Text>
+    </Row>
+    <Row Tag="LOC_IDS_DEAL_SUZERAIN">
+      <Text>[COLOR_Civ6Blue]Suserano[ENDCOLOR] de</Text>
+    </Row>
+    <Row Tag="LOC_IDS_DEAL_UNTRADEABLE">
+      <Text>Não comercializável</Text>
+    </Row>
+    <Row Tag="LOC_IDS_DEAL_DUPLICATE">
+      <Text>Duplicado</Text>
+    </Row>
+
+  </BaseGameText>
+</GameData>

@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- PORTUGUESE -->
+
+    <Row Tag="LOC_CQUI_BINDINGS" Language="pt_BR">
+      <Text>Atalhos de Teclado</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="pt_BR">
+      <Text>Modo de Atalhos de Teclado</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="pt_BR">
+      <Text>Padrão: Inalterado[NEWLINE]Clássico: Civ V binds[NEWLINE]Melhorado: Atalhos Civ V com as seguintes mudanças[NEWLINE]  WASD controle de câmera[NEWLINE]  Q/E ciclo unidade/cidade[NEWLINE]  Shift alterna seleção cidade/unidade[NEWLINE]  Pedreira/Ataque aéreo são movidos para alt-key + Q/S[NEWLINE]  NOTA:DESATIVAR W/E NAS CONFIGURAÇÕES OU AS COISAS NÃO FUNCIONARÃO</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="pt_BR">
+      <Text>Classico</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_ENHANCED" Language="pt_BR">
+      <Text>Melhorado</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_BINDINGS_STANDARD" Language="pt_BR">
+      <Text>Padrão</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW" Language="pt_BR">
+      <Text>Visão da Cidade</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK" Language="pt_BR">
+      <Text>Bloquear final de turno para ataque da cidade</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK_TOOLTIP" Language="pt_BR">
+      <Text>Habilite isso se você quer bloquear "Final de Turno" se uma cidade pode atacar.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_ITEMHEIGHT" Language="pt_BR">
+      <Text>Altura dos itens de produção</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_PRODUCTIONQUEUE" Language="pt_BR">
+      <Text>Habilidar fila de produção</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="pt_BR">
+      <Text>Exibe sobreposição de crescimento cultural</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="pt_BR">
+      <Text>Isso também pode ser ativado clicando no emblema de crescimento na visão da cidade</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" Language="pt_BR">
+      <Text>Exibe informações de gestão da cidade ao passar o mouse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="pt_BR">
+      <Text>Exibe ícones de gerenciamento de cidadão, rendimentos dos lotes e crescimento de fronteiras ao passar o mouse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITIZENICONSONHOVER" Language="pt_BR">
+      <Text>Exibe ícones de cidadãos ao passar o mouse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITIZENICONSONHOVER_TOOLTIP" Language="pt_BR">
+      <Text>Exibe ícones de cidadão ao passar o mouse sobre o banner da cidade</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEONHOVER" Language="pt_BR">
+      <Text>Exibe área de gestão da cidade ao passar o mouse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEONHOVER_TOOLTIP" Language="pt_BR">
+      <Text>Exibe a área de gerenciamento de cidadãos quando passar o mouse sobre o banner da cidade</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEINSCREEN" Language="pt_BR">
+      <Text>Exibe área de gerenciamento da cidade na tela</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEINSCREEN_TOOLTIP" Language="pt_BR">
+      <Text>Exibe a área de gerenciamento de cidadãos na tela da cidade</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_HEADER" Language="pt_BR">
+      <Text>Insígnias Inteligentes</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER" Language="pt_BR">
+      <Text>Habilitar Banners Inteligentes</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="pt_BR">
+      <Text>Exibe novos ícones e informações no banner da cidade.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="pt_BR">
+      <Text>Um [ICON_EXCLAMATION] é exibido sempre que os cidadãos desbloqueados são automaticamente atribuídos pela IA do governador da cidade.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_DISTRICTS_TOOLTIP" Language="pt_BR">
+      <Text>Ícones de distrito indicam distritos construídos</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_POPULATION_TOOLTIP" Language="pt_BR">
+      <Text>Mostra o número de turnos que restam para o crescimento da população[NEWLINE]e a [população atual/habitação máxima].</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="pt_BR">
+      <Text>Mostra o número de turnos que restam para o crecimento cultural.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON" Language="pt_BR">
+      <Text>Ícones Smart Work</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON_TOOLTIP" Language="pt_BR">
+      <Text>Dá um tamanho/transparência especial aos botões de cidadão trabalhado</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONALPHA" Language="pt_BR">
+      <Text>Transparência de Ícone Smart Work</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONSIZE" Language="pt_BR">
+      <Text>Tamanho de Ícone Smart Work</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONS_HEADER" Language="pt_BR">
+      <Text>Ícones de trabalho</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONALPHA" Language="pt_BR">
+      <Text>Transparência de Ícones de Trabalho</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_WORKICONSIZE" Language="pt_BR">
+      <Text>Tamanho de Ícones de trabalho</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL" Language="pt_BR">
+      <Text>Geral</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_HIDDEN" Language="pt_BR">
+      <Text>Escondido</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_MINIMAPSIZE" Language="pt_BR">
+      <Text>Tamanho do Minimapa</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="pt_BR">
+      <Text>Estilo de ícone de recurso aprimorado</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="pt_BR">
+      <Text>Sólido: sempre desenhe ícones de recursos[NEWLINE]Transparente: ícones de recursos aprimorados são transparentes[NEWLINE]Oculto: ícones de recursos aprimorados estão ocultos</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="pt_BR">
+      <Text>Mostrar luxos no painel superior</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="pt_BR">
+      <Text>Sólido</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="pt_BR">
+      <Text>Alterna produção para ON por padrão</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_TRANSPARENT" Language="pt_BR">
+      <Text>Transparente</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP" Language="pt_BR">
+      <Text>Fofoca</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="pt_BR">
+      <Text>Cortar mensagens de fofoca</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="pt_BR">
+      <Text>Remove o começo, na maior parte dos casos, da mensagem de fofoca que descreve de onde veio a informação</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES" Language="pt_BR">
+      <Text>Lentes</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYARCHAEOLOGISTLENS" Language="pt_BR">
+      <Text>Lente de Arqueologia aplicada automaticamente</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYBUILDERLENS" Language="pt_BR">
+      <Text>Lente de Construtor aplicada automaticamente</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="pt_BR">
+      <Text>Lente de Batedor aplicada automaticamente</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWNOTHINGTODO_BUILDER" Language="pt_BR">
+      <Text>Não mostre nada para fazer nas lentes de construtor</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWNOTHINGTODO_BUILDER_TOOLTIP" Language="pt_BR">
+      <Text>Não mostrar nada para fazer nos hexágonos (lotes vermelhos) quando nas lentes de construtor</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWGENERIC_BUILDER" Language="pt_BR">
+      <Text>Mostrar genéricos nas lentes de construtores</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWGENERIC_BUILDER_TOOLTIP" Language="pt_BR">
+      <Text>Mostra hexágonos genéricos (lotes brancos) quando em lentes de construtor</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS" Language="pt_BR">
+      <Text>Popups</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_ALWAYSOPENTECHTREES" Language="pt_BR">
+      <Text>Sempre abra a árvore completa em vez de popups</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="pt_BR">
+      <Text>Popup Tech/Cívico visual</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="pt_BR">
+      <Text>Alterna o popup que aparece sempre que uma nova tecnologia ou cívico é alcançado</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="pt_BR">
+      <Text>Popup Tech/Cívico audio</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="pt_BR">
+      <Text>Alterna o áudio de popup que é reproduzido sempre que uma nova tecnologia ou cívico é alcançado. É totalmente independente do componente visual e pode ser reproduzido mesmo quando não há popup vísivel</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="pt_BR">
+      <Text>Lembre-se: as configurações do CQUI são anexadas aos saves individuais![NEWLINE]Se você quiser alterar uma configuração por padrão, por favor leia as informações[NEWLINE]no arquivo cqui_settings.sql dentro de [MOD INSTALL DIRECTORY]/CQUI/Assets directory</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS" Language="pt_BR">
+      <Text>Unidades</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_SHOWUNITPATHS" Language="pt_BR">
+      <Text>Mostrar o caminho da unidade ao passar o mouse ou na seleção</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="pt_BR">
+      <Text>Autoexpande todas as ações no painel da unidade</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWPRD" Language="pt_BR">
+      <Text>Mostrar lembrete de popup de política</Text>
+    </Row>
+	<Row Tag="LOC_CQUI_GENERAL_SHOWPRD_TOOLTIP" Language="pt_BR">
+      <Text>Habilitar um popup para lembrá-lo de alterar seus cartões de política antes do final do turno</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_SCREEN" Language="pt_BR">
+      <Text>Tela do Comerciante</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_SHOW_SORT_ORDER" Language="pt_BR">
+      <Text>Mostrar ordem de ordenação</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_SHOW_SORT_ORDER_TOOLTIP" Language="pt_BR">
+      <Text>Mostra a ordem de ordenação dos vários rendimentos na tela do comerciante</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_COLOR_YIELDS" Language="pt_BR">
+      <Text>Colorir valores de rendimentos</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_COLOR_YIELDS_TOOLTIP" Language="pt_BR">
+      <Text>Colore os valores de rendimento com base no tipo de rendimento. Ex: rendimentos de alimentos são coloridos verde</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_ADD_DIVIDER" Language="pt_BR">
+      <Text>Adicionar divisão entre grupos</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_ADD_DIVIDER_TOOLTIP" Language="pt_BR">
+      <Text>Adiciona um divisor entre grupos no painel Visão Geral do Comércio</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SCREEN" Language="pt_BR">
+      <Text>Recomendações</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWPRODUCTION" Language="pt_BR">
+      <Text>Mostrar recomendações de produção</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWTECH" Language="pt_BR">
+      <Text>Mostrar recomendações tecnológicas/cívicas</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWIMPROVEMENTS" Language="pt_BR">
+      <Text>Mostrar recomendações de melhorias</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWCITYDETAILADVISOR" Language="pt_BR">
+      <Text>Mostrar o assessor de detalhes da cidade</Text>
+    </Row>
+  </LocalizedText>
+</GameData>
