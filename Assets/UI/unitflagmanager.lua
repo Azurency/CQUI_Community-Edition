@@ -815,6 +815,11 @@ function UnitFlag.UpdatePromotions( self )
         self.m_Instance.New_Promotion_Flag:SetHide(true);
         --ARISTOS: to test for available promotions! Previous test using XPs was faulty (Firaxis... :rolleyes:)
         local bCanStart, tResults = UnitManager.CanStartCommand( pUnit, UnitCommandTypes.PROMOTE, true, true);
+        -- AZURENCY : CanStartCommand will return false if the unit have no movements left but still can have 
+        -- a promotion (maybe not this turn, but it have enough experience, so we'll show it on the flag anyway)
+        if not bCanStart then
+          bCanStart = unitExperience:GetExperiencePoints() >= unitExperience:GetExperienceForNextLevel()
+        end
         if bCanStart and isLocalPlayerUnit then
           self.m_Instance.New_Promotion_Flag:SetHide(false);
           self.m_Instance.UnitNumPromotions:SetText("[COLOR:StatBadCS]+[ENDCOLOR]");
@@ -1673,7 +1678,9 @@ function OnUnitPromotionChanged( playerID : number, unitID : number )
     if (pUnit ~= nil) then
       local flag = GetUnitFlag(playerID, pUnit:GetID());
       if (flag ~= nil) then
-        flag:UpdateStats();
+        --flag:UpdateStats();
+        -- AZURENCY : request a refresh on the next frame (to update the promotion flag and remove + sign)
+        ContextPtr:RequestRefresh()
       end
     end
   end
@@ -1803,6 +1810,14 @@ function Refresh()
     for locX:number,ys:table in pairs(plotsToUpdate) do
       for locY:number,_ in pairs(ys) do
         UpdateIconStack( locX, locY );
+      end
+    end
+  
+    -- AZURENCY : update the stats of the flags on refresh
+    local playerFlagInstances = m_UnitFlagInstances[ Game.GetLocalPlayer() ];
+    for id, flag in pairs(playerFlagInstances) do
+      if (flag ~= nil) then
+        flag:UpdateStats();
       end
     end
 
@@ -2029,6 +2044,7 @@ function Initialize()
 
   ContextPtr:SetInitHandler( OnInit );
   ContextPtr:SetShutdown( OnShutdown );
+  ContextPtr:SetRefreshHandler( Refresh );
 
   Events.Camera_Updated.Add( OnCameraUpdate );
   Events.CombatVisBegin.Add( OnCombatVisBegin );
