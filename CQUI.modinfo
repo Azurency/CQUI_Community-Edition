@@ -27,7 +27,7 @@
       <zh_Hans_CN>一键化操作，轻松管理您的帝国</zh_Hans_CN>
       <pl_PL>Zmniejsz ilość kliknięć i spraw by zarządzanie imperium było łatwiejsze.</pl_PL>
       <ru_RU>Убирает лишние клики и облегчает управление империей</ru_RU>
-      <de_DE>Reduziert die Anzahl der Klicks und macht das CIV-Management einfach.</de_DE>
+      <de_DE>Reduziert die Anzahl der Klicks und vereinfacht das Civ-Management.</de_DE>
       <it_IT>Riduce i click e facilita la gestione dell'impero.</it_IT>
       <ko_KR>문명 게임 플레이를 더욱 간편하게 해주는 CQUI 모드입니다</ko_KR>
     </Text>
@@ -45,24 +45,28 @@
     <File>Assets/cqui_toplayer.xml</File>
     <File>Assets/cqui_toplayer.lua</File>
     <File>Assets/Text/Gossip_Text.xml</File>
+    <File>Assets/Text/Gossip_Text_de.xml</File>
+    <File>Assets/Text/Gossip_Text_ja.xml</File>
     <File>Assets/Text/cqui_text_general.xml</File>
     <File>Assets/Text/cqui_text_general_de.xml</File>
+    <File>Assets/Text/cqui_text_general_es.xml</File>
     <File>Assets/Text/cqui_text_general_fr.xml</File>
     <File>Assets/Text/cqui_text_general_it.xml</File>
+    <File>Assets/Text/cqui_text_general_ja.xml</File>
     <File>Assets/Text/cqui_text_general_ko.xml</File>
     <File>Assets/Text/cqui_text_general_pl.xml</File>
     <File>Assets/Text/cqui_text_general_ru.xml</File>
     <File>Assets/Text/cqui_text_general_zh.xml</File>
-    <File>Assets/Text/cqui_text_general_es.xml</File>
     <File>Assets/Text/cqui_text_settings.xml</File>
     <File>Assets/Text/cqui_text_settings_de.xml</File>
+    <File>Assets/Text/cqui_text_settings_es.xml</File>
     <File>Assets/Text/cqui_text_settings_fr.xml</File>
     <File>Assets/Text/cqui_text_settings_it.xml</File>
+    <File>Assets/Text/cqui_text_settings_ja.xml</File>
     <File>Assets/Text/cqui_text_settings_ko.xml</File>
     <File>Assets/Text/cqui_text_settings_pl.xml</File>
     <File>Assets/Text/cqui_text_settings_ru.xml</File>
     <File>Assets/Text/cqui_text_settings_zh.xml</File>
-    <File>Assets/Text/cqui_text_settings_es.xml</File>
     <File>Assets/UI/actionpanel.lua</File>
     <File>Assets/UI/citysupport.lua</File>
     <File>Assets/UI/civ6common.lua</File>
@@ -137,36 +141,39 @@
     <File>Integrations/BTS/UI/Choosers/tradeoriginchooser.lua</File>
     <File>Integrations/BTS/Text/bts_text.xml</File>
     <File>Integrations/BTS/Text/bts_text_de.xml</File>
+    <File>Integrations/BTS/Text/bts_text_es.xml</File>
     <File>Integrations/BTS/Text/bts_text_fr.xml</File>
     <File>Integrations/BTS/Text/bts_text_it.xml</File>
+    <File>Integrations/BTS/Text/bts_text_ja.xml</File>
     <File>Integrations/BTS/Text/bts_text_ko.xml</File>
     <File>Integrations/BTS/Text/bts_text_pl.xml</File>
     <File>Integrations/BTS/Text/bts_text_ru.xml</File>
     <File>Integrations/BTS/Text/bts_text_zh.xml</File>
-    <File>Integrations/BTS/Text/bts_text_es.xml</File>
     <File>Integrations/URS/reportscreen.lua</File>
     <File>Integrations/URS/reportscreen.xml</File>
     <File>Integrations/URS/unitpromotionpopup.lua</File>
     <File>Integrations/URS/Text/urs_text.xml</File>
     <File>Integrations/URS/Text/urs_text_de.xml</File>
+    <File>Integrations/URS/Text/urs_text_es.xml</File>
     <File>Integrations/URS/Text/urs_text_fr.xml</File>
     <File>Integrations/URS/Text/urs_text_it.xml</File>
+    <File>Integrations/URS/Text/urs_text_ja.xml</File>
     <File>Integrations/URS/Text/urs_text_ko.xml</File>
     <File>Integrations/URS/Text/urs_text_pl.xml</File>
     <File>Integrations/URS/Text/urs_text_ru.xml</File>
     <File>Integrations/URS/Text/urs_text_zh.xml</File>
-    <File>Integrations/URS/Text/urs_text_es.xml</File>
     <File>Integrations/IDS/diplomacydealview.lua</File>
     <File>Integrations/IDS/diplomacydealview.xml</File>
     <File>Integrations/IDS/Text/ids_text.xml</File>
     <File>Integrations/IDS/Text/ids_text_de.xml</File>
+    <File>Integrations/IDS/Text/ids_text_es.xml</File>
     <File>Integrations/IDS/Text/ids_text_fr.xml</File>
     <File>Integrations/IDS/Text/ids_text_it.xml</File>
+    <File>Integrations/IDS/Text/ids_text_ja.xml</File>
     <File>Integrations/IDS/Text/ids_text_ko.xml</File>
     <File>Integrations/IDS/Text/ids_text_pl.xml</File>
     <File>Integrations/IDS/Text/ids_text_ru.xml</File>
     <File>Integrations/IDS/Text/ids_text_zh.xml</File>
-    <File>Integrations/IDS/Text/ids_text_es.xml</File>
     <File>Integrations/ML/UI/minimappanel.lua</File>
     <File>Integrations/ML/UI/minimappanel.xml</File>
     <File>Integrations/ML/UI/Panels/modallenspanel.lua</File>
@@ -174,20 +181,25 @@
     <File>Integrations/ML/morelenses_colors.sql</File>
     <File>Integrations/ML/Text/morelenses_text.xml</File>
     <File>Integrations/ML/Text/morelenses_text_de.xml</File>
+    <File>Integrations/ML/Text/morelenses_text_es.xml</File>
     <File>Integrations/ML/Text/morelenses_text_fr.xml</File>
     <File>Integrations/ML/Text/morelenses_text_it.xml</File>
+    <File>Integrations/ML/Text/morelenses_text_ja.xml</File>
     <File>Integrations/ML/Text/morelenses_text_ko.xml</File>
     <File>Integrations/ML/Text/morelenses_text_pl.xml</File>
     <File>Integrations/ML/Text/morelenses_text_ru.xml</File>
     <File>Integrations/ML/Text/morelenses_text_zh.xml</File>
-    <File>Integrations/ML/Text/morelenses_text_es.xml</File>
     <File>Integrations/BES/UI/espionagesupport.lua</File>
     <File>Integrations/BES/UI/Choosers/espionagechooser.lua</File>
     <File>Integrations/BES/UI/Choosers/espionagechooser.xml</File>
     <File>Integrations/BES/UI/PartialScreens/espionageoverview.lua</File>
     <File>Integrations/BES/UI/PartialScreens/espionageoverview.xml</File>
     <File>Integrations/BES/Text/bes_text.xml</File>
+    <File>Integrations/BES/Text/bes_text_de.xml</File>
     <File>Integrations/BES/Text/bes_text_es.xml</File>
+    <File>Integrations/BES/Text/bes_text_it.xml</File>
+    <File>Integrations/BES/Text/bes_text_ja.xml</File>
+    <File>Integrations/BES/Text/bes_text_ru.xml</File>
   </Files>
 
   <Components>
