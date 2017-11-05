@@ -4,34 +4,34 @@
     <!-- oerms: This file extends the vanilla InGameText.xml -->
     <!-- Extended variables for world ranking from 20 to 30 players -->
 		<Row Tag="LOC_WORLD_RANKINGS_21_PLACE" Language="de_DE">
-			<Text>einundzwanzigstem</Text>
+			<Text>einundzwanzigsten</Text>
 		</Row>
     <Row Tag="LOC_WORLD_RANKINGS_22_PLACE" Language="de_DE">
-			<Text>zweiundzwanzigstem</Text>
+			<Text>zweiundzwanzigsten</Text>
 		</Row>
     <Row Tag="LOC_WORLD_RANKINGS_23_PLACE" Language="de_DE">
-			<Text>dreiundzwanzigstem</Text>
+			<Text>dreiundzwanzigsten</Text>
 		</Row>
     <Row Tag="LOC_WORLD_RANKINGS_24_PLACE" Language="de_DE">
-			<Text>vierundzwanzigstem</Text>
+			<Text>vierundzwanzigsten</Text>
 		</Row>
     <Row Tag="LOC_WORLD_RANKINGS_25_PLACE" Language="de_DE">
-			<Text>fünfundzwanzigstem</Text>
+			<Text>fünfundzwanzigsten</Text>
 		</Row>
     <Row Tag="LOC_WORLD_RANKINGS_26_PLACE" Language="de_DE">
-			<Text>sechsundzwanzigstem</Text>
+			<Text>sechsundzwanzigsten</Text>
 		</Row>
     <Row Tag="LOC_WORLD_RANKINGS_27_PLACE" Language="de_DE">
-			<Text>siebenundzwanzigstem</Text>
+			<Text>siebenundzwanzigsten</Text>
 		</Row>
     <Row Tag="LOC_WORLD_RANKINGS_28_PLACE" Language="de_DE">
-			<Text>achtundzwanzigstem</Text>
+			<Text>achtundzwanzigsten</Text>
 		</Row>
     <Row Tag="LOC_WORLD_RANKINGS_29_PLACE" Language="de_DE">
-			<Text>neunundzwanzigstem</Text>
+			<Text>neunundzwanzigsten</Text>
 		</Row>
     <Row Tag="LOC_WORLD_RANKINGS_30_PLACE" Language="de_DE">
-			<Text>dreißigstem</Text>
+			<Text>dreißigsten</Text>
 		</Row>
  	</LocalizedText>
 </GameData>
