@@ -47,6 +47,7 @@
     <File>Assets/cqui_toplayer.lua</File>
     <File>Assets/Text/Gossip_Text.xml</File>
     <File>Assets/Text/Gossip_Text_pt.xml</File>
+    <File>Assets/Text/cqui_InGameText.xml</File>
     <File>Assets/Text/cqui_text_general.xml</File>
     <File>Assets/Text/cqui_text_general_de.xml</File>
     <File>Assets/Text/cqui_text_general_fr.xml</File>
