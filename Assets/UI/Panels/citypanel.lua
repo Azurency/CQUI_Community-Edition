@@ -645,6 +645,7 @@ function ViewMain( data:table )
   -- CQUI get real housing from improvements value
   local selectedCityID = selectedCity:GetID();
   local CQUI_HousingFromImprovements = CQUI_HousingFromImprovementsTable[selectedCityID];
+
   Controls.HousingNum:SetText( data.Population );
   colorName = GetPercentGrowthColor( data.HousingMultiplier );
   Controls.HousingNum:SetColorByName( colorName );
@@ -1424,7 +1425,7 @@ function CQUI_UpdateSelectedCityCitizens( plotId:number )
 end
 
 -- ===========================================================================
---CQUI get real housing from improvements
+-- CQUI get real housing from improvements
 function CQUI_HousingFromImprovementsTableInsert (pCityID, CQUI_HousingFromImprovements)
   CQUI_HousingFromImprovementsTable[pCityID] = CQUI_HousingFromImprovements;
 end
@@ -1515,7 +1516,9 @@ function Initialize()
   LuaEvents.CQUI_ToggleGrowthTile.Add( CQUI_ToggleGrowthTile );
   LuaEvents.CQUI_SettingsUpdate.Add( CQUI_SettingsUpdate );
   LuaEvents.RefreshCityPanel.Add(Refresh);
-  LuaEvents.CQUI_RealHousingFromImprovementsCalculated.Add(CQUI_HousingFromImprovementsTableInsert);    --CQUI get real housing from improvements values
+  LuaEvents.CQUI_RealHousingFromImprovementsCalculated.Add(CQUI_HousingFromImprovementsTableInsert);    -- CQUI get real housing from improvements values
+  LuaEvents.CQUI_CityLostTileToCultureBomb.Add( Refresh );    -- CQUI update real housing from improvements when a city lost tile to a Culture Bomb
+  LuaEvents.CQUI_IndiaPlayerResearchedSanitation.Add( Refresh );    -- CQUI update real housing from improvements when play as India and researched Sanitation
 
   -- Truncate possible static text overflows
   TruncateStringWithTooltip(Controls.BreakdownLabel,  MAX_BEFORE_TRUNC_STATIC_LABELS, Controls.BreakdownLabel:GetText());

@@ -1172,6 +1172,13 @@ function OnResearchComplete( ePlayer:number, eTech:number)
 
         --------------------------------------------------------------------------
 
+    -- CQUI update all cities real housing when play as India and researched sanitation
+    if(PlayerConfigurations[ePlayer]:GetCivilizationTypeName() == "CIVILIZATION_INDIA") then
+      if eTech == 40 then    -- Sanitation (Index == 40)
+        LuaEvents.CQUI_IndiaPlayerResearchedSanitation();
+      end
+    end
+
   end
 end
 

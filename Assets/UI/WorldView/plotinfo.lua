@@ -503,6 +503,15 @@ function OnDistrictAddedToMap( playerID: number, districtID : number, cityID :nu
     OnMapYieldsChanged();
     -- UI.DeselectAllCities();
   end
+
+  -- CQUI update citizens and data for close cities within 4 tiles when city founded
+  -- we use it only to update real housing for a city that loses a 3rd radius tile to a city that is founded within 4 tiles
+  if playerID == Game.GetLocalPlayer() then
+    if districtType == CITY_CENTER_DISTRICT_INDEX then
+      local kCity = CityManager.GetCity(playerID, cityID);
+      CQUI_UpdateCloseCitiesCitizensWhenCityFounded(kCity);
+    end
+  end
 end
 
 function OnBuildingAddedToMap( plotX:number, plotY:number, buildingType:number, misc1, misc2, misc3 )
@@ -942,6 +951,37 @@ function CQUI_UpdateCloseCitiesCitizensWhenSwapTiles(kPlot)
   local m_pCity:table = Players[Game.GetLocalPlayer()]:GetCities();
   for i, pCity in m_pCity:Members() do
     if Map.GetPlotDistance(kPlot:GetX(), kPlot:GetY(), pCity:GetX(), pCity:GetY()) <= 3 then
+      local pCitizens   :table = pCity:GetCitizens();
+      local tParameters :table = {};
+
+      if pCitizens:IsFavoredYield(YieldTypes.CULTURE) then
+        tParameters[CityCommandTypes.PARAM_FLAGS] = 0;        -- Set favoured
+        tParameters[CityCommandTypes.PARAM_DATA0] = 1;        -- on
+      elseif pCitizens:IsDisfavoredYield(YieldTypes.CULTURE) then
+        tParameters[CityCommandTypes.PARAM_FLAGS] = 1;        -- Set Ignored
+        tParameters[CityCommandTypes.PARAM_DATA0] = 1;        -- on
+      else
+        tParameters[CityCommandTypes.PARAM_FLAGS] = 0;        -- Set favoured
+        tParameters[CityCommandTypes.PARAM_DATA0] = 0;        -- off
+      end
+
+      tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = YieldTypes.CULTURE;  -- Yield type
+      CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, tParameters);
+
+      local pCityID = pCity:GetID();
+      LuaEvents.CQUI_CityInfoUpdated(pCityID);
+    end
+  end
+end
+
+-- ===========================================================================
+-- CQUI update citizens and data for close cities within 4 tiles when city founded
+-- we use it only to update real housing for a city that loses a 3rd radius tile to a city that is founded within 4 tiles
+function CQUI_UpdateCloseCitiesCitizensWhenCityFounded(kCity)
+
+  local m_pCity:table = Players[Game.GetLocalPlayer()]:GetCities();
+  for i, pCity in m_pCity:Members() do
+    if Map.GetPlotDistance(kCity:GetX(), kCity:GetY(), pCity:GetX(), pCity:GetY()) == 4 then
       local pCitizens   :table = pCity:GetCitizens();
       local tParameters :table = {};
 
