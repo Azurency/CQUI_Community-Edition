@@ -67,13 +67,15 @@ function OnLeaderRightClicked(ms_SelectedPlayerID : number )
   local pPlayer = Players[ms_LocalPlayerID];
   local iPlayerDiploState = pPlayer:GetDiplomaticAI():GetDiplomaticStateIndex(ms_SelectedPlayerID);
   local relationshipHash = GameInfo.DiplomaticStates[iPlayerDiploState].Hash;
+  --ARISTOS: to check if Peace Deal is valid
+  local bValidAction, tResults = pPlayer:GetDiplomacy():IsDiplomaticActionValid("DIPLOACTION_PROPOSE_PEACE_DEAL", ms_SelectedPlayerID, true); --ARISTOS
   if (not (relationshipHash == DiplomaticStates.WAR)) then
     if (not DealManager.HasPendingDeal(ms_LocalPlayerID, ms_SelectedPlayerID)) then
       DealManager.ClearWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayerID, ms_SelectedPlayerID);
     end
     DiplomacyManager.RequestSession(ms_LocalPlayerID, ms_SelectedPlayerID, "MAKE_DEAL");
-  --ARISTOS: To make Right Click on leader go directly to peace deal
-  else
+  --ARISTOS: To make Right Click on leader go directly to peace deal if Peace Deal is valid
+  elseif bValidAction then
     if (not DealManager.HasPendingDeal(ms_LocalPlayerID, ms_SelectedPlayerID)) then
       DealManager.ClearWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayerID, ms_SelectedPlayerID);
       local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayerID, ms_SelectedPlayerID);
