@@ -4,13 +4,13 @@
     <!-- GERMAN -->
 
     <Row Tag="LOC_CQUI_BINDINGS" Language="de_DE">
-      <Text>Tastaturbelegung</Text>
+      <Text>Tastenbelegung</Text>
     </Row>
     <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN" Language="de_DE">
-      <Text>Belegungsmodus</Text>
+      <Text>Voreinstellungen (s.a. Tooltip!)</Text>
     </Row>
     <Row Tag="LOC_CQUI_BINDINGS_DROPDOWN_TOOLTIP" Language="de_DE">
-      <Text>Standard: Unverändert[NEWLINE]Klassisch: Civ V Belegung[NEWLINE]Erweitert: Civ V Belegung mit folgenden Veränderungen[NEWLINE]  WASD Kamera-Kontrolle[NEWLINE]  Q/E Einheit/Stadt Cycling[NEWLINE]  Shift Wechsel Stadt/Einheit Auswahl[NEWLINE]  Verfolgung/Airstrike  verändert zu (alt) + Q/S[NEWLINE]  Hinweis: Lösche W/E Belegung in den Einstellungen, damit es wie gewünscht funktioniert!</Text>
+      <Text>Standard: Unverändert[NEWLINE]Klassisch: Civ V Belegung[NEWLINE]Erweitert: Civ V Belegung mit folgenden Veränderungen[NEWLINE]  WASD → Kamera-Kontrolle[NEWLINE]  Q/E → vorherige/nächste Einheit oder Stadt [NEWLINE]  Umschalt → Wechsel Stadt/Einheit Auswahl[NEWLINE]  Alt + Q/S → Verfolgung/Airstrike[NEWLINE] [NEWLINE]Hinweis: Lösche die Belegung von W und E in den Einstellungen!</Text>
     </Row>
     <Row Tag="LOC_CQUI_BINDINGS_CLASSIC" Language="de_DE">
       <Text>Klassisch</Text>
@@ -25,7 +25,7 @@
       <Text>Stadtansicht</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK" Language="de_DE">
-      <Text>Stadtverteidigung verhindert Rundenende</Text>
+      <Text>Erzwinge Stadtverteid. für Rundenende</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_BLOCKONCITYATTACK_TOOLTIP" Language="de_DE">
       <Text>Der "Nächste Runde"-Button ist blockiert, solange eine Stadtverteidigung möglich ist.</Text>
@@ -37,16 +37,34 @@
       <Text>Produktionsliste einschalten</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH" Language="de_DE">
-      <Text>Zeige Overlay Grenzausdehnung</Text>
+      <Text>Zeige Grenzausdehnungs-Overlay</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP" Language="de_DE">
-      <Text>Kann außerdem aktiviert werden per Anklicken des Grenzausdehnungssymbols in der Stadtansicht</Text>
+      <Text>Kann auch aktiviert werden per Anklicken des Grenzausdehnungssymbols in der Stadtansicht.</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER" Language="de_DE">
-      <Text>Zeige aktive BürgerIcons beim Hovern</Text>
+      <Text>Zeige Info zu Stadt-Management beim Hovern</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP" Language="de_DE">
-      <Text>Zeige BürgerIcons, Erträge pro Feld und Grenzausdehnung beim Hovern.</Text>
+      <Text>Zeige Bürger-Icons, Erträge pro Feld und Grenzausdehnung, wenn die Maus über dem Stadtbanner steht.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITIZENICONSONHOVER" Language="de_DE">
+      <Text>Zeige Bürger-Icons beim Hovern</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITIZENICONSONHOVER_TOOLTIP" Language="de_DE">
+      <Text>Zeige Bürger-Icons, wenn die Maus über dem Stadtbanner steht.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEONHOVER" Language="de_DE">
+      <Text>Zeige Stadtgebiet beim Hovern.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEONHOVER_TOOLTIP" Language="de_DE">
+      <Text>Zeige die Gebiete, an denen Einwohner arbeiten, wenn die Maus über dem Stadtbanner steht.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEINSCREEN" Language="de_DE">
+      <Text>Zeige Stadtgebiet im Stadtbildschirm</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_CITYVIEW_SHOWCITYMANAGEINSCREEN_TOOLTIP" Language="de_DE">
+      <Text>Zeige Stadtgebiet, wenn der Stadtbildschirm geöffnet wird.</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_HEADER" Language="de_DE">
       <Text>Smartbanner</Text>
@@ -55,40 +73,40 @@
       <Text>Aktiviere Smartbanner</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP" Language="de_DE">
-      <Text>Zeige neue Symbole und Informationen im Stadtbanner an.</Text>
+      <Text>Zeige zusätzliche Symbole und Informationen im Stadtbanner an.</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="de_DE">
-      <Text>Zeige ein [ICON_EXCLAMATION] , immer wenn ein frei verfügbarer Bürger automatisch von der StadtverwaltungsAI zugewiesen wurde.</Text>
+      <Text>Zeige ein [ICON_EXCLAMATION], immer wenn ein frei verfügbarer Bürger automatisch von der Stadtverwaltungs-KI zugewiesen wurde.</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_DISTRICTS_TOOLTIP" Language="de_DE">
-      <Text>Zeige die gebauten Bezirke als Symbole im Banner an.</Text>
+      <Text>Zeige die errichteten Bezirke als Symbole im Banner an.</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_POPULATION_TOOLTIP" Language="de_DE">
-      <Text>Zeige die Rundenzahl bis zum Bevölkerungswachstum[NEWLINE]und die Wohnraumbelegung an.</Text>
+      <Text>Zeige die Rundenzahl bis zum Bevölkerungswachstum und die Wohnraumbelegung an.</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTBANNER_CULTURAL_TOOLTIP" Language="de_DE">
       <Text>Zeige die Rundenzahl bis zur Grenzausdehnung an.</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON" Language="de_DE">
-      <Text>Smart BürgerIcons</Text>
+      <Text>Smart Bürger-Icons</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICON_TOOLTIP" Language="de_DE">
-      <Text>Transparenz und Größe der BürgerIcons einstellen</Text>
+      <Text>Zeige bearbeitete Bürger-Icons in spezieller Transparenz und Größe.</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONALPHA" Language="de_DE">
-      <Text>Smart BürgerIcon Transparenz</Text>
+      <Text>Transparenz der Smart Bürger-Icon </Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_SMARTWORKICONSIZE" Language="de_DE">
-      <Text>Smart BürgerIcon Größe</Text>
+      <Text>Größe der Smart Bürger-Icon</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_WORKICONS_HEADER" Language="de_DE">
-      <Text>BürgerIcons</Text>
+      <Text>Bürger-Icons</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_WORKICONALPHA" Language="de_DE">
-      <Text>BürgerIcon Transparenz</Text>
+      <Text>Transparenz des Bürger-Icon</Text>
     </Row>
     <Row Tag="LOC_CQUI_CITYVIEW_WORKICONSIZE" Language="de_DE">
-      <Text>BürgerIcon Größe</Text>
+      <Text>Größe des Bürger-Icon</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL" Language="de_DE">
       <Text>Allgemein</Text>
@@ -97,22 +115,22 @@
       <Text>Versteckt</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_MINIMAPSIZE" Language="de_DE">
-      <Text>Minimapgröße</Text>
+      <Text>Größe der Minimap</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE" Language="de_DE">
-      <Text>Verbesserte Ressourcensymbole</Text>
+      <Text>Erschlossene Ressourcensymbole</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_RESOURCEDIMMINGSTYLE_TOOLTIP" Language="de_DE">
-      <Text>Opak: Zeige immer Ressourcensymbole[NEWLINE]Transparent: Verbesserte Ressourcensymbole sind transparent[NEWLINE]Versteckt: Verbesserte Ressourcensymbole werden nicht angezeigt</Text>
+      <Text>Opak: Zeige immer Ressourcensymbole.[NEWLINE]Transparent: Erschlossene Ressourcensymbole sind transparent.[NEWLINE]Versteckt: Erschlossene Ressourcensymbole werden nicht angezeigt.</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="de_DE">
-      <Text>Zeige Luxusgüter im Top-Panel</Text>
+      <Text>Zeige Luxusgüter im Top-Panel.</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="de_DE">
       <Text>Opak</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" Language="de_DE">
-      <Text>Ansicht Erträge immer AN</Text>
+      <Text>Erträge-Anzeige immer AN</Text>
     </Row>
     <Row Tag="LOC_CQUI_GENERAL_TRANSPARENT" Language="de_DE">
       <Text>Transparent</Text>
@@ -121,10 +139,10 @@
       <Text>Nachrichten</Text>
     </Row>
     <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE" Language="de_DE">
-      <Text>Nachrichtenauswahl</Text>
+      <Text>Nachrichten kürzen</Text>
     </Row>
     <Row Tag="LOC_CQUI_GOSSIP_TRIMMESSAGE_TOOLTIP" Language="de_DE">
-      <Text>Entfernt die meisten unnötigen Beschreibungen innerhalb der Nachricht, von wo die Nachricht herkam</Text>
+      <Text>Kürzt die Nachrichten auf das Wesentliche und fügt Symbole hinzu.</Text>
     </Row>
     <Row Tag="LOC_CQUI_LENSES" Language="de_DE">
       <Text>Linsen</Text>
@@ -138,26 +156,38 @@
     <Row Tag="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS" Language="de_DE">
       <Text>Automat. Späher-Linse</Text>
     </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWNOTHINGTODO_BUILDER" Language="de_DE">
+      <Text>Zeigt untätige in Handwerker-Linse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWNOTHINGTODO_BUILDER_TOOLTIP" Language="de_DE">
+      <Text>Zeigt untätige Hex-Felder (rot) in Handwerker-Linse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWGENERIC_BUILDER" Language="de_DE">
+      <Text>Normale Anzeige in Handwerker-Linse</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_LENSES_SHOWGENERIC_BUILDER_TOOLTIP" Language="de_DE">
+      <Text>Zeige normale Felder (weiß) in Handwerker-Linse</Text>
+    </Row>
     <Row Tag="LOC_CQUI_POPUPS" Language="de_DE">
       <Text>Popups</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS_ALWAYSOPENTECHTREES" Language="de_DE">
-      <Text>Zeige immer ganze Bäume statt Popups</Text>
+      <Text>Zeige immer ganze Bäume statt Popup.</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="de_DE">
-      <Text>Tech/Ausrichtung Popup Anzeige</Text>
+      <Text>Popup-Anzeige bei Technol./Ausr.</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="de_DE">
-      <Text>Zeige das Popup an, das erscheint, wenn eine neue Tech oder Ausrichtung abgeschlossen wurde</Text>
+      <Text>Zeige das Popup an, das erscheint, wenn eine neue Technologie oder Ausrichtung abgeschlossen wurde</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="de_DE">
-      <Text>Tech/Ausrichtung Popup Audio</Text>
+      <Text>Audio bei Technol./Ausr.</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="de_DE">
-      <Text>Spiele das Popup-Audio ab, das erfolgt, wenn eine neue Tech oder Ausrichtung abgeschlossen wurde. Kann völlig unabhängig von der visuellen Popup-Komponente ein- und ausgeschaltet werden</Text>
+      <Text>Spiele das Popup-Audio bei Abschluss einer neuen Technologie oder Ausrichtung ab. Kann unabhängig von der visuellen Popup-Komponente ein- und ausgeschaltet werden.</Text>
     </Row>
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="de_DE">
-      <Text>Denk dran: CQUI Einstellungen werden im individuellen Savegame gespeichert![NEWLINE]Wenn Du die Einstellungen dauerhaft ändern möchtest, dann befolge bitte die Anweisungen [NEWLINE]in der Datei cqui_settings.sql im Verzeichnis[MOD INSTALL DIRECTORY]/CQUI/Assets.</Text>
+      <Text>Merke: CQUI Einstellungen werden im individuellen Savegame gespeichert![NEWLINE]Wenn Du die Einstellungen dauerhaft ändern möchtest, dann befolge bitte die Anweisungen [NEWLINE]in der Datei cqui_settings.sql im Verzeichnis [MOD INSTALL DIRECTORY]/CQUI/Assets.</Text>
     </Row>
     <Row Tag="LOC_CQUI_UNITS" Language="de_DE">
       <Text>Einheiten</Text>
@@ -168,6 +198,47 @@
     <Row Tag="LOC_CQUI_UNITS_AUTOEXPANDUNITACTIONS" Language="de_DE">
       <Text>Ansicht aller Befehle im Einheiten-Panel</Text>
     </Row>
-
+    <Row Tag="LOC_CQUI_GENERAL_SHOWPRD" Language="de_DE">
+      <Text>Zeige Politik-Erinnerungs-Pop-Up</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWPRD_TOOLTIP" Language="de_DE">
+      <Text>Zeigt am Rundenende ein Popup, um an neu erhaltene Politik-Karten zu erinnern.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_SCREEN" Language="de_DE">
+      <Text>Händler-Bildschirm</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_SHOW_SORT_ORDER" Language="de_DE">
+      <Text>Zeige Sortierung</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_SHOW_SORT_ORDER_TOOLTIP" Language="de_DE">
+      <Text>Zeigt die Sortierung der verschiedenen Erträge in den Händler-Bildschirmen.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_COLOR_YIELDS" Language="de_DE">
+      <Text>Färbe Erträge</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_COLOR_YIELDS_TOOLTIP" Language="de_DE">
+      <Text>Färbt die Werte der Erträge je nach Ertrags-Typ. ZB. Nahrungserträge werden grün dargestellt.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_ADD_DIVIDER" Language="de_DE">
+      <Text>Trenner zwischen Gruppen</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_TRADER_ADD_DIVIDER_TOOLTIP" Language="de_DE">
+      <Text>Es wird ein Trenner zwischen den Gruppen in der Handelsübersicht angezeigt.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SCREEN" Language="de_DE">
+      <Text>Ratschläge</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWPRODUCTION" Language="de_DE">
+      <Text>Zeige Ratschläge</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWTECH" Language="de_DE">
+      <Text>Ratschläge zu Technol./Ausricht.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWIMPROVEMENTS" Language="de_DE">
+      <Text>Zeige Ratschläge zu Felder-Verbesserungen</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_RECOMMENDATIONS_SHOWCITYDETAILADVISOR" Language="de_DE">
+      <Text>Zeige Stadt-Ratgeber</Text>
+    </Row>
   </LocalizedText>
 </GameData>

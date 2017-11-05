@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <LocalizedText>
+    <!-- GERMAN -->
+    <Replace Tag="LOC_ESPIONAGECHOOSER_FILTER_ALL" Language="de_DE">
+      <Text>Alle</Text>
+    </Replace>
+    <Replace Tag="LOC_ESPIONAGECHOOSER_FILTER_SHOW_CITIES" Language="de_DE">
+      <Text>Zeige Städte</Text>
+    </Replace>
+  <LocalizedText>
+</GameData>

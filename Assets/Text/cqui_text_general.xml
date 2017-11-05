@@ -14,7 +14,7 @@
       <Text>The current Technology, </Text>
     </Row>
     <Row Tag="LOC_CQUI_HALF_MESSAGE_E" Language="en_US">
-      <Text>, is one turn away from maximum Inspiration potential.</Text>
+      <Text>, is one turn away from maximum Inspiration bonus.</Text>
     </Row>
     <Row Tag="LOC_CQUI_FINISH_MESSAGE_E" Language="en_US">
       <Text>, is completed.</Text>

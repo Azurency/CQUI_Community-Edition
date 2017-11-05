@@ -3,9 +3,30 @@
   <LocalizedText>
     <!-- GERMAN -->
 
-    <!-- HUD Common Text -->
+    <!-- IDS -->
     <Replace Tag="LOC_IDS_DUMMY_KEY" Language="de_DE">
       <Text>Handelsübersicht</Text>
+    </Replace>
+    <Replace Tag="LOC_IDS_DEAL_TERMS" Language="de_DE">
+      <Text>Handelsbedingungen</Text>
+    </Replace>
+    <Replace Tag="LOC_IDS_DEAL_CEDE" Language="de_DE">
+      <Text>Zurücktreten</Text>
+    </Replace>
+    <Replace Tag="LOC_IDS_DEAL_RETURN" Language="de_DE">
+      <Text>Zurück</Text>
+    </Replace>
+    <Replace Tag="LOC_IDS_DEAL_TRADE" Language="de_DE">
+      <Text>[COLOR_Red]Handel[ENDCOLOR] mit</Text>
+    </Replace>
+    <Replace Tag="LOC_IDS_DEAL_SUZERAIN" Language="de_DE">
+      <Text>[COLOR_Civ6Blue]Suzerän[ENDCOLOR] von</Text>
+    </Replace>
+    <Replace Tag="LOC_IDS_DEAL_UNTRADEABLE" Language="de_DE">
+      <Text>nicht handelbar</Text>
+    </Replace>
+    <Replace Tag="LOC_IDS_DEAL_DUPLICATE" Language="de_DE"
+      <Text>Wiederholen</Text>
     </Replace>
 
   </LocalizedText>

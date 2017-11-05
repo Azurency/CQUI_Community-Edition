@@ -124,7 +124,7 @@
 			<Text>[ICON_Research_agreement] {1_CivName} and {2_CivName} formed a scientific partnership.</Text>
 		</Replace>
 		<Replace Tag="LOC_GOSSIP_RESEARCH_TECH" Language="en_US">
-			<Text>[ICON_Science] {1_CivName} completed research on {2_TechName}</Text>
+			<Text>[ICON_Science] {1_CivName} completed research on {2_TechName}.</Text>
 		</Replace>
 		<Replace Tag="LOC_GOSSIP_SPY_DISRUPT_ROCKETRY_DETECTED" Language="en_US">
 			<Text>[ICON_Pillaged] {1_CivName}'s Spaceport in {2_CityName} was sabotaged by {3_SpyPlayer}.</Text>
