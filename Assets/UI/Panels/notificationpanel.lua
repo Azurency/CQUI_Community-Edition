@@ -1430,8 +1430,8 @@ function OnNotificationAdded( playerID:number, notificationID:number )
       UI.DataError("Notification added Event but not found in manager. PlayerID - " .. tostring(playerID) .. " Notification ID - " .. tostring(notificationID));
     end
 
-    if notificationID	== 577 then                   -- CQUI: Notification when a City lost tile by Culture Bomb (Index == 577)
-      LuaEvents.CQUI_CityLostTileByCultureBomb();
+    if notificationID	== 577 then                   -- CQUI: Notification when a City lost tile to a Culture Bomb (Index == 577)
+      LuaEvents.CQUI_CityLostTileToCultureBomb();
     end
   end
 end

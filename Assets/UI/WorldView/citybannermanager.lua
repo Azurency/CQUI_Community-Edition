@@ -3260,12 +3260,16 @@ function CQUI_RealHousingFromImprovements(pCity)
       local kImprovementData = GameInfo.Improvements[eImprovementType].Housing;
         if kImprovementData == 1 then    -- farms, pastures etc.
           CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 1;
-        elseif kImprovementData == 2 then    -- stepwells
-          local CQUI_PlayerResearchedSanitation :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(40);    -- check if a player researched Sanitation (Index == 40)
-          if not CQUI_PlayerResearchedSanitation then
+        elseif kImprovementData == 2 then    -- kampungs and stepwells
+          if eImprovementType == 26 then    -- kampungs (Index == 26)
             CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
-          else
-            CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
+          else    -- stepwells
+            local CQUI_PlayerResearchedSanitation :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(40);    -- check if a player researched Sanitation (Index == 40)
+            if not CQUI_PlayerResearchedSanitation then
+              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
+            else
+              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
+            end
           end
         end
       end
@@ -3285,7 +3289,7 @@ function CQUI_OnCityInfoUpdated(pCityID)
 end
 
 -- ===========================================================================
-function CQUI_OnCityLostTileByCultureBomb()
+function CQUI_OnAllCitiesInfoUpdated()
   local m_pCity:table = Players[Game.GetLocalPlayer()]:GetCities();
   for i, pCity in m_pCity:Members() do
     local pCityID = pCity:GetID();
@@ -3357,7 +3361,8 @@ function Initialize()
   Events.CityWorkerChanged.Add(           OnCityWorkerChanged );
 
   LuaEvents.CQUI_CityInfoUpdated.Add( CQUI_OnCityInfoUpdated );
-  LuaEvents.CQUI_CityLostTileByCultureBomb.Add( CQUI_OnCityLostTileByCultureBomb );
+  LuaEvents.CQUI_CityLostTileToCultureBomb.Add( CQUI_OnAllCitiesInfoUpdated );
+  LuaEvents.CQUI_IndiaPlayerResearchedSanitation.Add( CQUI_OnAllCitiesInfoUpdated );
 
   LuaEvents.GameDebug_Return.Add(OnGameDebugReturn);
 
