@@ -4,28 +4,28 @@
     <!-- PORTUGUESE -->
 
     <!-- IDS -->
-    <Row Tag="LOC_IDS_DUMMY_KEY">
+    <Row Tag="LOC_IDS_DUMMY_KEY" Language="pt_BR">
       <Text>Ofertas atuais</Text>
     </Row>
-    <Row Tag="LOC_IDS_DEAL_TERMS">
+    <Row Tag="LOC_IDS_DEAL_TERMS" Language="pt_BR">
       <Text>Termos da oferta</Text>
     </Row>
-    <Row Tag="LOC_IDS_DEAL_CEDE">
+    <Row Tag="LOC_IDS_DEAL_CEDE" Language="pt_BR">
       <Text>Ceder</Text>
     </Row>
-    <Row Tag="LOC_IDS_DEAL_RETURN">
+    <Row Tag="LOC_IDS_DEAL_RETURN" Language="pt_BR">
       <Text>Retornar</Text>
     </Row>
-    <Row Tag="LOC_IDS_DEAL_TRADE">
+    <Row Tag="LOC_IDS_DEAL_TRADE" Language="pt_BR">
       <Text>[COLOR_Red]Comércio[ENDCOLOR] com</Text>
     </Row>
-    <Row Tag="LOC_IDS_DEAL_SUZERAIN">
+    <Row Tag="LOC_IDS_DEAL_SUZERAIN" Language="pt_BR">
       <Text>[COLOR_Civ6Blue]Suserano[ENDCOLOR] de</Text>
     </Row>
-    <Row Tag="LOC_IDS_DEAL_UNTRADEABLE">
+    <Row Tag="LOC_IDS_DEAL_UNTRADEABLE" Language="pt_BR">
       <Text>Não comercializável</Text>
     </Row>
-    <Row Tag="LOC_IDS_DEAL_DUPLICATE">
+    <Row Tag="LOC_IDS_DEAL_DUPLICATE" Language="pt_BR">
       <Text>Duplicado</Text>
     </Row>
 

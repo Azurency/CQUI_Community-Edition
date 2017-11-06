@@ -4,39 +4,39 @@
     <!-- PORTUGUESE -->
 
     <!-- HUD Common Text -->
-    <Row Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS">
+    <Row Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="pt_BR">
       <Text>Ofertas Atuais</Text>
     </Row>
-    <Row Tag="LOC_HUD_REPORTS_TAB_HIDE_CITY_BUILDINGS">
+    <Row Tag="LOC_HUD_REPORTS_TAB_HIDE_CITY_BUILDINGS" Language="pt_BR">
       <Text>Esconder edificações da cidade</Text>
     </Row>
     <!-- Current Deals -->
-    <Row Tag="LOC_CURRENT_DEALS_OUTGOING">
+    <Row Tag="LOC_CURRENT_DEALS_OUTGOING" Language="pt_BR">
       <Text>Saindo</Text>
     </Row>
-    <Row Tag="LOC_CURRENT_DEALS_INCOMING">
+    <Row Tag="LOC_CURRENT_DEALS_INCOMING" Language="pt_BR">
       <Text>Entrando</Text>
     </Row>
     <!-- Units Overview -->
-    <Row Tag="LOC_UNITS_MILITARY_LAND">
+    <Row Tag="LOC_UNITS_MILITARY_LAND" Language="pt_BR">
       <Text>Militar (Terra)</Text>
     </Row>
-    <Row Tag="LOC_UNITS_MILITARY_AIR">
+    <Row Tag="LOC_UNITS_MILITARY_AIR" Language="pt_BR">
       <Text>Militar (Ar)</Text>
     </Row>
-    <Row Tag="LOC_UNITS_MILITARY_SEA">
+    <Row Tag="LOC_UNITS_MILITARY_SEA" Language="pt_BR">
       <Text>Militar (Oceano)</Text>
     </Row>
-    <Row Tag="LOC_UNITS_VIEW_ON_THE_MAP">
+    <Row Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="pt_BR">
       <Text>Veja esta unidade no mapa.</Text>
     </Row>
-    <Row Tag="LOC_HUD_REPORTS_BONUSES_URS">
+    <Row Tag="LOC_HUD_REPORTS_BONUSES_URS" Language="pt_BR">
       <Text>Bônus</Text>
     </Row>
-    <Row Tag="LOC_HUD_REPORTS_PROMOTION_AVAILABLE">
+    <Row Tag="LOC_HUD_REPORTS_PROMOTION_AVAILABLE" Language="pt_BR">
       <Text>Promoção Disponível</Text>
     </Row>
-    <Row Tag="LOC_HUD_REPORTS_IN_FORMATION">
+    <Row Tag="LOC_HUD_REPORTS_IN_FORMATION" Language="pt_BR">
       <Text>Em formação</Text>
     </Row>
 
