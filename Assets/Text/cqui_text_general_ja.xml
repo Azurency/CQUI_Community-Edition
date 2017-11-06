@@ -52,5 +52,19 @@
 			<Text>兵営から遠隔攻撃が可能</Text>
 		</Replace>
 
+    <!-- Policyreminderpopup -->
+		<Replace Tag="LOC_POLICY_REMINDER_TITLE" Language="ja_JP">
+			<Text>政策の通知</Text>
+		</Replace>
+		<Replace Tag="LOC_POLICY_REMINDER_TEXT" Language="ja_JP">
+			<Text>新たな政策が解禁されました。</Text>
+		</Replace>
+		<Replace Tag="LOC_POLICY_REMINDER_ACTION_BUTTON" Language="ja_JP">
+			<Text>政策の変更</Text>
+		</Replace>
+		<Replace Tag="LOC_POLICY_REMINDER_ACTION_BUTTON_TOOLTIP" Language="ja_JP">
+			<Text>このターンは政策を変更できます。</Text>
+		</Replace>
+
 	</LocalizedText>
 </GameData>
