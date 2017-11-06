@@ -6,32 +6,32 @@
 		<Row Tag="LOC_WORLD_RANKINGS_21_PLACE" Language="ja_JP">
 			<Text>21位</Text>
 		</Row>
-    <Row Tag="LOC_WORLD_RANKINGS_22_PLACE" Language="ja_JP">
+		<Row Tag="LOC_WORLD_RANKINGS_22_PLACE" Language="ja_JP">
 			<Text>22位</Text>
 		</Row>
-    <Row Tag="LOC_WORLD_RANKINGS_23_PLACE" Language="ja_JP">
+		<Row Tag="LOC_WORLD_RANKINGS_23_PLACE" Language="ja_JP">
 			<Text>23位</Text>
 		</Row>
-    <Row Tag="LOC_WORLD_RANKINGS_24_PLACE" Language="ja_JP">
+		<Row Tag="LOC_WORLD_RANKINGS_24_PLACE" Language="ja_JP">
 			<Text>24位</Text>
 		</Row>
-    <Row Tag="LOC_WORLD_RANKINGS_25_PLACE" Language="ja_JP">
+		<Row Tag="LOC_WORLD_RANKINGS_25_PLACE" Language="ja_JP">
 			<Text>25位</Text>
 		</Row>
-    <Row Tag="LOC_WORLD_RANKINGS_26_PLACE" Language="ja_JP">
+		<Row Tag="LOC_WORLD_RANKINGS_26_PLACE" Language="ja_JP">
 			<Text>26位</Text>
 		</Row>
-    <Row Tag="LOC_WORLD_RANKINGS_27_PLACE" Language="ja_JP">
+		<Row Tag="LOC_WORLD_RANKINGS_27_PLACE" Language="ja_JP">
 			<Text>27位</Text>
 		</Row>
-    <Row Tag="LOC_WORLD_RANKINGS_28_PLACE" Language="ja_JP">
+		<Row Tag="LOC_WORLD_RANKINGS_28_PLACE" Language="ja_JP">
 			<Text>28位</Text>
 		</Row>
-    <Row Tag="LOC_WORLD_RANKINGS_29_PLACE" Language="ja_JP">
+		<Row Tag="LOC_WORLD_RANKINGS_29_PLACE" Language="ja_JP">
 			<Text>29位</Text>
 		</Row>
-    <Row Tag="LOC_WORLD_RANKINGS_30_PLACE" Language="ja_JP">
+		<Row Tag="LOC_WORLD_RANKINGS_30_PLACE" Language="ja_JP">
 			<Text>30位</Text>
 		</Row>
- 	</LocalizedText>
+	</LocalizedText>
 </GameData>

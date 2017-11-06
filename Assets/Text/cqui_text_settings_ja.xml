@@ -201,7 +201,7 @@
     <Row Tag="LOC_CQUI_GENERAL_SHOWPRD" Language="ja_JP">
       <Text>政策の通知を表示</Text>
     </Row>
-	<Row Tag="LOC_CQUI_GENERAL_SHOWPRD_TOOLTIP" Language="ja_JP">
+    <Row Tag="LOC_CQUI_GENERAL_SHOWPRD_TOOLTIP" Language="ja_JP">
       <Text>ターン終了前に、政策が変更可能なことをポップアップで通知する</Text>
     </Row>
     <Row Tag="LOC_CQUI_TRADER_SCREEN" Language="ja_JP">
