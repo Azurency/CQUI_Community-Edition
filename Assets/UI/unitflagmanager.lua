@@ -27,6 +27,7 @@ local FLAGSTYLE_NAVAL			:number= 4;
 local FLAGSTYLE_RELIGION		:number= 5;
 local FLAGTYPE_UNIT				:number= 0;
 local ZOOM_MULT_DELTA			:number = .01;
+local UNITTYPE_SPY        :number = 18;
 local TEXTURE_BASE				:string = "UnitFlagBase.dds";
 local TEXTURE_CIVILIAN			:string = "UnitFlagCivilian.dds";
 local TEXTURE_RELIGION			:string = "UnitFlagReligion.dds";
@@ -815,7 +816,7 @@ function UnitFlag.UpdatePromotions( self )
         self.m_Instance.New_Promotion_Flag:SetHide(true);
         --ARISTOS: to test for available promotions! Previous test using XPs was faulty (Firaxis... :rolleyes:)
         local bCanStart, tResults = UnitManager.CanStartCommand( pUnit, UnitCommandTypes.PROMOTE, true, true);
-        -- AZURENCY : CanStartCommand will return false if the unit have no movements left but still can have 
+        -- AZURENCY : CanStartCommand will return false if the unit have no movements left but still can have
         -- a promotion (maybe not this turn, but it have enough experience, so we'll show it on the flag anyway)
         if not bCanStart then
           bCanStart = unitExperience:GetExperiencePoints() >= unitExperience:GetExperienceForNextLevel()
@@ -1796,11 +1797,14 @@ function Refresh()
         -- If flag is visible, ensure it's being viewed that way; set plot for an update call.
         -- While event will handle in normal case, this is necessary for hotloading and flags are re-created.
         if pLocalPlayerVis:IsVisible(locX, locY) then
-          OnUnitVisibilityChanged(playerID, unitID, RevealedState.VISIBLE);
-          if plotsToUpdate[locX] == nil then
-            plotsToUpdate[locX] = {};
+          -- Timmeey86: Never show spies which do not belong to the local player
+          if playerID == Game.GetLocalPlayer() or unit:GetUnitType() ~= UNITTYPE_SPY then
+            OnUnitVisibilityChanged(playerID, unitID, RevealedState.VISIBLE);
+            if plotsToUpdate[locX] == nil then
+              plotsToUpdate[locX] = {};
+            end
+            plotsToUpdate[locX][locY] = true;	-- Mark for update
           end
-          plotsToUpdate[locX][locY] = true;	-- Mark for update
         end
 
       end
@@ -1812,7 +1816,7 @@ function Refresh()
         UpdateIconStack( locX, locY );
       end
     end
-  
+
     -- AZURENCY : update the stats of the flags on refresh
     local playerFlagInstances = m_UnitFlagInstances[ Game.GetLocalPlayer() ];
     for id, flag in pairs(playerFlagInstances) do
