@@ -722,7 +722,7 @@ end
 function ClearMovementPath()
   UILens.ClearLayerHexes( LensLayers.MOVEMENT_PATH );
   UILens.ClearLayerHexes( LensLayers.NUMBERS );
-  if (UI.GetInterfaceMode() ~= InterfaceModeTypes.RANGE_ATTACK) then
+  if (UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK) then
     UILens.ClearLayerHexes( LensLayers.ATTACK_RANGE );
   end
   m_cachedPathUnit = nil;

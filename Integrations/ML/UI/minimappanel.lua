@@ -148,6 +148,11 @@ function CQUI_UpdateMinimapSize()
     print_debug("Using previous minimap size")
   end
 
+  -- AZURENCY : Quick fix to avoid visual glitch when CQUI_MapSize is too big (with old saves before the setting change)
+  if CQUI_MapSize > 100 then
+    CQUI_MapSize = 100
+  end
+
   Options.SetGraphicsOption("General", "MinimapSize", CQUI_MapSize/100);
   UI.SetMinimapSize(CQUI_MapSize/100);
 
