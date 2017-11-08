@@ -78,7 +78,9 @@ function OnClickSwapTile( plotId:number )
 
   local tResults :table = CityManager.RequestCommand( pSelectedCity, CityCommandTypes.SWAP_TILE_OWNER, tParameters );
 
-  CQUI_UpdateCloseCitiesCitizensWhenSwapTiles(kPlot);    -- CQUI update citizens and data for close cities within 3 tiles when swap tiles
+  CQUI_UpdateCitiesCitizensWhenSwapTiles(pSelectedCity);    -- CQUI update citizens and data for a city that is a new tile owner
+  local pCity = Cities.GetPlotPurchaseCity(kPlot);    -- CQUI a city that was a previous tile owner
+  CQUI_UpdateCitiesCitizensWhenSwapTiles(pCity);    -- CQUI update citizens and data for a city that was a previous tile owner
   return true;
 end
 
@@ -502,18 +504,16 @@ function OnDistrictAddedToMap( playerID: number, districtID : number, cityID :nu
     OnPlotYieldChanged(districtX, districtY);
     OnMapYieldsChanged();
     -- UI.DeselectAllCities();
-  end
 
-  -- CQUI update citizens and data for close cities within 4 tiles when city founded
-  -- we use it only to update real housing for a city that loses a 3rd radius tile to a city that is founded within 4 tiles
-  if playerID == Game.GetLocalPlayer() then
-    if districtType == CITY_CENTER_DISTRICT_INDEX then
-      local kCity = CityManager.GetCity(playerID, cityID);
-      CQUI_UpdateCloseCitiesCitizensWhenCityFounded(kCity);
-    end
+    -- CQUI update citizens and data for close cities within 4 tiles when city founded
+    -- we use it only to update real housing for a city that loses a 3rd radius tile to a city that is founded within 4 tiles
+  elseif playerID == Game.GetLocalPlayer() then
+    local kCity = CityManager.GetCity(playerID, cityID);
+    CQUI_UpdateCloseCitiesCitizensWhenCityFounded(kCity);
   end
 end
 
+-- ===========================================================================
 function OnBuildingAddedToMap( plotX:number, plotY:number, buildingType:number, misc1, misc2, misc3 )
 end
 
@@ -945,33 +945,28 @@ function OnInputHandler( pInputStruct:table )
 end
 
 -- ===========================================================================
--- CQUI update citizens and data for close cities within 3 tiles when swap tiles
-function CQUI_UpdateCloseCitiesCitizensWhenSwapTiles(kPlot)
+-- CQUI update citizens and data for both cities when swap tiles
+function CQUI_UpdateCitiesCitizensWhenSwapTiles(pCity)
 
-  local m_pCity:table = Players[Game.GetLocalPlayer()]:GetCities();
-  for i, pCity in m_pCity:Members() do
-    if Map.GetPlotDistance(kPlot:GetX(), kPlot:GetY(), pCity:GetX(), pCity:GetY()) <= 3 then
-      local pCitizens   :table = pCity:GetCitizens();
-      local tParameters :table = {};
+  local pCitizens   :table = pCity:GetCitizens();
+  local tParameters :table = {};
 
-      if pCitizens:IsFavoredYield(YieldTypes.CULTURE) then
-        tParameters[CityCommandTypes.PARAM_FLAGS] = 0;        -- Set favoured
-        tParameters[CityCommandTypes.PARAM_DATA0] = 1;        -- on
-      elseif pCitizens:IsDisfavoredYield(YieldTypes.CULTURE) then
-        tParameters[CityCommandTypes.PARAM_FLAGS] = 1;        -- Set Ignored
-        tParameters[CityCommandTypes.PARAM_DATA0] = 1;        -- on
-      else
-        tParameters[CityCommandTypes.PARAM_FLAGS] = 0;        -- Set favoured
-        tParameters[CityCommandTypes.PARAM_DATA0] = 0;        -- off
-      end
-
-      tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = YieldTypes.CULTURE;  -- Yield type
-      CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, tParameters);
-
-      local pCityID = pCity:GetID();
-      LuaEvents.CQUI_CityInfoUpdated(pCityID);
-    end
+  if pCitizens:IsFavoredYield(YieldTypes.CULTURE) then
+    tParameters[CityCommandTypes.PARAM_FLAGS] = 0;        -- Set favoured
+    tParameters[CityCommandTypes.PARAM_DATA0] = 1;        -- on
+  elseif pCitizens:IsDisfavoredYield(YieldTypes.CULTURE) then
+    tParameters[CityCommandTypes.PARAM_FLAGS] = 1;        -- Set Ignored
+    tParameters[CityCommandTypes.PARAM_DATA0] = 1;        -- on
+  else
+    tParameters[CityCommandTypes.PARAM_FLAGS] = 0;        -- Set favoured
+    tParameters[CityCommandTypes.PARAM_DATA0] = 0;        -- off
   end
+
+  tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = YieldTypes.CULTURE;  -- Yield type
+  CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, tParameters);
+
+  local pCityID = pCity:GetID();
+  LuaEvents.CQUI_CityInfoUpdated(pCityID);
 end
 
 -- ===========================================================================

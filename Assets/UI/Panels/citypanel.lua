@@ -232,14 +232,12 @@ function CQUI_OnNextCity()
   local kCity:table = UI.GetHeadSelectedCity();
   UI.SelectNextCity(kCity);
   UI.PlaySound("UI_Click_Sweetener_Metal_Button_Small");
-  CQUI_UpdateSelectedCityCitizens();
 end
 
 function CQUI_OnPreviousCity()
   local kCity:table = UI.GetHeadSelectedCity();
   UI.SelectPrevCity(kCity);
   UI.PlaySound("UI_Click_Sweetener_Metal_Button_Small");
-  CQUI_UpdateSelectedCityCitizens();
 end
 
 function CQUI_OnLoadScreenClose()
@@ -1408,20 +1406,6 @@ function OnTutorial_ContextDisableItems( contextName:string, kIdsToDisable:table
       end
     end
   end
-end
-
--- ===========================================================================
-function CQUI_UpdateSelectedCityCitizens( plotId:number )
-
-  local pSelectedCity	:table = UI.GetHeadSelectedCity();
-  local kPlot			:table = Map.GetPlotByIndex(plotId);
-  local tParameters	:table = {};
-  tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
-  tParameters[CityCommandTypes.PARAM_X] = kPlot:GetX();
-  tParameters[CityCommandTypes.PARAM_Y] = kPlot:GetY();
-
-  local tResults :table = CityManager.RequestCommand( pSelectedCity, CityCommandTypes.MANAGE, tParameters );
-  return true;
 end
 
 -- ===========================================================================
