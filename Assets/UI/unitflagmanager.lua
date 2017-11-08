@@ -1771,6 +1771,7 @@ end
 --	This does not include the flags' positions in world space; those are
 --	updated on another event.
 -- ===========================================================================
+-- AZURENCY : is only use for hot reload (debug) and will show invisible units
 function Refresh()
   local pLocalPlayerVis = PlayersVisibility[Game.GetLocalPlayer()];
   if (pLocalPlayerVis ~= nil) then
@@ -1821,6 +1822,16 @@ function Refresh()
       end
     end
 
+  end
+end
+
+function CQUI_Refresh()
+  -- AZURENCY : update the stats of the flags on refresh
+  local playerFlagInstances = m_UnitFlagInstances[ Game.GetLocalPlayer() ];
+  for id, flag in pairs(playerFlagInstances) do
+    if (flag ~= nil) then
+      flag:UpdateStats();
+    end
   end
 end
 
@@ -2044,7 +2055,7 @@ function Initialize()
 
   ContextPtr:SetInitHandler( OnInit );
   ContextPtr:SetShutdown( OnShutdown );
-  ContextPtr:SetRefreshHandler( Refresh );
+  ContextPtr:SetRefreshHandler( CQUI_Refresh );
 
   Events.Camera_Updated.Add( OnCameraUpdate );
   Events.CombatVisBegin.Add( OnCombatVisBegin );
