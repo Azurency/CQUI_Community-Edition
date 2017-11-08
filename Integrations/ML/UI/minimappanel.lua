@@ -140,26 +140,30 @@ function CQUI_OnToggleBindings(mode: number)
 end
 
 function CQUI_UpdateMinimapSize()
+  -- AZURENCY : TODO remove this resize totally since its in base game now
   local size = GameConfiguration.GetValue("CQUI_MinimapSize");
   if size ~= nil then
-  CQUI_MapSize = size
+    CQUI_MapSize = size
   else
-  print_debug("Using previous minimap size")
+    print_debug("Using previous minimap size")
   end
 
+  Options.SetGraphicsOption("General", "MinimapSize", CQUI_MapSize/100);
+  UI.SetMinimapSize(CQUI_MapSize/100);
+
   --Cycles the minimap after resizing
-  local xSize = CQUI_MapSize
-  local ySize = CQUI_MapSize * CQUI_MapImageScaler
-  Controls.MinimapContainer:SetSizeVal(xSize, ySize);
-  Controls.MinimapImage:SetSizeVal(xSize, ySize);
-  Controls.MinimapBacking:SetSizeVal(xSize + CQUI_MapBackingXSizeDiff, ySize + CQUI_MapBackingYSizeDiff);
+  -- local xSize = CQUI_MapSize
+  -- local ySize = CQUI_MapSize * CQUI_MapImageScaler
+  -- Controls.MinimapContainer:SetSizeVal(xSize, ySize);
+  -- Controls.MinimapImage:SetSizeVal(xSize, ySize);
+  -- Controls.MinimapBacking:SetSizeVal(xSize + CQUI_MapBackingXSizeDiff, ySize + CQUI_MapBackingYSizeDiff);
   -- Controls.CollapseAnim:SetEndVal(0, Controls.MinimapImage:GetOffsetY() + Controls.MinimapImage:GetSizeY());
 
   --Squeezes the map buttons if extra space is needed
-  if(CQUI_MapSize < 256) then
-  Controls.OptionsStack:SetPadding(-7);
+  if(CQUI_MapSize < 15) then
+    Controls.OptionsStack:SetPadding(-7);
   else
-  Controls.OptionsStack:SetPadding(-3);
+    Controls.OptionsStack:SetPadding(-3);
   end
 end
 

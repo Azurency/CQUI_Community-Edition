@@ -46,10 +46,10 @@
           </Stack>
           <Grid Size="0,35" Anchor="R,T" AutoSize="H" Color="0,0,0,0">
             <Stack Anchor="C,T" StackGrowth="Left" Padding="3">
-              <Label String="777" Style="ShellOptionText" Anchor="L,C" ID="MinimapSizeText" />
+              <Label String="777" Style="ShellOptionText" Anchor="L,C" ID="MinimapSizeText" Hidden="1"/>
               <Label Style="ShellOptionText" String="LOC_CQUI_GENERAL_MINIMAPSIZE"/>
             </Stack>
-            <Slider Style="SliderControl" Anchor="C,B" Size="300,13" SpaceForScroll="0" ID="MinimapSizeSlider" Steps="68" />
+            <Slider Style="SliderControl" Anchor="C,B" Size="300,13" SpaceForScroll="0" ID="MinimapSizeSlider" Steps="100" />
           </Grid>
         </Stack>
       </Container>

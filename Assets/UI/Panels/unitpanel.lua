@@ -918,7 +918,7 @@ function View(data)
   end
 
   -- Populate Earned Promotions UI
-  if (not UILens.IsLensActive("Religion") and data.Combat > 0) then
+  if (not UILens.IsLensActive("Religion") and data.Combat > 0 and (UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK) and (UI.GetInterfaceMode() ~= InterfaceModeTypes.DISTRICT_RANGE_ATTACK)) then
     Controls.XPArea:SetHide(false);
     Controls.XPBar:SetPercent( data.UnitExperience / data.MaxExperience );
     Controls.XPArea:SetToolTipString( Locale.Lookup("LOC_HUD_UNIT_PANEL_XP_TT", data.UnitExperience, data.MaxExperience, data.UnitLevel+1 ) );
