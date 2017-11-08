@@ -4,152 +4,152 @@
     <!-- PORTUGUESE -->
 
     <!-- Builder Lens -->
-    <Row Tag="LOC_HUD_BUILDER_LENS">
+    <Row Tag="LOC_HUD_BUILDER_LENS" Language="pt_BR">
       <Text>Construtor</Text>
     </Row>
-    <Row Tag="LOC_HUD_BUILDER_LENS_TOOLTIP">
+    <Row Tag="LOC_HUD_BUILDER_LENS_TOOLTIP" Language="pt_BR">
       <Text>Destaques sobre quais hexagonos o construtor pode trabalhar</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_IMP">
+    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_IMP" Language="pt_BR">
       <Text>Recurso/Saqueado/Habilidade Única</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_RECOMFEATURE_LENS_HILL">
+    <Row Tag="LOC_TOOLTIP_RECOMFEATURE_LENS_HILL" Language="pt_BR">
       <Text>Recomendado Melhorar o Recurso</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_HILL">
+    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_HILL" Language="pt_BR">
       <Text>Colina</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_FEATURE">
+    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_FEATURE" Language="pt_BR">
       <Text>Recurso Removível</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_GENERIC">
+    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_GENERIC" Language="pt_BR">
       <Text>Lote genérico</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_NOTHING">
+    <Row Tag="LOC_TOOLTIP_BUILDER_LENS_NOTHING" Language="pt_BR">
       <Text>Nada para fazer</Text>
     </Row>
 
     <!-- Archaeologist Lens -->
-    <Row Tag="LOC_HUD_ARCHAEOLOGIST_LENS">
+    <Row Tag="LOC_HUD_ARCHAEOLOGIST_LENS" Language="pt_BR">
       <Text>Arqueologista</Text>
     </Row>
-    <Row Tag="LOC_HUD_ARCHAEOLOGIST_LENS_TOOLTIP">
+    <Row Tag="LOC_HUD_ARCHAEOLOGIST_LENS_TOOLTIP" Language="pt_BR">
       <Text>Destaques de sites de escavação do arqueologista.</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_ARTIFACT">
+    <Row Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_ARTIFACT" Language="pt_BR">
       <Text>Artefato</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_SHIPWRECK">
+    <Row Tag="LOC_TOOLTIP_ARCHAEOLOGIST_LENS_SHIPWRECK" Language="pt_BR">
       <Text>Naufrágio</Text>
     </Row>
 
     <!-- City Overlap Lens -->
-    <Row Tag="LOC_HUD_CITYOVERLAP_LENS">
+    <Row Tag="LOC_HUD_CITYOVERLAP_LENS" Language="pt_BR">
       <Text>Sobreposição de Cidade</Text>
     </Row>
-    <Row Tag="LOC_HUD_CITYOVERLAP_LENS_TOOLTIP">
+    <Row Tag="LOC_HUD_CITYOVERLAP_LENS_TOOLTIP" Language="pt_BR">
       <Text>Mostra quantas cidades (no intervalo de 6 hexagonos) um hex se sobrepõe</Text>
     </Row>
-    <Row Tag="LOC_PANEL_CITYOVERLAP_OPTION1">
+    <Row Tag="LOC_PANEL_CITYOVERLAP_OPTION1" Language="pt_BR">
       <Text>Destaca fronteiras externas</Text>
     </Row>
-    <Row Tag="LOC_PANEL_CITYOVERLAP_NMOUSE">
+    <Row Tag="LOC_PANEL_CITYOVERLAP_NMOUSE" Language="pt_BR">
         <Text>Sem Mouse</Text>
     </Row>
-    <Row Tag="LOC_PANEL_CITYOVERLAP_RANGE">
+    <Row Tag="LOC_PANEL_CITYOVERLAP_RANGE" Language="pt_BR">
       <Text>Alcance com mouse</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_CITYOVERLAP_RANGE">
+    <Row Tag="LOC_TOOLTIP_CITYOVERLAP_RANGE" Language="pt_BR">
       <Text>Mostra lotes e destaca cidades dentro do alcance (definido abaixo) a partir do lote sob o mouse.</Text>
     </Row>
-    <Row Tag="LOC_PANEL_CITYOVERLAP_RADIUS">
+    <Row Tag="LOC_PANEL_CITYOVERLAP_RADIUS" Language="pt_BR">
       <Text>Raio Mouse</Text>
     </Row>
 
     <!-- Barbarian Lens -->
-    <Row Tag="LOC_HUD_BARBARIAN_LENS">
+    <Row Tag="LOC_HUD_BARBARIAN_LENS" Language="pt_BR">
       <Text>Bárbaros</Text>
     </Row>
-    <Row Tag="LOC_HUD_BARBARIAN_LENS_TOOLTIP">
+    <Row Tag="LOC_HUD_BARBARIAN_LENS_TOOLTIP" Language="pt_BR">
       <Text>Destaca acampamentos bárbaros no mapa</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_BARBARIAN_LENS_ENCAPMENT">
+    <Row Tag="LOC_TOOLTIP_BARBARIAN_LENS_ENCAPMENT" Language="pt_BR">
       <Text>Acampamento Bárbaro</Text>
     </Row>
 
     <!-- Resources Lens -->
-    <Row Tag="LOC_HUD_RESOURCE_LENS">
+    <Row Tag="LOC_HUD_RESOURCE_LENS" Language="pt_BR">
       <Text>Recursos</Text>
     </Row>
-    <Row Tag="LOC_HUD_RESOURCE_LENS_TOOLTIP">
+    <Row Tag="LOC_HUD_RESOURCE_LENS_TOOLTIP" Language="pt_BR">
       <Text>Destaca recursos no mapa</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_LUXURY">
+    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_LUXURY" Language="pt_BR">
       <Text>Recursos de Luxo</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_NLUXURY">
+    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_NLUXURY" Language="pt_BR">
       <Text>Luxo Desconectado</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_STRATEGIC">
+    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_STRATEGIC" Language="pt_BR">
       <Text>Recursos Estratégicos</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_NSTRATEGIC">
+    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_NSTRATEGIC" Language="pt_BR">
       <Text>Recurso Estratégico Desconectado</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_BONUS">
+    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_BONUS" Language="pt_BR">
       <Text>Recursos bônus</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_NBONUS">
+    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_NBONUS" Language="pt_BR">
       <Text>Recurso bônus desconectado</Text>
     </Row>
 
     <!-- Wonder Lens -->
-    <Row Tag="LOC_HUD_WONDER_LENS">
+    <Row Tag="LOC_HUD_WONDER_LENS" Language="pt_BR">
       <Text>Maravilhas</Text>
     </Row>
-    <Row Tag="LOC_HUD_WONDER_LENS_TOOLTIP">
+    <Row Tag="LOC_HUD_WONDER_LENS_TOOLTIP" Language="pt_BR">
       <Text>Destaca maravilhas naturais e maravilhas construída por jogadores</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_WONDER_LENS_NWONDER">
+    <Row Tag="LOC_TOOLTIP_WONDER_LENS_NWONDER" Language="pt_BR">
       <Text>Maravilha Natural</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_PWONDER">
+    <Row Tag="LOC_TOOLTIP_RESOURCE_LENS_PWONDER" Language="pt_BR">
       <Text>Maravilha feita por jogador</Text>
     </Row>
 
     <!-- Adjacency Yield Lens -->
-    <Row Tag="LOC_HUD_ADJYIELD_LENS">
+    <Row Tag="LOC_HUD_ADJYIELD_LENS" Language="pt_BR">
       <Text>Rendimento adjacentes</Text>
     </Row>
-    <Row Tag="LOC_HUD_ADJYIELD_LENS_TOOLTIP">
+    <Row Tag="LOC_HUD_ADJYIELD_LENS_TOOLTIP" Language="pt_BR">
       <Text>Mostra o rendimento adjacentes para os distritos</Text>
     </Row>
 
     <!-- Scout Lens -->
-    <Row Tag="LOC_HUD_SCOUT_LENS">
+    <Row Tag="LOC_HUD_SCOUT_LENS" Language="pt_BR">
       <Text>Batedor</Text>
     </Row>
-    <Row Tag="LOC_HUD_SCOUT_LENS_TOOLTIP">
+    <Row Tag="LOC_HUD_SCOUT_LENS_TOOLTIP" Language="pt_BR">
       <Text>Destaca as aldeias no mapa</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_SCOUT_LENS_GHUT">
+    <Row Tag="LOC_TOOLTIP_SCOUT_LENS_GHUT" Language="pt_BR">
       <Text>Aldeias</Text>
     </Row>
 
     <!-- Naturalist Lens -->
-    <Row Tag="LOC_HUD_NATURALIST_LENS">
+    <Row Tag="LOC_HUD_NATURALIST_LENS" Language="pt_BR">
       <Text>Naturalista</Text>
     </Row>
-    <Row Tag="LOC_HUD_NATURALIST_LENS_TOOLTIP">
+    <Row Tag="LOC_HUD_NATURALIST_LENS_TOOLTIP" Language="pt_BR">
       <Text>Destaca lugares onde Parques Nacionais podem ser construídos</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_NATURALIST_LENS_NPARK">
+    <Row Tag="LOC_TOOLTIP_NATURALIST_LENS_NPARK" Language="pt_BR">
       <Text>Área pronta para Parque Nacional</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_NATURALIST_LENS_OK">
+    <Row Tag="LOC_TOOLTIP_NATURALIST_LENS_OK" Language="pt_BR">
       <Text>Lote pode ser usado, se outro ponto for corrigido</Text>
     </Row>
-    <Row Tag="LOC_TOOLTIP_NATURALIST_LENS_FIXABLE">
+    <Row Tag="LOC_TOOLTIP_NATURALIST_LENS_FIXABLE" Language="pt_BR">
       <Text>Precisa de correção se for usado para um parque</Text>
     </Row>
 
