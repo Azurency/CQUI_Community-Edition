@@ -3,6 +3,7 @@
 
   <!-- Basic Mod Information -->
   <Properties>
+    <AffectsSavedGames>0</AffectsSavedGames>
     <Name>Community Quick User Interface</Name>
     <Teaser>CQUI</Teaser>
     <Description>Community Quick User Interface MOD was Formally CQUI Mod [NEWLINE]and is now being updated and improved by its community</Description>
