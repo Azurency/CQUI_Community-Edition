@@ -3,7 +3,7 @@
   <LocalizedText>
     <!-- JAPANESE -->
 
-   <!-- Common Text -->
+    <!-- Common Text -->
     <Replace Tag="LOC_TRADE_GROUP_SETTINGS" Language="ja_JP">
       <Text>グループ設定</Text>
     </Replace>
