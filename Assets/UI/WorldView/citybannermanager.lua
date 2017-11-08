@@ -530,7 +530,6 @@ function CityBanner.Initialize( self : CityBanner, playerID: number, cityID : nu
     self.m_Instance.CityBannerButton:RegisterCallback( Mouse.eLClick, OnCityBannerClick );
     self.m_Instance.CityBannerButton:SetVoid1(playerID);
     self.m_Instance.CityBannerButton:SetVoid2(cityID);
-    self.m_Instance.CityBannerButton:RegisterCallback( Mouse.eRClick, OnCityBannerRightClick );    -- for CQUI recenter camera on city when right click on citybanner
 
     local pCity = self:GetCity();
     if (pCity ~= nil) then
