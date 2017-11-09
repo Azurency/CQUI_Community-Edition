@@ -201,7 +201,7 @@ function ShowPurchases()
           else
             pInstance.PurchaseButton:GetTextControl():SetColorByName("ResGoldLabelCS");
           end
-          pInstance.PurchaseButton:RegisterCallback( Mouse.eLClick, function() OnClickPurchasePlot( index ); end );
+          pInstance.PurchaseButton:RegisterCallback( Mouse.eRClick, function() OnClickPurchasePlot( index ); end );
           pInstance.PurchaseAnim:SetColor( (goldCost > playerGold ) and 0xbb808080 or 0xffffffff ) ;
           pInstance.PurchaseAnim:RegisterEndCallback( OnSpinningCoinAnimDone );
           if (goldCost > playerGold ) then
