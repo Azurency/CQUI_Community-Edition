@@ -191,7 +191,7 @@ This section should not always be up to date, so don't hesitate to check the mil
 ## Contributing
 > This part still need some love
 
-You want to contribute to the mod ? We're always welcoming new contributors and the pull request are open if you wish to tacle an issue. Some issues are labeled "easy" it should be a great entry point if you want to join the team.
+You want to contribute to the mod ? We're always welcoming new contributors and the pull request are open if you wish to tacle an issue. Some issues are labeled "easy" it should be a great entry point if you want to join the team. A comprehensive [contribution guide](https://github.com/CQUI-Org/cqui/wiki/How-to-contribute-to-CQUI) created for the predecessor of this mod is a good starting point.
 
 ### Quick coding style
 - Please use 2 spaces for indentation
