@@ -705,12 +705,17 @@ end
 
 -- ===========================================================================
 -- register the settings callback
-function CQUI_OnIconStyleSettingsUpdate()
+function CQUI_GetSettingsValues()
   CQUI_ResourceIconStyle = GameConfiguration.GetValue("CQUI_ResourceDimmingStyle");
+end
+
+function CQUI_OnIconStyleSettingsUpdate()
+  CQUI_GetSettingsValues()
   --print("resource icon style global setting: ", CQUI_ResourceIconStyle);
   Rebuild();
 end
 LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnIconStyleSettingsUpdate );
+LuaEvents.CQUI_SettingsInitialized.Add(CQUI_GetSettingsValues);
 
 
 -- ===========================================================================
