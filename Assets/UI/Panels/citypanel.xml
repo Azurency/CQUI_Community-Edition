@@ -86,7 +86,7 @@
         </Image>
 
         <Image              ID="ProductionFrame"        Anchor="R,B" Offset="3,36"                              Texture="SelectionPanel_PortraitFrame"    FlipX="1">
-          <ScrollPanel      ID="ProductionDataScroll"   AutoScrollBar="1" Vertical="1" Size="130,101"  Anchor="L,T" Offset="-155,15">
+          <ScrollPanel      ID="ProductionDataScroll"   AutoScrollBar="1" Vertical="1" Size="130,101"  Anchor="L,T" Offset="-155,15" ConsumeMouseWheel="0">
             <Stack          ID="ProductionDataStack"    Padding="5" >
               <Container                                Size="10,1"/>
               <Label        ID="ProductionNowLabel"     Align="Left" Style="BlueGlow"   FontSize="16" WrapWidth="124" String="LOC_HUD_CITY_PRODUCTION_NOTHING_PRODUCED" />
