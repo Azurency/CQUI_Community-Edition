@@ -1828,9 +1828,11 @@ end
 function CQUI_Refresh()
   -- AZURENCY : update the stats of the flags on refresh
   local playerFlagInstances = m_UnitFlagInstances[ Game.GetLocalPlayer() ];
-  for id, flag in pairs(playerFlagInstances) do
-    if (flag ~= nil) then
-      flag:UpdateStats();
+  if playerFlagInstances then
+    for id, flag in pairs(playerFlagInstances) do
+      if (flag ~= nil) then
+        flag:UpdateStats();
+      end
     end
   end
 end
