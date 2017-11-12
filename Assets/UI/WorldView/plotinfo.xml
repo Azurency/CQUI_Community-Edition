@@ -5,7 +5,7 @@
 
   <Instance         Name="InfoInstance">
     <WorldAnchor    ID="Anchor"                                           Size="2,2" >
-      <GridButton       ID="PurchaseButton" Anchor="C,T"  Offset="0,-40" Size="51,30" Hidden="1" Style="PurchaseTileButton">
+      <GridButton       ID="PurchaseButton" Anchor="C,T"  Offset="0,-40" Size="51,30" Hidden="1" Style="PurchaseTileButton" ConsumeMouseButton="0">
         <FlipAnim   ID="PurchaseAnim" Size="32,32" Columns="8"  FrameCount="40" Speed="25" Texture="CityPanel_PurchaseTileAnim" Cycle="Once" Stopped="1" Anchor="L,C" Offset="0,0"/>
       <Label      ID="Amount" Anchor="R,C"  Offset="4,0" Style="CityPanelNumLarge" Align="Right"/>
       </GridButton>
