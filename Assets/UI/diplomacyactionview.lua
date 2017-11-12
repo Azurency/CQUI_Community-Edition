@@ -1118,7 +1118,10 @@ function OnActivateIntelGossipHistoryPanel(gossipInstance : table)
         if (item ~= nil) then
           -- AZURENCY : trim the message if the setting is enable
           if(CQUI_trimGossip) then
-            gossipString = CQUI_TrimGossipMessage(gossipString);
+            trimmed = CQUI_TrimGossipMessage(gossipString);
+            if trimmed ~= nil then
+              gossipString = trimmed
+            end
           end
           item.GossipText:SetText(gossipString);			-- It has already been localized
           AutoSizeGrid(item:GetTopControl(), item.GossipText,25,25);

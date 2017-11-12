@@ -1025,8 +1025,9 @@ end
 
 --Trims source information from gossip messages. Returns nil if the message couldn't be trimmed (this usually means the provided string wasn't a gossip message at all)
 function CQUI_TrimGossipMessage(str:string)
-  local sourceSample = Locale.Lookup("LOC_GOSSIP_SOURCE_DELEGATE", "X", "Y", "Z"); --Get a sample of a gossip source string
-  last = string.match(sourceSample, ".-(%s%S+)$"); --Get last word that occurs in the gossip source string. "that" in English. Assumes the last word is always the same, which it is in English, unsure if this holds true in other languages
+  local sourceSample = Locale.Lookup("LOC_GOSSIP_SOURCE_DELEGATE", "XX", "Y", "Z"); --Get a sample of a gossip source string
+  last = string.match(sourceSample, ".-XX.-(%s%S+)$"); --Get last word that occurs in the gossip source string. "that" in English. Assumes the last word is always the same, which it is in English, unsure if this holds true in other languages
+  -- AZURENCY : the patterns means : any character 0 or +, XX exactly, any character 0 or +, space, any character other than space 1 or + at the end of the sentence.
   -- AZURENCY : in some languages, there is no space, in that case, take the last character (often it's a ":")
   if last == nil then
     last = string.match(sourceSample, ".-(.)$");
