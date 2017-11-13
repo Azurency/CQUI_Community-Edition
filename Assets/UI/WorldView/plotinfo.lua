@@ -44,6 +44,8 @@ local CQUI_WorkIconAlpha = .60;
 local CQUI_SmartWorkIcon: boolean = true;
 local CQUI_SmartWorkIconSize: number = 64;
 local CQUI_SmartWorkIconAlpha = .45;
+local CQUI_isMouseDragging = false;
+local CQUI_hasMouseDragged = false;
 
 function CQUI_OnSettingsUpdate()
   CQUI_WorkIconSize = GameConfiguration.GetValue("CQUI_WorkIconSize");
@@ -86,6 +88,11 @@ end
 
 -- ===========================================================================
 function OnClickPurchasePlot( plotId:number )
+
+  -- AZURENCY : if we're dragging, don't purchase
+  if CQUI_isMouseDragging and CQUI_hasMouseDragged then
+    return
+  end
 
   local isUsingDistrictPlacementFilter :boolean = (UI.GetInterfaceMode() == InterfaceModeTypes.DISTRICT_PLACEMENT);
   local isUsingBuildingPlacementFilter :boolean = (UI.GetInterfaceMode() == InterfaceModeTypes.BUILDING_PLACEMENT);
@@ -938,9 +945,27 @@ function KeyHandler( key:number )
   end
   return false;
 end
+
 function OnInputHandler( pInputStruct:table )
   local uiMsg = pInputStruct:GetMessageType();
   if (uiMsg == KeyEvents.KeyUp) then return KeyHandler( pInputStruct:GetKey() ); end;
+
+  -- AZURENCY : added drag awareness to handle the clic/drag on purchase button (from minimap.lua)
+  -- Enable drag on LMB down
+  if uiMsg == MouseEvents.LButtonDown then
+    CQUI_isMouseDragging = true; -- Potential drag is in process
+    CQUI_hasMouseDragged = false; -- There has been no actual dragging yet
+    return false;
+  -- Disable drag on LMB up (but only if mouse was previously dragging)
+  elseif uiMsg == MouseEvents.LButtonUp and CQUI_isMouseDragging then
+    CQUI_isMouseDragging = false;
+    return false;
+  -- If the mouse move and is dragging, it has dragged
+  elseif uiMsg == MouseEvents.MouseMove and CQUI_isMouseDragging then
+    CQUI_hasMouseDragged = true;
+    return false;
+  end
+
   return false;
 end
 
