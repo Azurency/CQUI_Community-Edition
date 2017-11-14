@@ -1,56 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GameData>
-	<LocalizedText>
-		<!-- JAPANESE -->
-		<Replace Tag="LOC_CQUI_NAME" Language="ja_JP">
-			<Text>CQUI</Text>
-		</Replace>
+  <LocalizedText>
+    <!-- JAPANESE -->
+    <Replace Tag="LOC_CQUI_NAME" Language="ja_JP">
+      <Text>CQUI</Text>
+    </Replace>
 
-		<!-- MESSAGES -->
-		<Replace Tag="LOC_CQUI_CIVIC_MESSAGE_S" Language="ja_JP">
-			<Text></Text>
-		</Replace>
-		<Replace Tag="LOC_CQUI_TECH_MESSAGE_S" Language="ja_JP">
-			<Text></Text>
-		</Replace>
-		<Replace Tag="LOC_CQUI_HALF_MESSAGE_E" Language="ja_JP">
-			<Text>の研究がブーストの最大値直前まで到達しました。</Text>
-		</Replace>
-		<Replace Tag="LOC_CQUI_FINISH_MESSAGE_E" Language="ja_JP">
-			<Text>の研究が完了しました。</Text>
-		</Replace>
+    <!-- MESSAGES -->
+    <Replace Tag="LOC_CQUI_CIVIC_MESSAGE_S" Language="ja_JP">
+      <Text></Text>
+    </Replace>
+    <Replace Tag="LOC_CQUI_TECH_MESSAGE_S" Language="ja_JP">
+      <Text></Text>
+    </Replace>
+    <Replace Tag="LOC_CQUI_HALF_MESSAGE_E" Language="ja_JP">
+      <Text>の研究がブーストの最大値直前まで到達しました。</Text>
+    </Replace>
+    <Replace Tag="LOC_CQUI_FINISH_MESSAGE_E" Language="ja_JP">
+      <Text>の研究が完了しました。</Text>
+    </Replace>
 
-		<!-- CITY PANEL -->
-		<Replace Tag="LOC_CQUI_CITY_ENTERTAINMENT" Language="ja_JP">
-			<Text>娯楽</Text>
-		</Replace>
-		<Replace Tag="LOC_HUD_CITY_FROM_POPULATION" Language="ja_JP">
-			<Text>(人口から)</Text>
-		</Replace>
-		<Replace Tag="LOC_HUD_CITY_RELIGIOUS_MINORITIES" Language="ja_JP">
-			<Text>少数宗教</Text>
-		</Replace>
-		<Replace Tag="LOC_HUD_CITY_PILLAGED" Language="ja_JP">
-			<Text>[COLOR:StatBadCS](略奪)[ENDCOLOR]</Text>
-		</Replace>
+    <!-- CITY PANEL -->
+    <Replace Tag="LOC_CQUI_CITY_ENTERTAINMENT" Language="ja_JP">
+      <Text>娯楽</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_CITY_FROM_POPULATION" Language="ja_JP">
+      <Text>(人口から)</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_CITY_RELIGIOUS_MINORITIES" Language="ja_JP">
+      <Text>少数宗教</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_CITY_PILLAGED" Language="ja_JP">
+      <Text>[COLOR:StatBadCS](略奪)[ENDCOLOR]</Text>
+    </Replace>
 
-		<!-- CITY VIEW -->
-		<Replace Tag="LOC_HUD_CITY_NEXT_PLOT" Language="ja_JP">
-			<Text>次の国境拡張でこのタイルを取得する。</Text>
-		</Replace>
+    <!-- CITY VIEW -->
+    <Replace Tag="LOC_HUD_CITY_NEXT_PLOT" Language="ja_JP">
+      <Text>次の国境拡張でこのタイルを取得する。</Text>
+    </Replace>
 
-		<!-- POPUPS -->
-		<Replace Tag="LOC_CQUI_GREAT_PERSON_PROGRESS" Language="ja_JP">
-			<Text>進捗:</Text>
-		</Replace>
+    <!-- POPUPS -->
+    <Replace Tag="LOC_CQUI_GREAT_PERSON_PROGRESS" Language="ja_JP">
+      <Text>進捗:</Text>
+    </Replace>
 
-		<!-- ActionPanel -->
-		<Replace Tag="LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK" Language="ja_JP">
-			<Text>兵営の遠隔攻撃</Text>
-		</Replace>
-		<Replace Tag="LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK_TOOLTIP" Language="ja_JP">
-			<Text>兵営から遠隔攻撃が可能</Text>
-		</Replace>
+    <!-- ActionPanel -->
+    <Replace Tag="LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK" Language="ja_JP">
+      <Text>兵営の遠隔攻撃</Text>
+    </Replace>
+    <Replace Tag="LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK_TOOLTIP" Language="ja_JP">
+      <Text>兵営から遠隔攻撃が可能</Text>
+    </Replace>
 
-	</LocalizedText>
+    <!-- Policyreminderpopup -->
+    <Replace Tag="LOC_POLICY_REMINDER_TITLE" Language="ja_JP">
+      <Text>政策の通知</Text>
+    </Replace>
+    <Replace Tag="LOC_POLICY_REMINDER_TEXT" Language="ja_JP">
+      <Text>新たな政策が解禁されました。</Text>
+    </Replace>
+    <Replace Tag="LOC_POLICY_REMINDER_ACTION_BUTTON" Language="ja_JP">
+      <Text>政策の変更</Text>
+    </Replace>
+    <Replace Tag="LOC_POLICY_REMINDER_ACTION_BUTTON_TOOLTIP" Language="ja_JP">
+      <Text>このターンは政策を変更できます。</Text>
+    </Replace>
+
+  </LocalizedText>
 </GameData>

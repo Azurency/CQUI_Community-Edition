@@ -1,193 +1,193 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by Ed Beach (Firaxis Games) -->
 <GameData>
-	<LocalizedText>
-		<!-- Replace Gossip Text -->
-		<Replace Tag="LOC_GOSSIP_AGENDA_KUDOS" Language="ja_JP">
-			<Text>[ICON_Declare_friendship] {1_LeaderName}が自身のアジェンダ ({3_AgendaName}) を尊重する{2_Leadername}に感謝を表明した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_AGENDA_WARNING" Language="ja_JP">
-			<Text>[ICON_Denounce] {1_LeaderName}が自身のアジェンダ ({3_AgendaName}) を無視する{2_Leadername}に警告を発した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_ALLIED" Language="ja_JP">
-			<Text>[ICON_Alliance] {1_CivName}が{2_CivName}と同盟を締結した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_ARTIFACT_EXTRACTED" Language="ja_JP">
-			<Text>[ICON_Greatwork_relic] {1_CivName}が史跡から{2_GreatWork}を発掘した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_BARBARIAN_INVASION_STARTED" Language="ja_JP">
-			<Text>[ICON_Barbarian] {1_CivName}の{2_CityName}が蛮族の侵略を受けている。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_BARBARIAN_RAID_STARTED" Language="ja_JP">
-			<Text>[ICON_Barbarian] {1_CivName}の{2_CityName}が蛮族の襲撃を受けている。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_BEACH_RESORT_CREATED" Language="ja_JP">
-			<Text>[ICON_Production] {1_CivName}が{2_CityName}の近くにシーサイドリゾートを建設した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_CHANGE_GOVERNMENT" Language="ja_JP">
-			<Text>[ICON_Government] {1_CivName}の政治体制が{2_Government}に移行した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_CITY_BESIEGED" Language="ja_JP">
-			<Text>[ICON_Razed] {1_CityName}が攻囲を受けている。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_CITY_LIBERATED" Language="ja_JP">
-			<Text>[ICON_Buildings] {1_CivName}が{2_CityName}を解放し、{3_CivName}に返還した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_CITY_RAZED" Language="ja_JP">
-			<Text>[ICON_Razed] {1_CivName}が{2_CivName}の都市を破壊した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_CLEAR_CAMP" Language="ja_JP">
-			<Text>[ICON_Barbarian] {1_CivName}の{2_UnitName}が{3_ImprovementName}を破壊した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_CITY_STATE_INFLUENCE" Language="ja_JP">
-			<Text>[ICON_Envoy] {1_CivName}が{2_CityState}に代表団を派遣した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_CONQUER_CITY" Language="ja_JP">
-			<Text>[ICON_Razed] {1_CivName}が{2_CityName}を征服した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_CONSTRUCT_BUILDING" Language="ja_JP">
-			<Text>[ICON_Production] {1_CivName}が{3_CityName}に{2_BuildingName}を建設した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_CONSTRUCT_DISTRICT" Language="ja_JP">
-			<Text>[ICON_Production] {1_CivName}が{3_CityName}に{2_DistrictName}を建設した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_CREATE_PANTHEON" Language="ja_JP">
-			<Text>[ICON_Religion] {1_CivName}がパンテオン信仰として「{2_BeliefName}」を採用した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_CULTURVATE_CIVIC" Language="ja_JP">
-			<Text>[ICON_Culture] {1_CivName}が{2_CivicName}を習得した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_DECLARED_FRIENDSHIP" Language="ja_JP">
-			<Text>[ICON_Declare_friendship] {1_CivName}が{2_CivName}との友好を宣言した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_DELEGATION" Language="ja_JP">
-			<Text>[ICON_Envoy] {1_CivName}が{2_CivName}の外交使節を受け入れた。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_DENOUNCED" Language="ja_JP">
-			<Text>[ICON_Denounce] {1_CivName}が{2_CivName}に非難声明を表明した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_EMBASSY" Language="ja_JP">
-			<Text>[ICON_Resident_embassy] {2_CivName}の大使館が{1_CivName}に完成した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_ERA_CHANGED" Language="ja_JP">
-			<Text>[ICON_Capitallarge] {1_CivName}が{3_NewEra}に移行した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_FIND_NATURAL_WONDER" Language="ja_JP">
-			<Text>[ICON_Terrain] {1_CivName}が自然遺産{2_NWName}を発見した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_FOUND_CITY" Language="ja_JP">
-			<Text>[ICON_Buildings] {1_CivName}が{2_CityName}を建設した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_FOUND_RELIGION" Language="ja_JP">
-			<Text>[ICON_Religion] {1_CivName}が{2_ReligionName}を創始した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_GREATPERSON_CREATED" Language="ja_JP">
-			<Text>[ICON_Greatperson] {1_CivName}が{2_unit}の{3_GreatPerson}を獲得した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_LAUNCHING_ATTACK" Language="ja_JP">
-			<Text>[ICON_Declare_formal_war] {1_CivName}が{2_CivName}への襲撃を開始した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_WAR_PREPARATION" Language="ja_JP">
-			<Text>[ICON_Declare_formal_war] {1_CivName}が{2_CivName}への宣戦布告を検討している。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_INQUISITION_LAUNCHED" Language="ja_JP">
-			<Text>[ICON_Religion] {1_CivName}が異端審問を開始した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_LAND_UNIT_LEVEL" Language="ja_JP">
-			<Text>[ICON_Promotion] {1_CivName}の{2_UnitName}が{3_PromotionName}の昇進を獲得した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_MAKE_DOW" Language="ja_JP">
-			<Text>[ICON_Declare_formal_war] {1_CivName}が{2_OtherPlayer}に宣戦布告した！</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_NATIONAL_PARK_CREATED" Language="ja_JP">
-			<Text>[ICON_Terrain] {1_CivName}が{2_NationalParkName}を建設した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_NAVAL_UNIT_LEVEL" Language="ja_JP">
-			<Text>[ICON_Promotion] {1_CivName}の{2_UnitName}が{3_PromotionName}の昇進を獲得した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_NEW_RELIGIOUS_MAJORITY" Language="ja_JP">
-			<Text>[ICON_Religion] {1_CivName}の主流宗教が{2_ReligionName}になった。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_PILLAGE" Language="ja_JP">
-			<Text>[ICON_Pillaged] {1_CivName}の{3_UnitName}が敵の{2_TargetName}を略奪した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_POLICY_ENACTED" Language="ja_JP">
-			<Text>[ICON_Policy] {1_CivName}が{2_SlotName}政策の「{3_PolicyName}」を採用した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_RECEIVE_DOW" Language="ja_JP">
-			<Text>[ICON_Declare_formal_war] {1_CivName}が{2_OtherPlayer}から宣戦布告された！</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_RELIC_RECEIVED" Language="ja_JP">
-			<Text>[ICON_Greatwork_religious] {1_CivName}が聖遺物の「{2_RelicName}」を獲得した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_RESEARCH_AGREEMENT" Language="ja_JP">
-			<Text>[ICON_Research_agreement] {1_CivName}と{2_CivName}が研究協定を締結した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_RESEARCH_TECH" Language="ja_JP">
-			<Text>[ICON_Science] {1_CivName}が{2_TechName}の研究を完了した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SPY_DISRUPT_ROCKETRY_DETECTED" Language="ja_JP">
-			<Text>[ICON_Exclamation] {3_SpyPlayer}のスパイが{1_CivName}の{2_CityName}で宇宙船基地を破壊した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SPY_DISRUPT_ROCKETRY_UNDETECTED" Language="ja_JP">
-			<Text>[ICON_Exclamation] 身元不明のスパイが{1_CivName}の{2_CityName}で宇宙船基地を破壊した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SPY_GREAT_WORK_HEIST_DETECTED" Language="ja_JP">
-			<Text>[ICON_Exclamation] {3_SpyPlayer}のスパイが{1_CivName}の{2_CityName}から傑作を盗み出した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SPY_GREAT_WORK_HEIST_UNDETECTED" Language="ja_JP">
-			<Text>[ICON_Exclamation] 身元不明のスパイが{1_CivName}の{2_CityName}から傑作を盗み出した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SPY_RECRUIT_PARTISANS_DETECTED" Language="ja_JP">
-			<Text>[ICON_Exclamation] {3_SpyPlayer}のスパイが{1_CivName}の{2_CityName}でパルチザンを蜂起させた。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SPY_RECRUIT_PARTISANS_UNDETECTED" Language="ja_JP">
-			<Text>[ICON_Exclamation] 身元不明のスパイが{1_CivName}の{2_CityName}でパルチザンを蜂起させた。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SPY_SABOTAGE_PRODUCTION_DETECTED" Language="ja_JP">
-			<Text>[ICON_Exclamation] {3_SpyPlayer}のスパイが{1_CivName}の{2_CityName}で工業地帯を破壊した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SPY_SABOTAGE_PRODUCTION_UNDETECTED" Language="ja_JP">
-			<Text>[ICON_Exclamation] 身元不明のスパイが{1_CivName}の{2_CityName}で工業地帯を破壊した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SPY_SIPHON_FUNDS_DETECTED" Language="ja_JP">
-			<Text>[ICON_Exclamation] {3_SpyPlayer}のスパイが{1_CivName}の{2_CityName}から資金を盗み出した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SPY_SIPHON_FUNDS_UNDETECTED" Language="ja_JP">
-			<Text>[ICON_Exclamation] 身元不明のスパイが{1_CivName}の{2_CityName}から資金を盗み出した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SPY_STEAL_TECH_BOOST_DETECTED" Language="ja_JP">
-			<Text>[ICON_Exclamation] {3_SpyPlayer}のスパイが{1_CivName}の{2_CityName}から研究成果を盗み出した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SPY_STEAL_TECH_BOOST_UNDETECTED" Language="ja_JP">
-			<Text>[ICON_Exclamation] 身元不明のスパイが{1_CivName}の{2_CityName}から研究成果を盗み出した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_TRADE_DEAL" Language="ja_JP">
-			<Text>[ICON_Gold] {1_CivName}が{2_CivName}と取引している。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_TRADE_RENEGE" Language="ja_JP">
-			<Text>[ICON_Gold] {1_CivName}が{2_CivName}との取引を撤回した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_TRAIN_SETTLER" Language="ja_JP">
-			<Text>[ICON_Unit] {1_CivName}が{2_UnitName}を生産した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_TRAIN_UNIT" Language="ja_JP">
-			<Text>[ICON_Unit] {1_CivName}が世界で初めて{2_UnitName}を生産した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_TRAIN_UNIQUE_UNIT" Language="ja_JP">
-			<Text>[ICON_Unit] {1_CivName}が固有ユニットの{2_UnitName}を生産した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_SPACE_RACE_PROJECT_COMPLETED" Language="ja_JP">
-			<Text>[ICON_Production] {1_CivName}が宇宙開発競争プロジェクト「{2_ProjectType}」を完了した。</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_WMD_BUILT" Language="ja_JP">
-			<Text>[ICON_Nuclear] {1_CivName}が大量破壊兵器を{2_WMDCount}個製造した！</Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_WMD_STRIKE" Language="ja_JP">
-			<Text>[ICON_Nuclear] {1_CivName}が{2_UnitName}を発射した！ </Text>
-		</Replace>
-		<Replace Tag="LOC_GOSSIP_WONDER_STARTED" Language="ja_JP">
-			<Text>[ICON_Production] {1_CivName}が{2_CityName}で{3_BuildingName}の建設を開始した。</Text>
-		</Replace>
-	</LocalizedText>
+  <LocalizedText>
+    <!-- Replace Gossip Text -->
+    <Replace Tag="LOC_GOSSIP_AGENDA_KUDOS" Language="ja_JP">
+      <Text>[ICON_Declare_friendship] {1_LeaderName}が自身のアジェンダ ({3_AgendaName}) を尊重する{2_Leadername}に感謝を表明した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_AGENDA_WARNING" Language="ja_JP">
+      <Text>[ICON_Denounce] {1_LeaderName}が自身のアジェンダ ({3_AgendaName}) を無視する{2_Leadername}に警告を発した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_ALLIED" Language="ja_JP">
+      <Text>[ICON_Alliance] {1_CivName}が{2_CivName}と同盟を締結した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_ARTIFACT_EXTRACTED" Language="ja_JP">
+      <Text>[ICON_Greatwork_relic] {1_CivName}が史跡から{2_GreatWork}を発掘した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_BARBARIAN_INVASION_STARTED" Language="ja_JP">
+      <Text>[ICON_Barbarian] {1_CivName}の{2_CityName}が蛮族の侵略を受けている。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_BARBARIAN_RAID_STARTED" Language="ja_JP">
+      <Text>[ICON_Barbarian] {1_CivName}の{2_CityName}が蛮族の襲撃を受けている。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_BEACH_RESORT_CREATED" Language="ja_JP">
+      <Text>[ICON_Production] {1_CivName}が{2_CityName}の近くにシーサイドリゾートを建設した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_CHANGE_GOVERNMENT" Language="ja_JP">
+      <Text>[ICON_Government] {1_CivName}の政治体制が{2_Government}に移行した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_CITY_BESIEGED" Language="ja_JP">
+      <Text>[ICON_Razed] {1_CityName}が攻囲を受けている。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_CITY_LIBERATED" Language="ja_JP">
+      <Text>[ICON_Buildings] {1_CivName}が{2_CityName}を解放し、{3_CivName}に返還した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_CITY_RAZED" Language="ja_JP">
+      <Text>[ICON_Razed] {1_CivName}が{2_CivName}の都市を破壊した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_CLEAR_CAMP" Language="ja_JP">
+      <Text>[ICON_Barbarian] {1_CivName}の{2_UnitName}が{3_ImprovementName}を破壊した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_CITY_STATE_INFLUENCE" Language="ja_JP">
+      <Text>[ICON_Envoy] {1_CivName}が{2_CityState}に代表団を派遣した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_CONQUER_CITY" Language="ja_JP">
+      <Text>[ICON_Razed] {1_CivName}が{2_CityName}を征服した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_CONSTRUCT_BUILDING" Language="ja_JP">
+      <Text>[ICON_Production] {1_CivName}が{3_CityName}に{2_BuildingName}を建設した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_CONSTRUCT_DISTRICT" Language="ja_JP">
+      <Text>[ICON_Production] {1_CivName}が{3_CityName}に{2_DistrictName}を建設した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_CREATE_PANTHEON" Language="ja_JP">
+      <Text>[ICON_Religion] {1_CivName}がパンテオン信仰として「{2_BeliefName}」を採用した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_CULTURVATE_CIVIC" Language="ja_JP">
+      <Text>[ICON_Culture] {1_CivName}が{2_CivicName}を習得した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_DECLARED_FRIENDSHIP" Language="ja_JP">
+      <Text>[ICON_Declare_friendship] {1_CivName}が{2_CivName}との友好を宣言した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_DELEGATION" Language="ja_JP">
+      <Text>[ICON_Envoy] {1_CivName}が{2_CivName}の外交使節を受け入れた。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_DENOUNCED" Language="ja_JP">
+      <Text>[ICON_Denounce] {1_CivName}が{2_CivName}に非難声明を表明した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_EMBASSY" Language="ja_JP">
+      <Text>[ICON_Resident_embassy] {2_CivName}の大使館が{1_CivName}に完成した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_ERA_CHANGED" Language="ja_JP">
+      <Text>[ICON_Capitallarge] {1_CivName}が{3_NewEra}に移行した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_FIND_NATURAL_WONDER" Language="ja_JP">
+      <Text>[ICON_Terrain] {1_CivName}が自然遺産{2_NWName}を発見した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_FOUND_CITY" Language="ja_JP">
+      <Text>[ICON_Buildings] {1_CivName}が{2_CityName}を建設した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_FOUND_RELIGION" Language="ja_JP">
+      <Text>[ICON_Religion] {1_CivName}が{2_ReligionName}を創始した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_GREATPERSON_CREATED" Language="ja_JP">
+      <Text>[ICON_Greatperson] {1_CivName}が{2_unit}の{3_GreatPerson}を獲得した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_LAUNCHING_ATTACK" Language="ja_JP">
+      <Text>[ICON_Declare_formal_war] {1_CivName}が{2_CivName}への襲撃を開始した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_WAR_PREPARATION" Language="ja_JP">
+      <Text>[ICON_Declare_formal_war] {1_CivName}が{2_CivName}への宣戦布告を検討している。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_INQUISITION_LAUNCHED" Language="ja_JP">
+      <Text>[ICON_Religion] {1_CivName}が異端審問を開始した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_LAND_UNIT_LEVEL" Language="ja_JP">
+      <Text>[ICON_Promotion] {1_CivName}の{2_UnitName}が{3_PromotionName}の昇進を獲得した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_MAKE_DOW" Language="ja_JP">
+      <Text>[ICON_Declare_formal_war] {1_CivName}が{2_OtherPlayer}に宣戦布告した！</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_NATIONAL_PARK_CREATED" Language="ja_JP">
+      <Text>[ICON_Terrain] {1_CivName}が{2_NationalParkName}を建設した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_NAVAL_UNIT_LEVEL" Language="ja_JP">
+      <Text>[ICON_Promotion] {1_CivName}の{2_UnitName}が{3_PromotionName}の昇進を獲得した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_NEW_RELIGIOUS_MAJORITY" Language="ja_JP">
+      <Text>[ICON_Religion] {1_CivName}の主流宗教が{2_ReligionName}になった。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_PILLAGE" Language="ja_JP">
+      <Text>[ICON_Pillaged] {1_CivName}の{3_UnitName}が敵の{2_TargetName}を略奪した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_POLICY_ENACTED" Language="ja_JP">
+      <Text>[ICON_Policy] {1_CivName}が{2_SlotName}政策の「{3_PolicyName}」を採用した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_RECEIVE_DOW" Language="ja_JP">
+      <Text>[ICON_Declare_formal_war] {1_CivName}が{2_OtherPlayer}から宣戦布告された！</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_RELIC_RECEIVED" Language="ja_JP">
+      <Text>[ICON_Greatwork_religious] {1_CivName}が聖遺物の「{2_RelicName}」を獲得した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_RESEARCH_AGREEMENT" Language="ja_JP">
+      <Text>[ICON_Research_agreement] {1_CivName}と{2_CivName}が研究協定を締結した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_RESEARCH_TECH" Language="ja_JP">
+      <Text>[ICON_Science] {1_CivName}が{2_TechName}の研究を完了した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_SPY_DISRUPT_ROCKETRY_DETECTED" Language="ja_JP">
+      <Text>[ICON_Exclamation] {3_SpyPlayer}のスパイが{1_CivName}の{2_CityName}で宇宙船基地を破壊した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_SPY_DISRUPT_ROCKETRY_UNDETECTED" Language="ja_JP">
+      <Text>[ICON_Exclamation] 身元不明のスパイが{1_CivName}の{2_CityName}で宇宙船基地を破壊した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_SPY_GREAT_WORK_HEIST_DETECTED" Language="ja_JP">
+      <Text>[ICON_Exclamation] {3_SpyPlayer}のスパイが{1_CivName}の{2_CityName}から傑作を盗み出した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_SPY_GREAT_WORK_HEIST_UNDETECTED" Language="ja_JP">
+      <Text>[ICON_Exclamation] 身元不明のスパイが{1_CivName}の{2_CityName}から傑作を盗み出した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_SPY_RECRUIT_PARTISANS_DETECTED" Language="ja_JP">
+      <Text>[ICON_Exclamation] {3_SpyPlayer}のスパイが{1_CivName}の{2_CityName}でパルチザンを蜂起させた。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_SPY_RECRUIT_PARTISANS_UNDETECTED" Language="ja_JP">
+      <Text>[ICON_Exclamation] 身元不明のスパイが{1_CivName}の{2_CityName}でパルチザンを蜂起させた。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_SPY_SABOTAGE_PRODUCTION_DETECTED" Language="ja_JP">
+      <Text>[ICON_Exclamation] {3_SpyPlayer}のスパイが{1_CivName}の{2_CityName}で工業地帯を破壊した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_SPY_SABOTAGE_PRODUCTION_UNDETECTED" Language="ja_JP">
+      <Text>[ICON_Exclamation] 身元不明のスパイが{1_CivName}の{2_CityName}で工業地帯を破壊した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_SPY_SIPHON_FUNDS_DETECTED" Language="ja_JP">
+      <Text>[ICON_Exclamation] {3_SpyPlayer}のスパイが{1_CivName}の{2_CityName}から資金を盗み出した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_SPY_SIPHON_FUNDS_UNDETECTED" Language="ja_JP">
+      <Text>[ICON_Exclamation] 身元不明のスパイが{1_CivName}の{2_CityName}から資金を盗み出した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_SPY_STEAL_TECH_BOOST_DETECTED" Language="ja_JP">
+      <Text>[ICON_Exclamation] {3_SpyPlayer}のスパイが{1_CivName}の{2_CityName}から研究成果を盗み出した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_SPY_STEAL_TECH_BOOST_UNDETECTED" Language="ja_JP">
+      <Text>[ICON_Exclamation] 身元不明のスパイが{1_CivName}の{2_CityName}から研究成果を盗み出した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_TRADE_DEAL" Language="ja_JP">
+      <Text>[ICON_Gold] {1_CivName}が{2_CivName}と取引している。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_TRADE_RENEGE" Language="ja_JP">
+      <Text>[ICON_Gold] {1_CivName}が{2_CivName}との取引を撤回した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_TRAIN_SETTLER" Language="ja_JP">
+      <Text>[ICON_Unit] {1_CivName}が{2_UnitName}を生産した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_TRAIN_UNIT" Language="ja_JP">
+      <Text>[ICON_Unit] {1_CivName}が世界で初めて{2_UnitName}を生産した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_TRAIN_UNIQUE_UNIT" Language="ja_JP">
+      <Text>[ICON_Unit] {1_CivName}が固有ユニットの{2_UnitName}を生産した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_SPACE_RACE_PROJECT_COMPLETED" Language="ja_JP">
+      <Text>[ICON_Production] {1_CivName}が宇宙開発競争プロジェクト「{2_ProjectType}」を完了した。</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_WMD_BUILT" Language="ja_JP">
+      <Text>[ICON_Nuclear] {1_CivName}が大量破壊兵器を{2_WMDCount}個製造した！</Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_WMD_STRIKE" Language="ja_JP">
+      <Text>[ICON_Nuclear] {1_CivName}が{2_UnitName}を発射した！ </Text>
+    </Replace>
+    <Replace Tag="LOC_GOSSIP_WONDER_STARTED" Language="ja_JP">
+      <Text>[ICON_Production] {1_CivName}が{2_CityName}で{3_BuildingName}の建設を開始した。</Text>
+    </Replace>
+  </LocalizedText>
 </GameData>

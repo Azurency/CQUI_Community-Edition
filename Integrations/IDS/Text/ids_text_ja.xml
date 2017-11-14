@@ -5,16 +5,16 @@
 
     <!-- IDS -->
     <Replace Tag="LOC_IDS_DUMMY_KEY" Language="ja_JP">
-    	<Text>現在の取引</Text>
+      <Text>現在の取引</Text>
     </Replace>
     <Replace Tag="LOC_IDS_DEAL_TERMS" Language="ja_JP">
-    	<Text>取引条項</Text>
+      <Text>取引条項</Text>
     </Replace>
     <Replace Tag="LOC_IDS_DEAL_CEDE" Language="ja_JP">
-    	<Text>割譲</Text>
+      <Text>割譲</Text>
     </Replace>
     <Replace Tag="LOC_IDS_DEAL_RETURN" Language="ja_JP">
-    	<Text>返還</Text>
+      <Text>返還</Text>
     </Replace>
     <Replace Tag="LOC_IDS_DEAL_TRADE" Language="ja_JP">
       <Text>[COLOR_Red]取引[ENDCOLOR]</Text>
@@ -23,10 +23,10 @@
       <Text>[COLOR_Civ6Blue]輸入[ENDCOLOR]</Text>
     </Replace>
     <Replace Tag="LOC_IDS_DEAL_UNTRADEABLE" Language="ja_JP">
-    	<Text>取引不可</Text>
+      <Text>取引不可</Text>
     </Replace>
     <Replace Tag="LOC_IDS_DEAL_DUPLICATE" Language="ja_JP">
-    	<Text>両国所持</Text>
+      <Text>両国所持</Text>
     </Replace>
 
   </LocalizedText>

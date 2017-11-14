@@ -52,6 +52,7 @@
     <File>Assets/Text/Gossip_Text_pt.xml</File>
     <File>Assets/Text/cqui_InGameText.xml</File>
     <File>Assets/Text/cqui_InGameText_de.xml</File>
+    <File>Assets/Text/cqui_InGameText_ja.xml</File>
     <File>Assets/Text/cqui_text_general.xml</File>
     <File>Assets/Text/cqui_text_general_de.xml</File>
     <File>Assets/Text/cqui_text_general_es.xml</File>
@@ -286,10 +287,12 @@
     <!-- CQUI specific LOCs  -->
     <LocalizedText id="CQUI_TEXT">
       <Items>
-	    <File>Assets/Text/Gossip_Text.xml</File>
+        <File>Assets/Text/Gossip_Text.xml</File>
+        <File>Assets/Text/Gossip_Text_ja.xml</File>
         <File>Assets/Text/Gossip_Text_pt.xml</File>
         <File>Assets/Text/cqui_InGameText.xml</File>
         <File>Assets/Text/cqui_InGameText_de.xml</File>
+        <File>Assets/Text/cqui_InGameText_ja.xml</File>
         <File>Assets/Text/cqui_text_general.xml</File>
         <File>Assets/Text/cqui_text_general_de.xml</File>
         <File>Assets/Text/cqui_text_general_es.xml</File>

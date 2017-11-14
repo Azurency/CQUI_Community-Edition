@@ -5,39 +5,39 @@
 
     <!-- HUD Common Text -->
     <Replace Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="ja_JP">
-    	<Text>現在の取引</Text>
+      <Text>現在の取引</Text>
     </Replace>
     <Replace Tag="LOC_HUD_REPORTS_TAB_HIDE_CITY_BUILDINGS" Language="ja_JP">
-    	<Text>都市の建造物を非表示</Text>
+      <Text>都市の建造物を非表示</Text>
     </Replace>
     <!-- Current Deals -->
     <Replace Tag="LOC_CURRENT_DEALS_OUTGOING" Language="ja_JP">
-    	<Text>自国</Text>
+      <Text>自国</Text>
     </Replace>
     <Replace Tag="LOC_CURRENT_DEALS_INCOMING" Language="ja_JP">
-    	<Text>相手</Text>
+      <Text>相手</Text>
     </Replace>
     <!-- Units Overview -->
     <Replace Tag="LOC_UNITS_MILITARY_LAND" Language="ja_JP">
-    	<Text>陸軍</Text>
+      <Text>陸軍</Text>
     </Replace>
     <Replace Tag="LOC_UNITS_MILITARY_AIR" Language="ja_JP">
-    	<Text>空軍</Text>
+      <Text>空軍</Text>
     </Replace>
     <Replace Tag="LOC_UNITS_MILITARY_SEA" Language="ja_JP">
-    	<Text>海軍</Text>
+      <Text>海軍</Text>
     </Replace>
     <Replace Tag="LOC_UNITS_VIEW_ON_THE_MAP" Language="ja_JP">
-    	<Text>このユニットをマップから発見</Text>
+      <Text>このユニットをマップから発見</Text>
     </Replace>
     <Replace Tag="LOC_HUD_REPORTS_BONUSES_URS" Language="ja_JP">
-    	<Text>ボーナス</Text>
+      <Text>ボーナス</Text>
     </Replace>
     <Replace Tag="LOC_HUD_REPORTS_PROMOTION_AVAILABLE" Language="ja_JP">
-    	<Text>レベルアップ可能</Text>
+      <Text>レベルアップ可能</Text>
     </Replace>
     <Replace Tag="LOC_HUD_REPORTS_IN_FORMATION" Language="ja_JP">
-    	<Text>護衛陣形</Text>
+      <Text>護衛陣形</Text>
     </Replace>
 
   </LocalizedText>
