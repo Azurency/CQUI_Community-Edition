@@ -424,7 +424,7 @@ function AddDistrictIcon(stackControl:table, city:table, districtType:string)
   local hasDistrict:boolean = false;
   local cityDistricts:table = city:GetDistricts();
   for i, district in cityDistricts:Members() do
-    if district:IsComplete() then
+    if district:IsComplete() and not district:IsPillaged() then
       local districtInfo:table = GameInfo.Districts[district:GetType()];
       if districtInfo.DistrictType == districtType then
         hasDistrict = true;
