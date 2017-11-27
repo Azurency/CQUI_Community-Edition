@@ -129,7 +129,7 @@ function hasDistrict(city:table, districtType:string)
   local hasDistrict:boolean = false;
   local cityDistricts:table = city:GetDistricts();
   for i, district in cityDistricts:Members() do
-    if district:IsComplete() then
+    if district:IsComplete() and not district:IsPillaged() then
       --gets the district type of the currently selected district
       local districtInfo:table = GameInfo.Districts[district:GetType()];
       local currentDistrictType = districtInfo.DistrictType
