@@ -62,7 +62,7 @@ local m_secondaryColor        :number = 0xf00d1ace;
 local m_kTutorialDisabledControls :table  = nil;
 local m_GrowthPlot          :number = -1;
 
-local CQUI_HousingFromImprovementsTable :table = {};
+local CQUI_HousingFromImprovementsTable :table = {};    -- CQUI real housing from improvements table
 
 -- ====================CQUI Cityview==========================================
 
@@ -953,6 +953,7 @@ function OnTileImproved(x, y)
       LuaEvents.CityPanel_LiveCityDataChanged( m_kData, true );
       --LuaEvents.UpdateBanner(Game.GetLocalPlayer(), m_pCity:GetID());
 
+      -- CQUI update city's real housing
       local pCityID = m_pCity:GetID();
       LuaEvents.CQUI_CityInfoUpdated(pCityID);
     end
@@ -1503,6 +1504,7 @@ function Initialize()
   LuaEvents.CQUI_RealHousingFromImprovementsCalculated.Add(CQUI_HousingFromImprovementsTableInsert);    -- CQUI get real housing from improvements values
   LuaEvents.CQUI_CityLostTileToCultureBomb.Add( Refresh );    -- CQUI update real housing from improvements when a city lost tile to a Culture Bomb
   LuaEvents.CQUI_IndiaPlayerResearchedSanitation.Add( Refresh );    -- CQUI update real housing from improvements when play as India and researched Sanitation
+  LuaEvents.CQUI_IndonesiaPlayerResearchedMassProduction.Add( Refresh );    -- CQUI update real housing from improvements when play as Indonesia and researched Mass Production
 
   -- Truncate possible static text overflows
   TruncateStringWithTooltip(Controls.BreakdownLabel,  MAX_BEFORE_TRUNC_STATIC_LABELS, Controls.BreakdownLabel:GetText());
