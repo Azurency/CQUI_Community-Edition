@@ -2023,6 +2023,10 @@ function PopulateAvailableCities(player : table, iconList : table)
       -- Handle occupied cities
       if pCity == nil or (entry.ForTypeName ~= GetCityData(pCity).CityName and not pCity:IsOccupied()) then --ARISTOS
         pCity = otherPlayer:GetCities():FindID( type );
+        -- AZURENCY : fix for persia not having occupation penalties
+        if pCity == nil then
+          pCity = player:GetCities():FindID(valueType);
+        end
       end
 
       local icon = renderCity(pCity, player, iconList.ListStack);
@@ -2504,6 +2508,10 @@ function PopulateDealCities(player : table, iconList : table)
           -- Handle occupied cities
           if pCity == nil or (valueName ~= GetCityData(pCity).CityName and not pCity:IsOccupied()) then --ARISTOS
             pCity = otherPlayer:GetCities():FindID(valueType);
+            -- AZURENCY : fix for persia not having occupation penalties
+            if pCity == nil then
+              pCity = player:GetCities():FindID(valueType);
+            end
           end
 
           local icon = renderCity(pCity, player, iconList.ListStack);
