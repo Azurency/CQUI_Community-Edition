@@ -362,6 +362,8 @@ function ViewPanelReligion( data:table )
       kBeliefInstance.Top:SetToolTipString( Locale.Lookup(kBelief.Description) );
     end
 
+    -- AZURENCY : fix the DominantReligionGrid being hidden at each turn of the loop
+    Controls.DominantReligionGrid:SetHide(true);
 
     for _,religion in ipairs(data.Religions) do
 
@@ -369,7 +371,6 @@ function ViewPanelReligion( data:table )
       local iconName    :string = "ICON_" .. religion.ReligionType;
       local textureOffsetX:number, textureOffsetY:number, textureSheet:string = IconManager:FindIconAtlas(iconName, 22);
 
-      Controls.DominantReligionGrid:SetHide(true);
       if textureSheet ~= nil then
         if religion == data.Religions[DATA_DOMINANT_RELIGION] then
           -- Dominant religion
