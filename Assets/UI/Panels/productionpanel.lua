@@ -2997,7 +2997,10 @@ function OnCityProductionCompleted(playerID, cityID, orderType, unitType, cancel
       if(GameInfo.Districts[prodQueue[productionQueueTableKey][1].entry.Hash] and pDistricts:HasDistrict(GameInfo.Districts[prodQueue[productionQueueTableKey][1].entry.Hash].Index, true)) then
         isComplete = true;
       elseif(GameInfo.Buildings[prodQueue[productionQueueTableKey][1].entry.Hash] and pBuildings:HasBuilding(GameInfo.Buildings[prodQueue[productionQueueTableKey][1].entry.Hash].Index)) then
-        isComplete = true;
+        -- AZURENCY : Fix faith buying with repaired item in queue
+        if not pBuildings:IsPillaged(prodQueue[productionQueueTableKey][1].entry.Hash) then
+          isComplete = true;
+        end
       elseif(productionInfo.PercentComplete >= 1) then
         isComplete = true;
       end
