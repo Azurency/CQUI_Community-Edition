@@ -1,3544 +1,2104 @@
 -- ===========================================================================
---  MINIMAP PANEL
+--	Unit Flag Manager
+--	Manages all the 2d "flags" above units on the world map.
 -- ===========================================================================
+
 include( "InstanceManager" );
-include( "Civ6Common.lua" ); -- GetCivilizationUniqueTraits, GetLeaderUniqueTraits
 include( "SupportFunctions" );
---include( "TradeSupport" )
+include( "Civ6Common" );
 
 -- ===========================================================================
---  CONSTANTS
+--	CONSTANTS
 -- ===========================================================================
-local MINIMAP_COLLAPSED_OFFSETY :number = -180;
-local LENS_PANEL_OFFSET:number = 50;
-local MINIMAP_BACKING_PADDING_SIZEY:number = 60;
+local YOFFSET_2DVIEW			:number = 26;
+local ZOFFSET_3DVIEW			:number = 36;
+local ALPHA_DIM					:number = 0.45;
+local COLOR_RED					:number = 0xFF0101F5;
+local COLOR_YELLOW				:number = 0xFF2DFFF8;
+local COLOR_GREEN				:number = 0xFF4CE710;
+local FLAGSTATE_NORMAL			:number= 0;
+local FLAGSTATE_FORTIFIED		:number= 1;
+local FLAGSTATE_EMBARKED		:number= 2;
+local FLAGSTYLE_MILITARY		:number= 0;
+local FLAGSTYLE_CIVILIAN		:number= 1;
+local FLAGSTYLE_SUPPORT			:number= 2;
+local FLAGSTYLE_TRADE			:number= 3;
+local FLAGSTYLE_NAVAL			:number= 4;
+local FLAGSTYLE_RELIGION		:number= 5;
+local FLAGTYPE_UNIT				:number= 0;
+local ZOOM_MULT_DELTA			:number = .01;
+local TEXTURE_BASE				:string = "UnitFlagBase.dds";
+local TEXTURE_CIVILIAN			:string = "UnitFlagCivilian.dds";
+local TEXTURE_RELIGION			:string = "UnitFlagReligion.dds";
+local TEXTURE_EMBARK			:string = "UnitFlagEmbark.dds";
+local TEXTURE_FORTIFY			:string = "UnitFlagFortify.dds";
+local TEXTURE_NAVAL				:string = "UnitFlagNaval.dds";
+local TEXTURE_SUPPORT			:string = "UnitFlagSupport.dds";
+local TEXTURE_TRADE				:string = "UnitFlagTrade.dds";
+local TEXTURE_MASK_BASE			:string = "UnitFlagBaseMask.dds";
+local TEXTURE_MASK_CIVILIAN		:string = "UnitFlagCivilianMask.dds";
+local TEXTURE_MASK_RELIGION		:string = "UnitFlagReligionMask.dds";
+local TEXTURE_MASK_EMBARK		:string = "UnitFlagEmbarkMask.dds";
+local TEXTURE_MASK_FORTIFY		:string = "UnitFlagFortifyMask.dds";
+local TEXTURE_MASK_NAVAL		:string = "UnitFlagNavalMask.dds";
+local TEXTURE_MASK_SUPPORT		:string = "UnitFlagSupportMask.dds";
+local TEXTURE_MASK_TRADE		:string = "UnitFlagTradeMask.dds";
+local TXT_UNITFLAG_ARMY_SUFFIX			:string = " " .. Locale.Lookup("LOC_UNITFLAG_ARMY_SUFFIX");
+local TXT_UNITFLAG_CORPS_SUFFIX			:string = " " .. Locale.Lookup("LOC_UNITFLAG_CORPS_SUFFIX");
+local TXT_UNITFLAG_ARMADA_SUFFIX			:string = " " .. Locale.Lookup("LOC_UNITFLAG_ARMADA_SUFFIX");
+local TXT_UNITFLAG_FLEET_SUFFIX			:string = " " .. Locale.Lookup("LOC_UNITFLAG_FLEET_SUFFIX");
+local TXT_UNITFLAG_ACTIVITY_ON_SENTRY	:string = " " .. Locale.Lookup("LOC_UNITFLAG_ACTIVITY_ON_SENTRY");
+local TXT_UNITFLAG_ACTIVITY_ON_INTERCEPT:string = " " .. Locale.Lookup("LOC_UNITFLAG_ACTIVITY_ON_INTERCEPT");
+local TXT_UNITFLAG_ACTIVITY_AWAKE		:string = " " .. Locale.Lookup("LOC_UNITFLAG_ACTIVITY_AWAKE");
+local TXT_UNITFLAG_ACTIVITY_HOLD		:string = " " .. Locale.Lookup("LOC_UNITFLAG_ACTIVITY_HOLD");
+local TXT_UNITFLAG_ACTIVITY_SLEEP		:string = " " .. Locale.Lookup("LOC_UNITFLAG_ACTIVITY_SLEEP");
+local TXT_UNITFLAG_ACTIVITY_HEALING		:string = " " .. Locale.Lookup("LOC_UNITFLAG_ACTIVITY_HEALING");
+local TXT_UNITFLAG_ACTIVITY_NO_ACTIVITY	:string = " " .. Locale.Lookup("LOC_UNITFLAG_ACTIVITY_NO_ACTIVITY");
 
--- Used to control ModalLensPanel.lua
-local MODDED_LENS_ID:table = {
-  NONE = 0;
-  APPEAL = 1;
-  BUILDER = 2;
-  ARCHAEOLOGIST = 3;
-  BARBARIAN = 4;
-  CITY_OVERLAP = 5;
-  RESOURCE = 6;
-  WONDER = 7;
-  ADJACENCY_YIELD = 8;
-  SCOUT = 9;
-  NATURALIST = 10;
-  CUSTOM = 11;
-};
+local m_FlagOffsets :table = {};
+  m_FlagOffsets[1] = {-32,0};
+  m_FlagOffsets[2] = {32,0};
+  m_FlagOffsets[3] = {0,-45};
 
--- Different from above, since it uses a government lens, instead of appeal
-local AREA_LENS_ID:table = {
-  NONE = 0;
-  GOVERNMENT = 1;
-  CITIZEN_MANAGEMENT = 2;
-}
+local m_LinkOffsets :table = {};
+  m_LinkOffsets[1] = {0,0};
+  m_LinkOffsets[2] = {0,-20};
+  m_LinkOffsets[3] = {16,22};
 
--- Should the builder lens auto apply, when a builder is selected.
-local AUTO_APPLY_BUILDER_LENS:boolean = true;
-
--- Should the archaeologist lens auto apply, when a archaeologist is selected.
-local AUTO_APPLY_ARCHEOLOGIST_LENS:boolean = true
-
--- Should the scout lens auto apply, when a scout/ranger is selected.
-local AUTO_APPLY_SCOUT_LENS:boolean = true;
-
--- Show citizen management when managing citizens
-local SHOW_CITIZEN_MANAGEMENT_INSCREEN:boolean = true;
-
--- Highlight nothing to do (red plots) in builder lens
-local SHOW_NOTHING_TODO_IN_BUILDER_LENS:boolean = true;
-
--- Highlight generic (white plots) in builder lens
-local SHOW_GENERIC_PLOTS_IN_BUILDER_LENS:boolean = true;
-
-local CITY_WORK_RANGE:number = 3;
-
--- ===========================================================================
---  MEMBERS
--- ===========================================================================
---local m_OptionsButtonManager= InstanceManager:new( "MiniMapOptionButtonInstance", "Top",      Controls.OptionsStack );
-local m_OptionButtons           :table = {};    -- option buttons indexed by buttonName.
-local iZoomIncrement            :number = 2;
-local m_isCollapsed             :boolean= false;
-local bGridOn                   :boolean= true;
-local m_ContinentsCreated       :boolean=false;
-local m_MiniMap_xmloffsety      :number = 0;
-local m_ContinentsCache         :table = {};
-local m_kFlyoutControlIds       :table = { "MapOptions", "Lens", "MapPinList"}; -- Name of controls that are the backing for "flyout" menus.
-
-local m_shouldCloseLensMenu     :boolean = true;    -- Controls when the Lens menu should be closed.
-
-local m_LensLayers:table = {
-  LensLayers.HEX_COLORING_RELIGION,
-  LensLayers.HEX_COLORING_CONTINENT,
-  LensLayers.HEX_COLORING_APPEAL_LEVEL,
-  LensLayers.HEX_COLORING_GOVERNMENT,
-  LensLayers.HEX_COLORING_OWING_CIV,
-  LensLayers.HEX_COLORING_WATER_AVAILABLITY
-};
-
-local m_ToggleReligionLensId    = Input.GetActionId("LensReligion");
-local m_ToggleContinentLensId   = Input.GetActionId("LensContinent");
-local m_ToggleAppealLensId      = Input.GetActionId("LensAppeal");
-local m_ToggleSettlerLensId     = Input.GetActionId("LensSettler");
-local m_ToggleGovernmentLensId  = Input.GetActionId("LensGovernment");
-local m_TogglePoliticalLensId   = Input.GetActionId("LensPolitical");
-local m_ToggleTourismLensId     = Input.GetActionId("LensTourism");
-local m_Toggle2DViewId          = Input.GetActionId("Toggle2DView");
-
-local m_isMouseDragEnabled      :boolean = true; -- Can the camera be moved by dragging on the minimap?
-local m_isMouseDragging         :boolean = false; -- Was LMB clicked inside the minimap, and has not been released yet?
-local m_hasMouseDragged         :boolean = false; -- Has there been any movements since m_isMouseDragging became true?
-local m_wasMouseInMinimap       :boolean = false; -- Was the mouse over the minimap the last time we checked?
-
-local m_CurrentModdedLensOn     :number  = MODDED_LENS_ID.NONE;
-local m_CurrentAreaLensOn       :number  = AREA_LENS_ID.NONE;
-
-local m_CustomLens_PlotsAndColors:table = {}
-
--- Resource Lens Specific Vars
-local ResourcesToHide:table = {};
-local ResourceCategoryToHide:table = {};
-
-local m_CityOverlapRange:number = 6;
-
-local m_CurrentCursorPlotID:number = -1;
-
--- Citizen management lens variables
-local m_CitizenManagementOn:boolean = false;
-local m_FullClearAreaLens:boolean = true;
-local m_tAreaPlotsColored:table = {}
-
--- Settler Lens Variables
-local m_CtrlDown:boolean = false;
-
-local CQUI_MapSize = 512;
-local CQUI_MapImageScaler = 0.5;
-
-local CQUI_MapBackingXSizeDiff = 27;
-local CQUI_MapBackingYSizeDiff = 54;
 
 -- ===========================================================================
---  FUNCTIONS
+--	VARIABLES
 -- ===========================================================================
 
--- CQUI Options Panel logic
-function CQUI_OnToggleBindings(mode: number)
-  Controls.CQUI_ToggleBindings0:SetCheck(false);
-  Controls.CQUI_ToggleBindings1:SetCheck(false);
-  Controls.CQUI_ToggleBindings2:SetCheck(false);
-  if(mode == 0) then
-  Controls.CQUI_ToggleBindings0:SetCheck(true);
-  elseif(mode == 1) then
-  Controls.CQUI_ToggleBindings1:SetCheck(true);
-  elseif(mode == 2) then
-  Controls.CQUI_ToggleBindings2:SetCheck(true);
-  end
-end
+-- A link to a container that is rendered after the Unit/City flags.  This is used
+-- so that selected units will always appear above the other objects.
+local m_SelectedContainer			:table = ContextPtr:LookUpControl( "../SelectedUnitContainer" );
 
-function CQUI_UpdateMinimapSize()
-  -- AZURENCY : TODO remove this resize totally since its in base game now
-  local size = GameConfiguration.GetValue("CQUI_MinimapSize");
-  if size ~= nil then
-    CQUI_MapSize = size
-  else
-    print_debug("Using previous minimap size")
-  end
+local m_MilitaryInstanceManager   :table = InstanceManager:new( "UnitFlag",	"Anchor", Controls.MilitaryFlags );
+local m_CivilianInstanceManager   :table = InstanceManager:new( "UnitFlag",	"Anchor", Controls.CivilianFlags );
+local m_SupportInstanceManager    :table = InstanceManager:new( "UnitFlag",	"Anchor", Controls.SupportFlags );
+local m_TradeInstanceManager      :table = InstanceManager:new( "UnitFlag",	"Anchor", Controls.TradeFlags );
+local m_NavalInstanceManager      :table = InstanceManager:new( "UnitFlag",	"Anchor", Controls.NavalFlags );
+local m_AttentionMarkerIM         :table = InstanceManager:new( "AttentionMarkerInstance", "Top" );
 
-  -- AZURENCY : Quick fix to avoid visual glitch when CQUI_MapSize is too big (with old saves before the setting change)
-  if CQUI_MapSize > 100 then
-    CQUI_MapSize = 100
-  end
+local m_cameraFocusX				:number = -1;
+local m_cameraFocusY				:number = -1;
+local m_zoomMultiplier				:number = 1;
+local m_DirtyComponents				:table  = nil;
+local m_UnitFlagInstances			:table  = {};
+local m_isMapDeselectDisabled		:boolean= false;
 
-  Options.SetGraphicsOption("General", "MinimapSize", CQUI_MapSize/100);
-  UI.SetMinimapSize(CQUI_MapSize/100);
+-- COMMENTING OUT hstructures.
+-- These structures remained defined for the entire lifetime of the application.
+-- If a modder or scenario script needs to redefine it, yer boned.
+-- Replacing these with regular tables, for now.
+-- The meta table definition that holds the function pointers
+--hstructure UnitFlagMeta
+  ---- Pointer back to itself.  Required.
+  --__index							: UnitFlagMeta
+--
+  --new								: ifunction;
+  --destroy							: ifunction;
+  --Initialize						: ifunction;
+  --GetUnit							: ifunction;
+  --SetInteractivity				: ifunction;
+  --SetFogState						: ifunction;
+  --SetHide							: ifunction;
+  --SetForceHide					: ifunction;
+  --SetFlagUnitEmblem				: ifunction;
+  --SetColor						: ifunction;
+  --SetDim							: ifunction;
+  --OverrideDimmed					: ifunction;
+  --UpdateDimmedState				: ifunction;
+  --UpdateFlagType					: ifunction;
+  --UpdateHealth					: ifunction;
+  --UpdateVisibility				: ifunction;
+  --UpdateSelected					: ifunction;
+  --UpdateFormationIndicators		: ifunction;
+  --UpdateName						: ifunction;
+  --UpdatePosition					: ifunction;
+  --SetPosition						: ifunction;
+  --UpdateStats						: ifunction;
+  --UpdateReadyState				: ifunction;
+  --UpdatePromotions				: ifunction;
+  --UpdateAircraftCounter			: ifunction;
+--end
+--
+---- The structure that holds the banner instance data
+--hstructure UnitFlag
+  --meta							: UnitFlagMeta;
+--
+  --m_InstanceManager				: table;				-- The instance manager that made the control set.
+    --m_Instance						: table;				-- The instanced control set.
+    --
+  --m_cacheMilitaryFormation		: number;				-- Name of last military formation this flag was in.
+    --m_Type							: number;
+  --m_Style							: number;
+  --m_eVisibility					: number;
+    --m_IsInitialized					: boolean;				-- Is flag done it's initial creation.
+  --m_IsSelected					: boolean;
+    --m_IsCurrentlyVisible			: boolean;
+  --m_IsForceHide					: boolean;
+    --m_IsDimmed						: boolean;
+  --m_OverrideDimmed				: boolean;
+  --m_OverrideDim					: boolean;
+  --m_FogState						: number;
+    --
+    --m_Player						: table;
+    --m_UnitID						: number;		-- The unit ID.  Keeping just the ID, rather than a reference because there will be times when we need the value, but the unit instance will not exist.
+--end
 
-  --Cycles the minimap after resizing
-  -- local xSize = CQUI_MapSize
-  -- local ySize = CQUI_MapSize * CQUI_MapImageScaler
-  -- Controls.MinimapContainer:SetSizeVal(xSize, ySize);
-  -- Controls.MinimapImage:SetSizeVal(xSize, ySize);
-  -- Controls.MinimapBacking:SetSizeVal(xSize + CQUI_MapBackingXSizeDiff, ySize + CQUI_MapBackingYSizeDiff);
-  -- Controls.CollapseAnim:SetEndVal(0, Controls.MinimapImage:GetOffsetY() + Controls.MinimapImage:GetSizeY());
+-- Create one instance of the meta object as a global variable with the same name as the data structure portion.
+-- This allows us to do a UnitFlag:new, so the naming looks consistent.
+--UnitFlag = hmake UnitFlagMeta {};
+UnitFlag = {};
 
-  --Squeezes the map buttons if extra space is needed
-  if(CQUI_MapSize < 15) then
-    Controls.OptionsStack:SetPadding(-7);
-  else
-    Controls.OptionsStack:SetPadding(-3);
+-- Link its __index to itself
+UnitFlag.__index = UnitFlag;
+
+--CQUI Members
+local CQUI_ShowingPath = nil; --unitID for the unit whose path is currently being shown. nil for no unit
+local CQUI_SelectionMade = false;
+local CQUI_ShowPaths = true; --Toggle for showing the paths
+local CQUI_IsFlagHover = false; -- if the path is the flag us currently hover or not
+
+--CQUI Functions
+--Hides any currently drawn paths.
+function CQUI_HidePath()
+  if CQUI_ShowPaths and CQUI_IsFlagHover then
+    LuaEvents.CQUI_clearUnitPath();
+    CQUI_IsFlagHover = false;
   end
 end
 
 function CQUI_OnSettingsUpdate()
-  AUTO_APPLY_ARCHEOLOGIST_LENS = GameConfiguration.GetValue("CQUI_AutoapplyArchaeologistLens");
-  AUTO_APPLY_BUILDER_LENS = GameConfiguration.GetValue("CQUI_AutoapplyBuilderLens");
-  AUTO_APPLY_SCOUT_LENS = GameConfiguration.GetValue("CQUI_AutoapplyScoutLens");
-  SHOW_CITIZEN_MANAGEMENT_INSCREEN = GameConfiguration.GetValue("CQUI_ShowCityMangeAreaInScreen");
-  SHOW_NOTHING_TODO_IN_BUILDER_LENS = GameConfiguration.GetValue("CQUI_ShowNothingToDoBuilderLens");
-  SHOW_GENERIC_PLOTS_IN_BUILDER_LENS = GameConfiguration.GetValue("CQUI_ShowGenericBuilderLens");
-
-  --Cycles the minimap after resizing
-  CQUI_UpdateMinimapSize();
+  CQUI_HidePath();
+  CQUI_ShowPaths = GameConfiguration.GetValue("CQUI_ShowUnitPaths");
 end
 
-function CQUI_ToggleYieldIcons()
-  -- CQUI: Toggle yield icons if option is enabled
-  if(GameConfiguration.GetValue("CQUI_ToggleYieldsOnLoad")) then
-  ToggleYieldIcons();
+LuaEvents.CQUI_SettingsUpdate.Add(CQUI_OnSettingsUpdate);
+LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
+
+-- ===========================================================================
+--	Obtain the unit flag associate with a player and unit.
+--	RETURNS: flag object (if found), nil otherwise
+-- ===========================================================================
+function GetUnitFlag(playerID:number, unitID:number)
+  if m_UnitFlagInstances[playerID]==nil then
+    return nil;
+  end
+  return m_UnitFlagInstances[playerID][unitID];
+end
+
+------------------------------------------------------------------
+-- constructor
+------------------------------------------------------------------
+function UnitFlag.new( self, playerID: number, unitID : number, flagType : number, flagStyle : number )
+  -- local o = hmake UnitFlag { };
+    local o = {};
+  setmetatable( o, self );
+
+  o:Initialize(playerID, unitID, flagType, flagStyle);
+
+  if (m_UnitFlagInstances[playerID] == nil) then
+    m_UnitFlagInstances[playerID] = {};
+  end
+
+  m_UnitFlagInstances[playerID][unitID] = o;
+end
+
+------------------------------------------------------------------
+function UnitFlag.destroy( self )
+  if ( self.m_InstanceManager ~= nil ) then
+    self:UpdateSelected( false );
+
+    if (self.m_Instance ~= nil) then
+      self.m_InstanceManager:ReleaseInstance( self.m_Instance );
+    end
   end
 end
--- ===========================================================================
-function GetContinentsCache()
-  if m_ContinentsCache == nil then
-    m_ContinentsCache = Map.GetContinentsInUse();
-  end
+
+------------------------------------------------------------------
+function UnitFlag.GetUnit( self )
+  local pUnit : table = self.m_Player:GetUnits():FindID(self.m_UnitID);
+  return pUnit;
 end
 
--- ===========================================================================
-function OnZoomIn()
-  UI.ZoomMap( iZoomIncrement );
-end
-
--- ===========================================================================
-function OnZoomOut()
-  UI.ZoomMap( -iZoomIncrement );
-end
-
--- ===========================================================================
-function CloseAllFlyouts()
-  for _,id in ipairs(m_kFlyoutControlIds) do
-    local panelId = id.."Panel";        -- e.g LenPanel, MapOptionPanel, etc...
-    local buttonId = id.."Button";
-    if Controls[panelId] ~= nil then
-      Controls[panelId]:SetHide( true );
+------------------------------------------------------------------
+function UnitFlag.Initialize( self, playerID: number, unitID : number, flagType : number, flagStyle : number)
+  if (flagType == FLAGTYPE_UNIT) then
+    if (flagStyle == FLAGSTYLE_MILITARY) then
+      self.m_InstanceManager = m_MilitaryInstanceManager;
+    elseif flagstyle == FLAGSTYLE_NAVAL then
+      self.m_InstanceManager = m_NavalInstanceManager;
+    elseif flagstyle == FLAGSTYLE_TRADE then
+      self.m_InstanceManager = m_TradeInstanceManager;
+    elseif flagstyle == FLAGSTYLE_SUPPORT then
+      self.m_InstanceManager = m_SupportInstanceManager;
     else
-      UI.DataError("Minimap's CloseAllFlyouts() attempted to close '"..panelId.."' but the control doesn't exist in the XML.");
+      self.m_InstanceManager = m_CivilianInstanceManager;
     end
-    if Controls[buttonId] ~= nil then
-      Controls[buttonId]:SetSelected( false );
-    else
-      UI.DataError("Minimap's CloseAllFlyouts() attempted to unselect'"..buttonId.."' but the control doesn't exist in the XML.");
+
+    self.m_Instance = self.m_InstanceManager:GetInstance();
+    self.m_Type = flagType;
+    self.m_Style = flagStyle;
+
+    self.m_IsInitialized = false;
+    self.m_IsSelected = false;
+    self.m_IsCurrentlyVisible = false;
+    self.m_IsForceHide = false;
+    self.m_IsDimmed = false;
+    self.m_OverrideDimmed = false;
+    self.m_FogState = 0;
+
+    self.m_Player = Players[playerID];
+    self.m_UnitID = unitID;
+
+    self:SetFlagUnitEmblem();
+    self:SetColor();
+    self:SetInteractivity();
+    self:UpdateFlagType();
+    self:UpdateHealth();
+    self:UpdateName();
+		self:UpdateReligion();
+    self:UpdatePosition();
+      self:UpdateVisibility();
+    self:UpdateStats();
+    if( playerID == Game.GetLocalPlayer() ) then
+      self:UpdateReadyState();
     end
+    self:UpdateDimmedState();
+
+    self.m_IsInitialized = true;
   end
 end
 
--- ===========================================================================
---  Only show one "flyout" control at a time.
--- ===========================================================================
-function RealizeFlyouts( pControl:table )
-  if pControl:IsHidden() then
-    return;     -- If target control is hidden, ignore the rest.
-  end
-  for _,id in ipairs(m_kFlyoutControlIds) do
-    local panelId = id.."Panel";        -- e.g LenPanel, MapOptionPanel, etc...
-    local buttonId = id.."Button";
-    if Controls[panelId] ~= nil then
-      if Controls[panelId] ~= pControl and Controls[panelId]:IsHidden()==false then
-        Controls[panelId]:SetHide( true );
-      end
-      if Controls[panelId] ~= pControl then
-        if Controls[buttonId]:IsSelected() then
-          Controls[buttonId]:SetSelected( false );
-        end
-      else
-        if not Controls[buttonId]:IsSelected() then
-          Controls[buttonId]:SetSelected( true );
-        end
-      end
-    else
-      UI.DataError("Minimap's RealizeFlyouts() attempted to close '"..panelId.."' but the control doesn't exist in the XML.");
-    end
-  end
-end
 
 -- ===========================================================================
-function RefreshMinimapOptions()
-  Controls.ToggleYieldsButton:SetCheck(UserConfiguration.ShowMapYield());
-  Controls.ToggleGridButton:SetCheck(bGridOn);
-  Controls.ToggleResourcesButton:SetCheck(UserConfiguration.ShowMapResources());
-end
-
--- ===========================================================================
-function ToggleMapOptionsList()
-  if Controls.MapOptionsPanel:IsHidden() then
-    RefreshMinimapOptions();
-  end
-  Controls.MapOptionsPanel:SetHide( not Controls.MapOptionsPanel:IsHidden() );
-  RealizeFlyouts(Controls.MapOptionsPanel);
-  Controls.MapOptionsButton:SetSelected( not Controls.MapOptionsPanel:IsHidden() );
-end
-
--- ===========================================================================
-function OnToggleLensList()
-  Controls.LensPanel:SetHide( not Controls.LensPanel:IsHidden() );
-  RealizeFlyouts(Controls.LensPanel);
-  Controls.LensButton:SetSelected( not Controls.LensPanel:IsHidden() );
-  Controls.LensChooserList:CalculateSize();
-  if Controls.LensPanel:IsHidden() then
-    m_shouldCloseLensMenu = true;
-    Controls.ReligionLensButton:SetCheck(false);
-    Controls.ContinentLensButton:SetCheck(false);
-    Controls.AppealLensButton:SetCheck(false);
-    Controls.GovernmentLensButton:SetCheck(false);
-    Controls.WaterLensButton:SetCheck(false);
-    Controls.OwnerLensButton:SetCheck(false);
-    Controls.TourismLensButton:SetCheck(false);
-
-    -- Modded lens
-    Controls.ScoutLensButton:SetCheck(false);
-    Controls.AdjacencyYieldLensButton:SetCheck(false);
-    Controls.WonderLensButton:SetCheck(false);
-    Controls.ResourceLensButton:SetCheck(false);
-    Controls.BarbarianLensButton:SetCheck(false);
-    Controls.CityOverlapLensButton:SetCheck(false);
-    Controls.ArchaeologistLensButton:SetCheck(false);
-    Controls.BuilderLensButton:SetCheck(false);
-    Controls.NaturalistLensButton:SetCheck(false);
-
-    -- Side Menus
-    Controls.ResourceLensOptionsPanel:SetHide(true);
-    Controls.OverlapLensOptionsPanel:SetHide(true);
-
-    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    end
-  else
-    Controls.ReligionLensButton:SetHide(not GameCapabilities.HasCapability("CAPABILITY_LENS_RELIGION"));
-    Controls.AppealLensButton:SetHide(not GameCapabilities.HasCapability("CAPABILITY_LENS_APPEAL"));
-    Controls.GovernmentLensButton:SetHide(not GameCapabilities.HasCapability("CAPABILITY_LENS_GOVERNMENT"));
-    Controls.WaterLensButton:SetHide(not GameCapabilities.HasCapability("CAPABILITY_LENS_SETTLER"));
-    Controls.TourismLensButton:SetHide(not GameCapabilities.HasCapability("CAPABILITY_LENS_TOURISM"));
-    -- Controls.LensToggleStack:CalculateSize();
-
-    -- Don't call this otherwise the panel is ridiculously long
-    -- Controls.LensPanel:SetSizeY(Controls.LensToggleStack:GetSizeY() + LENS_PANEL_OFFSET);
-  end
-end
-
--- ===========================================================================
-function ToggleMapPinMode()
-  Controls.MapPinListPanel:SetHide( not Controls.MapPinListPanel:IsHidden() );
-  RealizeFlyouts(Controls.MapPinListPanel);
-  Controls.MapPinListButton:SetSelected( not Controls.MapPinListPanel:IsHidden() );
-end
-
--- ===========================================================================
-function ToggleResourceIcons()
-  UserConfiguration.ShowMapResources( not UserConfiguration.ShowMapResources() );
-end
-
--- ===========================================================================
-function ToggleYieldIcons()
-  local showMapYield:boolean = not UserConfiguration.ShowMapYield();
-  UserConfiguration.ShowMapYield( showMapYield );
-  if showMapYield then
-    LuaEvents.MinimapPanel_ShowYieldIcons();
-  else
-    LuaEvents.MinimapPanel_HideYieldIcons();
-  end
-end
-
--- ===========================================================================
-function ToggleReligionLens()
-  if Controls.ReligionLensButton:IsChecked() then
-    UILens.SetActive("Religion");
-    RefreshInterfaceMode();
-  else
-    m_shouldCloseLensMenu = false; --When toggling the lens off, shouldn't close the menu.
-    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    end
-  end
-end
-
--- ===========================================================================
-function ToggleContinentLens()
-  if Controls.ContinentLensButton:IsChecked() then
-    UILens.SetActive("Continent");
-    RefreshInterfaceMode();
-  else
-    m_shouldCloseLensMenu = false;
-    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    end
-  end
-end
-
--- ===========================================================================
-function ToggleAppealLens()
-  if Controls.AppealLensButton:IsChecked() then
-    SetActiveModdedLens(MODDED_LENS_ID.APPEAL);
-
-    -- Check if the appeal lens is already active. Needed to clear any modded lens
-    if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
-      -- Unapply the appeal lens, so it can be cleared from the screen
-      UILens.SetActive("Default");
-    end
-
-    UILens.SetActive("Appeal");
-    RefreshInterfaceMode();
-  else
-    m_shouldCloseLensMenu = false;
-    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    end
-    SetActiveModdedLens(MODDED_LENS_ID.NONE);
-  end
-end
-
--- ===========================================================================
-function ToggleWaterLens()
-  if Controls.WaterLensButton:IsChecked() then
-    UILens.SetActive("WaterAvailability");
-    RefreshInterfaceMode();
-  else
-    m_shouldCloseLensMenu = false;
-    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    end
-  end
-end
-
--- ===========================================================================
-function ToggleGovernmentLens()
-  if Controls.GovernmentLensButton:IsChecked() then
-    SetActiveAreaLens(AREA_LENS_ID.GOVERNMENT);
-
-    -- Check if the gov lens is already active. Needed to clear any gov lens
-    if UILens.IsLayerOn(LensLayers.HEX_COLORING_GOVERNMENT) then
-      -- Unapply the appeal lens, so it can be cleared from the screen
-      UILens.SetActive("Default");
-    end
-
-    UILens.SetActive("Government");
-    RefreshInterfaceMode();
-  else
-    m_shouldCloseLensMenu = false;
-    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    end
-    SetActiveAreaLens(AREA_LENS_ID.NONE);
-  end
-end
-
--- ===========================================================================
-function ToggleOwnerLens()
-  if Controls.OwnerLensButton:IsChecked() then
-    UILens.SetActive("OwningCiv");
-    RefreshInterfaceMode();
-  else
-    m_shouldCloseLensMenu = false;
-    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    end
-  end
-end
-
--- ===========================================================================
-function ToggleTourismLens()
-  if Controls.TourismLensButton:IsChecked() then
-    UILens.SetActive("Tourism");
-    RefreshInterfaceMode();
-  else
-    m_shouldCloseLensMenu = false;
-    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    end
-  end
-end
-
--- ===========================================================================
--- Modded lenses
--- ===========================================================================
-function ToggleBuilderLens()
-  if Controls.BuilderLensButton:IsChecked() then
-    SetActiveModdedLens(MODDED_LENS_ID.BUILDER);
-
-    -- Check if the appeal lens is already active
-    if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
-      -- Unapply the appeal lens, so it can be cleared from the screen
-      UILens.SetActive("Default");
-    end
-
-    UILens.SetActive("Appeal");
-    RefreshInterfaceMode();
-  else
-    m_shouldCloseLensMenu = false;
-    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    end
-    SetActiveModdedLens(MODDED_LENS_ID.NONE);
-  end
-end
-
--- ===========================================================================
-function ToggleArchaeologistLens()
-  if Controls.ArchaeologistLensButton:IsChecked() then
-    SetActiveModdedLens(MODDED_LENS_ID.ARCHAEOLOGIST);
-
-    -- Check if the appeal lens is already active
-    if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
-      -- Unapply the appeal lens, so it can be cleared from the screen
-      UILens.SetActive("Default");
-    end
-
-    UILens.SetActive("Appeal");
-    RefreshInterfaceMode();
-  else
-    m_shouldCloseLensMenu = false;
-    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    end
-    SetActiveModdedLens(MODDED_LENS_ID.NONE);
-  end
-end
-
--- ===========================================================================
-function ToggleCityOverlapLens()
-  if Controls.CityOverlapLensButton:IsChecked() then
-    SetActiveModdedLens(MODDED_LENS_ID.CITY_OVERLAP);
-
-    -- Check if the appeal lens is already active
-    if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
-      -- Unapply the appeal lens, so it can be cleared from the screen
-      UILens.SetActive("Default");
-    end
-
-    UILens.SetActive("Appeal");
-
-    RefreshInterfaceMode();
-    Controls.OverlapLensOptionsPanel:SetHide(false);
-  else
-    m_shouldCloseLensMenu = false;
-    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    end
-    Controls.OverlapLensOptionsPanel:SetHide(true);
-    SetActiveModdedLens(MODDED_LENS_ID.NONE);
-  end
-end
-
--- ===========================================================================
-function ToggleBarbarianLens()
-  if Controls.BarbarianLensButton:IsChecked() then
-    SetActiveModdedLens(MODDED_LENS_ID.BARBARIAN);
-
-    -- Check if the appeal lens is already active
-    if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
-      -- Unapply the appeal lens, so it can be cleared from the screen
-      UILens.SetActive("Default");
-    end
-
-    UILens.SetActive("Appeal");
-    RefreshInterfaceMode();
-  else
-    m_shouldCloseLensMenu = false;
-    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    end
-    SetActiveModdedLens(MODDED_LENS_ID.NONE);
-  end
-end
-
--- ===========================================================================
-function ToggleResourceLens()
-  if Controls.ResourceLensButton:IsChecked() then
-    SetActiveModdedLens(MODDED_LENS_ID.RESOURCE);
-
-    -- Check if the appeal lens is already active
-    if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
-      -- Unapply the appeal lens, so it can be cleared from the screen
-      UILens.SetActive("Default");
-    end
-
-    UILens.SetActive("Appeal");
-
-    RefreshResourcePicker();
-    RefreshInterfaceMode();
-
-    Controls.ResourceLensOptionsPanel:SetHide(false);
-  else
-    m_shouldCloseLensMenu = false;
-    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    end
-    Controls.ResourceLensOptionsPanel:SetHide(true);
-    SetActiveModdedLens(MODDED_LENS_ID.NONE);
-  end
-end
-
--- ===========================================================================
-function ToggleWonderLens()
-  if Controls.WonderLensButton:IsChecked() then
-    SetActiveModdedLens(MODDED_LENS_ID.WONDER);
-
-    -- Check if the appeal lens is already active
-    if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
-      -- Unapply the appeal lens, so it can be cleared from the screen
-      UILens.SetActive("Default");
-    end
-
-    UILens.SetActive("Appeal");
-    RefreshInterfaceMode();
-  else
-    m_shouldCloseLensMenu = false;
-    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    end
-    SetActiveModdedLens(MODDED_LENS_ID.NONE);
-  end
-end
-
--- ===========================================================================
-function ToggleAdjacencyYieldLens()
-  if Controls.AdjacencyYieldLensButton:IsChecked() then
-    SetActiveModdedLens(MODDED_LENS_ID.ADJACENCY_YIELD);
-
-    -- Check if the appeal lens is already active
-    if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
-      -- Unapply the appeal lens, so it can be cleared from the screen
-      UILens.SetActive("Default");
-    end
-
-    UILens.SetActive("Appeal");
-    RefreshInterfaceMode();
-  else
-    m_shouldCloseLensMenu = false;
-    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    end
-    SetActiveModdedLens(MODDED_LENS_ID.NONE);
-  end
-end
-
--- ===========================================================================
-function ToggleScoutLens()
-  if Controls.ScoutLensButton:IsChecked() then
-    SetActiveModdedLens(MODDED_LENS_ID.SCOUT);
-
-    -- Check if the appeal lens is already active
-    if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
-      -- Unapply the appeal lens, so it can be cleared from the screen
-      UILens.SetActive("Default");
-    end
-
-    UILens.SetActive("Appeal");
-    RefreshInterfaceMode();
-  else
-    m_shouldCloseLensMenu = false;
-    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    end
-    SetActiveModdedLens(MODDED_LENS_ID.NONE);
-  end
-end
-
--- ===========================================================================
-function ToggleNaturalistLens()
-  if Controls.NaturalistLensButton:IsChecked() then
-    SetActiveModdedLens(MODDED_LENS_ID.NATURALIST);
-
-    -- Check if the appeal lens is already active
-    if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
-      -- Unapply the appeal lens, so it can be cleared from the screen
-      UILens.SetActive("Default");
-    end
-
-    UILens.SetActive("Appeal");
-    RefreshInterfaceMode();
-  else
-    m_shouldCloseLensMenu = false;
-    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    end
-    SetActiveModdedLens(MODDED_LENS_ID.NONE);
-  end
-end
-
--- ===========================================================================
--- Remaining MINIMAP
--- Resize functions, callbacks, etc
--- ===========================================================================
-function ToggleGrid()
-  bGridOn = not bGridOn;
-  UI.ToggleGrid( bGridOn );
-end
-
--- ===========================================================================
-function Toggle2DView()
-  if (UserConfiguration.GetValue("RenderViewIsLocked") ~= true) then
-    if (UI.GetWorldRenderView() == WorldRenderView.VIEW_2D) then
-      UI.SetWorldRenderView( WorldRenderView.VIEW_3D );
-      Controls.SwitcherImage:SetTextureOffsetVal(0,0);
-      UI.PlaySound("Set_View_3D");
-    else
-      UI.SetWorldRenderView( WorldRenderView.VIEW_2D );
-      Controls.SwitcherImage:SetTextureOffsetVal(0,24);
-      UI.PlaySound("Set_View_2D");
-    end
-    UI.PlaySound("Stop_Unit_Movement_Master");
-  end
-end
-
--- ===========================================================================
-function OnPauseEnd()
-  Controls.ExpandAnim:SetToBeginning();
-end
-
--- ===========================================================================
-function OnCollapseToggle()
-  if ( m_isCollapsed ) then
-    UI.PlaySound("Minimap_Open");
-    Controls.ExpandButton:SetHide( true );
-    Controls.CollapseButton:SetHide( false );
-    Controls.ExpandAnim:SetEndVal(0, -Controls.MinimapContainer:GetOffsetY() - Controls.MinimapContainer:GetSizeY());
-    Controls.ExpandAnim:SetToBeginning();
-    Controls.ExpandAnim:Play();
-    Controls.CompassArm:SetPercent(.25);
-  else
-    UI.PlaySound("Minimap_Closed");
-    Controls.ExpandButton:SetHide( false );
-    Controls.CollapseButton:SetHide( true );
-    Controls.Pause:Play();
-    Controls.CollapseAnim:SetEndVal(0, Controls.MinimapContainer:GetOffsetY() + Controls.MinimapContainer:GetSizeY());
-    Controls.CollapseAnim:SetToBeginning();
-    Controls.CollapseAnim:Play();
-    Controls.CompassArm:SetPercent(.5);
-  end
-  m_isCollapsed = not m_isCollapsed;
-end
-
--- ===========================================================================
-function OnMinimapImageSizeChanged()
-  ResizeBacking();
-end
-
--- ===========================================================================
-function ResizeBacking()
-  Controls.MinimapBacking:SetSizeY(Controls.MinimapImage:GetSizeY() + MINIMAP_BACKING_PADDING_SIZEY);
-
-  -- if the minimap is collapsed, shift it accordingly
-  if ( m_isCollapsed ) then
-    Controls.Pause:Play();
-    Controls.CollapseAnim:SetEndVal(0, Controls.MinimapContainer:GetOffsetY() + Controls.MinimapContainer:GetSizeY());
-    Controls.CollapseAnim:SetToEnd();
-  end
-end
-
--- ===========================================================================
-function RefreshInterfaceMode()
-  if UI.GetInterfaceMode() ~= InterfaceModeTypes.VIEW_MODAL_LENS then
-    UI.SetInterfaceMode(InterfaceModeTypes.VIEW_MODAL_LENS);
-  end
-
-  Controls.ResourceLensOptionsPanel:SetHide(true);
-  Controls.OverlapLensOptionsPanel:SetHide(true);
-end
-
--- ===========================================================================
-function OnLensLayerOn( layerNum:number )
-  if layerNum == LensLayers.HEX_COLORING_RELIGION then
-    UI.PlaySound("UI_Lens_Overlay_On");
-    UILens.SetDesaturation(1.0);
-  elseif layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL then
-    if m_CurrentModdedLensOn == MODDED_LENS_ID.APPEAL then
-      SetAppealHexes();
-    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.BUILDER then
-      SetBuilderLensHexes();
-    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.ARCHAEOLOGIST then
-      SetArchaeologistLens();
-    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.CITY_OVERLAP then
-      SetCityOverlapLens();
-    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.BARBARIAN then
-      SetBarbarianLens();
-    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.RESOURCE then
-      SetResourceLens();
-    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.WONDER then
-      SetWonderLens();
-    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.ADJACENCY_YIELD then
-      SetAdjacencyYieldLens();
-    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.SCOUT then
-      SetScoutLens();
-    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.NATURALIST then
-      SetNaturalistLens();
-    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.CUSTOM then
-      SetCustomLens();
-    end
-    UI.PlaySound("UI_Lens_Overlay_On");
-  elseif layerNum == LensLayers.HEX_COLORING_GOVERNMENT then
-    if m_CurrentAreaLensOn == AREA_LENS_ID.GOVERNMENT then
-      SetGovernmentHexes();
-      UI.PlaySound("UI_Lens_Overlay_On");
-    -- else Extra Area Lenses go here
-    end
-  elseif layerNum == LensLayers.HEX_COLORING_OWING_CIV then
-    SetOwingCivHexes();
-    UI.PlaySound("UI_Lens_Overlay_On");
-  elseif layerNum == LensLayers.HEX_COLORING_CONTINENT then
-    SetContinentHexes();
-    UI.PlaySound("UI_Lens_Overlay_On");
-  elseif layerNum == LensLayers.HEX_COLORING_WATER_AVAILABLITY then
-    SetWaterHexes();
-    UI.PlaySound("UI_Lens_Overlay_On");
-  elseif layerNum == LensLayers.TOURIST_TOKENS then
-    UI.PlaySound("UI_Lens_Overlay_On");
-  end
-end
-
--- ===========================================================================
-function OnLensLayerOff( layerNum:number )
-  if layerNum == LensLayers.HEX_COLORING_RELIGION then
-    UILens.SetDesaturation(0.0);
-
-  elseif (layerNum == LensLayers.HEX_COLORING_CONTINENT or
-      layerNum == LensLayers.HEX_COLORING_OWING_CIV) then
-    UI.PlaySound("UI_Lens_Overlay_Off");
-
-  -- Clear Modded Lens (Appeal lens included)
-  elseif layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL then
-    UILens.ClearLayerHexes( LensLayers.MAP_HEX_MASK );
-    if UI.GetInterfaceMode() ~= InterfaceModeTypes.VIEW_MODAL_LENS or (UI.GetHeadSelectedUnit() == nil) then
-      UILens.ClearLayerHexes(LensLayers.HEX_COLORING_APPEAL_LEVEL);
-    end
-    UI.PlaySound("UI_Lens_Overlay_Off");
-
-  -- Clear Area Lens (Government lens included)
-  elseif layerNum == LensLayers.HEX_COLORING_GOVERNMENT then
-    UILens.ClearLayerHexes( LensLayers.MAP_HEX_MASK );
-    if UI.GetInterfaceMode() ~= InterfaceModeTypes.VIEW_MODAL_LENS or (UI.GetHeadSelectedUnit() == nil) then
-      UILens.ClearLayerHexes(LensLayers.HEX_COLORING_GOVERNMENT);
-    end
-    UI.PlaySound("UI_Lens_Overlay_Off");
-
-  elseif layerNum == LensLayers.HEX_COLORING_WATER_AVAILABLITY then
-    -- Only clear the water lens if we're turning off lenses altogether, but not if switching to another modal lens (Turning on another modal lens clears it already).
-    if UI.GetInterfaceMode() ~= InterfaceModeTypes.VIEW_MODAL_LENS or (UI.GetHeadSelectedUnit() == nil) then
-      UILens.ClearLayerHexes(LensLayers.HEX_COLORING_WATER_AVAILABLITY);
-    end
-    UI.PlaySound("UI_Lens_Overlay_Off");
-  end
-end
-
--- ===========================================================================
-function OnToggleContinentLensExternal()
-  if Controls.LensPanel:IsHidden() then
-    Controls.LensPanel:SetHide(false);
-    RealizeFlyouts(Controls.LensPanel);
-    Controls.LensButton:SetSelected(true);
-  end
-  if not Controls.ContinentLensButton:IsChecked() then
-    Controls.ContinentLensButton:SetCheck(true);
-    UILens.SetActive("Continent");
-    RefreshInterfaceMode();
-  end
-end
-
--- ===========================================================================
---  Engine EVENT
---  Local player changed; likely a hotseat game
--- ===========================================================================
-function OnLocalPlayerChanged( eLocalPlayer:number , ePrevLocalPlayer:number )
-  if eLocalPlayer == -1 then
+function OnUnitFlagClick( playerID : number, unitID : number )
+  local pPlayer = Players[playerID];
+  if (pPlayer == nil) then
     return;
   end
-  CloseAllFlyouts();
+
+  if m_isMapDeselectDisabled then
+    return;
+  end
+
+  -- Only allow a unit selection when in one of the following modes:
+  local interfaceMode:number = UI.GetInterfaceMode();
+  if interfaceMode ~= InterfaceModeTypes.SELECTION and interfaceMode ~= InterfaceModeTypes.MAKE_TRADE_ROUTE and interfaceMode ~= InterfaceModeTypes.SPY_CHOOSE_MISSION and interfaceMode ~= InterfaceModeTypes.SPY_TRAVEL_TO_CITY and interfaceMode ~= InterfaceModeTypes.VIEW_MODAL_LENS then
+    return;
+  end
+
+  local pUnit = pPlayer:GetUnits():FindID(unitID);
+  if (pUnit == nil ) then
+    print("ERROR : Player clicked a unit flag for unit '"..tostring(unitID).."' but that unit doesn't exist.");
+    Controls.PanelTop:ForceAnAssertDueToAboveCondition();
+    return;
+  end
+
+  if ( Game.GetLocalPlayer() ~= pUnit:GetOwner() ) then
+
+    -- Enemy unit; this may start an attack...
+    -- Does player have a selected unit?
+    local pSelectedUnit = UI.GetHeadSelectedUnit();
+    if ( pSelectedUnit ~= nil ) then
+      local tParameters = {};
+      tParameters[UnitOperationTypes.PARAM_X] = pUnit:GetX();
+      tParameters[UnitOperationTypes.PARAM_Y] = pUnit:GetY();
+      tParameters[UnitOperationTypes.PARAM_MODIFIERS] = UnitOperationMoveModifiers.ATTACK;
+      if (UnitManager.CanStartOperation( pSelectedUnit, UnitOperationTypes.RANGE_ATTACK, nil, tParameters) ) then
+        UnitManager.RequestOperation(pSelectedUnit, UnitOperationTypes.RANGE_ATTACK, tParameters);
+	  elseif (UnitManager.CanStartOperation( pSelectedUnit, UnitOperationTypes.MOVE_TO, nil, tParameters) ) then
+        UnitManager.RequestOperation(pSelectedUnit, UnitOperationTypes.MOVE_TO, tParameters);
+      end
+    end
+  else
+    -- Player's unit; show info:
+    UI.DeselectAllUnits();
+    UI.DeselectAllCities();
+    UI.SelectUnit( pUnit );
+  end
+end
+
+------------------------------------------------------------------
+-- Set the user interativity for the flag.
+function UnitFlag.SetInteractivity( self )
+
+    local localPlayerID :number = Game.GetLocalPlayer();
+    local flagPlayerID	:number = self.m_Player:GetID();
+  local unitID		:number = self.m_UnitID;
+
+
+    self.m_Instance.NormalButton:SetVoid1( flagPlayerID );
+    self.m_Instance.NormalButton:SetVoid2( unitID );
+    self.m_Instance.NormalButton:RegisterCallback( Mouse.eLClick, OnUnitFlagClick );
+    -- self.m_Instance.NormalButton:RegisterCallback( Mouse.eMouseEnter, UnitFlagEnter );
+    -- self.m_Instance.NormalButton:RegisterCallback( Mouse.eMouseExit, UnitFlagExit );
+
+    self.m_Instance.HealthBarButton:SetVoid1( flagPlayerID );
+    self.m_Instance.HealthBarButton:SetVoid2( unitID );
+    self.m_Instance.HealthBarButton:RegisterCallback( Mouse.eLClick, OnUnitFlagClick );
+    -- self.m_Instance.HealthBarButton:RegisterCallback( Mouse.eMouseEnter, UnitFlagEnter );
+    -- self.m_Instance.HealthBarButton:RegisterCallback( Mouse.eMouseExit, UnitFlagExit );
+
+  -- Off of the root flag set callbacks to let other UI pieces know that it's focus.
+  -- This cannot be done on the buttons because enemy flags are disabled and some
+  -- UI (e.g., CombatPreview) may want to query this.
+
+  --CQUI modifications for showing unit paths on hover
+  self.m_Instance.FlagRoot:RegisterMouseEnterCallback(
+    function()
+      LuaEvents.UnitFlagManager_PointerEntered( flagPlayerID, unitID );
+      if CQUI_ShowPaths and not CQUI_IsFlagHover then
+        if not CQUI_SelectionMade then
+          LuaEvents.CQUI_showUnitPath(true, unitID);
+        end
+        CQUI_IsFlagHover = true;
+      end
+    end );
+
+  self.m_Instance.FlagRoot:RegisterMouseExitCallback(
+    function()
+      LuaEvents.UnitFlagManager_PointerExited( flagPlayerID, unitID );
+      if CQUI_ShowPaths and CQUI_IsFlagHover then
+        if not CQUI_SelectionMade then
+          LuaEvents.CQUI_clearUnitPath();
+        end
+        CQUI_IsFlagHover = false;
+      end
+    end );
+end
+
+------------------------------------------------------------------
+function UnitFlag.UpdateReadyState( self )
+  local pUnit : table = self:GetUnit();
+  if (pUnit ~= nil and pUnit:IsHuman()) then
+    self:SetDim(not pUnit:IsReadyToSelect());
+  end
+end
+
+------------------------------------------------------------------
+function UnitFlag.UpdateStats( self )
+  local pUnit : table = self:GetUnit();
+  if (pUnit ~= nil) then
+    self:UpdateFlagType();
+    self:UpdateHealth();
+    self:UpdatePromotions();
+    self:UpdateAircraftCounter();
+    self:SetColor();
+  end
+end
+
+------------------------------------------------------------------
+function UnitFlag.UpdateAircraftCounter( self )
+  local pUnit : table = self:GetUnit();
+  if (pUnit ~= nil) then
+    local airUnitCapacity = pUnit:GetAirSlots();
+    if airUnitCapacity > 0 then
+      -- Clear previous list entries
+      self.m_Instance.UnitListPopup:ClearEntries();
+
+      -- Set max capacity
+      self.m_Instance.MaxAirUnitCount:SetText(airUnitCapacity);
+
+      local bHasAirUnits, tAirUnits = pUnit:GetAirUnits();
+      if (bHasAirUnits and tAirUnits ~= nil) then
+        -- Set current capacity
+        local numAirUnits = table.count(tAirUnits);
+        self.m_Instance.CurrentAirUnitCount:SetText(numAirUnits);
+
+        -- Update unit instances in unit list
+        for i,unit in ipairs(tAirUnits) do
+          local unitEntry:table = {};
+          self.m_Instance.UnitListPopup:BuildEntry( "UnitListEntry", unitEntry );
+
+          -- Update name
+          unitEntry.UnitName:SetText( Locale.ToUpper(unit:GetName()) );
+
+          -- Update icon
+					local iconInfo:table, iconShadowInfo:table = GetUnitIcon(unit, 22, true);
+          if iconInfo.textureSheet then
+            unitEntry.UnitTypeIcon:SetTexture( iconInfo.textureOffsetX, iconInfo.textureOffsetY, iconInfo.textureSheet );
+          end
+
+          -- Update callback
+          unitEntry.Button:RegisterCallback( Mouse.eLClick, OnUnitSelected );
+          unitEntry.Button:SetVoid1(unit:GetOwner());
+          unitEntry.Button:SetVoid2(unit:GetID());
+
+          -- Fade out the button icon and text if the unit is not able to move
+          if unit:IsReadyToMove() then
+            unitEntry.UnitName:SetAlpha(1.0);
+            unitEntry.UnitTypeIcon:SetAlpha(1.0);
+          else
+            unitEntry.UnitName:SetAlpha(ALPHA_DIM);
+            unitEntry.UnitTypeIcon:SetAlpha(ALPHA_DIM);
+          end
+        end
+
+        -- If current air unit count is 0 then disabled popup
+        if numAirUnits <= 0 then
+          self.m_Instance.UnitListPopup:SetDisabled(true);
+        else
+          self.m_Instance.UnitListPopup:SetDisabled(false);
+        end
+
+        self.m_Instance.UnitListPopup:CalculateInternals();
+
+        -- Adjust the scroll panel offset so stack is centered whether scrollbar is visible or not
+        local scrollPanel = self.m_Instance.UnitListPopup:GetScrollPanel();
+        if scrollPanel then
+          if scrollPanel:GetScrollBar():IsHidden() then
+            scrollPanel:SetOffsetX(0);
+          else
+            scrollPanel:SetOffsetX(7);
+          end
+        end
+
+        self.m_Instance.UnitListPopup:ReprocessAnchoring();
+        self.m_Instance.UnitListPopup:GetGrid():ReprocessAnchoring();
+      else
+        -- Set current capacity to 0
+        self.m_Instance.CurrentAirUnitCount:SetText(0);
+      end
+
+      -- Update air unit list button colors
+
+      -- Show air unit list
+      self.m_Instance.AirUnitContainer:SetHide(false);
+    else
+      -- Hide air unit list since none can be stationed here
+      self.m_Instance.AirUnitContainer:SetHide(true);
+    end
+  end
 end
 
 -- ===========================================================================
-function SetOwingCivHexes()
-  local localPlayer : number = Game.GetLocalPlayer();
-  local localPlayerVis:table = PlayersVisibility[localPlayer];
-  if (localPlayerVis ~= nil) then
-    local players = Game.GetPlayers();
-    for i, player in ipairs(players) do
-      local cities = players[i]:GetCities();
-      local primaryColor, secondaryColor = UI.GetPlayerColors( player:GetID() );
+function OnUnitSelected( playerID:number, unitID:number )
+  local playerUnits:table = Players[playerID]:GetUnits();
+  if playerUnits then
+    local selectedUnit:table = playerUnits:FindID(unitID);
+    if selectedUnit then
+      UI.SelectUnit( selectedUnit );
+    end
+  end
+end
 
-      for _, pCity in cities:Members() do
-        local visibleCityPlots  :table = Map.GetCityPlots():GetVisiblePurchasedPlots(pCity);
+------------------------------------------------------------------
+-- Set the flag color based on the player colors.
+function UnitFlag.SetColor( self )
+  local primaryColor, secondaryColor  = UI.GetPlayerColors( self.m_Player:GetID() );
+  local darkerFlagColor	:number = DarkenLightenColor(primaryColor,(-85),255);
+  local brighterFlagColor :number = DarkenLightenColor(primaryColor,90,255);
+  local brighterIconColor :number = DarkenLightenColor(secondaryColor,20,255);
+  local darkerIconColor	:number = DarkenLightenColor(secondaryColor,-30,255);
 
-        if(table.count(visibleCityPlots) > 0) then
-          UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_OWING_CIV, localPlayer, visibleCityPlots, primaryColor );
+
+  -- War Check
+  if Game.GetLocalPlayer() > -1 then
+    local pUnit : table = self:GetUnit();
+    local localPlayer =  Players[Game.GetLocalPlayer()];
+    local ownerPlayer = pUnit:GetOwner();
+
+    local isAtWar = localPlayer:GetDiplomacy():IsAtWarWith( ownerPlayer );
+    local CQUI_isBarb = Players[ownerPlayer]:IsBarbarian(); --pUnit:GetBarbarianTribeIndex() ~= -1
+
+    if(isAtWar and (not CQUI_isBarb)) then
+      self.m_Instance.FlagBaseDarken:SetColor( RGBAValuesToABGRHex(255,0,0,255) );
+    else
+      self.m_Instance.FlagBaseDarken:SetColor( darkerFlagColor );
+    end
+  end
+
+  self.m_Instance.FlagBase:SetColor( primaryColor );
+  self.m_Instance.UnitIcon:SetColor( brighterIconColor );
+  self.m_Instance.FlagBaseOutline:SetColor( primaryColor );
+  self.m_Instance.FlagBaseLighten:SetColor( primaryColor );
+
+  self.m_Instance.FlagOver:SetColor( brighterFlagColor );
+  self.m_Instance.NormalSelect:SetColor( brighterFlagColor );
+  self.m_Instance.NormalSelectPulse:SetColor( brighterFlagColor );
+  self.m_Instance.HealthBarSelect:SetColor( primaryColor );
+
+  -- Set air unit list button color
+  self.m_Instance.AirUnitListButton_Base:SetColor( primaryColor );
+  self.m_Instance.AirUnitListButton_Darker:SetColor( darkerFlagColor );
+  self.m_Instance.AirUnitListButton_Lighter:SetColor( brighterFlagColor );
+  self.m_Instance.AirUnitListButton_None:SetColor( primaryColor );
+  self.m_Instance.AirUnitListButtonIcon:SetColor( secondaryColor );
+end
+
+------------------------------------------------------------------
+-- Set the flag texture based on the unit's type
+function UnitFlag.SetFlagUnitEmblem( self )
+  local icon:string = nil;
+  local pUnit:table = self:GetUnit();
+  local individual:number = pUnit:GetGreatPerson():GetIndividual();
+  if individual >= 0 then
+    local individualType:string = GameInfo.GreatPersonIndividuals[individual].GreatPersonIndividualType;
+    local iconModifier:table = GameInfo.GreatPersonIndividualIconModifiers[individualType];
+    if iconModifier then
+      icon = iconModifier.OverrideUnitIcon;
+    end
+  end
+  if not icon then
+    icon = "ICON_"..GameInfo.Units[pUnit:GetUnitType()].UnitType;
+  end
+  self.m_Instance.UnitIcon:SetIcon(icon);
+end
+
+------------------------------------------------------------------
+function UnitFlag.SetDim( self, bDim : boolean )
+  if (self.m_IsDimmed ~= bDim) then
+    self.m_IsDimmed = bDim;
+    self:UpdateDimmedState();
+  end
+end
+
+-----------------------------------------------------------------
+-- Set whether or not the dimmed state for the flag is overridden
+function UnitFlag.OverrideDimmed( self, bOverride : boolean )
+  self.m_OverrideDimmed = bOverride;
+    self:UpdateDimmedState();
+end
+
+-----------------------------------------------------------------
+-- Set the flag's alpha state, based on the current dimming flags.
+function UnitFlag.UpdateDimmedState( self )
+  if( self.m_IsDimmed and not self.m_OverrideDimmed ) then
+    self.m_Instance.FlagRoot:SetToEnd(true);
+        self.m_Instance.FlagRoot:SetAlpha( ALPHA_DIM );
+        self.m_Instance.HealthBar:SetAlpha( 1.0 / ALPHA_DIM ); -- Health bar doesn't get dimmed, else it is too hard to see.
+  else
+        self.m_Instance.FlagRoot:SetAlpha( 1.0 );
+        self.m_Instance.HealthBar:SetAlpha( 1.0 );
+    end
+end
+
+
+------------------------------------------------------------------
+-- Change the flag's fog state
+function UnitFlag.SetFogState( self, fogState : number )
+
+  self.m_eVisibility = fogState;
+
+    if (fogState ~= RevealedState.VISIBLE) then
+    self:SetHide( true );
+    else
+    self:SetHide( false );
+    end
+
+    self.m_FogState = fogState;
+end
+
+------------------------------------------------------------------
+-- Change the flag's overall visibility
+function UnitFlag.SetHide( self, bHide : boolean )
+  local isPreviouslyVisible :boolean = self.m_IsCurrentlyVisible;
+  self.m_IsCurrentlyVisible = not bHide;
+  if self.m_IsCurrentlyVisible ~= isPreviouslyVisible then
+    self:UpdateVisibility();
+  end
+end
+
+------------------------------------------------------------------
+-- Change the flag's force hide
+function UnitFlag.SetForceHide( self, bHide : boolean )
+  self.m_IsForceHide = bHide;
+  self:UpdateVisibility();
+end
+
+------------------------------------------------------------------
+-- Update the flag's type.  This adjust the look of the flag based
+-- on the state of the unit.
+function UnitFlag.UpdateFlagType( self )
+
+  local pUnit = self:GetUnit();
+  if pUnit == nil then
+    return;
+  end
+
+  local textureName:string;
+  local maskName:string;
+
+  -- Make this more data driven.  It would be nice to have it so any state the unit could be in could have its own look.
+  if( pUnit:IsEmbarked() ) then
+    textureName = TEXTURE_EMBARK;
+    maskName	= TEXTURE_MASK_EMBARK;
+  elseif( pUnit:GetFortifyTurns() > 0 ) then
+    textureName = TEXTURE_FORTIFY;
+    maskName	= TEXTURE_MASK_FORTIFY;
+  elseif( self.m_Style == FLAGSTYLE_CIVILIAN ) then
+    textureName = TEXTURE_CIVILIAN;
+    maskName	= TEXTURE_MASK_CIVILIAN;
+  elseif( self.m_Style == FLAGSTYLE_RELIGION ) then
+    textureName = TEXTURE_RELIGION;
+    maskName	= TEXTURE_MASK_RELIGION;
+  elseif( self.m_Style == FLAGSTYLE_NAVAL) then
+    textureName = TEXTURE_NAVAL;
+    maskName	= TEXTURE_MASK_NAVAL;
+  elseif( self.m_Style == FLAGSTYLE_SUPPORT) then
+    textureName = TEXTURE_SUPPORT;
+    maskName	= TEXTURE_MASK_SUPPORT;
+  elseif( self.m_Style == FLAGSTYLE_TRADE) then
+    textureName = TEXTURE_TRADE;
+    maskName	= TEXTURE_MASK_TRADE;
+  else
+    textureName = TEXTURE_BASE;
+    maskName	= TEXTURE_MASK_BASE;
+  end
+
+
+  self.m_Instance.FlagBaseDarken:SetTexture( textureName );
+  self.m_Instance.FlagBaseLighten:SetTexture( textureName );
+  self.m_Instance.FlagShadow:SetTexture( textureName );
+  self.m_Instance.FlagBase:SetTexture( textureName );
+  self.m_Instance.FlagBaseOutline:SetTexture( textureName );
+  self.m_Instance.NormalSelectPulse:SetTexture( textureName );
+  self.m_Instance.NormalSelect:SetTexture( textureName );
+  self.m_Instance.FlagOver:SetTexture( textureName );
+  self.m_Instance.FlagOverHealthBar:SetTexture( textureName );
+  self.m_Instance.HealthBarSelect:SetTexture( textureName );
+  self.m_Instance.LightEffect:SetTexture( textureName );
+  self.m_Instance.HealthBarBG:SetTexture( textureName );
+  --self.m_Instance.NormalAlphaAnim:SetTexture( textureName );
+  --self.m_Instance.HealthBarAlphaAnim:SetTexture( textureName );
+
+  self.m_Instance.NormalScrollAnim:SetMask( maskName );
+  --self.m_Instance.HealthBarScrollAnim:SetMask( maskName );
+end
+
+------------------------------------------------------------------
+-- Update the health bar.
+function UnitFlag.UpdateHealth( self )
+
+  local pUnit = self:GetUnit();
+    if pUnit == nil then
+    return;
+  end
+
+    local healthPercent = 0;
+  local maxDamage = pUnit:GetMaxDamage();
+  if (maxDamage > 0) then
+    healthPercent = math.max( math.min( (maxDamage - pUnit:GetDamage()) / maxDamage, 1 ), 0 );
+    end
+
+    -- going to damaged state
+    if( healthPercent < 1 ) then
+        -- show the bar and the button anim
+        self.m_Instance.HealthBarBG:SetHide( false );
+        self.m_Instance.HealthBar:SetHide( false );
+        self.m_Instance.HealthBarButton:SetHide( false );
+
+        -- hide the normal button
+        self.m_Instance.NormalButton:SetHide( true );
+
+        -- handle the selection indicator
+        if ( self.m_IsSelected ) then
+            self.m_Instance.NormalSelect:SetHide( true );
+            self.m_Instance.HealthBarSelect:SetHide( false );
+        end
+
+        if ( healthPercent >= 0.8 ) then
+            self.m_Instance.HealthBar:SetColor( COLOR_GREEN );
+        elseif( healthPercent > 0.4 and healthPercent < .8) then
+            self.m_Instance.HealthBar:SetColor( COLOR_YELLOW );
+        else
+            self.m_Instance.HealthBar:SetColor( COLOR_RED );
+        end
+
+    --------------------------------------------------------------------
+    -- going to full health
+    else
+        self.m_Instance.HealthBar:SetColor( COLOR_GREEN );
+
+        -- hide the bar and the button anim
+        self.m_Instance.HealthBarBG:SetHide( true );
+        self.m_Instance.HealthBarButton:SetHide( true );
+
+        -- show the normal button
+        self.m_Instance.NormalButton:SetHide( false );
+
+        -- handle the selection indicator
+        if ( self.m_IsSelected ) then
+            self.m_Instance.NormalSelect:SetHide( false );
+            self.m_Instance.HealthBarSelect:SetHide( true );
+        end
+    end
+
+    self.m_Instance.HealthBar:SetPercent( healthPercent );
+end
+
+------------------------------------------------------------------
+-- Update the visibility of the flag based on the current state.
+function UnitFlag.UpdateVisibility( self )
+
+  if self.m_IsForceHide then
+    self.m_Instance.Anchor:SetHide(true);
+  else
+    self.m_Instance.Anchor:SetHide(false);
+
+    if self.m_IsCurrentlyVisible then
+      self.m_Instance.FlagRoot:ClearEndCallback();
+
+      if( self.m_IsDimmed and not self.m_OverrideDimmed ) then
+        self.m_Instance.FlagRoot:SetToEnd();
+            self.m_Instance.FlagRoot:SetAlpha( ALPHA_DIM );
+      else
+        -- Fade in (show)
+        self.m_Instance.FlagRoot:SetToBeginning();
+        self.m_Instance.FlagRoot:Play();
+      end
+    else
+      -- Fade out (hide)
+      -- One case where a unit flag is first created, if this check isn't done
+      -- it will pop into existance and then immediately fade out in the FOW.
+      if self.m_IsInitialized then
+        self.m_Instance.FlagRoot:RegisterEndCallback(function() self.m_Instance.Anchor:SetHide(not self.m_IsCurrentlyVisible); end);
+        self.m_Instance.FlagRoot:SetToEnd();
+        self.m_Instance.FlagRoot:Reverse();
+      else
+        self.m_Instance.Anchor:SetHide(true);
+      end
+      self.m_Instance.Formation3:SetHide(true);
+      self.m_Instance.Formation2:SetHide(true);
+    end
+  end
+
+end
+
+------------------------------------------------------------------
+function GetLevyTurnsRemaining(pUnit : table)
+  if (pUnit ~= nil) then
+    if (pUnit:GetCombat() > 0) then
+      local iOwner = pUnit:GetOwner();
+      local iOriginalOwner = pUnit:GetOriginalOwner();
+      if (iOwner ~= iOriginalOwner) then
+        local pOriginalOwner = Players[iOriginalOwner];
+        if (pOriginalOwner ~= nil and pOriginalOwner:GetInfluence() ~= nil) then
+          local iLevyTurnCounter = pOriginalOwner:GetInfluence():GetLevyTurnCounter();
+          if (iLevyTurnCounter >= 0 and iOwner == pOriginalOwner:GetInfluence():GetSuzerain()) then
+            return (pOriginalOwner:GetInfluence():GetLevyTurnLimit() - iLevyTurnCounter);
+          end
+        end
+      end
+    end
+  end
+  return -1;
+end
+
+------------------------------------------------------------------
+function UnitFlag.UpdatePromotions( self )
+  self.m_Instance.Promotion_Flag:SetHide(true);
+  local pUnit : table = self:GetUnit();
+  local isLocalPlayerUnit: boolean = pUnit:GetOwner() == Game:GetLocalPlayer(); --ARISTOS: hide promotion/charge info if not local player's unit!
+  if pUnit ~= nil then
+    -- If this unit is levied (ie. from a city-state), showing that takes precedence
+    local iLevyTurnsRemaining = GetLevyTurnsRemaining(pUnit);
+    if (iLevyTurnsRemaining >= 0) then
+      self.m_Instance.UnitNumPromotions:SetText("[ICON_Turn]");
+      self.m_Instance.Promotion_Flag:SetHide(false);
+    -- Otherwise, show the experience level
+    elseif ((GameInfo.Units[pUnit:GetUnitType()].UnitType == "UNIT_BUILDER") or (GameInfo.Units[pUnit:GetUnitType()].UnitType == "UNIT_MILITARY_ENGINEER")) and isLocalPlayerUnit then
+      local uCharges = pUnit:GetBuildCharges();
+      self.m_Instance.New_Promotion_Flag:SetHide(true);
+      self.m_Instance.UnitNumPromotions:SetText(uCharges);
+      self.m_Instance.Promotion_Flag:SetHide(false);
+      self.m_Instance.Promotion_Flag:SetOffsetX(-8);
+      self.m_Instance.Promotion_Flag:SetOffsetY(12);
+    else
+      local unitExperience = pUnit:GetExperience();
+      if (unitExperience ~= nil) then
+        local promotionList :table = unitExperience:GetPromotions();
+        self.m_Instance.New_Promotion_Flag:SetHide(true);
+        --ARISTOS: to test for available promotions! Previous test using XPs was faulty (Firaxis... :rolleyes:)
+        local bCanStart, tResults = UnitManager.CanStartCommand( pUnit, UnitCommandTypes.PROMOTE, true, true);
+        -- AZURENCY : CanStartCommand will return false if the unit have no movements left but still can have 
+        -- a promotion (maybe not this turn, but it have enough experience, so we'll show it on the flag anyway)
+        if not bCanStart then
+          bCanStart = unitExperience:GetExperiencePoints() >= unitExperience:GetExperienceForNextLevel()
+        end
+		-- Nilt: Added check to prevent the promotion flag staying a red + permanently on max XP units.
+        if bCanStart and isLocalPlayerUnit and (#promotionList < 7) then
+          self.m_Instance.New_Promotion_Flag:SetHide(false);
+          self.m_Instance.UnitNumPromotions:SetText("[COLOR:StatBadCS]+[ENDCOLOR]");
+          self.m_Instance.Promotion_Flag:SetHide(false);
+        --end
+        --ARISTOS: if already promoted, or no promotion available, show # of proms
+        elseif (#promotionList > 0) then
+          --[[
+          local tooltipString :string = "";
+          for i, promotion in ipairs(promotionList) do
+            tooltipString = tooltipString .. Locale.Lookup(GameInfo.UnitPromotions[promotion].Name);
+            if (i < #promotionList) then
+              tooltipString = tooltipString .. "[NEWLINE]";
+            end
+          end
+          self.m_Instance.Promotion_Flag:SetToolTipString(tooltipString);
+          --]]
+          self.m_Instance.UnitNumPromotions:SetText(#promotionList);
+          self.m_Instance.Promotion_Flag:SetHide(false);
         end
       end
     end
   end
 end
 
--- ===========================================================================
-function SetWaterHexes()
-  if (not m_CtrlDown) or UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-    local FullWaterPlots:table = {};
-    local CoastalWaterPlots:table = {};
-    local NoWaterPlots:table = {};
-    local NoSettlePlots:table = {};
+------------------------------------------------------------------
+-- Update the unit religion indicator icon
+function UnitFlag.UpdateReligion( self )
+	local pUnit : table = self:GetUnit();
+	if pUnit ~= nil then
+		local religionType = pUnit:GetReligionType();
+		if (religionType > 0 and pUnit:GetReligiousStrength() > 0) then
+			local religion:table = GameInfo.Religions[religionType];
+			local religionIcon:string = "ICON_" .. religion.ReligionType;
+			local religionColor:number = UI.GetColorValue(religion.Color);
 
-    UILens.ClearLayerHexes(LensLayers.HEX_COLORING_WATER_AVAILABLITY);
-    FullWaterPlots, CoastalWaterPlots, NoWaterPlots, NoSettlePlots = Map.GetContinentPlotsWaterAvailability();
+			self.m_Instance.ReligionIcon:SetIcon(religionIcon);
+			self.m_Instance.ReligionIcon:SetColor(religionColor);
+			self.m_Instance.ReligionIconBacking:LocalizeAndSetToolTip(religion.Name);
+			self.m_Instance.ReligionIconBacking:SetHide(false);
+		else
+			self.m_Instance.ReligionIconBacking:SetHide(true);
+		end
+	end
+end
 
-    local BreathtakingColor :number = UI.GetColorValue("COLOR_BREATHTAKING_APPEAL");
-    local CharmingColor     :number = UI.GetColorValue("COLOR_CHARMING_APPEAL");
-    local AverageColor      :number = UI.GetColorValue("COLOR_AVERAGE_APPEAL");
-    local DisgustingColor   :number = UI.GetColorValue("COLOR_DISGUSTING_APPEAL");
-    local localPlayer       :number = Game.GetLocalPlayer();
-
-    if(table.count(FullWaterPlots) > 0) then
-      UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_WATER_AVAILABLITY, localPlayer, FullWaterPlots, BreathtakingColor );
-    end
-    if(table.count(CoastalWaterPlots) > 0) then
-      UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_WATER_AVAILABLITY, localPlayer, CoastalWaterPlots, CharmingColor );
-    end
-    if(table.count(NoWaterPlots) > 0) then
-      UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_WATER_AVAILABLITY, localPlayer, NoWaterPlots, AverageColor );
-    end
-    if(table.count(NoSettlePlots) > 0) then
-      UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_WATER_AVAILABLITY, localPlayer, NoSettlePlots, DisgustingColor );
+------------------------------------------------------------------
+-- Update the unit name / tooltip
+function UnitFlag.UpdateName( self )
+  local pUnit : table = self:GetUnit();
+  if pUnit ~= nil then
+    local unitName = pUnit:GetName();
+    local pPlayerCfg = PlayerConfigurations[ self.m_Player:GetID() ];
+    local nameString : string;
+    if(GameConfiguration.IsAnyMultiplayer() and pPlayerCfg:IsHuman()) then
+      nameString = Locale.Lookup( pPlayerCfg:GetCivilizationShortDescription() ) .. " (" .. Locale.Lookup(pPlayerCfg:GetPlayerName()) .. ") - " .. Locale.Lookup( unitName );
+    else
+      nameString = Locale.Lookup( pPlayerCfg:GetCivilizationShortDescription() ) .. " - " .. Locale.Lookup( unitName );
     end
 
-  else -- A settler is selected, show alternate highlighting
-    SetSettlerLens()
+    -- display military formation indicator(s)
+    local militaryFormation = pUnit:GetMilitaryFormation();
+    if self.m_Style == FLAGSTYLE_NAVAL then
+      if (militaryFormation == MilitaryFormationTypes.CORPS_FORMATION) then
+        nameString = nameString .. TXT_UNITFLAG_FLEET_SUFFIX;
+      elseif (militaryFormation == MilitaryFormationTypes.ARMY_FORMATION) then
+        nameString = nameString .. TXT_UNITFLAG_ARMADA_SUFFIX;
+      end
+    else
+      if (militaryFormation == MilitaryFormationTypes.CORPS_FORMATION) then
+        nameString = nameString .. TXT_UNITFLAG_CORPS_SUFFIX;
+      elseif (militaryFormation == MilitaryFormationTypes.ARMY_FORMATION) then
+        nameString = nameString .. TXT_UNITFLAG_ARMY_SUFFIX;
+      end
+    end
+
+    -- DEBUG TEXT FOR SHOWING UNIT ACTIVITY TYPE
+    --[[
+    local activityType = UnitManager.GetActivityType(pUnit);
+    if (activityType == ActivityTypes.ACTIVITY_SENTRY) then
+      nameString = nameString .. TXT_UNITFLAG_ACTIVITY_ON_SENTRY;
+    elseif (activityType == ActivityTypes.ACTIVITY_INTERCEPT) then
+      nameString = nameString .. TXT_UNITFLAG_ACTIVITY_ON_INTERCEPT;
+    elseif (activityType == ActivityTypes.ACTIVITY_AWAKE) then
+      nameString = nameString .. TXT_UNITFLAG_ACTIVITY_AWAKE;
+    elseif (activityType == ActivityTypes.ACTIVITY_HOLD) then
+      nameString = nameString .. TXT_UNITFLAG_ACTIVITY_HOLD;
+    elseif (activityType == ActivityTypes.ACTIVITY_SLEEP) then
+      nameString = nameString .. TXT_UNITFLAG_ACTIVITY_SLEEP;
+    elseif (activityType == ActivityTypes.ACTIVITY_HEAL) then
+      nameString = nameString .. TXT_UNITFLAG_ACTIVITY_HEALING;
+    elseif (activityType == ActivityTypes.NO_ACTIVITY) then
+      nameString = nameString .. TXT_UNITFLAG_ACTIVITY_NO_ACTIVITY;
+    end
+    ]]--
+
+    -- display archaeology info
+    local idArchaeologyHomeCity = pUnit:GetArchaeologyHomeCity();
+    if (idArchaeologyHomeCity ~= 0) then
+      local pCity = self.m_Player:GetCities():FindID(idArchaeologyHomeCity);
+      if (pCity ~= nil) then
+        nameString = nameString .. "[NEWLINE]" .. Locale.Lookup("LOC_UNITFLAG_ARCHAEOLOGY_HOME_CITY", pCity:GetName());
+        local iGreatWorkIndex = pUnit:GetGreatWorkIndex();
+        if (iGreatWorkIndex >= 0) then
+          local eGWType = Game.GetGreatWorkType(iGreatWorkIndex);
+          local eGWPlayer = Game.GetGreatWorkPlayer(iGreatWorkIndex);
+          nameString = nameString .. "[NEWLINE]" .. Locale.Lookup("LOC_UNITFLAG_ARCHAEOLOGY_ARTIFACT", GameInfo.GreatWorks[eGWType].Name, PlayerConfigurations[eGWPlayer]:GetPlayerName());
+        end
+      end
+    end
+
+    -- display religion info
+    if (pUnit:GetReligiousStrength() > 0) then
+      local eReligion = pUnit:GetReligionType();
+      if (eReligion > 0) then
+        nameString = nameString .. " (" .. Game.GetReligion():GetName(eReligion) .. ")";
+      end
+    end
+
+    -- display levy status
+    local iLevyTurnsRemaining = GetLevyTurnsRemaining(pUnit);
+    if (iLevyTurnsRemaining >= 0 and PlayerConfigurations[pUnit:GetOriginalOwner()] ~= nil) then
+      nameString = nameString .. "[NEWLINE]" .. Locale.Lookup("LOC_UNITFLAG_LEVY_ACTIVE", PlayerConfigurations[pUnit:GetOriginalOwner()]:GetPlayerName(), iLevyTurnsRemaining);
+    end
+
+    self.m_Instance.UnitIcon:SetToolTipString( Locale.Lookup(nameString) );
   end
 end
 
-function SetSettlerLens()
-  -- If cursor is not on a plot, don't do anything
-  local plotId = UI.GetCursorPlotID();
+------------------------------------------------------------------
+-- The selection state has changed.
+function UnitFlag.UpdateSelected( self, isSelected : boolean )
+  local pUnit : table = self:GetUnit();
 
-  -- If Modal Panel, or cursor is not on a plot, show normal Water Hexes
-  if (not Map.IsPlot(plotId)) then
+  --local pPlayer : table = Players[Game.GetLocalPlayer()];
+
+  if (pUnit ~= nil) then
+        self.m_IsSelected = isSelected;
+
+        if( pUnit:GetDamage() == 0 ) then
+            self.m_Instance.NormalSelect:SetHide( not self.m_IsSelected );
+            self.m_Instance.HealthBarSelect:SetHide( true );
+        else
+            self.m_Instance.HealthBarSelect:SetHide( not self.m_IsSelected );
+            self.m_Instance.NormalSelect:SetHide( true );
+        end
+
+    -- If selected, change our parent to the selection container so we are on top in the drawing order
+      -- if( self.m_IsSelected ) then
+      --     self.m_Instance.Anchor:ChangeParent( m_SelectedContainer );
+      -- else
+      -- Re-attach back to the manager parent
+    --	self.m_Instance.Anchor:ChangeParent( self.m_InstanceManager.m_ParentControl );
+        --end
+
+        self:OverrideDimmed( self.m_IsSelected );
+
+  end
+end
+
+------------------------------------------------------------------
+-- Update the position of the flag to match the current unit position.
+function UnitFlag.UpdatePosition( self )
+  local pUnit : table = self:GetUnit();
+  if (pUnit ~= nil) then
+    self:SetPosition( UI.GridToWorld( pUnit:GetX(), pUnit:GetY() ) );
+  end
+
+  --local yOffset = 0;	--offset for 2D strategic view
+  --local zOffset = 0;	--offset for 3D world view
+  --
+  --if (UI.GetWorldRenderView() == WorldRenderView.VIEW_2D) then
+  --	yOffset = YOFFSET_2DVIEW;
+  --	zOffset = 0;
+  --else
+  --	yOffset = 0;
+  --	yOffset = -25 + m_zoomMultiplier*25;
+  --	zOffset = ZOFFSET_3DVIEW;
+  --end
+  --
+  --local worldX;
+  --local worldY;
+  --local worldZ;
+  --
+  --worldX, worldY, worldZ = UI.GridToWorld( pUnit:GetX(), pUnit:GetY() );
+  --self.m_Instance.Anchor:SetWorldPositionVal( worldX, worldY+yOffset, worldZ+zOffset );
+
+end
+
+------------------------------------------------------------------
+function CanRangeAttack(pCityOrDistrict : table)
+  -- An invalid plot means we want to know if there are any locations that the city can range strike.
+  return CityManager.CanStartCommand( pCityOrDistrict, CityCommandTypes.RANGE_ATTACK );
+end
+
+
+-- ===========================================================================
+--	Returns a city object immediately left of plot, or NIL if no city there.
+-- ===========================================================================
+function GetCityPlotLeftOf( x:number, y:number )
+  local pPlot:table = Map.GetAdjacentPlot( x, y, DirectionTypes.DIRECTION_WEST );
+  if pPlot == nil then
+    return nil; --This will happen in non-world-wrapping maps.
+  end
+  return Cities.GetCityInPlot( pPlot:GetX(), pPlot:GetY() );
+end
+
+-- ===========================================================================
+--	Returns a city object immediately right of plot, or NIL if no city there.
+-- ===========================================================================
+function GetCityPlotRightOf( x:number, y:number )
+  local pPlot:table = Map.GetAdjacentPlot( x, y, DirectionTypes.DIRECTION_EAST );
+  if pPlot == nil then
+    return nil; --This will happen in non-world-wrapping maps.
+  end
+  return Cities.GetCityInPlot( pPlot:GetX(), pPlot:GetY() );
+end
+
+-- ===========================================================================
+--	Set the position of the flag.
+-- ===========================================================================
+function UnitFlag.SetPosition( self, worldX : number, worldY : number, worldZ : number )
+
+  local unitStackXOffset = 0;
+  local rangedAttackXOffset = 0;
+  local cityBannerZOffset: number = 0;
+  local cityBannerYOffset: number = 0;
+  if (self ~= nil ) then
+    local pUnit : table = self:GetUnit();
+    if (pUnit ~= nil) then
+      local unitX = pUnit:GetX();
+      local unitY = pUnit:GetY();
+
+      if unitX == -9999 or unitY == -9999 then
+        UI.DataError("Unable to set a unit #"..tostring(pUnit:GetID()).." ("..tostring(pUnit:GetName())..") flag due to an invalid position: "..unitX..","..unitY);
+        return;
+      end
+
+      -- If there is a city sharing the plot with the unit, "duck" the unit flag with an offset to minimize UI overlapping
+      if (pUnit ~= nil) then
+        local pCity				:table = Cities.GetCityInPlot( unitX, unitY );
+        local pCityToTheRight	:table = GetCityPlotRightOf( unitX, unitY );
+        local pCityToTheLeft	:table = GetCityPlotLeftOf( unitX, unitY );
+        if (pCity ~= nil or pCityToTheRight ~= nil or pCityToTheLeft ~= nil) then
+          if (pCity ~= nil) then
+            -- If the city can attack, offset the unit flag icon so that we can see the ranged attack action icon
+            local pDistrict : table = pCity:GetDistricts():FindID(pCity:GetDistrictID());
+            if (pCity:GetOwner() == Game.GetLocalPlayer() and CanRangeAttack(pDistrict) ) then
+              rangedAttackXOffset = 30 - m_zoomMultiplier*15;
+            end
+          end
+          cityBannerZOffset = -15;
+          cityBannerYOffset = m_zoomMultiplier * 25 - 25;
+        end
+
+        local pPlot:table = Map.GetPlot( unitX, unitY );
+        if( pPlot ) then
+          local eImprovementType :number = pPlot:GetImprovementType();
+          if( eImprovementType ~= -1 ) then
+            local kImprovementData : table = GameInfo.Improvements[eImprovementType];
+            if ( kImprovementData.AirSlots > 0 or kImprovementData.WeaponSlots > 0) then
+              cityBannerZOffset = -15;
+              cityBannerYOffset = 5;
+            end
+          end
+          local eDistrictType :number = pPlot:GetDistrictType();
+          if( eDistrictType ~= -1 ) then
+            if ( GameInfo.Districts[eDistrictType].DistrictType == "DISTRICT_ENCAMPMENT" ) then
+              rangedAttackXOffset = -5;
+              cityBannerZOffset = -15;
+              cityBannerYOffset =  30;
+            end
+            if ( GameInfo.Districts[eDistrictType].AirSlots > 0 ) then
+              cityBannerZOffset = -15;
+              cityBannerYOffset = 5;
+            end
+          end
+        end
+
+      end
+    end
+  end
+
+  local yOffset = 0;	--offset for 2D strategic view
+  local zOffset = 0;	--offset for 3D world view
+  local xOffset = unitStackXOffset + rangedAttackXOffset;
+
+  if (UI.GetWorldRenderView() == WorldRenderView.VIEW_2D) then
+    yOffset = 20;
+    zOffset = 0;
+  else
+    yOffset = cityBannerYOffset;
+    zOffset = 40 + cityBannerZOffset;
+  end
+  self.m_Instance.Anchor:SetWorldPositionVal( worldX+xOffset, worldY+yOffset, worldZ+zOffset );
+end
+
+
+-- ===========================================================================
+--	Creates a unit flag (if one doesn't exist).
+-- ===========================================================================
+function CreateUnitFlag( playerID: number, unitID : number, unitX : number, unitY : number )
+  -- If a flag already exists for this player/unit combo... just return.
+  if (m_UnitFlagInstances[ playerID ] ~= nil and m_UnitFlagInstances[ playerID ][ unitID ] ~= nil) then
+    return;
+  end
+
+  -- Allocate a new flag.
+  local pPlayer	:table = Players[playerID];
+  local pUnit		:table = pPlayer:GetUnits():FindID(unitID);
+  if pUnit ~= nil and pUnit:GetUnitType() ~= -1 then
+    if (pUnit:GetCombat() ~= 0 or pUnit:GetRangedCombat() ~= 0) then		-- Need a simpler what to test if the unit is a combat unit or not.
+      if "DOMAIN_SEA" == GameInfo.Units[pUnit:GetUnitType()].Domain then
+        UnitFlag:new( playerID, unitID, FLAGTYPE_UNIT, FLAGSTYLE_NAVAL );
+      else
+        UnitFlag:new( playerID, unitID, FLAGTYPE_UNIT, FLAGSTYLE_MILITARY );
+      end
+    else
+      if GameInfo.Units[pUnit:GetUnitType()].MakeTradeRoute then
+        UnitFlag:new( playerID, unitID, FLAGTYPE_UNIT, FLAGSTYLE_TRADE );
+      elseif "FORMATION_CLASS_SUPPORT" == GameInfo.Units[pUnit:GetUnitType()].FormationClass then
+        UnitFlag:new( playerID, unitID, FLAGTYPE_UNIT, FLAGSTYLE_SUPPORT );
+      elseif pUnit:GetReligiousStrength() > 0 then
+        UnitFlag:new( playerID, unitID, FLAGTYPE_UNIT, FLAGSTYLE_RELIGION );
+      else
+        UnitFlag:new( playerID, unitID, FLAGTYPE_UNIT, FLAGSTYLE_CIVILIAN );
+      end
+    end
+  end
+end
+
+-- ===========================================================================
+--	Engine Event
+-- ===========================================================================
+function OnUnitAddedToMap( playerID: number, unitID : number, unitX : number, unitY : number )
+  CreateUnitFlag( playerID, unitID, unitX, unitY );
+  UpdateIconStack(unitX, unitY);
+end
+
+------------------------------------------------------------------
+function OnUnitRemovedFromMap( playerID: number, unitID : number )
+
+    local flagInstance = GetUnitFlag( playerID, unitID );
+  if flagInstance ~= nil then
+    flagInstance:destroy();
+    m_UnitFlagInstances[ playerID ][ unitID ] = nil;
+
+    local pUnit : table = flagInstance:GetUnit();
+    if (pUnit ~= nil) then
+      UpdateIconStack(pUnit:GetX(), pUnit:GetY());
+    end
+
+  end
+
+end
+
+------------------------------------------------------------------
+function OnUnitVisibilityChanged( playerID: number, unitID : number, eVisibility : number )
+    local flagInstance = GetUnitFlag( playerID, unitID );
+  if (flagInstance ~= nil) then
+    flagInstance:SetFogState( eVisibility );
+    flagInstance:UpdatePosition();
+
+    local pUnit : table = flagInstance:GetUnit();
+    if (pUnit ~= nil) then
+      UpdateIconStack(pUnit:GetX(), pUnit:GetY());
+    end
+
+    end
+end
+
+------------------------------------------------------------------
+function OnUnitEmbarkedStateChanged( playerID: number, unitID : number, bEmbarkedState : boolean )
+    local flagInstance = GetUnitFlag( playerID, unitID );
+  if (flagInstance ~= nil) then
+    flagInstance:UpdateFlagType();
+    end
+end
+
+--CQUI modified to hide unit paths on deselect
+function OnUnitSelectionChanged( playerID : number, unitID : number, hexI : number, hexJ : number, hexK : number, bSelected : boolean, bEditable : boolean )
+  local flagInstance = GetUnitFlag( playerID, unitID );
+  if (flagInstance ~= nil) then
+    flagInstance:UpdateSelected( bSelected );
+  end
+
+  if (bSelected) then
+    --[[
+    local pPlayer = Players[ playerID ];
+    if (pPlayer ~= nil) then
+      local pUnit = pPlayer:GetUnits():FindID(unitID);
+      print(pUnit:GetUnitType(), hexI, hexJ);
+    end
+    --]]
+    UpdateIconStack(hexI, hexJ);
+    -- CQUI modifications for tracking unit selection and displaying unit paths
+    -- unitID could be nil, if unit is consumed (f.e. settler, worker)
+    if (unitID ~= nil) then
+      CQUI_SelectionMade = true;
+      if(CQUI_ShowingPath ~= unitID) then
+        if(CQUI_ShowingPath ~= nil) then
+            CQUI_HidePath();
+        end
+        CQUI_ShowingPath = unitID;
+      end
+    else
+      CQUI_SelectionMade = false;
+      CQUI_ShowingPath = nil;
+    end
+  else
+    CQUI_SelectionMade = false;
+    CQUI_HidePath();
+    CQUI_ShowingPath = nil;
+  end
+end
+
+------------------------------------------------------------------
+function OnUnitTeleported( playerID: number, unitID : number, x : number, y : number)
+
+    local flagInstance = GetUnitFlag( playerID, unitID );
+  if (flagInstance ~= nil) then
+    flagInstance:UpdatePosition();
+
+    -- Mark the unit in the dirty list, the rest of the updating will happen there.
+    m_DirtyComponents:AddComponent(playerID, unitID, ComponentType.UNIT);
+    UpdateIconStack(x, y);
+    end
+
+end
+
+-------------------------------------------------
+-- The position of the unit sim has changed.
+-------------------------------------------------
+function UnitSimPositionChanged( playerID, unitID, worldX, worldY, worldZ, bVisible, bComplete )
+    local flagInstance = GetUnitFlag( playerID, unitID );
+
+  if (flagInstance ~= nil) then
+    if (bComplete) then
+      local plotX, plotY = UI.GetPlotCoordFromWorld(worldX, worldY, worldZ);
+      UpdateIconStack( plotX, plotY );
+    end
+    if( not bVisible ) then
+      flagInstance.m_Instance.FlagRoot:SetToBeginning();
+    end
+
+    flagInstance:SetPosition(worldX, worldY, worldZ);
+    end
+end
+
+-------------------------------------------------
+-- Unit Formations
+-------------------------------------------------
+function OnEnterFormation(playerID1, unitID1, playerID2, unitID2)
+  local pPlayer = Players[ playerID1 ];
+  if (pPlayer ~= nil) then
+    local pUnit = pPlayer:GetUnits():FindID(unitID1);
+    if (pUnit ~= nil) then
+      UpdateIconStack(pUnit:GetX(), pUnit:GetY());
+    end
+  end
+end
+
+-------------------------------------------------
+-- Unit flag arrangement and formation visualization
+-------------------------------------------------
+function UpdateIconStack( plotX:number, plotY:number )
+  local unitList:table = Units.GetUnitsInPlotLayerID( plotX, plotY, MapLayers.ANY );
+  if unitList ~= nil then
+    -- If a unit is going to die it shouldn't be counted
+
+    local numUnits:number = table.count(unitList);
+    for i, pUnit in ipairs(unitList) do
+      if pUnit:IsDelayedDeath() then
+        numUnits = numUnits - 1;
+      elseif ShouldHideFlag(pUnit) then
+        -- Don't count unit flags which will be hidden
+        numUnits = numUnits - 1;
+      end
+    end
+    local multiSpacingX = 32;
+    local landCombatOffsetX = 0;
+    local civilianOffsetX =  0;
+    local formationIndex = 0;
+    local DuoFlag;
+    for _, pUnit in ipairs(unitList) do
+      -- Cache commonly used values (optimization)
+      local unitID:number = pUnit:GetID();
+      local unitOwner:number = pUnit:GetOwner();
+      local flag = GetUnitFlag( unitOwner, unitID );
+
+      if ( flag ~= nil and flag.m_eVisibility == RevealedState.VISIBLE ) then
+        local unitInfo:table = GameInfo.Units[pUnit:GetUnitType()];
+
+        -- Check if we should hide this units flag
+        flag.m_Instance.FlagRoot:SetHide(ShouldHideFlag(pUnit));
+
+        -- If there's more than one unit in the hex, offset their flags so they don't overlap
+        local formationClassString:string = unitInfo.FormationClass;
+        local iFormationCount:number = pUnit:GetFormationUnitCount();
+        if(iFormationCount > 1 or numUnits > 1) then
+          if ( iFormationCount < 2 ) then
+            if (formationClassString == "FORMATION_CLASS_LAND_COMBAT") then
+              flag.m_Instance.FlagRoot:SetOffsetVal(landCombatOffsetX + m_FlagOffsets[1][1], m_FlagOffsets[1][2] );
+              landCombatOffsetX = landCombatOffsetX - multiSpacingX;
+            elseif	(formationClassString == "FORMATION_CLASS_CIVILIAN" or formationClassString == "FORMATION_CLASS_SUPPORT") then
+              flag.m_Instance.FlagRoot:SetOffsetVal(civilianOffsetX + m_FlagOffsets[2][1], m_FlagOffsets[2][2]);
+              civilianOffsetX = civilianOffsetX + multiSpacingX;
+            elseif	(formationClassString == "FORMATION_CLASS_NAVAL") then
+              flag.m_Instance.FlagRoot:SetOffsetVal(m_FlagOffsets[3][1], m_FlagOffsets[3][2]);
+            elseif	(formationClassString == "FORMATION_CLASS_AIR") then
+              flag.m_Instance.FlagRoot:SetOffsetVal(m_FlagOffsets[3][1], m_FlagOffsets[3][2] * -1 );
+            else
+              flag.m_Instance.FlagRoot:SetOffsetVal(0,0);
+            end
+
+            flag.m_Instance.Formation2:SetHide(true);
+            flag.m_Instance.Formation3:SetHide(true);
+          else
+            if (iFormationCount < 3) then
+              flag.m_Instance.Formation2:SetHide(true);
+              flag.m_Instance.Formation3:SetHide(true);
+              if formationClassString ~= "FORMATION_CLASS_LAND_COMBAT" then
+                if(DuoFlag and (formationClassString == "FORMATION_CLASS_CIVILIAN" or formationClassString == "FORMATION_CLASS_SUPPORT")) then
+                  DuoFlag.m_Instance.Formation2:SetHide(true);
+                else
+                  flag.m_Instance.Formation2:SetHide(false);
+                  flag.m_Instance.Formation2:SetOffsetVal(m_LinkOffsets[1][1], m_LinkOffsets[1][2]);
+                  flag.m_Instance.Formation2:SetSizeX(64);
+                end
+                DuoFlag = flag;
+              end
+
+            else
+              flag.m_Instance.Formation2:SetHide(true);
+              flag.m_Instance.Formation3:SetHide(true);
+              if formationClassString == "FORMATION_CLASS_CIVILIAN" or formationClassString == "FORMATION_CLASS_SUPPORT" then
+                flag.m_Instance.Formation3:SetHide(false);
+                flag.m_Instance.Formation3:SetOffsetVal(m_LinkOffsets[2][1], m_LinkOffsets[2][2]);
+                flag.m_Instance.Formation3:SetSizeX(100);
+                flag.m_Instance.Formation3:SetSizeY(80);
+              end
+
+            end
+
+            formationIndex = formationIndex + 1;
+            flag.m_Instance.FlagRoot:SetOffsetVal(m_FlagOffsets[formationIndex][1], m_FlagOffsets[formationIndex][2] );
+          end
+
+        else
+          -- If there is not more than one unit remove the offset and hide the formation indicator
+          flag.m_Instance.FlagRoot:SetOffsetX(0);
+          flag.m_Instance.FlagRoot:SetOffsetY(0);
+          flag.m_Instance.Formation2:SetHide(true);
+          flag.m_Instance.Formation3:SetHide(true);
+        end
+
+        -- Avoid name changing (per frame) as there are lots of small string allocations that will occur.
+        -- The only time the name would change is if the military formation has changed.
+        local militaryFormation:number = pUnit:GetMilitaryFormation();
+        if flag.m_cacheMilitaryFormation ~= militaryFormation then
+          if militaryFormation == MilitaryFormationTypes.CORPS_FORMATION then
+            flag.m_Instance.CorpsMarker:SetHide(false);
+            flag.m_Instance.ArmyMarker:SetHide(true);
+          elseif militaryFormation == MilitaryFormationTypes.ARMY_FORMATION then
+            flag.m_Instance.CorpsMarker:SetHide(true);
+            flag.m_Instance.ArmyMarker:SetHide(false);
+          else
+            flag.m_Instance.CorpsMarker:SetHide(true);
+            flag.m_Instance.ArmyMarker:SetHide(true);
+          end
+          flag.m_cacheMilitaryFormation = militaryFormation;
+          flag:UpdateName();
+        end
+
+      end
+    end
+  end
+end
+
+---========================================
+function ShouldHideFlag(pUnit:table)
+  local unitInfo:table = GameInfo.Units[pUnit:GetUnitType()];
+  local unitPlot:table = Map.GetPlot(pUnit:GetX(), pUnit:GetY());
+
+  -- Cache commonly used values (optimization)
+  local unitID:number = pUnit:GetID();
+  local unitOwner:number = pUnit:GetOwner();
+
+  -- If we're an air unit then check if we should hide the unit flag due to being based in a stacked tile
+  local shouldHideFlag:boolean = false;
+
+	local activityType = UnitManager.GetActivityType(pUnit);
+	if (activityType == ActivityTypes.ACTIVITY_INTERCEPT) then
+		return false;
+	end
+
+  if	unitInfo.Domain == "DOMAIN_AIR" then
+    -- Hide air unit if we're stationed at a airstrip
+    local tPlotAirUnits = unitPlot:GetAirUnits();
+    if tPlotAirUnits then
+      for i,unit in ipairs(tPlotAirUnits) do
+        if unitOwner == unit:GetOwner() and unitID == unit:GetID() then
+          shouldHideFlag = true;
+        end
+      end
+    end
+
+    -- Hide air unit if we're stationed at an aerodrome
+    if not shouldHideFlag then
+      local districtID:number = unitPlot:GetDistrictID();
+      if districtID > 0 then
+        local pPlayer = Players[unitOwner];
+        local pDistrict = pPlayer:GetDistricts():FindID(districtID);
+        local pDistrictInfo = GameInfo.Districts[pDistrict:GetType()];
+        if pDistrict and not pDistrictInfo.CityCenter then
+          local bHasAirUnits, tAirUnits = pDistrict:GetAirUnits();
+          if (bHasAirUnits and tAirUnits ~= nil) then
+            for _,unit in ipairs(tAirUnits) do
+              if unitOwner == unit:GetOwner() and unitID == unit:GetID() then
+                shouldHideFlag = true;
+              end
+            end
+          end
+        end
+      end
+    end
+
+    -- Hide air unit if we're stationed on an aircraft carrier
+    if not shouldHideFlag then
+      local unitsInPlot = Units.GetUnitsInPlot(unitPlot);
+      for i, unit in ipairs(unitsInPlot) do
+        -- If we have any air unit slots then hide the stationed units flag
+        if unit:GetAirSlots() > 0 then
+          shouldHideFlag = true;
+        end
+      end
+    end
+  end
+
+  return shouldHideFlag;
+end
+
+-------------------------------------------------
+-- Zoom level calculation
+-------------------------------------------------
+function OnCameraUpdate( vFocusX:number, vFocusY:number, fZoomLevel:number )
+  m_cameraFocusX	= vFocusX;
+  m_cameraFocusY	= vFocusY;
+
+  -- If no change in the zoom, no update necessary.
+  if( math.abs( (1-fZoomLevel) - m_zoomMultiplier ) < ZOOM_MULT_DELTA ) then
+    return;
+  end
+  m_zoomMultiplier= 1-fZoomLevel;
+
+  if m_zoomMultiplier < 0.6 then
+    m_zoomMultiplier = 0.6;
+  end
+
+
+  --Reposition flags that are near cities, since they are the only ones that can change position because of a zoom level change.
+
+  local units = Game.GetUnits{NearCity = true};
+  for i, idTable:table in pairs(units) do
+    PositionFlagForUnitToView( idTable[1], idTable[2] );
+  end
+end
+
+-- ===========================================================================
+--	Game Engine Event
+-- ===========================================================================
+function OnPlayerTurnActivated( ePlayer:number, bFirstTimeThisTurn:boolean )
+
+  if ePlayer == -1 then
+    return;
+  end
+
+  if Players[ ePlayer ] == nil then
+    return;
+  end
+
+  if m_UnitFlagInstances[ ePlayer ] == nil then
+    return;
+  end
+
+  local idLocalPlayer = Game.GetLocalPlayer();
+  if idLocalPlayer < 0 then
     return
   end
+  if (ePlayer == idLocalPlayer and bFirstTimeThisTurn) then
 
-  local pPlot = Map.GetPlotByIndex(plotId)
-  local localPlayer:number = Game.GetLocalPlayer();
-  local localPlayerVis:table = PlayersVisibility[localPlayer];
-  local localPlayerCities = Players[localPlayer]:GetCities()
-
-  local tNonDimPlots:table = {}
-  local tUnusablePlots:table = {}
-  local tOverlapPlots:table = {}
-  local tResourcePlots:table = {}
-  local tRegularPlots:table = {}
-
-  local iUnusableColor:number = UI.GetColorValue("COLOR_ALT_SETTLER_UNUSABLE");
-  local iOverlapColor:number = UI.GetColorValue("COLOR_ALT_SETTLER_OVERLAP");
-  local iResourceColor:number = UI.GetColorValue("COLOR_ALT_SETTLER_RESOURCE");
-  local iRegularColor:number = UI.GetColorValue("COLOR_ALT_SETTLER_REGULAR");
-
-  for pRangePlot in PlotAreaSpiralIterator(pPlot, CITY_WORK_RANGE,
-      SECTOR_NONE, DIRECTION_CLOCKWISE, DIRECTION_OUTWARDS, CENTRE_INCLUDE) do
-
-    local plotX = pRangePlot:GetX()
-    local plotY = pRangePlot:GetY()
-    local plotID = pRangePlot:GetIndex()
-    if localPlayerVis:IsRevealed(plotX, plotY) then
-
-      table.insert(tNonDimPlots, plotID)
-      if plotWithinWorkingRange(localPlayer, plotID) then
-        table.insert(tOverlapPlots, plotID)
-
-      elseif pRangePlot:IsImpassable() then
-        table.insert(tUnusablePlots, plotID)
-
-      elseif pRangePlot:IsOwned() and pRangePlot:GetOwner() ~= localPlayer then
-        table.insert(tUnusablePlots, plotID)
-
-      elseif plotHasResource(pRangePlot) and
-          playerHasDiscoveredResource(localPlayer, plotID) then
-
-        table.insert(tResourcePlots, plotID)
-      else
-        table.insert(tRegularPlots, plotID)
+    local playerFlagInstances = m_UnitFlagInstances[ idLocalPlayer ];
+    for id, flag in pairs(playerFlagInstances) do
+      if (flag ~= nil) then
+        flag:UpdateStats();
+        flag:UpdateReadyState();
       end
     end
-  end
 
-  -- Alt_HighlightPlots(tNonDimPlots)
+    -- Hide all attention icons
+    m_AttentionMarkerIM:ResetInstances();
 
-  if #tOverlapPlots > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_WATER_AVAILABLITY, localPlayer, tOverlapPlots, iOverlapColor );
-  end
+    -- Iterate through barbarian units to determine if they should show an attention icon
+    for _, pPlayer in ipairs(Players) do
+      if pPlayer:IsBarbarian() then
+        local iPlayerID:number = pPlayer:GetID();
+        local pPlayerUnits:table = pPlayer:GetUnits();
 
-  if #tUnusablePlots > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_WATER_AVAILABLITY, localPlayer, tUnusablePlots, iUnusableColor );
-  end
+        for i, pUnit in pPlayerUnits:Members() do
+          local flag:table = GetUnitFlag(iPlayerID, pUnit:GetID());
 
-  if #tResourcePlots > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_WATER_AVAILABLITY, localPlayer, tResourcePlots, iResourceColor );
-  end
+          if flag ~= nil then
 
-  if #tRegularPlots  > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_WATER_AVAILABLITY, localPlayer, tRegularPlots, iRegularColor );
-  end
-end
+            local targetPlayer :number = pUnit:GetBarbarianTargetPlayer();
 
-function RefreshSettlerLens()
-  ClearSettlerLens()
-  UILens.ToggleLayerOn( LensLayers.HEX_COLORING_WATER_AVAILABLITY );
-end
-
-function ClearSettlerLens()
-  -- Alt_ClearHighlightedPlots()
-
-  if UILens.IsLayerOn( LensLayers.HEX_COLORING_WATER_AVAILABLITY ) then
-    UILens.ToggleLayerOff( LensLayers.HEX_COLORING_WATER_AVAILABLITY );
-  end
-end
-
--- Checks to see if settler lens should be reapplied
-function RecheckSettlerLens()
-  local selectedUnit = UI.GetHeadSelectedUnit()
-  if (selectedUnit ~= nil) then
-    local unitType = GetUnitType(selectedUnit:GetOwner(), selectedUnit:GetID());
-    if (unitType == "UNIT_SETTLER") then
-      RefreshSettlerLens()
-      return
-    end
-  end
-
-  ClearSettlerLens()
-end
-
--- ===========================================================================
-function SetGovernmentHexes()
-  local localPlayer : number = Game.GetLocalPlayer();
-  local localPlayerVis:table = PlayersVisibility[localPlayer];
-  if (localPlayerVis ~= nil) then
-    local players = Game.GetPlayers();
-    for i, player in ipairs(players) do
-      local cities = players[i]:GetCities();
-      local culture = player:GetCulture();
-      local governmentId :number = culture:GetCurrentGovernment();
-      local GovernmentColor;
-
-      if culture:IsInAnarchy() then
-        GovernmentColor = UI.GetColorValue("COLOR_CLEAR");
-      else
-        if(governmentId < 0) then
-          GovernmentColor = UI.GetColorValue("COLOR_GOVERNMENT_CITYSTATE");
-        else
-          GovernmentColor = UI.GetColorValue("COLOR_" ..  GameInfo.Governments[governmentId].GovernmentType);
-        end
-      end
-
-      for _, pCity in cities:Members() do
-        local visibleCityPlots:table = Map.GetCityPlots():GetVisiblePurchasedPlots(pCity);
-
-        if(table.count(visibleCityPlots) > 0) then
-          UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_GOVERNMENT, localPlayer, visibleCityPlots, GovernmentColor );
-        end
-      end
-    end
-  end
-
-  m_FullClearAreaLens = true;
-end
-
--- ===========================================================================
-function SetAppealHexes()
-  local BreathtakingPlots:table = {};
-  local CharmingPlots:table = {};
-  local AveragePlots:table = {};
-  local UninvitingPlots:table = {};
-  local DisgustingPlots:table = {};
-
-  BreathtakingPlots, CharmingPlots, AveragePlots, UninvitingPlots, DisgustingPlots = Map.GetContinentPlotsAppeal();
-
-  local BreathtakingColor :number = UI.GetColorValue("COLOR_BREATHTAKING_APPEAL");
-  local CharmingColor     :number = UI.GetColorValue("COLOR_CHARMING_APPEAL");
-  local AverageColor      :number = UI.GetColorValue("COLOR_AVERAGE_APPEAL");
-  local UninvitingColor   :number = UI.GetColorValue("COLOR_UNINVITING_APPEAL");
-  local DisgustingColor   :number = UI.GetColorValue("COLOR_DISGUSTING_APPEAL");
-  local localPlayer       :number = Game.GetLocalPlayer();
-
-  if(table.count(BreathtakingPlots) > 0) then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, BreathtakingPlots, BreathtakingColor );
-  end
-  if(table.count(CharmingPlots) > 0) then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, CharmingPlots, CharmingColor );
-  end
-  if(table.count(AveragePlots) > 0) then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, AveragePlots, AverageColor );
-  end
-  if(table.count(UninvitingPlots) > 0) then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, UninvitingPlots, UninvitingColor );
-  end
-  if(table.count(DisgustingPlots) > 0) then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, DisgustingPlots, DisgustingColor );
-  end
-end
-
--- ===========================================================================
-function SetContinentHexes()
-  local ContinentColor:number = 0x02000000;
-  GetContinentsCache();
-  local localPlayerVis:table = PlayersVisibility[Game.GetLocalPlayer()];
-  if (localPlayerVis ~= nil) then
-
-    local kContinentColors:table = {};
-    for loopNum, ContinentID in ipairs(m_ContinentsCache) do
-      local visibleContinentPlots:table = Map.GetVisibleContinentPlots(ContinentID);
-      ContinentColor = UI.GetColorValue("COLOR_" .. GameInfo.Continents[ loopNum-1 ].ContinentType);
-      if(table.count(visibleContinentPlots) > 0) then
-        UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_CONTINENT, loopNum-1, visibleContinentPlots, ContinentColor );
-        kContinentColors[ContinentID] = ContinentColor;
-      end
-    end
-    LuaEvents.MinimapPanel_AddContinentColorPair( kContinentColors );
-  end
-end
-
--- ===========================================================================
-function SetBuilderLensHexes()
-  -- Check required to work properly with hotkey.
-  -- print("Highlight Builder Lens Hexes");
-  local mapWidth, mapHeight = Map.GetGridSize();
-
-  local ResourceColor:number = UI.GetColorValue("COLOR_RESOURCE_BUILDER_LENS");
-  local HillColor:number = UI.GetColorValue("COLOR_HILL_BUILDER_LENS");
-  local RecomFeatureColor:number = UI.GetColorValue("COLOR_RECOMFEATURE_BUILDER_LENS")
-  local FeatureColor:number = UI.GetColorValue("COLOR_FEATURE_BUILDER_LENS");
-  local GenericColor:number = UI.GetColorValue("COLOR_GENERIC_BUILDER_LENS");
-  local NothingColor:number = UI.GetColorValue("COLOR_NOTHING_BUILDER_LENS");
-  local localPlayer:number = Game.GetLocalPlayer();
-
-  local unworkableHexes:table = {};
-  local repairableHexes:table = {};
-  local resourceHexes:table = {};
-  local featureHexes:table = {};
-  local recomFeatureHexes:table = {}
-  local hillHexes:table = {};
-  local genericHexes:table = {};
-  local specialHexes:table = {};
-  local localPlayerHexes:table = {};
-
-  for i = 0, (mapWidth * mapHeight) - 1, 1 do
-    local pPlot:table = Map.GetPlotByIndex(i);
-
-    if pPlot:GetOwner() == Game.GetLocalPlayer() then
-      table.insert(localPlayerHexes, i);
-
-      -- IMPASSABLE
-      --------------------------------------
-      if pPlot:IsImpassable() then
-        table.insert(unworkableHexes, i)
-
-      -- NATIONAL PARK
-      --------------------------------------
-      elseif pPlot:IsNationalPark() then
-        table.insert(unworkableHexes, i)
-
-      -- IMPROVEMENTS
-      --------------------------------------
-      elseif plotHasImprovement(pPlot) then
-        if pPlot:IsImprovementPillaged() then
-          table.insert(repairableHexes, i);
-        else
-          table.insert(unworkableHexes, i);
-        end
-
-      -- NATURAL WONDER
-      --------------------------------------
-      elseif plotHasNaturalWonder(pPlot) then
-        if plotHasImprovableWonder(pPlot) then
-          table.insert(recomFeatureHexes, i)
-        else
-          table.insert(unworkableHexes, i)
-        end
-
-      -- PLAYER WONDER - CHINESE UA
-      --------------------------------------
-      elseif plotHasWonder(pPlot) then
-        -- Check for a UA similiar to china's
-        if playerHasBuilderWonderModifier(localPlayer) and (not pPlot:IsWonderComplete())
-          and isAncientClassicalWonder(pPlot:GetWonderType()) then
-            table.insert(specialHexes, i);
-        else
-          table.insert(unworkableHexes, i);
-        end
-
-      -- DISTRICT - AZTEC UA
-      --------------------------------------
-      elseif plotHasDistrict(pPlot) then
-        -- Check for a UA similiar to Aztec's
-        if (not pPlot:IsCity()) and (not districtComplete(localPlayer, i)) and
-          playerHasBuilderDistrictModifier(localPlayer) then
-            table.insert(specialHexes, i);
-        else
-          table.insert(unworkableHexes, i);
-        end
-
-      -- VISIBLE RESOURCE
-      --------------------------------------
-      elseif plotHasResource(pPlot) and playerHasDiscoveredResource(localPlayer, i) then
-        -- Is the resource improvable?
-        if plotResourceImprovable(pPlot) then
-          table.insert(resourceHexes, i);
-        else
-          table.insert(unworkableHexes, i);
-        end
-
-      -- FEATURE - Note: This includes natural wonders, since wonder is also a "feature". Check Features.xml
-      --------------------------------------
-      elseif plotHasFeature(pPlot) then
-        -- Recommended Feature
-        if plotHasRecomFeature(pPlot) then
-          table.insert(recomFeatureHexes, i)
-        -- Harvestable feature
-        elseif playerCanRemoveFeature(localPlayer, i) then
-          table.insert(featureHexes, i);
-        else
-          table.insert(unworkableHexes, i)
-        end
-
-      -- HILL - MINE
-      --------------------------------------
-      elseif plotHasImprovableHill(pPlot) then
-        if plotNextToBuffingWonder(pPlot) then
-          table.insert(recomFeatureHexes, i)
-        else
-          table.insert(hillHexes, i);
-        end
-
-      -- GENERIC TILE
-      --------------------------------------
-      elseif plotCanHaveImprovement(localPlayer, i) then
-        if plotNextToBuffingWonder(pPlot) then
-          table.insert(recomFeatureHexes, i)
-        elseif plotCanHaveFarm(plot) then
-          table.insert(genericHexes, i)
-        end
-
-      -- NOTHING TO DO
-      --------------------------------------
-      else
-         table.insert(unworkableHexes, i)
-      end
-    end
-  end
-
-  -- Dim other hexes
-  -- if table.count(localPlayerHexes) > 0 then
-  --  UILens.SetLayerHexesArea(LensLayers.MAP_HEX_MASK, localPlayer, localPlayerHexes );
-  -- end
-
-  if table.count(repairableHexes) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, repairableHexes, ResourceColor );
-  end
-  if table.count(resourceHexes) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, resourceHexes, ResourceColor );
-  end
-  if table.count(specialHexes) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, specialHexes, ResourceColor );
-  end
-  if table.count(hillHexes) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, hillHexes, HillColor );
-  end
-  if table.count(recomFeatureHexes) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, recomFeatureHexes, RecomFeatureColor );
-  end
-  if table.count(featureHexes) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, featureHexes, FeatureColor );
-  end
-  if SHOW_GENERIC_PLOTS_IN_BUILDER_LENS and table.count(genericHexes) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, genericHexes, GenericColor );
-  end
-  if SHOW_NOTHING_TODO_IN_BUILDER_LENS and table.count(unworkableHexes) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, unworkableHexes, NothingColor );
-  end
-end
-
-function ClearBuilderLensHexes()
-  -- print("Clear Builder Lens Hexes");
-  ClearModdedLens();
-end
-
--- Called when a builder is selected
-function ShowBuilderLens()
-  -- UILens.SetActive("Default");
-  SetActiveModdedLens(MODDED_LENS_ID.BUILDER);
-  UILens.ToggleLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL);
-end
-
--- ===========================================================================
-function SetArchaeologistLens()
-  -- print("Show archeologist lens")
-  local mapWidth, mapHeight = Map.GetGridSize();
-  local localPlayer   :number = Game.GetLocalPlayer();
-  local localPlayerVis:table = PlayersVisibility[localPlayer];
-
-  local artifactPlots     :table = {};
-  local antiquityPlots    :table = {};
-  local shipwreckPlots    :table = {};
-
-  local AntiquityColor = UI.GetColorValue("COLOR_ARTIFACT_ARCH_LENS");
-  local ShipwreckColor = UI.GetColorValue("COLOR_SHIPWRECK_ARCH_LENS");
-
-  for i = 0, (mapWidth * mapHeight) - 1, 1 do
-    local pPlot:table = Map.GetPlotByIndex(i);
-
-    if localPlayerVis:IsRevealed(pPlot:GetX(), pPlot:GetY()) and playerHasDiscoveredResource(localPlayer, i) then
-      if plotHasAnitquitySite(pPlot) then
-        table.insert(artifactPlots, i);
-        table.insert(antiquityPlots, i);
-      elseif plotHasShipwreck(pPlot) then
-        table.insert(shipwreckPlots, i);
-        table.insert(antiquityPlots, i);
-      end
-    end
-  end
-
-  -- Dim hexes that are not artifacts or shipwrecks
-  -- if table.count(antiquityPlots) > 0 then
-  --  UILens.SetLayerHexesArea(LensLayers.MAP_HEX_MASK, localPlayer, antiquityPlots );
-  -- end
-
-  if table.count(artifactPlots) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, artifactPlots, AntiquityColor );
-  end
-  if table.count(shipwreckPlots) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, shipwreckPlots, ShipwreckColor );
-  end
-end
-
-function ClearArchaeologistLens()
-  -- print("Clear Archaeologist Lens Hexes");
-  ClearModdedLens();
-end
-
--- Called when a archeologist is selected
-function ShowArchaeologistLens()
-  SetActiveModdedLens(MODDED_LENS_ID.ARCHAEOLOGIST);
-  UILens.ToggleLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL);
-end
-
--- ===========================================================================
-function SetCityOverlapLens()
-  -- print("Show City Overlap 6 lens")
-  local mapWidth, mapHeight = Map.GetGridSize();
-  local localPlayer   :number = Game.GetLocalPlayer();
-  local localPlayerVis:table = PlayersVisibility[localPlayer];
-
-  local plotEntries       :table = {};
-  local numCityEntries    :table = {};
-  local localPlayerCities = Players[localPlayer]:GetCities()
-
-  for i = 0, (mapWidth * mapHeight) - 1, 1 do
-    local pPlot:table = Map.GetPlotByIndex(i);
-
-    if localPlayerVis:IsRevealed(pPlot:GetX(), pPlot:GetY()) then
-      if pPlot:GetOwner() == localPlayer or Controls.ShowLensOutsideBorder:IsChecked() then
-        local numCities = 0;
-        for _, pCity in localPlayerCities:Members() do
-          if Map.GetPlotDistance(pPlot:GetX(), pPlot:GetY(), pCity:GetX(), pCity:GetY()) <= m_CityOverlapRange then
-            numCities = numCities + 1;
-          end
-        end
-
-        if numCities > 0 then
-          numCities = Clamp(numCities, 1, 8);
-
-          table.insert(plotEntries, i);
-          table.insert(numCityEntries, numCities);
-        end
-      end
-    end
-  end
-
-  -- Dim hexes that are not encapments.
-  -- if table.count(plotEntries) > 0 then
-  --  UILens.SetLayerHexesArea( LensLayers.MAP_HEX_MASK, localPlayer, plotEntries );
-  -- end
-
-  for i = 1, #plotEntries, 1 do
-    local colorLookup:string = "COLOR_GRADIENT8_" .. tostring(numCityEntries[i]);
-    local color:number = UI.GetColorValue(colorLookup);
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, {plotEntries[i]}, color );
-  end
-end
-
-function Alt_SetCityOverlapLens()
-  local plotId = UI.GetCursorPlotID();
-  if (not Map.IsPlot(plotId)) then
-    return;
-  end
-
-  local pPlot = Map.GetPlotByIndex(plotId)
-  local localPlayer = Game.GetLocalPlayer()
-  local localPlayerVis:table = PlayersVisibility[localPlayer]
-  local cityPlots:table = {}
-  local normalPlot:table = {}
-
-  for pAdjacencyPlot in PlotAreaSpiralIterator(pPlot, m_CityOverlapRange, SECTOR_NONE, DIRECTION_CLOCKWISE, DIRECTION_OUTWARDS, CENTRE_INCLUDE) do
-    if localPlayerVis:IsRevealed(pAdjacencyPlot:GetX(), pAdjacencyPlot:GetY()) then
-      if (pAdjacencyPlot:GetOwner() == localPlayer and pAdjacencyPlot:IsCity()) then
-        table.insert(cityPlots, pAdjacencyPlot:GetIndex());
-      else
-        table.insert(normalPlot, pAdjacencyPlot:GetIndex());
-      end
-    end
-  end
-
-  if (table.count(cityPlots) > 0) then
-    local plotColor:number = UI.GetColorValue("COLOR_GRADIENT8_1");
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, cityPlots, plotColor );
-  end
-
-  if (table.count(normalPlot) > 0) then
-    local plotColor:number = UI.GetColorValue("COLOR_GRADIENT8_3");
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, normalPlot, plotColor );
-  end
-end
-
-function RefreshCityOverlapLens()
-  -- Assuming City Overlap lens is already applied
-  UILens.ClearLayerHexes(LensLayers.HEX_COLORING_APPEAL_LEVEL);
-  SetCityOverlapLens();
-end
-
-function Refresh_AltCityOverlapLens()
-  UILens.ClearLayerHexes(LensLayers.HEX_COLORING_APPEAL_LEVEL);
-  Alt_SetCityOverlapLens();
-end
-
-function IncreseOverlapRange()
-  m_CityOverlapRange = m_CityOverlapRange + 1;
-  Controls.OverlapRangeLabel:SetText(m_CityOverlapRange);
-  RefreshCityOverlapLens();
-end
-
-function DecreaseOverlapRange()
-  if (m_CityOverlapRange > 0) then
-    m_CityOverlapRange = m_CityOverlapRange - 1;
-  end
-  Controls.OverlapRangeLabel:SetText(m_CityOverlapRange);
-  RefreshCityOverlapLens();
-end
-
--- ===========================================================================
-function SetBarbarianLens()
-  -- print("Show archeologist lens")
-  local mapWidth, mapHeight = Map.GetGridSize();
-  local localPlayer   :number = Game.GetLocalPlayer();
-  local localPlayerVis:table = PlayersVisibility[localPlayer];
-
-  local BarbarianColor = UI.GetColorValue("COLOR_BARBARIAN_BARB_LENS");
-  local barbPlots:table = {};
-  local barbAdjacent:table = {};
-
-  for i = 0, (mapWidth * mapHeight) - 1, 1 do
-    local pPlot:table = Map.GetPlotByIndex(i);
-
-    if localPlayerVis:IsRevealed(pPlot:GetX(), pPlot:GetY()) and plotHasBarbCamp(pPlot) then
-      table.insert(barbPlots, i);
-      table.insert(barbAdjacent, i);
-
-      -- for pAdjacencyPlot in PlotRingIterator(pPlot, 1, SECTOR_NONE, DIRECTION_CLOCKWISE) do
-      --  table.insert(barbAdjacent, pAdjacencyPlot:GetIndex());
-      -- end
-    end
-  end
-
-  -- Dim hexes that are not encapments
-  -- if table.count(barbAdjacent) > 0 then
-  --  UILens.SetLayerHexesArea( LensLayers.MAP_HEX_MASK, localPlayer, barbAdjacent );
-  -- end
-
-  if table.count(barbPlots) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, barbPlots, BarbarianColor );
-  end
-end
-
--- ===========================================================================
-function SetResourceLens()
-  -- print("Show Resource lens")
-  local mapWidth, mapHeight = Map.GetGridSize();
-  local localPlayer   :number = Game.GetLocalPlayer();
-  local localPlayerVis:table = PlayersVisibility[localPlayer];
-
-  local LuxConnectedColor   :number = UI.GetColorValue("COLOR_LUXCONNECTED_RES_LENS");
-  local StratConnectedColor :number = UI.GetColorValue("COLOR_STRATCONNECTED_RES_LENS");
-  local BonusConnectedColor :number = UI.GetColorValue("COLOR_BONUSCONNECTED_RES_LENS");
-  local LuxNConnectedColor  :number = UI.GetColorValue("COLOR_LUXNCONNECTED_RES_LENS");
-  local StratNConnectedColor  :number = UI.GetColorValue("COLOR_STRATNCONNECTED_RES_LENS");
-  local BonusNConnectedColor  :number = UI.GetColorValue("COLOR_BONUSNCONNECTED_RES_LENS");
-
-  -- Resources to exclude in the "Resource Lens"
-  local ResourceExclusionList:table = {
-    "RESOURCE_ANTIQUITY_SITE",
-    "RESOURCE_SHIPWRECK"
-  }
-
-  local ConnectedLuxury       = {};
-  local ConnectedStrategic    = {};
-  local ConnectedBonus        = {};
-  local NotConnectedLuxury    = {};
-  local NotConnectedStrategic = {};
-  local NotConnectedBonus     = {};
-  local ResourcePlots         = {};
-
-  for i = 0, (mapWidth * mapHeight) - 1, 1 do
-    local pPlot:table = Map.GetPlotByIndex(i);
-
-    if localPlayerVis:IsRevealed(pPlot:GetX(), pPlot:GetY()) and playerHasDiscoveredResource(localPlayer, i) then
-      local resourceType = pPlot:GetResourceType()
-      if resourceType ~= nil and resourceType >= 0 then
-        local resourceInfo = GameInfo.Resources[resourceType];
-        if resourceInfo ~= nil then
-
-          -- Check if resource is not in exclusion list
-          if not has_value(ResourceExclusionList, resourceInfo.ResourceType) and (not has_value(ResourcesToHide, resourceInfo.ResourceType)) then
-            table.insert(ResourcePlots, i);
-            if resourceInfo.ResourceClassType == "RESOURCECLASS_BONUS" and
-                not has_value(ResourceCategoryToHide, "Bonus") then
-              if plotHasImprovement(pPlot) and not pPlot:IsImprovementPillaged() then
-                table.insert(ConnectedBonus, i)
-              else
-                table.insert(NotConnectedBonus, i)
-              end
-            elseif resourceInfo.ResourceClassType == "RESOURCECLASS_LUXURY" and
-                not has_value(ResourceCategoryToHide, "Luxury") then
-              if plotHasImprovement(pPlot) and not pPlot:IsImprovementPillaged() then
-                table.insert(ConnectedLuxury, i)
-              else
-                table.insert(NotConnectedLuxury, i)
-              end
-            elseif resourceInfo.ResourceClassType == "RESOURCECLASS_STRATEGIC" and
-                not has_value(ResourceCategoryToHide, "Strategic") then
-              if plotHasImprovement(pPlot) and not pPlot:IsImprovementPillaged() then
-                table.insert(ConnectedStrategic, i)
-              else
-                table.insert(NotConnectedStrategic, i)
-              end
+            if targetPlayer ~= -1 and targetPlayer == idLocalPlayer then
+              m_AttentionMarkerIM:GetInstance(flag.m_Instance.FlagRoot);
+              flag.bHasAttentionMarker = true;
+            else
+              flag.bHasAttentionMarker = false;
             end
           end
         end
       end
     end
   end
-
-  -- Dim other hexes
-  -- if table.count(ResourcePlots) > 0 then
-  --  UILens.SetLayerHexesArea( LensLayers.MAP_HEX_MASK, localPlayer, ResourcePlots );
-  -- end
-
-  if table.count(ConnectedLuxury) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, ConnectedLuxury, LuxConnectedColor );
-  end
-  if table.count(ConnectedStrategic) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, ConnectedStrategic, StratConnectedColor );
-  end
-  if table.count(ConnectedBonus) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, ConnectedBonus, BonusConnectedColor );
-  end
-  if table.count(NotConnectedLuxury) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, NotConnectedLuxury, LuxNConnectedColor );
-  end
-  if table.count(NotConnectedStrategic) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, NotConnectedStrategic, StratNConnectedColor );
-  end
-  if table.count(NotConnectedBonus) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, NotConnectedBonus, BonusNConnectedColor );
-  end
 end
 
-function RefreshResourcePicker()
-  print_debug("Show Resource Picker")
-  local mapWidth, mapHeight = Map.GetGridSize();
-  local localPlayer   :number = Game.GetLocalPlayer();
-  local localPlayerVis:table = PlayersVisibility[localPlayer];
-
-  -- Resources to exclude in the "Resource Lens"
-  local ResourceExclusionList:table = {
-    "RESOURCE_ANTIQUITY_SITE",
-    "RESOURCE_SHIPWRECK"
-  }
-
-  local BonusResources:table = {}
-  local LuxuryResources:table = {}
-  local StrategicResources:table = {}
-
-  for i = 0, (mapWidth * mapHeight) - 1, 1 do
-    local pPlot:table = Map.GetPlotByIndex(i);
-
-    if localPlayerVis:IsRevealed(pPlot:GetX(), pPlot:GetY()) and playerHasDiscoveredResource(localPlayer, i) then
-      local resourceType = pPlot:GetResourceType()
-      if resourceType ~= nil and resourceType >= 0 then
-        local resourceInfo = GameInfo.Resources[resourceType];
-        if resourceInfo ~= nil then
-          -- Check if resource is not in exclusion list
-          if not has_value(ResourceExclusionList, resourceInfo.ResourceType) then
-            if resourceInfo.ResourceClassType == "RESOURCECLASS_BONUS" then
-              if not has_rInfo(BonusResources, resourceInfo.ResourceType) then
-                table.insert(BonusResources, resourceInfo)
-              end
-            elseif resourceInfo.ResourceClassType == "RESOURCECLASS_LUXURY" then
-              if not has_rInfo(LuxuryResources, resourceInfo.ResourceType) then
-                table.insert(LuxuryResources, resourceInfo)
-              end
-            elseif resourceInfo.ResourceClassType == "RESOURCECLASS_STRATEGIC" then
-              if not has_rInfo(StrategicResources, resourceInfo.ResourceType) then
-                table.insert(StrategicResources, resourceInfo)
-              end
-            end
-          end
-        end
-      end
-    end
-  end
-
-  Controls.BonusResourcePickStack:DestroyAllChildren();
-  Controls.LuxuryResourcePickStack:DestroyAllChildren();
-  Controls.StrategicResourcePickStack:DestroyAllChildren();
-
-  -- Bonus Resources
-  if table.count(BonusResources) > 0 and
-      not has_value(ResourceCategoryToHide, "Bonus") then
-    for i, resourceInfo in ipairs(BonusResources) do
-      -- print(Locale.Lookup(resourceInfo.Name))
-      local resourcePickInstance:table = {};
-      ContextPtr:BuildInstanceForControl( "ResourcePickEntry", resourcePickInstance, Controls.BonusResourcePickStack );
-      resourcePickInstance.ResourceLabel:SetText("[ICON_" .. resourceInfo.ResourceType .. "]" .. Locale.Lookup(resourceInfo.Name));
-
-      if has_value(ResourcesToHide, resourceInfo.ResourceType) then
-        resourcePickInstance.ResourceCheckbox:SetCheck(false);
-      end
-
-      resourcePickInstance.ResourceCheckbox:RegisterCallback(Mouse.eLClick, function() HandleResourceCheckbox(resourcePickInstance, resourceInfo.ResourceType); end);
-    end
-  end
-
-  -- Luxury Resources
-  if table.count(LuxuryResources) > 0 and
-      not has_value(ResourceCategoryToHide, "Luxury") then
-    for i, resourceInfo in ipairs(LuxuryResources) do
-      -- print(Locale.Lookup(resourceInfo.Name))
-      local resourcePickInstance:table = {};
-      ContextPtr:BuildInstanceForControl( "ResourcePickEntry", resourcePickInstance, Controls.LuxuryResourcePickStack );
-      resourcePickInstance.ResourceLabel:SetText("[ICON_" .. resourceInfo.ResourceType .. "]" .. Locale.Lookup(resourceInfo.Name));
-
-      if has_value(ResourcesToHide, resourceInfo.ResourceType) then
-        resourcePickInstance.ResourceCheckbox:SetCheck(false);
-      end
-
-      resourcePickInstance.ResourceCheckbox:RegisterCallback(Mouse.eLClick, function() HandleResourceCheckbox(resourcePickInstance, resourceInfo.ResourceType); end);
-    end
-  end
-
-  -- Strategic Resources
-  if table.count(StrategicResources) > 0 and
-      not has_value(ResourceCategoryToHide, "Strategic") then
-    for i, resourceInfo in ipairs(StrategicResources) do
-      -- print(Locale.Lookup(resourceInfo.Name))
-      local resourcePickInstance:table = {};
-      ContextPtr:BuildInstanceForControl( "ResourcePickEntry", resourcePickInstance, Controls.StrategicResourcePickStack );
-      resourcePickInstance.ResourceLabel:SetText("[ICON_" .. resourceInfo.ResourceType .. "]" .. Locale.Lookup(resourceInfo.Name));
-
-      if has_value(ResourcesToHide, resourceInfo.ResourceType) then
-        resourcePickInstance.ResourceCheckbox:SetCheck(false);
-      end
-
-      resourcePickInstance.ResourceCheckbox:RegisterCallback(Mouse.eLClick, function() HandleResourceCheckbox(resourcePickInstance, resourceInfo.ResourceType); end);
-    end
-  end
-
-  -- Cleanup
-  Controls.BonusResourcePickStack:CalculateSize();
-  Controls.LuxuryResourcePickStack:CalculateSize();
-  Controls.StrategicResourcePickStack:CalculateSize();
-  Controls.ResourcePickList:CalculateSize();
-end
-
-function ToggleResourceLens_Bonus()
-  if not Controls.ShowBonusResource:IsChecked() then
-    print_debug("Hide Bonus Resource")
-    ndup_insert(ResourceCategoryToHide, "Bonus")
-  else
-    print_debug("Show Bonus Resource")
-    find_and_remove(ResourceCategoryToHide, "Bonus");
-  end
-
-  -- Assuming resource lens is already applied
-  UILens.ClearLayerHexes(LensLayers.HEX_COLORING_APPEAL_LEVEL);
-  RefreshResourcePicker();
-  SetResourceLens();
-end
-
-function ToggleResourceLens_Luxury()
-  if not Controls.ShowLuxuryResource:IsChecked() then
-    print_debug("Hide Luxury Resource")
-    ndup_insert(ResourceCategoryToHide, "Luxury")
-  else
-    print_debug("Show Luxury Resource")
-    find_and_remove(ResourceCategoryToHide, "Luxury");
-  end
-
-  -- Assuming resource lens is already applied
-  UILens.ClearLayerHexes(LensLayers.HEX_COLORING_APPEAL_LEVEL);
-  RefreshResourcePicker();
-  SetResourceLens();
-end
-
-function ToggleResourceLens_Strategic()
-  if not Controls.ShowStrategicResource:IsChecked() then
-    print_debug("Hide Strategic Resource")
-    ndup_insert(ResourceCategoryToHide, "Strategic")
-  else
-    print_debug("Show Strategic Resource")
-    find_and_remove(ResourceCategoryToHide, "Strategic");
-  end
-
-  -- Assuming resource lens is already applied
-  UILens.ClearLayerHexes(LensLayers.HEX_COLORING_APPEAL_LEVEL);
-  RefreshResourcePicker();
-  SetResourceLens();
-end
-
-function HandleResourceCheckbox(pControl, resourceType)
-  if not pControl.ResourceCheckbox:IsChecked() then
-    -- Don't show this resource
-    if not has_value(ResourcesToHide, resourceType) then
-      table.insert(ResourcesToHide, resourceType)
-    end
-  else
-    -- Show this resource
-    for i, rType in ipairs(ResourcesToHide) do
-      if rType == resourceType then
-        table.remove(ResourcesToHide, i)
-        break
-      end
-    end
-  end
-
-  -- Assuming resource lens is already applied
-  UILens.ClearLayerHexes(LensLayers.HEX_COLORING_APPEAL_LEVEL);
-  SetResourceLens();
-end
-
--- ===========================================================================
-function SetWonderLens()
-  -- print("Show wonder lens")
-  local mapWidth, mapHeight = Map.GetGridSize();
-  local localPlayer   :number = Game.GetLocalPlayer();
-  local localPlayerVis:table = PlayersVisibility[localPlayer];
-
-  local NaturalWonderColor  :number = UI.GetColorValue("COLOR_NATURAL_WONDER_LENS");
-  local PlayerWonderColor   :number = UI.GetColorValue("COLOR_PLAYER_WONDER_LENS");
-
-  local naturalWonderPlots  :table = {};
-  local playerWonderPlots   :table = {};
-
-  for i = 0, (mapWidth * mapHeight) - 1, 1 do
-    local pPlot:table = Map.GetPlotByIndex(i);
-
-    if localPlayerVis:IsRevealed(pPlot:GetX(), pPlot:GetY()) then
-      -- check for player wonder.
-      if plotHasWonder(pPlot) then
-        table.insert(playerWonderPlots, i);
-      else
-        -- Check for natural wonder
-        local featureInfo = GameInfo.Features[pPlot:GetFeatureType()];
-        if featureInfo ~= nil and featureInfo.NaturalWonder then
-          table.insert(naturalWonderPlots, i)
-        end
-      end
-    end
-  end
-
-  -- Dim hexes that are not encapments
-  -- if table.count(barbAdjacent) > 0 then
-  --  UILens.SetLayerHexesArea( LensLayers.MAP_HEX_MASK, localPlayer, barbAdjacent );
-  -- end
-
-  if table.count(naturalWonderPlots) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, naturalWonderPlots, NaturalWonderColor );
-  end
-  if table.count(playerWonderPlots) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, playerWonderPlots, PlayerWonderColor );
-  end
-end
-
--- ===========================================================================
-function SetAdjacencyYieldLens()
-  -- print("Show adjacency yield lens")
-  local mapWidth, mapHeight = Map.GetGridSize();
-  local localPlayer   :number = Game.GetLocalPlayer();
-  local localPlayerVis:table = PlayersVisibility[localPlayer];
-
-  local districtPlots   :table = {};
-  local districtAdjYield  :table = {};
-
-  for i = 0, (mapWidth * mapHeight) - 1, 1 do
-    local pPlot:table = Map.GetPlotByIndex(i);
-
-    if localPlayerVis:IsRevealed(pPlot:GetX(), pPlot:GetY()) and pPlot:GetOwner() == localPlayer then
-      if plotHasDistrict(pPlot) and (not pPlot:IsCity()) and (not plotHasWonder(pPlot)) then
-        local pPlayer = Players[localPlayer];
-        local districtID = pPlot:GetDistrictID()
-        local pDistrict = pPlayer:GetDistricts():FindID(districtID);
-        local pCity = pDistrict:GetCity();
-        local hadAdjacency:boolean = false;
-        -- Get adjacency yield
-        for yieldInfo in GameInfo.Yields() do
-          iBonus = pPlot:GetAdjacencyYield(localPlayer, pCity:GetID(), pPlot:GetDistrictType(), yieldInfo.Index);
-          if iBonus > 0 then
-            table.insert(districtPlots, i)
-            table.insert(districtAdjYield, iBonus)
-            hadAdjacency = true
-            -- print("Yield " .. yieldInfo.YieldType .. " bonus " .. iBonus);
-            break;
-          end
-        end
-
-        if not hadAdjacency then
-          table.insert(districtPlots, i)
-          table.insert(districtAdjYield, 0)
-        end
-      end
-    end
-  end
-
-  -- Dim hexes that are not encapments
-  -- if table.count(barbAdjacent) > 0 then
-  --  UILens.SetLayerHexesArea( LensLayers.MAP_HEX_MASK, localPlayer, barbAdjacent );
-  -- end
-
-  for i = 1, #districtPlots, 1 do
-    local colorLookup:string = "COLOR_GRADIENT8_" .. tostring(Clamp(districtAdjYield[i], 0, 7) + 1);  -- Gradient goes from 1 - 8
-    local color:number = UI.GetColorValue(colorLookup);
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, {districtPlots[i]}, color );
-  end
-end
-
--- ===========================================================================
-function SetScoutLens()
-  -- print("Show scout lens")
-  local mapWidth, mapHeight = Map.GetGridSize();
-  local localPlayer   :number = Game.GetLocalPlayer();
-  local localPlayerVis:table = PlayersVisibility[localPlayer];
-
-  local GoodyHutColor   :number = UI.GetColorValue("COLOR_GHUT_SCOUT_LENS");
-
-  local goodyHutPlots   :table = {};
-
-  for i = 0, (mapWidth * mapHeight) - 1, 1 do
-    local pPlot:table = Map.GetPlotByIndex(i);
-
-    if localPlayerVis:IsRevealed(pPlot:GetX(), pPlot:GetY()) then
-      -- check for player wonder. It has to be complete
-      if plotHasGoodyHut(pPlot) then
-        table.insert(goodyHutPlots, i);
-      end
-    end
-  end
-
-  -- Dim hexes that are not encapments
-  -- if table.count(barbAdjacent) > 0 then
-  --  UILens.SetLayerHexesArea( LensLayers.MAP_HEX_MASK, localPlayer, barbAdjacent );
-  -- end
-
-  if table.count(goodyHutPlots) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, goodyHutPlots, GoodyHutColor );
-  end
-end
-
-function ClearScoutLens()
-  -- print("Clear Scout Lens Hexes");
-  ClearModdedLens();
-end
-
--- Called when a scout is selected
-function ShowScoutLens()
-  SetActiveModdedLens(MODDED_LENS_ID.SCOUT);
-  UILens.ToggleLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL);
-end
-
--- ===========================================================================
-function SetNaturalistLens()
-  print_debug("Show Naturalist lens")
-  local localPlayer:number = Game.GetLocalPlayer();
-  local localPlayerVis:table = PlayersVisibility[localPlayer];
-
-  local parkPlotColor:number = UI.GetColorValue("COLOR_PARK_NATURALIST_LENS");
-  local OkColor:number = UI.GetColorValue("COLOR_OK_NATURALIST_LENS");
-  local FixableColor:number = UI.GetColorValue("COLOR_FIXABLE_NATURALIST_LENS");
-
-  local fixableHexes:table = {};
-  local okHexes:table = {};
-  local tiles:table = {};
-
-  -- Get plots that can be made into National Parks without any changes
-  local rawParkPlots:table = Game.GetNationalParks():GetPossibleParkTiles(localPlayer);
-
-  -- Collect individual tile data
-  local mapWidth, mapHeight = Map.GetGridSize();
-  for plotIndex = 0, (mapWidth * mapHeight) - 1, 1 do
-    local pPlot:table = Map.GetPlotByIndex(plotIndex);
-    if localPlayerVis:IsRevealed(pPlot:GetX(), pPlot:GetY()) then
-      local data =  {
-        X     = pPlot:GetX();
-        Y     = pPlot:GetY();
-        Level = 0;
-        Cities = nil;
-        Use   = false;
-      };
-
-      -- Level 3 = OK
-      -- Level 2 = Fixable
-      -- Level 1 = Semifixable
-
-      -- Base requirements
-      if plotHasNaturalWonder(pPlot) then
-        data.Level = 3;
-
-      elseif pPlot:IsMountain() then
-        data.Level = 3;
-
-      -- Appeal charming or better
-      elseif pPlot:GetAppeal() >= 2 then
-        data.Level = 3;
-
-      -- Check for fixable plots by doing something to increase appeal
-      elseif pPlot:GetAppeal() >= 1 then
-        -- Removable unappealing feature
-        local featureInfo = GameInfo.Features[pPlot:GetFeatureType()]
-        if featureInfo ~= nil then
-          local featureType = featureInfo.FeatureType
-          if featureType == "FEATURE_JUNGLE" or featureType == "FEATURE_MARSH" then
-            data.Level = 2;
-          end
-        end
-
-        -- TODO - Check for plantable forest?
-      end
-
-      -- An improvement can be removed, downgrade to fixable
-      if data.Level > 2 and plotHasImprovement(pPlot) then
-        data.Level = 2;
-      end
-
-      -- If not owned by any player
-      if pPlot:GetOwner() ~= Game.GetLocalPlayer() then
-        if data.Level > 2 then
-          data.Level = 2;
-        end
-      end
-
-      -- Blocking changes
-      if plotHasWonder(pPlot) then
-        data.Level = 0;
-      elseif plotHasDistrict(pPlot) then -- also checks for cities (city district)
-        data.Level = 0;
-      elseif pPlot:IsNationalPark() then
-        data.Level = 0;
-      end
-
-      -- Only keep relevant tiles and those that have cities in range
-      if data.Level > 0 then
-        data.Cities = GetCitiesWithinWorkingRange(localPlayer, plotIndex)
-        if table.count(data.Cities) > 0 then
-          -- print(plotIndex, unpack(data.Cities))
-          tiles[plotIndex] = data;
-        end
-      end
-    end
-  end
-
-  -- Mark those that are interesting
-  -- They must belong to a diamond where all four are at least semifixable.
-  for i1, data in pairs(tiles) do
-    -- Get the four plots for the vertical diamond
-    local p1:table = Map.GetPlot(data.X, data.Y)
-    local p2:table = Map.GetPlot(data.X + data.Y % 2 - 1, data.Y + 1);
-    local p3:table = Map.GetPlot(data.X + data.Y % 2, data.Y + 1);
-    local p4:table = Map.GetPlot(data.X, data.Y + 2);
-
-    -- All four must exist
-    if p1 ~= nil and p2 ~= nil and p3 ~= nil and p4 ~= nil then
-      local i2 = p2:GetIndex();
-      local i3 = p3:GetIndex();
-      local i4 = p4:GetIndex();
-      -- All three calculated diamond plots should have data
-      if tiles[i2] ~= nil and tiles[i3] ~= nil and tiles[i4] ~= nil then
-
-        -- Make sure the four plots have some common city in range
-        local commonCities12 = get_common_values(tiles[i1].Cities, tiles[i2].Cities)
-        local commonCities34 = get_common_values(tiles[i3].Cities, tiles[i4].Cities)
-        local netCommonCities = get_common_values(commonCities12, commonCities34)
-
-        if table.count(netCommonCities) > 0 then
-          -- Use these plots only if they passable
-          if not tiles[i1].Use and not p1:IsImpassable() then
-            tiles[i1].Use = true;
-          end
-          if not tiles[i2].Use and not p2:IsImpassable() then
-            tiles[i2].Use = true;
-          end
-          if not tiles[i3].Use and not p3:IsImpassable() then
-            tiles[i3].Use = true;
-          end
-          if not tiles[i4].Use and not p4:IsImpassable() then
-            tiles[i4].Use = true;
-          end
-        end
-      end
-    end
-  end
-
-  -- Extract info. Don't use plots that exist in rawParkPlots
-  for i, data in pairs(tiles) do
-    if tiles[i].Use and not has_value(rawParkPlots, i) then
-      if tiles[i].Level == 3 then
-        -- print("ok", i)
-        table.insert(okHexes, i)
-      elseif tiles[i].Level == 2 then
-        -- print("fix", i)
-        table.insert(fixableHexes, i)
-      end
-    end
-  end
-
-  if table.count(fixableHexes) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, fixableHexes, FixableColor );
-  end
-  if table.count(okHexes) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, okHexes, OkColor );
-  end
-  if table.count(rawParkPlots) > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, rawParkPlots, parkPlotColor );
-  end
-end
-
--- Returns a table of cities that are within working range of the plot
-function  GetCitiesWithinWorkingRange(playerID:number, plotIndex:number)
-  local localPlayerCities = Players[playerID]:GetCities()
-  local pPlot = Map.GetPlotByIndex(plotIndex)
-  local plotX = pPlot:GetX()
-  local plotY = pPlot:GetY()
-
-  local tCities = {}
-  for _, pCity in localPlayerCities:Members() do
-    if Map.GetPlotDistance(plotX, plotY, pCity:GetX(), pCity:GetY()) <= CITY_WORK_RANGE then
-      table.insert(tCities, pCity:GetID())
-    end
-  end
-  return tCities
-end
-
--- ===========================================================================
-function ShowCitizenManagementArea(cityID)
-  print_debug("Showing city manage area for " .. cityID)
-  SetActiveAreaLens(AREA_LENS_ID.CITIZEN_MANAGEMENT)
-  UILens.ToggleLayerOn(LensLayers.HEX_COLORING_GOVERNMENT)
-
-  local pCity:table;
-  local localPlayer = Game.GetLocalPlayer()
-
-  if (cityID ~= nil) then
-    pCity = Players[localPlayer]:GetCities():FindID(cityID);
-  else
-    local pPlot = Map.GetPlotByIndex(m_CurrentCursorPlotID)
-    if pPlot:IsCity() and pPlot:GetOwner() == Game.GetLocalPlayer() then
-      pCity = CityManager.GetCityAt(pPlot:GetX(), pPlot:GetY());
-    end
-  end
-
-  if pCity ~= nil then
-    print_debug("Show citizens for " .. Locale.Lookup(pCity:GetName()))
-    m_tAreaPlotsColored = {}
-
-    local tParameters:table = {};
-    local cityPlotID = Map.GetPlot(pCity:GetX(), pCity:GetY()):GetIndex()
-    tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
-
-    local tWorkingPlots:table = {}  -- Plots worked by unlocked citizens
-    local tLockedPlots:table = {}   -- Plots worked by locked citizes
-
-    -- Get city plot and citizens info
-    local tResults:table = CityManager.GetCommandTargets(pCity, CityCommandTypes.MANAGE, tParameters);
-    if tResults == nil then
-      print("ERROR : Could not find plots")
-      return
-    end
-
-    local tPlots:table = tResults[CityCommandResults.PLOTS];
-    local tUnits:table = tResults[CityCommandResults.CITIZENS];
-    local tLockedUnits:table = tResults[CityCommandResults.LOCKED_CITIZENS];
-
-    if tPlots ~= nil then
-      for i, plotID in ipairs(tPlots) do
-        table.insert(m_tAreaPlotsColored, plotID);
-        if (tLockedUnits[i] > 0 or cityPlotID == plotID) then
-          table.insert(tLockedPlots, plotID);
-        elseif (tUnits[i] > 0) then
-          table.insert(tWorkingPlots, plotID);
-        end
-      end
-    end
-
-    local workingColor:number = UI.GetColorValue("COLOR_CITY_PLOT_WORKING");
-    local lockedColor:number = UI.GetColorValue("COLOR_CITY_PLOT_LOCKED");
-
-    if #tWorkingPlots > 0 then
-      UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_GOVERNMENT, localPlayer, tWorkingPlots, workingColor );
-    end
-
-    if #tLockedPlots > 0 then
-      UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_GOVERNMENT, localPlayer, tLockedPlots, lockedColor );
-    end
-
-    m_CitizenManagementOn = true;
-  end
-end
-
-function RefreshCitizenManagementArea(cityID)
-  ClearAreaLens();
-  ShowCitizenManagementArea(cityID);
-end
-
--- ===========================================================================
-function SetCustomLens()
-  local localPlayer = Game.GetLocalPlayer()
-  for i, plot_color in ipairs(m_CustomLens_PlotsAndColors) do
-    -- print(i .. " layer")
-    local color:number = plot_color.Color;
-    local plots:table = plot_color.Plots;
-
-    if table.count(plots) > 0 then
-      -- print("Apply Lens")
-      -- dump(plots)
-      UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, plots, color );
+------------------------------------------------------------------
+function OnBarbarianSpottedCity(iPlayerID:number, iUnitID:number, cityOwner:number, cityID:number)
+  local flag:table = GetUnitFlag(iPlayerID, iUnitID);
+
+  if flag ~= nil and flag.bHasAttentionMarker ~= true then
+    local pPlayer:table = Players[iPlayerID];
+    local pPlayerUnits:table = pPlayer:GetUnits();
+    local pUnit:table = pPlayerUnits:FindID(iUnitID);
+    local targetPlayer:number = pUnit and pUnit:GetBarbarianTargetPlayer() or -1;
+
+    if targetPlayer ~= -1 and targetPlayer == Game.GetLocalPlayer() then
+      m_AttentionMarkerIM:GetInstance(flag.m_Instance.FlagRoot);
+      flag.bHasAttentionMarker = true;
     end
   end
 end
 
-function ApplyCustomLens(plot_color_table)
-  SetActiveModdedLens(MODDED_LENS_ID.CUSTOM);
-
-  -- Check if the appeal lens is already active
-  if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
-    -- Unapply the appeal lens, so it can be cleared from the screen
-    UILens.ToggleLayerOff(LensLayers.HEX_COLORING_APPEAL_LEVEL);
-  end
-
-  UILens.ToggleLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL);
-
-  m_CustomLens_PlotsAndColors = plot_color_table
-end
-
-function ClearCustomLens()
-  ClearModdedLens();
-
-  if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-    UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-  end
-end
-
--- ===========================================================================
-function OnApplyModdedLens(moddedLensID, showModalPanel:boolean)
-  if showModalPanel then
-    SetActiveModdedLens(moddedLensID);
-
-    -- Check if the appeal lens is already active
-    if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
-      -- Unapply the appeal lens, so it can be cleared from the screen
-      UILens.SetActive("Default");
-    end
-
-    UILens.SetActive("Appeal");
-
-    RefreshInterfaceMode();
-  else
-    SetActiveModdedLens(moddedLensID);
-    UI.ToggleLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL)
-  end
-end
-
-function OnClearModdedLens(showedModalPanel:boolean)
-  ClearModdedLens()
-
-  if showedModalPanel and UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-    UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-  end
-end
-
--- Modded lens helper functions ===========================================================
-function ClearModdedLens()
-  UILens.ClearLayerHexes( LensLayers.MAP_HEX_MASK );
-  if UILens.IsLayerOn( LensLayers.HEX_COLORING_APPEAL_LEVEL ) then
-    UILens.ToggleLayerOff( LensLayers.HEX_COLORING_APPEAL_LEVEL );
-  end
-  SetActiveModdedLens(MODDED_LENS_ID.NONE);
-end
-
-function ClearAreaLens()
-  print_debug("Clearing area lens")
-
-  -- Because of engine limitations, clear previous color of tiles
-  local neutralColor:number = UI.GetColorValue("COLOR_AREA_LENS_NEUTRAL");
-  local localPlayer:number = Game.GetLocalPlayer();
-
-  if m_FullClearAreaLens then
-    local players = Game.GetPlayers();
-    for _, player in ipairs(players) do
-      local cities = player:GetCities();
-      for _, pCity in cities:Members() do
-        local visibleCityPlots:table = Map.GetCityPlots():GetVisiblePurchasedPlots(pCity);
-        if #visibleCityPlots > 0 then
-          UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_GOVERNMENT, localPlayer, visibleCityPlots, neutralColor );
-        end
-      end
-    end
-  elseif (table.count(m_tAreaPlotsColored) > 0) then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_GOVERNMENT, localPlayer, m_tAreaPlotsColored, neutralColor );
-    m_tAreaPlotsColored = {}
-  end
-
-  -- UILens.ClearLayerHexes( LensLayers.MAP_HEX_MASK );
-  if UILens.IsLayerOn( LensLayers.HEX_COLORING_GOVERNMENT ) then
-    UILens.ToggleLayerOff( LensLayers.HEX_COLORING_GOVERNMENT );
-  end
-
-  SetActiveAreaLens(MODDED_LENS_ID.NONE);
-
-  m_FullClearAreaLens = false;
-end
-
-function SetActiveModdedLens(lensID)
-  m_CurrentModdedLensOn = lensID;
-  LuaEvents.MinimapPanel_ModdedLensOn(lensID);
-end
-
-function SetActiveAreaLens(lensID)
-  m_CurrentAreaLensOn = lensID;
-  LuaEvents.MinimapPanel_AreaLensOn(lensID);
-end
-
-function Alt_HighlightPlots(plotIndices)
-  UILens.SetLayerHexesArea( LensLayers.MAP_HEX_MASK, Game.GetLocalPlayer(), plotIndices );
-
-  -- UILens.ToggleLayerOn(LensLayers.HEX_COLORING_ATTACK);
-  -- UILens.SetLayerHexesArea(LensLayers.HEX_COLORING_ATTACK, Game.GetLocalPlayer(), plotIndices);
-end
-
-function Alt_ClearHighlightedPlots()
-  UILens.ClearLayerHexes( LensLayers.MAP_HEX_MASK );
-  -- UILens.ToggleLayerOff(LensLayers.HEX_COLORING_ATTACK);
-end
-
-function HandleMouseForModdedLens( mousex:number, mousey:number )
-  -- Don't do anything if mouse is dragging
-  if not m_isMouseDragging then
-    -- Get plot under cursor
-    local plotId = UI.GetCursorPlotID();
-    if (not Map.IsPlot(plotId)) then
+------------------------------------------------------------------
+function OnPlayerConnectChanged(iPlayerID)
+  -- When a human player connects/disconnects, their unit flag tooltips need to be updated.
+  local pPlayer = Players[ iPlayerID ];
+  if (pPlayer ~= nil) then
+    if (m_UnitFlagInstances[ iPlayerID ] == nil) then
       return;
     end
 
-    -- If the cursor plot has not changed don't refresh
-    if (m_CurrentCursorPlotID == plotId) then
-      return
-    end
-
-    m_CurrentCursorPlotID = plotId
-
-    local pPlot = Map.GetPlotByIndex(m_CurrentCursorPlotID)
-    local selectedCity = UI.GetHeadSelectedCity()
-    local selectedUnit = UI.GetHeadSelectedUnit()
-
-    -- Handler for City Overlap lens
-    if (m_CurrentModdedLensOn == MODDED_LENS_ID.CITY_OVERLAP) then
-      if (Controls.OverlapLensMouseRange:IsChecked()) then
-        Refresh_AltCityOverlapLens();
+    local playerFlagInstances = m_UnitFlagInstances[ iPlayerID ];
+    for id, flag in pairs(playerFlagInstances) do
+      if (flag ~= nil) then
+        flag:UpdateName();
       end
     end
-
-    -- Handler for alternate settler lens
-    if m_CtrlDown then
-      if selectedUnit ~= nil then
-        local unitType = GetUnitType(selectedUnit:GetOwner(), selectedUnit:GetID());
-        if unitType == "UNIT_SETTLER" then
-          RefreshSettlerLens();
-        else
-          print_debug(unitType)
-        end
-
-      -- Clear Settler lens, if not in modal screen
-      elseif UI.GetInterfaceMode() ~= InterfaceModeTypes.VIEW_MODAL_LENS then
-
-        ClearSettlerLens();
-      end
     end
-  end
 end
 
--- ===========================================================================
---  Utility/Helper Functions
--- ===========================================================================
-
-function plotWithinWorkingRange(playerID, plotIndex)
-  local localPlayerCities = Players[playerID]:GetCities()
-  local pPlot = Map.GetPlotByIndex(plotIndex)
-  local plotX = pPlot:GetX()
-  local plotY = pPlot:GetY()
-
-  for _, pCity in localPlayerCities:Members() do
-    if Map.GetPlotDistance(plotX, plotY, pCity:GetX(), pCity:GetY()) <= CITY_WORK_RANGE then
-      return true
-    end
-  end
-  return false
-end
-
-function plotHasImprovement(plot)
-  return plot:GetImprovementType() ~= -1;
-end
-
-function plotHasResource(plot)
-  return plot:GetResourceType() ~= -1;
-end
-
-function plotHasFeature(plot)
-  return plot:GetFeatureType() ~= -1;
-end
-
-function plotHasRemovableFeature(plot)
-  local featureInfo = GameInfo.Features[plot:GetFeatureType()];
-  if featureInfo ~= nil and featureInfo.Removable then
-    return true;
-  end
-  return false;
-end
-
-function plotHasImprovableHill(plot)
-  local terrainInfo = GameInfo.Terrains[plot:GetTerrainType()];
-  local improvInfo = GameInfo.Improvements["IMPROVEMENT_MINE"];
-  local playerID = Game.GetLocalPlayer()
-
-  if (terrainInfo ~= nil and terrainInfo.Hills
-      and playerCanHave(playerID, improvInfo)) then
-    return true
-  end
-  return false;
-end
-
-function plotHasWonder(plot)
-  return plot:GetWonderType() ~= -1;
-end
-
-function plotHasDistrict(plot)
-  return plot:GetDistrictType() ~= -1;
-end
-
-function plotHasNaturalWonder(plot)
-  local featureInfo = GameInfo.Features[plot:GetFeatureType()];
-  if featureInfo ~= nil and featureInfo.NaturalWonder then
-    return true
-  end
-  return false
-end
-
-function plotHasImprovableWonder(plot)
-  -- List of wonders that can have an improvement on them.
-  local permitWonderList = {
-    "FEATURE_CLIFFS_DOVER"
-  }
-
-  local featureInfo = GameInfo.Features[plot:GetFeatureType()];
-  if featureInfo ~= nil then
-    for i, wonderType in ipairs(permitWonderList) do
-      if featureInfo.FeatureType == wonderType then
-        return true
-      end
-    end
-  end
-  return false
-end
-
-function IsAdjYieldWonder(featureInfo)
-  -- List any wonders here that provide yield bonuses, but not mentioned in Features.xml
-  local specialWonderList = {
-    "FEATURE_TORRES_DEL_PAINE"
-  }
-
-  if featureInfo ~= nil and featureInfo.NaturalWonder then
-    for adjYieldInfo in GameInfo.Feature_AdjacentYields() do
-      if adjYieldInfo ~= nil and adjYieldInfo.FeatureType == featureInfo.FeatureType then
-        return true
-      end
-    end
-
-    for i, featureType in ipairs(specialWonderList) do
-      if featureType == featureInfo.FeatureType then
-        return true
-      end
-    end
-  end
-  return false
-end
-
-function plotNextToBuffingWonder(plot)
-  for pPlot in PlotRingIterator(plot, 1, SECTOR_NONE, DIRECTION_CLOCKWISE) do
-    local featureInfo = GameInfo.Features[pPlot:GetFeatureType()]
-    if IsAdjYieldWonder(featureInfo) then
-      return true
-    end
-  end
-  return false
-end
-
-function plotHasRecomFeature(plot)
-  local playerID = Game.GetLocalPlayer()
-  local featureInfo = GameInfo.Features[plot:GetFeatureType()]
-  local farmImprovInfo = GameInfo.Improvements["IMPROVEMENT_FARM"]
-  local lumberImprovInfo = GameInfo.Improvements["IMPROVEMENT_LUMBER_MILL"]
-
-  if featureInfo ~= nil then
-
-    -- 1. Is it a floodplain?
-    if featureInfo.FeatureType == "FEATURE_FLOODPLAINS" and
-        playerCanHave(playerID, farmImprovInfo) then
-      return true
-    end
-
-    -- 2. Is it a forest next to a river?
-    if featureInfo.FeatureType == "FEATURE_FOREST" and plot:IsRiver() and
-        playerCanHave(playerID, lumberImprovInfo) then
-      return true
-    end
-
-    -- 3. Is it a tile next to buffing wonder?
-    if plotNextToBuffingWonder(plot) then
-      return true
-    end
-
-    -- 4. Is it wonder, that can have an improvement?
-    if plotHasImprovableWonder(plot) then
-      if featureInfo.FeatureType == "FEATURE_FOREST" and
-          playerCanHave(playerID, lumberImprovInfo) then
-        return true
-      end
-
-      if plotCanHaveFarm(plot) then
-        return true
-      end
-    end
-  end
-  return false
-end
-
-function plotHasAnitquitySite(plot)
-  local resourceInfo = GameInfo.Resources[plot:GetResourceType()];
-  if resourceInfo ~= nil and resourceInfo.ResourceType == "RESOURCE_ANTIQUITY_SITE" then
-    return true;
-  end
-  return false
-end
-
-function plotHasShipwreck(plot)
-  local resourceInfo = GameInfo.Resources[plot:GetResourceType()];
-  if resourceInfo ~= nil and resourceInfo.ResourceType == "RESOURCE_SHIPWRECK" then
-    return true;
-  end
-  return false
-end
-
-function plotHasBarbCamp(plot)
-  local improvementInfo = GameInfo.Improvements[plot:GetImprovementType()];
-  if improvementInfo ~= nil and improvementInfo.ImprovementType == "IMPROVEMENT_BARBARIAN_CAMP" then
-    return true;
-  end
-  return false;
-end
-
--- TODO: Check for valid feature
-function plotCanHaveFarm(plot)
-  local farmImprovInfo = GameInfo.Improvements["IMPROVEMENT_FARM"]
-  if not playerCanHave(playerID, farmImprovInfo) then
-    return false;
-  end
-
-  local validTerrain:boolean = false;
-  local playerID = Game.GetLocalPlayer()
-
-  for improvTerrainInfo in GameInfo.Improvement_ValidTerrains() do
-    if (improvTerrainInfo.ImprovementType == "IMPROVEMENT_FARM"
-        and playerCanHave(playerID, improvTerrainInfo)) then
-      return true;
-    end
-  end
-  return false
-end
-
-function plotHasGoodyHut(plot)
-  local improvementInfo = GameInfo.Improvements[plot:GetImprovementType()];
-  if improvementInfo ~= nil and improvementInfo.ImprovementType == "IMPROVEMENT_GOODY_HUT" then
-    return true;
-  end
-  return false;
-end
-
-function plotResourceImprovable(plot)
-  local plotIndex = plot:GetIndex()
-  local playerID = Game.GetLocalPlayer()
-
-  -- If the plot has a resource, and the player has discovered it, get the improvement specific to that
-  if playerHasDiscoveredResource(playerID, plotIndex) then
-    local resourceInfo = GameInfo.Resources[plot:GetResourceType()]
-    if resourceInfo ~= nil then
-      local improvementType;
-      for validResourceInfo in GameInfo.Improvement_ValidResources() do
-        if validResourceInfo ~= nil and validResourceInfo.ResourceType == resourceInfo.ResourceType then
-          improvementType = validResourceInfo.ImprovementType;
-          break
-        end
-      end
-
-      if improvementType ~= nil then
-        local improvementInfo = GameInfo.Improvements[improvementType];
-        -- print("Plot " .. plotIndex .. " possibly can have " .. improvementType)
-        return playerCanHave(playerID, improvementInfo);
-      end
-    end
-  end
-
-  return false
-end
-
-function playerCanRemoveFeature(playerID, plotIndex)
-  local pPlot = Map.GetPlotByIndex(plotIndex)
-  local pPlayer = Players[playerID];
-  local featureInfo = GameInfo.Features[pPlot:GetFeatureType()]
-
-  if featureInfo ~= nil then
-    if not featureInfo.Removable then return false; end
-
-    -- Check for remove tech
-    if featureInfo.RemoveTech ~= nil then
-      local tech = GameInfo.Technologies[featureInfo.RemoveTech]
-      local playerTech:table = pPlayer:GetTechs();
-      if tech ~= nil  then
-        return playerTech:HasTech(tech.Index);
-      else
-        return false;
-      end
-    else
-      return true;
-    end
-  end
-
-  return false;
-end
-
-function BuilderCanConstruct(improvementInfo)
-  for improvementBuildUnits in GameInfo.Improvement_ValidBuildUnits() do
-    if improvementBuildUnits ~= nil and improvementBuildUnits.ImprovementType == improvementInfo.ImprovementType and
-      improvementBuildUnits.UnitType == "UNIT_BUILDER" then
-        return true
-    end
-  end
-
-  return false
-end
-
-function plotCanHaveImprovement(playerID, plotIndex)
-  local pPlot = Map.GetPlotByIndex(plotIndex)
-  local pPlayer = Players[playerID]
-
-  -- Handler for a generic tile
-  for improvementInfo in GameInfo.Improvements() do
-    if improvementInfo ~= nil and improvementInfo.Buildable then
-
-      -- Does the player the prereq techs and civis
-      if BuilderCanConstruct(improvementInfo) and playerCanHave(playerID, improvementInfo) then
-        local improvementValid:boolean = false;
-
-        -- Check for valid feature
-        for validFeatureInfo in GameInfo.Improvement_ValidFeatures() do
-          if validFeatureInfo ~= nil and validFeatureInfo.ImprovementType == improvementInfo.ImprovementType then
-            -- Does this plot have this feature?
-            local featureInfo = GameInfo.Features[validFeatureInfo.FeatureType]
-            if featureInfo ~= nil and pPlot:GetFeatureType() == featureInfo.Index then
-              if playerCanHave(playerID, featureInfo) and playerCanHave(playerID, validFeatureInfo) then
-                print_debug("(feature) Plot " .. pPlot:GetIndex() .. " can have " .. improvementInfo.ImprovementType)
-                improvementValid = true;
-                break;
-              end
-            end
-          end
-        end
-
-        -- Check for valid terrain
-        if not improvementValid then
-          for validTerrainInfo in GameInfo.Improvement_ValidTerrains() do
-            if validTerrainInfo ~= nil and validTerrainInfo.ImprovementType == improvementInfo.ImprovementType then
-              -- Does this plot have this terrain?
-              local terrainInfo = GameInfo.Terrains[validTerrainInfo.TerrainType]
-              if terrainInfo ~= nil and pPlot:GetTerrainType() == terrainInfo.Index then
-                if playerCanHave(playerID, terrainInfo) and playerCanHave(playerID, validTerrainInfo)  then
-                  print_debug("(terrain) Plot " .. pPlot:GetIndex() .. " can have " .. improvementInfo.ImprovementType)
-                  improvementValid = true;
-                  break;
-                end
-              end
-            end
-          end
-        end
-
-        -- Check for valid resource
-        if not improvementValid then
-          for validResourceInfo in GameInfo.Improvement_ValidResources() do
-            if validResourceInfo ~= nil and validResourceInfo.ImprovementType == improvementInfo.ImprovementType then
-              -- Does this plot have this terrain?
-              local resourceInfo = GameInfo.Resources[validResourceInfo.ResourceType]
-              if resourceInfo ~= nil and pPlot:GetResourceType() == resourceInfo.Index then
-                if playerCanHave(playerID, resourceInfo) and playerCanHave(playerID, validResourceInfo)  then
-                  print_debug("(resource) Plot " .. pPlot:GetIndex() .. " can have " .. improvementInfo.ImprovementType)
-                  improvementValid = true;
-                  break;
-                end
-              end
-            end
-          end
-        end
-
-        -- Special check for coastal requirement
-        if improvementInfo.Coast and (not pPlot:IsCoastalLand()) then
-          print_debug(plotIndex .. " plot is not coastal")
-          improvementValid = false;
-        end
-
-        if improvementValid then
-          return true
-        end
-      end
-    end
-  end
-
-  return false;
-end
-
--- General function to check if the player has xmlEntry.PrereqTech and xmlEntry.PrereqTech
--- Also handles unique traits, and bonuses received from city states
-function playerCanHave(playerID, xmlEntry)
-  if xmlEntry == nil then return false; end;
-
-  local pPlayer = Players[playerID]
-  if xmlEntry.PrereqTech ~= nil then
-    local playerTech:table = pPlayer:GetTechs();
-    local tech = GameInfo.Technologies[xmlEntry.PrereqTech]
-    if tech ~= nil and (not playerTech:HasTech(tech.Index)) then
-      -- print("Player does not have " .. tech.TechnologyType)
-      return false;
-    end
-  end
-
-  -- Does the player have the prereq civic if one exists
-  if xmlEntry.PrereqCivic ~= nil then
-    local playerCulture = pPlayer:GetCulture();
-    local civic = GameInfo.Civics[xmlEntry.PrereqCivic]
-    if civic ~= nil and (not playerCulture:HasCivic(civic.Index)) then
-      -- print("Player does not have " .. civic.CivicType)
-      return false;
-    end
-  end
-
-  -- Is it a Unique thing to a player/civ
-  if xmlEntry.TraitType ~= nil then
-    -- print(xmlEntry.TraitType)
-    local civilizationType = PlayerConfigurations[playerID]:GetCivilizationTypeName()
-    local leaderType = PlayerConfigurations[playerID]:GetLeaderTypeName()
-    local isSuzerain:boolean = false;
-
-    -- Special handler for city state traits.
-    local spitResult = Split(xmlEntry.TraitType, "_");
-    if spitResult[1] == "MINOR" then
-      local traitLeaderType;
-      for traitInfo in GameInfo.LeaderTraits() do
-        if traitInfo.TraitType == xmlEntry.TraitType then
-          traitLeaderType = traitInfo.LeaderType
-          break
-        end
-      end
-
-      if traitLeaderType ~= nil then
-        -- print("traitLeaderType " .. traitLeaderType)
-        local traitLeaderID;
-
-        -- See if this city state is present in the game
-        for minorID in ipairs(PlayerManager.GetAliveMinorIDs()) do
-          local minorLeaderType = PlayerConfigurations[minorID]:GetLeaderTypeName()
-          if minorLeaderType == traitLeaderType then
-            traitLeaderID = minorID;
-            break;
-          end
-        end
-
-        if traitLeaderID ~= nil then
-          -- Found the player in the game. Is the suzerain the player
-          if playerID ~= Players[traitLeaderID]:GetInfluence():GetSuzerain() then
-            -- print("Player is not the suzerain of " .. minorLeaderType)
-            return false
+------------------------------------------------------------------
+function OnUnitDamageChanged( playerID : number, unitID : number, newDamage : number, oldDamage : number)
+  local pPlayer = Players[ playerID ];
+  if (pPlayer ~= nil) then
+    local pUnit = pPlayer:GetUnits():FindID(unitID);
+    if (pUnit ~= nil) then
+      local flag = GetUnitFlag(playerID, pUnit:GetID());
+      if (flag ~= nil) then
+        flag:UpdateStats();
+        if (flag.m_eVisibility == RevealedState.VISIBLE) then
+          local iDelta = newDamage - oldDamage;
+          local szText;
+          if (iDelta < 0) then
+            szText = Locale.Lookup("LOC_WORLD_UNIT_DAMAGE_DECREASE_FLOATER", -iDelta);
           else
-            return true;
+            szText = Locale.Lookup("LOC_WORLD_UNIT_DAMAGE_INCREASE_FLOATER", -iDelta);
           end
+
+          UI.AddWorldViewText(EventSubTypes.DAMAGE, szText, pUnit:GetX(), pUnit:GetY(), 0);
+        end
+      end
+    end
+  end
+end
+
+------------------------------------------------------------------
+function OnUnitAbilityGained( playerID : number, unitID : number, eAbilityType : number)
+  if (playerID == Game.GetLocalPlayer()) then
+    local pPlayer = Players[ playerID ];
+    if (pPlayer ~= nil) then
+      local pUnit = pPlayer:GetUnits():FindID(unitID);
+      if (pUnit ~= nil) then
+        local flag = GetUnitFlag(playerID, pUnit:GetID());
+        if (flag ~= nil) then
+          if (flag.m_eVisibility == RevealedState.VISIBLE) then
+            local abilityInfo = GameInfo.UnitAbilities[eAbilityType];
+            if (abilityInfo ~= nil and abilityInfo.ShowFloatTextWhenEarned) then
+              local sAbilityName = GameInfo.UnitAbilities[eAbilityType].Name;
+              if (sAbilityName ~= nil) then
+                local floatText = Locale.Lookup(sAbilityName);
+                UI.AddWorldViewText(EventSubTypes.DAMAGE, floatText, pUnit:GetX(), pUnit:GetY(), 0);
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+end
+
+------------------------------------------------------------------
+function OnUnitFortificationChanged( playerID : number, unitID : number )
+  local pPlayer = Players[ playerID ];
+  if (pPlayer ~= nil) then
+    local pUnit = pPlayer:GetUnits():FindID(unitID);
+    if (pUnit ~= nil) then
+      local flag = GetUnitFlag(playerID, pUnit:GetID());
+      if (flag ~= nil) then
+        flag:UpdateStats();
+      end
+    end
+  end
+end
+
+function OnDiplomacyWarStateChange(player1ID:number, player2ID:number)
+  local localPlayer =  Players[Game.GetLocalPlayer()];
+
+  local playerToUpdate = player1ID;
+  if(player1ID ==Game.GetLocalPlayer()) then
+    playerToUpdate = player2ID;
+  else
+    playerToUpdate = player1ID;
+  end
+
+
+  if (playerToUpdate ~= nil) then
+    for index,pUnit in Players[playerToUpdate]:GetUnits():Members() do
+      if (pUnit ~= nil) then
+        local flag = GetUnitFlag(playerToUpdate, pUnit:GetID());
+        if (flag ~= nil) then
+          flag:UpdateStats();
+        end
+      end
+    end
+  end
+end
+
+------------------------------------------------------------------
+function OnUnitPromotionChanged( playerID : number, unitID : number )
+  local pPlayer = Players[ playerID ];
+  if (pPlayer ~= nil) then
+    local pUnit = pPlayer:GetUnits():FindID(unitID);
+    if (pUnit ~= nil) then
+      local flag = GetUnitFlag(playerID, pUnit:GetID());
+      if (flag ~= nil) then
+        --flag:UpdateStats();
+        -- AZURENCY : request a refresh on the next frame (to update the promotion flag and remove + sign)
+        ContextPtr:RequestRefresh()
+      end
+    end
+  end
+end
+
+------------------------------------------------------------------
+function OnObjectPairingChanged(eSubType, parentOwner, parentType, parentID, childOwner, childType, childID)
+  local pPlayer = Players[ parentOwner ];
+  if (pPlayer ~= nil) then
+    if (parentType == ComponentType.UNIT) then
+      local pUnit = pPlayer:GetUnits():FindID(parentID);
+      if (pUnit ~= nil) then
+        local flag = GetUnitFlag(parentOwner, pUnit:GetID());
+        if (flag ~= nil) then
+          flag:UpdateStats();
+        end
+      end
+    end
+  end
+end
+
+------------------------------------------------------------------
+function OnUnitArtifactChanged( playerID : number, unitID : number )
+  local pPlayer = Players[ playerID ];
+  if (pPlayer ~= nil) then
+    local pUnit = pPlayer:GetUnits():FindID(unitID);
+    if (pUnit ~= nil) then
+      local flag = GetUnitFlag(playerID, pUnit:GetID());
+      if (flag ~= nil) then
+        flag:UpdateName();
+      end
+    end
+  end
+end
+
+------------------------------------------------------------------
+function OnUnitActivityChanged( playerID :number, unitID :number, eActivityType :number)
+  local pPlayer = Players[ playerID ];
+  if (pPlayer ~= nil) then
+    local pUnit = pPlayer:GetUnits():FindID(unitID);
+    if (pUnit ~= nil) then
+      local flag = GetUnitFlag(playerID, pUnit:GetID());
+      if (flag ~= nil) then
+        flag:UpdateName();
+      end
+    end
+  end
+end
+
+------------------------------------------------------------------
+function SetForceHideForID( id : table, bState : boolean)
+  if (id ~= nil) then
+    if (id.componentType == ComponentType.UNIT) then
+        local flagInstance = GetUnitFlag( id.playerID, id.componentID );
+      if (flagInstance ~= nil) then
+        flagInstance:SetForceHide(bState);
+        flagInstance:UpdatePosition();
+      end
+    end
+    end
+end
+-------------------------------------------------
+-- Combat vis is beginning
+-------------------------------------------------
+function OnCombatVisBegin( kVisData )
+
+  SetForceHideForID( kVisData[CombatVisType.ATTACKER], true );
+  SetForceHideForID( kVisData[CombatVisType.DEFENDER], true );
+  SetForceHideForID( kVisData[CombatVisType.INTERCEPTOR], true );
+  SetForceHideForID( kVisData[CombatVisType.ANTI_AIR], true );
+
+end
+
+-------------------------------------------------
+-- Combat vis is ending
+-------------------------------------------------
+function OnCombatVisEnd( kVisData )
+
+  SetForceHideForID( kVisData[CombatVisType.ATTACKER], false );
+  SetForceHideForID( kVisData[CombatVisType.DEFENDER], false );
+  SetForceHideForID( kVisData[CombatVisType.INTERCEPTOR], false );
+  SetForceHideForID( kVisData[CombatVisType.ANTI_AIR], false );
+
+end
+
+-- ===========================================================================
+--	Refresh the contents of the flags.
+--	This does not include the flags' positions in world space; those are
+--	updated on another event.
+-- ===========================================================================
+-- AZURENCY : is only use for hot reload (debug) and will show invisible units
+function Refresh()
+  local pLocalPlayerVis = PlayersVisibility[Game.GetLocalPlayer()];
+  if (pLocalPlayerVis ~= nil) then
+
+    local plotsToUpdate	:table = {};
+    local players		:table = Game.GetPlayers{Alive = true};
+
+    for i, player in ipairs(players) do
+      local playerID		:number = player:GetID();
+      local playerUnits	:table = players[i]:GetUnits();
+      for ii, unit in playerUnits:Members() do
+        local unitID	:number = unit:GetID();
+        local locX		:number = unit:GetX();
+        local locY		:number = unit:GetY();
+
+        -- If flag doesn't exist for this combo, create it:
+        if ( m_UnitFlagInstances[ playerID ] == nil or m_UnitFlagInstances[ playerID ][ unitID ] == nil) then
+          if not unit:IsDead() and not unit:IsDelayedDeath() then
+            CreateUnitFlag(playerID, unitID, locX, locY);
+          end
+        end
+
+        -- If flag is visible, ensure it's being viewed that way; set plot for an update call.
+        -- While event will handle in normal case, this is necessary for hotloading and flags are re-created.
+        if pLocalPlayerVis:IsVisible(locX, locY) then
+          OnUnitVisibilityChanged(playerID, unitID, RevealedState.VISIBLE);
+          if plotsToUpdate[locX] == nil then
+            plotsToUpdate[locX] = {};
+          end
+          plotsToUpdate[locX][locY] = true;	-- Mark for update
+        end
+
+      end
+    end
+
+    -- Update only the plots requiring a refresh.
+    for locX:number,ys:table in pairs(plotsToUpdate) do
+      for locY:number,_ in pairs(ys) do
+        UpdateIconStack( locX, locY );
+      end
+    end
+  
+    -- AZURENCY : update the stats of the flags on refresh
+    local playerFlagInstances = m_UnitFlagInstances[ Game.GetLocalPlayer() ];
+    for id, flag in pairs(playerFlagInstances) do
+      if (flag ~= nil) then
+        flag:UpdateStats();
+      end
+    end
+
+  end
+end
+
+function CQUI_Refresh()
+  -- AZURENCY : update the stats of the flags on refresh
+  local playerFlagInstances = m_UnitFlagInstances[ Game.GetLocalPlayer() ];
+  if playerFlagInstances then
+    for id, flag in pairs(playerFlagInstances) do
+      if (flag ~= nil) then
+        flag:UpdateStats();
+      end
+    end
+  end
+end
+
+----------------------------------------------------------------
+function OnUnitCommandStarted(playerID, unitID, hCommand, iData1)
+  if ( hCommand == GameInfo.Types["UNITCOMMAND_NAME_UNIT"].Hash ) then
+    local flagInstance = GetUnitFlag( playerID, unitID );
+    if (flagInstance ~= nil) then
+      flagInstance:UpdateName();
+    end
+  end
+end
+
+----------------------------------------------------------------
+function OnUnitUpgraded(player, unitID, eUpgradeUnitType)
+  local pPlayer = Players[ player ];
+  if (pPlayer ~= nil) then
+    local pUnit = pPlayer:GetUnits():FindID(unitID);
+    if (pUnit ~= nil) then
+      local flagInstance = GetUnitFlag( player, unitID );
+      if (flagInstance ~= nil) then
+        flagInstance:UpdateName();
+        flagInstance:UpdatePromotions();
+      end
+    end
+  end
+end
+
+----------------------------------------------------------------
+function OnMilitaryFormationChanged( playerID : number, unitID : number )
+  local pPlayer = Players[ playerID ];
+  if (pPlayer ~= nil) then
+    local pUnit = pPlayer:GetUnits():FindID(unitID);
+    if (pUnit ~= nil) then
+      local flagInstance = GetUnitFlag( playerID, unitID );
+      if flagInstance ~= nil then
+        local militaryFormation = pUnit:GetMilitaryFormation();
+        if (militaryFormation == MilitaryFormationTypes.CORPS_FORMATION) then
+          flagInstance.m_Instance.CorpsMarker:SetHide(false);
+          flagInstance.m_Instance.ArmyMarker:SetHide(true);
+        elseif (militaryFormation == MilitaryFormationTypes.ARMY_FORMATION) then
+          flagInstance.m_Instance.CorpsMarker:SetHide(false);
+          flagInstance.m_Instance.ArmyMarker:SetHide(false);
         else
-          -- print(traitLeaderType .. " is not in this game")
-          return false;
-        end
-      end
-    end
-
-    for traitInfo in GameInfo.CivilizationTraits() do
-      if traitInfo.TraitType == xmlEntry.TraitType and
-          traitInfo.CivilizationType ~= nil and
-          civilizationType ~= traitInfo.CivilizationType then
-        -- print(civilizationType .. " ~= " .. traitInfo.CivilizationType)
-        return false
-      end
-    end
-
-    for traitInfo in GameInfo.LeaderTraits() do
-      if traitInfo.TraitType == xmlEntry.TraitType and
-          traitInfo.LeaderType ~= nil and
-          leaderType ~= traitInfo.LeaderType then
-        -- print(civilizationType .. " ~= " .. traitInfo.LeaderType)
-        return false
-      end
-    end
-
-  end
-
-  return true;
-end
-
-function playerHasBuilderWonderModifier(playerID)
-  return playerHasModifier(playerID, "MODIFIER_PLAYER_ADJUST_UNIT_WONDER_PERCENT");
-end
-
-function playerHasBuilderDistrictModifier(playerID)
-  return playerHasModifier(playerID, "MODIFIER_PLAYER_ADJUST_UNIT_DISTRICT_PERCENT");
-end
-
-function playerHasModifier(playerID, modifierType)
-  -- Get civ, and leader
-  local civTypeName = PlayerConfigurations[playerID]:GetCivilizationTypeName();
-  local leaderTypeName = PlayerConfigurations[playerID]:GetLeaderTypeName();
-
-  local civUA = GetCivilizationUniqueTraits(civTypeName);
-  local leaderUA = GetLeaderUniqueTraits(leaderTypeName);
-
-  for _, item in ipairs(civUA) do
-    local traitType = civUA[1].TraitType
-    -- print("Trait type: " .. traitType)
-
-    -- Find the modifier ID
-    local modifierID;
-    for row in GameInfo.TraitModifiers() do
-      if row.TraitType == traitType then
-        local modifierID = row.ModifierId;
-
-        -- Find the matching modifier type
-        if modifierID ~= nil then
-          -- print("Modifier ID: " .. modifierID)
-          for row in GameInfo.Modifiers() do
-            if row.ModifierId == modifierID and row.ModifierType == modifierType then
-              -- print("Player has a modifier for district")
-              return true;
-            end
-          end
-        end
-      end
-    end
-  end
-
-  for _, item in ipairs(leaderUA) do
-    local traitType = leaderUA[1].TraitType
-    -- print("Trait type: " .. traitType)
-
-    -- Find the modifier ID
-    local modifierID;
-    for row in GameInfo.TraitModifiers() do
-      if row.TraitType == traitType then
-        local modifierID = row.ModifierId;
-
-        -- Find the matching modifier type
-        if modifierID ~= nil then
-          -- print("Modifier ID: " .. modifierID)
-          for row in GameInfo.Modifiers() do
-            if row.ModifierId == modifierID and row.ModifierType == modifierType then
-              -- print("Player has a modifier for district")
-              return true;
-            end
-          end
+          flagInstance.m_Instance.CorpsMarker:SetHide(true);
+          flagInstance.m_Instance.ArmyMarker:SetHide(true);
         end
       end
     end
   end
 end
 
--- Uses same logic as the icon manager (returns true, if the resource icon is being displayed on the map)
-function playerHasDiscoveredResource(playerID, plotIndex)
-  local eObserverID = Game.GetLocalObserver();
-  local pLocalPlayerVis = PlayerVisibilityManager.GetPlayerVisibility(eObserverID);
+-------------------------------------------------
+-- Update charges on units
+-------------------------------------------------
+function OnUnitChargesChanged(player, unitID)
+  local localPlayerID = Game.GetLocalPlayer();
+  local pPlayer = Players[ player ];
 
-  local pPlot = Map.GetPlotByIndex(plotIndex);
-  -- Have a Resource?
-  local eResource = pLocalPlayerVis:GetLayerValue(VisibilityLayerTypes.RESOURCES, plotIndex);
-  local bHideResource = ( pPlot ~= nil and ( pPlot:GetDistrictType() > 0 or pPlot:IsCity() ) );
-  if (eResource ~= nil and eResource ~= -1 and not bHideResource ) then
-    return true;
-  end
-
-  return false;
-end
-
--- Tells if the district on this plot is complete or not
-function districtComplete(playerID, plotIndex)
-  local pPlayer = Players[playerID];
-  local pPlot = Map.GetPlotByIndex(plotIndex);
-  local districtID = pPlot:GetDistrictID();
-
-  if districtID ~= nil and districtID >= 0 then
-    local pDistrict = pPlayer:GetDistricts():FindID(districtID);
-    if pDistrict ~= nil then
-      return pDistrict:IsComplete()
-    end
-  end
-
-  return false;
-end
-
-function isAncientClassicalWonder(wonderTypeID)
-  -- print("Checking wonder " .. wonderTypeID .. " if ancient or classical")
-
-  for row in GameInfo.Buildings() do
-    if row.Index == wonderTypeID then
-      -- Make hash, and get era
-      if row.PrereqTech ~= nil then
-        prereqTechHash = DB.MakeHash(row.PrereqTech);
-        eraType = GameInfo.Technologies[prereqTechHash].EraType;
-      elseif row.PrereqCivic ~= nil then
-        prereqCivicHash = DB.MakeHash(row.PrereqCivic);
-        eraType = GameInfo.Civics[prereqCivicHash].EraType;
-      else
-        -- Wonder has no prereq
-        return true;
-      end
-
-      -- print("Era = " .. eraType);
-
-      if eraType == nil then
-        -- print("Could not find era for wonder " .. wonderTypeID)
-        return true
-      elseif eraType == "ERA_ANCIENT" or eraType == "ERA_CLASSICAL" then
-        return true;
+  if (player == localPlayerID) then
+    local pUnit = pPlayer:GetUnits():FindID(unitID);
+    if (pUnit ~= nil) then
+      local flagInstance = GetUnitFlag( player, unitID );
+      if (flagInstance ~= nil) then
+        flagInstance:UpdatePromotions();
       end
     end
   end
-
-  return false;
 end
 
-function GetUnitType( playerID: number, unitID : number )
-  if( playerID == Game.GetLocalPlayer() ) then
-    local pPlayer   :table = Players[playerID];
-    local pUnit     :table = pPlayer:GetUnits():FindID(unitID);
-    if pUnit ~= nil then
-      return GameInfo.Units[pUnit:GetUnitType()].UnitType;
-    end
-  end
-  return nil;
-end
-
-function has_value (tab, val)
-  for _, value in ipairs (tab) do
-    if value == val then
-      return true
-    end
-  end
-  return false
-end
-
-function has_rInfo (tab, val)
-  for _, value in ipairs (tab) do
-    if value.ResourceType == val then
-      return true
-    end
-  end
-  return false
-end
-
-function find_and_remove(tab, val)
-  for i, item in ipairs(tab) do
-    if item == val then
-      table.remove(tab, i);
-      return
+-------------------------------------------------
+-- Position flag for unit appropriately in 2D and 3D view
+-------------------------------------------------
+function PositionFlagForUnitToView( playerID : number, unitID : number )
+  local flagInstance = GetUnitFlag( playerID, unitID );
+  if (flagInstance ~= nil) then
+    if (flagInstance.m_eVisibility == RevealedState.VISIBLE) then
+      local pUnit : table = flagInstance:GetUnit();
+      flagInstance:SetPosition( UI.GridToWorld( pUnit:GetX(), pUnit:GetY() ) );
     end
   end
 end
 
-function ndup_insert(tab, val)
-  if not has_value(tab, val) then
-    table.insert(tab, val);
+-------------------------------------------------
+-- Position all unit flags appropriately in 2D and 3D view
+-------------------------------------------------
+function PositionFlagsToView()
+  local players = Game.GetPlayers{Alive = true};
+  for i, player in ipairs(players) do
+    local playerID = player:GetID();
+    local playerUnits = players[i]:GetUnits();
+    for ii, unit in playerUnits:Members() do
+      local unitID = unit:GetID();
+      PositionFlagForUnitToView( playerID, unitID );
+    end
   end
 end
 
-function get_common_values(tab1, tab2)
-  local common_table = {}
-  for _, value1 in ipairs (tab1) do
-    for _, value2 in ipairs (tab2) do
-      if value1 == value2 then
-        table.insert(common_table, value1)
+----------------------------------------------------------------
+function OnEventPlaybackComplete()
+
+  for playerID, unitID in m_DirtyComponents:Members() do
+
+      local flagInstance = GetUnitFlag( playerID, unitID );
+    if (flagInstance ~= nil) then
+      flagInstance:UpdateFlagType();
+      flagInstance:UpdateReadyState();
       end
-    end
-  end
-  return common_table
-end
-
---------------------------------------------
--- Plot Iterator, Author: whoward69; URL: https://forums.civfanatics.com/threads/border-and-area-plot-iterators.474634/
-  -- convert funcs odd-r offset to axial. URL: http://www.redblobgames.com/grids/hexagons/
-  -- here grid == offset; hex == axial
-  function ToHexFromGrid(grid)
-    local hex = {
-      x = grid.x - (grid.y - (grid.y % 2)) / 2;
-      y = grid.y;
-    }
-    return hex
-  end
-  function ToGridFromHex(hex_x, hex_y)
-    local grid = {
-      x = hex_x + (hex_y - (hex_y % 2)) / 2;
-      y = hex_y;
-    }
-    return grid.x, grid.y
   end
 
-  SECTOR_NONE = nil
-  SECTOR_NORTH = 1
-  SECTOR_NORTHEAST = 2
-  SECTOR_SOUTHEAST = 3
-  SECTOR_SOUTH = 4
-  SECTOR_SOUTHWEST = 5
-  SECTOR_NORTHWEST = 6
-
-  DIRECTION_CLOCKWISE = false
-  DIRECTION_ANTICLOCKWISE = true
-
-  DIRECTION_OUTWARDS = false
-  DIRECTION_INWARDS = true
-
-  CENTRE_INCLUDE = true
-  CENTRE_EXCLUDE = false
-
-  function PlotRingIterator(pPlot, r, sector, anticlock)
-    -- print(string.format("PlotRingIterator((%i, %i), r=%i, s=%i, d=%s)", pPlot:GetX(), pPlot:GetY(), r, (sector or SECTOR_NORTH), (anticlock and "rev" or "fwd")))
-    -- The important thing to remember with hex-coordinates is that x+y+z = 0
-    -- so we never actually need to store z as we can always calculate it as -(x+y)
-    -- See http://keekerdc.com/2011/03/hexagon-grids-coordinate-systems-and-distance-calculations/
-
-    if (pPlot ~= nil and r > 0) then
-      local hex = ToHexFromGrid({x=pPlot:GetX(), y=pPlot:GetY()})
-      local x, y = hex.x, hex.y
-
-      -- Along the North edge of the hex (x-r, y+r, z) to (x, y+r, z-r)
-      local function north(x, y, r, i) return {x=x-r+i, y=y+r} end
-      -- Along the North-East edge (x, y+r, z-r) to (x+r, y, z-r)
-      local function northeast(x, y, r, i) return {x=x+i, y=y+r-i} end
-      -- Along the South-East edge (x+r, y, z-r) to (x+r, y-r, z)
-      local function southeast(x, y, r, i) return {x=x+r, y=y-i} end
-      -- Along the South edge (x+r, y-r, z) to (x, y-r, z+r)
-      local function south(x, y, r, i) return {x=x+r-i, y=y-r} end
-      -- Along the South-West edge (x, y-r, z+r) to (x-r, y, z+r)
-      local function southwest(x, y, r, i) return {x=x-i, y=y-r+i} end
-      -- Along the North-West edge (x-r, y, z+r) to (x-r, y+r, z)
-      local function northwest(x, y, r, i) return {x=x-r, y=y+i} end
-
-      local side = {north, northeast, southeast, south, southwest, northwest}
-      if (sector) then
-        for i=(anticlock and 1 or 2), sector, 1 do
-          table.insert(side, table.remove(side, 1))
-        end
-      end
-
-      -- This coroutine walks the edges of the hex centered on pPlot at radius r
-      local next = coroutine.create(function ()
-        if (anticlock) then
-          for s=6, 1, -1 do
-            for i=r, 1, -1 do
-              coroutine.yield(side[s](x, y, r, i))
-            end
-          end
-        else
-          for s=1, 6, 1 do
-            for i=0, r-1, 1 do
-              coroutine.yield(side[s](x, y, r, i))
-            end
-          end
-        end
-
-        return nil
-      end)
-
-      -- This function returns the next edge plot in the sequence, ignoring those that fall off the edges of the map
-      return function ()
-        local pEdgePlot = nil
-        local success, hex = coroutine.resume(next)
-        -- if (hex ~= nil) then print(string.format("hex(%i, %i, %i)", hex.x, hex.y, -1 * (hex.x+hex.y))) else print("hex(nil)") end
-
-        while (success and hex ~= nil and pEdgePlot == nil) do
-          pEdgePlot = Map.GetPlot(ToGridFromHex(hex.x, hex.y))
-          if (pEdgePlot == nil) then success, hex = coroutine.resume(next) end
-        end
-
-        return success and pEdgePlot or nil
-      end
-    else
-      -- Iterators have to return a function, so return a function that returns nil
-      return function () return nil end
-    end
-  end
-
-
-  function PlotAreaSpiralIterator(pPlot, r, sector, anticlock, inwards, centre)
-    -- print(string.format("PlotAreaSpiralIterator((%i, %i), r=%i, s=%i, d=%s, w=%s, c=%s)", pPlot:GetX(), pPlot:GetY(), r, (sector or SECTOR_NORTH), (anticlock and "rev" or "fwd"), (inwards and "in" or "out"), (centre and "yes" or "no")))
-    -- This coroutine walks each ring in sequence
-    local next = coroutine.create(function ()
-      if (centre and not inwards) then
-        coroutine.yield(pPlot)
-      end
-
-      if (inwards) then
-        for i=r, 1, -1 do
-          for pEdgePlot in PlotRingIterator(pPlot, i, sector, anticlock) do
-            coroutine.yield(pEdgePlot)
-          end
-        end
-      else
-        for i=1, r, 1 do
-          for pEdgePlot in PlotRingIterator(pPlot, i, sector, anticlock) do
-            coroutine.yield(pEdgePlot)
-          end
-        end
-      end
-
-      if (centre and inwards) then
-        coroutine.yield(pPlot)
-      end
-
-      return nil
-    end)
-
-    -- This function returns the next plot in the sequence
-    return function ()
-      local success, pAreaPlot = coroutine.resume(next)
-      return success and pAreaPlot or nil
-    end
-  end
--- End of iterator code --------------------
-
--- ===========================================================================
---  Support function for Hotkey Event
--- ===========================================================================
-function LensPanelHotkeyControl( pControl:table )
-  if Controls.LensPanel:IsHidden() then
-    Controls.LensPanel:SetHide(false);
-    RealizeFlyouts(Controls.LensPanel);
-    Controls.LensButton:SetSelected(true);
-  elseif (not Controls.LensPanel:IsHidden()) and pControl:IsChecked() then
-    Controls.LensPanel:SetHide(true);
-    Controls.LensButton:SetSelected(false);
-  end
-  pControl:SetCheck( not pControl:IsChecked() );
+  m_DirtyComponents:Clear();
 end
 
 -- ===========================================================================
---  Input Hotkey Event
+--	Gamecore Event
+--	Called once per layer that is turned on when a new lens is activated,
+--	or when a player explicitly turns off the layer from the "player" lens.
 -- ===========================================================================
-function OnInputActionTriggered( actionId )
-  -- dont show panel if there is no local player
-  if (Game.GetLocalPlayer() == -1) then
-    return;
-  end
-  if m_ToggleReligionLensId ~= nil and (actionId == m_ToggleReligionLensId) then
-    LensPanelHotkeyControl( Controls.ReligionLensButton );
-    ToggleReligionLens();
-    UI.PlaySound("Play_UI_Click");
-  end
-  if m_ToggleContinentLensId ~= nil and (actionId == m_ToggleContinentLensId) then
-    LensPanelHotkeyControl( Controls.ContinentLensButton );
-    ToggleContinentLens();
-    UI.PlaySound("Play_UI_Click");
-  end
-  if m_ToggleAppealLensId ~= nil and (actionId == m_ToggleAppealLensId) then
-    LensPanelHotkeyControl( Controls.AppealLensButton );
-    ToggleAppealLens();
-    UI.PlaySound("Play_UI_Click");
-  end
-  if m_ToggleSettlerLensId ~= nil and (actionId == m_ToggleSettlerLensId) then
-    LensPanelHotkeyControl( Controls.WaterLensButton );
-    ToggleWaterLens();
-    UI.PlaySound("Play_UI_Click");
-  end
-  if m_ToggleGovernmentLensId ~= nil and (actionId == m_ToggleGovernmentLensId) then
-    LensPanelHotkeyControl( Controls.GovernmentLensButton );
-    ToggleGovernmentLens();
-    UI.PlaySound("Play_UI_Click");
-  end
-  if m_TogglePoliticalLensId ~= nil and (actionId == m_TogglePoliticalLensId) then
-    LensPanelHotkeyControl( Controls.OwnerLensButton );
-    ToggleOwnerLens();
-    UI.PlaySound("Play_UI_Click");
-  end
-  if m_ToggleTourismLensId ~= nil and (actionId == m_ToggleTourismLensId) then
-        LensPanelHotkeyControl( Controls.TourismLensButton );
-        ToggleTourismLens();
-        UI.PlaySound("Play_UI_Click");
-  end
-  if m_Toggle2DViewId ~= nil and (actionId == m_Toggle2DViewId) then
-    UI.PlaySound("Play_UI_Click");
-    Toggle2DView();
+function OnLensLayerOn( layerNum:number )
+  if	layerNum == LensLayers.UNITS_MILITARY or
+    layerNum == LensLayers.UNITS_RELIGIOUS or
+    layerNum == LensLayers.UNITS_CIVILIAN or
+    layerNum == LensLayers.UNITS_ARCHEOLOGY then
+    ContextPtr:SetHide(false);
   end
 end
 
 -- ===========================================================================
---  Game Engine Event
+--	Gamecore Event
+--	Called once per layer that is turned on when a new lens is deactivated,
+--	or when a player explicitly turns off the layer from the "player" lens.
 -- ===========================================================================
-function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
-
-  if SHOW_CITIZEN_MANAGEMENT_INSCREEN then
-    if eOldMode == InterfaceModeTypes.CITY_MANAGEMENT then
-      ClearAreaLens()
-      m_CitizenManagementOn = false
-    end
-
-    if eNewMode == InterfaceModeTypes.CITY_MANAGEMENT then
-      local selectedCity = UI.GetHeadSelectedCity();
-      if (selectedCity ~= nil) then
-        RefreshCitizenManagementArea(selectedCity:GetID())
-      end
-    end
-  end
-
-  --and eNewMode ~= InterfaceModeTypes.VIEW_MODAL_LENS
-  if eOldMode == InterfaceModeTypes.VIEW_MODAL_LENS then
-    if not Controls.LensPanel:IsHidden() then
-      if m_shouldCloseLensMenu then --If player turns off the lens from the menu, do not close the menu
-        Controls.LensPanel:SetHide( true );
-        RealizeFlyouts(Controls.LensPanel);
-        Controls.LensButton:SetSelected( false );
-      end
-      m_shouldCloseLensMenu = true; --Reset variable so the menu can be closed by selecting a unit/city
-      Controls.ReligionLensButton:SetCheck(false);
-      Controls.ContinentLensButton:SetCheck(false);
-      Controls.AppealLensButton:SetCheck(false);
-      Controls.GovernmentLensButton:SetCheck(false);
-      Controls.WaterLensButton:SetCheck(false);
-      Controls.OwnerLensButton:SetCheck(false);
-      Controls.TourismLensButton:SetCheck(false);
-
-      -- Modded lens
-      Controls.ScoutLensButton:SetCheck(false);
-      Controls.AdjacencyYieldLensButton:SetCheck(false);
-      Controls.WonderLensButton:SetCheck(false);
-      Controls.ResourceLensButton:SetCheck(false);
-      Controls.BarbarianLensButton:SetCheck(false);
-      Controls.CityOverlapLensButton:SetCheck(false);
-      Controls.ArchaeologistLensButton:SetCheck(false);
-      Controls.BuilderLensButton:SetCheck(false);
-      Controls.NaturalistLensButton:SetCheck(false);
-
-      -- Side Menus
-      Controls.ResourceLensOptionsPanel:SetHide(true);
-      Controls.OverlapLensOptionsPanel:SetHide(true);
-
-      if m_CurrentModdedLensOn ~= MODDED_LENS_ID.NONE then
-        ClearModdedLens()
-      end
-
-      if m_CurrentAreaLensOn ~= AREA_LENS_ID.NONE then
-        ClearAreaLens()
-      end
-    end
+function OnLensLayerOff( layerNum:number )
+  if	layerNum == LensLayers.UNITS_MILITARY or
+    layerNum == LensLayers.UNITS_RELIGIOUS or
+    layerNum == LensLayers.UNITS_CIVILIAN or
+    layerNum == LensLayers.UNITS_ARCHEOLOGY then
+    ContextPtr:SetHide(true);
   end
 end
 
-function OnCitySelectionChanged(owner, ID, i, j, k, bSelected, bEditable)
-  if owner ~= Game.GetLocalPlayer() then
-    return
-  end
+function OnLevyCounterChanged( originalOwnerID : number )
+  local pOriginalOwner = Players[originalOwnerID];
+  if (pOriginalOwner ~= nil and pOriginalOwner:GetInfluence() ~= nil) then
+    local suzerainID = pOriginalOwner:GetInfluence():GetSuzerain();
+    local pSuzerain = Players[suzerainID];
+    if (pSuzerain ~= nil) then
+      if (m_UnitFlagInstances[ suzerainID ] == nil) then
+        return;
+      end
 
-  if SHOW_CITIZEN_MANAGEMENT_INSCREEN then
-    if bSelected and m_CurrentAreaLensOn == AREA_LENS_ID.CITIZEN_MANAGEMENT then
-      RefreshCitizenManagementArea(ID)
-    end
-  end
-end
-
-function OnCityWorkerChanged(ownerPlayerID:number, cityID:number)
-  if SHOW_CITIZEN_MANAGEMENT_INSCREEN and ownerPlayerID == Game.GetLocalPlayer() and
-      m_CurrentAreaLensOn == AREA_LENS_ID.CITIZEN_MANAGEMENT then
-    RefreshCitizenManagementArea(cityID)
-  end
-end
-
-function OnCityMadePurchase(owner:number, cityID:number, plotX:number, plotY:number, purchaseType, objectType)
-  if SHOW_CITIZEN_MANAGEMENT_INSCREEN and owner == Game.GetLocalPlayer() and
-      m_CurrentAreaLensOn == AREA_LENS_ID.CITIZEN_MANAGEMENT and
-      purchaseType == EventSubTypes.PLOT then
-
-    -- Add plot so that the plot is properly cleared
-    table.insert(m_tAreaPlotsColored, Map.GetPlotIndex(plotX, plotY))
-    RefreshCitizenManagementArea(cityID)
-  end
-end
-
--- For modded lens on unit selection
-function OnUnitSelectionChanged( playerID:number, unitID:number, hexI:number, hexJ:number, hexK:number, bSelected:boolean, bEditable:boolean )
-  if playerID == Game.GetLocalPlayer() then
-    local unitType = GetUnitType(playerID, unitID);
-    if unitType then
-      if bSelected then
-        if unitType == "UNIT_BUILDER" and AUTO_APPLY_BUILDER_LENS then
-          ShowBuilderLens();
-        elseif unitType == "UNIT_ARCHAEOLOGIST" and AUTO_APPLY_ARCHEOLOGIST_LENS then
-          ShowArchaeologistLens();
-        elseif (unitType == "UNIT_SCOUT" or unitType == "UNIT_RANGER") and AUTO_APPLY_SCOUT_LENS then
-          ShowScoutLens();
-        end
-      -- Deselection
-      else
-        if unitType == "UNIT_BUILDER" and AUTO_APPLY_BUILDER_LENS then
-          ClearBuilderLensHexes();
-        elseif unitType == "UNIT_ARCHAEOLOGIST" and AUTO_APPLY_ARCHEOLOGIST_LENS then
-          ClearArchaeologistLens();
-        elseif (unitType == "UNIT_SCOUT" or unitType == "UNIT_RANGER") and AUTO_APPLY_SCOUT_LENS then
-          ClearScoutLens();
-        elseif (unitType == "UNIT_SETTLER") then
-          ClearSettlerLens();
+      local suzerainFlagInstances = m_UnitFlagInstances[ suzerainID ];
+      for id, flag in pairs(suzerainFlagInstances) do
+        if (flag ~= nil) then
+          flag:UpdateName();
+          flag:UpdatePromotions();
         end
       end
     end
-
-    -- If unit is selected and citizen management area was on, turn on selection interface mode.
-    -- Lens will cleared in the OnInterfaceModeChanged event
-    if SHOW_CITIZEN_MANAGEMENT_INSCREEN and m_CurrentAreaLensOn == AREA_LENS_ID.CITIZEN_MANAGEMENT then
-      -- AZURENCY : fix weird behavior when a unit was selected and the citybanner mouse hover state
-      --UI.SetInterfaceMode(InterfaceModeTypes.SELECTION)
-      ClearAreaLens()
-      m_CitizenManagementOn = false
     end
-  end
 end
 
--- For builder lens
-function OnUnitChargesChanged( playerID: number, unitID : number, newCharges : number, oldCharges : number )
-  local localPlayer = Game.GetLocalPlayer()
+-- ===========================================================================
+function OnLocalPlayerChanged()
 
-  if playerID == localPlayer then
-    local unitType = GetUnitType(playerID, unitID)
-
-    if unitType and unitType == "UNIT_BUILDER" then
-      if newCharges == 0 then
-        ClearBuilderLensHexes();
+  -- Hide all the flags, we will get updates later
+  for _, playerFlagInstances in pairs(m_UnitFlagInstances) do
+    for id, flag in pairs(playerFlagInstances) do
+      if (flag ~= nil) then
+        flag:SetFogState(RevealedState.HIDDEN);
       end
     end
-  end
-end
-
--- For modded lens during multiplayer. Might need to test this further
-function OnUnitCaptured( currentUnitOwner, unit, owningPlayer, capturingPlayer )
-  local localPlayer = Game.GetLocalPlayer()
-
-  if owningPlayer == localPlayer then
-    local unitType = GetUnitType(owningPlayer, unitID)
-
-    if unitType and unitType == "UNIT_BUILDER" then
-      ClearBuilderLensHexes();
-    elseif unitType and unitType == "UNIT_ARCHAEOLOGIST" then
-      ClearArchaeologistLens();
     end
+
+  m_DirtyComponents:Clear();
+end
+
+-- ===========================================================================
+function RegisterDirtyEvents()
+  m_DirtyComponents = DirtyComponentsManager.Create();
+  m_DirtyComponents:AddEvent("UNIT_OPERATION_DEACTIVATED");
+  m_DirtyComponents:AddEvent("UNIT_ACTIVITY_CHANGED");
+  m_DirtyComponents:AddEvent("UNIT_MOVEMENT_POINTS_CHANGED");
+  m_DirtyComponents:AddEvent("UNIT_EMBARK_CHANGED");
+end
+
+-- ===========================================================================
+--	LUA Event
+--	Tutorial system is disabling selection.
+-- ===========================================================================
+function OnTutorial_DisableMapSelect( isDisabled:boolean )
+  m_isMapDeselectDisabled = isDisabled;
+end
+
+-- ===========================================================================
+--	UI Callback
+-- ===========================================================================
+function OnInit(isHotload : boolean)
+  -- If hotloading, rebuild from scratch.
+  if isHotload then
+    Refresh();
   end
 end
 
--- For modded lens on unit deletion
-function OnUnitRemovedFromMap( playerID: number, unitID : number )
-  local localPlayer = Game.GetLocalPlayer()
-
-  if playerID == localPlayer then
-    if m_CurrentModdedLensOn == MODDED_LENS_ID.BUILDER then
-      ClearBuilderLensHexes();
-    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.ARCHAEOLOGIST then
-      ClearArchaeologistLens();
-    elseif m_CurrentModdedLensOn == MODDED_LENS_ID.SCOUT then
-      ClearScoutLens();
-    end
-  end
-end
-
--- To update the scout lens, when a scout/ranger moves
-function OnUnitMoved( playerID:number, unitID:number )
-  if playerID == Game.GetLocalPlayer() then
-    local unitType = GetUnitType(playerID, unitID);
-    if (unitType == "UNIT_SCOUT" or unitType == "UNIT_RANGER") and AUTO_APPLY_SCOUT_LENS then
-      -- Refresh the scout lens, if already applied. Need this check so scout lens
-      -- does not apply when a scout is currently under a operation
-      if m_CurrentModdedLensOn == MODDED_LENS_ID.SCOUT then
-        ClearScoutLens();
-        ShowScoutLens();
-      end
-    end
-  end
-end
-
-function GetMinimapMouseCoords( mousex:number, mousey:number )
-  local topLeftX, topLeftY = Controls.MinimapImage:GetScreenOffset();
-
-  -- normalized 0-1, relative to map
-  local minix = mousex - topLeftX;
-  local miniy = mousey - topLeftY;
-  minix = minix / Controls.MinimapImage:GetSizeX();
-  miniy = miniy / Controls.MinimapImage:GetSizeY();
-
-  return minix, miniy;
-end
-
-function IsMouseInMinimap( minix:number, miniy:number )
-  return minix >= 0 and minix <= 1 and miniy >= 0 and miniy <= 1;
-end
-
-function TranslateMinimapToWorld( minix:number, miniy:number )
-  local mapMinX, mapMinY, mapMaxX, mapMaxY = UI.GetMinimapWorldRect();
-
-  -- Clamp coords to minimap.
-  minix = math.min( 1, math.max( 0, minix ) );
-  miniy = math.min( 1, math.max( 0, miniy ) );
-
-  --TODO: max-min probably wont work for rects that cross world wrap! -KS
-  local wx = mapMinX + (mapMaxX-mapMinX) * minix;
-  local wy = mapMinY + (mapMaxY-mapMinY) * (1 - miniy);
-
-  return wx, wy;
-end
-
-function OnInputHandler( pInputStruct:table )
-  local msg = pInputStruct:GetMessageType();
-  if pInputStruct:GetKey() == Keys.VK_CONTROL then
-    if msg == KeyEvents.KeyDown then
-      m_CtrlDown = true
-
-      -- Reset cursor plot to recalculate HandleMouseForModdedLens
-      m_CurrentCursorPlotID = -1;
-    elseif msg == KeyEvents.KeyUp then
-      m_CtrlDown = false
-
-      RecheckSettlerLens()
-    end
-  end
-
-  HandleMouseForModdedLens(pInputStruct:GetX(), pInputStruct:GetY())
-
-  -- Skip all other handling when dragging is disabled or the minimap is collapsed
-  if m_isMouseDragEnabled and not m_isCollapsed then
-
-    -- Enable drag on LMB down
-    if msg == MouseEvents.LButtonDown then
-      local minix, miniy = GetMinimapMouseCoords( pInputStruct:GetX(), pInputStruct:GetY() );
-      if IsMouseInMinimap( minix, miniy ) then
-        m_isMouseDragging = true; -- Potential drag is in process
-        m_hasMouseDragged = false; -- There has been no actual dragging yet
-        LuaEvents.WorldInput_DragMapBegin(); -- Alert luathings that a drag is about to go down
-        return true; -- Consume event
-      end
-
-    -- Disable drag on LMB up (but only if mouse was previously dragging)
-    elseif msg == MouseEvents.LButtonUp and m_isMouseDragging then
-      m_isMouseDragging = false;
-      -- In case of no actual drag occurring, perform camera jump.
-      if not m_hasMouseDragged then
-        local minix, miniy = GetMinimapMouseCoords( pInputStruct:GetX(), pInputStruct:GetY() );
-        local wx, wy = TranslateMinimapToWorld( minix, miniy );
-        UI.LookAtPosition( wx, wy );
-      end
-
-      LuaEvents.WorldInput_DragMapEnd(); -- Alert luathings that the drag has stopped
-      return true;
-
-    -- Move camera if dragging, mouse moves, and mouse is over minimap.
-    elseif msg == MouseEvents.MouseMove and m_isMouseDragging then
-      local minix, miniy = GetMinimapMouseCoords( pInputStruct:GetX(), pInputStruct:GetY() );
-      local isMouseInMinimap = IsMouseInMinimap( minix, miniy );
-
-      -- Catches entering, exiting, and moving within the minimap.
-      -- Clamping in TranslateMinimapToWorld guarantees OOB input is treated correctly.
-      if m_wasMouseInMinimap or isMouseInMinimap then
-        m_hasMouseDragged = true;
-        local wx, wy = TranslateMinimapToWorld( minix, miniy );
-        UI.FocusMap( wx, wy );
-      end
-      m_wasMouseInMinimap = isMouseInMinimap
-      return isMouseInMinimap; -- Only consume event if it's inside the minimap.
-
-    -- Consume mouse right click if mouse is on minimap.
-    elseif msg == MouseEvents.RButtonDown or msg == MouseEvents.RButtonUp then
-      local minix, miniy = GetMinimapMouseCoords( pInputStruct:GetX(), pInputStruct:GetY() );
-      if IsMouseInMinimap( minix, miniy ) then
-        return true
-      end
-    end
-  end
-  return false;
-end
-
-function OnTutorial_DisableMapDrag( isDisabled:boolean )
-  m_isMouseDragEnabled = not isDisabled;
-  if isDisabled then
-    m_isMouseDragging = false;
-    m_hasMouseDragged = false;
-    m_wasMouseInMinimap = false;
-  end
-end
-
-function OnTutorial_SwitchToWorldView()
-  Controls.SwitcherImage:SetTextureOffsetVal(0,0);
-end
-
+-- ===========================================================================
+--	UI Callback
+--	Handle the UI shutting down.
+-- ===========================================================================
 function OnShutdown()
-  LuaEvents.Tutorial_SwitchToWorldView.Remove( OnTutorial_SwitchToWorldView );
-  LuaEvents.Tutorial_DisableMapDrag.Remove( OnTutorial_DisableMapDrag );
-  LuaEvents.NotificationPanel_ShowContinentLens.Remove(OnToggleContinentLensExternal);
+  m_MilitaryInstanceManager:ResetInstances();
+  m_CivilianInstanceManager:ResetInstances();
+  m_SupportInstanceManager:ResetInstances();
+  m_TradeInstanceManager:ResetInstances();
+  m_NavalInstanceManager:ResetInstances();
+  DirtyComponentsManager.Destroy( m_DirtyComponents );
+  m_DirtyComponents = nil;
 end
 
 -- ===========================================================================
--- INITIALIZATION
--- ===========================================================================
-
 function Initialize()
-  m_MiniMap_xmloffsety = Controls.MiniMap:GetOffsetY();
-  m_ContinentsCache = Map.GetContinentsInUse();
 
-  -- Check for function nil for backward compatibiliy. @Summer Patch 2017
-  if Controls.MinimapImage.RegisterSizeChanged ~= nil then
-    Controls.MinimapImage:RegisterSizeChanged( OnMinimapImageSizeChanged );
-  end
-  UI.SetMinimapImageControl(Controls.MinimapImage);
-  Controls.LensChooserList:CalculateSize();
-
-  ContextPtr:SetInputHandler( OnInputHandler, true );
+  ContextPtr:SetInitHandler( OnInit );
   ContextPtr:SetShutdown( OnShutdown );
+  ContextPtr:SetRefreshHandler( CQUI_Refresh );
 
-  Controls.LensPanel:ChangeParent(Controls.LensButton);
-  Controls.MapOptionsPanel:ChangeParent(Controls.MapOptionsButton);
-  Controls.ToggleResourcesButton:SetCheck( UserConfiguration.ShowMapResources() );
-  Controls.ToggleYieldsButton:SetCheck( UserConfiguration.ShowMapYield() );
-
-  -- Modded lens
-  Controls.BuilderLensButton:RegisterCallback( Mouse.eLClick, ToggleBuilderLens );
-  Controls.ArchaeologistLensButton:RegisterCallback( Mouse.eLClick, ToggleArchaeologistLens );
-  Controls.CityOverlapLensButton:RegisterCallback( Mouse.eLClick, ToggleCityOverlapLens );
-  Controls.BarbarianLensButton:RegisterCallback( Mouse.eLClick, ToggleBarbarianLens );
-  Controls.ResourceLensButton:RegisterCallback( Mouse.eLClick, ToggleResourceLens );
-  Controls.WonderLensButton:RegisterCallback( Mouse.eLClick, ToggleWonderLens );
-  Controls.AdjacencyYieldLensButton:RegisterCallback( Mouse.eLClick, ToggleAdjacencyYieldLens );
-  Controls.ScoutLensButton:RegisterCallback( Mouse.eLClick, ToggleScoutLens );
-  Controls.NaturalistLensButton:RegisterCallback( Mouse.eLClick, ToggleNaturalistLens );
-
-  -- Resource Lens Picker
-  Controls.ShowBonusResource:RegisterCallback( Mouse.eLClick, ToggleResourceLens_Bonus );
-  Controls.ShowLuxuryResource:RegisterCallback( Mouse.eLClick, ToggleResourceLens_Luxury );
-  Controls.ShowStrategicResource:RegisterCallback( Mouse.eLClick, ToggleResourceLens_Strategic );
-
-  -- City Overlap Lens Setting
-  Controls.ShowLensOutsideBorder:RegisterCallback( Mouse.eLClick, RefreshCityOverlapLens );
-  Controls.OverlapRangeUp:RegisterCallback( Mouse.eLClick, IncreseOverlapRange );
-  Controls.OverlapRangeDown:RegisterCallback( Mouse.eLClick, DecreaseOverlapRange );
-  Controls.OverlapLensMouseNone:RegisterCallback( Mouse.eLClick, RefreshCityOverlapLens );
-
-  Controls.AppealLensButton:RegisterCallback( Mouse.eLClick, ToggleAppealLens );
-  Controls.ContinentLensButton:RegisterCallback( Mouse.eLClick, ToggleContinentLens );
-  Controls.CollapseButton:RegisterCallback( Mouse.eLClick, OnCollapseToggle );
-  Controls.CollapseButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.ExpandButton:RegisterCallback( Mouse.eLClick, OnCollapseToggle );
-  Controls.ExpandButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.GovernmentLensButton:RegisterCallback( Mouse.eLClick, ToggleGovernmentLens );
-  Controls.LensButton:RegisterCallback( Mouse.eLClick, OnToggleLensList );
-  Controls.LensButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.MapOptionsButton:RegisterCallback( Mouse.eLClick, ToggleMapOptionsList );
-  Controls.MapOptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.MapPinListButton:RegisterCallback( Mouse.eLClick, ToggleMapPinMode );
-  Controls.MapPinListButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.OwnerLensButton:RegisterCallback( Mouse.eLClick, ToggleOwnerLens );
-  Controls.TourismLensButton:RegisterCallback( Mouse.eLClick, ToggleTourismLens );
-  Controls.Pause:RegisterEndCallback( OnPauseEnd );
-  Controls.ReligionLensButton:RegisterCallback( Mouse.eLClick, ToggleReligionLens );
-  Controls.StrategicSwitcherButton:RegisterCallback( Mouse.eLClick, Toggle2DView );
-  Controls.StrategicSwitcherButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.ToggleGridButton:RegisterCallback( Mouse.eLClick, ToggleGrid );
-  Controls.ToggleResourcesButton:RegisterCallback( Mouse.eLClick, ToggleResourceIcons );
-  Controls.ToggleYieldsButton:RegisterCallback( Mouse.eLClick, ToggleYieldIcons );
-  Controls.WaterLensButton:RegisterCallback( Mouse.eLClick, ToggleWaterLens );
-
-  -- Hide buttons not needed for the world builder
-  if GameConfiguration.IsWorldBuilderEditor() then
-    Controls.LensButton:SetHide(true);
-    Controls.MapPinListButton:SetHide(true);
-    Controls.StrategicSwitcherButton:SetHide(true);
-    Controls.OptionsStack:ReprocessAnchoring();
-  end
-
-  --CQUI Options Button
-  Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_ToggleSettings() end);
-  Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-
-  -- Make sure the StrategicSwitcherButton has the correct image when the game starts in StrategicView
-  if UI.GetWorldRenderView() == WorldRenderView.VIEW_2D then
-    Controls.SwitcherImage:SetTextureOffsetVal(0,24);
-  end
-
-  Events.InputActionTriggered.Add( OnInputActionTriggered );
-  Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );
-  Events.LensLayerOn.Add( OnLensLayerOn );
+  Events.Camera_Updated.Add( OnCameraUpdate );
+  Events.CombatVisBegin.Add( OnCombatVisBegin );
+  Events.CombatVisEnd.Add( OnCombatVisEnd );
+  Events.DiplomacyMakePeace.Add( OnDiplomacyWarStateChange );
+  Events.DiplomacyDeclareWar.Add( OnDiplomacyWarStateChange );
+  Events.GameCoreEventPlaybackComplete.Add(OnEventPlaybackComplete);
+  Events.LensLayerOn.Add(	OnLensLayerOn );
   Events.LensLayerOff.Add( OnLensLayerOff );
-  Events.LocalPlayerChanged.Add( OnLocalPlayerChanged );
-
-  LuaEvents.NotificationPanel_ShowContinentLens.Add(OnToggleContinentLensExternal);
-  LuaEvents.Tutorial_DisableMapDrag.Add( OnTutorial_DisableMapDrag );
-  LuaEvents.Tutorial_SwitchToWorldView.Add( OnTutorial_SwitchToWorldView );
-  LuaEvents.MinimapPanel_ToggleGrid.Add( ToggleGrid );
-  LuaEvents.MinimapPanel_RefreshMinimapOptions.Add( RefreshMinimapOptions );
-
-  -- For modded lenses
-  Events.CitySelectionChanged.Add( OnCitySelectionChanged );
-  Events.UnitSelectionChanged.Add( OnUnitSelectionChanged );
-  Events.UnitCaptured.Add( OnUnitCaptured );
-  Events.UnitChargesChanged.Add( OnUnitChargesChanged );
+  Events.LevyCounterChanged.Add( OnLevyCounterChanged );
+  Events.LocalPlayerChanged.Add(OnLocalPlayerChanged);
+  Events.MultiplayerPlayerConnected.Add( OnPlayerConnectChanged );
+  Events.MultiplayerPostPlayerDisconnected.Add( OnPlayerConnectChanged );
+  Events.ObjectPairing.Add(OnObjectPairingChanged);
+  Events.PlayerTurnActivated.Add( OnPlayerTurnActivated );
+  Events.UnitAddedToMap.Add( OnUnitAddedToMap );
+  Events.UnitDamageChanged.Add( OnUnitDamageChanged );
+  Events.UnitEnterFormation.Add( OnEnterFormation );
+  Events.UnitExitFormation.Add( OnEnterFormation );
+  Events.UnitFormCorps.Add( OnMilitaryFormationChanged );
+  Events.UnitFormArmy.Add( OnMilitaryFormationChanged );
+  Events.UnitArtifactChanged.Add( OnUnitArtifactChanged );
+  Events.UnitFortificationChanged.Add( OnUnitFortificationChanged );
   Events.UnitRemovedFromMap.Add( OnUnitRemovedFromMap );
-  Events.UnitMoved.Add( OnUnitMoved );
+  Events.UnitSelectionChanged.Add( OnUnitSelectionChanged );
+  Events.UnitSimPositionChanged.Add( UnitSimPositionChanged );
+  Events.UnitTeleported.Add( OnUnitTeleported );
+  Events.UnitVisibilityChanged.Add( OnUnitVisibilityChanged );
+  Events.UnitEmbarkedStateChanged.Add( OnUnitEmbarkedStateChanged );
+  Events.UnitCommandStarted.Add( OnUnitCommandStarted );
+  Events.UnitUpgraded.Add( OnUnitUpgraded );
+  Events.WorldRenderViewChanged.Add(PositionFlagsToView);
+  Events.UnitPromoted.Add(OnUnitPromotionChanged);
+  Events.UnitAbilityGained.Add(OnUnitAbilityGained);
+  Events.BarbarianSpottedCity.Add(OnBarbarianSpottedCity);
+  --Events.UnitActivityChanged.Add(OnUnitActivityChanged); --Currently only needed for debugging.
+  Events.UnitChargesChanged.Add( OnUnitChargesChanged );
 
-  -- CQUI Handlers
-  LuaEvents.CQUI_Option_ToggleBindings.Add( CQUI_OnToggleBindings );
-  LuaEvents.CQUI_Option_ToggleYields.Add( ToggleYieldIcons );
-  LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
-  LuaEvents.CQUI_SettingsInitialized.Add( CQUI_UpdateMinimapSize );
-  LuaEvents.CQUI_SettingsInitialized.Add( CQUI_ToggleYieldIcons );
-  Events.LoadScreenClose.Add( CQUI_OnSettingsUpdate ); -- Astog: Update settings when load screen close
-  -- CQUI_OnSettingsUpdate()
+  LuaEvents.Tutorial_DisableMapSelect.Add( OnTutorial_DisableMapSelect );
 
-  -- For Area Lens
-  Events.CityWorkerChanged.Add( OnCityWorkerChanged );
-  Events.CityMadePurchase.Add( OnCityMadePurchase );
-
-  -- External Lens Controls
-  LuaEvents.Lens_ApplyCustomLens.Add( ApplyCustomLens );
-  LuaEvents.Lens_ClearCustomLens.Add( ClearCustomLens );
-  LuaEvents.Lens_ApplyModdedLens.Add( OnApplyModdedLens );
-  LuaEvents.Lens_ClearModdedLens.Add( OnClearModdedLens );
-  LuaEvents.Area_ShowCitizenManagement.Add( ShowCitizenManagementArea );
-  LuaEvents.Area_RefreshCitizenManagement.Add( RefreshCitizenManagementArea );
-  LuaEvents.Area_ClearCitizenManagement.Add( ClearAreaLens );
+  RegisterDirtyEvents();
 end
 Initialize();
