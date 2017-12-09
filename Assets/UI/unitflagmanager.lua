@@ -820,7 +820,7 @@ function UnitFlag.UpdatePromotions( self )
         if not bCanStart then
           bCanStart = unitExperience:GetExperiencePoints() >= unitExperience:GetExperienceForNextLevel()
         end
-        if bCanStart and isLocalPlayerUnit then
+        if bCanStart and isLocalPlayerUnit and (#promotionList < 7) then
           self.m_Instance.New_Promotion_Flag:SetHide(false);
           self.m_Instance.UnitNumPromotions:SetText("[COLOR:StatBadCS]+[ENDCOLOR]");
           self.m_Instance.Promotion_Flag:SetHide(false);
