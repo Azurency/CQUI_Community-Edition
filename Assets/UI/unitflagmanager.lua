@@ -820,7 +820,8 @@ function UnitFlag.UpdatePromotions( self )
         if not bCanStart then
           bCanStart = unitExperience:GetExperiencePoints() >= unitExperience:GetExperienceForNextLevel()
         end
-        if bCanStart and isLocalPlayerUnit then
+        -- Nilt: Added check to prevent the promotion flag staying a red + permanently on max XP units.
+        if bCanStart and isLocalPlayerUnit and (#promotionList < 7) then
           self.m_Instance.New_Promotion_Flag:SetHide(false);
           self.m_Instance.UnitNumPromotions:SetText("[COLOR:StatBadCS]+[ENDCOLOR]");
           self.m_Instance.Promotion_Flag:SetHide(false);
