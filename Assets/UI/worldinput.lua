@@ -3098,10 +3098,28 @@ function OnCycleUnitSelectionRequest()
   --end
 
   if(UI.GetInterfaceMode() ~= InterfaceModeTypes.NATURAL_WONDER or m_isMouseButtonRDown) then
-    -- Auto-advance selection to the next unit.
-    if not UI.SelectNextReadyUnit() then
-      UI.DeselectAllUnits();
+
+    -- AZURENCY : OnCycleUnitSelectionRequest is called by UI.SetCycleAdvanceTimer() 
+    -- in SelectedUnit.lua causing a conflict with the auto-cyling of unit 
+    -- (not the same given by UI.SelectNextReadyUnit() and player:GetUnits():GetFirstReadyUnit())
+    local pPlayer :table = Players[Game.GetLocalPlayer()];
+    if pPlayer ~= nil then
+      if pPlayer:IsTurnActive() then
+        local unit:table = pPlayer:GetUnits():GetFirstReadyUnit();
+        -- AZURENCY : we also check if there is not already a unit selected, 
+        -- bacause UI.SetCycleAdvanceTimer() is always called after deselecting a unit
+        if unit ~= nil and not UI.GetHeadSelectedUnit() then
+          UI.DeselectAllUnits();
+          UI.DeselectAllCities();
+          UI.SelectUnit(unit);
+          UI.LookAtPlot(unit:GetX(), unit:GetY())
+        end
+      end
     end
+    -- Auto-advance selection to the next unit.
+    -- if not UI.SelectNextReadyUnit() then
+    --   UI.DeselectAllUnits();
+    -- end
   end
 end
 
