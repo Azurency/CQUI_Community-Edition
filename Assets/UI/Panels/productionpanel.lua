@@ -3787,6 +3787,7 @@ function CheckAndReplaceQueueForUpgrades(city)
   local cityID = city:GetID();
   local productionQueueTableKey = FindProductionQueueKey(cityID, city:GetOwner());
   local pBuildings = city:GetBuildings();
+  local pDistricts = city:GetDistricts();
   local civTypeName = PlayerConfigurations[playerID]:GetCivilizationTypeName();
   local removeUnits = {};
 
@@ -3904,6 +3905,16 @@ function CheckAndReplaceQueueForUpgrades(city)
           table.insert(removeUnits, i);
         elseif(not IsCityPlotValidForWonderPlacement(city, qi.plotID, GameInfo.Buildings[qi.entry.Hash]) and not buildQueue:HasBeenPlaced(qi.entry.Hash)) then
           table.insert(removeUnits, i);
+        end
+      end
+
+      -- AZURENCY : check if district required is pillaged and not in queue
+      if (GameInfo.Buildings[qi.entry.Hash]) then
+        if GameInfo.Buildings[qi.entry.Hash].PrereqDistrict then
+          prereqDistrict = GameInfo.Districts[GameInfo.Buildings[qi.entry.Hash].PrereqDistrict]
+          if pDistricts:IsPillaged(prereqDistrict.Index) and not IsHashInQueue(city, prereqDistrict.Hash) then
+            table.insert(removeUnits, i);
+          end
         end
       end
     end
