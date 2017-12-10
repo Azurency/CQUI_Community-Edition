@@ -3913,6 +3913,12 @@ function CheckAndReplaceQueueForUpgrades(city)
         prereqDistrict = GameInfo.Districts[GameInfo.Buildings[qi.entry.Hash].PrereqDistrict]
         if pDistricts:IsPillaged(prereqDistrict.Index) and not IsHashInQueue(city, prereqDistrict.Hash) then
           table.insert(removeUnits, i);
+=======
+        if GameInfo.Buildings[qi.entry.Hash].PrereqDistrict then
+          prereqDistrict = GameInfo.Districts[GameInfo.Buildings[qi.entry.Hash].PrereqDistrict]
+          if pDistricts:IsPillaged(prereqDistrict.Index) and not IsHashInQueue(city, prereqDistrict.Hash) then
+            table.insert(removeUnits, i);
+          end
         end
       end
     end
