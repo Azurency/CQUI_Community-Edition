@@ -129,6 +129,7 @@
     <File>Assets/UI/Popups/policyreminderpopup.lua</File>
     <File>Assets/UI/Popups/policyreminderpopup.xml</File>
     <File>Assets/UI/Popups/techciviccompletedpopup.lua</File>
+    <File>Assets/UI/Popups/wonderbuiltpopup.lua</File>
     <File>Assets/UI/Screens/civicstree.lua</File>
     <File>Assets/UI/Screens/governmentscreen.lua</File>
     <File>Assets/UI/Screens/governmentscreen.xml</File>
@@ -270,6 +271,7 @@
         <File>Assets/UI/Popups/mappinpopup.lua</File>
         <File>Assets/UI/Popups/mappinpopup.xml</File>
         <File>Assets/UI/Popups/techciviccompletedpopup.lua</File>
+        <File>Assets/UI/Popups/wonderbuiltpopup.lua</File>
         <File>Assets/UI/Screens/techtree.lua</File>
         <File>Assets/UI/Screens/civicstree.lua</File>
         <File>Assets/UI/Screens/governmentscreen.lua</File>

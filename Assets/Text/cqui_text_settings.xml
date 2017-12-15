@@ -186,6 +186,18 @@
     <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="en_US">
       <Text>Toggles the popup audio that plays whenever a new tech or civic is achieved. Is fully independent of the visual component and can play even when there is no visible popup.</Text>
     </Row>
+    <Row Tag="LOC_CQUI_POPUPS_WONDERBUILTVISUAL" Language="en_US">
+      <Text>Wonder popup movie</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_WONDERBUILTVISUAL_TOOLTIP" Language="en_US">
+      <Text>Toggles the popup movie that appears whenever a wonder is completed</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_WONDERBUILTAUDIO" Language="en_US">
+      <Text>Wonder popup audio</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_WONDERBUILTAUDIO_TOOLTIP" Language="en_US">
+      <Text>Toggles the popup audio that plays whenever a wonder is completed. Is fully independent of the visual component and can play even when there is no visible popup.</Text>
+    </Row>
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="en_US">
       <Text>Remember: CQUI settings are attached to individual saves![NEWLINE]If you'd like to change a setting by default, please read the info[NEWLINE]in cqui_settings.sql file within the [MOD INSTALL DIRECTORY]/CQUI/Assets directory</Text>
     </Row>
