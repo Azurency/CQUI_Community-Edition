@@ -3112,7 +3112,7 @@ function OnCycleUnitSelectionRequest()
           UI.DeselectAllUnits();
           UI.DeselectAllCities();
           UI.SelectUnit(unit);
-          UI.LookAtPlot(unit:GetX(), unit:GetY())
+          UI.LookAtPlot(unit:GetX(), unit:GetY());
         end
       end
     end
