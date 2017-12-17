@@ -687,6 +687,8 @@ function SelectUnit(unit)
   UI.DeselectAllUnits();
   UI.DeselectAllCities();
   UI.SelectUnit( unit );
+  -- Azurency : also look at the unit when selecting it.
+  UI.LookAtPlot(unit:GetX(), unit:GetY());
 end
 
 
