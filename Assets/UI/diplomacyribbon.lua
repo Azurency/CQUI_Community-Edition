@@ -208,9 +208,9 @@ function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean
   -- CQUI: Set score values for DRS display
   --ARISTOS: only if Diplo Banner ON
   if CQUI_IsDiploBannerOn then
-	instance.CQUI_ScoreOverall:SetText("[ICON_Capital]"..Players[playerID]:GetScore());
-	instance.CQUI_ScienceRate:SetText("[ICON_Science]"..Round(Players[playerID]:GetTechs():GetScienceYield(),0));
-	instance.CQUI_MilitaryStrength:SetText("[ICON_Strength]"..Players[playerID]:GetStats():GetMilitaryStrength());
+	  instance.CQUI_ScoreOverall:SetText("[ICON_Capital]"..Players[playerID]:GetScore());
+	  instance.CQUI_ScienceRate:SetText("[ICON_Science]"..Round(Players[playerID]:GetTechs():GetScienceYield(),0));
+	  instance.CQUI_MilitaryStrength:SetText("[ICON_Strength]"..Players[playerID]:GetStats():GetMilitaryStrength());
   end
 
   instance.Relationship:SetHide(not bShowRelationshipIcon);
