@@ -58,5 +58,14 @@
         </Grid>
       </SlideAnim>
   </Instance>
+  
+  <Instance Name="LeaderInstanceNormal">
+      <SlideAnim ID="LeaderContainer" Size="52,52" Offset="0,0" Begin="0,0" EndOffset="0,20" Cycle="Once" Stopped="1">
+				<MakeInstance Name="LeaderIcon45"/>
+				<AlphaAnim ID="ChatIndicatorFade" Cycle="Once" AlphaBegin="0.0" AlphaEnd="1.0" Speed="3" Stopped="1">
+					<Image ID="ChatIndicator" Hidden="0" Offset="35,0" Size="22,22" Texture="DiploRibbon_TypingIndicator"/>
+				</AlphaAnim>
+      </SlideAnim>
+  </Instance>
 
 </Context>

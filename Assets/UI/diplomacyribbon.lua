@@ -27,9 +27,11 @@ local m_scrollIndex			:number = 0; -- Index of leader that is supposed to be on 
 local m_scrollPercent		:number = 0; -- Necessary for scroll lerp
 local m_maxNumLeaders		:number = 0; -- Number of leaders that can fit in the ribbon
 local m_isScrolling			:boolean = false;
+local CQUI_IsDiploBannerOn = GameConfiguration.GetValue("CQUI_ShowDiploBanner"); --ARISTOS: controls the display of Diplo Banner
 local m_uiLeadersByID		:table = {};
 local m_uiChatIconsVisible	:table = {};
-local m_kLeaderIM			:table = InstanceManager:new("LeaderInstance", "LeaderContainer", Controls.LeaderStack);
+local m_kLeaderIM			:table = CQUI_IsDiploBannerOn and InstanceManager:new("LeaderInstance", "LeaderContainer", Controls.LeaderStack) 
+										or InstanceManager:new("LeaderInstanceNormal", "LeaderContainer", Controls.LeaderStack); --ARISTOS: to make Diplo Banner optional
 local m_PartialScreenHookBar: table;	-- = ContextPtr:LookUpControl( "/InGame/PartialScreenHooks/LaunchBacking" );
 local m_LaunchBar			: table;	-- = ContextPtr:LookUpControl( "/InGame/LaunchBar/LaunchBacking" );
 
@@ -46,6 +48,16 @@ function ResetLeaders()
   m_uiLeadersByID = {};
   m_kLeaderIM:ResetInstances();
 end
+
+--ARISTOS: Update Diplo Banner display status
+function CQUI_OnSettingsUpdate()
+  CQUI_IsDiploBannerOn = GameConfiguration.GetValue("CQUI_ShowDiploBanner");
+  ResetLeaders();
+  m_kLeaderIM = CQUI_IsDiploBannerOn and InstanceManager:new("LeaderInstance", "LeaderContainer", Controls.LeaderStack) 
+										or InstanceManager:new("LeaderInstanceNormal", "LeaderContainer", Controls.LeaderStack); --ARISTOS: to make Diplo Banner optional
+  UpdateLeaders();
+end
+LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
 
 -- ===========================================================================
 function OnLeaderClicked(playerID : number )
@@ -194,9 +206,12 @@ function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean
   end
 
   -- CQUI: Set score values for DRS display
-  instance.CQUI_ScoreOverall:SetText("[ICON_Capital]"..Players[playerID]:GetScore());
-  instance.CQUI_ScienceRate:SetText("[ICON_Science]"..Round(Players[playerID]:GetTechs():GetScienceYield(),0));
-  instance.CQUI_MilitaryStrength:SetText("[ICON_Strength]"..Players[playerID]:GetStats():GetMilitaryStrength());
+  --ARISTOS: only if Diplo Banner ON
+  if CQUI_IsDiploBannerOn then
+	instance.CQUI_ScoreOverall:SetText("[ICON_Capital]"..Players[playerID]:GetScore());
+	instance.CQUI_ScienceRate:SetText("[ICON_Science]"..Round(Players[playerID]:GetTechs():GetScienceYield(),0));
+	instance.CQUI_MilitaryStrength:SetText("[ICON_Strength]"..Players[playerID]:GetStats():GetMilitaryStrength());
+  end
 
   instance.Relationship:SetHide(not bShowRelationshipIcon);
   -- Set the tooltip
