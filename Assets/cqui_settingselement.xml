@@ -35,6 +35,9 @@
             <GridButton ID="ShowLuxuryCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_SHOWLUXURY" />
           </Stack>
 		  <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+            <GridButton ID="ShowDiploBannerCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_SHOWDIPLOBANNER" />
+          </Stack>
+		  <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
 			<GridButton ID="ShowPolicyReminderCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_SHOWPRD" />
           </Stack>
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">

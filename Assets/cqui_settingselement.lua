@@ -313,6 +313,7 @@ function Initialize()
   PopulateCheckBox(Controls.ProductionQueueCheckbox, "CQUI_ProductionQueue");
   RegisterControl(Controls.ProductionQueueCheckbox, "CQUI_ProductionQueue", UpdateCheckbox);
   PopulateCheckBox(Controls.ShowLuxuryCheckbox, "CQUI_ShowLuxuries");
+  PopulateCheckBox(Controls.ShowDiploBannerCheckbox, "CQUI_ShowDiploBanner");
   PopulateCheckBox(Controls.ShowCultureGrowthCheckbox, "CQUI_ShowCultureGrowth", Locale.Lookup("LOC_CQUI_CITYVIEW_SHOWCULTUREGROWTH_TOOLTIP"));
   RegisterControl(Controls.ShowCultureGrowthCheckbox, "CQUI_ShowCultureGrowth", UpdateCheckbox);
   PopulateCheckBox(Controls.SmartbannerCheckbox, "CQUI_Smartbanner", Locale.Lookup("LOC_CQUI_CITYVIEW_SMARTBANNER_TOOLTIP"));
