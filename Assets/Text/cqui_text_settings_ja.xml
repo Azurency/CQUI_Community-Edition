@@ -126,6 +126,9 @@
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="ja_JP">
       <Text>高級資源をトップパネルに表示</Text>
     </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWDIPLOBANNER" Language="ja_JP">
+      <Text>Show the Diplomacy Ribbon</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="ja_JP">
       <Text>表示</Text>
     </Row>

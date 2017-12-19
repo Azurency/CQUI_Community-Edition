@@ -86,6 +86,9 @@
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="fr_FR">
       <Text>Montrer les ressources de luxe dans le panel du haut</Text>
     </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWDIPLOBANNER" Language="fr_FR">
+      <Text>Show the Diplomacy Ribbon</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="fr_FR">
       <Text>Solide</Text>
     </Row>

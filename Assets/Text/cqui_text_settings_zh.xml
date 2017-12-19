@@ -102,6 +102,9 @@
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="zh_Hans_CN">
       <Text>在顶部面板显示奢侈</Text>
     </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWDIPLOBANNER" Language="zh_Hans_CN">
+      <Text>Show the Diplomacy Ribbon</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="zh_Hans_CN">
       <Text>固定</Text>
     </Row>

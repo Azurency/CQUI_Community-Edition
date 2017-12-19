@@ -108,6 +108,9 @@
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="ru_RU">
       <Text>Редкие ресурсы на верхней панели</Text>
     </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWDIPLOBANNER" Language="ru_RU">
+      <Text>Show the Diplomacy Ribbon</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="ru_RU">
       <Text>Сплошные</Text>
     </Row>

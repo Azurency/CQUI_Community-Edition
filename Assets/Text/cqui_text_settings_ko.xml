@@ -102,6 +102,9 @@
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="ko_KR">
       <Text>상단 패널에 사치 자원 표시</Text>
     </Row>
+    <Row Tag="LOC_CQUI_GENERAL_SHOWDIPLOBANNER" Language="ko_KR">
+      <Text>Show the Diplomacy Ribbon</Text>
+    </Row>
     <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="ko_KR">
       <Text>불투명</Text>
     </Row>
