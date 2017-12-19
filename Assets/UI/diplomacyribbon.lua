@@ -665,6 +665,7 @@ function Initialize()
   LuaEvents.WorldTracker_OnChatShown.Add(OnChatPanelShown);
   LuaEvents.LaunchBar_Resize.Add(RealizeSize);
   LuaEvents.PartialScreenHooks_Resize.Add(RealizeSize);
+  LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 
   Controls.NextButton:RegisterCallback( Mouse.eLClick, OnScrollLeft );
   Controls.PreviousButton:RegisterCallback( Mouse.eLClick, OnScrollRight );
