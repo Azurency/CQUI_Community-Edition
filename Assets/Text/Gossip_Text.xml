@@ -115,7 +115,7 @@
 			<Text>[ICON_Policy] {1_CivName} adopted the {2_SlotName} policy {3_PolicyName}.</Text>
 		</Replace>
 		<Replace Tag="LOC_GOSSIP_RECEIVE_DOW" Language="en_US">
-			<Text>[ICON_Declare_formal_war] {1_CivName} recieved a declaration of war from {2_OtherPlayer}!</Text>
+			<Text>[ICON_Declare_formal_war] {1_CivName} received a declaration of war from {2_OtherPlayer}!</Text>
 		</Replace>
 		<Replace Tag="LOC_GOSSIP_RELIC_RECEIVED" Language="en_US">
 			<Text>[ICON_Greatwork_religious] {1_CivName} gained new holy relic: {2_RelicName}.</Text>
