@@ -12,7 +12,7 @@
   
   <AlphaAnim                ID="CityPanelAlpha"       AlphaBegin="0" AlphaEnd="1" Speed="3"   Function="OutSine" Cycle="Once" Size="parent,parent">
     <SlideAnim              ID="CityPanelSlide"       Start="200,0" End="-175,0"     Speed="3.5" Function="OutSine" Cycle="Once" Size="parent,parent">
-      <Grid                 ID="WoodBacking"          Anchor="R,B" Offset="175,-5"  Size="500,162"          Texture="SelectionPanel_WoodBacking"  SliceCorner="51,50"  SliceSize="1,1" SliceTextureSize="148,156" ConsumeMouse="1">
+      <Grid                 ID="WoodBacking"          Anchor="R,B" Offset="175,-5"  Size="500,162"          Texture="SelectionPanel_WoodBacking"  SliceCorner="51,50"  SliceSize="1,1" SliceTextureSize="148,156" ConsumeMouse="0">
         <Grid               ID="PanelStackShadow"     Anchor="L,T" Offset="100,-100" Size="250,200" Style="DropShadow" />
         <Grid               ID="MainPanel"            Anchor="R,B" Offset="46,0"    Size="parent-78,parent-2" Texture="SelectionPanel_MainPanel"    SliceCorner="60,60" SliceTextureSize="263,160" />
 
