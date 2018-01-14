@@ -56,7 +56,7 @@
               <m_ParamName text="Opacity"/>
             </Element>
             <Element class="AssetObjects:FloatValue">
-              <m_fValue>2.000000</m_fValue>
+              <m_fValue>0.000000</m_fValue>
               <m_ParamName text="FlashRate"/>
             </Element>
           </m_Values>
@@ -83,7 +83,7 @@
               <m_ParamName text="Opacity"/>
             </Element>
             <Element class="AssetObjects:FloatValue">
-              <m_fValue>2.000000</m_fValue>
+              <m_fValue>0.300000</m_fValue>
               <m_ParamName text="FlashRate"/>
             </Element>
           </m_Values>
