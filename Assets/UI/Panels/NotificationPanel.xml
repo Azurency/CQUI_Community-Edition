@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd">
+	
+  <Image															Anchor="R,B" Texture="ActionPanel_Backing.dds"/>
+  <SlideAnim        ID="RailOffsetAnim" Anchor="R,B" Size="parent,parent" Begin="0,-70" End="0,0" Cycle="Once" Speed="1" Function="OutQuint" Stopped="1">
+    <SlideAnim				ID="RailAnim"			Anchor="R,B" Size="1,1"		Offset="0,60" Begin="0,-260" End="0,0" Cycle="Once" Speed="1" Function="OutQuint">
+      <Stack Anchor="R,B" Offset="-5,-5" StackGrowth="Down" Padding="0">
+        <Image Texture="ActionPanel_RailTopper.dds"  Size="39,41"/>
+        <Image ID="RailImage" Texture="ActionPanel_Rail"    Size ="39,89" StretchMode="Tile"/>
+      </Stack>
+    </SlideAnim>
+    <Grid AnchorSide="O,I" Offset="-2,0" Texture="Controls_ScrollBarBacking" Size="15,parent" SliceTextureSize="11,11" SliceCorner="5,5" Anchor="R,B" Color="111,101,94,180"/>
+    <Container				ID="Items"/>
+    <Container				ID="Groups"/>
+
+    <!-- The offset of the scrollpanel (300) is to accommodate the height of the ActionPanel AND Purchase Tile/Manage Citizens buttons -->
+    <!-- The relative size of the scrollpanel height (parent-285) is to accommodate the height of the ActionPanel AND the hieght of the top bar-->
+    <ScrollPanel			ID="ScrollPanel"	Anchor="R,B"	Offset="0,300"	Size="62,parent-280"				Vertical="1" AutoScollbar="1" FullClip="0" HasExternalChildren="1">
+			<Stack					ID="ScrollStack"	Anchor="R,B"	Offset="0,0"		StackGrowth="Top"		Padding="-10"  />
+			<ScrollBar			ID="ScrollBar"		Anchor="R,C"									Size="11,14"				AnchorSide="O,I"  Texture="Controls_ScrollbarV" StateOffsetIncrement="0,0" Vertical="1" SliceCorner="5,5" SliceTextureSize="11,14" Color="0,0,0,120" >
+        <Thumb																										Size="13,13"					Texture="Controls_ScrollBarHandleV_Brown" StateOffsetIncrement="0,0" SliceCorner="6,6" SliceTextureSize="13,13"/>
+      </ScrollBar>
+    </ScrollPanel>
+  </SlideAnim>
+
+
+
+  <!-- ====================================================================	-->
+  <!--	Instances																														-->
+  <!-- ====================================================================	-->
+
+  <Instance							Name="GroupInstance">
+    <Container					ID="Top"								Anchor="R,C"  Offset="0,0"	Size="96,62"	ConsumeMouse="1">
+      <Button						ID="GroupButton"				Anchor="R,C"	Offset="0,0"	Size="65,66"	Texture="ActionPanel_NotificationGrouped.dds" NoStateChange="1">
+        <Image            ID="Icon"               Size="40,40"  Texture="Notifications40" Anchor="C,C"/>
+      </Button>
+    </Container>
+  </Instance>
+
+  <Instance							Name="ItemInstance">
+    <Container					ID="Top"								Anchor="R,C"	Offset="0,0"		Size="62,72" >
+      <ScrollPanel			ID="Clip"								Anchor="L,C"	Offset="-43,0"	Size="2048,66" AnchorSide="O,O" Vertical="0">
+        <SlideAnim			ID="NotificationSlide"	Anchor="R,C"	Start="-250,0"	EndOffset="0,0"		Size="255,60" Speed="3" Cycle="Once" FunctionPower="3" Function="Root" Stopped="1">
+          <Grid					ID="ExpandedArea"				Anchor="L,C"	Size="250,70"		InnerPadding="35,0"										Texture="ActionPanel_Flyout" SliceTextureSize="64,64" SliceCorner="32,32" ConsumeMouse="0" d="0">
+
+						<Button			ID="LeftArrow"					Anchor="R,C"	Offset="7,5"		Size="19,23"				Texture="Controls_ArrowButtonLeft"						Hidden="1" ConsumeMouse="1"/>
+						<Button			ID="RightArrow"					Anchor="R,C"	Offset="-13,5"	Size="19,23"				Texture="Controls_ArrowButtonRight"						Hidden="1" ConsumeMouse="1"/>
+						
+						<Stack			ID="TitleStack"					Anchor="C,T"	Offset="0,3"	 Size="auto,26" StackGrowth="Right" Padding="4" >
+              <Label		ID="TitleCount"					Anchor="L,C"																			Style="FlairShadow26"				ColorEffect="0,0,0,255" FontStyle="Shadow" String="" Offset="-20,0" />
+              <Label		ID="TitleInfo"					Anchor="L,C"	Offset="0,1"												Style="NotificationHeader"	String="$ActionInfo$" />
+            </Stack>
+						
+            <Label			ID="Summary"						Anchor="C,T"	Offset="0,27"			LeadingOffset="1"                 Style="WhiteSemiBold12"     String="$ActionDetails$"/>
+            <Stack			ID="PagePipStack"				Anchor="C,B"	Offset="0,8"		StackGrowth="Right" Padding="1"																		Hidden="1"	/>
+            <Label			ID="Pages"							Anchor="C,B"	Offset="0,9" Style="FontFlair14" FontStyle="glow" Color0="208,212,217,255" Color1="0,0,0,200" String="#/#" Hidden="1"	/>
+          </Grid>
+        </SlideAnim>
+      </ScrollPanel>
+
+      <Button				ID="MouseInArea"						Anchor="R,C" Size="65,60" ConsumeMouse="0" d="0" />
+			<Button				ID="MouseOutArea"						Anchor="R,C" Size="321,60" Disabled="0" Hidden="1" d="0"  />
+
+			<Image						ID="IconBG"								Anchor="R,C"	Offset="0,0"	Size="65,66"	Texture="ActionPanel_Notification.dds" >
+        <Image            ID="Icon"               Size="40,40"  Texture="Notifications40" Anchor="C,C" Offset="-2,-2"/>
+      </Image>
+
+			<Image						ID="IconBGInvalidPhase"			Anchor="R,C"	Offset="0,0"	Size="65,66"  Texture="ActionPanel_Notification.dds" Color="Civ6Red" Hidden="1" />
+      <Image						ID="CountImage"							Anchor="R,B"	Offset="0,-4" Texture="ActionPanel_Badge" Hidden="0" >
+        <Label					ID="Count"									Anchor="C,C"	Offset="4,4"	Style="FontFlair14" String="3" />
+        <Button         ID="DismissStackButton"     Anchor="R,B"  Offset="5,5" Size="20,20"/>
+      </Image>
+    </Container>
+  </Instance>
+
+  <Instance							Name="ButtonInstance">
+    <Button							ID="Button"							Size="50,50"	Texture="ActionPanel_Notification2" NoStateChange="1">
+      <Image            ID="Icon"               Size="40,40"  Texture="Notifications40" Anchor="C,C"/>
+    </Button>
+  </Instance>
+
+  <Instance							Name="PipInstance">
+    <Image							ID="Pip"							Size="9,10"					Texture="Controls_Bolt" />
+  </Instance>
+
+</Context>
