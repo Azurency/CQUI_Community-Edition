@@ -9,7 +9,7 @@
 
   <AlphaAnim ID="WorldTrackerAlpha" AlphaBegin="0" AlphaEnd="1" Speed="3" Cycle="Once" Function="OutQuint" Stopped="0">
     <SlideAnim ID="WorldTrackerSlide" Start="0,-100" EndOffset="0,100" Function="OutQuint" Speed="3" Cycle="Once" Stopped="0">
-      <Stack              ID="PanelStack" StackGrowth="Down" Offset="0,75" ConsumeMouseOver="1">
+      <Stack              ID="PanelStack" StackGrowth="Down" Offset="0,75" ConsumeMouseOver="0">
         <Box  ID="WorldTrackerHeader" Color="40,35,25,230" Size="296,auto" AutoSizePadding="0,2">
           <Box Color="143,122,82,200" Anchor="L,B" Size="parent-1,2">
             <Box Color="0,0,0,200" Anchor="L,T" Size="parent-1,1" AnchorSide="I,O"/>
@@ -72,7 +72,7 @@
   <!-- ================================================================== -->
 
   <Instance           Name="ResearchInstance">
-    <Grid             ID="MainPanel"                                Offset="0,0" Size="296,96"          Texture="ResearchPanel_Frame" SliceCorner="80,80" SliceSize="1,1" SliceTextureSize="110,88" ConsumeMouseOver="1">
+    <Grid             ID="MainPanel"                                Offset="0,0" Size="296,96"          Texture="ResearchPanel_Frame" SliceCorner="80,80" SliceSize="1,1" SliceTextureSize="110,88" ConsumeMouseOver="0">
       <Box                                                          Offset="0,25" Size="parent,1"       Color="0,0,0,100"/>
       <Container                                                    Offset="-5,0" Size="parent,parent" >
         <FlipAnim     ID="MainGearAnim"                                                                 Texture="ResearchPanel_MeterFrameAnim" FrameCount="3" Columns="3" Speed="10" Size="40,40" Stopped="1"/>
@@ -99,7 +99,7 @@
   </Instance>
 
   <Instance           Name="CivicInstance">
-    <Grid             ID="MainPanel"                                Offset="0,0"    Size="296,96"         Texture="CivicPanel_Frame" SliceCorner="80,80" SliceSize="1,1" SliceTextureSize="110,88" ConsumeMouseOver="1">
+    <Grid             ID="MainPanel"                                Offset="0,0"    Size="296,96"         Texture="CivicPanel_Frame" SliceCorner="80,80" SliceSize="1,1" SliceTextureSize="110,88" ConsumeMouseOver="0">
       <Box                                                          Offset="0,25"   Size="parent,1"       Color="0,0,0,100"/>
       <Container                                                    Offset="-5,0"   Size="parent,parent" >
         <FlipAnim     ID="MainGearAnim"                                                                   Texture="CivicPanel_MeterFrameAnim" FrameCount="3" Columns="3" Speed="10" Size="40,40" Stopped="1"/>
