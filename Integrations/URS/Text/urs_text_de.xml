@@ -2,6 +2,7 @@
 <GameData>
   <LocalizedText>
     <!-- GERMAN -->
+
     <!-- HUD Common Text -->
     <Replace Tag="LOC_HUD_REPORTS_TAB_CURRENT_DEALS" Language="de_DE">
       <Text>Handelsübersicht</Text>
@@ -31,6 +32,12 @@
     </Replace>
     <Replace Tag="LOC_HUD_REPORTS_BONUSES_URS" Language="de_DE">
       <Text>Boni</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_REPORTS_PROMOTION_AVAILABLE" Language="de_DE">
+      <Text>Beförderung verfügbar</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_REPORTS_IN_FORMATION" Language="de_DE">
+      <Text>In Ausbildung</Text>
     </Replace>
   </LocalizedText>
 </GameData>

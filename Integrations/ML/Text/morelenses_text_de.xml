@@ -13,11 +13,14 @@
     <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_IMP" Language="de_DE">
       <Text>Res. geplündert Einzigartig</Text>
     </Replace>
+    <Replace Tag="LOC_TOOLTIP_RECOMFEATURE_LENS_HILL" Language="de_DE">
+      <Text>Vorgeschlagene Geländeverbesserungen</Text>
+    </Replace>
     <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_HILL" Language="de_DE">
       <Text>Hügel</Text>
     </Replace>
     <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_FEATURE" Language="de_DE">
-      <Text>Entfernbares Feature</Text>
+      <Text>Entfernbare Geländearten</Text>
     </Replace>
     <Replace Tag="LOC_TOOLTIP_BUILDER_LENS_GENERIC" Language="de_DE">
       <Text>Normales Feld</Text>
@@ -131,6 +134,23 @@
     </Replace>
     <Replace Tag="LOC_TOOLTIP_SCOUT_LENS_GHUT" Language="de_DE">
       <Text>Stammesdorf</Text>
+    </Replace>
+
+    <!-- Naturalist Lens -->
+    <Replace Tag="LOC_HUD_NATURALIST_LENS" Language="de_DE">
+      <Text>Naturforscher</Text>
+    </Replace>
+    <Replace Tag="LOC_HUD_NATURALIST_LENS_TOOLTIP" Language="de_DE">
+      <Text>Hebe geeignete Plätze zum Bau von Nationalparks hervor</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_NATURALIST_LENS_NPARK" Language="de_DE">
+      <Text>Gebiete bereit für einen Nationalpark</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_NATURALIST_LENS_OK" Language="de_DE">
+      <Text>Feld als Nationalpark tauglich, wenn umliegende Grundstücke verbessert werden</Text>
+    </Replace>
+    <Replace Tag="LOC_TOOLTIP_NATURALIST_LENS_FIXABLE" Language="de_DE">
+      <Text>Benötigt Verbesserung um zum Nationalpark zu werden</Text>
     </Replace>
 
   </LocalizedText>

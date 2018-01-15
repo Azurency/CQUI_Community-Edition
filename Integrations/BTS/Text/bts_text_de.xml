@@ -57,12 +57,28 @@
         <Text>Sort. nach</Text>
     </Replace>
 
+    <Replace Tag="LOC_TRADE_OVERVIEW_ORIGIN_AZ" Language="de_DE">
+      <Text>Start A-Z</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_OVERVIEW_ORIGIN_ZA" Language="de_DE">
+      <Text>Start Z-A</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_OVERVIEW_DESTINATION_AZ" Language="de_DE">
+      <Text>Ziel A-Z</Text>
+    </Replace>
+
+    <Replace Tag="LOC_TRADE_OVERVIEW_DESTINATION_ZA" Language="de_DE">
+      <Text>Ziel Z-A</Text>
+    </Replace>
+
     <Replace Tag="LOC_TRADE_EXPAND_ALL_BUTTON_TEXT" Language="de_DE">
-        <Text>Max</Text>
+        <Text>Alles aufklappen</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_COLLAPSE_ALL_BUTTON_TEXT" Language="de_DE">
-        <Text>Min</Text>
+        <Text>Alles zuklappen</Text>
     </Replace>
 
     <Replace Tag="LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP" Language="de_DE">
@@ -72,6 +88,7 @@
     <Replace Tag="LOC_TRADE_TURNS_REMAINING_ALT_HELP_TOOLTIP" Language="de_DE">
         <Text>Diese Route benötigt {1_TurnsRemaining}[Icon_Turn] bis zur Fertigstellung.</Text>
     </Replace>
+    
     <Replace Tag="LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER" Language="de_DE">
         <Text>----------------------------</Text>
     </Replace>
