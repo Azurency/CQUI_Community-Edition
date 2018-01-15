@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<Context>
+  <Container    ID="DebugStuff"       Anchor="L,T"  Size="100,20"  Offset="0,150" Hidden="1" >
+    <AlphaAnim  ID="a1"                             Size="20,20"  Offset="0,0," AlphaBegin="1" AlphaEnd="0" Speed="2" Cycle="Once">
+      <Box      ID="b1"                             Size="parent,parent" Color="255,50,50,255">
+        <Label  ID="t1"               Anchor="C,C"  FontSize="9" FontStyle="Stroke" Color="255,255,255,255" EffectColor="0,0,0,100" String="-1" />
+      </Box>
+    </AlphaAnim>
+    <AlphaAnim  ID="a2"                             Size="20,20"  Offset="30,0," AlphaBegin="1" AlphaEnd="0" Speed="2" Cycle="Once">
+      <Box      ID="b2"                             Size="parent,parent" Color="50,255,50,255">
+        <Label  ID="t2"               Anchor="C,C"  FontSize="9" FontStyle="Stroke" Color="255,255,255,255" EffectColor="0,0,0,100" String="-1" />
+      </Box>
+    </AlphaAnim>
+    <AlphaAnim  ID="a3"                             Size="20,20"  Offset="60,0," AlphaBegin="1" AlphaEnd="0" Speed="2" Cycle="Once">
+      <Box      ID="b3"                             Size="parent,parent" Color="50,50,255,255">
+        <Label  ID="t3"               Anchor="C,C"  FontSize="9" FontStyle="Stroke" Color="255,255,255,255" EffectColor="0,0,0,100" String="-1" />
+      </Box>
+    </AlphaAnim>
+  </Container>
+	
+  <Container                                        Size="parent,parent">
+    <Container  ID="LeftScreenEdge"    Anchor="L,T" Size="2,parent" Offset="0,0"              />
+    <Container  ID="RightScreenEdge"   Anchor="R,T" Size="2,parent" Offset="0,0"               />
+	<Container  ID="TopScreenEdge"     Anchor="L,T" Size="parent,2" Offset="0,0" />
+    <Container  ID="BottomScreenEdge"  Anchor="L,B" Size="parent,2" Offset="0,0"  />
+  </Container>
+	
+</Context>
