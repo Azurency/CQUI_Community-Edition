@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Context>
+  <Stack							ID="NotificationStack"		Anchor="R,B" Offset="57,50" StackGrowth="Up" />
+
+	<Container																		Anchor="R,B"									Size="190,215" Offset="2,10">
+    <Image																			Anchor="R,B" Offset="-7,25"		Texture="ActionPanel_LittleGear.dds" />
+    <Image																			Anchor="R,B" Offset="0,-6"	Texture="ActionPanel_WoodenRim.dds" ConsumeAllMouse="1" Size="177,183"/>
+		<Container				ID="EraToolTipArea1"			Anchor="R,B" Offset="0,45"		Size="30,105" />
+		<Container				ID="EraToolTipArea2"			Anchor="R,B" Offset="30,135"	Size="42,36"	/>
+		
+    <FlipAnim					ID="TickerAnim"						Anchor="R,B" Offset="0,-14"		Size="52,60" Texture="ActionPanel_ClickerAnim" FrameCount="10" Columns="5" Speed="30" Cycle="OneBounce"/>
+    
+    <AlphaAnim				ID="OverflowHandleAlpha"	AlphaBegin="0" AlphaEnd="1" Speed="5" Cycle="Once" Pause=".6" Hidden="1">
+      <SlideAnim			ID="OverflowHandleSlide"	Anchor="L,T"									Size="parent,parent" Begin="-30,20" End="0,0" Cycle="Once" Speed="1" Function="OutQuint" Pause=".6">
+        <Button																	Anchor="L,B" Offset="75,152"	Size="27,11" Texture="ActionPanel_OverflowHandle"  StateOffsetIncrement="0,0" />
+      </SlideAnim>		
+    </AlphaAnim>
+    <AlphaAnim				ID="TurnBlockerAlpha4"		AlphaBegin="0" AlphaEnd="1" Speed="5" Cycle="Once" Pause=".4" Hidden="1">
+      <SlideAnim			ID="TurnBlockerSlide4"		Anchor="L,T"									Size="parent,parent" Begin="-20,20" End="0,0" Cycle="Once" Speed="1" Function="OutQuint" Pause=".4">
+				<Image																	Anchor="L,B" Offset="29,120"	Size="60,60"	Texture="ActionPanel_TurnBlocker3"   StateOffsetIncrement="0,0" >
+          <Button	ID="TurnBlockerButton4"		Anchor="C,C"		 Offset="3,-2"							Size="40,40"  StateOffsetIncrement="0,0" Texture="Notifications40"/>
+				</Image>
+			</SlideAnim>		
+    </AlphaAnim>
+    <AlphaAnim				ID="TurnBlockerAlpha3"		AlphaBegin="0" AlphaEnd="1" Speed="5" Cycle="Once" Pause=".2" Hidden="1">
+      <SlideAnim			ID="TurnBlockerSlide3"		Anchor="L,T"									Size="parent,parent" Begin="0,30" End="0,0" Cycle="Once" Speed="1" Function="OutQuint" Pause=".2">
+				<Image																	Anchor="L,B" Offset="2,68"		Size="50,71"	Texture="ActionPanel_TurnBlocker2"   StateOffsetIncrement="0,0">
+          <Button	ID="TurnBlockerButton3"		Anchor="C,T" Offset="3,7" Size="40,40"  StateOffsetIncrement="0,0"  Texture="Notifications40" />
+				</Image>
+      </SlideAnim>		
+    </AlphaAnim>
+    <AlphaAnim				ID="TurnBlockerAlpha2"		AlphaBegin="0" AlphaEnd="1" Speed="5" Cycle="Once"						Hidden="1">
+      <SlideAnim			ID="TurnBlockerSlide2"		Anchor="L,T"								Size="parent,parent" Begin="10,20" End="0,0" Cycle="Once" Speed="1" Function="OutQuint" >
+				<Image																	Anchor="L,B" Offset="1,24"	Size="59,62"	Texture="ActionPanel_TurnBlocker1"   StateOffsetIncrement="0,0">
+					<Button	ID="TurnBlockerButton2"		Anchor="C,C" Offset="-1,-4" Size="40,40"  StateOffsetIncrement="0,0"  Texture="Notifications40" />
+				</Image>
+      </SlideAnim>
+    </AlphaAnim>
+		
+    <Image																						Anchor="R,B"	Offset="14,6" Texture="ActionPanel_Gold1.dds"  />
+		
+    <AlphaAnim			ID="TurnBlockerContainerAlpha"		AlphaBegin="0" AlphaEnd="1" Speed="5" Cycle="Once" Stopped="1"  Hidden="1">
+      <SlideAnim		ID="TurnBlockerContainerSlide"		Anchor="L,T"										Size="parent,parent"		Begin="0,20" End="0,0" Cycle="Once" Speed="1" Function="OutQuint" Stopped="1">
+        <Grid				ID="OverflowContainer"						Anchor="R,B"	Offset="0,168"		Size="230,130"	Texture="ActionPanel_TurnBlocker" NoStateChange="1" SliceCorner="20,25" SliceTextureSize="171,48" >
+          <Stack		ID="OverflowStack"								Offset="10,7" />
+        </Grid>
+      </SlideAnim>
+    </AlphaAnim>		
+    <AlphaAnim			ID="OverflowAlpha"								AlphaBegin="0" AlphaEnd="1" Speed="5" Cycle="Once" Pause=".6" Hidden="0">
+      <SlideAnim		ID="OverflowSlide"								Anchor="L,T"										Size="parent,parent" Begin="-30,20" End="0,0" Cycle="Once" Speed="1" Function="OutQuint"  Pause=".6">
+        <Image			ID="OverflowCheckboxGroup"																	Anchor="L,B"	Offset="82,134"		Size="50,50" Color="0,0,0,255" Texture="Controls_Glow2" >
+          <CheckBox	ID="OverflowCheckbox"							Anchor="C,T"	ButtonTexture="Controls_ButtonPlus_Up" ButtonSize="36,36" UseSelectedTextures="1" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0" />
+        </Image>
+      </SlideAnim>
+    </AlphaAnim>		
+	
+    <Button					ID="EndTurnButtonLabel"						Anchor="R,B"	Offset="-2,167"	Size="171,48"					Texture="ActionPanel_TurnBlocker.dds" NoStateChange="1">
+		<AlphaAnim Anchor="C,C" Cycle="Bounce" Speed="1" AlphaStart="1" AlphaEnd="0.2" Pause="3" >
+			<Label				ID="EndTurnText"									Align="C,C" Anchor="C,C"	Offset="0,-3"	WrapWidth="165"					Style="ActionPanelText"	String="LOC_ACTION_PANEL_END_TURN" />
+		</AlphaAnim>
+    </Button>
+  
+		<Image																						Anchor="R,B"																				Texture="ActionPanel_Gold2.dds" Offset="20,2" >
+
+			<Container ID="TurnTimerContainer" Size="148,147" Hidden="1">
+				<Container Size="138,41" Offset="12,-7" Anchor="C,B">
+					<Grid ID="TurnTimerLabelBG" Offset="0,0" Anchor="C,B" Size="40,41" Texture="UnitPanel_ActionGroupSlot" SliceCorner="5,0" SliceSize="2,41" SliceTextureSize="12,41"/>
+					<Label ID="TurnTimerLabel" Offset="0,7" Anchor="C,B" Style="ActionPanelText"/>
+				</Container>
+				<Container Size="138,138" Offset="14,-2" >
+					<Image ID="TurnTimerMeterBG" Anchor="C,C"	Texture="ActionPanel_MultiplayerTimerBacking"/>
+					<Meter ID="TurnTimerMeter" Anchor="C,C" Offset="0,-4"	Size="116,117" Texture="ActionPanel_MultiplayerTimerFill" Speed="0"/>
+				</Container>
+			</Container>
+			
+			<Image				ID="EraIndicator"																Offset="0,-15"	Rotate="90"						Texture="ActionPanel_EraIndicator"  />
+      <FlipAnim FrameCount="17" Texture="ActionPanel_TurnProcessing" Columns="8" Anchor="R,B" Size="102,102" Offset="15,32" Stopped="0"/>
+			<BoxButton				ID="EndTurnButton"								Anchor="R,B"	Offset="11,28"	Size="108,108"				Color="0,0,0,0" NoStateChange="1">
+        <Image      ID="CurrentTurnBlockerIcon"             Anchor="C,C" Texture="Notifications100" Size="100,100"/>
+				<AlphaAnim	ID="EndTurnButtonProductionAlpha" Anchor="C,C"									Size="parent,parent"  Cycle="Bounce" Speed="1" AlphaStart=".4" AlphaEnd="0" Hidden="1" >
+					<Image																			Anchor="C,C"																				Texture="ActionPanel_EndTurnFlash.dds" />
+				</AlphaAnim>
+				<AlphaAnim	ID="EndTurnButtonScienceAlpha"		Anchor="C,C"									Size="parent,parent"  Cycle="Bounce" Speed="1" AlphaStart=".4" AlphaEnd="0" Hidden="1" >
+					<Image																			Anchor="C,C"																				Texture="ActionPanel_EndTurnFlash.dds" />
+				</AlphaAnim>
+				<AlphaAnim	ID="EndTurnButtonFreeTechAlpha"		Anchor="C,C"									Size="parent,parent"  Cycle="Bounce" Speed="1" AlphaStart=".4" AlphaEnd="0" Hidden="1" >
+					<Image																			Anchor="C,C"																				Texture="ActionPanel_EndTurnFlash.dds" />
+				</AlphaAnim>
+				<AlphaAnim	ID="EndTurnButtonEndTurnAlpha"		Anchor="C,C"									Size="parent,parent"  Cycle="Once" Speed="1" AlphaStart=".4" AlphaEnd="0" Hidden="1" >
+					<Image																			Anchor="C,C"																				Texture="ActionPanel_EndTurnFlash.dds" />
+				</AlphaAnim>				
+			</BoxButton>
+
+			<AlphaAnim		ID="TutorialSlowTurnEnableAnim"			Anchor="R,B" Speed="0.5" Offset="-20,0" Size="180,220" AlphaStart="1" AlphaEnd="1" Cycle="Once" ConsumeAllMouse="1" Hidden="1" />
+			
+		</Image>
+		
+		<Tutorial	   			ID="TutNotificationPointer"	Style="TutorialContainer"			Anchor="L,T"	Offset="-40,0"	TriggerBy="TutorialNotificationPointer" >
+			<SlideAnim																			Start="0,0"		EndOffset="-20,0" Cycle="Bounce" Function="OutQuad" >
+				<Image																			Offset="0,0"	Size="58,44"		Texture="Tutorial_ArrowH" />
+			</SlideAnim>
+		</Tutorial>
+
+		<Tutorial   			ID="TutSelectEndTurnAction"	Style="TutorialContainer"			Anchor="C,T"	Offset="5,50"	AnchorSide="O,O"  TriggerBy="TutorialSelectEndTurn">
+			<Grid																																					Style="TutorialEndTurnCalloutGrid">
+				<Label																			Style="TutorialEndTurnHeaderText"					String="LOC_META_5_HEAD" />
+				<Label																			Style="TutorialEndTurnBodyText"	String="LOC_META_5_BODY" />
+			</Grid>
+			<SlideAnim																			Start="0,-15"		EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" Anchor="C,B">
+				<Image																			Offset="-20,-35"	Size="44,58"		Texture="Tutorial_ArrowV" />
+			</SlideAnim>
+		</Tutorial>
+
+		<Tutorial   			ID="TutSelectEndTurnActionB"	Style="TutorialContainer"			Anchor="C,T"	Offset="5,50"	AnchorSide="O,O"  TriggerBy="TutorialSelectEndTurnB" >
+			<Grid																																					Style="TutorialEndTurnCalloutGrid"  >
+				<Label																			Style="TutorialEndTurnHeaderText"					String="LOC_META_8_HEAD" />
+				<Label																			Style="TutorialEndTurnBodyText"	String="LOC_META_8_BODY" />
+			</Grid>
+		  <SlideAnim																			Start="0,-15"		EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" Anchor="C,B">
+			<Image																			Offset="-20,-35"	Size="44,58"		Texture="Tutorial_ArrowV" />
+		  </SlideAnim>
+		</Tutorial>
+		
+		<Tutorial   			ID="TutSelectEndTurnActionC"	Style="TutorialContainer"			Anchor="C,T"	Offset="5,50"	AnchorSide="O,O"  TriggerBy="TutorialSelectEndTurnC" >
+			<Grid																				Style="TutorialEndTurnCalloutGrid"  >
+				<Label																			Style="TutorialEndTurnHeaderText"		String="LOC_META_11_HEAD" />
+				<Label																			Style="TutorialEndTurnBodyText"			String="LOC_META_11_BODY" />
+			</Grid>
+			<SlideAnim																			Start="0,-20"		EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" Anchor="C,B">
+				<Image																			Offset="-20,-35"	Size="44,58"		Texture="Tutorial_ArrowV" />
+			</SlideAnim>
+		</Tutorial>
+
+		<Tutorial   			ID="TutSelectEndTurnActionD"	Style="TutorialContainer"			Anchor="C,T"	Offset="5, 50"	AnchorSide="O,O"  TriggerBy="TutorialSelectEndTurnD">
+			<Grid																																					Style="TutorialEndTurnCalloutGrid"  >
+				<Label																			Style="TutorialEndTurnHeaderText"					String="LOC_META_13_HEAD" />
+				<Label																			Style="TutorialEndTurnBodyText"	String="LOC_META_13_BODY" />
+			</Grid>
+		  <SlideAnim																			Start="0,-20"		EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" Anchor="C,B">
+			<Image																			Offset="-20,-35"	Size="44,58"		Texture="Tutorial_ArrowV" />
+		  </SlideAnim>
+		</Tutorial>
+		
+		<Tutorial   			ID="TutSelectEndTurnActionE"	Style="TutorialContainer"			Anchor="C,T"	Offset="5, 50"	AnchorSide="O,O"  TriggerBy="TutorialSelectEndTurnE">
+			<Grid																																				Style="TutorialEndTurnCalloutGrid"  >
+				<Label																			Style="TutorialEndTurnHeaderText"					String="LOC_META_19_HEAD" />
+				<Label																			Style="TutorialEndTurnBodyText"	String="LOC_META_19b_BODY" />
+			</Grid>
+      <SlideAnim																			Start="0,-10"		EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" Anchor="C,B">
+        <Image																			Offset="-20,-35"	Size="44,58"		Texture="Tutorial_ArrowV" />
+      </SlideAnim>
+		</Tutorial>
+
+		<Tutorial   			ID="TutSelectEndTurnActionF"	Style="TutorialContainer"			Anchor="C,T"	Offset="0,50"	AnchorSide="O,O"  TriggerBy="TutorialSelectEndTurnF"  >
+			<Grid																																					Style="TutorialEndTurnCalloutGrid"  >
+				<Label																			Style="TutorialEndTurnHeaderText"					String="LOC_META_27_HEAD" />
+				<Label																			Style="TutorialEndTurnBodyText"	String="LOC_META_27_BODY" />
+			</Grid>
+      <SlideAnim																			Start="0,0"		EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" Anchor="C,B">
+        <Image																			Offset="-20,-35"	Size="44,58"		Texture="Tutorial_ArrowV" />
+      </SlideAnim>
+		</Tutorial>
+
+		<Tutorial   			ID="TutSelectEndTurnActionI"	Style="TutorialContainer"			Anchor="C,T"	Offset="5, 50"	AnchorSide="O,O"  TriggerBy="TutorialSelectEndTurnI">
+			<Grid																																					Style="TutorialEndTurnCalloutGrid"   >
+				<Label																			Style="TutorialEndTurnHeaderText"					String="LOC_META_33b_HEAD" />
+				<Label																			Style="TutorialEndTurnBodyText" String="LOC_META_33b_BODY" />
+			</Grid>
+      <SlideAnim																			Start="0,-15"		EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" Anchor="C,B">
+        <Image																			Offset="-20,-35"	Size="44,58"		Texture="Tutorial_ArrowV" />
+      </SlideAnim>
+		</Tutorial>
+
+		<Tutorial   			ID="TutSelectEndTurnActionH"	Style="TutorialContainer"			Anchor="C,T"	Offset="5, 50"	AnchorSide="O,O"  TriggerBy="TutorialSelectEndTurnH"  >
+			<Grid																																					Style="TutorialEndTurnCalloutGrid"  >
+				<Label																			Style="TutorialEndTurnHeaderText"					String="LOC_META_34_HEAD" />
+				<Label																			Style="TutorialEndTurnBodyText"	String="LOC_META_34_BODY" />
+			</Grid>
+      <SlideAnim																			Start="0,0"		EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" Anchor="C,B">
+        <Image																			Offset="-20,-35"	Size="44,58"		Texture="Tutorial_ArrowV" />
+      </SlideAnim>
+		</Tutorial>
+
+		<Tutorial   			ID="TutSelectEndTurnActionG"	Style="TutorialContainer"			Anchor="C,T"	Offset="5, 50"	AnchorSide="O,O"  TriggerBy="TutorialSelectEndTurnG">
+			<Grid																																					Style="TutorialEndTurnCalloutGrid"  >
+        <Label																			Style="TutorialEndTurnHeaderText"					String="LOC_META_6_HEAD" />
+				<Label																			Style="TutorialEndTurnBodyText"	String="LOC_META_6_BODY" />
+			</Grid>
+      <SlideAnim																			Start="0,-15"		EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" Anchor="C,B">
+        <Image																			Offset="-20,-35"	Size="44,58"		Texture="Tutorial_ArrowV" />
+      </SlideAnim>
+		</Tutorial>
+
+		<Tutorial   			ID="TutSelectEndTurnActionIrrigation"	 Style="TutorialContainer"			Anchor="C,T"	Offset="5, 50" AnchorSide="O,O"  TriggerBy="TutorialSelectEndTurnIrrigation"  >
+			<Grid																																					Style="TutorialEndTurnCalloutGrid"  >
+				<Label																			Style="TutorialEndTurnHeaderText"					String="LOC_META_332_HEAD" />
+				<Label																			Style="TutorialEndTurnBodyText"	String="LOC_META_332_BODY" />
+      </Grid>
+      <SlideAnim																			Start="0,0"		EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" Anchor="C,B">
+        <Image																			Offset="-20,-35"	Size="44,58"		Texture="Tutorial_ArrowV" />
+      </SlideAnim>
+		</Tutorial>
+    <Image						ID="CountImage"							Anchor="R,B"	Offset="15,8" Texture="ActionPanel_TurnBlockerGroup" Hidden="1" >
+      <Label					ID="Count"									Anchor="C,C"	Offset="0,0"	Style="FontFlair18" String="2" />
+    </Image>
+	</Container>
+
+	
+  <!-- INSTANCES -->
+
+  <Instance				Name="TurnBlockerInstance">
+    <GridButton		ID="TurnBlockerButton"																						Size="210,50"	Style="ButtonLightWeight" >
+      <Stack			StackGrowth="Right">
+        <Image																						Size="50,50" Texture="ActionPanel_Notification2">
+          <Image ID="TurnBlockerIcon" Size="40,40" Anchor="C,C" Texture="Notifications40"/>
+        </Image>
+        <Label		ID="TurnBlockerLabel"								Anchor="L,C" WrapWidth="150"	String="LOC_META_331_HEAD"  Style="ActionPanelText" FontStyle="None" />
+      </Stack>
+    </GridButton>
+  </Instance>
+	
+</Context>
