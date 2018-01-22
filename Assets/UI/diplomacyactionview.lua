@@ -692,16 +692,16 @@ function PopulateStatementList( options: table, rootControl: table, isSubList: b
           LuaEvents.DiplomacyActionView_ConfirmWarDialog(ms_LocalPlayerID, ms_SelectedPlayerID, eWarType);
         end;
       end
-      
+
       --If denounce statement change callback to prompt first.
       if (selection.Key == "CHOICE_DENOUNCE")then
         local denounceFn = function() OnSelectInitialDiplomacyStatement( selection.Key ); end;
-        callback = function() 
+        callback = function()
           local playerConfig = PlayerConfigurations[ms_SelectedPlayer:GetID()];
           if (playerConfig ~= nil) then
 
             selectedCivName = Locale.Lookup(playerConfig:GetCivilizationShortDescription());
-            m_PopupDialog:Reset();					
+            m_PopupDialog:Reset();
             m_PopupDialog:AddText(Locale.Lookup("LOC_DENOUNCE_POPUP_BODY", selectedCivName));
             m_PopupDialog:AddButton(Locale.Lookup("LOC_CANCEL"), nil);
             m_PopupDialog:AddButton(Locale.Lookup("LOC_DIPLO_CHOICE_DENOUNCE"), denounceFn, nil, nil, "PopupButtonInstanceRed");
@@ -803,25 +803,25 @@ function GetInitialStatementOptions(parsedStatements, rootControl)
 
   if(table.count(discussOptions) > 0) then
     table.insert(topOptions, {
-      Text = Locale.Lookup("LOC_DIPLOMACY_DISCUSS").. " [ICON_List]", 
-      Callback = 
-        function() 
-          rootControl.RootStack:SetHide(true); 
-          rootControl.SubContainerStack:SetHide(false); 
-          PopulateStatementList( discussOptions, rootControl, true ); 
-        end, 
+      Text = Locale.Lookup("LOC_DIPLOMACY_DISCUSS").. " [ICON_List]",
+      Callback =
+        function()
+          rootControl.RootStack:SetHide(true);
+          rootControl.SubContainerStack:SetHide(false);
+          PopulateStatementList( discussOptions, rootControl, true );
+        end,
     });
   end
 
   if(table.count(warOptions) > 0) then
     table.insert(topOptions, {
-      Text = Locale.Lookup("LOC_DIPLOMACY_CASUS_BELLI").. " [ICON_List]", 
-      Callback = 
-        function() 
-          rootControl.RootStack:SetHide(true); 
-          rootControl.SubContainerStack:SetHide(false); 
-          PopulateStatementList( warOptions, rootControl, true ); 
-        end, 
+      Text = Locale.Lookup("LOC_DIPLOMACY_CASUS_BELLI").. " [ICON_List]",
+      Callback =
+        function()
+          rootControl.RootStack:SetHide(true);
+          rootControl.SubContainerStack:SetHide(false);
+          PopulateStatementList( warOptions, rootControl, true );
+        end,
       ToolTip = "LOC_DIPLOMACY_CASUS_BELLI_TT"
     });
   end
@@ -893,16 +893,33 @@ function OnActivateIntelRelationshipPanel(relationshipInstance : table)
   intelSubPanel.RelationshipIcon:SetOffsetX(relationshipPercent*intelSubPanel.RelationshipBar:GetSizeX());
   intelSubPanel.RelationshipIcon:SetVisState( GetVisStateFromDiplomaticState(iState) );
 
+  local relationshipScore = kStateEntry.RelationshipLevel;
+  local relationshipScoreText = Locale.Lookup("{1_Score : number #,###.##;#,###.##}", relationshipScore);
+
+  if (relationshipScore > 50) then
+    relationshipScoreText = "[COLOR_Civ6Green]" .. relationshipScoreText .. "[ENDCOLOR]";
+  elseif (relationshipScore < 50) then
+    relationshipScoreText = "[COLOR_Civ6Red]" .. relationshipScoreText .. "[ENDCOLOR]";
+  else
+    relationshipScoreText = "[COLOR_Grey]" .. relationshipScoreText .. "[ENDCOLOR]";
+  end
+
+  intelSubPanel.RelationshipScore:SetText(relationshipScoreText);
   local toolTips = selectedPlayerDiplomaticAI:GetDiplomaticModifiers(ms_LocalPlayerID);
   ms_IntelRelationshipReasonIM:ResetInstances();
+
+  local reasonsTotalScore = 0;
+  local hasReasonEntries = false;
 
   if(toolTips) then
     for i, tip in ipairs(toolTips) do
       local score = tip.Score;
       local text = tip.Text;
+      reasonsTotalScore = reasonsTotalScore + score;
 
       if(score ~= 0) then
         local relationshipReason = ms_IntelRelationshipReasonIM:GetInstance(intelSubPanel.RelationshipReasonStack);
+        hasReasonEntries = true;
 
         local scoreText = Locale.Lookup("{1_Score : number +#,###.##;-#,###.##}", score);
         if(score > 0) then
@@ -918,6 +935,22 @@ function OnActivateIntelRelationshipPanel(relationshipInstance : table)
         end
       end
     end
+  end
+
+  local reasonsTotalScoreText = Locale.Lookup("{1_Score : number +#,###.##;-#,###.##}", reasonsTotalScore);
+  if (reasonsTotalScore > 0) then
+    reasonsTotalScoreText = "[COLOR_Civ6Green]" .. reasonsTotalScoreText .. "[ENDCOLOR]";
+  elseif (reasonsTotalScore < 0) then
+    reasonsTotalScoreText = "[COLOR_Civ6Red]" .. reasonsTotalScoreText .. "[ENDCOLOR]";
+  else
+    reasonsTotalScoreText = "[COLOR_Grey]" .. reasonsTotalScoreText .. "[ENDCOLOR]";
+  end
+
+  if (hasReasonEntries) then
+    intelSubPanel.RelationshipReasonsTotal:SetHide(false);
+    intelSubPanel.RelationshipReasonsTotalScorePerTurn:SetText(reasonsTotalScoreText);
+  else
+    intelSubPanel.RelationshipReasonsTotal:SetHide(true);
   end
 
   intelSubPanel.RelationshipReasonStack:CalculateSize();
@@ -1090,12 +1123,12 @@ function OnActivateIntelGossipHistoryPanel(gossipInstance : table)
   --Only show the gossip generated in the last 100 turns.  Otherwise we can end up with a TON of gossip, and everything bogs down.
   local earliestTurn = iCurrentTurn - 100;
   local gossipStringTable = gossipManager:GetRecentVisibleGossipStrings(earliestTurn, ms_LocalPlayerID, ms_SelectedPlayerID);
-    
+
   if(#gossipStringTable > 0) then								 -- FF16~ Neccesary with new loop to prevent trying to reference items in empty gossip tables of civs you just met.
-    --for i, currTable:table in pairs(gossipStringTable) do  -- FF16~ The original loop delcaration seems to have a bug, it puts the most recent gossip entry at the bottom instead of the top. 
+    --for i, currTable:table in pairs(gossipStringTable) do  -- FF16~ The original loop delcaration seems to have a bug, it puts the most recent gossip entry at the bottom instead of the top.
     for i = 0, #gossipStringTable do 						 -- FF16~ I have delcared a simpler loop which seems to resolve the issue and correctly puts the list in the right order.
-          
-      currTable = gossipStringTable[i];		
+
+      currTable = gossipStringTable[i];
       local gossipString = currTable[1];
       local gossipTurn = currTable[2];
 
@@ -1104,9 +1137,9 @@ function OnActivateIntelGossipHistoryPanel(gossipInstance : table)
         if ((iCurrentTurn - gossipTurn) <= 10) then
           item = ms_IntelGossipHistoryPanelEntryIM:GetInstance(intelSubPanel.LastTenTurnsStack);
           bAddedLastTenTurnsItem = true;
-          if((iCurrentTurn-1) == gossipTurn) then -- FF16~ Originally this is checking if the current turn matches the gossip turn, but its not possible for any gossip to be generated on the active turn. 
+          if((iCurrentTurn-1) == gossipTurn) then -- FF16~ Originally this is checking if the current turn matches the gossip turn, but its not possible for any gossip to be generated on the active turn.
             item.NewIndicator:SetHide(false);	-- FF16~ These new gossip entry highlight icons would never be show as a result! Fixed by checking against previous turn instead.
-            m_GossipThisTurnCount = m_GossipThisTurnCount + 1; 
+            m_GossipThisTurnCount = m_GossipThisTurnCount + 1;
           else
             item.NewIndicator:SetHide(true);
           end
@@ -1131,7 +1164,7 @@ function OnActivateIntelGossipHistoryPanel(gossipInstance : table)
       end
     end
   end
-    
+
   if (not bAddedLastTenTurnsItem) then
     local item = ms_IntelGossipHistoryPanelEntryIM:GetInstance(intelSubPanel.LastTenTurnsStack);
     item.GossipText:LocalizeAndSetText("LOC_DIPLOMACY_GOSSIP_ITEM_NO_RECENT");
@@ -1348,7 +1381,7 @@ function AddOverviewAgendas(overviewInstance:table)
     local localPlayerDiplomacy = ms_LocalPlayer:GetDiplomacy();
     local iAccessLevel = localPlayerDiplomacy:GetVisibilityOn(ms_SelectedPlayerID);
 
-    -- What randomly assigned agendas does the selected player have? 
+    -- What randomly assigned agendas does the selected player have?
     -- Determine whether our Diplomatic Visibility allows us to see random agendas
     local bRevealRandom = false;
     for row in GameInfo.Visibilities() do
@@ -1358,16 +1391,16 @@ function AddOverviewAgendas(overviewInstance:table)
     end
     local kAgendaTypes = {};
     kAgendaTypes = ms_SelectedPlayer:GetAgendaTypes();
-    --GetAgendaTypes() returns ALL of my agendas, including the historical agenda. 
-    --To retrieve only the randomly assigned agendas, delete the first entry from the table.  
+    --GetAgendaTypes() returns ALL of my agendas, including the historical agenda.
+    --To retrieve only the randomly assigned agendas, delete the first entry from the table.
     table.remove(kAgendaTypes,1);
     local numRandomAgendas = table.count(kAgendaTypes);
     if (numRandomAgendas > 0) then
       if(bRevealRandom) then
-        -- If our visibility allows, display the agendas 
+        -- If our visibility allows, display the agendas
         -- At present, we are displaying ALL random agendas, if we have reached the SECRET level.
         local bFirst = true;
-        for i, agendaType in ipairs(kAgendaTypes) do 
+        for i, agendaType in ipairs(kAgendaTypes) do
           local randomAgenda = ms_IntelOverviewAgendaEntryIM:GetInstance(overviewAgendasInst.OverviewAgendasStack);
           randomAgenda.Text:LocalizeAndSetText( GameInfo.Agendas[agendaType].Name );
           randomAgenda.Text:LocalizeAndSetToolTip( GameInfo.Agendas[agendaType].Description );
@@ -1460,7 +1493,7 @@ function AddOverviewOurRelationship(overviewInstance:table)
       local iTheirDenounceTurn = Players[ms_SelectedPlayerID]:GetDiplomacy():GetDenounceTurn(ms_LocalPlayerID);
 
       -- *** REPLACE GOSSIP STRING WHEN POSSIBLE -- SHOULD BE STORED WITH DIPLO STRINGS ***
-      if (iOurDenounceTurn >= iTheirDenounceTurn) then  
+      if (iOurDenounceTurn >= iTheirDenounceTurn) then
         iRemainingTurns = iOurDenounceTurn + GlobalParameters.DIPLOMACY_DENOUNCE_TIME_LIMIT - Game.GetCurrentGameTurn();
         szDenounceTooltip = Locale.Lookup("LOC_GOSSIP_DENOUNCED", PlayerConfigurations[ms_LocalPlayerID]:GetCivilizationShortDescription(), PlayerConfigurations[ms_SelectedPlayerID]:GetCivilizationShortDescription());
       else
@@ -1487,7 +1520,7 @@ function AddOverviewOtherRelationships(overviewInstance:table)
   local localPlayerDiplomacy = ms_LocalPlayer:GetDiplomacy();
   local selectedPlayerConfig = PlayerConfigurations[ms_SelectedPlayer:GetID()];
   local leaderDesc = selectedPlayerConfig:GetLeaderName();
-  
+
   ms_RelationshipIconsIM:ResetInstances();
 
   -- Get who the selected player has met
@@ -1511,7 +1544,7 @@ function AddOverviewOtherRelationships(overviewInstance:table)
           -- Tool tip
           local leaderDesc = playerConfig:GetLeaderName();
           relationshipIcon.Background:LocalizeAndSetToolTip("LOC_DIPLOMACY_DEAL_PLAYER_PANEL_TITLE", leaderDesc, playerConfig:GetCivilizationDescription());
-          
+
           -- Show team ribbon for ourselves and civs we've met
           local teamID:number = playerConfig:GetTeam();
           if #Teams[teamID] > 1 then
@@ -1529,7 +1562,7 @@ function AddOverviewOtherRelationships(overviewInstance:table)
           relationshipIcon.Background:LocalizeAndSetToolTip("LOC_DIPLOPANEL_UNMET_PLAYER");
           relationshipIcon.TeamRibbon:SetHide(true);
         end
-      end				
+      end
     end
   end
 
@@ -1628,7 +1661,7 @@ function PopulatePlayerPanel(rootControl : table, player : table)
     AddIntelPanel(rootControl.IntelContainer);
 
     rootControl.RootStack:CalculateSize();
-    rootControl.RootStack:ReprocessAnchoring();	
+    rootControl.RootStack:ReprocessAnchoring();
   end
 end
 
@@ -1659,7 +1692,7 @@ function PopulateLeader(leaderIcon : table, player : table, isUniqueLeader : boo
 
         local iconName = "ICON_" .. leaderTypeName;
         leaderIcon:UpdateIcon(iconName, playerID, isUniqueLeader);
-        
+
         -- Configure button
         leaderIcon.Controls.SelectButton:SetVoid1(playerID);
         leaderIcon:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
@@ -1670,9 +1703,9 @@ function PopulateLeader(leaderIcon : table, player : table, isUniqueLeader : boo
         -- Set the gold per turn
         local goldYield = player:GetTreasury():GetGoldYield();
         if (goldYield > 0) then
-          leaderIcon.Controls.GoldPerTurn:SetText( "(+" .. string.format("%.1f", goldYield) .. " [ICON_Gold])" );			
+          leaderIcon.Controls.GoldPerTurn:SetText( "(+" .. string.format("%.1f", goldYield) .. " [ICON_Gold])" );
         else
-          leaderIcon.Controls.GoldPerTurn:SetText( "(" .. string.format("%.1f", goldYield) .. " [ICON_Gold])" );			
+          leaderIcon.Controls.GoldPerTurn:SetText( "(" .. string.format("%.1f", goldYield) .. " [ICON_Gold])" );
         end
         -- The selection background
         leaderIcon.Controls.SelectedBackground:SetHide(playerID ~= ms_SelectedPlayerID);
@@ -2393,8 +2426,8 @@ function OnDiplomacySessionClosed(sessionID)
 
   -- Hotload hack
   if m_isInHotload then
-    if ms_OtherPlayerID then 
-      -- OnTalkToLeader( ms_OtherPlayerID ); 
+    if ms_OtherPlayerID then
+      -- OnTalkToLeader( ms_OtherPlayerID );
     end
     m_isInHotload = false;
   end

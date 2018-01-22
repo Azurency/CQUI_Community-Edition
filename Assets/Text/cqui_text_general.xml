@@ -66,5 +66,10 @@
       <Text>You can change your policy this turn.</Text>
     </Row>
 
+    <!-- Diplomacy View -->
+    <Row Tag="LOC_CQUI_DIPLOMACY_VIEW_TOTAL_SCORE_PER_TURN_TEXT" Language="en_US">
+      <Text>Total</Text>
+    </Row>
+
   </LocalizedText>
 </GameData>

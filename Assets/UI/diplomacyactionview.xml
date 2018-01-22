@@ -310,13 +310,28 @@
           </Grid>
         </Container>
         <Grid Style="SubContainer3" Size="parent,auto" Color="DiplomacyPanelFrameColor">
-          <Stack StackGrowth="Bottom" Size="parent,0" Padding="5">
+          <Stack StackGrowth="Bottom" Size="parent,auto" Padding="5">
             <Label Style="HeaderSmallCaps" String="{LOC_DIPLOMACY_INTEL_RELATIONSHIP:upper}" Anchor="R,T" Color0="150,150,150,255"/>
-            <Label ID="RelationshipText" Style="HeaderLargeCaps" Anchor="R,T"/>
+            <Stack StackGrowth="Right" Size="0,0" Anchor="R,T">
+              <Label ID="RelationshipText" Style="HeaderLargeCaps"/>
+              <Label String="(" Offset="5,0"/>
+              <Label ID="RelationshipScore"/>
+              <Label String=")"/>
+            </Stack>
           </Stack>
         </Grid>
         <Label ID="RelationshipReasonsText" Style="HeaderSmallCaps" String="LOC_DIPLOMACY_INTEL_RELATIONSHIP_REASONS" Anchor="C,T" Color0="150,150,150,255" Align="Center" WrapWidth="250"/>
         <Stack ID="RelationshipReasonStack" StackGrowth="Down"/>
+        <Stack ID="RelationshipReasonsTotal" Hidden="1" Size="parent,auto" Offset="0,10">
+          <Container Size="parent, auto">
+            <Container Size="120,auto">
+              <Label ID="RelationshipReasonsTotalScorePerTurn" Style="FontNormal14" Anchor="R,T"/>
+            </Container>
+            <Container Size="parent-120,auto" Offset="125,0">
+              <Label String="{LOC_CQUI_DIPLOMACY_VIEW_TOTAL_SCORE_PER_TURN_TEXT:upper}" Color="Civ6Yellow" Style="FontNormal14" Anchor="L,T" Size="parent,parent"/>
+            </Container>
+          </Container>
+        </Stack>
         <Grid ID="NoReasons" Style="DecoGrid" Size="parent,auto" Hidden="1" Color="DiplomacyPanelFrameColor">
           <Label Style="FontNormal14" Anchor="C,C" String="LOC_DIPLOMACY_INTEL_RELATIONSHIP_NOTHING_ABJECT" WrapWidth="220" Align="Center" Color0="DiplomacyPanelFrameColor"/>
         </Grid>
