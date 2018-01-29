@@ -2362,7 +2362,7 @@ function Refresh()
             local pFailureReasons = reasons[CityCommandResults.FAILURE_REASONS];
             if pFailureReasons ~= nil and table.count( pFailureReasons ) > 0 then
               for i,v in ipairs(pFailureReasons) do
-                if("LOC_BUILDING_CONSTRUCT_IS_OCCUPIED" == v) then
+                if(Locale.Lookup("LOC_BUILDING_CONSTRUCT_IS_OCCUPIED") == v) then
                   disabledTooltip = Locale.Lookup("LOC_BUILDING_CONSTRUCT_IS_OCCUPIED");
                 end
               end
@@ -2498,7 +2498,19 @@ function Refresh()
 
       if ( not row.MustPurchase or cityBuildings:IsPillaged(row.Hash) ) and ( buildQueue:CanProduce( row.Hash, true ) or (doShow and not row.IsWonder) ) then
         local isCanStart, results      = buildQueue:CanProduce( row.Hash, false, true );
-          local isDisabled      :boolean = false; --not isCanStart;
+        local isDisabled      :boolean = false; --not isCanStart;
+
+        -- AZURENCY : check if the building is occupied by an enemy
+        if(not isCanStart and results) then
+          local pFailureReasons = results[CityCommandResults.FAILURE_REASONS];
+          if pFailureReasons ~= nil and table.count( pFailureReasons ) > 0 then
+            for i,v in pairs(pFailureReasons) do
+              if(Locale.Lookup("LOC_BUILDING_CONSTRUCT_IS_OCCUPIED") == v) then
+                disabledTooltip = Locale.Lookup("LOC_BUILDING_CONSTRUCT_IS_OCCUPIED");
+              end
+            end
+          end
+        end
 
         if(row.IsWonder or not doShow) then
           isDisabled = not isCanStart;
@@ -3915,6 +3927,19 @@ function CheckAndReplaceQueueForUpgrades(city)
           if pDistricts:IsPillaged(prereqDistrict.Index) and not IsHashInQueue(city, prereqDistrict.Hash) then
             table.insert(removeUnits, i);
           end
+        end
+      end
+
+      -- AZURENCY : check if the building is occupied by an enemy
+     isCanStart,results = buildQueue:CanProduce( qi.entry.Hash, false, true );
+     if(not isCanStart and results) then
+        local pFailureReasons = results[CityCommandResults.FAILURE_REASONS];
+        if pFailureReasons ~= nil and table.count( pFailureReasons ) > 0 then
+         for a,b in pairs(pFailureReasons) do
+           if(Locale.Lookup("LOC_BUILDING_CONSTRUCT_IS_OCCUPIED") == b) then
+             table.insert(removeUnits, i);
+           end
+         end
         end
       end
     end
