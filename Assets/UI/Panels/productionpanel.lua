@@ -3910,6 +3910,10 @@ function CheckAndReplaceQueueForUpgrades(city)
 
       -- AZURENCY : check if district required is pillaged and not in queue
       if (GameInfo.Buildings[qi.entry.Hash]) then
+        prereqDistrict = GameInfo.Districts[GameInfo.Buildings[qi.entry.Hash].PrereqDistrict]
+        if pDistricts:IsPillaged(prereqDistrict.Index) and not IsHashInQueue(city, prereqDistrict.Hash) then
+          table.insert(removeUnits, i);
+=======
         if GameInfo.Buildings[qi.entry.Hash].PrereqDistrict then
           prereqDistrict = GameInfo.Districts[GameInfo.Buildings[qi.entry.Hash].PrereqDistrict]
           if pDistricts:IsPillaged(prereqDistrict.Index) and not IsHashInQueue(city, prereqDistrict.Hash) then

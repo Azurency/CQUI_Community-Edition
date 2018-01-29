@@ -1850,9 +1850,21 @@ function ClearScoutLens()
   ClearModdedLens();
 end
 
+-- Nilt: Added for clearing barb lens when appropriate
+function CQUI_ClearBarbLens()
+  -- print("Clear Barbarian Lens Hexes");
+  ClearModdedLens();
+end
+
 -- Called when a scout is selected
 function ShowScoutLens()
   SetActiveModdedLens(MODDED_LENS_ID.SCOUT);
+  UILens.ToggleLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL);
+end
+
+-- Nilt: Called when military is selected in order to auto apply barbarian lens
+function CQUI_ShowBarbLens()
+  SetActiveModdedLens(MODDED_LENS_ID.BARBARIAN);
   UILens.ToggleLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL);
 end
 
@@ -3198,6 +3210,7 @@ function OnCityMadePurchase(owner:number, cityID:number, plotX:number, plotY:num
 end
 
 -- For modded lens on unit selection
+-- Nilt: Lines 3225, 3226, 3236, and 2337 added to auto apply Barbarian Lens for military units.  Intent is to add the uniques over time but first I want to play through a full game with just these for proper testing.
 function OnUnitSelectionChanged( playerID:number, unitID:number, hexI:number, hexJ:number, hexK:number, bSelected:boolean, bEditable:boolean )
   if playerID == Game.GetLocalPlayer() then
     local unitType = GetUnitType(playerID, unitID);
@@ -3209,6 +3222,8 @@ function OnUnitSelectionChanged( playerID:number, unitID:number, hexI:number, he
           ShowArchaeologistLens();
         elseif (unitType == "UNIT_SCOUT" or unitType == "UNIT_RANGER") and AUTO_APPLY_SCOUT_LENS then
           ShowScoutLens();
+        elseif (unitType == "UNIT_WARRIOR" or unitType == "UNIT_SPEARMAN" or unitType == "UNIT_WARRIOR_MONK" or unitType == "UNIT_PIKEMAN" or unitType == "UNIT_MUSKETMAN" or unitType == "UNIT_INFANTRY" or unitType == "UNIT_TANK" or unitType == "UNIT_MECHANIZED_INFANTRY" or unitType == "UNIT_MODERN_ARMOR" or unitType == "UNIT_SLINGER" or unitType == "UNIT_ARCHER" or unitType == "UNIT_CROSSBOWMAN" or unitType == "UNIT_FIELD_CANNON" or unitType == "UNIT_MACHINE_GUN" or unitType == "UNIT_HORSEMAN" or unitType == "UNIT_CAVALRY" or unitType == "UNIT_HELICOPTER" or unitType == "UNIT_HEAVY_CHARIOT" or unitType == "UNIT_KNIGHT" or unitType == "UNIT_QUADRIREME" or unitType == "UNIT_FRIGATE" or unitType == "UNIT_PRIVATEER" or unitType == "UNIT_BATTLESHIP" or unitType == "UNIT_MISSILE_CRUISER" or unitType == "UNIT_SUMERIAN_WAR_CART") then
+          CQUI_ShowBarbLens(); 
         end
       -- Deselection
       else
@@ -3218,6 +3233,8 @@ function OnUnitSelectionChanged( playerID:number, unitID:number, hexI:number, he
           ClearArchaeologistLens();
         elseif (unitType == "UNIT_SCOUT" or unitType == "UNIT_RANGER") and AUTO_APPLY_SCOUT_LENS then
           ClearScoutLens();
+		elseif (unitType == "UNIT_WARRIOR" or unitType == "UNIT_SPEARMAN" or unitType == "UNIT_WARRIOR_MONK" or unitType == "UNIT_PIKEMAN" or unitType == "UNIT_MUSKETMAN" or unitType == "UNIT_INFANTRY" or unitType == "UNIT_TANK" or unitType == "UNIT_MECHANIZED_INFANTRY" or unitType == "UNIT_MODERN_ARMOR" or unitType == "UNIT_SLINGER" or unitType == "UNIT_ARCHER" or unitType == "UNIT_CROSSBOWMAN" or unitType == "UNIT_FIELD_CANNON" or unitType == "UNIT_MACHINE_GUN" or unitType == "UNIT_HORSEMAN" or unitType == "UNIT_CAVALRY" or unitType == "UNIT_HELICOPTER" or unitType == "UNIT_HEAVY_CHARIOT" or unitType == "UNIT_KNIGHT" or unitType == "UNIT_QUADRIREME" or unitType == "UNIT_FRIGATE" or unitType == "UNIT_PRIVATEER" or unitType == "UNIT_BATTLESHIP" or unitType == "UNIT_MISSILE_CRUISER" or unitType == "UNIT_SUMERIAN_WAR_CART") then
+          CQUI_ClearBarbLens(); 
         elseif (unitType == "UNIT_SETTLER") then
           ClearSettlerLens();
         end
@@ -3276,6 +3293,8 @@ function OnUnitRemovedFromMap( playerID: number, unitID : number )
       ClearArchaeologistLens();
     elseif m_CurrentModdedLensOn == MODDED_LENS_ID.SCOUT then
       ClearScoutLens();
+	elseif m_CurrentModdedLensOn == MODDED_LENS_ID.BARBARIAN then
+      CQUI_ClearBarbLens();
     end
   end
 end
@@ -3290,6 +3309,21 @@ function OnUnitMoved( playerID:number, unitID:number )
       if m_CurrentModdedLensOn == MODDED_LENS_ID.SCOUT then
         ClearScoutLens();
         ShowScoutLens();
+      end
+    end
+  end
+end
+
+-- Nilt: Update the barbarian lens when a military unit moves, as the scout version does.  Edited comment from scout lens item to be more generic but remain here for future modders.
+function OnUnitMoved( playerID:number, unitID:number )
+  if playerID == Game.GetLocalPlayer() then
+    local unitType = GetUnitType(playerID, unitID);
+    if (unitType == "UNIT_WARRIOR" or unitType == "UNIT_SPEARMAN" or unitType == "UNIT_WARRIOR_MONK" or unitType == "UNIT_PIKEMAN" or unitType == "UNIT_MUSKETMAN" or unitType == "UNIT_INFANTRY" or unitType == "UNIT_TANK" or unitType == "UNIT_MECHANIZED_INFANTRY" or unitType == "UNIT_MODERN_ARMOR" or unitType == "UNIT_SLINGER" or unitType == "UNIT_ARCHER" or unitType == "UNIT_CROSSBOWMAN" or unitType == "UNIT_FIELD_CANNON" or unitType == "UNIT_MACHINE_GUN" or unitType == "UNIT_HORSEMAN" or unitType == "UNIT_CAVALRY" or unitType == "UNIT_HELICOPTER" or unitType == "UNIT_HEAVY_CHARIOT" or unitType == "UNIT_KNIGHT" or unitType == "UNIT_QUADRIREME" or unitType == "UNIT_FRIGATE" or unitType == "UNIT_PRIVATEER" or unitType == "UNIT_BATTLESHIP" or unitType == "UNIT_MISSILE_CRUISER" or unitType == "UNIT_SUMERIAN_WAR_CART") then
+      -- Refresh the lens, if already applied. Need this check so lens
+      -- does not apply when a unit is currently under a operation
+      if m_CurrentModdedLensOn == MODDED_LENS_ID.BARBARIAN then
+        CQUI_ClearBarbLens();
+        CQUI_ShowBarbLens();
       end
     end
   end
