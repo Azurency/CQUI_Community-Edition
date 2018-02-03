@@ -476,9 +476,12 @@ function CQUI_CheckPolicyCanBeChanged()
   if CQUI_PolicyReminderClosed or not CQUI_ShowPolicyReminder then
     return false
   end
+  
+  -- AURENCY : get the Index of the future tech
+  local futureCivicIndex = GameInfo["Civics"]["CIVIC_FUTURE_CIVIC"].Index
 
   local PRD:table	= pPlayer:GetCulture()
-  if(PRD:CivicCompletedThisTurn() and not PRD:PolicyChangeMade()) then
+  if(PRD:CivicCompletedThisTurn() and PRD:GetCivicCompletedThisTurn() ~= futureCivicIndex and not PRD:PolicyChangeMade()) then
     return true
   end
   return false
