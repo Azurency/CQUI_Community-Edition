@@ -3791,14 +3791,14 @@ function Initialize()
 
 
   -- UI Events
-  Controls.LeftScreenEdge:RegisterMouseEnterCallback( OnMouseBeginPanLeft );
-  Controls.LeftScreenEdge:RegisterMouseExitCallback( OnMouseStopPanLeft );
-  Controls.RightScreenEdge:RegisterMouseEnterCallback( OnMouseBeginPanRight );
-  Controls.RightScreenEdge:RegisterMouseExitCallback( OnMouseStopPanRight );
-  Controls.TopScreenEdge:RegisterMouseEnterCallback( OnMouseBeginPanUp );
-  Controls.TopScreenEdge:RegisterMouseExitCallback( OnMouseStopPanUp );
-  Controls.BottomScreenEdge:RegisterMouseEnterCallback( OnMouseBeginPanDown );
-  Controls.BottomScreenEdge:RegisterMouseExitCallback( OnMouseStopPanDown );
+  -- Controls.LeftScreenEdge:RegisterMouseEnterCallback( OnMouseBeginPanLeft );
+  -- Controls.LeftScreenEdge:RegisterMouseExitCallback( OnMouseStopPanLeft );
+  -- Controls.RightScreenEdge:RegisterMouseEnterCallback( OnMouseBeginPanRight );
+  -- Controls.RightScreenEdge:RegisterMouseExitCallback( OnMouseStopPanRight );
+  -- Controls.TopScreenEdge:RegisterMouseEnterCallback( OnMouseBeginPanUp );
+  -- Controls.TopScreenEdge:RegisterMouseExitCallback( OnMouseStopPanUp );
+  -- Controls.BottomScreenEdge:RegisterMouseEnterCallback( OnMouseBeginPanDown );
+  -- Controls.BottomScreenEdge:RegisterMouseExitCallback( OnMouseStopPanDown );
   ContextPtr:SetInputHandler( OnInputHandler, true );
   ContextPtr:SetRefreshHandler( OnRefresh );
   ContextPtr:SetAppRegainedFocusHandler( OnAppRegainedFocusHandler );
