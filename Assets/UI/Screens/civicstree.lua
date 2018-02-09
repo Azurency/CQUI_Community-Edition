@@ -465,13 +465,16 @@ function AllocateUI()
     -- end
 
 		-- Include extra icons in total unlocks
-		for _,iconData in pairs(g_ExtraIconData) do
-			if iconData.ModifierType == item.ModifierType then
-				numUnlocks = numUnlocks + 1;
-				hideDescriptionIcon = hideDescriptionIcon or iconData.HideDescriptionIcon;
-				table.insert(extraUnlocks, iconData);
-			end
-		end
+    if ( item.ModifierList ) then
+      for _,tModifier in ipairs(item.ModifierList) do
+        local tIconData :table = g_ExtraIconData[tModifier.ModifierType];
+        if ( tIconData ) then
+          numUnlocks = numUnlocks + 1;
+          hideDescriptionIcon = hideDescriptionIcon or tIconData.HideDescriptionIcon;
+          table.insert(extraUnlocks, {IconData=tIconData, ModifierTable=tModifier});
+        end
+      end
+    end
 
     -- Create node based on # of unlocks for this civic.
     if numUnlocks <= 8 then
@@ -523,9 +526,8 @@ function AllocateUI()
 		-- end
 
 		-- Initialize extra icons
-		for _,iconData in pairs(extraUnlocks) do
-			iconData:Initialize(node.UnlockStack, item);
-			-- extraIconDataCache[iconData.Context.CData] = item;
+    for _,tUnlock in pairs(extraUnlocks) do
+      tUnlock.IconData:Initialize(node.UnlockStack, tUnlock.ModifierTable);
     end
 
     -- What happens when clicked

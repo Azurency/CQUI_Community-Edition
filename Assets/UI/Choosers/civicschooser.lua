@@ -174,10 +174,13 @@ function AddAvailableCivic( playerID:number, kData:table )
   local extraUnlocks:table = {};
   local hideDescriptionIcon:boolean = false;
   local cachedModifier:table = m_CachedModifiers[kData.CivicType];
-  for _,iconData in pairs(g_ExtraIconData) do
-    if iconData.ModifierType == cachedModifier.ModifierType then
-      hideDescriptionIcon = hideDescriptionIcon or iconData.HideDescriptionIcon;
-      table.insert(extraUnlocks, iconData);
+  if ( cachedModifiers ) then
+    for _,tModifier in ipairs(cachedModifiers) do
+      local tIconData :table = g_ExtraIconData[tModifier.ModifierType];
+      if ( tIconData ) then
+        hideDescriptionIcon = hideDescriptionIcon or tIconData.HideDescriptionIcon;
+        table.insert(extraUnlocks, {IconData=tIconData, ModifierTable=tModifier});
+      end
     end
   end
   
@@ -186,8 +189,8 @@ function AddAvailableCivic( playerID:number, kData:table )
   numUnlockables = PopulateUnlockablesForCivic( playerID, kData.ID, unlockIM, nil, callback, hideDescriptionIcon );
   
   -- Initialize extra icons
-  for _,iconData in pairs(extraUnlocks) do
-    iconData:Initialize(kItemInstance.UnlockStack, cachedModifier);
+  for _,tUnlock in pairs(extraUnlocks) do
+    tUnlock.IconData:Initialize(kItemInstance.UnlockStack, tUnlock.ModifierTable);
     numUnlockables = numUnlockables + 1;
   end
   

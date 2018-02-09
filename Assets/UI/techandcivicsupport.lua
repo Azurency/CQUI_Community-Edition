@@ -732,19 +732,22 @@ function RealizeCurrentCivic( playerID:number, kData:table, kControl:table, cach
     -- Include extra icons in total unlocks
     local extraUnlocks:table = {};
     local hideDescriptionIcon:boolean = false;
-    local cachedModifier:table = cachedModifiers[kData.CivicType];
-    for _,iconData in pairs(g_ExtraIconData) do
-      if iconData.ModifierType == cachedModifier.ModifierType then
-        hideDescriptionIcon = hideDescriptionIcon or iconData.HideDescriptionIcon;
-        table.insert(extraUnlocks, iconData);
+    local civicModifiers:table = cachedModifiers[kData.CivicType];
+    if ( civicModifiers ) then
+      for _,tModifier in ipairs(civicModifiers) do
+        local tIconData :table = g_ExtraIconData[tModifier.ModifierType];
+        if ( tIconData ) then
+          hideDescriptionIcon = hideDescriptionIcon or tIconData.HideDescriptionIcon;
+          table.insert(extraUnlocks, {IconData=tIconData, ModifierTable=tModifier});
+        end
       end
     end
     
     numUnlockables = PopulateUnlockablesForCivic( playerID, kData.ID, techUnlockIM, nil, nil, hideDescriptionIcon );
     
     -- Initialize extra icons
-    for _,iconData in pairs(extraUnlocks) do
-      iconData:Initialize(kControl.UnlockStack, cachedModifier);
+    for _,tUnlock in pairs(extraUnlocks) do
+      tUnlock.IconData:Initialize(kControl.UnlockStack, tUnlock.ModifierTable);
       numUnlockables = numUnlockables + 1;
     end
     

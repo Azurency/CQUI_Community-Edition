@@ -103,30 +103,35 @@ end
 --  Move a unit to X,Y
 -- ===========================================================================
 function MoveUnitToPlot( kUnit:table, plotX:number, plotY:number )
-  if kUnit ~= nil then
-    local tParameters:table = {};
-    tParameters[UnitOperationTypes.PARAM_X] = plotX;
-    tParameters[UnitOperationTypes.PARAM_Y] = plotY;
+	if kUnit ~= nil then
+		local tParameters:table = {};
+		tParameters[UnitOperationTypes.PARAM_X] = plotX;
+		tParameters[UnitOperationTypes.PARAM_Y] = plotY;		
+		
+		-- Will this start a war?  Note, we are ignoring destinations in the for that will start a war, the unit will be allowed to move until they are adjacent.
+		-- We may want to also skip the war check if the move will take more than one turn to get to the destination.
+		local eAttackingPlayer:number = kUnit:GetOwner();
+		local eUnitComponentID:table = kUnit:GetComponentID();
+		local bWillStartWar = false;
+		
+		local results:table;
+		if (PlayersVisibility[eAttackingPlayer]:IsVisible(plotX, plotY)) then
+			results = CombatManager.IsAttackChangeWarState(eUnitComponentID, plotX, plotY);
+			if (results ~= nil and #results > 0) then
+				bWillStartWar = true;
+			end
+		end
 
-    -- Will this start a war?  Note, we are ignoring destinations in the for that will start a war, the unit will be allowed to move until they are adjacent.
-    -- We may want to also skip the war check if the move will take more than one turn to get to the destination.
-    local eAttackingPlayer:number = kUnit:GetOwner();
-    local eUnitComponentID:table = kUnit:GetComponentID();
-    local bWillStartWar = PlayersVisibility[eAttackingPlayer]:IsVisible(plotX, plotY) and CombatManager.IsAttackChangeWarState(eUnitComponentID, plotX, plotY);
-    if (bWillStartWar) then
-      local eDefendingPlayer = CombatManager.GetBestDefender(eUnitComponentID, plotX, plotY );
-      if (eDefendingPlayer == nil) then
-        local pPlot = Map.GetPlot(plotX, plotY);
-        eDefendingPlayer = pPlot:GetOwner();
-      end
-      -- Create the action specific parameters
-      if (eDefendingPlayer ~= nil and eDefendingPlayer ~= -1) then
-        LuaEvents.Civ6Common_ConfirmWarDialog(eAttackingPlayer, eDefendingPlayer, WarTypes.SURPRISE_WAR);
-      end
-    else
-      RequestMoveOperation(kUnit, tParameters, plotX, plotY);
-    end
-  end
+		if (bWillStartWar) then
+			local eDefendingPlayer = results[1];
+			-- Create the action specific parameters 
+			if (eDefendingPlayer ~= nil and eDefendingPlayer ~= -1) then
+				LuaEvents.Civ6Common_ConfirmWarDialog(eAttackingPlayer, eDefendingPlayer, WarTypes.SURPRISE_WAR);
+			end
+		else
+			RequestMoveOperation(kUnit, tParameters, plotX, plotY);
+		end
+	end			
 end
 
 -- ===========================================================================
