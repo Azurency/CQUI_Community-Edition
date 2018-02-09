@@ -392,12 +392,12 @@ end
 -- Event Handlers
 ----------------------------------------------------------------
 function OnMapPinPlayerInfoChanged( playerID :number )
-  PlayerTarget_OnPlayerInfoChanged( playerID, Controls.VisibilityPull, nil, g_visibilityTargetEntries, g_playerTarget, true);
+  PlayerTarget_OnPlayerInfoChanged( playerID, Controls.VisibilityPull, nil, nil, g_visibilityTargetEntries, g_playerTarget, true);
 end
 
 function OnLocalPlayerChanged()
   g_playerTarget.targetID = Game.GetLocalPlayer();
-  PopulateTargetPull(Controls.VisibilityPull, nil, g_visibilityTargetEntries, g_playerTarget, true, OnVisibilityPull);
+  PopulateTargetPull(Controls.VisibilityPull, nil, nil, g_visibilityTargetEntries, g_playerTarget, true, OnVisibilityPull);
 
   if( not ContextPtr:IsHidden() ) then
     UIManager:DequeuePopup( ContextPtr );
@@ -434,7 +434,7 @@ function Initialize()
   ContextPtr:SetInputHandler( OnInputHandler, true );
 
   PopulateIconOptions();
-  PopulateTargetPull(Controls.VisibilityPull, nil, g_visibilityTargetEntries, g_playerTarget, true, OnVisibilityPull);
+  PopulateTargetPull(Controls.VisibilityPull, nil, nil, g_visibilityTargetEntries, g_playerTarget, true, OnVisibilityPull);
   Controls.DeleteButton:RegisterCallback(Mouse.eLClick, OnDelete);
   Controls.DeleteButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.SendToChatButton:RegisterCallback(Mouse.eLClick, OnSendToChatButton);
