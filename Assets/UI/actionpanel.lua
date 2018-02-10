@@ -22,7 +22,6 @@ local TURN_TIMER_BAR_ACTIVE_COLOR   :number = 0xffffffff;
 local TURN_TIMER_BAR_INACTIVE_COLOR :number = 0xff0000ff;
 
 local MAX_BLOCKER_BUTTONS     :number = 4;  -- Number of buttons around big action button
-local ERA_DEGREES         :table = { 209,190,171,153,137,122,106,106 }; -- Degrees to place the era indicator
 local autoEndTurnOptionHash     :number = DB.MakeHash("AutoEndTurn");
 local cityRangeAttackTurnOptionHash	:number = DB.MakeHash("CityRangeAttackTurnBlocking");
 
@@ -103,6 +102,9 @@ g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_SPY_CHOOSE_ESCAPE_ROUTE]	= 
 g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_SPY_CHOOSE_DRAGNET_PRIORITY]={Message = chooseDragnetPriorityString,	ToolTip = chooseDragnetPriorityTip	, Icon="ICON_NOTIFICATION_SPY_CHOOSE_DRAGNET_PRIORITY"}
 g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_ARTIFACT]                   ={Message = needArtifactPlayerString,		ToolTip = needArtifactPlayerTip	, Icon="ICON_NOTIFICATION_DISCOVER_ARTIFACT"}
 
+g_kEras	= {};
+
+ERA_DEGREES	= { 209,190,171,153,137,122,106,106 };	-- Degrees to place the era indicator
 
 -- ===========================================================================
 --  MEMBERS
@@ -110,7 +112,6 @@ g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_ARTIFACT]                  
 local m_overflowIM      : table = InstanceManager:new( "TurnBlockerInstance",  "TurnBlockerButton", Controls.OverflowStack );
 local m_shiftsHeld      : number  = 0;
 local m_activeBlockerId   : number  = EndTurnBlockingTypes.NO_ENDTURN_BLOCKING; -- Blocking notification receiving attention
-local m_kEras       : table   = {};
 local m_kSoundsPlayed   : table   = {};                   -- Track which notifications have had their associate sound played
 local m_EndTurnId           = Input.GetActionId("EndTurn");       -- Hotkey
 local m_lastTurnTickTime  : number  = 0;                    -- When did we last make a tick sound for the turn timer?
@@ -337,18 +338,16 @@ function OnRefresh()
   SetEndTurnFlashing(iFlashingState);
 
   -- Set the era rotation and tooltip.
-  local eraIndex:number = pPlayer:GetEra() + 1;     -- Engine is 0 Based
-  Controls.EraIndicator:Rotate( ERA_DEGREES[eraIndex] );
-
-  for _,era in pairs(m_kEras) do
-    if era.Index == eraIndex then
+  local displayEra = GetDisplayEra();
+  Controls.EraIndicator:Rotate( ERA_DEGREES[displayEra] );
+  for _,era in pairs(g_kEras) do
+    if era.Index == displayEra then
       local description:string = Locale.Lookup("LOC_GAME_ERA_DESC", era.Description );
       Controls.EraToolTipArea1:SetToolTipString( description );
       Controls.EraToolTipArea2:SetToolTipString( description );
       break;
     end
   end
-
 end
 
 
@@ -595,6 +594,8 @@ function DoEndTurn( optionalNewBlocker:number )
       if(attackCity ~= nil) then
           LuaEvents.CQUI_Strike_Enter();
           LuaEvents.CQUI_CityRangeStrike(Game.GetLocalPlayer(), attackCity:GetID());
+          -- oerms: The following line has been introduced by vanilla Rise and Fall
+          UI.SetInterfaceMode(InterfaceModeTypes.CITY_RANGE_ATTACK);
       else
         error( "Unable to find selectable attack city while in CheckCityRangeAttackState()" );
       end
@@ -1080,14 +1081,23 @@ end
 --  Create a hash table of EraType to its chronological index.
 -- ===========================================================================
 function PopulateEraData()
-  m_kEras = {};
+  g_kEras = {};
   for row:table in GameInfo.Eras() do
-    m_kEras[row.EraType] = {
+    g_kEras[row.EraType] = {
       Description = Locale.Lookup(row.Name),
       Index   = row.ChronologyIndex,
     }
   end
 end
+
+function GetDisplayEra()
+  local pPlayer = Players[Game.GetLocalPlayer()];
+  if (pPlayer == nil) then
+    return 1;
+  end
+  return pPlayer:GetEra() + 1;			-- Engine is 0 Based
+end
+
 
 -- ===========================================================================
 --  Update turn timer meter
@@ -1202,8 +1212,6 @@ function OnTurnTimerUpdated(elapsedTime :number, maxTurnTime :number)
     else
       Controls.TurnTimerLabel:LocalizeAndSetText("-");
     end
-
-    Controls.TurnTimerLabelBG:SetSizeX(Controls.TurnTimerLabel:GetSizeX() + 14 );
   end
 end
 
