@@ -27,7 +27,7 @@
   <Stack					ID="InfoStack" Offset="10,2"  StackGrowth="Right" Padding="2">
     <Stack				ID="YieldStack"						  StackGrowth="Right" Padding="2"/>
     <Stack ID="StaticInfoStack" StackGrowth="Right" Padding="2">
-      <Grid				ID="TradeRoutes"					Style="SubContainerSmall" Size="48,24" ToolTip="LOC_HUD_TRADEROUTES_TOOLTIP">
+      <Grid				ID="TradeRoutes"					Style="SubContainerSmall2" Size="48,24" ToolTip="LOC_HUD_TRADEROUTES_TOOLTIP">
         <Stack		ID="TradeStack"						Anchor="L,C"	Offset="0,4" StackGrowth="Right">
           <Label	ID="TradeIcon"						Anchor="L,C"	Style="FontNormal10" ColorSet="ResGoldLabelCS" String="[ICON_TradeRouteLarge]" />
           <Label	ID="TradeRoutesActive"									Offset="0,-3" Style="FontNormal14" ColorSet="TopBarValueCS" String="?"	WrapWidth="45" />
@@ -42,7 +42,7 @@
       </Tutorial>
       </Grid>
 
-      <Grid		ID="Envoys" Style="SubContainerSmall" Size="48,24" ToolTip="LOC_TOP_PANEL_INFLUENCE">
+      <Grid		ID="Envoys" Style="SubContainerSmall2" Size="48,24" ToolTip="LOC_TOP_PANEL_INFLUENCE">
         <Stack			ID="EnvoysStack"				Anchor="L,C"	Offset="0,0" StackGrowth="Right" >
           <Image	  ID="EnvoysBacking" Size="24,24" Texture="Controls_MeterTinyBacking">
             <Label	Offset="1,1" Anchor="L,C"	Style="FontNormal14" ColorSet="TopBarValueCS" String="[ICON_Envoy]" />
@@ -52,14 +52,14 @@
         </Stack>
       </Grid>
 
-      <Grid ID="NuclearDevices" Style="SubContainerSmall" Size="48,24" ToolTip="LOC_WMD_NUCLEAR_DEVICE_NAME">
+      <Grid ID="NuclearDevices" Style="SubContainerSmall2" Size="48,24" ToolTip="LOC_WMD_NUCLEAR_DEVICE_NAME">
         <Stack StackGrowth="Right" Anchor="L,C">
           <Label String="[ICON_Nuclear]" Anchor="C,C" Offset="0,-1" />
           <Label ID="NuclearDeviceCount" Offset="2,2" String="0" Style="FontNormal14" Align="C,C" />
         </Stack>
       </Grid>
 
-      <Grid ID="ThermoNuclearDevices"  Style="SubContainerSmall" Size="48,24" ToolTip="LOC_WMD_THERMONUCLEAR_DEVICE_NAME">
+      <Grid ID="ThermoNuclearDevices"  Style="SubContainerSmall2" Size="48,24" ToolTip="LOC_WMD_THERMONUCLEAR_DEVICE_NAME">
         <Stack StackGrowth="Right" Anchor="L,C">
           <Label String="[ICON_ThermoNuclear]" Anchor="C,C" />
           <Label ID="ThermoNuclearDeviceCount" Offset="1,2" String="0" Style="FontNormal14"  Align="C,C" />
@@ -67,7 +67,7 @@
       </Grid>
     </Stack>
 
-    <Grid    ID="Resources" Style="SubContainerSmall"  Size="48,24">
+    <Grid    ID="Resources" Style="SubContainerSmall2"  Size="48,24">
       <Stack ID="ResourceStack" StackGrowth="Right" StackPadding="4" Anchor="L,C" />
     </Grid>
 
@@ -110,7 +110,7 @@
 
   <Instance Name="YieldButton_SingleLabel">
     <Container ID="Top" Size="auto,auto">
-      <GridButton	ID="YieldBacking" Size="auto,24" AutoSizePadding="1,0" Style="YieldBacking" Color="24,156,216,150">
+      <GridButton	ID="YieldBacking" Size="auto,24" AutoSizePadding="1,0" Style="YieldBacking" Color="24,156,216,255">
         <Stack		ID="YieldButtonStack" Anchor="L,C" Offset="0,2"	StackGrowth="Right">
           <Label	ID="YieldIconString" Anchor="L,B" Offset="0,4"/>
           <Label	ID="YieldPerTurn" Anchor="C,T" Style="FontNormal18" ColorSet="ResScienceLabelCS" FontStyle="Stroke" String="0"/>
@@ -121,7 +121,8 @@
 
   <Instance Name="YieldButton_DoubleLabel">
     <Container ID="Top" Size="auto,auto">
-      <GridButton	ID="YieldBacking" Size="auto,24" AutoSizePadding="1,0" Style="YieldBacking" Color="24,156,216,150">
+      <Image Anchor="C,C" Offset="45,0" Size="auto,24" Texture="TopBar_YieldBacking.dds"		/>
+      <GridButton	ID="YieldBacking" Size="auto,24" AutoSizePadding="1,0" Style="YieldBacking" Color="24,156,216,255">
         <Stack		ID="YieldButtonStack" Anchor="L,C" Offset="0,2"	StackGrowth="Right">
           <Label	ID="YieldIconString" Anchor="L,B" Offset="0,4"/>
           <Label	ID="YieldBalance" Anchor="C,T" Style="FontNormal18" ColorSet="ResFaithLabelCS" String="?"/>

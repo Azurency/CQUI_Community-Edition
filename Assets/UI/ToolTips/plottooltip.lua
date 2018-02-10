@@ -288,6 +288,9 @@ function View(data:table, bIsUpdate:boolean)
     local resourceTechType;
     local terrainType = data.TerrainType;
     local featureType = data.FeatureType;
+    
+    local valid_feature = false;
+		local valid_terrain = false;
 
     -- Are there any improvements that specifically require this resource?
     for row in GameInfo.Improvement_ValidResources() do
@@ -295,7 +298,6 @@ function View(data:table, bIsUpdate:boolean)
         -- Found one!  Now.  Can it be constructed on this terrain/feature
         local improvementType = row.ImprovementType;
         local has_feature = false;
-        local valid_feature = false;
         for inner_row in GameInfo.Improvement_ValidFeatures() do
           if(inner_row.ImprovementType == improvementType) then
             has_feature = true;
@@ -307,7 +309,6 @@ function View(data:table, bIsUpdate:boolean)
         valid_feature = not has_feature or valid_feature;
 
         local has_terrain = false;
-        local valid_terrain = false;
         for inner_row in GameInfo.Improvement_ValidTerrains() do
           if(inner_row.ImprovementType == improvementType) then
             has_terrain = true;
@@ -317,14 +318,28 @@ function View(data:table, bIsUpdate:boolean)
           end
         end
         valid_terrain = not has_terrain or valid_terrain;
+        
+        if( GameInfo.Terrains[terrainType].TerrainType  == "TERRAIN_COAST") then
+					if ("DOMAIN_SEA" == GameInfo.Improvements[improvementType].Domain) then
+						valid_terrain = true;
+					elseif ("DOMAIN_LAND" == GameInfo.Improvements[improvementType].Domain) then
+						valid_terrain = false;
+					end
+				else
+					if ("DOMAIN_SEA" == GameInfo.Improvements[improvementType].Domain) then
+						valid_terrain = false;
+					elseif ("DOMAIN_LAND" == GameInfo.Improvements[improvementType].Domain) then
+						valid_terrain = true;
+					end
+				end
 
-        if(valid_feature and valid_terrain) then
+        if(valid_feature == true and valid_terrain == true) then
           resourceTechType = GameInfo.Improvements[improvementType].PrereqTech;
           break;
         end
       end
     end
-    if (resourceTechType ~= nil) then
+    if (resourceTechType ~= nil and valid_feature == true and valid_terrain == true) then
       local localPlayer = Players[Game.GetLocalPlayer()];
       if (localPlayer ~= nil) then
         local playerTechs = localPlayer:GetTechs();

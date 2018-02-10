@@ -47,7 +47,7 @@ local COLUMN_WIDTH					:number = 220;			-- Space of node and line(s) after it to
 local COLUMNS_NODES_SPAN			:number = 2;			-- How many colunms do the nodes span
 local PADDING_TIMELINE_LEFT			:number = 275;
 local PADDING_PAST_ERA_LEFT			:number = 30;
-local PADDING_FIRST_ERA_INDICATOR	:number = -35;
+local PADDING_FIRST_ERA_INDICATOR	:number = -15;
 
 -- Graphic constants
 local PIC_BOLT_OFF        :string = "Controls_BoltOff";
@@ -61,7 +61,7 @@ local PIC_METER_BACK      :string = "Tree_Meter_GearBack";
 local PIC_METER_BACK_DONE   :string = "TechTree_Meter_Done";
 local SIZE_ART_ERA_OFFSET_X   :number = 40;     -- How far to push each era marker
 local SIZE_ART_ERA_START_X    :number = 40;     -- How far to set the first era marker
-local SIZE_MARKER_PLAYER_X    :number = 122;      -- Marker of player
+local SIZE_MARKER_PLAYER_X    :number = 42;      -- Marker of player
 local SIZE_MARKER_PLAYER_Y    :number = 42;     -- "
 local SIZE_MARKER_OTHER_X   :number = 34;     -- Marker of other players
 local SIZE_MARKER_OTHER_Y   :number = 37;     -- "
@@ -151,7 +151,8 @@ local m_uiConnectorSets   :table = {};
 local m_kFilters      :table = {};
 
 local m_shiftDown     :boolean = false;
-local m_ToggleTechTreeId;
+
+local m_lastPercent   :number = 0.1;
 
 -- CQUI variables
 local CQUI_halfwayNotified  :table = {};
@@ -360,7 +361,7 @@ function AllocateUI()
 
     local inst:table = m_kEraLabelIM:GetInstance();
     local eraMarkerx, _ = ColumnRowToPixelXY( eraData.PriorColumns + 1, 0) - PADDING_PAST_ERA_LEFT; -- Need to undo the padding in place that nodes use to get past the era marker column
-		if m_kEraLabelIM.m_iAllocatedInstances == 1 then
+		if eraData.Index == 1 then
 			eraMarkerx = eraMarkerx + PADDING_FIRST_ERA_INDICATOR;
 		end
 		inst.Top:SetOffsetX((eraMarkerx - (SIZE_NODE_X * 0.5)) * (1 / PARALLAX_SPEED));
@@ -609,10 +610,15 @@ function OnScroll( control:table, percent:number )
 
   -- Audio
   if percent==0 or percent==1.0 then
-    UI.PlaySound("UI_TechTree_ScrollTick_End");
+    if m_lastPercent == percent then
+      return;
+    end
+    UI.PlaySound("UI_TechTree_ScrollTick_End"); 
   else
     UI.PlaySound("UI_TechTree_ScrollTick");
   end
+  
+  m_lastPercent = percent;
 end
 
 
@@ -1676,20 +1682,6 @@ function OnTutorialScrollToNode( typeName:string )
 end
 
 -- ===========================================================================
---  Input Hotkey Event
--- ===========================================================================
-function OnInputActionTriggered( actionId )
-  if actionId == m_ToggleTechTreeId then
-        UI.PlaySound("Play_UI_Click");
-    if(ContextPtr:IsHidden()) then
-      LuaEvents.LaunchBar_RaiseTechTree();
-    else
-      OnClose();
-    end
-  end
-end
-
--- ===========================================================================
 --	Searching
 -- ===========================================================================
 function OnSearchCharCallback()
@@ -1852,12 +1844,6 @@ function Initialize()
   Events.ResearchQueueChanged.Add( OnResearchChanged );
   Events.ResearchCompleted.Add( OnResearchComplete );
   Events.SystemUpdateUI.Add( OnUpdateUI );
-
-  --  Hot Key Handling
-  m_ToggleTechTreeId = Input.GetActionId("ToggleTechTree");
-  if (m_ToggleTechTreeId ~= nil) then
-    Events.InputActionTriggered.Add( OnInputActionTriggered );
-  end
 
   -- Key Label Truncation to Tooltip
   TruncateStringWithTooltip(Controls.AvailableLabelKey, MAX_BEFORE_TRUNC_KEY_LABEL, Controls.AvailableLabelKey:GetText());
