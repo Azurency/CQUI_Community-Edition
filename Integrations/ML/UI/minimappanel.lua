@@ -2032,7 +2032,6 @@ end
 function ShowCitizenManagementArea(cityID)
   print_debug("Showing city manage area for " .. cityID)
   SetActiveAreaLens(AREA_LENS_ID.CITIZEN_MANAGEMENT)
-  UILens.ToggleLayerOn(LensLayers.HEX_COLORING_GOVERNMENT)
 
   local pCity:table;
   local localPlayer = Game.GetLocalPlayer()
@@ -2197,7 +2196,7 @@ function ClearAreaLens()
     m_tAreaPlotsColored = {}
   end
 
-  -- UILens.ClearLayerHexes( LensLayers.MAP_HEX_MASK );
+  UILens.ClearLayerHexes( LensLayers.HEX_COLORING_GOVERNMENT );
   if UILens.IsLayerOn( LensLayers.HEX_COLORING_GOVERNMENT ) then
     UILens.ToggleLayerOff( LensLayers.HEX_COLORING_GOVERNMENT );
   end
