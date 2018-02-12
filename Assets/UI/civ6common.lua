@@ -124,7 +124,6 @@ function MoveUnitToPlot( kUnit:table, plotX:number, plotY:number )
  
     if (bWillStartWar) then
       local eDefendingPlayer = results[1];
-      end
       -- Create the action specific parameters
       if (eDefendingPlayer ~= nil and eDefendingPlayer ~= -1) then
         LuaEvents.Civ6Common_ConfirmWarDialog(eAttackingPlayer, eDefendingPlayer, WarTypes.SURPRISE_WAR);
