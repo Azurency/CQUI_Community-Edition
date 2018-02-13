@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd" Style="FontNormal16" FontStyle="Shadow">
 
+  <Include File="CivilizationIcon" />
   <Include File="LeaderIcon"/>
   <Include File="PopupDialog" />
+
+  <!-- Button to intercept right mouse clicka and skip cutscenes -->
+  <Button ID="ScreenClickRegion" Size="parent,parent" Color="0,0,0,0"/>
+
   <!-- Containers for caching instances -->
   <Container ID="IconAndTextContainer" Hidden="1"/>
   <Container ID="TextContainer" Hidden="1"/>
@@ -25,19 +30,21 @@
       <Image Texture="Controls_Gradient" Size="parent,100" Anchor="L,B" Color="0,0,0,255" Offset="0,0" FlipY="1"/>
       <Image ID="PlayerPanelWindow" Size="parent,parent" Offset="0,0" Texture="Controls_BannerWide" StretchMode="TileY">
         <!-- The leader icon and title -->
-        <Container Anchor="C,T" Size="parent,88">
+        <Container Anchor="C,T" Size="auto,88">
+          <Container Anchor="L,C" Size="62,62" Offset="-62,0">
+            <MakeInstance ID="CivIcon" Name="CivilizationIconShaded44"/>
+            <Image Texture="Controls_CircleRim50" Size="50,50" Anchor="C,C" Offset="-1,-1" Color="255,255,255,50"/>
+          </Container>
           <Label ID="PlayerNameText" Anchor="C,C" Offset="0,-11" Align="C" Style="DiplomacyCivHeader"/>
           <Label ID="CivNameText" Anchor="C,C" Offset="0,13" Align="C" Style="DiplomacyCivHeader"/>
         </Container>
         <!-- The container for all the content below the header -->
         <Container ID="ContentContainer" Size="parent, parent-108" Offset="0,88">
-          <!-- A stack to contain the Content -->
-          <Stack ID="RootStack" StackGrowth="Bottom">
-            <!-- The content stack for the panel-->
-            <Container ID="IntelContainer" Size="parent,100"/>
-            <Stack ID="ContentStack" Anchor="C,T" StackGrowth="Bottom" Offset="0,-6" />
+          <Container ID="IntelContainer" Size="parent,100"/>
+          <Stack ID="RootOptionStack" Anchor="C,B" StackGrowth="Bottom">
+            <Stack ID="OptionStack" StackGrowth="Bottom"/>
+            <Stack ID="SubOptionStack" StackGrowth="Bottom"/>
           </Stack>
-          <Stack ID="SubContainerStack" Anchor="C,B" StackGrowth="Bottom" Offset="0,4" />
         </Container>
         <Grid Texture="Controls_BannerBottom" Anchor="L,B" Offset="0,-4" Size="514,32" SliceSize="1,30" SliceCorner="18,2" SliceTextureSize="37,32"/>
       </Image>
@@ -93,7 +100,7 @@
 
   <!-- Instance container for an action button. -->
   <Instance	Name="ActionButton">
-    <GridButton ID="Button" Size="300, 38" Style="ButtonLightWeightGrid" Anchor="C,T">
+    <GridButton ID="Button" Size="450, 38" Style="ButtonLightWeightGrid" Anchor="C,T">
       <Label ID="ButtonText" Anchor="C,C" Style="ButtonFont16" LeadingOffset="-4"/>
     </GridButton>
   </Instance>
@@ -152,7 +159,7 @@
 
   <Instance Name="IntelOverviewGossipInstance">
     <Container ID="Top" Size="parent,38">
-      <Image Offset="20,10" Size="16,16" IconSize="16" Icon="ICON_GOSSIP"/>
+      <Image Offset="20,10" Size="22,22" IconSize="22" Icon="ICON_GOSSIP"/>
       <Label Offset="60,10" Style="FontNormal16" String="LOC_DIPLOMACY_OVERVIEW_GOSSIP"/>
       <Image Offset="220,10" Size="16,16" IconSize="16" Icon="ICON_STATS_GENERIC_MODIFIER"/>
       <Label ID="GossipText" Offset="250,10" Style="FontNormal16"/>
@@ -169,7 +176,7 @@
 
   <Instance Name="IntelOverviewAccessLevelInstance">
     <Container ID="Top" Size="parent,38">
-      <Image Offset="20,10" Size="16,16" IconSize="16" Icon="ICON_ACCESS_LEVEL"/>
+      <Image Offset="20,10" Size="22,22" IconSize="22" Icon="ICON_ACCESS_LEVEL"/>
       <Label Offset="60,10" Style="FontNormal16" String="LOC_DIPLOMACY_OVERVIEW_ACCESS_LEVEL"/>
       <Button ID="AccessLevelIcon" Offset="215,8" Style="DiplomacyVisibilityIconSmall" Disabled="1"/>
       <Label ID="AccessLevelText" Offset="250,10" Style="FontNormal16" String="Limited"/>
@@ -178,7 +185,7 @@
 
   <Instance Name="IntelOverviewGovernmentInstance">
     <Container ID="Top" Size="parent,38">
-      <Image Offset="20,10" Size="16,16" IconSize="16" Icon="ICON_GOVERNMENT"/>
+      <Image Offset="20,10" Size="22,22" IconSize="22" Icon="ICON_GOVERNMENT"/>
       <Label Offset="60,10" Style="FontNormal16" String="LOC_DIPLOMACY_OVERVIEW_GOVERNMENT"/>
       <Image Offset="220,10" Size="16,16" IconSize="16" Icon="ICON_STATS_GENERIC_MODIFIER"/>
       <Label ID="GovernmentText" Offset="250,10" Style="FontNormal16" String="Limited"/>
@@ -186,8 +193,8 @@
   </Instance>
 
   <Instance Name="IntelOverviewAgendasInstance">
-    <Container ID="Top" Size="parent,38" AutoSize="V" AutoSizePadding="0,6">
-      <Image Offset="20,10" Size="16,16" IconSize="16" Icon="ICON_AGENDA"/>
+    <Container ID="Top" Size="parent,auto" AutoSizePadding="0,6">
+      <Image Offset="20,10" Size="22,22" IconSize="22" Icon="ICON_AGENDA"/>
       <Label Offset="60,10" Style="FontNormal16" String="LOC_DIPLOMACY_OVERVIEW_AGENDAS"/>
       <Stack ID="OverviewAgendasStack" Offset="0,10" StackGrowth="Down" StackPadding="6"/>
     </Container>
@@ -202,7 +209,7 @@
 
   <Instance Name="IntelOverviewAgreementsInstance">
     <Container ID="Top" Size="parent,38">
-      <Image Offset="20,10" Size="16,16" IconSize="16" Icon="ICON_AGREEMENT"/>
+      <Image Offset="20,10" Size="22,22" IconSize="22" Icon="ICON_AGREEMENT"/>
       <Label Offset="60,10" Style="FontNormal16" String="LOC_DIPLOMACY_OVERVIEW_AGREEMENTS"/>
       <Stack ID="AgreementStack" Offset="214,8" StackGrowth="Right" StackPadding="6"/>
     </Container>
@@ -210,7 +217,7 @@
 
   <Instance Name="IntelOverviewOurRelationshipInstance">
     <Container ID="Top" Size="parent,38">
-      <Image Offset="20,10" Size="16,16" IconSize="16" Icon="ICON_RELATIONSHIP"/>
+      <Image Offset="20,10" Size="22,22" IconSize="22" Icon="ICON_RELATIONSHIP"/>
       <Label Offset="60,10" Style="FontNormal16" String="LOC_DIPLOMACY_OVERVIEW_OUR_RELATIONSHIP"/>
       <Button ID="RelationshipIcon" Offset="214,6" Style="DiplomacyRelationshipPips" Disabled="1"/>
       <Label ID="RelationshipText" Offset="250,10" Style="FontNormal16" WrapWidth="140"/>
@@ -218,8 +225,8 @@
   </Instance>
 
   <Instance Name="IntelOverviewOtherRelationshipsInstance">
-    <Container ID="Top" Size="parent,38">
-      <Image Offset="20,10" Size="16,16" IconSize="16" Icon="ICON_RELATIONSHIPS"/>
+    <Container ID="Top" Size="parent,auto">
+      <Image Offset="20,10" Size="22,22" IconSize="22" Icon="ICON_RELATIONSHIPS"/>
       <Label Offset="60,10" Style="FontNormal16" String="LOC_DIPLOMACY_OVERVIEW_OTHER_RELATIONSHIPS"/>
       <Stack ID="RelationshipsStack" Anchor="C,T" Offset="0,34" StackGrowth="Right" Padding="-8" WrapGrowth="Bottom" WrapWidth="180"/>
     </Container>
@@ -258,7 +265,7 @@
   </Instance>
 
   <Instance	Name="IntelAccessLevelPanel">
-    <Container ID="Top" Anchor="C,T" Size="parent-40,parent">
+    <Container ID="Top" Anchor="C,T" Size="parent-40,auto">
       <Stack StackGrowth="Bottom">
         <Grid ID="AccessContribution" Style="SubContainerCallout" Size="parent-8,auto" Color="DiplomacyPanelFrameColor">
           <Label ID="AccessContributionText" Style="FontNormal14" Anchor="L,T" WrapWidth="274" Offset="4,0" />
@@ -275,19 +282,19 @@
         </Grid>
 
         <Stack Size="parent-8,0" Offset="4,auto">
-          <Label Style="FontNormal14" String="LOC_DIPLOMACY_INTEL_INFORMATION_SHARED_HEADER" Anchor="L,T" Color0="150,150,150,255" Align="Center" WrapWidth="250"/>
-          <Label ID="InformationSharedText" Style="FontNormal14"/>
+          <Label Style="FontNormal14" String="LOC_DIPLOMACY_INTEL_INFORMATION_SHARED_HEADER" Anchor="L,T" Color0="150,150,150,255" Align="Center" WrapWidth="parent"/>
+          <Label ID="InformationSharedText" Style="FontNormal14" WrapWidth="parent"/>
         </Stack>
         <Stack ID="NextAccessLevelStack" Size="parent-8,0" Offset="4,auto" Hidden="1">
           <Label Style="FontNormal14" String="LOC_DIPLOMACY_INTEL_NEXT_ACCESS_LEVEL_HEADER" Color0="150,150,150,255"/>
-          <Label ID="NextAccessLevelText" Style="FontNormal14" Color0="150,150,150,255"/>
+          <Label ID="NextAccessLevelText" Style="FontNormal14" Color0="150,150,150,255" WrapWidth="parent"/>
         </Stack>
 
         <Container ID="Advisor" Size="parent,auto" Hidden="1">
           <Grid Style="AdvisorWordBubble" Offset="0,4" Size="parent-32,auto" Color="41,51,59,200">
             <Stack StackGrowth="Down" Padding="0" Offset="10,10">
               <Label Style="FontNormal12" WrapWidth="200" String="LOC_DIPLOMACY_INTEL_GAIN_ACCESS_LEVEL_HEADER" Color0="150,150,150,255"/>
-              <Label ID="AdvisorText" Offset="20,0" Style="FontNormal12" WrapWidth="200" Color0="150,150,150,255"/>
+              <Label ID="AdvisorText" Offset="20,0" Style="FontNormal12" WrapWidth="parent-60" Color0="150,150,150,255"/>
             </Stack>
           </Grid>
           <Image ID="AdvisorIcon" Offset="0,10" Anchor="R,T" Size="32,32"/>
@@ -297,12 +304,12 @@
   </Instance>
 
   <Instance	Name="IntelRelationshipPanel">
-    <Container ID="Top" Anchor="C,T" Size="300,parent">
+    <Container ID="Top" Anchor="C,T" Size="460,parent">
       <Stack StackGrowth="Bottom" Size="parent,0" InnerPadding="8,8" Offset="0,10" Anchor="C,T" Padding="5">
-        <Container Size="parent, 15">
-          <Grid Size="292, 8" Texture="Controls_RoundedRectH" SliceTextureSize="12,8" SliceCorner="6,4" Color="DiplomacyPanelFrameColor">
-            <TextureBar ID="RelationshipBar" Size="286, 3" Anchor="C,C" Texture="Diplomacy_RelationshipBar" Direction="Right" Percent="0" Speed="10"/>
-            <AlphaAnim ID="FlashingBar" Cycle="Bounce" Speed=".5" AlphaBegin="0" AlphaEnd="1" Size="292,5" Anchor="C,C" Hidden="1">
+        <Container Size="parent,15">
+          <Grid Size="292,8" Anchor="C,T" Texture="Controls_RoundedRectH" SliceTextureSize="12,8" SliceCorner="6,4" Color="DiplomacyPanelFrameColor">
+            <TextureBar ID="RelationshipBar" Size="286,3" Anchor="C,C" Texture="Diplomacy_RelationshipBar" Direction="Right" Percent="0" Speed="10"/>
+            <AlphaAnim ID="FlashingBar" Cycle="Bounce" Speed=".5" AlphaBegin="0" AlphaEnd="1" Size="292,4" Anchor="C,C" Hidden="1">
               <Grid ID="WarBar" Texture="Controls_ScrollHandleH" SliceTextureSize="12,5" SliceCorner="6,3" Size="parent,parent" Color="231,53,52,255" Hidden="1"/>
               <Grid ID="AllyBar" Texture="Controls_ScrollHandleH" SliceTextureSize="12,5" SliceCorner="6,3" Size="parent,parent" Color="26,176,206,255" Hidden="1"/>
             </AlphaAnim>
@@ -320,7 +327,7 @@
             </Stack>
           </Stack>
         </Grid>
-        <Label ID="RelationshipReasonsText" Style="HeaderSmallCaps" String="LOC_DIPLOMACY_INTEL_RELATIONSHIP_REASONS" Anchor="C,T" Color0="150,150,150,255" Align="Center" WrapWidth="250"/>
+        <Label ID="RelationshipReasonsText" Style="HeaderSmallCaps" String="LOC_DIPLOMACY_INTEL_RELATIONSHIP_REASONS" Anchor="C,T" Color0="150,150,150,255" Align="Center" WrapWidth="350"/>
         <Stack ID="RelationshipReasonStack" StackGrowth="Down"/>
         <Stack ID="RelationshipReasonsTotal" Hidden="1" Size="parent,auto" Offset="0,10">
           <Container Size="parent, auto">
@@ -338,10 +345,10 @@
         <Container ID="Advisor" Size="parent,auto">
           <Grid Style="AdvisorWordBubble" Offset="0,4" Size="parent-32,auto" Color="41,51,59,200">
             <Stack StackGrowth="Down" Padding="0" Offset="10,10">
-              <Label Style="FontNormal12" WrapWidth="200" String="LOC_DIPLOMACY_INTEL_TO_RAISE_RELATIONSHIP" Color0="150,150,150,255"/>
-              <Label ID="AdvisorTextRaise" Offset="20,0" Style="FontNormal12" WrapWidth="200"/>
-              <Label Style="FontNormal12" WrapWidth="200" String="LOC_DIPLOMACY_INTEL_TO_LOWER_RELATIONSHIP" Color0="150,150,150,255"/>
-              <Label ID="AdvisorTextLower" Offset="20,0" Style="FontNormal12" WrapWidth="200"/>
+              <Label Style="FontNormal12" WrapWidth="340" String="LOC_DIPLOMACY_INTEL_TO_RAISE_RELATIONSHIP" Color0="150,150,150,255"/>
+              <Label ID="AdvisorTextRaise" Offset="20,0" Style="FontNormal12" WrapWidth="340"/>
+              <Label Style="FontNormal12" WrapWidth="340" String="LOC_DIPLOMACY_INTEL_TO_LOWER_RELATIONSHIP" Color0="150,150,150,255"/>
+              <Label ID="AdvisorTextLower" Offset="20,0" Style="FontNormal12" WrapWidth="340"/>
               <Box Color="0,0,0,0" Size="10,10"/>
             </Stack>
           </Grid>
@@ -353,10 +360,10 @@
 
   <Instance Name="IntelRelationshipReasonEntry">
     <Container ID="Background" Size="parent,auto">
-      <Container Size="120,auto">
+      <Container Size="50,auto">
         <Label ID="Score" Style="FontNormal14" Anchor="R,T"/>
       </Container>
-      <Container Size="parent-120,auto" Offset="125,0">
+      <Container Size="parent-50,auto" Offset="55,0">
         <Label ID="Text" Style="FontNormal14" Anchor="L,T" Size="parent,auto"/>
       </Container>
     </Container>
@@ -416,16 +423,16 @@
 
   <!-- Controls for when the local player is overview mode or auction mode. -->
   <Container ID="OverviewContainer" Size="parent,parent" ConsumeAllMouse="0">
-    <AlphaAnim ID="AlphaIn" AlphaBegin="0" AlphaEnd="1" Speed="2" Cycle="Once" Function="Root" Pause=".4">
-      <SlideAnim ID="SlideIn" Begin="-200,0" End="0,0" Speed="2" Cycle="Once" Function="Root" Pause=".4">
+    <AlphaAnim ID="AlphaIn" AlphaBegin="0" AlphaEnd="1" Speed="2" Cycle="Once" Function="Root" Pause="0.2">
+      <SlideAnim ID="SlideIn" Begin="-200,0" End="0,0" Speed="2" Cycle="Once" Function="Root" Pause="0.2">
         <!-- The container for the diplo ribbon instance -->
         <Container ID="DiplomacyRibbonContainer" Size="200,parent"/>
         <!-- The container for the player panel instance -->
         <Container ID="PlayerContainer" Offset="64,0" Size="360,parent"/>
       </SlideAnim>
     </AlphaAnim>
-    <AlphaAnim ID="NameFade" AlphaBegin="0" AlphaEnd="1" Speed="3" Cycle="Once" Function="Root"   Pause="1.5" Size="parent,parent">
-      <SlideAnim ID="NameSlide" Begin="-20,0" End="0,0" Speed="3" Cycle="Once" Function="Root"    Pause="1.5" Size="parent,parent">
+    <AlphaAnim ID="NameFade" AlphaBegin="0" AlphaEnd="1" Speed="3" Cycle="Once" Function="Root"   Pause="0.4" Size="parent,parent">
+      <SlideAnim ID="NameSlide" Begin="-20,0" End="0,0" Speed="3" Cycle="Once" Function="Root"    Pause="0.4" Size="parent,parent">
           <Stack StackGrowth="Down" Padding="3" Offset="10,25">
             <Label      ID="PlayerNameText" Style="DiplomacyCivHeaderLarge" ColorSet="BodyTextCool"/>
             <Label      ID="CivNameText" Style="DiplomacyCivHeaderLarge" Color0="Dark_Gray"/>
@@ -446,6 +453,10 @@
     <AlphaAnim		ID="LeaderResponse_Alpha"			AlphaBegin="0"	AlphaEnd="1"	Speed="2" Function="Root" Cycle="Once" >
       <SlideAnim	ID="LeaderResponse_Slide"			Begin="-10,0"		End="0,0"			Speed="2" Function="Root" Cycle="Once" >
         <Grid			ID="LeaderResponseGrid" Size="650,auto" Offset="50,50" Style="DiplomacyWordBubble" Color="255,255,255,200">
+          <Stack Anchor="I,O" Offset="0,-22" StackGrowth="Right" StackPadding="4">
+            <MakeInstance ID="LeaderResponseIcon" Name="CivilizationIcon22"/>
+            <Label ID="LeaderResponseName" Anchor="L,C" Style="HeaderSmallCaps" Color0="GoldMetalDark"/>
+          </Stack>
           <Stack Anchor="C,C" Size="parent,auto" StackPadding="16">
             <Label	ID="LeaderResponseText" Anchor="C,C" Align="C,C" String="LOC_DIPLO_GREETING_CLEO" WrapWidth="620" Style="DiplomacyDialogText"/>
             <Label	ID="LeaderReasonText" Anchor="C,C" Align="C,C" WrapWidth="620" Style="FontNormal18" Color="150,150,150,255"/>
@@ -475,11 +486,11 @@
 
   <!--The fade-to-black stuff -->
   <Container ID="BlackFade" Hidden="1">
-    <AlphaAnim ID="BlackFadeAnim" Begin="0" End="1" Speed="3" Cycle="Once" Stopped="1">
+    <AlphaAnim ID="BlackFadeAnim" Begin="0" End="1" Speed="3" Cycle="Once" Stopped="1" Speed="4">
       <Box Color="0,0,0,255" Size="parent,parent" ConsumeMouse="0"/>
     </AlphaAnim>
   </Container>
-  <AlphaAnim ID="FadeTimerAnim" Begin="0" End="1" Speed="3" Cycle="Once" Stopped="1"/>
+  <AlphaAnim ID="FadeTimerAnim" Begin="0" End="1" Speed="3" Cycle="Once" Stopped="1" Speed="4"/>
 
 
 
@@ -505,7 +516,7 @@
 
   <Instance	Name="IntelTabButtonInstance">
     <Button	ID="Button" Size="40,40"  Texture="LaunchBar_Hook_ButtonSmall.dds" Style="ButtonDisabledText">
-      <Image ID="ButtonIcon" Anchor="C,C" Size="16,16" IconSize="16" Icon="ICON_GOSSIP"/>
+      <Image ID="ButtonIcon" Anchor="C,C" Size="22,22" IconSize="22" Icon="ICON_GOSSIP"/>
     </Button>
   </Instance>
 
