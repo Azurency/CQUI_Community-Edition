@@ -1002,12 +1002,12 @@ function ViewTarget(data)
   -- Portrait Icons
   if(data.IconName ~= nil) then
     Controls.TargetUnitIconArea:SetHide(false); 
-		if not Controls.TargetUnitIcon:SetIcon(data.IconName) then
-			Controls.TargetUnitIcon:SetIcon(data.FallbackIconName)
+    if not Controls.TargetUnitIcon:SetIcon(data.IconName) then
+      Controls.TargetUnitIcon:SetIcon(data.FallbackIconName)
     end
   else
     Controls.TargetUnitIconArea:SetHide(true);
-	end
+  end
   if(data.CivIconName ~= nil) then
     local darkerBackColor = DarkenLightenColor(m_primaryColor,(-85),238);
     local brighterBackColor = DarkenLightenColor(m_primaryColor,90,255);
