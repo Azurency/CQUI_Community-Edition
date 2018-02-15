@@ -1371,7 +1371,6 @@ function ViewRelationships( kCityState:table )
 	Controls.InfluencedByButton:SetSelected( false );
 	Controls.QuestsButton:SetSelected( false );
   Controls.RelationshipsButton:SetSelected( true );
-  Controls.SingleViewStack:RegisterSizeChanged( OnSingleViewStackSizeChanged );
 
 	Controls.EnvoysSentArea:SetHide( true );
 	Controls.InfluenceArea:SetHide( true );
@@ -1839,7 +1838,8 @@ function Initialize()
   Controls.EnvoysSentButton:RegisterCallback( Mouse.eLClick, OnEnvoySentClick );
   Controls.InfluencedByButton:RegisterCallback( Mouse.eLClick, OnInfluencedByClick );
   Controls.QuestsButton:RegisterCallback( Mouse.eLClick, OnQuestsClick );
-	Controls.RelationshipsButton:RegisterCallback( Mouse.eLClick, OnRelationshipsClick );
+  Controls.RelationshipsButton:RegisterCallback( Mouse.eLClick, OnRelationshipsClick );
+  Controls.SingleViewStack:RegisterSizeChanged( OnSingleViewStackSizeChanged );
 
   -- UI Events
   ContextPtr:SetInitHandler( OnInit );
