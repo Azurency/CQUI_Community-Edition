@@ -600,6 +600,7 @@ end
 -- patterns.
 -------------------------------------------------------------------------------
 function FindChapterTextKey(SectionId, PageId, ChapterId, Tag)
+  if(SectionId and PageId and ChapterId and Tag) then
 
     local suffix =  "_CHAPTER_" .. ChapterId .. "_" .. Tag;
 
