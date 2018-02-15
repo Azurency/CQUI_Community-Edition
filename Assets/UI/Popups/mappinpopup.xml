@@ -16,7 +16,7 @@
               <Container Size="auto,auto" Anchor="C,T">
                 <Stack    ID="WindowContentsStack"  Anchor="L,T" StackGrowth="Bottom" Padding="0">
                   <!-- Name -->
-                  <Grid Style="EditTextButton" Anchor="C,T" Size="315,26">
+                  <Grid ID="PinFrame" Style="EditTextButton" Anchor="C,T" Size="300,26">
                     <EditBox ID="PinName" Style="EditTextArea" Size="270,22" Anchor="R,C" Offset="4,0" MaxLength="20" EditMode="0" KeepFocus="1"/>
                   </Grid>
                   <!-- Spacer -->

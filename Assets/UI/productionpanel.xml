@@ -113,7 +113,7 @@
                 <MakeInstance Name="TutorialBouncingArrowH"/>
               </Tutorial>
 
-              <Tutorial  ID="TutBuildCampus" Style="TutorialContainer"  Anchor="L,T" AnchorSide="O,I" Offset=" 10, 187" TriggerBy="TutorialBuildCampus">
+              <Tutorial  ID="TutBuildCampus" Style="TutorialContainer"  Anchor="L,T" AnchorSide="O,I" Offset=" 10, 212" TriggerBy="TutorialBuildCampus">
                 <Grid Style="TutorialCalloutGrid">
                   <Label Style="TutorialHeaderText" String="LOC_META_80_HEAD"/>
                   <Label Style="TutorialBodyText" String="LOC_META_80_BODY" />
@@ -121,7 +121,7 @@
                 <MakeInstance Name="TutorialBouncingArrowH"/>
               </Tutorial>
 
-              <Tutorial  ID="TutBuildLibrary" Style="TutorialContainer" Anchor="L,T" AnchorSide="O,I" Offset=" 10, 206" TriggerBy="TutorialBuildLibrary">
+              <Tutorial  ID="TutBuildLibrary" Style="TutorialContainer" Anchor="L,T" AnchorSide="O,I" Offset=" 10, 256" TriggerBy="TutorialBuildLibrary">
                 <Grid Style="TutorialCalloutGrid">
                   <Label Style="TutorialHeaderText" String="LOC_META_87_HEAD"/>
                 </Grid>

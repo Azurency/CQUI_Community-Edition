@@ -1,9 +1,9 @@
 -- WonderBuiltPopup
 -- Triggered from game event Event.WonderCompleted
 
---	***************************************************************************
---	MEMBERS
---	***************************************************************************
+--  ***************************************************************************
+--  MEMBERS
+--  ***************************************************************************
 local ms_eventID = 0;
 
 local ms_hidReligionLensLayer = false;
@@ -25,12 +25,12 @@ function OnWonderCompleted(locX, locY, buildingIndex, playerIndex, iPercentCompl
 
   local localPlayer = Game.GetLocalPlayer();
   if (localPlayer == PlayerTypes.NONE) then
-    return;	-- Nobody there to click on it, just exit.
+    return;  -- Nobody there to click on it, just exit.
   end
 
   -- No wonder popup if it is not YOU
   if (localPlayer ~= playerIndex ) then
-    return;	
+    return;  
   end
 
   -- No wonder popups in multiplayer games.
@@ -71,7 +71,7 @@ function OnWonderCompleted(locX, locY, buildingIndex, playerIndex, iPercentCompl
 
         UI.LookAtPlot(locX, locY);
 
-        LuaEvents.WonderRevealPopup_Shown();	-- Signal other systems (e.g., bulk hide UI)
+        LuaEvents.WonderRevealPopup_Shown();  -- Signal other systems (e.g., bulk hide UI)
 
         ms_eventID = ReferenceCurrentGameCoreEvent();
         UIManager:QueuePopup( ContextPtr, PopupPriority.Current);
@@ -82,8 +82,8 @@ function OnWonderCompleted(locX, locY, buildingIndex, playerIndex, iPercentCompl
   end
 
   -- Ensure the religion lens is disabled when we show the wonder popup
-  if UILens.IsLayerOn( LensLayers.HEX_COLORING_RELIGION ) then
-    UILens.ToggleLayerOff( LensLayers.HEX_COLORING_RELIGION );
+  if UILens.IsLensActive("Religion") then
+    UILens.SetActive("Default");
     ms_hidReligionLensLayer = true;
   else
     ms_hidReligionLensLayer = false;
@@ -103,7 +103,7 @@ function Resize()
 end
 
 function Close()
-  LuaEvents.WonderRevealPopup_Closed();	-- Signal other systems (e.g., bulk show UI)
+  LuaEvents.WonderRevealPopup_Closed();  -- Signal other systems (e.g., bulk show UI)
   -- Release our hold on the event
   ReleaseGameCoreEvent( ms_eventID );
   ms_eventID = 0;
@@ -111,7 +111,7 @@ function Close()
   UI.PlaySound("Stop_Wonder_Tracks");
 
   if ms_hidReligionLensLayer then
-    UILens.ToggleLayerOn( LensLayers.HEX_COLORING_RELIGION );
+    UILens.SetActive("Religion");
   end
 end
 
@@ -133,8 +133,8 @@ end
 
 
 -- ===========================================================================
---	Input
---	UI Event Handler
+--  Input
+--  UI Event Handler
 -- ===========================================================================
 function KeyHandler( key:number )
   if key == Keys.VK_ESCAPE then
@@ -154,13 +154,13 @@ function OnWorldRenderViewChanged()
   Controls.ReplayButton:SetEnabled(UI.GetWorldRenderView() == WorldRenderView.VIEW_3D);
 end
 
-function Initialize()	
+function Initialize()  
   if(not GameConfiguration.IsAnyMultiplayer()) then
     ContextPtr:SetInputHandler( OnInputHandler, true );
     Controls.Close:RegisterCallback(Mouse.eLClick, OnClose);
     Controls.ReplayButton:RegisterCallback(Mouse.eLClick, RestartMovie);
     Controls.ReplayButton:SetToolTipString(Locale.Lookup("LOC_UI_ENDGAME_REPLAY_MOVIE"));
-    Events.WonderCompleted.Add( OnWonderCompleted );	
+    Events.WonderCompleted.Add( OnWonderCompleted );  
     Events.WorldRenderViewChanged.Add( OnWorldRenderViewChanged );
     Events.SystemUpdateUI.Add( OnUpdateUI );
   end

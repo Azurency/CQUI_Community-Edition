@@ -67,7 +67,7 @@
                   <Label  ID="HousingMultiplier"          Anchor="R,C"                                      Style="CityPanelTextSmall"      String="-" />
                 </Grid>
                 <Grid                                                  Offset="0,40"                        Style="CityPanelLineItem">
-                  <Label                                                                                    Style="CityPanelTextSmall"    String="LOC_HUD_CITY_OCCUPATION_MULTIPLIER" />
+                  <Label  ID="OccupationLabel"                                                              Style="CityPanelTextSmall"    String="LOC_HUD_CITY_OCCUPATION_MULTIPLIER" />
                   <Label  ID="OccupationMultiplier"       Anchor="R,C"                                      Style="CityPanelTextSmall"      String="-" />
                 </Grid>
               </Grid>
@@ -334,7 +334,7 @@
             </Grid>
           </Grid>
         </Stack>
-        <ScrollBar Style="Slider_Blue" Anchor="L,C" AnchorSide="O,I"/>
+        <ScrollBar Style="Slider_Blue" Anchor="R,C" AnchorSide="O,I"/>
       </ScrollPanel>
       <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent-12,30" Color="8,34,56,255" Offset="0,60"/>
       <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent-12,20" Color="8,34,56,255" Offset="0,60"/>
@@ -405,7 +405,7 @@
         <Image    ID="Icon"               Offset="-2,-4" Texture="Buildings32" Size="32,32"/>
       </Container>
       <Label    ID="BuildingName"         Anchor="L,C" Offset="30,0" Style="CityPanelText" String="$BuildingName$" WrapWidth="120"/>
-      <Label    ID="BuildingYield"        Anchor="R,C" Offset="2,2"                       Style="CityPanelText" String="$BuildingYield$" WrapWidth="parent-130"/>
+      <Label    ID="BuildingYield"        Anchor="R,C" Offset="2,2"                       Style="CityPanelText" String="$BuildingYield$"/>
     </Grid>
   </Instance>
 
