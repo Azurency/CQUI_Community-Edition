@@ -1488,7 +1488,7 @@ end
 --  All notifications are about to be refreshed
 -- ===========================================================================
 function OnNotificationRefreshRequested()
-  ClearControls();
+  ClearNotifications();
   Controls.ScrollStack:DestroyAllChildren();
   m_genericItemIM:DestroyInstances();
   m_lastStackSize = 0;

@@ -249,6 +249,7 @@ function ConfirmPlaceDistrict(pInputStruct:table)
       if (not IsTutorialRunning()) then
         pPopupDialog:AddCancelButton(Locale.Lookup("LOC_NO"), nil);
         pPopupDialog:Open();
+      end
     end
   else
     ExitPlacementMode( true );
