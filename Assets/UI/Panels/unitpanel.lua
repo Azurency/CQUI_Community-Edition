@@ -922,8 +922,7 @@ function View(data)
   end
 
   -- Populate Earned Promotions UI
-  -- QCUI modified to not allow promotion when in city attack interface (?)
-  if (not UILens.IsLensActive("Religion") and data.Combat > 0 and (UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK) and (UI.GetInterfaceMode() ~= InterfaceModeTypes.DISTRICT_RANGE_ATTACK) and data.MaxExperience > 0) then
+  if (not UILens.IsLensActive("Religion") and data.Combat > 0 and data.MaxExperience > 0) then
     Controls.XPArea:SetHide(false);
     Controls.XPBar:SetPercent( data.UnitExperience / data.MaxExperience );
     Controls.XPArea:SetToolTipString( Locale.Lookup("LOC_HUD_UNIT_PANEL_XP_TT", data.UnitExperience, data.MaxExperience, data.UnitLevel+1 ) );
@@ -1005,10 +1004,10 @@ function ViewTarget(data)
     Controls.TargetUnitIconArea:SetHide(false); 
 		if not Controls.TargetUnitIcon:SetIcon(data.IconName) then
 			Controls.TargetUnitIcon:SetIcon(data.FallbackIconName)
-    else
-      Controls.TargetUnitIconArea:SetHide(true);
-		end
-  end
+    end
+  else
+    Controls.TargetUnitIconArea:SetHide(true);
+	end
   if(data.CivIconName ~= nil) then
     local darkerBackColor = DarkenLightenColor(m_primaryColor,(-85),238);
     local brighterBackColor = DarkenLightenColor(m_primaryColor,90,255);
@@ -3410,9 +3409,9 @@ function ReadTargetData(attacker)
   if (m_combatResults ~= nil) then
     -- initialize the target object data table
     InitTargetData();
-    local bShowTarget = false; 
+    local bShowTarget = false;
     -- grab the defender from the combat solution table
-    local targetObject = m_combatResults[CombatResultParameters.DEFENDER]; 
+    local targetObject = m_combatResults[CombatResultParameters.DEFENDER];
     if (targetObject == nil) then
       return false;
     end
@@ -3505,7 +3504,7 @@ function ReadTargetData(attacker)
 
     if (bShowTarget) then
       ViewTarget(m_targetData);
-      return true; 
+      return true;
     end
   end
 

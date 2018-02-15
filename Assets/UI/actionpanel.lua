@@ -594,8 +594,6 @@ function DoEndTurn( optionalNewBlocker:number )
       if(attackCity ~= nil) then
           LuaEvents.CQUI_Strike_Enter();
           LuaEvents.CQUI_CityRangeStrike(Game.GetLocalPlayer(), attackCity:GetID());
-          -- oerms: The following line has been introduced by vanilla Rise and Fall
-          UI.SetInterfaceMode(InterfaceModeTypes.CITY_RANGE_ATTACK);
       else
         error( "Unable to find selectable attack city while in CheckCityRangeAttackState()" );
       end

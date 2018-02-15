@@ -150,24 +150,24 @@ end
 
 -- ===========================================================================
 function AddScreenHooks()
-	if (m_isCityStatesUnlocked and HasCapability("CAPABILITY_CITY_STATES_VIEW")) then
-		AddScreenHook("LaunchBar_Hook_CityStates", "LOC_PARTIALSCREEN_CITYSTATES_TOOLTIP", function() OnToggleCityStates(); end);
-	end
-	if (m_isTradeRoutesUnlocked and HasCapability("CAPABILITY_TRADE_VIEW")) then
-		AddScreenHook("LaunchBar_Hook_Trade", "LOC_PARTIALSCREEN_TRADEROUTES_TOOLTIP", function() OnToggleTradeOverview(); end);
-	end
-	if (m_isEspionageUnlocked and HasCapability("CAPABILITY_ESPIONAGE_VIEW")) then
-		AddScreenHook("LaunchBar_Hook_Espionage", "LOC_PARTIALSCREEN_ESPIONAGE_TOOLTIP", function() OnToggleEspionage(); end);
-	end
+  if (m_isCityStatesUnlocked and HasCapability("CAPABILITY_CITY_STATES_VIEW")) then
+    AddScreenHook("LaunchBar_Hook_CityStates", "LOC_PARTIALSCREEN_CITYSTATES_TOOLTIP", function() OnToggleCityStates(); end);
+  end
+  if (m_isTradeRoutesUnlocked and HasCapability("CAPABILITY_TRADE_VIEW")) then
+    AddScreenHook("LaunchBar_Hook_Trade", "LOC_PARTIALSCREEN_TRADEROUTES_TOOLTIP", function() OnToggleTradeOverview(); end);
+  end
+  if (m_isEspionageUnlocked and HasCapability("CAPABILITY_ESPIONAGE_VIEW")) then
+    AddScreenHook("LaunchBar_Hook_Espionage", "LOC_PARTIALSCREEN_ESPIONAGE_TOOLTIP", function() OnToggleEspionage(); end);
+  end
 end
 
 -- ===========================================================================
 function AddScreenHook(texture:string, tooltip:string, callback:ifunction)
-	local screenHookInst:table = m_ScreenHookIM:GetInstance();
-	screenHookInst.ScreenHookImage:SetTexture(texture);
-	screenHookInst.ScreenHookButton:SetToolTipString(Locale.Lookup(tooltip));
-	screenHookInst.ScreenHookButton:RegisterCallback( Mouse.eLClick, callback );
-	screenHookInst.ScreenHookButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+  local screenHookInst:table = m_ScreenHookIM:GetInstance();
+  screenHookInst.ScreenHookImage:SetTexture(texture);
+  screenHookInst.ScreenHookButton:SetToolTipString(Locale.Lookup(tooltip));
+  screenHookInst.ScreenHookButton:RegisterCallback( Mouse.eLClick, callback );
+  screenHookInst.ScreenHookButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 end
 
 
@@ -233,6 +233,7 @@ function OnTurnBegin()
 
   CheckTradeCapacity(localPlayer);
   CheckSpyCapacity(localPlayer);
+  CheckCityStatesUnlocked(localPlayer); 
   
   Resize();
 end
@@ -312,7 +313,7 @@ function OnTutorialCloseAll()
 end
 
 -- ===========================================================================
--- CQUI - function needed for CQUI
+-- "Modular Screen" mod by Astog
 -- ===========================================================================
 function OnAddScreenHook(hookInfo:table)
   -- print("Build hook")
