@@ -1048,6 +1048,7 @@ function OnUnitSelectionChanged( playerID:number, unitID:number, hexI:number, he
   if playerID == Game.GetLocalPlayer() then
     if ContextPtr:IsHidden()==false then
       Close();
+      Controls.ToggleOverviewPanel:SetAndCall(false); 
     end
   end
 end
@@ -1116,8 +1117,6 @@ function OnTutorialOpen()
   Refresh();
 end
 
-
-
 -- ===========================================================================
 function OnBreakdown()
   LuaEvents.CityPanel_ShowBreakdownTab();
@@ -1152,7 +1151,6 @@ end
 function OnCitizensGrowth()
   LuaEvents.CityPanel_ShowCitizensTab();
 end
-
 
 -- ===========================================================================
 --  Set a yield to one of 3 check states.
@@ -1348,7 +1346,6 @@ function OnLocalPlayerChanged( eLocalPlayer:number , ePrevLocalPlayer:number )
   end
 end
 
-
 -- ===========================================================================
 --  Show/hide an area based on the status of a checkbox control
 --  checkBoxControl   A checkbox control that when selected is open
@@ -1375,7 +1372,6 @@ function SetupCollapsibleToggle( pCheckBoxControl:table, pButtonControl:table, p
     );
   end
 end
-
 
 -- ===========================================================================
 --  LUA Event
@@ -1496,6 +1492,14 @@ function Initialize()
   LuaEvents.ProductionPanel_Close.Add( OnProductionPanelClose );
   LuaEvents.Tutorial_CityPanelOpen.Add( OnTutorialOpen );
   LuaEvents.Tutorial_ContextDisableItems.Add( OnTutorial_ContextDisableItems );
+  LuaEvents.CityPanel_SetOverViewState.Add(function(isOpened)
+    Controls.ToggleOverviewPanel:SetCheck(isOpened);
+  end);
+  LuaEvents.CityPanel_ToggleManageCitizens.Add(function()
+    Controls.ManageCitizensCheck:SetAndCall(not Controls.ManageCitizensCheck:IsChecked());
+  end);
+  
+  -- CQUI Events
   LuaEvents.CQUI_GoNextCity.Add( CQUI_OnNextCity );
   LuaEvents.CQUI_GoPrevCity.Add( CQUI_OnPreviousCity );
   LuaEvents.CQUI_ToggleGrowthTile.Add( CQUI_ToggleGrowthTile );
