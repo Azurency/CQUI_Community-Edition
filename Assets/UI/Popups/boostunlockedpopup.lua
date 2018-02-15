@@ -1,16 +1,16 @@
 -- ===========================================================================
 --
---	Popup when a Tech/Civic Boost unlock occurs.
+--  Popup when a Tech/Civic Boost unlock occurs.
 --
 -- ===========================================================================
 include("SupportFunctions");
 
 -- ===========================================================================
---	CONSTANS / MEMBERS
+--  CONSTANS / MEMBERS
 -- ===========================================================================
-local m_queuedBoosts			:table	 = {};
-local m_isDisabledByTutorial	:boolean = false;
-local m_isPastLoadingScreen		:boolean = false;
+local m_queuedBoosts      :table   = {};
+local m_isDisabledByTutorial  :boolean = false;
+local m_isPastLoadingScreen    :boolean = false;
 
 -- ===========================================================================
 function ShowBoost(queueEntry:table)
@@ -31,7 +31,7 @@ function ShowBoost(queueEntry:table)
 end
 
 -- ===========================================================================
---	Raise a panel in center of screen showing researched tech boost.
+--  Raise a panel in center of screen showing researched tech boost.
 -- ===========================================================================
 function ShowTechBoost(techIndex, iTechProgress, eSource)
   -- Make sure we're the local player
@@ -141,7 +141,7 @@ function ShowTechBoost(techIndex, iTechProgress, eSource)
 end
 
 -- ===========================================================================
---	Raise a panel in center of screen showing researched civic boost.
+--  Raise a panel in center of screen showing researched civic boost.
 -- ===========================================================================
 function ShowCivicBoost(civicIndex, iCivicProgress, eSource)
 -- Make sure we're the local player
@@ -315,9 +315,9 @@ function ShowNextQueuedPopup()
 end
 
 -- ===========================================================================
-function OnClose()	
-	-- Dequeue popup from UI mananger
-	UIManager:DequeuePopup( ContextPtr );
+function OnClose()  
+  -- Dequeue popup from UI mananger
+  UIManager:DequeuePopup( ContextPtr );
 
   ShowNextQueuedPopup();
 end
@@ -354,21 +354,21 @@ end
 
 -- ===========================================================================
 function OnUIIdle()
-	-- The UI is idle, are we waiting to show a popup?
-	if UI.CanShowPopup() then
-		ShowNextQueuedPopup();
-	end
+  -- The UI is idle, are we waiting to show a popup?
+  if UI.CanShowPopup() then
+    ShowNextQueuedPopup();
+  end
 end
 
 -- ===========================================================================
---	LUA Event
+--  LUA Event
 -- ===========================================================================
 function OnDisableTechAndCivicPopups()
   m_isDisabledByTutorial = true;
 end
 
 -- ===========================================================================
---	LUA Event
+--  LUA Event
 -- ===========================================================================
 function OnEnableTechAndCivicPopups()
   m_isDisabledByTutorial = false;
@@ -383,7 +383,7 @@ function OnNotificationPanel_ShowCivicBoost( ePlayer, civicIndex, iCivicProgress
 end
 
 -- ===========================================================================
---	UI Callback
+--  UI Callback
 -- ===========================================================================
 function OnInit( isHotload:boolean )
   if isHotload then

@@ -405,7 +405,7 @@
         <Image    ID="Icon"               Offset="-2,-4" Texture="Buildings32" Size="32,32"/>
       </Container>
       <Label    ID="BuildingName"         Anchor="L,C" Offset="30,0" Style="CityPanelText" String="$BuildingName$" WrapWidth="120"/>
-      <Label    ID="BuildingYield"        Anchor="R,C" Offset="2,2"                       Style="CityPanelText" String="$BuildingYield$" WrapWidth="parent-130"/>
+      <Label    ID="BuildingYield"        Anchor="R,C" Offset="2,2"                       Style="CityPanelText" String="$BuildingYield$"/>
     </Grid>
   </Instance>
 

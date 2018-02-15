@@ -246,17 +246,17 @@ end
 -- ===========================================================================
 function ShowNextQueuedPopup()
 
-	-- Find first entry in table, display that, then remove it from the internal queue
-	for i, entry in ipairs(m_kQueuedPopups) do
-		ShowCompletedPopup(entry);
-		table.remove(m_kQueuedPopups, i);
-		break;
-	end
+  -- Find first entry in table, display that, then remove it from the internal queue
+  for i, entry in ipairs(m_kQueuedPopups) do
+    ShowCompletedPopup(entry);
+    table.remove(m_kQueuedPopups, i);
+    break;
+  end
 
-	-- If no more popups are in the queue, close the whole context down.
-	if table.count(m_kQueuedPopups) == 0 then
-		m_isWaitingToShowPopup = false;
-	end
+  -- If no more popups are in the queue, close the whole context down.
+  if table.count(m_kQueuedPopups) == 0 then
+    m_isWaitingToShowPopup = false;
+  end
 end
 
 -- ===========================================================================
