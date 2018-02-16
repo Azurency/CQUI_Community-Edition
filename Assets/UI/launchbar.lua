@@ -45,10 +45,10 @@ function OnOpenGovernment()
     return; -- Probably autoplay
   end
 
-    localPlayer = Players[ePlayer];
-    if localPlayer == nil then
-      return;
-    end
+  localPlayer = Players[ePlayer];
+  if localPlayer == nil then
+    return;
+  end
 
   local kCulture:table = localPlayer:GetCulture();
   if ( kCulture:IsInAnarchy() ) then -- Anarchy? No gov't for you.
