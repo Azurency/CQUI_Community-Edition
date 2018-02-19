@@ -9,7 +9,7 @@
     <Description>Community Quick User Interface MOD was Formally CQUI Mod [NEWLINE]and is now being updated and improved by its community</Description>
   </Properties>
 
-  <!--Incompatible mods.-->  
+  <!--Incompatible mods.-->
   <Blocks>
     <Mod id="9e9923e5-6842-4e7d-97e7-c9a56a85cf03" title="Simplified Gossip" />
     <Mod id="37b5fdca-2690-96ff-ea23-d8612ae7a757" title="Divine Yuri's Custom City Panel" />
@@ -19,7 +19,7 @@
     <Mod id="35f33319-ad93-4d6b-bf27-406fac382d06" title="More Lenses" />
     <Mod id="c9d28cde-61ee-459c-93f5-c734cd392553" title="NQ Enhanced User Interface" />
   </Blocks>
-  
+
   <!-- Modinfo Specific LOC -->
   <LocalizedText>
     <Text id="CQUI_TEASER">
@@ -209,6 +209,8 @@
     <File>Integrations/BES/UI/Choosers/espionagechooser.xml</File>
     <File>Integrations/BES/UI/PartialScreens/espionageoverview.lua</File>
     <File>Integrations/BES/UI/PartialScreens/espionageoverview.xml</File>
+    <File>UI/Replacements/espionagechooser_expansion1.lua</File>
+    <File>UI/Replacements/espionageoverview_expansion1.lua</File>
     <File>Integrations/BES/Text/bes_text.xml</File>
     <File>Integrations/BES/Text/bes_text_de.xml</File>
     <File>Integrations/BES/Text/bes_text_es.xml</File>
@@ -217,6 +219,12 @@
     <File>Integrations/BES/Text/bes_text_pt.xml</File>
     <File>Integrations/BES/Text/bes_text_ru.xml</File>
   </Files>
+
+  <ActionCriteria>
+    <Criteria id="Expansion1">
+      <GameCoreInUse>Expansion1</GameCoreInUse>
+    </Criteria>
+  </ActionCriteria>
 
   <Components>
     <ImportFiles id="CQUI_IMPORT_FILES">
@@ -287,7 +295,7 @@
         <File>Assets/UI/WorldView/plotinfo.xml</File>
       </Items>
     </ImportFiles>
-	
+
     <!-- CQUI specific LOCs  -->
     <LocalizedText id="CQUI_TEXT">
       <Items>
@@ -321,7 +329,7 @@
         <File>Assets/Text/cqui_text_settings_zh.xml</File>
       </Items>
     </LocalizedText>
-	
+
     <!-- CQUI specific settings -->
     <UpdateDatabase id="CQUI_Settings">
       <Properties>
@@ -333,7 +341,7 @@
         <File>Assets/cqui_settings_local.sql</File>
       </Items>
     </UpdateDatabase>
-	
+
     <!-- CQUI specific UIs -->
     <UserInterface id="CQUI_UI">
       <Properties>
@@ -346,21 +354,21 @@
         <!--the lua files are taken as implied-->
       </Items>
     </UserInterface>
-	
+
     <!-- CQUI specific scripts -->
     <GameplayScripts id="CQUI_SCRIPTS">
       <Items>
         <File>Assets/cqui_main.lua</File>
       </Items>
     </GameplayScripts>
-	
+
     <!-- CQUI specific art overrides -->
     <ModArt id="CQUI_MODART">
       <Items>
         <File>cqui.dep</File>
       </Items>
     </ModArt>
-    
+
     <!-- Mod integrations -->
     <LocalizedText id="BTS_TEXT">
       <Items>
@@ -438,6 +446,12 @@
         <File>Integrations/BES/UI/Choosers/espionagechooser.xml</File>
         <File>Integrations/BES/UI/PartialScreens/espionageoverview.lua</File>
         <File>Integrations/BES/UI/PartialScreens/espionageoverview.xml</File>
+      </Items>
+    </ImportFiles>
+    <ImportFiles id="BES_EXPANSION1_FILES" criteria="Expansion1">
+      <Items>
+        <File>UI/Replacements/espionagechooser_expansion1.lua</File>
+        <File>UI/Replacements/espionageoverview_expansion1.lua</File>
       </Items>
     </ImportFiles>
     <LocalizedText id="BES_TEXT">
