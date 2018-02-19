@@ -8,8 +8,8 @@
         <Stack StackGrowth="Down">
 
           <!-- Top Panel -->
-          <Grid ID="TopGrid" Size="parent-4,240" Texture="DestinationChooser_CurrentSlot" SliceStart="0,0" SliceCorner="30,30" SliceSize="200,60" SliceTextureSize="308,173">
-            <Container ID="CurrentSelectionContainer" Size="parent, parent" Offset="0,7">
+          <Grid ID="TopGrid" Size="parent-4,auto" MinSize="0,240" Texture="DestinationChooser_CurrentSlot" SliceStart="0,0" SliceCorner="30,30" SliceSize="200,60" SliceTextureSize="308,173">
+            <Container ID="CurrentSelectionContainer" Size="parent, auto" Offset="0,7">
               <Stack Anchor="C,T" StackGrowth="Down">
 
                 <!-- Selected City -->
@@ -67,7 +67,7 @@
               </Stack>
             </Container>
 
-            <Container Size="parent, parent">
+            <Container Size="parent, auto" MinSize="0,240">
               <Label ID="StatusMessage" Size="300,50" Anchor="C,C" Style="FontNormal16" Color="0,0,0,150"/>
             </Container>
           </Grid>
