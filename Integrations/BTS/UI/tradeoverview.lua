@@ -4,7 +4,6 @@
 
 local showSortOrdersPermanently = false
 local addDividerBetweenGroups = true
-local colorYieldValues = true
 local hideTradingPostIcon = false
 
 -- Color Settings for Headers
@@ -153,7 +152,6 @@ local m_dividerCount = 0
 function CQUI_OnSettingsUpdate()
   showSortOrdersPermanently = GameConfiguration.GetValue("CQUI_TraderShowSortOrder");
   addDividerBetweenGroups = GameConfiguration.GetValue("CQUI_TraderAddDivider");
-  colorYieldValues = GameConfiguration.GetValue("CQUI_TraderColorYields");
 
   Refresh()
 end
