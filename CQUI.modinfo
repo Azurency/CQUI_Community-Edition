@@ -209,8 +209,8 @@
     <File>Integrations/BES/UI/Choosers/espionagechooser.xml</File>
     <File>Integrations/BES/UI/PartialScreens/espionageoverview.lua</File>
     <File>Integrations/BES/UI/PartialScreens/espionageoverview.xml</File>
-    <File>UI/Replacements/espionagechooser_expansion1.lua</File>
-    <File>UI/Replacements/espionageoverview_expansion1.lua</File>
+    <File>Integrations/BES/Expansion1/Replacements/espionagechooser_expansion1.lua</File>
+    <File>Integrations/BES/Expansion1/Replacements/espionageoverview_expansion1.lua</File>
     <File>Integrations/BES/Text/bes_text.xml</File>
     <File>Integrations/BES/Text/bes_text_de.xml</File>
     <File>Integrations/BES/Text/bes_text_es.xml</File>
@@ -370,6 +370,7 @@
     </ModArt>
 
     <!-- Mod integrations -->
+    <!-- BTS -->
     <LocalizedText id="BTS_TEXT">
       <Items>
         <File>Integrations/BTS/Text/bts_text.xml</File>
@@ -396,6 +397,8 @@
         <File>Integrations/BTS/UI/Choosers/tradeoriginchooser.lua</File>
       </Items>
     </ImportFiles>
+
+    <!-- UNITREPORT -->
     <LocalizedText id="UNITREPORT_TEXT">
       <Items>
         <File>Integrations/URS/Text/urs_text.xml</File>
@@ -418,13 +421,15 @@
         <File>Integrations/URS/unitpromotionpopup.lua</File>
       </Items>
     </ImportFiles>
-  <ImportFiles id="IDS_IMPORT_FILES">
+
+    <!-- IDS -->
+    <ImportFiles id="IDS_IMPORT_FILES">
       <Items>
         <File>Integrations/IDS/diplomacydealview.lua</File>
         <File>Integrations/IDS/diplomacydealview.xml</File>
       </Items>
     </ImportFiles>
-  <LocalizedText id="IDS_TEXT">
+    <LocalizedText id="IDS_TEXT">
       <Items>
         <File>Integrations/IDS/Text/ids_text.xml</File>
         <File>Integrations/IDS/Text/ids_text_de.xml</File>
@@ -439,7 +444,9 @@
         <File>Integrations/IDS/Text/ids_text_zh.xml</File>
       </Items>
     </LocalizedText>
-  <ImportFiles id="BES_IMPORT_FILES">
+
+    <!-- BES -->
+    <ImportFiles id="BES_IMPORT_FILES">
       <Items>
         <File>Integrations/BES/UI/espionagesupport.lua</File>
         <File>Integrations/BES/UI/Choosers/espionagechooser.lua</File>
@@ -450,13 +457,13 @@
     </ImportFiles>
     <ImportFiles id="BES_EXPANSION1_FILES" criteria="Expansion1">
       <Items>
-        <File>UI/Replacements/espionagechooser_expansion1.lua</File>
-        <File>UI/Replacements/espionageoverview_expansion1.lua</File>
+        <File>Integrations/BES/Expansion1/Replacements/espionagechooser_expansion1.lua</File>
+        <File>Integrations/BES/Expansion1/Replacements/espionageoverview_expansion1.lua</File>
       </Items>
     </ImportFiles>
     <LocalizedText id="BES_TEXT">
       <Items>
-        <File>Integrations/BES/Text/bes_text.xml</File>
+        <File Priority="1">Integrations/BES/Text/bes_text.xml</File>
         <File>Integrations/BES/Text/bes_text_de.xml</File>
         <File>Integrations/BES/Text/bes_text_es.xml</File>
         <File>Integrations/BES/Text/bes_text_it.xml</File>
@@ -465,6 +472,8 @@
         <File>Integrations/BES/Text/bes_text_ru.xml</File>
       </Items>
     </LocalizedText>
+
+    <!-- ML -->
     <ImportFiles id="MORELENSES_IMPORT_FILES">
       <Items>
         <File>Integrations/ML/UI/minimappanel.lua</File>
