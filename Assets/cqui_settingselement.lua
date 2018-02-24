@@ -333,8 +333,8 @@ function Initialize()
   PopulateCheckBox(Controls.AutoapplyArchaeologistLensCheckbox, "CQUI_AutoapplyArchaeologistLens");
   PopulateCheckBox(Controls.AutoapplyBuilderLensCheckbox, "CQUI_AutoapplyBuilderLens");
   PopulateCheckBox(Controls.AutoapplyScoutLensCheckbox, "CQUI_AutoapplyScoutLens");
-  PopulateCheckBox(Controls.ShowNothingToDoInBuilderLens, "CQUI_ShowNothingToDoBuilderLens", Locale.Lookup("LOC_CQUI_LENSES_SHOWNOTHINGTODO_BUILDER_TOOLTIP"));
-  PopulateCheckBox(Controls.ShowGenericInBuilderLens, "CQUI_ShowGenericBuilderLens", Locale.Lookup("LOC_CQUI_LENSES_SHOWGENERIC_BUILDER_TOOLTIP"));
+  --PopulateCheckBox(Controls.ShowNothingToDoInBuilderLens, "CQUI_ShowNothingToDoBuilderLens", Locale.Lookup("LOC_CQUI_LENSES_SHOWNOTHINGTODO_BUILDER_TOOLTIP"));
+  --PopulateCheckBox(Controls.ShowGenericInBuilderLens, "CQUI_ShowGenericBuilderLens", Locale.Lookup("LOC_CQUI_LENSES_SHOWGENERIC_BUILDER_TOOLTIP"));
 
   PopulateCheckBox(Controls.ShowYieldsOnCityHoverCheckbox, "CQUI_ShowYieldsOnCityHover", Locale.Lookup("LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP"));
   PopulateCheckBox(Controls.ShowCitizenIconsOnHoverCheckbox, "CQUI_ShowCitizenIconsOnCityHover", Locale.Lookup("LOC_CQUI_CITYVIEW_SHOWCITIZENICONSONHOVER_TOOLTIP"));
