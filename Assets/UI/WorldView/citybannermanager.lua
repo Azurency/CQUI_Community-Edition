@@ -201,6 +201,7 @@ function CQUI_OnSettingsInitialized()
 
   CQUI_ShowCitizenIconsOnCityHover = GameConfiguration.GetValue("CQUI_ShowCitizenIconsOnCityHover");
   CQUI_ShowCityManageAreaOnCityHover = GameConfiguration.GetValue("CQUI_ShowCityManageAreaOnCityHover");
+  CQUI_ShowCityManageAreaInScreen = GameConfiguration.GetValue("CQUI_ShowCityMangeAreaInScreen")
 end
 
 function CQUI_OnSettingsUpdate()
@@ -442,7 +443,7 @@ function CQUI_OnBannerMouseExit(playerID: number, cityID: number)
   end
 
   -- Astog: Fix for lens being cleared when having other lenses on
-  if CQUI_ShowCityManageAreaOnCityHover and UI.GetHeadSelectedCity() == nil
+  if CQUI_ShowCityManageAreaOnCityHover and UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_MANAGEMENT
       and CQUI_CityManageAreaShown then
     CQUI_ClearCitizenManagementLens()
   end
@@ -3124,22 +3125,26 @@ function OnLensLayerOn( layerNum:number )
     RealizeReligion();
   end
 
-  -- ASTOG: Comment from here to line 3143 to disable citizen management area when in city
-  if layerNum == LensLayers.CITIZEN_MANAGEMENT then
-    local pCity:table = UI.GetHeadSelectedCity()
-    if pCity ~= nil then
-      UILens.SetActive("Appeal")
-      CQUI_ShowCitizenManagementLens(pCity:GetID())
+  -- ASTOG: Hack solution to appeal lens being cleared on entry to city.
+  -- it is worse when citizen changes since it causes a complete refresh of lenses including resource icons and yield icons
+  -- TODO: Improve this system so it does not cause a complete refresh
+  if CQUI_ShowCityManageAreaInScreen then
+    if layerNum == LensLayers.CITIZEN_MANAGEMENT then
+      local pCity:table = UI.GetHeadSelectedCity()
+      if pCity ~= nil then
+        UILens.SetActive("Appeal")
+        CQUI_ShowCitizenManagementLens(pCity:GetID())
+      end
     end
-  end
 
-  -- Should we reapply citizen management area because it got cleared?
-  if layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL and CQUI_CityManageAreaShouldShow then
-    local pCity:table = UI.GetHeadSelectedCity()
-    if pCity ~= nil then
-      UILens.SetActive("Appeal")
-      CQUI_ShowCitizenManagementLens(pCity:GetID())
-      CQUI_CityManageAreaShouldShow = false
+    -- Should we reapply citizen management area because it got cleared?
+    if layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL and CQUI_CityManageAreaShouldShow then
+      local pCity:table = UI.GetHeadSelectedCity()
+      if pCity ~= nil then
+        UILens.SetActive("Appeal")
+        CQUI_ShowCitizenManagementLens(pCity:GetID())
+        CQUI_CityManageAreaShouldShow = false
+      end
     end
   end
 end
@@ -3156,10 +3161,12 @@ function OnLensLayerOff( layerNum:number )
   end
 
   -- Catch uninteded clear of appeal lens because of event chain
-  if layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL and CQUI_CityManageAreaShown then
-    UILens.SetActive("Appeal")
-    CQUI_CityManageAreaShouldShow = true
-    CQUI_CityManageAreaShown = false
+  if CQUI_ShowCityManageAreaInScreen then
+    if layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL and CQUI_CityManageAreaShown then
+      UILens.SetActive("Appeal")
+      CQUI_CityManageAreaShouldShow = true
+      CQUI_CityManageAreaShown = false
+    end
   end
 end
 
