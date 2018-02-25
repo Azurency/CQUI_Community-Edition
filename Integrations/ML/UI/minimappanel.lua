@@ -64,12 +64,6 @@ local m_isMouseDragging         :boolean = false; -- Was LMB clicked inside the 
 local m_hasMouseDragged         :boolean = false; -- Has there been any movements since m_isMouseDragging became true?
 local m_wasMouseInMinimap       :boolean = false; -- Was the mouse over the minimap the last time we checked?
 
-local CQUI_MapSize = 512;
-local CQUI_MapImageScaler = 0.5;
-
-local CQUI_MapBackingXSizeDiff = 27;
-local CQUI_MapBackingYSizeDiff = 54;
-
 -- ===========================================================================
 --  FUNCTIONS
 -- ===========================================================================
@@ -86,46 +80,6 @@ function CQUI_OnToggleBindings(mode: number)
   elseif(mode == 2) then
   Controls.CQUI_ToggleBindings2:SetCheck(true);
   end
-end
-
-function CQUI_UpdateMinimapSize()
-  -- AZURENCY : TODO remove this resize totally since its in base game now
-  local size = GameConfiguration.GetValue("CQUI_MinimapSize");
-  if size ~= nil then
-    CQUI_MapSize = size
-  else
-    print_debug("Using previous minimap size")
-  end
-
-  -- AZURENCY : Quick fix to avoid visual glitch when CQUI_MapSize is too big (with old saves before the setting change)
-  if CQUI_MapSize > 100 then
-    CQUI_MapSize = 100
-  end
-
-  Options.SetGraphicsOption("General", "MinimapSize", CQUI_MapSize/100);
-  UI.SetMinimapSize(CQUI_MapSize/100);
-
-  --Cycles the minimap after resizing
-  -- local xSize = CQUI_MapSize
-  -- local ySize = CQUI_MapSize * CQUI_MapImageScaler
-  -- Controls.MinimapContainer:SetSizeVal(xSize, ySize);
-  -- Controls.MinimapImage:SetSizeVal(xSize, ySize);
-  -- Controls.MinimapBacking:SetSizeVal(xSize + CQUI_MapBackingXSizeDiff, ySize + CQUI_MapBackingYSizeDiff);
-  -- Controls.CollapseAnim:SetEndVal(0, Controls.MinimapImage:GetOffsetY() + Controls.MinimapImage:GetSizeY());
-
-  --Squeezes the map buttons if extra space is needed
-  if(CQUI_MapSize < 15) then
-    Controls.OptionsStack:SetPadding(-7);
-  else
-    Controls.OptionsStack:SetPadding(-3);
-  end
-end
-
-function CQUI_OnSettingsUpdate()
-  SHOW_CITIZEN_MANAGEMENT_INSCREEN = GameConfiguration.GetValue("CQUI_ShowCityMangeAreaInScreen");
-
-  --Cycles the minimap after resizing
-  CQUI_UpdateMinimapSize();
 end
 
 function CQUI_ToggleYieldIcons()
@@ -1238,11 +1192,7 @@ function Initialize()
   -- CQUI Handlers
   LuaEvents.CQUI_Option_ToggleBindings.Add( CQUI_OnToggleBindings );
   LuaEvents.CQUI_Option_ToggleYields.Add( ToggleYieldIcons );
-  LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
-  LuaEvents.CQUI_SettingsInitialized.Add( CQUI_UpdateMinimapSize );
   LuaEvents.CQUI_SettingsInitialized.Add( CQUI_ToggleYieldIcons );
-  Events.LoadScreenClose.Add( CQUI_OnSettingsUpdate ); -- Astog: Update settings when load screen close
-  -- CQUI_OnSettingsUpdate()
 
   -- Mod Lens Support
   LuaEvents.MinimapPanel_SetActiveModLens.Add( SetActiveModdedLens );
