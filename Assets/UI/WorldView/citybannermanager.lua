@@ -3352,7 +3352,7 @@ function OnInterfaceModeChanged( oldMode:number, newMode:number )
     end
   end
 
-  if (UI.GetInterfaceMode() == InterfaceModeTypes.DISTRICT_PLACEMENT) then
+  if (newMode == InterfaceModeTypes.DISTRICT_PLACEMENT) then
     CQUI_CityManageAreaShown = false
     CQUI_CityManageAreaShouldShow = false
   end
