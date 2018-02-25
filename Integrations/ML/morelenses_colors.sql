@@ -78,11 +78,11 @@ VALUES                  (   'COLOR_FIXABLE_NATURALIST_LENS',    '0.56',     '0.0
 
 -- City Manager Colors
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
-VALUES                  (   'COLOR_CITY_PLOT_WORKING',          '1',        '0.5',      '0',        '0.2');
+VALUES                  (   'COLOR_CITY_PLOT_WORKING',          '0.9',      '0.0',      '0.05',     '0.5');
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
 VALUES                  (   'COLOR_CITY_PLOT_LOCKED',           '0',        '1',        '0',        '0.2');
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
-VALUES                  (   'COLOR_AREA_LENS_NEUTRAL',          '0',        '0',        '0',        '0.0');
+VALUES                  (   'COLOR_CITY_PLOT_CULTURE',          '0.56',     '0.0',      '0.98',     '0.5');
 
 -- Alternate Settler Colors
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)

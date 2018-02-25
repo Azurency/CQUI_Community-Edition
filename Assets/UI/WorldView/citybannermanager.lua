@@ -284,7 +284,7 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
     if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)
         and UI.GetInterfaceMode() == InterfaceModeTypes.SELECTION
         and UI.GetHeadSelectedUnit() == nil then
-      LuaEvents.Area_ShowCitizenManagement(cityID);
+      CQUI_ShowCitizenManagementLens(playerID, cityID)
       CQUI_CityManageAreaShown = true;
     end
 
@@ -440,7 +440,7 @@ function CQUI_OnBannerMouseExit(playerID: number, cityID: number)
   -- Astog: Fix for lens being cleared when having other lenses on
   if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)
       and CQUI_CityManageAreaShown then
-    LuaEvents.Area_ClearCitizenManagement();
+    CQUI_ClearCitizenManagementLens()
     CQUI_CityManageAreaShown = false;
   end
 
@@ -3167,6 +3167,69 @@ function OnCameraUpdate( vFocusX:number, vFocusY:number, fZoomLevel:number )
     OnRefreshBannerPositions();
   end
   m_prevZoomMultiplier = m_zoomMultiplier;
+end
+
+-- ===========================================================================
+function CQUI_ShowCitizenManagementLens(playerID:number, cityID:number)
+  local pCity:table = Players[playerID]:GetCities():FindID(cityID);
+  if pCity ~= nil then
+    print_debug("Show citizens for " .. Locale.Lookup(pCity:GetName()))
+    print("here 1")
+
+    local tParameters:table = {};
+    local cityPlotID = Map.GetPlot(pCity:GetX(), pCity:GetY()):GetIndex()
+    tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
+
+    print("here 2")
+
+    local workingColor:number = UI.GetColorValue("COLOR_CITY_PLOT_WORKING");
+    local lockedColor:number = UI.GetColorValue("COLOR_CITY_PLOT_LOCKED");
+    local colorPlot:table = {}
+    colorPlot[workingColor] = {}
+    colorPlot[lockedColor] = {}
+
+    -- Get city plot and citizens info
+    local tResults:table = CityManager.GetCommandTargets(pCity, CityCommandTypes.MANAGE, tParameters);
+    if tResults == nil then
+      print("ERROR : Could not find plots")
+      return
+    end
+
+    print("here 3")
+
+    local tPlots:table = tResults[CityCommandResults.PLOTS];
+    local tUnits:table = tResults[CityCommandResults.CITIZENS];
+    local tLockedUnits:table = tResults[CityCommandResults.LOCKED_CITIZENS];
+
+    if tPlots ~= nil then
+      for i, plotID in ipairs(tPlots) do
+        if (tLockedUnits[i] > 0 or cityPlotID == plotID) then
+          table.insert(colorPlot[lockedColor], plotID);
+        elseif (tUnits[i] > 0) then
+          table.insert(colorPlot[workingColor], plotID);
+        end
+      end
+    end
+
+    print("here 4")
+
+    -- Next culture expansion plot
+    local pCityCulture:table  = pCity:GetCulture();
+    local pNextPlotID:number = pCityCulture:GetNextPlot();
+    local culturePlotColor:number = UI.GetColorValue("COLOR_CITY_PLOT_CULTURE")
+    colorPlot[culturePlotColor] = {pNextPlotID}
+
+    print("here 5")
+
+    LuaEvents.MinimapPanel_ApplyCustomLens(colorPlot);
+
+    print("here 6")
+  end
+end
+
+-- ===========================================================================
+function CQUI_ClearCitizenManagementLens()
+  LuaEvents.MinimapPanel_ClearCustomLens()
 end
 
 -- ===========================================================================

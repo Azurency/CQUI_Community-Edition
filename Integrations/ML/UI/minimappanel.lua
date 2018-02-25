@@ -11,7 +11,7 @@ g_ModLenses = {} -- Populated by ModLens_*.lua scripts
 include( "modlens_", true )
 
 local m_LensButtonIM:table = InstanceManager:new("LensButtonInstance", "LensButton", Controls.LensToggleStack)
-local m_CurrentModdedLensOn:string = nil
+local m_CurrentModdedLensOn:string = "NONE"
 
 -- Settler Lens Variables
 local m_SetterLensAlternateInverse:boolean = false;
@@ -413,16 +413,18 @@ end
 
 -- ===========================================================================
 function OnLensLayerOn( layerNum:number )
+  -- print("On: " .. layerNum)
   if layerNum == LensLayers.HEX_COLORING_RELIGION then
     UI.PlaySound("UI_Lens_Overlay_On");
     UILens.SetDesaturation(1.0);
   elseif layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL then
     if m_CurrentModdedLensOn == "VANILLA_APPEAL" then
       SetAppealHexes();
-    else
+      UI.PlaySound("UI_Lens_Overlay_On");
+    elseif m_CurrentModdedLensOn ~= "ML_CUSTOM" and m_CurrentModdedLensOn ~= "NONE" then
       SetModLens();
+      UI.PlaySound("UI_Lens_Overlay_On");
     end
-    UI.PlaySound("UI_Lens_Overlay_On");
   elseif layerNum == LensLayers.HEX_COLORING_GOVERNMENT then
     SetGovernmentHexes();
     UI.PlaySound("UI_Lens_Overlay_On");
@@ -442,6 +444,7 @@ end
 
 -- ===========================================================================
 function OnLensLayerOff( layerNum:number )
+  -- print("Off: " .. layerNum)
   if (layerNum == LensLayers.HEX_COLORING_RELIGION or
       layerNum == LensLayers.HEX_COLORING_CONTINENT or
       layerNum == LensLayers.HEX_COLORING_GOVERNMENT or
@@ -450,7 +453,7 @@ function OnLensLayerOff( layerNum:number )
 
   -- Clear Modded Lens (Appeal lens included)
   elseif layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL then
-    UILens.ClearLayerHexes( LensLayers.MAP_HEX_MASK );
+    -- UILens.ClearLayerHexes( LensLayers.MAP_HEX_MASK );
     if UI.GetInterfaceMode() ~= InterfaceModeTypes.VIEW_MODAL_LENS or (UI.GetHeadSelectedUnit() == nil) then
       UILens.ClearLayerHexes(LensLayers.HEX_COLORING_APPEAL_LEVEL);
     end
@@ -997,9 +1000,26 @@ function SetModLensHexes(colorPlot:table)
   end
 end
 
+function OnApplyCustomLens(colorPlot:table)
+  if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
+    UILens.ClearLayerHexes(LensLayers.HEX_COLORING_APPEAL_LEVEL)
+  else
+    SetActiveModdedLens("ML_CUSTOM")
+    UILens.ToggleLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL)
+  end
+  SetModLensHexes(colorPlot)
+end
+
+function OnClearCustomLens()
+  if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
+    UILens.ToggleLayerOff(LensLayers.HEX_COLORING_APPEAL_LEVEL)
+  end
+  SetActiveModdedLens("NONE")
+end
+
 function SetActiveModdedLens(lensName:string)
   m_CurrentModdedLensOn = lensName
-  LuaEvents.MinimapPanel_ModdedLensOn(lensName)
+  -- LuaEvents.MinimapPanel_ModdedLensOn(lensName)
 end
 
 function GetActiveModdedLens(returnLens:table)
@@ -1182,6 +1202,11 @@ function Initialize()
   Events.LensLayerOn.Add( OnLensLayerOn );
   Events.LensLayerOff.Add( OnLensLayerOff );
   Events.LocalPlayerChanged.Add( OnLocalPlayerChanged );
+  Events.LoadScreenClose.Add(
+    function()
+      UILens.SetActive("Default");
+    end
+  )
 
   LuaEvents.NotificationPanel_ShowContinentLens.Add(OnToggleContinentLensExternal);
   LuaEvents.Tutorial_DisableMapDrag.Add( OnTutorial_DisableMapDrag );
@@ -1198,6 +1223,8 @@ function Initialize()
   LuaEvents.MinimapPanel_SetActiveModLens.Add( SetActiveModdedLens );
   LuaEvents.MinimapPanel_GetActiveModLens.Add( GetActiveModdedLens );
   LuaEvents.MinimapPanel_GetLensPanelOffsets.Add( GetLensPanelOffsets );
+  LuaEvents.MinimapPanel_ApplyCustomLens.Add( OnApplyCustomLens );
+  LuaEvents.MinimapPanel_ClearCustomLens.Add( OnClearCustomLens );
   LuaEvents.MinimapPanel_AddLensEntry.Add( AddLensEntry );
   InitializeModLens()
 end
