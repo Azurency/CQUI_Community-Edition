@@ -2,6 +2,7 @@
 --  MINIMAP PANEL
 -- ===========================================================================
 include( "InstanceManager" );
+include( "Civ6Common" );
 
 -- ===========================================================================
 --  MODDED LENS
@@ -977,15 +978,15 @@ end
 function SetModLens()
   if m_CurrentModdedLensOn ~= nil and m_CurrentModdedLensOn ~= "NONE" and
       g_ModLenses[m_CurrentModdedLensOn] ~= nil then
-    print("Highlighting " .. m_CurrentModdedLensOn .. " hexes")
+    print_debug("Highlighting " .. m_CurrentModdedLensOn .. " hexes")
     local getPlotColorFn = g_ModLenses[m_CurrentModdedLensOn].GetColorPlotTable
     if getPlotColorFn ~= nil then
       SetModLensHexes(getPlotColorFn())
     else
-      print("ERROR: No Plot Color Function")
+      print_debug("ERROR: No Plot Color Function")
     end
   else
-    print("ERROR: Given lens has no entry")
+    print_debug("ERROR: Given lens has no entry")
   end
 end
 
@@ -994,7 +995,7 @@ function SetModLensHexes(colorPlot:table)
   local localPlayer = Game.GetLocalPlayer()
   for color, plots in pairs(colorPlot) do
     if table.count(plots) > 0 then
-      -- print("Showing " .. table.count(plots) .. " plots with color " .. color)
+      print_debug("Showing " .. table.count(plots) .. " plots with color " .. color)
       UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, plots, color);
     end
   end
@@ -1007,11 +1008,13 @@ function OnApplyCustomLens(colorPlot:table)
     SetActiveModdedLens("ML_CUSTOM")
     UILens.ToggleLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL)
   end
+  -- print("Toggling on")
   SetModLensHexes(colorPlot)
 end
 
 function OnClearCustomLens()
   if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
+    -- print("Toggling off")
     UILens.ToggleLayerOff(LensLayers.HEX_COLORING_APPEAL_LEVEL)
   end
   SetActiveModdedLens("NONE")

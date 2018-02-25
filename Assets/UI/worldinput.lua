@@ -2405,7 +2405,7 @@ function CoastalRaid( pInputStruct )
     end
 
     if (bWillStartWar) then
-      -- Create the action specific parameters 
+      -- Create the action specific parameters
       LuaEvents.WorldInput_ConfirmWarDialog(pSelectedUnit:GetOwner(), results, WarTypes.SURPRISE_WAR);
     else
       if (UnitManager.CanStartOperation( pSelectedUnit, UnitOperationTypes.COASTAL_RAID, nil, tParameters)) then
@@ -3096,14 +3096,14 @@ function OnCycleUnitSelectionRequest()
 
   if(UI.GetInterfaceMode() ~= InterfaceModeTypes.NATURAL_WONDER or m_isMouseButtonRDown) then
 
-    -- AZURENCY : OnCycleUnitSelectionRequest is called by UI.SetCycleAdvanceTimer() 
-    -- in SelectedUnit.lua causing a conflict with the auto-cyling of unit 
+    -- AZURENCY : OnCycleUnitSelectionRequest is called by UI.SetCycleAdvanceTimer()
+    -- in SelectedUnit.lua causing a conflict with the auto-cyling of unit
     -- (not the same given by UI.SelectNextReadyUnit() and player:GetUnits():GetFirstReadyUnit())
     local pPlayer :table = Players[Game.GetLocalPlayer()];
     if pPlayer ~= nil then
       if pPlayer:IsTurnActive() then
         local unit:table = pPlayer:GetUnits():GetFirstReadyUnit();
-        -- AZURENCY : we also check if there is not already a unit selected, 
+        -- AZURENCY : we also check if there is not already a unit selected,
         -- bacause UI.SetCycleAdvanceTimer() is always called after deselecting a unit
         if unit ~= nil and not UI.GetHeadSelectedUnit() then
           UI.DeselectAllUnits();

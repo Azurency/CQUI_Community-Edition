@@ -1,6 +1,7 @@
 -- Provides info about currently active Modal Lens
 
 include( "InstanceManager" );
+include( "Civ6Common" );
 
 -- ===========================================================================
 --  MODDED LENS
@@ -173,7 +174,7 @@ end
 --============================================================================
 function ShowModLensKey(lensName:string)
   -- This is printed even if the modal panel is hidden
-  print("Showing " .. lensName .. " modal panel")
+  print_debug("Showing " .. lensName .. " modal panel")
 
   m_KeyStackIM: ResetInstances();
 

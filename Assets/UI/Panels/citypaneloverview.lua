@@ -113,6 +113,7 @@ function SetDesiredLens(desiredLens)
   m_desiredLens = desiredLens;
   -- AZURENCY : don't change interface mode
   --UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+  --[[
   if m_isShowingPanel then
     if m_desiredLens == "CityManagement" then
       LuaEvents.Area_RefreshCitizenManagement(m_pCity:GetID());
@@ -122,7 +123,10 @@ function SetDesiredLens(desiredLens)
   else
     UILens.SetActive(m_desiredLens);
   end
+  ]]
+  UILens.SetActive(m_desiredLens);
 end
+
 function EnsureDesiredLens()
   if m_isShowingPanel then
     if m_desiredLens == "CityManagement" then
@@ -285,7 +289,7 @@ function ViewPanelBreakdown( data:table )
   end
 
   -- Add trading posts
-  local hideTradingPostsInfo :boolean = not GameCapabilities.HasCapability("CAPABILITY_CITY_HUD_TRADING_POSTS");  
+  local hideTradingPostsInfo :boolean = not GameCapabilities.HasCapability("CAPABILITY_CITY_HUD_TRADING_POSTS");
   local isHasTradingPosts :boolean = (table.count(data.TradingPosts) > 0)
   Controls.NoTradingPostsArea:SetHide(hideTradingPostsInfo or isHasTradingPosts);
   Controls.TradingPostsArea:SetHide(hideTradingPostsInfo or not isHasTradingPosts);
@@ -305,7 +309,7 @@ function ViewPanelBreakdown( data:table )
         -- If we're a city-state display our city-state icon instead of leader since we don't have one
         local leader:string = pTradePostPlayerConfig:GetLeaderTypeName();
         local civType:string = GameInfo.CivilizationLeaders[leader].CivilizationType;
-        local primaryColor, secondaryColor = UI.GetPlayerColors(tradePostPlayerId);	
+        local primaryColor, secondaryColor = UI.GetPlayerColors(tradePostPlayerId);
         iconName = "ICON_"..civType;
         iconColor = secondaryColor;
         iconSize = SIZE_CITYSTATE_ICON;
@@ -377,7 +381,7 @@ function ViewPanelReligion( data:table )
     end
 
     -- Other religions
-    for _,religion in ipairs(data.Religions) do		
+    for _,religion in ipairs(data.Religions) do
       -- Don't show pantheons or dominate religions here. Dominate religion is handled above.
       if religion.ReligionType ~= "RELIGION_PANTHEON" and (dominateReligion == nil or religion.ReligionType ~= dominateReligion.ReligionType) then
         local religionName	:string = Game.GetReligion():GetName(religion.ID);
@@ -385,7 +389,7 @@ function ViewPanelReligion( data:table )
         local textureOffsetX:number, textureOffsetY:number, textureSheet:string = IconManager:FindIconAtlas(iconName, 22);
 
         if textureSheet ~= nil then
-          local religionInstance:table = m_kOtherReligionsIM:GetInstance();	
+          local religionInstance:table = m_kOtherReligionsIM:GetInstance();
           religionInstance.ReligionSymbol:SetTexture( textureSheet );
           religionInstance.ReligionSymbol:SetTextureOffsetVal( textureOffsetX, textureOffsetY );
           religionInstance.ReligionName:SetText( Locale.Lookup("LOC_HUD_CITY_RELIGIOUS_CITIZENS_NUMBER",religion.Followers,religionName) );
@@ -395,7 +399,7 @@ function ViewPanelReligion( data:table )
       end
     end
   end
-  
+
   if Controls.PanelReligion:IsVisible() then
     SetDesiredLens("Religion");
   end
@@ -772,7 +776,7 @@ function PopulateTabs()
     else
       Controls.ReligionButton:SetHide(true);
     end
-    
+
     m_tabs.CenterAlignTabs(0);
   end
   m_tabs.SelectTab( Controls.HealthButton );

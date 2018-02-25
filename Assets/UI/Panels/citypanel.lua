@@ -103,6 +103,7 @@ function CQUI_OnCityviewEnabled()
     UI.SetFixedTiltMode(true);
     DisplayGrowthTile();
     UI.SetInterfaceMode(InterfaceModeTypes.CITY_MANAGEMENT);
+
 end
 
 function CQUI_OnCityviewDisabled()
@@ -1048,7 +1049,7 @@ function OnUnitSelectionChanged( playerID:number, unitID:number, hexI:number, he
   if playerID == Game.GetLocalPlayer() then
     if ContextPtr:IsHidden()==false then
       Close();
-      Controls.ToggleOverviewPanel:SetAndCall(false); 
+      Controls.ToggleOverviewPanel:SetAndCall(false);
     end
   end
 end
@@ -1498,7 +1499,7 @@ function Initialize()
   LuaEvents.CityPanel_ToggleManageCitizens.Add(function()
     Controls.ManageCitizensCheck:SetAndCall(not Controls.ManageCitizensCheck:IsChecked());
   end);
-  
+
   -- CQUI Events
   LuaEvents.CQUI_GoNextCity.Add( CQUI_OnNextCity );
   LuaEvents.CQUI_GoPrevCity.Add( CQUI_OnPreviousCity );

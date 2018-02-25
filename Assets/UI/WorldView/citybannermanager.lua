@@ -172,6 +172,7 @@ local SIZEOFPOPANDPRODMETERS    :number = 15; --The amount to add to the city ba
 local CQUI_ShowCitizenIconsOnCityHover:boolean = false;
 local CQUI_ShowCityManageAreaOnCityHover:boolean = true;
 local CQUI_CityManageAreaShown:boolean = false;
+local CQUI_CityManageAreaShouldShow:boolean = false;
 
 -- ===========================================================================
 --  QUI
@@ -284,8 +285,7 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
     if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)
         and UI.GetInterfaceMode() == InterfaceModeTypes.SELECTION
         and UI.GetHeadSelectedUnit() == nil then
-      CQUI_ShowCitizenManagementLens(playerID, cityID)
-      CQUI_CityManageAreaShown = true;
+      CQUI_ShowCitizenManagementLens(cityID)
     end
 
     local kPlayer = Players[playerID];
@@ -361,6 +361,10 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
     end
 
     tResults  = CityManager.GetCommandTargets( kCity, CityCommandTypes.PURCHASE, tParameters );
+    if tResults == nil then
+      return;
+    end
+
     tPlots    = tResults[CityCommandResults.PLOTS];
 
     if (tPlots ~= nil and table.count(tPlots) ~= 0) and UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) == false then
@@ -438,10 +442,9 @@ function CQUI_OnBannerMouseExit(playerID: number, cityID: number)
   end
 
   -- Astog: Fix for lens being cleared when having other lenses on
-  if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)
+  if CQUI_ShowCityManageAreaOnCityHover and UI.GetHeadSelectedCity() == nil
       and CQUI_CityManageAreaShown then
     CQUI_ClearCitizenManagementLens()
-    CQUI_CityManageAreaShown = false;
   end
 
   local tPlots    :table = tResults[CityCommandResults.PLOTS];
@@ -3120,6 +3123,25 @@ function OnLensLayerOn( layerNum:number )
     m_isReligionLensActive = true;
     RealizeReligion();
   end
+
+  -- ASTOG: Comment from here to line 3143 to disable citizen management area when in city
+  if layerNum == LensLayers.CITIZEN_MANAGEMENT then
+    local pCity:table = UI.GetHeadSelectedCity()
+    if pCity ~= nil then
+      UILens.SetActive("Appeal")
+      CQUI_ShowCitizenManagementLens(pCity:GetID())
+    end
+  end
+
+  -- Should we reapply citizen management area because it got cleared?
+  if layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL and CQUI_CityManageAreaShouldShow then
+    local pCity:table = UI.GetHeadSelectedCity()
+    if pCity ~= nil then
+      UILens.SetActive("Appeal")
+      CQUI_ShowCitizenManagementLens(pCity:GetID())
+      CQUI_CityManageAreaShouldShow = false
+    end
+  end
 end
 
 -- ===========================================================================
@@ -3131,6 +3153,13 @@ function OnLensLayerOff( layerNum:number )
   if  layerNum == LensLayers.HEX_COLORING_RELIGION then
     m_isReligionLensActive = false;
     RealizeReligion();
+  end
+
+  -- Catch uninteded clear of appeal lens because of event chain
+  if layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL and CQUI_CityManageAreaShown then
+    UILens.SetActive("Appeal")
+    CQUI_CityManageAreaShouldShow = true
+    CQUI_CityManageAreaShown = false
   end
 end
 
@@ -3170,17 +3199,15 @@ function OnCameraUpdate( vFocusX:number, vFocusY:number, fZoomLevel:number )
 end
 
 -- ===========================================================================
-function CQUI_ShowCitizenManagementLens(playerID:number, cityID:number)
+function CQUI_ShowCitizenManagementLens(cityID:number)
+  local playerID:number = Game.GetLocalPlayer()
   local pCity:table = Players[playerID]:GetCities():FindID(cityID);
   if pCity ~= nil then
     print_debug("Show citizens for " .. Locale.Lookup(pCity:GetName()))
-    print("here 1")
 
     local tParameters:table = {};
     local cityPlotID = Map.GetPlot(pCity:GetX(), pCity:GetY()):GetIndex()
     tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
-
-    print("here 2")
 
     local workingColor:number = UI.GetColorValue("COLOR_CITY_PLOT_WORKING");
     local lockedColor:number = UI.GetColorValue("COLOR_CITY_PLOT_LOCKED");
@@ -3195,13 +3222,11 @@ function CQUI_ShowCitizenManagementLens(playerID:number, cityID:number)
       return
     end
 
-    print("here 3")
-
     local tPlots:table = tResults[CityCommandResults.PLOTS];
     local tUnits:table = tResults[CityCommandResults.CITIZENS];
     local tLockedUnits:table = tResults[CityCommandResults.LOCKED_CITIZENS];
 
-    if tPlots ~= nil then
+    if tPlots ~= nil and table.count(tPlots) > 0 then
       for i, plotID in ipairs(tPlots) do
         if (tLockedUnits[i] > 0 or cityPlotID == plotID) then
           table.insert(colorPlot[lockedColor], plotID);
@@ -3211,25 +3236,33 @@ function CQUI_ShowCitizenManagementLens(playerID:number, cityID:number)
       end
     end
 
-    print("here 4")
+    -- Next culture expansion plot, show it only if not in city panel
+    if UI.GetHeadSelectedCity() == nil then
+      local pCityCulture:table  = pCity:GetCulture();
+      local culturePlotColor:number = UI.GetColorValue("COLOR_CITY_PLOT_CULTURE")
+      if pCityCulture ~= nil then
+        local pNextPlotID:number = pCityCulture:GetNextPlot();
+        if pNextPlotID ~= nil and Map.IsPlot(pNextPlotID) then
+          colorPlot[culturePlotColor] = {pNextPlotID}
+        end
+      end
+    end
 
-    -- Next culture expansion plot
-    local pCityCulture:table  = pCity:GetCulture();
-    local pNextPlotID:number = pCityCulture:GetNextPlot();
-    local culturePlotColor:number = UI.GetColorValue("COLOR_CITY_PLOT_CULTURE")
-    colorPlot[culturePlotColor] = {pNextPlotID}
-
-    print("here 5")
-
+    CQUI_CityManageAreaShown = true;
     LuaEvents.MinimapPanel_ApplyCustomLens(colorPlot);
-
-    print("here 6")
   end
 end
 
 -- ===========================================================================
 function CQUI_ClearCitizenManagementLens()
+  CQUI_CityManageAreaShown = false;
   LuaEvents.MinimapPanel_ClearCustomLens()
+end
+
+-- ===========================================================================
+function CQUI_RefreshCitizenManagementLens(cityID:number)
+  CQUI_ClearCitizenManagementLens()
+  CQUI_ShowCitizenManagementLens(cityID)
 end
 
 -- ===========================================================================
