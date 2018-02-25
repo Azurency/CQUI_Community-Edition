@@ -41,7 +41,7 @@ INSERT OR REPLACE INTO CQUI_Settings -- Don't touch this line!
       ("CQUI_BlockOnCityAttack", 1), -- Block turn from ending if you have a city that can attack
       ("CQUI_ProductionQueue", 1), -- A production queue appears next to the production panel, allowing multiple constructions to be queued at once
       ("CQUI_ShowCultureGrowth", 1), -- Shows cultural growth overlay in cityview
-      ("CQUI_ShowPolicyReminder", 1), 
+      ("CQUI_ShowPolicyReminder", 1),
 	  ("CQUI_ShowLuxuries", 1), -- Luxury resources will show in the top-bar next to strategic resources
       ("CQUI_ShowUnitPaths", 1), -- Shows unit paths on hover and selection
       ("CQUI_ShowYieldsOnCityHover", 1), -- Shows city management info like citizens, tile yields, and tile growth on hover
@@ -59,7 +59,6 @@ INSERT OR REPLACE INTO CQUI_Settings -- Don't touch this line!
       ('CQUI_ShowCitizenIconsOnCityHover', 0), -- Shows citizen icons when hovering over city banner
       ('CQUI_ShowCityManageAreaOnCityHover', 1), -- Shows citizen management area when hovering over city banner
       ('CQUI_ShowCityMangeAreaInScreen', 1), -- Shows citizen management area when in city screen
-      ('CQUI_TraderColorYields', 1), -- Colors the yield in screen based on their respective type. Ex: Food yields are colored green
       ('CQUI_TraderAddDivider', 1), -- Adds a divider between groups in TradeOverview panel
       ('CQUI_TraderShowSortOrder', 0), -- Adds a divider between groups in TradeOverview panel
       ('CQUI_ShowProductionRecommendations', 0), -- Shows the advisor recommendation in the city produciton panel

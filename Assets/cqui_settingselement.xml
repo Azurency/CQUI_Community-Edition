@@ -420,9 +420,6 @@
       <Container ID="TraderScreenOption" Size="parent,parent" Hidden="1">
         <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-            <GridButton ID="TraderColorYieldsCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_TRADER_COLOR_YIELDS"/>
-          </Stack>
-          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <GridButton ID="TraderAddDividerCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_TRADER_ADD_DIVIDER"/>
           </Stack>
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">

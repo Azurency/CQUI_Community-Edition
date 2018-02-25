@@ -167,7 +167,6 @@ function InitializeGossipCheckboxes()
 end
 
 function InitializeTraderScreenCheckboxes()
-  PopulateCheckBox(Controls.TraderColorYieldsCheckbox, "CQUI_TraderColorYields", Locale.Lookup("LOC_CQUI_TRADER_COLOR_YIELDS_TOOLTIP"));
   PopulateCheckBox(Controls.TraderAddDividerCheckbox, "CQUI_TraderAddDivider", Locale.Lookup("LOC_CQUI_TRADER_ADD_DIVIDER_TOOLTIP"));
   PopulateCheckBox(Controls.TraderShowSortOrderCheckbox, "CQUI_TraderShowSortOrder", Locale.Lookup("LOC_CQUI_TRADER_SHOW_SORT_ORDER_TOOLTIP"));
 end
