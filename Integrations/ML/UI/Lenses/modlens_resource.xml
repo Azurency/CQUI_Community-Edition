@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Context>
+  <Container ID="ResourceLensOptionsPanel" Size="230,350" Anchor="L,B" ConsumeMouse="1">
+    <Grid Size="parent,parent" Texture="Tracker_OptionsBacking.dds" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119">
+      <Label Anchor="C,T" String="{LOC_HUD_RESOURCE_LENS:upper}" Offset="-6,10"  Style="FontFlair16" Color0="106,93,69,255" Color1="0,0,0,150" Color2="146,133,109,255" FontStyle="Glow" SmallCaps="20" SmallCapsLeading="0" SmallCapsType="EveryWord" KerningAdjustment="0" AutoScrollBar="1" AutoSizeScrollBar="1"/>
+      <ScrollPanel ID="ResourcePickList" Anchor="L,T" Offset="35,35" Size="parent,parent-65" Style="ScrollPanelWithLeftBar">
+        <Stack ID="ResourcePickStack" Anchor="L,T" StackGrowth="Down" Offset="-10,0" StackPadding="5">
+
+          <!-- BONUS -->
+          <CheckBox   ID="ShowBonusResource"               IsChecked="1"   Offset="15,4"   BoxOnLeft="1" TextOffset="-5,0" String="LOC_TOOLTIP_RESOURCE_LENS_BONUS" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds"    ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17"  Anchor="L,T"/>
+            <Stack ID="BonusResourcePickStack" Anchor="L,T" StackGrowth="Down" Offset="40,-3" StackPadding="0">
+            </Stack>
+
+          <!-- LUXURY -->
+          <CheckBox   ID="ShowLuxuryResource"               IsChecked="1"   Offset="15,4"   BoxOnLeft="1" TextOffset="-5,0" String="LOC_TOOLTIP_RESOURCE_LENS_LUXURY" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds"    ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17"  Anchor="L,T"/>
+            <Stack ID="LuxuryResourcePickStack" Anchor="L,T" StackGrowth="Down" Offset="40,-3" StackPadding="0">
+            </Stack>
+
+          <!-- STRATEGIC -->
+          <CheckBox   ID="ShowStrategicResource"               IsChecked="1"   Offset="15,4"   BoxOnLeft="1" TextOffset="-5,0" String="LOC_TOOLTIP_RESOURCE_LENS_STRATEGIC" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds"    ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17"  Anchor="L,T"/>
+            <Stack ID="StrategicResourcePickStack" Anchor="L,T" StackGrowth="Down" Offset="40,-3" StackPadding="0">
+            </Stack>
+
+        </Stack>
+      </ScrollPanel>
+    </Grid>
+  </Container>
+
+  <Instance Name="ResourcePickEntry">
+    <Container Size="130,20">
+      <CheckBox ID="ResourceCheckbox" IsChecked="1" Anchor="L,C" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
+      <Label ID="ResourceLabel" String="$Resource$" Anchor="L,C" Offset="17,1" Style="WhiteSemiBold14"/>
+    </Container>
+  </Instance>
+
+</Context>

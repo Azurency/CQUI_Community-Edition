@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Context>
+  <Container ID="OverlapLensOptionsPanel" Size="230,350" Anchor="L,B" ConsumeMouse="1">
+    <Grid  Size="parent,parent" Texture="Tracker_OptionsBacking.dds" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" Hidden="0">
+      <Label Anchor="C,T" String="{LOC_HUD_CITYOVERLAP_LENS:upper}" Offset="-6,10"  Style="FontFlair16" Color0="106,93,69,255" Color1="0,0,0,150" Color2="146,133,109,255" FontStyle="Glow" SmallCaps="20" SmallCapsLeading="0" SmallCapsType="EveryWord" KerningAdjustment="0" AutoScrollBar="1" AutoSizeScrollBar="1"/>
+
+      <Stack StackGrowth="Down" Padding="10">
+        <CheckBox ID="ShowLensOutsideBorder" WrapWidth="120" IsChecked="1" Offset="25,50" BoxOnLeft="1" TextOffset="-9,0" String="LOC_PANEL_CITYOVERLAP_OPTION1" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
+
+        <RadioButton ID="OverlapLensMouseNone" IsChecked="1" RadioGroup="OverlapMouse" TextOffset="-1,-1" String="LOC_PANEL_CITYOVERLAP_NMOUSE" Style="WhiteSemiBold14" Offset="17,4" ButtonTexture="Controls_RadioButtonLarge.dds" ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,35" Anchor="L,T" BoxOnLeft="1"/>
+
+        <RadioButton ID="OverlapLensMouseRange" RadioGroup="OverlapMouse" TextOffset="-1,-1" String="LOC_PANEL_CITYOVERLAP_RANGE" ToolTip="LOC_TOOLTIP_CITYOVERLAP_RANGE" Style="WhiteSemiBold14" Offset="17,0" ButtonTexture="Controls_RadioButtonLarge.dds" ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,35" Anchor="L,T" BoxOnLeft="1"/>
+      </Stack>
+
+      <Container Anchor="C,B" Offset="-5,50" Size="parent-45,70">
+        <Grid Texture="Controls_SeparatorAngled" TextureSize="14,6" Anchor="C,T" Size="parent,6" SliceCorner="6,4" Offset="0,0"/>
+
+        <Label Anchor="C,T" Offset="0,15" String="RANGE" WrapWidth="Parent-40" Align="Center" Style="FontFlair16" Color2="143,122,82,255" Color0="106,93,69,230" SmallCaps="20" SmallCapsLeading="0" SmallCapsType="EveryWord" KerningAdjustment="0" />
+
+        <Button ID="OverlapRangeDown" Style="ArrowButtonLeft" Offset="20,24" Anchor="L,C"/>
+        <Button ID="OverlapRangeUp" Style="ArrowButtonRight" Offset="20,24" Anchor="R,C"/>
+        <Label ID="OverlapRangeLabel"  String="6" Offset="0,24" Anchor="C,C" Align="Center" Style="EventPopupTitle" />
+      </Container>
+    </Grid>
+  </Container>
+</Context>

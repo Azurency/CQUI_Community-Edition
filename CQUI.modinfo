@@ -188,11 +188,6 @@
     <File>Integrations/IDS/Text/ids_text_pt.xml</File>
     <File>Integrations/IDS/Text/ids_text_ru.xml</File>
     <File>Integrations/IDS/Text/ids_text_zh.xml</File>
-    <File>Integrations/ML/UI/minimappanel.lua</File>
-    <File>Integrations/ML/UI/minimappanel.xml</File>
-    <File>Integrations/ML/UI/Panels/modallenspanel.lua</File>
-    <File>Integrations/ML/UI/Panels/modallenspanel.xml</File>
-    <File>Integrations/ML/morelenses_colors.sql</File>
     <File>Integrations/ML/Text/morelenses_text.xml</File>
     <File>Integrations/ML/Text/morelenses_text_de.xml</File>
     <File>Integrations/ML/Text/morelenses_text_es.xml</File>
@@ -204,6 +199,23 @@
     <File>Integrations/ML/Text/morelenses_text_pt.xml</File>
     <File>Integrations/ML/Text/morelenses_text_ru.xml</File>
     <File>Integrations/ML/Text/morelenses_text_zh.xml</File>
+    <File>Integrations/ML/UI/minimappanel.lua</File>
+    <File>Integrations/ML/UI/minimappanel.xml</File>
+    <File>Integrations/ML/UI/Panels/modallenspanel.lua</File>
+    <File>Integrations/ML/UI/Panels/modallenspanel.xml</File>
+    <File>Integrations/ML/morelenses_colors.sql</File>
+    <File>Integrations/ML/UI/lenssupport.lua</File>
+    <File>Integrations/ML/UI/Lenses/modlens_builder.lua</File>
+    <File>Integrations/ML/UI/Lenses/modlens_scout.lua</File>
+    <File>Integrations/ML/UI/Lenses/modlens_archaeologist.lua</File>
+    <File>Integrations/ML/UI/Lenses/modlens_barbarian.lua</File>
+    <File>Integrations/ML/UI/Lenses/modlens_adjacencyyield.lua</File>
+    <File>Integrations/ML/UI/Lenses/modlens_naturalist.lua</File>
+    <File>Integrations/ML/UI/Lenses/modlens_wonder.lua</File>
+    <File>Integrations/ML/UI/Lenses/modlens_cityoverlap.xml</File>
+    <File>Integrations/ML/UI/Lenses/modlens_cityoverlap.lua</File>
+    <File>Integrations/ML/UI/Lenses/modlens_resource.xml</File>
+    <File>Integrations/ML/UI/Lenses/modlens_resource.lua</File>
     <File>Integrations/BES/UI/espionagesupport.lua</File>
     <File>Integrations/BES/UI/Choosers/espionagechooser.lua</File>
     <File>Integrations/BES/UI/Choosers/espionagechooser.xml</File>
@@ -474,12 +486,27 @@
     </LocalizedText>
 
     <!-- ML -->
+    <ImportFiles id="MORELENSES_LENSES">
+      <Items>
+        <File>Integrations/ML/UI/lenssupport.lua</File>
+        <File>Integrations/ML/UI/Lenses/modlens_builder.lua</File>
+        <File>Integrations/ML/UI/Lenses/modlens_scout.lua</File>
+        <File>Integrations/ML/UI/Lenses/modlens_archaeologist.lua</File>
+        <File>Integrations/ML/UI/Lenses/modlens_barbarian.lua</File>
+        <File>Integrations/ML/UI/Lenses/modlens_adjacencyYield.lua</File>
+        <File>Integrations/ML/UI/Lenses/modlens_naturalist.lua</File>
+        <File>Integrations/ML/UI/Lenses/modlens_wonder.lua</File>
+      </Items>
+    </ImportFiles>
     <ImportFiles id="MORELENSES_IMPORT_FILES">
       <Items>
         <File>Integrations/ML/UI/minimappanel.lua</File>
         <File>Integrations/ML/UI/minimappanel.xml</File>
         <File>Integrations/ML/UI/Panels/modallenspanel.lua</File>
         <File>Integrations/ML/UI/Panels/modallenspanel.xml</File>
+        <File>Integrations/ML/UI/Lenses/modlens_cityoverlap.xml</File>
+        <!-- ModLens_CityOverlap.lua implied -->
+        <File>Integrations/ML/UI/Lenses/modlens_resource.xml</File>
       </Items>
     </ImportFiles>
     <LocalizedText id="MORELENSES_TEXT">
@@ -503,5 +530,6 @@
       </Items>
     </UpdateDatabase>
   </Components>
+
   <Settings />
 </Mod>
