@@ -155,6 +155,7 @@ function RefreshBottom()
       Controls.PossibleMissionsLabel:SetHide(false);
       Controls.DestinationChooserButtons:SetHide(false);
       Controls.MissionScrollPanel:SetParentRelativeSizeY(DESTINATION_CHOOSER_MISSIONSCROLLPANEL_RELATIVE_SIZE_Y);
+      RefreshDestinationList();
       RefreshMissionList();
     else
       Controls.DestinationPanel:SetHide(false);
@@ -188,18 +189,12 @@ end
 -- ===========================================================================
 function RefreshDestinationList()
   m_RouteChoiceIM:ResetInstances();
-  local localPlayer = Players[Game.GetLocalPlayer()];
 
   -- Add each players cities to destination list
   local players:table = Game.GetPlayers();
   for i, player in ipairs(players) do
-    local playerInfluence:table = player:GetInfluence();
-    -- Ignore city states (only they can receive influence)
-    if playerInfluence and not playerInfluence:CanReceiveInfluence() and
-        m_filterList[m_filterSelected].FilterFunction(player) then
-      if (player:GetID() == localPlayer:GetID() or player:GetTeam() == -1 or localPlayer:GetTeam() == -1 or player:GetTeam() ~= localPlayer:GetTeam()) then
-        AddPlayerCities(player)
-      end
+    if m_filterList[m_filterSelected].FilterFunction(player) and ShouldAddPlayer(player) then
+      AddPlayerCities(player)
     end
   end
 
@@ -487,6 +482,26 @@ function UpdateCityBanner(city:table)
 end
 
 -- ===========================================================================
+function ShouldAddPlayer(player:table)
+  local localPlayer = Players[Game.GetLocalPlayer()];
+  -- Only show full civs
+  if player:IsMajor() then
+    if (player:GetID() == localPlayer:GetID() or player:GetTeam() == -1 or localPlayer:GetTeam() == -1 or player:GetTeam() ~= localPlayer:GetTeam()) then
+      return true
+    end
+  end
+  return false
+end
+
+-- ===========================================================================
+function ShouldAddToFilter(player:table)
+  if player:IsMajor() and HasMetAndAlive(player) and (not player:IsBarbarian()) then
+    return true
+  end
+  return false
+end
+
+-- ===========================================================================
 function AddPlayerCities(player:table)
   local playerCities:table = player:GetCities();
   for j, city in playerCities:Members() do
@@ -502,37 +517,36 @@ end
 
 -- ===========================================================================
 function shouldDisplayCity(city:table)
-  local isValid = true;
   if Controls.FilterCityCenterCheckbox:IsChecked() and not
       hasDistrict(city, "DISTRICT_CITY_CENTER") then
-    isValid = false
+    return false
   end
-  if isValid and Controls.FilterCommericalHubCheckbox:IsChecked() and not
+  if Controls.FilterCommericalHubCheckbox:IsChecked() and not
       hasDistrict(city, "DISTRICT_COMMERCIAL_HUB") then
-    isValid = false
+    return false
   end
-  if isValid and Controls.FilterTheaterCheckbox:IsChecked() and not
+  if Controls.FilterTheaterCheckbox:IsChecked() and not
       hasDistrict(city, "DISTRICT_THEATER") then
-    isValid = false
+    return false
   end
-  if isValid and Controls.FilterCampusCheckbox:IsChecked() and not
+  if Controls.FilterCampusCheckbox:IsChecked() and not
       hasDistrict(city, "DISTRICT_CAMPUS") then
-    isValid = false
+    return false
   end
-  if isValid and Controls.FilterIndustrialCheckbox:IsChecked() and not
+  if Controls.FilterIndustrialCheckbox:IsChecked() and not
       hasDistrict(city, "DISTRICT_INDUSTRIAL_ZONE") then
-    isValid = false
+    return false
   end
-  if isValid and Controls.FilterNeighborhoodCheckbox:IsChecked() and not
+  if Controls.FilterNeighborhoodCheckbox:IsChecked() and not
       hasDistrict(city, "DISTRICT_NEIGHBORHOOD") then
-    isValid = false
+    return false
   end
-  if isValid and Controls.FilterSpaceportCheckbox:IsChecked() and not
+  if Controls.FilterSpaceportCheckbox:IsChecked() and not
       hasDistrict(city, "DISTRICT_SPACEPORT") then
-    isValid = false
+    return false
   end
 
-  return isValid
+  return true
 end
 
 -- ===========================================================================
@@ -549,8 +563,8 @@ function AddDestination(city:table)
   destinationInstance.BannerLighter:SetColor( brighterBackColor );
   destinationInstance.CityName:SetColor( frontColor );
 
-  -- Update capital indicator
-  if city:IsCapital() then
+  -- Update capital indicator but never show it for city-states
+  if city:IsCapital() and Players[city:GetOwner()]:IsMajor() then
     TruncateStringWithTooltip(destinationInstance.CityName, 185, "[ICON_Capital] " .. Locale.ToUpper(city:GetName()));
   else
     TruncateStringWithTooltip(destinationInstance.CityName, 185, Locale.ToUpper(city:GetName()));
@@ -569,16 +583,80 @@ function AddDestination(city:table)
   destinationInstance.BannerBase:SetToolTipString(Locale.Lookup("LOC_ESPIONAGECHOOSER_TRAVEL_TIME_TOOLTIP", travelTime, establishTime));
 
   -- Update district icons
-  RefreshDistrictIcon(city, "DISTRICT_CITY_CENTER", destinationInstance.CityCenterIcon);
-  RefreshDistrictIcon(city, "DISTRICT_COMMERCIAL_HUB", destinationInstance.CommericalIcon);
-  RefreshDistrictIcon(city, "DISTRICT_THEATER", destinationInstance.TheaterIcon);
-  RefreshDistrictIcon(city, "DISTRICT_CAMPUS", destinationInstance.ScienceIcon);
-  RefreshDistrictIcon(city, "DISTRICT_INDUSTRIAL_ZONE", destinationInstance.IndustrialIcon);
-  RefreshDistrictIcon(city, "DISTRICT_NEIGHBORHOOD", destinationInstance.NeighborhoodIcon);
-  RefreshDistrictIcon(city, "DISTRICT_SPACEPORT", destinationInstance.SpaceIcon);
+  destinationInstance.CityDistrictStack:DestroyAllChildren();
+  AddDistrictIcon(destinationInstance.CityDistrictStack, city, "DISTRICT_CITY_CENTER");
+  AddDistrictIcon(destinationInstance.CityDistrictStack, city, "DISTRICT_COMMERCIAL_HUB");
+  AddDistrictIcon(destinationInstance.CityDistrictStack, city, "DISTRICT_THEATER");
+  AddDistrictIcon(destinationInstance.CityDistrictStack, city, "DISTRICT_CAMPUS");
+  AddDistrictIcon(destinationInstance.CityDistrictStack, city, "DISTRICT_INDUSTRIAL_ZONE");
+  AddDistrictIcon(destinationInstance.CityDistrictStack, city, "DISTRICT_NEIGHBORHOOD");
+  AddDistrictIcon(destinationInstance.CityDistrictStack, city, "DISTRICT_SPACEPORT");
 
   -- Set button callback
   destinationInstance.DestinationButton:RegisterCallback( Mouse.eLClick, function() OnSelectDestination(city);  end);
+end
+
+-- ===========================================================================
+function AddDistrictIcon(stackControl:table, city:table, districtType:string)
+  local districtInstance:table = {};
+  ContextPtr:BuildInstanceForControl( "CityDistrictInstance", districtInstance, stackControl );
+
+  local toolTipString:string = "";
+
+  -- We're manipulating the alpha to hide each element so they maintain their stack positions
+  if hasDistrict(city, districtType) then --ARISTOS: make use of the espionagesupport.lua funtion, more efficient and has been fixed to only show valid targets
+    toolTipString = Locale.Lookup(GameInfo.Districts[districtType].Name);
+    districtInstance.DistrictIcon:SetAlpha(1.0);
+  else
+    districtInstance.DistrictIcon:SetAlpha(0.0);
+    return;
+  end
+
+  -- Update district icon
+  districtInstance.DistrictIcon:SetIcon("ICON_" .. districtType);
+
+  -- Check if one of our spies is active in this district
+  local shouldShowActiveSpy:boolean = false;
+  local playerUnits:table = Players[Game.GetLocalPlayer()]:GetUnits();
+  for i,unit in playerUnits:Members() do
+    local unitInfo:table = GameInfo.Units[unit:GetUnitType()];
+    if unitInfo.Spy then
+      local operationType:number = unit:GetSpyOperation();
+      local operationInfo:table = GameInfo.UnitOperations[operationType];
+      if operationInfo then
+        local spyPlot:table = Map.GetPlot(unit:GetX(), unit:GetY());
+        local targetCity:table = Cities.GetPlotPurchaseCity(spyPlot);
+        if targetCity:GetOwner() == city:GetOwner() and targetCity:GetID() == city:GetID() then
+          local activeDistrictType:number = spyPlot:GetDistrictType();
+          local districtInfo = GameInfo.Districts[activeDistrictType];
+          if districtInfo.DistrictType == districtType then
+            -- Turns Remaining
+            local turnsRemaining:number = unit:GetSpyOperationEndTurn() - Game.GetCurrentGameTurn();
+            if turnsRemaining <= 0 then
+              turnsRemaining = 0;
+            end
+
+            shouldShowActiveSpy = true;
+            toolTipString = toolTipString .. "[NEWLINE]" ..
+              Locale.Lookup(unit:GetName()) .. ": " ..
+              Locale.Lookup(operationInfo.Description) .. " -- " ..
+              Locale.Lookup("LOC_ESPIONAGEOVERVIEW_MORE_TURNS", turnsRemaining);
+          end
+        end
+      end
+    end
+  end
+
+  districtInstance.DistrictIcon:SetToolTipString( toolTipString );
+
+  if shouldShowActiveSpy then
+    local backColor:number, frontColor:number  = UI.GetPlayerColors( Game.GetLocalPlayer() );
+    districtInstance.SpyIconBack:SetColor( backColor );
+    districtInstance.SpyIconFront:SetColor( frontColor );
+    districtInstance.SpyIconBack:SetHide(false);
+  else
+    districtInstance.SpyIconBack:SetHide(true);
+  end
 end
 
 -- ===========================================================================
@@ -633,6 +711,14 @@ function HasMetAndAlive(player:table)
   return false;
 end
 
+function IsCityState(player:table)
+  local playerInfluence:table = player:GetInfluence();
+  if  playerInfluence:CanReceiveInfluence() then
+    return true
+  end
+  return false
+end
+
 -- ---------------------------------------------------------------------------
 -- Filter pulldown functions
 -- ---------------------------------------------------------------------------
@@ -647,11 +733,18 @@ function RefreshFilters()
 
   -- Add Players Filter
   local players:table = Game.GetPlayers();
+  local addedCityStateFilter:boolean = false
   for i, pPlayer in ipairs(players) do
-    if pPlayer:IsMajor() and HasMetAndAlive(pPlayer) and not pPlayer:IsBarbarian() then
-      local playerConfig:table = PlayerConfigurations[pPlayer:GetID()];
-      local name = Locale.Lookup(GameInfo.Civilizations[playerConfig:GetCivilizationTypeID()].Name);
-      AddFilter(name, function(a) return a:GetID() == pPlayer:GetID() end);
+    if ShouldAddToFilter(pPlayer) then
+      if pPlayer:IsMajor() then
+        local playerConfig:table = PlayerConfigurations[pPlayer:GetID()];
+        local name = Locale.Lookup(GameInfo.Civilizations[playerConfig:GetCivilizationTypeID()].Name);
+        AddFilter(name, function(a) return a:GetID() == pPlayer:GetID() end);
+      elseif not addedCityStateFilter then
+        -- Add "City States" Filter
+        AddFilter(Locale.Lookup("LOC_HUD_REPORTS_CITY_STATE"), IsCityState);
+        addedCityStateFilter = true
+      end
     end
   end
 

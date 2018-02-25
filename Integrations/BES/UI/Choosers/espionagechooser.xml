@@ -151,7 +151,7 @@
 
   <!-- Instances -->
   <Instance Name="DestinationInstance">
-    <GridButton ID="DestinationButton" Size="parent,72" Anchor="C,T">
+    <GridButton ID="DestinationButton" Size="parent,75" Anchor="C,T">
       <GridData Texture="DestinationChooser_Button" StateOffsetIncrement="0,76" SliceCorner="14,14" SliceSize="19,44" SliceTextureSize="48,76"/>
 
       <!-- City Banner -->
@@ -169,22 +169,17 @@
       </Grid>
 
       <!-- District Info -->
-      <Grid Size="225,30" Anchor="C,B" Offset="-1,6" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16" >
+      <Grid Size="225,32" Anchor="C,B" Offset="-1,7" Texture="Controls_ItemContainer" SliceCorner="8,8" SliceTextureSize="16,16" >
         <!-- Column Background -->
         <Box Size="32,parent" Offset="32,0" Color="255,255,255,10"/>
         <Box Size="32,parent" Offset="96,0" Color="255,255,255,10"/>
         <Box Size="32,parent" Offset="161,0" Color="255,255,255,10"/>
 
-        <Stack Anchor="L,C" StackGrowth="Right">
-          <Container Size="32,32"><Image ID="CityCenterIcon"    Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="0,0"   /> </Container>
-          <Container Size="32,32"><Image ID="CommericalIcon"    Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="192,0" /> </Container>
-          <Container Size="32,32"><Image ID="TheaterIcon"       Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="0,32"  /> </Container>
-          <Container Size="32,32"><Image ID="ScienceIcon"       Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="64,0"  /> </Container>
-          <Container Size="32,32"><Image ID="IndustrialIcon"    Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="32,32" /> </Container>
-          <Container Size="32,32"><Image ID="NeighborhoodIcon"  Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="64,32" /> </Container>
-          <Container Size="32,32"><Image ID="SpaceIcon"         Size="32,32" Offset="0,0" Texture="Districts32" TextureOffset="128,32"/> </Container>
+        <Stack ID="CityDistrictStack" Anchor="L,T" StackGrowth="Right">
+          <!-- Disctricts go here -->
         </Stack>
       </Grid>
+
     </GridButton>
   </Instance>
 
@@ -233,5 +228,14 @@
         </Stack>
       </Grid>
     </GridButton>
+  </Instance>
+
+  <!-- District Instance -->
+  <Instance Name="CityDistrictInstance">
+    <Image ID="DistrictIcon" Size="32,32" Texture="Districts32" Color="255,255,255,255">
+      <Image ID="SpyIconBack" Anchor="C,C" Size="34,31" Offset="0,0" Texture="Espionage_SpyIconBack">
+        <Image ID="SpyIconFront" Anchor="C,C" Size="30,27" Offset="0,0" Texture="Espionage_SpyIconFront"/>
+      </Image>
+    </Image>
   </Instance>
 </Context>

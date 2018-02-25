@@ -129,7 +129,7 @@ function hasDistrict(city:table, districtType:string)
   local hasDistrict:boolean = false;
   local cityDistricts:table = city:GetDistricts();
   for i, district in cityDistricts:Members() do
-    if district:IsComplete() and not district:IsPillaged() then
+    if district:IsComplete() and not district:IsPillaged() then --ARISTOS: to only show available and valid targets in each city, both for espionage overview and selector
       --gets the district type of the currently selected district
       local districtInfo:table = GameInfo.Districts[district:GetType()];
       local currentDistrictType = districtInfo.DistrictType
