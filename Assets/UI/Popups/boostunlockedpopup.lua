@@ -273,7 +273,7 @@ function DoCivicBoost(ePlayer, civicIndex, iCivicProgress, eSource)
     local civicBoostEntry:table = { civicIndex=civicIndex, iCivicProgress=iCivicProgress, eSource=eSource };
 
     -- If we're not showing a boost popup then add it to the popup system queue
-    if not UI.CanShowPopup() then
+    if UI.CanShowPopup() then
       ShowBoost(civicBoostEntry);
     else
       -- Add to queue if already showing a boost popup
@@ -294,7 +294,7 @@ function DoTechBoost(ePlayer, techIndex, iTechProgress, eSource)
     local techBoostEntry:table = { techIndex=techIndex, iTechProgress=iTechProgress, eSource=eSource };
 
     -- If we're not showing a boost popup then add it to the popup system queue
-    if not UI.CanShowPopup() then
+    if UI.CanShowPopup() then
       ShowBoost(techBoostEntry);
     else
       -- Add to queue if already showing a boost popup
