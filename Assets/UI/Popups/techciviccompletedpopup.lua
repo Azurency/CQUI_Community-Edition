@@ -248,8 +248,8 @@ function ShowNextQueuedPopup()
 
   -- Find first entry in table, display that, then remove it from the internal queue
   for i, entry in ipairs(m_kQueuedPopups) do
-    ShowCompletedPopup(entry);
     table.remove(m_kQueuedPopups, i);
+    ShowCompletedPopup(entry);
     break;
   end
 
@@ -348,7 +348,7 @@ end
 -- ===========================================================================
 --  UI Event
 -- ===========================================================================
-function OnShow( )
+function OnShow()
     UI.PlaySound("Pause_Advisor_Speech");
     UI.PlaySound("Resume_TechCivic_Speech");
     if(m_quote_audio and #m_quote_audio > 0 and GameConfiguration.GetValue("CQUI_TechPopupAudio")) then
