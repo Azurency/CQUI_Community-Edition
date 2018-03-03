@@ -39,7 +39,7 @@
           <LuaContext     FileName="ChatPanel"/>
         </Container>
 
-        <Container        ID="TutorialGoals" Size="Auto,Auto" Offset="-2,0">
+        <Container        ID="TutorialGoals" Size="300,106" Offset="-2,0">
           <LuaContext     FileName="TutorialGoals"        Hidden="1" />
         </Container>
       </Stack>
@@ -48,9 +48,8 @@
 
   <ScrollPanel          ID="DropdownScroll"         Offset="15,98"  Size="194,500"  Vertical="1">
     <SlideAnim          ID="DropdownAnim"           Start="0,-490" EndOffset="0,480" Function="OutQuint" Speed="3" Cycle="Once" Stopped="1">
-      <Grid             ID="DropdownGrid"           Offset="0,-25"  Size="270,auto"  Texture="Tracker_OptionsBacking" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" MinSize="121,119" AutoSizePadding="0,10">
-        <Stack  Anchor="C,T" Offset="0,0" StackGrowth="Bottom" StackPadding="5">
-          <Container Size="30,40"/>
+      <Grid             ID="DropdownGrid"           Offset="0,-25"  Size="270,auto"  Texture="Tracker_OptionsBacking" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" MinSize="121,119" AutoSizePadding="0,15">
+        <Stack  Anchor="C,T" Offset="0,40" StackGrowth="Bottom" StackPadding="5">
           <Container  ID="ResearchCheckButton" Size="auto,auto" Anchor="R,T">
             <CheckBox ID="ResearchCheck"      Anchor="R,T"  Style="WorldTrackerCheckBox" TextOffset="-5" String="LOC_HIDE_RESEARCH_PANEL" WrapWidth="180" Align="Right"/>
           </Container>

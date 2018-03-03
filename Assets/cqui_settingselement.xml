@@ -47,13 +47,6 @@
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <GridButton ID="ToggleYieldsOnLoadCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_GENERAL_TOGGLEYIELDSONLOAD" />
           </Stack>
-          <Grid Size="0,35" Anchor="R,T" AutoSize="H" Color="0,0,0,0">
-            <Stack Anchor="C,T" StackGrowth="Left" Padding="3">
-              <Label String="777" Style="ShellOptionText" Anchor="L,C" ID="MinimapSizeText" Hidden="1"/>
-              <Label Style="ShellOptionText" String="LOC_CQUI_GENERAL_MINIMAPSIZE"/>
-            </Stack>
-            <Slider Style="SliderControl" Anchor="C,B" Size="300,13" SpaceForScroll="0" ID="MinimapSizeSlider" Steps="100" />
-          </Grid>
         </Stack>
       </Container>
       <Container ID="PopupsOptions" Size="parent,parent" Hidden="1">
@@ -409,19 +402,16 @@
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <GridButton ID="AutoapplyScoutLensCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_LENSES_AUTOAPPLYSCOUTLENS"/>
           </Stack>
-          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
+          <!--<Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <GridButton ID="ShowNothingToDoInBuilderLens" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_LENSES_SHOWNOTHINGTODO_BUILDER"/>
           </Stack>
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <GridButton ID="ShowGenericInBuilderLens" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_LENSES_SHOWGENERIC_BUILDER"/>
-          </Stack>
+          </Stack>-->
         </Stack>
       </Container>
       <Container ID="TraderScreenOption" Size="parent,parent" Hidden="1">
         <Stack Anchor="C,T" StackGrowth="Down" Padding="5" Offset="0,50">
-          <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
-            <GridButton ID="TraderColorYieldsCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_TRADER_COLOR_YIELDS"/>
-          </Stack>
           <Stack Anchor="R,T" StackGrowth="Left" Padding="5">
             <GridButton ID="TraderAddDividerCheckbox" Anchor="L,C" Offset="0,0" Size="300,24" Style="CheckBoxControl" String="LOC_CQUI_TRADER_ADD_DIVIDER"/>
           </Stack>

@@ -2,6 +2,7 @@
 --  HUD Partial Screen Hooks
 -- ===========================================================================
 include("GameCapabilities");
+include("InstanceManager");
 
 -- ===========================================================================
 --  Action Hotkeys
@@ -34,7 +35,9 @@ local m_kPartialScreens:table = { -- Screens that are considered "partial" and m
 local m_isEspionageUnlocked   :boolean = false;
 local m_isTradeRoutesUnlocked :boolean = false;
 local m_isCityStatesUnlocked  :boolean = false;
-local m_isDebug         :boolean = false;
+local m_isDebug               :boolean = false;
+
+local m_ScreenHookIM:table = InstanceManager:new("ScreenHookInstance", "ScreenHookStack", Controls.ButtonStack);
 
 
 -- ===========================================================================
@@ -125,37 +128,13 @@ end
 -- ===========================================================================
 -- ===========================================================================
 function Resize()
-  -- The Launch Bar width should accomodate how many hooks are currently in the stack.
-  if (m_isTradeRoutesUnlocked and HasCapability("CAPABILITY_TRADE_VIEW")) then
-    Controls.TradeRoutesButton:SetHide(false);
-    Controls.TradeRoutesBolt:SetHide(false);
-  else
-    if(not m_isDebug) then
-      Controls.TradeRoutesButton:SetHide(true);
-      Controls.TradeRoutesBolt:SetHide(true);
-    end
-  end
-  if (m_isEspionageUnlocked and HasCapability("CAPABILITY_ESPIONAGE_VIEW")) then
-    Controls.EspionageButton:SetHide(false);
-    Controls.EspionageBolt:SetHide(false);
-  else
-    if(not m_isDebug) then
-      Controls.EspionageButton:SetHide(true);
-      Controls.EspionageBolt:SetHide(true);
-    end
-  end
-  if (m_isCityStatesUnlocked and HasCapability("CAPABILITY_CITY_STATES_VIEW")) then
-    Controls.CityStatesButton:SetHide(false);
-    Controls.CityStatesBolt:SetHide(false);
-  else
-    if(not m_isDebug) then
-      Controls.CityStatesButton:SetHide(true);
-      Controls.CityStatesBolt:SetHide(true);
-    end
-  end
-
+  -- Reset screen hooks instances
+  m_ScreenHookIM:ResetInstances();
+ 
+  AddScreenHooks();
+ 
+  -- The Launch Bar width should accomodate how many hooks are currently in the stack.  
   Controls.ButtonStack:CalculateSize();
-  Controls.ButtonStack:ReprocessAnchoring();
 
   if( MIN_BG_SIZE > Controls.ButtonStack:GetSizeX() + BG_PADDING) then
     Controls.LaunchBacking:SetSizeX(MIN_BG_SIZE);
@@ -165,10 +144,32 @@ function Resize()
     Controls.LaunchBacking:SetSizeX(Controls.ButtonStack:GetSizeX() + BG_PADDING);
   end
   Controls.LaunchBackingDropShadow:SetSizeX(Controls.ButtonStack:GetSizeX() + BG_TILE_PADDING);
-  Controls.LaunchBackingDropShadow:ReprocessAnchoring();
   Controls.LaunchBackingTile:SetSizeX(Controls.ButtonStack:GetSizeX() - BG_TILE_PADDING);
   LuaEvents.PartialScreenHooks_Resize();
 end
+
+-- ===========================================================================
+function AddScreenHooks()
+  if (m_isCityStatesUnlocked and HasCapability("CAPABILITY_CITY_STATES_VIEW")) then
+    AddScreenHook("LaunchBar_Hook_CityStates", "LOC_PARTIALSCREEN_CITYSTATES_TOOLTIP", function() OnToggleCityStates(); end);
+  end
+  if (m_isTradeRoutesUnlocked and HasCapability("CAPABILITY_TRADE_VIEW")) then
+    AddScreenHook("LaunchBar_Hook_Trade", "LOC_PARTIALSCREEN_TRADEROUTES_TOOLTIP", function() OnToggleTradeOverview(); end);
+  end
+  if (m_isEspionageUnlocked and HasCapability("CAPABILITY_ESPIONAGE_VIEW")) then
+    AddScreenHook("LaunchBar_Hook_Espionage", "LOC_PARTIALSCREEN_ESPIONAGE_TOOLTIP", function() OnToggleEspionage(); end);
+  end
+end
+
+-- ===========================================================================
+function AddScreenHook(texture:string, tooltip:string, callback:ifunction)
+  local screenHookInst:table = m_ScreenHookIM:GetInstance();
+  screenHookInst.ScreenHookImage:SetTexture(texture);
+  screenHookInst.ScreenHookButton:SetToolTipString(Locale.Lookup(tooltip));
+  screenHookInst.ScreenHookButton:RegisterCallback( Mouse.eLClick, callback );
+  screenHookInst.ScreenHookButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+end
+
 
 -- ===========================================================================
 --  Refresh Data and View
@@ -195,7 +196,6 @@ function CheckTradeCapacity(localPlayer)
     local routesCapacity:number = playerTrade:GetOutgoingRouteCapacity();
     if (routesCapacity > 0) then
       m_isTradeRoutesUnlocked = true;
-      Resize();
     end
   end
 end
@@ -206,7 +206,6 @@ function CheckSpyCapacity(localPlayer)
     local spyCapacity:number = playerDiplo:GetSpyCapacity();
     if (spyCapacity > 0) then
       m_isEspionageUnlocked = true;
-      Resize();
     end
   end
 end
@@ -220,6 +219,7 @@ function OnCivicCompleted( player:number, civic:number, isCanceled:boolean)
     end
     CheckTradeCapacity(localPlayer);
     CheckSpyCapacity(localPlayer);
+    Resize();
   end
 end
 
@@ -233,7 +233,13 @@ function OnTurnBegin()
 
   CheckTradeCapacity(localPlayer);
   CheckSpyCapacity(localPlayer);
-
+  CheckCityStatesUnlocked(localPlayer); 
+  
+  Resize();
+end
+ 
+-- ===========================================================================
+function CheckCityStatesUnlocked(localPlayer:table)
   --  Check to see if the player has met any city-states
   --  Note: I'm using not IsMajor and not IsBarbarian to determine the city-state check at this point - though elsewhere we have used CanReceiveInfluencePoints.
   --  For future expansions we should probably create an IsMinor check for the Player object.
@@ -246,8 +252,6 @@ function OnTurnBegin()
       end
     end
   end
-
-  Resize();
 end
 
 -- ===========================================================================
@@ -267,11 +271,11 @@ end
 --  Input Hotkey Event
 -- ===========================================================================
 function OnInputActionTriggered( actionId )
-  if actionId == m_ToggleCSId then
+  if m_isCityStatesUnlocked and actionId == m_ToggleCSId then
     OnToggleCityStates();
     UI.PlaySound("Play_UI_Click");
   end
-  if actionId == m_ToggleEspId and HasCapability("CAPABILITY_ESPIONAGE_VIEW") then
+  if m_isCityStatesUnlocked and actionId == m_ToggleEspId and HasCapability("CAPABILITY_ESPIONAGE_VIEW") then
     if UI.QueryGlobalParameterInt("DISABLE_ESPIONAGE_HOTKEY") ~= 1 then
         OnToggleEspionage();
         UI.PlaySound("Play_UI_Click");
@@ -281,7 +285,7 @@ function OnInputActionTriggered( actionId )
     OnToggleWorldRankings();
     UI.PlaySound("Play_UI_Click");
   end
-  if actionId == m_ToggleTradeId and HasCapability("CAPABILITY_TRADE_VIEW") then
+  if m_isCityStatesUnlocked and actionId == m_ToggleTradeId and HasCapability("CAPABILITY_TRADE_VIEW") then
     OnToggleTradeOverview();
     UI.PlaySound("Play_UI_Click");
   end
@@ -308,6 +312,9 @@ function OnTutorialCloseAll()
   if IsPartialScreenOpen("WorldRankings") then    LuaEvents.PartialScreenHooks_CloseWorldRankings(); end
 end
 
+-- ===========================================================================
+-- "Modular Screen" mod by Astog
+-- ===========================================================================
 function OnAddScreenHook(hookInfo:table)
   -- print("Build hook")
   local tButtonEntry:table = {};
@@ -366,18 +373,17 @@ function OnAddScreenHook(hookInfo:table)
 end
 
 -- ===========================================================================
+function OnInit()
+  OnTurnBegin();
+end
+
+-- ===========================================================================
 function Initialize()
-  Controls.CityStatesButton:RegisterCallback( Mouse.eLClick,    OnToggleCityStates );
-  Controls.CityStatesButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.EspionageButton:RegisterCallback( Mouse.eLClick,   OnToggleEspionage );
-  Controls.EspionageButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.WorldRankingsButton:RegisterCallback( Mouse.eLClick, OnToggleWorldRankings );
   Controls.WorldRankingsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.TradeRoutesButton:RegisterCallback( Mouse.eLClick,   OnToggleTradeOverview );
-  Controls.TradeRoutesButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-
+  
   Events.CivicCompleted.Add(OnCivicCompleted);
-  Events.DiplomacyMeet.Add( OnDiplomacyMeet );
+  Events.DiplomacyMeet.Add( function() OnDiplomacyMeet(); end);
   Events.InputActionTriggered.Add( OnInputActionTriggered );
   Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );
   Events.LocalPlayerChanged.Add( OnLocalPlayerChanged );
@@ -418,6 +424,7 @@ function Initialize()
   LuaEvents.PartialScreenHooks_AddHook(hookInfo1);
   ]]
 
-  OnTurnBegin();
+  ContextPtr:SetInitHandler(OnInit);
 end
+
 Initialize();

@@ -26,6 +26,9 @@ local DATA_FIELD_RELIGION_ICONS_IM :string = "m_IconsIM";
 local DATA_FIELD_RELIGION_FOLLOWER_LIST_IM :string = "m_FollowerListIM";
 local DATA_FIELD_RELIGION_POP_CHART_IM :string = "m_PopChartIM";
 local DATA_FIELD_RELIGION_INFO_INSTANCE :string = "m_ReligionInfoInst";
+
+local RELIGION_POP_CHART_TOOLTIP_HEADER		:string = Locale.Lookup("LOC_CITY_BANNER_FOLLOWER_PRESSURE_TOOLTIP_HEADER");
+
 local OFFSET_RELIGION_BANNER  :number = 25;
 local ICON_HOLY_SITE      :string = "Faith";
 local ICON_PRESSURE_DOWN    :string = "PressureDown";
@@ -93,27 +96,28 @@ end
 
 -- The structure that holds the banner instance data
 hstructure CityBanner
-  meta              : CityBannerMeta;
+  meta                    : CityBannerMeta;
 
-  m_InstanceManager       : table;              -- The instance manager that made the control set.
-    m_Instance            : table;              -- The instanced control set.
+  m_InstanceManager       : table;           -- The instance manager that made the control set.
+  m_Instance              : table;           -- The instanced control set.
 
-    m_Type              : number;             -- Full, mini, etc...
-  m_Style             : number;             -- Team or other
-    m_IsSelected          : boolean;
-    m_IsCurrentlyVisible      : boolean;
-  m_IsForceHide         : boolean;
-    m_IsDimmed            : boolean;
-  m_OverrideDim         : boolean;
-  m_FogState            : number;
+  m_Type                  : number;          -- Full, mini, etc...
+  m_Style                 : number;          -- Team or other
+  m_IsSelected            : boolean;
+  m_IsCurrentlyVisible    : boolean;
+  m_IsForceHide           : boolean;
+  m_IsDimmed              : boolean;
+  m_OverrideDim           : boolean;
+  m_FogState              : number;
 
-    m_Player            : table;
-    m_CityID            : number;   -- The city ID.  Keeping just the ID, rather than a reference because there will be times when we need the value, but the city instance will not exist.
-  m_DistrictID          : number;   -- The district ID.
-  m_PlotX             : number;   -- the X and Y location of the plot associated with the banner. We need this in cases where we need a banner not associated with a district (ex. Airstrip Improvement)
-  m_PlotY             : number;
-  m_IsImprovementBanner     : boolean;
-  m_eMajorityReligion       : number;
+  m_Player                : table;
+  m_CityID                : number;          -- The city ID.  Keeping just the ID, rather than a reference because there will be times when we need the value, but the city instance will not exist.
+  m_DistrictID            : number;          -- The district ID.
+  m_PlotX                 : number;          -- the X and Y location of the plot associated with the banner. We need this in cases where we need a banner not associated with a district (ex. Airstrip Improvement)
+  m_PlotY                 : number;
+  m_IsImprovementBanner   : boolean;
+  m_eMajorityReligion     : number;
+  m_UnitListEnabled				: boolean;         -- if this is an aerodome marks whether the unit dropdown is enabled when fully visible.
 end
 
 
@@ -168,6 +172,7 @@ local SIZEOFPOPANDPRODMETERS    :number = 15; --The amount to add to the city ba
 local CQUI_ShowCitizenIconsOnCityHover:boolean = false;
 local CQUI_ShowCityManageAreaOnCityHover:boolean = true;
 local CQUI_CityManageAreaShown:boolean = false;
+local CQUI_CityManageAreaShouldShow:boolean = false;
 
 -- ===========================================================================
 --  QUI
@@ -196,6 +201,7 @@ function CQUI_OnSettingsInitialized()
 
   CQUI_ShowCitizenIconsOnCityHover = GameConfiguration.GetValue("CQUI_ShowCitizenIconsOnCityHover");
   CQUI_ShowCityManageAreaOnCityHover = GameConfiguration.GetValue("CQUI_ShowCityManageAreaOnCityHover");
+  CQUI_ShowCityManageAreaInScreen = GameConfiguration.GetValue("CQUI_ShowCityMangeAreaInScreen")
 end
 
 function CQUI_OnSettingsUpdate()
@@ -280,8 +286,7 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
     if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)
         and UI.GetInterfaceMode() == InterfaceModeTypes.SELECTION
         and UI.GetHeadSelectedUnit() == nil then
-      LuaEvents.Area_ShowCitizenManagement(cityID);
-      CQUI_CityManageAreaShown = true;
+      CQUI_ShowCitizenManagementLens(cityID)
     end
 
     local kPlayer = Players[playerID];
@@ -357,6 +362,10 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
     end
 
     tResults  = CityManager.GetCommandTargets( kCity, CityCommandTypes.PURCHASE, tParameters );
+    if tResults == nil then
+      return;
+    end
+
     tPlots    = tResults[CityCommandResults.PLOTS];
 
     if (tPlots ~= nil and table.count(tPlots) ~= 0) and UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) == false then
@@ -434,10 +443,9 @@ function CQUI_OnBannerMouseExit(playerID: number, cityID: number)
   end
 
   -- Astog: Fix for lens being cleared when having other lenses on
-  if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)
+  if CQUI_ShowCityManageAreaOnCityHover and UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_MANAGEMENT
       and CQUI_CityManageAreaShown then
-    LuaEvents.Area_ClearCitizenManagement();
-    CQUI_CityManageAreaShown = false;
+    CQUI_ClearCitizenManagementLens()
   end
 
   local tPlots    :table = tResults[CityCommandResults.PLOTS];
@@ -569,6 +577,7 @@ function CityBanner.Initialize( self : CityBanner, playerID: number, cityID : nu
   self.m_IsDimmed = false;
   self.m_OverrideDim = false;
   self.m_FogState = 0;
+  self.m_UnitListEnabled = false;
 
   self:UpdateName();
   self:UpdatePosition();
@@ -699,14 +708,16 @@ function CityBanner.UpdateAerodromeBanner( self : CityBanner )
   self.m_Instance.AerodromeMaxUnitCount:SetText(iAirCapacity);
 
   -- Update tooltip to show unit capacity
-  self.m_Instance.AerodromeBannerGrid:SetToolTipString(Locale.Lookup("LOC_CITY_BANNER_AERODROME_AIRCRAFT_STATIONED", iAirUnitCount, iAirCapacity));
+  self.m_Instance.AerodromeBase:SetToolTipString(Locale.Lookup("LOC_CITY_BANNER_AERODROME_AIRCRAFT_STATIONED", iAirUnitCount, iAirCapacity));
 
   -- If current air unit count is 0 then disabled popup
   if iAirUnitCount <= 0 then
-    self.m_Instance.UnitListPopup:SetDisabled(true);
+    self.m_UnitListEnabled = false;
   else
-    self.m_Instance.UnitListPopup:SetDisabled(false);
+    self.m_UnitListEnabled = true;
   end
+
+  self:SetFogState( self.m_FogState );
 
   self.m_Instance.UnitListPopup:CalculateInternals();
 
@@ -1052,6 +1063,8 @@ end
     if turnsUntilGrowth > 0 then
       popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_TURNS_GROWTH", turnsUntilGrowth);
       popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_FOOD_SURPLUS", round(foodSurplus,1));
+    elseif turnsUntilGrowth == 0 then
+      popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_STAGNATE");
     elseif turnsUntilGrowth < 0 then
       popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_TURNS_STARVATION", -turnsUntilGrowth);
     end
@@ -1493,12 +1506,25 @@ end
 function CityBanner.SetFogState( self : CityBanner, fogState : number )
 
   if( fogState == PLOT_HIDDEN ) then
-        self:SetHide( true );
-    else
-        self:SetHide( false );
-    end
+    self:SetHide( true );
+  else
+    self:SetHide( false );
 
-    self.m_FogState = fogState;
+    --If this is an Aerodrome we need to hide the numbers and dropdown if in FOW
+    if( self.m_Instance ~= nil ) then
+      if( self.m_Type == BANNERTYPE_AERODROME) then
+        if( fogState == PLOT_REVEALED ) then
+          self.m_Instance.AerodromeBase:SetHide(true);
+          self.m_Instance.UnitListPopup:SetDisabled(true);
+        else
+          self.m_Instance.AerodromeBase:SetHide(false);
+          self.m_Instance.UnitListPopup:SetDisabled(not self.m_UnitListEnabled);
+        end
+      end
+    end
+  end
+
+  self.m_FogState = fogState;
 end
 
 -- ===========================================================================
@@ -1779,6 +1805,7 @@ function CityBanner.UpdateReligion( self : CityBanner )
         Religion=religion,
         Followers=followers,
         Pressure=pCityReligion:GetTotalPressureOnCity(religion),
+        LifetimePressure=cityReligion.Pressure,
         FillPercent=fillPercent,
         Color=GameInfo.Religions[religion].Color });
     end
@@ -1816,9 +1843,9 @@ function CityBanner.UpdateReligion( self : CityBanner )
       end
 
       -- Color hexes in this city the same color as religion
-      local visiblePlots:table = Map.GetCityPlots():GetVisiblePurchasedPlots(pCity);
-      if(table.count(visiblePlots) > 0) then
-        UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_RELIGION, Game.GetLocalPlayer(), visiblePlots, majorityReligionColor );
+      local plots:table = Map.GetCityPlots():GetPurchasedPlots(pCity);
+      if(table.count(plots) > 0) then
+        UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_RELIGION, Game.GetLocalPlayer(), plots, majorityReligionColor );
       end
     end
   end
@@ -1861,13 +1888,22 @@ function CityBanner.UpdateReligion( self : CityBanner )
       popChartIM:ResetInstances();
     end
 
+    local populationChartTooltip:string = RELIGION_POP_CHART_TOOLTIP_HEADER;
+
     -- Add religion icons for each active religion
     for i,religionInfo in ipairs(activeReligions) do
       local religionDef:table = GameInfo.Religions[religionInfo.Religion];
 
       local icon = "ICON_" .. religionDef.ReligionType;
       local religionColor = UI.GetColorValue(religionDef.Color);
-      local religionName = Game.GetReligion():GetName(religionDef.Index);
+
+      -- The first index is the predominant religion. Label it as such.
+      local religionName = "";
+      if i == 1 then
+        religionName = Locale.Lookup("LOC_CITY_BANNER_PREDOMINANT_RELIGION", Game.GetReligion():GetName(religionDef.Index));
+      else
+        religionName = Game.GetReligion():GetName(religionDef.Index);
+      end
 
       -- Add icon to main icon list
       local iconInst:table = iconIM:GetInstance();
@@ -1881,10 +1917,16 @@ function CityBanner.UpdateReligion( self : CityBanner )
       followerListInst.ReligionFollowerIcon:SetIcon(icon);
       followerListInst.ReligionFollowerIcon:SetColor(religionColor);
       followerListInst.ReligionFollowerIconBacking:SetColor(religionColor);
-      followerListInst.ReligionFollowerIconBacking:SetToolTipString(religionName);
       followerListInst.ReligionFollowerCount:SetText(religionInfo.Followers);
-      followerListInst.ReligionFollowerPressure:SetText(Locale.Lookup("LOC_CITY_BANNER_RELIGIOUS_PRESSURE", religionInfo.Pressure));
+      followerListInst.ReligionFollowerPressure:SetText(Locale.Lookup("LOC_CITY_BANNER_RELIGIOUS_PRESSURE", Round(religionInfo.Pressure)));
+
+      -- Add the follower tooltip to the population chart tooltip
+      local followerTooltip:string = Locale.Lookup("LOC_CITY_BANNER_FOLLOWER_PRESSURE_TOOLTIP", religionName, religionInfo.Followers, Round(religionInfo.LifetimePressure));
+      followerListInst.ReligionFollowerIconBacking:SetToolTipString(followerTooltip);
+      populationChartTooltip = populationChartTooltip .. "[NEWLINE][NEWLINE]" .. followerTooltip;
     end
+
+    religionInfoInst.ReligionPopChartContainer:SetToolTipString(populationChartTooltip);
 
     religionInfoInst.ReligionFollowerListStack:CalculateSize();
     religionInfoInst.ReligionFollowerListScrollPanel:CalculateInternalSize();
@@ -1943,7 +1985,7 @@ function CityBanner.UpdateReligion( self : CityBanner )
 
     -- Show how much religion this city is exerting outwards
     local outwardReligiousPressure = pCityReligion:GetPressureFromCity();
-    religionInfoInst.ExertedReligiousPressure:SetText(Locale.Lookup("LOC_CITY_BANNER_RELIGIOUS_PRESSURE", outwardReligiousPressure));
+    religionInfoInst.ExertedReligiousPressure:SetText(Locale.Lookup("LOC_CITY_BANNER_RELIGIOUS_PRESSURE", Round(outwardReligiousPressure)));
 
     -- Reset buttons to default state
     religionInfoInst.ReligionInfoButton:SetHide(false);
@@ -2193,11 +2235,11 @@ end
 
 -- ===========================================================================
 function DestroyCityBanner( playerID: number, cityID : number )
-	local bannerInstance = GetCityBanner( playerID, cityID );
-	if (bannerInstance ~= nil) then
-		bannerInstance:destroy();
-		CityBannerInstances[ playerID ][ cityID ] = nil;
-	end
+  local bannerInstance = GetCityBanner( playerID, cityID );
+  if (bannerInstance ~= nil) then
+    bannerInstance:destroy();
+    CityBannerInstances[ playerID ][ cityID ] = nil;
+  end
 end
 
 -- ===========================================================================
@@ -3082,6 +3124,29 @@ function OnLensLayerOn( layerNum:number )
     m_isReligionLensActive = true;
     RealizeReligion();
   end
+
+  -- ASTOG: Hack solution to appeal lens being cleared on entry to city.
+  -- it is worse when citizen changes since it causes a complete refresh of lenses including resource icons and yield icons
+  -- TODO: Improve this system so it does not cause a complete refresh
+  -- if CQUI_ShowCityManageAreaInScreen then
+  --   if layerNum == LensLayers.CITIZEN_MANAGEMENT then
+  --     local pCity:table = UI.GetHeadSelectedCity()
+  --     if pCity ~= nil then
+  --       UILens.SetActive("Appeal")
+  --       CQUI_ShowCitizenManagementLens(pCity:GetID())
+  --     end
+  --   end
+
+  --   -- Should we reapply citizen management area because it got cleared?
+  --   if layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL and CQUI_CityManageAreaShouldShow then
+  --     local pCity:table = UI.GetHeadSelectedCity()
+  --     if pCity ~= nil then
+  --       UILens.SetActive("Appeal")
+  --       CQUI_ShowCitizenManagementLens(pCity:GetID())
+  --       CQUI_CityManageAreaShouldShow = false
+  --     end
+  --   end
+  -- end
 end
 
 -- ===========================================================================
@@ -3094,6 +3159,15 @@ function OnLensLayerOff( layerNum:number )
     m_isReligionLensActive = false;
     RealizeReligion();
   end
+
+  -- Catch uninteded clear of appeal lens because of event chain
+  -- if CQUI_ShowCityManageAreaInScreen then
+  --   if layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL and CQUI_CityManageAreaShown then
+  --     UILens.SetActive("Appeal")
+  --     CQUI_CityManageAreaShouldShow = true
+  --     CQUI_CityManageAreaShown = false
+  --   end
+  -- end
 end
 
 -- ===========================================================================
@@ -3129,6 +3203,73 @@ function OnCameraUpdate( vFocusX:number, vFocusY:number, fZoomLevel:number )
     OnRefreshBannerPositions();
   end
   m_prevZoomMultiplier = m_zoomMultiplier;
+end
+
+-- ===========================================================================
+function CQUI_ShowCitizenManagementLens(cityID:number)
+  local playerID:number = Game.GetLocalPlayer()
+  local pCity:table = Players[playerID]:GetCities():FindID(cityID);
+  if pCity ~= nil then
+    print_debug("Show citizens for " .. Locale.Lookup(pCity:GetName()))
+
+    local tParameters:table = {};
+    local cityPlotID = Map.GetPlot(pCity:GetX(), pCity:GetY()):GetIndex()
+    tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
+
+    local workingColor:number = UI.GetColorValue("COLOR_CITY_PLOT_WORKING");
+    local lockedColor:number = UI.GetColorValue("COLOR_CITY_PLOT_LOCKED");
+    local colorPlot:table = {}
+    colorPlot[workingColor] = {}
+    colorPlot[lockedColor] = {}
+
+    -- Get city plot and citizens info
+    local tResults:table = CityManager.GetCommandTargets(pCity, CityCommandTypes.MANAGE, tParameters);
+    if tResults == nil then
+      print("ERROR : Could not find plots")
+      return
+    end
+
+    local tPlots:table = tResults[CityCommandResults.PLOTS];
+    local tUnits:table = tResults[CityCommandResults.CITIZENS];
+    local tLockedUnits:table = tResults[CityCommandResults.LOCKED_CITIZENS];
+
+    if tPlots ~= nil and table.count(tPlots) > 0 then
+      for i, plotID in ipairs(tPlots) do
+        if (tLockedUnits[i] > 0 or cityPlotID == plotID) then
+          table.insert(colorPlot[lockedColor], plotID);
+        elseif (tUnits[i] > 0) then
+          table.insert(colorPlot[workingColor], plotID);
+        end
+      end
+    end
+
+    -- Next culture expansion plot, show it only if not in city panel
+    if UI.GetHeadSelectedCity() == nil then
+      local pCityCulture:table  = pCity:GetCulture();
+      local culturePlotColor:number = UI.GetColorValue("COLOR_CITY_PLOT_CULTURE")
+      if pCityCulture ~= nil then
+        local pNextPlotID:number = pCityCulture:GetNextPlot();
+        if pNextPlotID ~= nil and Map.IsPlot(pNextPlotID) then
+          colorPlot[culturePlotColor] = {pNextPlotID}
+        end
+      end
+    end
+
+    CQUI_CityManageAreaShown = true;
+    LuaEvents.MinimapPanel_ApplyCustomLens(colorPlot);
+  end
+end
+
+-- ===========================================================================
+function CQUI_ClearCitizenManagementLens()
+  CQUI_CityManageAreaShown = false;
+  LuaEvents.MinimapPanel_ClearCustomLens()
+end
+
+-- ===========================================================================
+function CQUI_RefreshCitizenManagementLens(cityID:number)
+  CQUI_ClearCitizenManagementLens()
+  CQUI_ShowCitizenManagementLens(cityID)
 end
 
 -- ===========================================================================
@@ -3209,6 +3350,11 @@ function OnInterfaceModeChanged( oldMode:number, newMode:number )
         end
       end
     end
+  end
+
+  if (newMode == InterfaceModeTypes.DISTRICT_PLACEMENT) then
+    CQUI_CityManageAreaShown = false
+    CQUI_CityManageAreaShouldShow = false
   end
 end
 
@@ -3346,6 +3492,10 @@ function Initialize()
   LuaEvents.CQUI_SettingsInitialized.Add( CQUI_OnSettingsInitialized );
   Events.CitySelectionChanged.Add( CQUI_OnBannerMouseExit );
   Events.InfluenceGiven.Add( CQUI_OnInfluenceGiven );
+
+  LuaEvents.CQUI_ShowCitizenManagement.Add( CQUI_ShowCitizenManagementLens );
+  LuaEvents.CQUI_RefreshCitizenManagement.Add( CQUI_RefreshCitizenManagementLens );
+  LuaEvents.CQUI_ClearCitizenManagement.Add( CQUI_ClearCitizenManagementLens );
 end
 Initialize();
 

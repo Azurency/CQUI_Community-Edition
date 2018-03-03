@@ -12,41 +12,43 @@ include("WorldTrackerItem_", true);
 g_ExtraIconData = {};
 include("CivicsTreeIconLoader_", true);
 
---	Hotloading note: The World Tracker button check now positions based on how many hooks are showing.
---	You'll need to save "LaunchBar" to see the tracker button appear.
+--  Hotloading note: The World Tracker button check now positions based on how many hooks are showing.
+--  You'll need to save "LaunchBar" to see the tracker button appear.
 -- ===========================================================================
---	CONSTANTS
+--  CONSTANTS
 -- ===========================================================================
 local RELOAD_CACHE_ID:string = "WorldTracker"; -- Must be unique (usually the same as the file name)
-local MAX_BEFORE_TRUNC_TRACKER			:number = 180;
-local MAX_BEFORE_TRUNC_CHECK			:number = 160;
-local MAX_BEFORE_TRUNC_TITLE			:number = 225;
-local LAUNCH_BAR_PADDING				:number = 50;
-local WORLD_TRACKER_PANEL_WIDTH			:number = 300;
-local STARTING_TRACKER_OPTIONS_OFFSET	:number = 75;
+local MAX_BEFORE_TRUNC_TRACKER      :number = 180;
+local MAX_BEFORE_TRUNC_CHECK      :number = 160;
+local MAX_BEFORE_TRUNC_TITLE      :number = 225;
+local LAUNCH_BAR_PADDING        :number = 50;
+local WORLD_TRACKER_PANEL_WIDTH      :number = 300;
+local STARTING_TRACKER_OPTIONS_OFFSET  :number = 75;
 local LAUNCH_BAR_EXTRA_OFFSET     :number = 361;
 
 -- ===========================================================================
---	VARIABLES
+--  VARIABLES
 -- ===========================================================================
 
-local m_hideAll					:boolean = false;
-local m_prevHideAll				:boolean = false;
-local m_hideChat				:boolean = false;
-local m_hideCivics				:boolean = false;
-local m_hideResearch			:boolean = false;
-local m_dropdownExpanded		:boolean = false;
-local m_unreadChatMsgs			:number  = 0;		-- number of chat messages unseen due to the chat panel being hidden.
+m_hideAll          = false;
+m_prevHideAll      = false;
+m_hideChat        = false;
+m_hideCivics      = false;
+m_hideResearch    = false;
+local m_dropdownExpanded    :boolean = false;
+local m_unreadChatMsgs      :number  = 0;    -- number of chat messages unseen due to the chat panel being hidden.
 
-local m_researchInstance		:table	 = {};		-- Single instance wired up for the currently being researched tech
-local m_civicsInstance			:table	 = {};		-- Single instance wired up for the currently being researched civic
-local m_CachedModifiers			:table	 = {};
+local m_researchInstance    :table   = {};    -- Single instance wired up for the currently being researched tech
+local m_civicsInstance      :table   = {};    -- Single instance wired up for the currently being researched civic
+local m_CachedModifiers      :table   = {};
 
-local m_currentResearchID		:number = -1;
-local m_lastResearchCompletedID	:number = -1;
-local m_currentCivicID			:number = -1;
-local m_lastCivicCompletedID	:number = -1;
-local m_TrackerAlwaysVisuallyCollapsed:boolean = false;	-- Once the launch bar extends past the width of the world tracker, we always show the collapsed version of the backing for the tracker element
+local m_currentResearchID    :number = -1;
+local m_lastResearchCompletedID  :number = -1;
+local m_currentCivicID      :number = -1;
+local m_lastCivicCompletedID  :number = -1;
+local m_TrackerAlwaysVisuallyCollapsed:boolean = false;  -- Once the launch bar extends past the width of the world tracker, we always show the collapsed version of the backing for the tracker element
+
+local m_needsRefresh        :boolean = false;
 
 function RealizeEmptyMessage()
   if(m_hideChat and m_hideCivics and m_hideResearch) then
@@ -164,14 +166,14 @@ function UpdateResearchPanel( isHideResearch:boolean )
   RealizeStack();
 
   -- Set the technology to show (or -1 if none)...
-  local iTech			:number = m_currentResearchID;
+  local iTech      :number = m_currentResearchID;
   if m_currentResearchID == -1 then
     iTech = m_lastResearchCompletedID;
   end
-  local ePlayer		:number = Game.GetLocalPlayer();
-  local pPlayer		:table  = Players[ePlayer];
-  local pPlayerTechs	:table	= pPlayer:GetTechs();
-  local kTech			:table	= (iTech ~= -1) and GameInfo.Technologies[ iTech ] or nil;
+  local ePlayer    :number = Game.GetLocalPlayer();
+  local pPlayer    :table  = Players[ePlayer];
+  local pPlayerTechs  :table  = pPlayer:GetTechs();
+  local kTech      :table  = (iTech ~= -1) and GameInfo.Technologies[ iTech ] or nil;
   local kResearchData :table = GetResearchData( ePlayer, pPlayerTechs, kTech );
   if iTech ~= -1 then
     if m_currentResearchID == iTech then
@@ -217,10 +219,10 @@ function UpdateCivicsPanel(hideCivics:boolean)
   if iCivic == -1 then
     iCivic = m_lastCivicCompletedID;
   end
-  local ePlayer		:number = Game.GetLocalPlayer();
-  local pPlayer		:table  = Players[ePlayer];
-  local pPlayerCulture:table	= pPlayer:GetCulture();
-  local kCivic		:table	= (iCivic ~= -1) and GameInfo.Civics[ iCivic ] or nil;
+  local ePlayer    :number = Game.GetLocalPlayer();
+  local pPlayer    :table  = Players[ePlayer];
+  local pPlayerCulture:table  = pPlayer:GetCulture();
+  local kCivic    :table  = (iCivic ~= -1) and GameInfo.Civics[ iCivic ] or nil;
   local kCivicData :table = GetCivicData( ePlayer, pPlayerCulture, kCivic );
   if iCivic ~= -1 then
     if m_currentCivicID == iCivic then
@@ -230,7 +232,10 @@ function UpdateCivicsPanel(hideCivics:boolean)
     end
   end
 
-  RealizeCurrentCivic( ePlayer, kCivicData, m_civicsInstance, m_CachedModifiers, true );
+  for _,iconData in pairs(g_ExtraIconData) do
+    iconData:Reset();
+  end
+  RealizeCurrentCivic( ePlayer, kCivicData, m_civicsInstance, m_CachedModifiers );
 
   -- No civic started (or finished)
   if kCivicData == nil then
@@ -276,7 +281,7 @@ function UpdateUnreadChatMsgs()
 end
 
 -- ===========================================================================
---	Obtains full refresh and views most current research and civic IDs.
+--  Obtains full refresh and views most current research and civic IDs.
 -- ===========================================================================
 function Refresh()
   local localPlayer :number = Game.GetLocalPlayer();
@@ -317,40 +322,41 @@ function Refresh()
 end
 
 -- ===========================================================================
---	Game Engine Event
+--  Game Engine Event
 -- ===========================================================================
 function OnLocalPlayerTurnBegin()
   local localPlayer = Game.GetLocalPlayer();
   if localPlayer ~= -1 then
-		m_needsRefresh = true;
+    m_needsRefresh = true;
   end
 end
 
 -- ===========================================================================
 function OnCityInitialized( playerID:number, cityID:number )
   if playerID == Game.GetLocalPlayer() then
-		m_needsRefresh = true;
+    m_needsRefresh = true;
   end
 end
 
 -- ===========================================================================
 function OnBuildingChanged( plotX:number, plotY:number, buildingIndex:number, playerID:number, iPercentComplete:number )
   if playerID == Game.GetLocalPlayer() then
-		m_needsRefresh = true; -- Buildings can change culture/science yield which can effect "turns to complete" values
-	end
-end
-
-function FlushChanges()
-	if m_needsRefresh then
-		Refresh();
-		m_needsRefresh = false;
+    m_needsRefresh = true; -- Buildings can change culture/science yield which can effect "turns to complete" values
   end
 end
 
 -- ===========================================================================
---	Game Engine EVENT
---	A civic item has changed, this may not be the current civic item
---	but an item deeper in the tree that was just boosted by a player action.
+function FlushChanges()
+  if m_needsRefresh then
+    Refresh();
+    m_needsRefresh = false;
+  end
+end
+
+-- ===========================================================================
+--  Game Engine EVENT
+--  A civic item has changed, this may not be the current civic item
+--  but an item deeper in the tree that was just boosted by a player action.
 -- ===========================================================================
 function OnCivicChanged( ePlayer:number, eCivic:number )
   local localPlayer = Game.GetLocalPlayer();
@@ -384,7 +390,7 @@ function OnCultureYieldChanged( ePlayer:number )
 end
 
 -- ===========================================================================
---	Game Engine EVENT
+--  Game Engine EVENT
 -- ===========================================================================
 function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
   if eNewMode == InterfaceModeTypes.VIEW_MODAL_LENS then
@@ -396,9 +402,9 @@ function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
 end
 
 -- ===========================================================================
---	Game Engine EVENT
---	A research item has changed, this may not be the current researched item
---	but an item deeper in the tree that was just boosted by a player action.
+--  Game Engine EVENT
+--  A research item has changed, this may not be the current researched item
+--  but an item deeper in the tree that was just boosted by a player action.
 -- ===========================================================================
 function OnResearchChanged( ePlayer:number, eTech:number )
   local localPlayer = Game.GetLocalPlayer();
@@ -444,32 +450,32 @@ function OnMultiplayerChat( fromPlayer, toPlayer, text, eTargetType )
 end
 
 -- ===========================================================================
---	HOT-RELOADING EVENTS
+--  HOT-RELOADING EVENTS
 -- ===========================================================================
 function OnInit(isReload:boolean)
   if isReload then
     LuaEvents.GameDebug_GetValues(RELOAD_CACHE_ID);
   else
-    Refresh();	-- Standard refresh.
+    Refresh();  -- Standard refresh.
   end
 end
 function OnShutdown()
-  LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID, "m_currentResearchID",		m_currentResearchID);
-  LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID, "m_lastResearchCompletedID",	m_lastResearchCompletedID);
-  LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID, "m_currentCivicID",			m_currentCivicID);
-  LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID, "m_lastCivicCompletedID",		m_lastCivicCompletedID);
+  LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID, "m_currentResearchID",    m_currentResearchID);
+  LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID, "m_lastResearchCompletedID",  m_lastResearchCompletedID);
+  LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID, "m_currentCivicID",      m_currentCivicID);
+  LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID, "m_lastCivicCompletedID",    m_lastCivicCompletedID);
 end
 function OnGameDebugReturn(context:string, contextTable:table)
   if context == RELOAD_CACHE_ID then
-    m_currentResearchID			= contextTable["m_currentResearchID"];
-    m_lastResearchCompletedID	= contextTable["m_lastResearchCompletedID"];
-    m_currentCivicID			= contextTable["m_currentCivicID"];
-    m_lastCivicCompletedID		= contextTable["m_lastCivicCompletedID"];
+    m_currentResearchID      = contextTable["m_currentResearchID"];
+    m_lastResearchCompletedID  = contextTable["m_lastResearchCompletedID"];
+    m_currentCivicID      = contextTable["m_currentCivicID"];
+    m_lastCivicCompletedID    = contextTable["m_lastCivicCompletedID"];
 
-    if m_currentResearchID == nil		then m_currentResearchID = -1; end
+    if m_currentResearchID == nil    then m_currentResearchID = -1; end
     if m_lastResearchCompletedID == nil then m_lastResearchCompletedID = -1; end
-    if m_currentCivicID == nil			then m_currentCivicID = -1; end
-    if m_lastCivicCompletedID == nil	then m_lastCivicCompletedID = -1; end
+    if m_currentCivicID == nil      then m_currentCivicID = -1; end
+    if m_lastCivicCompletedID == nil  then m_lastCivicCompletedID = -1; end
 
     -- Don't call refresh, use cached data from last hotload.
     UpdateResearchPanel();
@@ -489,17 +495,17 @@ end
 
 -- ===========================================================================
 function Tutorial_ShowFullTracker()
-	Controls.ToggleAllButton:SetHide(true);
-	Controls.ToggleDropdownButton:SetHide(true);
-	UpdateCivicsPanel(false);
-	UpdateResearchPanel(false);
-	ToggleAll(false);
+  Controls.ToggleAllButton:SetHide(true);
+  Controls.ToggleDropdownButton:SetHide(true);
+  UpdateCivicsPanel(false);
+  UpdateResearchPanel(false);
+  ToggleAll(false);
 end
 
 -- ===========================================================================
 function Tutorial_ShowTrackerOptions()
-	Controls.ToggleAllButton:SetHide(false);
-	Controls.ToggleDropdownButton:SetHide(false);
+  Controls.ToggleAllButton:SetHide(false);
+  Controls.ToggleDropdownButton:SetHide(false);
 end
 
 -- ===========================================================================
@@ -518,37 +524,6 @@ function OnLoadScreenClose()
 end
 
 -- ===========================================================================
---  Obtain the data from the DB that doesn't change
---  Base costs and relationships (prerequisites)
---  RETURN: A table of node data (techs/civics/etc...) with a prereq for each entry.
--- ===========================================================================
-function PopulateCachedModifiers()
-  -- Build main item table.
-  for row:table in GameInfo.Civics() do
-    local entry:table	= {};
-    -- Look up and cache any civic modifiers we reward like envoys awarded
-    for civicModifier in GameInfo.CivicModifiers() do
-      if (row.CivicType == civicModifier.CivicType) then
-        for modifierType in GameInfo.Modifiers() do
-          if civicModifier.ModifierId == modifierType.ModifierId then
-            entry.ModifierId = modifierType.ModifierId;
-            entry.ModifierType = modifierType.ModifierType;
-          end
-        end
-        for modifierArguments in GameInfo.ModifierArguments() do
-          if civicModifier.ModifierId == modifierArguments.ModifierId then
-            entry.ModifierValue = modifierArguments.Value;
-          end
-        end
-      end
-    end
-
-
-    m_CachedModifiers[row.CivicType] = entry;
-  end
-end
-
--- ===========================================================================
 function Initialize()
 
   if not GameCapabilities.HasCapability("CAPABILITY_WORLD_TRACKER") then
@@ -556,24 +531,24 @@ function Initialize()
     return;
   end
 
-  PopulateCachedModifiers();
+  m_CachedModifiers = TechAndCivicSupport_BuildCivicModifierCache();
 
   -- Create semi-dynamic instances; hack: change parent back to self for ordering:
   ContextPtr:BuildInstanceForControl( "ResearchInstance", m_researchInstance, Controls.PanelStack );
-  ContextPtr:BuildInstanceForControl( "CivicInstance",	m_civicsInstance,	Controls.PanelStack );
+  ContextPtr:BuildInstanceForControl( "CivicInstance",  m_civicsInstance,  Controls.PanelStack );
 
-	for i,v in ipairs(g_TrackedItems) do
-		local instance = {};
-		ContextPtr:BuildInstanceForControl( v.InstanceType, instance, Controls.PanelStack );
-		if(instance.IconButton) then
-			instance.IconButton:RegisterCallback(Mouse.eLClick, function() v.SelectFunc() end);
-			table.insert(g_TrackedInstances, instance);
-		end
+  for i,v in ipairs(g_TrackedItems) do
+    local instance = {};
+    ContextPtr:BuildInstanceForControl( v.InstanceType, instance, Controls.PanelStack );
+    if(instance.IconButton) then
+      instance.IconButton:RegisterCallback(Mouse.eLClick, function() v.SelectFunc() end);
+      table.insert(g_TrackedInstances, instance);
+    end
 
-		if(instance.TitleButton) then
-			instance.TitleButton:LocalizeAndSetText(v.Name);
-		end
-	end
+    if(instance.TitleButton) then
+      instance.TitleButton:LocalizeAndSetText(v.Name);
+    end
+  end
 
 
   Controls.ChatPanel:ChangeParent( Controls.PanelStack );
@@ -594,13 +569,13 @@ function Initialize()
   Controls.ResearchCheck:SetCheck(true);
   -- Controls.ToggleAllButton:SetCheck(true);
 
-  Controls.ChatCheck:RegisterCheckHandler(						function() UpdateChatPanel(not m_hideChat); end);
-  Controls.CivicsCheck:RegisterCheckHandler(						function() UpdateCivicsPanel(not m_hideCivics); end);
-  Controls.ResearchCheck:RegisterCheckHandler(					function() UpdateResearchPanel(not m_hideResearch); end);
-  m_researchInstance.IconButton:RegisterCallback(	Mouse.eLClick,	function() LuaEvents.WorldTracker_OpenChooseResearch(); end);
-  m_civicsInstance.IconButton:RegisterCallback(	Mouse.eLClick,	function() LuaEvents.WorldTracker_OpenChooseCivic(); end);
-  -- Controls.ToggleAllButton:RegisterCheckHandler(					function() ToggleAll(not Controls.ToggleAllButton:IsChecked()) end);
-  Controls.ToggleDropdownButton:RegisterCallback(	Mouse.eLClick, ToggleDropdown);
+  Controls.ChatCheck:RegisterCheckHandler(            function() UpdateChatPanel(not m_hideChat); end);
+  Controls.CivicsCheck:RegisterCheckHandler(            function() UpdateCivicsPanel(not m_hideCivics); end);
+  Controls.ResearchCheck:RegisterCheckHandler(          function() UpdateResearchPanel(not m_hideResearch); end);
+  m_researchInstance.IconButton:RegisterCallback(  Mouse.eLClick,  function() LuaEvents.WorldTracker_OpenChooseResearch(); end);
+  m_civicsInstance.IconButton:RegisterCallback(  Mouse.eLClick,  function() LuaEvents.WorldTracker_OpenChooseCivic(); end);
+  -- Controls.ToggleAllButton:RegisterCheckHandler(          function() ToggleAll(not Controls.ToggleAllButton:IsChecked()) end);
+  Controls.ToggleDropdownButton:RegisterCallback(  Mouse.eLClick, ToggleDropdown);
   Controls.WorldTrackerAlpha:RegisterEndCallback( OnWorldTrackerAnimationFinished );
 
   Events.CityInitialized.Add(OnCityInitialized);
@@ -614,21 +589,21 @@ function Initialize()
   Events.ResearchChanged.Add(OnResearchChanged);
   Events.ResearchCompleted.Add(OnResearchCompleted);
   Events.ResearchYieldChanged.Add(OnResearchYieldChanged);
-	Events.GameCoreEventPublishComplete.Add(FlushChanges); --This event is raised directly after a series of gamecore events.
+  Events.GameCoreEventPublishComplete.Add(FlushChanges); --This event is raised directly after a series of gamecore events.
   LuaEvents.LaunchBar_Resize.Add(OnLaunchBarResized);
 
-  LuaEvents.CivicChooser_ForceHideWorldTracker.Add(	function() ContextPtr:SetHide(true);  end);
-  LuaEvents.CivicChooser_RestoreWorldTracker.Add(		function() ContextPtr:SetHide(false); end);
+  LuaEvents.CivicChooser_ForceHideWorldTracker.Add(  function() ContextPtr:SetHide(true);  end);
+  LuaEvents.CivicChooser_RestoreWorldTracker.Add(    function() ContextPtr:SetHide(false); end);
   LuaEvents.ResearchChooser_ForceHideWorldTracker.Add(function() ContextPtr:SetHide(true);  end);
-  LuaEvents.ResearchChooser_RestoreWorldTracker.Add(	function() ContextPtr:SetHide(false); end);
-  LuaEvents.Tutorial_ForceHideWorldTracker.Add(		function() ContextPtr:SetHide(true);  end);
-	LuaEvents.Tutorial_RestoreWorldTracker.Add(			Tutorial_ShowFullTracker);
-	LuaEvents.Tutorial_EndTutorialRestrictions.Add(		Tutorial_ShowTrackerOptions);
-  LuaEvents.TutorialGoals_Showing.Add(				OnTutorialGoalsShowing );
-  LuaEvents.TutorialGoals_Hiding.Add(					OnTutorialGoalsHiding );
+  LuaEvents.ResearchChooser_RestoreWorldTracker.Add(  function() ContextPtr:SetHide(false); end);
+  LuaEvents.Tutorial_ForceHideWorldTracker.Add(    function() ContextPtr:SetHide(true);  end);
+  LuaEvents.Tutorial_RestoreWorldTracker.Add(      Tutorial_ShowFullTracker);
+  LuaEvents.Tutorial_EndTutorialRestrictions.Add(    Tutorial_ShowTrackerOptions);
+  LuaEvents.TutorialGoals_Showing.Add(        OnTutorialGoalsShowing );
+  LuaEvents.TutorialGoals_Hiding.Add(          OnTutorialGoalsHiding );
 
     -- InitChatPanel
-  if(GameConfiguration.IsNetworkMultiplayer()) then
+  if(GameConfiguration.IsNetworkMultiplayer() and UI.HasFeature("Chat")) then
     UpdateChatPanel(false);
   else
     UpdateChatPanel(true);
@@ -644,12 +619,12 @@ Initialize();
 --???TRON debug:
 --[[
 hstructure GoalItem
-  Id				: string;		-- Id of item
-  Text			: string;		-- Text to always display
-  Tooltip			: string;		-- (optional) tooltip text
-  IsCompleted		: boolean;		-- Is the goal completed?
-  ItemId			: string;		-- For debugging, the id of the item that is setting the goal
-  CompletedOnTurn	: number;		-- Which turn # the tutorial goal was completed on (required for auto-remove)
+  Id        : string;    -- Id of item
+  Text      : string;    -- Text to always display
+  Tooltip      : string;    -- (optional) tooltip text
+  IsCompleted    : boolean;    -- Is the goal completed?
+  ItemId      : string;    -- For debugging, the id of the item that is setting the goal
+  CompletedOnTurn  : number;    -- Which turn # the tutorial goal was completed on (required for auto-remove)
 end
 local goal1:GoalItem = hmake GoalItem {};
 goal1.Id = "foo";

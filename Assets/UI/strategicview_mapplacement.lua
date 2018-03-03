@@ -8,6 +8,7 @@
 include("SupportFunctions.lua");
 include("AdjacencyBonusSupport.lua");
 include("PopupDialog");
+include("Civ6Common.lua");
 
 
 -- ===========================================================================
@@ -218,22 +219,37 @@ function ConfirmPlaceDistrict(pInputStruct:table)
       local pPopupDialog :table = PopupDialogInGame:new("PlaceDistrictAt_X" .. kPlot:GetX() .. "_Y" .. kPlot:GetY()); -- unique identifier
       pPopupDialog:AddText(sConfirmText);
       if (bIsPurchase) then
-        pPopupDialog:AddConfirmButton(Locale.Lookup("LOC_YES"), function()
+        if (IsTutorialRunning()) then
           CityManager.RequestCommand(pSelectedCity, CityCommandTypes.PURCHASE, tParameters);
           ExitPlacementMode();
           LuaEvents.CQUI_CityPanel_CityviewEnable();
-        end);
+        else
+          pPopupDialog:AddConfirmButton(Locale.Lookup("LOC_YES"), function()
+            CityManager.RequestCommand(pSelectedCity, CityCommandTypes.PURCHASE, tParameters);
+            ExitPlacementMode();
+            LuaEvents.CQUI_CityPanel_CityviewEnable();
+          end);
+        end  
       else
-        pPopupDialog:AddConfirmButton(Locale.Lookup("LOC_YES"), function()
-          --CityManager.RequestOperation(pSelectedCity, CityOperationTypes.BUILD, tParameters);
+        if (IsTutorialRunning()) then
           local tProductionQueueParameters = { tParameters=tParameters, plotId=plotId, pSelectedCity=pSelectedCity, buildingHash=districtHash }
           LuaEvents.StrageticView_MapPlacement_ProductionClose(tProductionQueueParameters);
           ExitPlacementMode();
           LuaEvents.CQUI_CityPanel_CityviewEnable();
-        end);
+        else
+          pPopupDialog:AddConfirmButton(Locale.Lookup("LOC_YES"), function()
+            local tProductionQueueParameters = { tParameters=tParameters, plotId=plotId, pSelectedCity=pSelectedCity, buildingHash=districtHash }
+            LuaEvents.StrageticView_MapPlacement_ProductionClose(tProductionQueueParameters);
+            ExitPlacementMode();
+            LuaEvents.CQUI_CityPanel_CityviewEnable();
+          end);
+        end
       end
-      pPopupDialog:AddCancelButton(Locale.Lookup("LOC_NO"), nil);
-      pPopupDialog:Open();
+
+      if (not IsTutorialRunning()) then
+        pPopupDialog:AddCancelButton(Locale.Lookup("LOC_NO"), nil);
+        pPopupDialog:Open();
+      end
     end
   else
     ExitPlacementMode( true );

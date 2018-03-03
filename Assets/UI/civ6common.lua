@@ -112,13 +112,18 @@ function MoveUnitToPlot( kUnit:table, plotX:number, plotY:number )
     -- We may want to also skip the war check if the move will take more than one turn to get to the destination.
     local eAttackingPlayer:number = kUnit:GetOwner();
     local eUnitComponentID:table = kUnit:GetComponentID();
-    local bWillStartWar = PlayersVisibility[eAttackingPlayer]:IsVisible(plotX, plotY) and CombatManager.IsAttackChangeWarState(eUnitComponentID, plotX, plotY);
-    if (bWillStartWar) then
-      local eDefendingPlayer = CombatManager.GetBestDefender(eUnitComponentID, plotX, plotY );
-      if (eDefendingPlayer == nil) then
-        local pPlot = Map.GetPlot(plotX, plotY);
-        eDefendingPlayer = pPlot:GetOwner();
+    local bWillStartWar = false;
+    
+    local results:table;
+    if (PlayersVisibility[eAttackingPlayer]:IsVisible(plotX, plotY)) then
+      results = CombatManager.IsAttackChangeWarState(eUnitComponentID, plotX, plotY);
+      if (results ~= nil and #results > 0) then
+        bWillStartWar = true;
       end
+    end
+ 
+    if (bWillStartWar) then
+      local eDefendingPlayer = results[1];
       -- Create the action specific parameters
       if (eDefendingPlayer ~= nil and eDefendingPlayer ~= -1) then
         LuaEvents.Civ6Common_ConfirmWarDialog(eAttackingPlayer, eDefendingPlayer, WarTypes.SURPRISE_WAR);
@@ -289,16 +294,17 @@ function GetProductionInfoOfCity( pCity:table, productionHash:number )
 
   local hash            = productionHash;
   local progress          :number = 0;
-  local cost            :number = 0;
-  local percentComplete     :number = 0;
+  local cost              :number = 0;
+  local percentComplete   :number = 0;
   local percentCompleteNextTurn :number = 0;
-  local productionName      :string;
+  local productionName    :string;
   local description       :string;
-  local statString        :string;    -- stats for unit to display
-  local iconName          :string;    -- name of icon to look up
-  local texture         :string;    -- texture of icon
-  local u             :number = 0;  -- texture horiztonal offset
-  local v             :number = 0;  -- texture vertical offset
+  local tooltip					  :string; 
+  local statString        :string;      -- stats for unit to display
+  local iconName          :string;      -- name of icon to look up
+  local texture           :string;      -- texture of icon
+  local u                 :number = 0;  -- texture horiztonal offset
+  local v                 :number = 0;  -- texture vertical offset
 
   -- Nothing being produced.
   if hash == 0 then
@@ -327,6 +333,7 @@ function GetProductionInfoOfCity( pCity:table, productionHash:number )
     prodTurnsLeft = pBuildQueue:GetTurnsLeft(buildingDef.BuildingType);
     productionName  = Locale.Lookup(buildingDef.Name);
     description   = buildingDef.Description;
+    tooltip			= ToolTipHelper.GetBuildingToolTip(hash, Game.GetLocalPlayer(), pCity ) 
     progress    = pBuildQueue:GetBuildingProgress(buildingDef.Index);
     percentComplete = progress / pBuildQueue:GetBuildingCost(buildingDef.Index);
     cost      = pBuildQueue:GetBuildingCost(buildingDef.Index);
@@ -337,6 +344,7 @@ function GetProductionInfoOfCity( pCity:table, productionHash:number )
     prodTurnsLeft = pBuildQueue:GetTurnsLeft(districtDef.DistrictType);
     productionName  = Locale.Lookup(districtDef.Name);
     description   = districtDef.Description;
+    tooltip			= ToolTipHelper.GetDistrictToolTip(hash); 
     progress    = pBuildQueue:GetDistrictProgress(districtDef.Index);
     percentComplete = progress / pBuildQueue:GetDistrictCost(districtDef.Index);
     cost      = pBuildQueue:GetDistrictCost(districtDef.Index);
@@ -348,6 +356,7 @@ function GetProductionInfoOfCity( pCity:table, productionHash:number )
     local eMilitaryFormationType :number = pBuildQueue:GetCurrentProductionTypeModifier();
     productionName  = Locale.Lookup(unitDef.Name);
     description   = unitDef.Description;
+    tooltip			= ToolTipHelper.GetUnitToolTip(hash); 
     progress    = pBuildQueue:GetUnitProgress(unitDef.Index);
     prodTurnsLeft = pBuildQueue:GetTurnsLeft(unitDef.UnitType, eMilitaryFormationType);
     iconName    = "ICON_"..unitDef.UnitType.."_PORTRAIT";
@@ -380,6 +389,7 @@ function GetProductionInfoOfCity( pCity:table, productionHash:number )
     prodTurnsLeft = pBuildQueue:GetTurnsLeft(projectDef.ProjectType);
     productionName  = Locale.Lookup(projectDef.Name);
     description   = projectDef.Description;
+    tooltip			= ToolTipHelper.GetProjectToolTip(hash); 
     progress    = pBuildQueue:GetProjectProgress(projectDef.Index);
     cost      = pBuildQueue:GetProjectCost(projectDef.Index);
     percentComplete = progress / pBuildQueue:GetProjectCost(projectDef.Index);
@@ -404,14 +414,15 @@ function GetProductionInfoOfCity( pCity:table, productionHash:number )
 
   return {
     Name          = productionName,
-    Description       = description,
+    Description   = description,
+    Tooltip				= tooltip, 
     Type          = type;
     Icon          = iconName,
-    PercentComplete     = percentComplete,
+    PercentComplete         = percentComplete,
     PercentCompleteNextTurn = percentCompleteNextTurn,
     Turns         = prodTurnsLeft,
-    StatString        = statString;
-    Progress        = progress;
+    StatString    = statString;
+    Progress      = progress;
     Cost          = cost;
   };
 end
@@ -725,17 +736,7 @@ end
 --  Is the on-rails tutorial active?
 -- ===========================================================================
 function IsTutorialRunning()
-  local mods = Modding.GetActiveMods();
-  if mods ~= nil then
-    for i,v in ipairs(mods) do
-      if v.Id == TUTORIAL_UUID then
-        return true;
-      end
-    end
-  else
-    UI.DataError("Unable to obtain mods table to determine if tutorial is running.");
-  end
-  return false;
+  return Modding.IsModActive(TUTORIAL_UUID); 
 end
 
 -- ===========================================================================

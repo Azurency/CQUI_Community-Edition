@@ -113,7 +113,7 @@
                 <MakeInstance Name="TutorialBouncingArrowH"/>
               </Tutorial>
 
-              <Tutorial  ID="TutBuildCampus" Style="TutorialContainer"  Anchor="L,T" AnchorSide="O,I" Offset=" 10, 187" TriggerBy="TutorialBuildCampus">
+              <Tutorial  ID="TutBuildCampus" Style="TutorialContainer"  Anchor="L,T" AnchorSide="O,I" Offset=" 10, 212" TriggerBy="TutorialBuildCampus">
                 <Grid Style="TutorialCalloutGrid">
                   <Label Style="TutorialHeaderText" String="LOC_META_80_HEAD"/>
                   <Label Style="TutorialBodyText" String="LOC_META_80_BODY" />
@@ -121,7 +121,7 @@
                 <MakeInstance Name="TutorialBouncingArrowH"/>
               </Tutorial>
 
-              <Tutorial  ID="TutBuildLibrary" Style="TutorialContainer" Anchor="L,T" AnchorSide="O,I" Offset=" 10, 206" TriggerBy="TutorialBuildLibrary">
+              <Tutorial  ID="TutBuildLibrary" Style="TutorialContainer" Anchor="L,T" AnchorSide="O,I" Offset=" 10, 256" TriggerBy="TutorialBuildLibrary">
                 <Grid Style="TutorialCalloutGrid">
                   <Label Style="TutorialHeaderText" String="LOC_META_87_HEAD"/>
                 </Grid>
@@ -189,7 +189,6 @@
   <Instance Name="QueueListInstance">
       <Container ID="Root" Size="255,auto">
           <Container ID="ButtonContainer" Size="parent,32" Anchor="R,B">
-              <Button ID="Button" Size="parent,parent" Alpha="0" />
               <Drag ID="Draggable" Size="parent,parent" Buttons="L" SnapBackSpeed="4" RestrictY="1">
                   <GridButton ID="DraggableButton" Size="parent,32" Style="RowButton" Anchor="R,B">
                       <Grid ID="Active" Style="Civilopedia_PageTabHeaderOverlay" Size="parent,parent+1" Hidden="1" />
@@ -217,6 +216,7 @@
                       </Container>
                   </GridButton>
               </Drag>
+              <Button ID="Button" Size="parent,parent" Alpha="0" ConsumeMouse="0" />
           </Container>
       </Container>
   </Instance>
