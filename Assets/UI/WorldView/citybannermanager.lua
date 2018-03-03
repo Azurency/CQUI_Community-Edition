@@ -3128,25 +3128,25 @@ function OnLensLayerOn( layerNum:number )
   -- ASTOG: Hack solution to appeal lens being cleared on entry to city.
   -- it is worse when citizen changes since it causes a complete refresh of lenses including resource icons and yield icons
   -- TODO: Improve this system so it does not cause a complete refresh
-  if CQUI_ShowCityManageAreaInScreen then
-    if layerNum == LensLayers.CITIZEN_MANAGEMENT then
-      local pCity:table = UI.GetHeadSelectedCity()
-      if pCity ~= nil then
-        UILens.SetActive("Appeal")
-        CQUI_ShowCitizenManagementLens(pCity:GetID())
-      end
-    end
+  -- if CQUI_ShowCityManageAreaInScreen then
+  --   if layerNum == LensLayers.CITIZEN_MANAGEMENT then
+  --     local pCity:table = UI.GetHeadSelectedCity()
+  --     if pCity ~= nil then
+  --       UILens.SetActive("Appeal")
+  --       CQUI_ShowCitizenManagementLens(pCity:GetID())
+  --     end
+  --   end
 
-    -- Should we reapply citizen management area because it got cleared?
-    if layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL and CQUI_CityManageAreaShouldShow then
-      local pCity:table = UI.GetHeadSelectedCity()
-      if pCity ~= nil then
-        UILens.SetActive("Appeal")
-        CQUI_ShowCitizenManagementLens(pCity:GetID())
-        CQUI_CityManageAreaShouldShow = false
-      end
-    end
-  end
+  --   -- Should we reapply citizen management area because it got cleared?
+  --   if layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL and CQUI_CityManageAreaShouldShow then
+  --     local pCity:table = UI.GetHeadSelectedCity()
+  --     if pCity ~= nil then
+  --       UILens.SetActive("Appeal")
+  --       CQUI_ShowCitizenManagementLens(pCity:GetID())
+  --       CQUI_CityManageAreaShouldShow = false
+  --     end
+  --   end
+  -- end
 end
 
 -- ===========================================================================
@@ -3161,13 +3161,13 @@ function OnLensLayerOff( layerNum:number )
   end
 
   -- Catch uninteded clear of appeal lens because of event chain
-  if CQUI_ShowCityManageAreaInScreen then
-    if layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL and CQUI_CityManageAreaShown then
-      UILens.SetActive("Appeal")
-      CQUI_CityManageAreaShouldShow = true
-      CQUI_CityManageAreaShown = false
-    end
-  end
+  -- if CQUI_ShowCityManageAreaInScreen then
+  --   if layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL and CQUI_CityManageAreaShown then
+  --     UILens.SetActive("Appeal")
+  --     CQUI_CityManageAreaShouldShow = true
+  --     CQUI_CityManageAreaShown = false
+  --   end
+  -- end
 end
 
 -- ===========================================================================
@@ -3492,6 +3492,10 @@ function Initialize()
   LuaEvents.CQUI_SettingsInitialized.Add( CQUI_OnSettingsInitialized );
   Events.CitySelectionChanged.Add( CQUI_OnBannerMouseExit );
   Events.InfluenceGiven.Add( CQUI_OnInfluenceGiven );
+
+  LuaEvents.CQUI_ShowCitizenManagement.Add( CQUI_ShowCitizenManagementLens );
+  LuaEvents.CQUI_RefreshCitizenManagement.Add( CQUI_RefreshCitizenManagementLens );
+  LuaEvents.CQUI_ClearCitizenManagement.Add( CQUI_ClearCitizenManagementLens );
 end
 Initialize();
 

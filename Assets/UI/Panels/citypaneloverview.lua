@@ -113,26 +113,27 @@ function SetDesiredLens(desiredLens)
   m_desiredLens = desiredLens;
   -- AZURENCY : don't change interface mode
   --UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-  --[[
   if m_isShowingPanel then
     if m_desiredLens == "CityManagement" then
-      LuaEvents.Area_RefreshCitizenManagement(m_pCity:GetID());
+      UILens.SetActive("Appeal");
+      LuaEvents.CQUI_RefreshCitizenManagement(m_pCity:GetID());
+    else
+      UILens.SetActive(m_desiredLens);
     end
-    UILens.SetActive(m_desiredLens);
     ContextPtr:SetUpdate(EnsureDesiredLens);
   else
     UILens.SetActive(m_desiredLens);
   end
-  ]]
-  UILens.SetActive(m_desiredLens);
 end
 
 function EnsureDesiredLens()
   if m_isShowingPanel then
     if m_desiredLens == "CityManagement" then
-      LuaEvents.Area_RefreshCitizenManagement(m_pCity:GetID());
+      UILens.SetActive("Appeal");
+      LuaEvents.CQUI_RefreshCitizenManagement(m_pCity:GetID());
+    else
+      UILens.SetActive(m_desiredLens);
     end
-    UILens.SetActive(m_desiredLens);
   end
   ContextPtr:ClearUpdate();
 end

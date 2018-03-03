@@ -1374,7 +1374,8 @@ end
 -- ===========================================================================
 function OnInterfaceModeEnter_CityManagement( eNewMode:number )
   UIManager:SetUICursor(CursorTypes.RANGE_ATTACK);
-  UILens.SetActive("CityManagement");
+  -- AZURENCY : fix the Appeal lens not being applied in city view
+	--UILens.SetActive("CityManagement");
 end
 
 -- ===========================================================================
