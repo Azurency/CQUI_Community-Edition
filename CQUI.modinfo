@@ -487,8 +487,15 @@
 
     <!-- ML -->
     <ImportFiles id="MORELENSES_LENSES">
+      <Properties>
+        <LoadOrder>0</LoadOrder>
+        <Context>InGame</Context>
+      </Properties>
       <Items>
-        <File>Integrations/ML/UI/lenssupport.lua</File>
+        <!-- Support file first -->
+        <File Priority="1">Integrations/ML/UI/lenssupport.lua</File>
+
+        <!-- All Lenses later -->
         <File>Integrations/ML/UI/Lenses/modlens_builder.lua</File>
         <File>Integrations/ML/UI/Lenses/modlens_scout.lua</File>
         <File>Integrations/ML/UI/Lenses/modlens_archaeologist.lua</File>
@@ -498,15 +505,28 @@
         <File>Integrations/ML/UI/Lenses/modlens_wonder.lua</File>
       </Items>
     </ImportFiles>
+    <AddUserInterfaces id="MORELENSES_LENSES_WPANEL">
+      <Properties>
+        <Context>InGame</Context>
+        <LoadOrder>1</LoadOrder>
+      </Properties>
+      <Items>
+        <File>Integrations/ML/UI/Lenses/modlens_cityoverlap.xml</File>
+        <!-- ModLens_CityOverlap.lua implied -->
+        <File>Integrations/ML/UI/Lenses/modlens_resource.xml</File>
+        <!-- ModLens_Resource.lua implied -->
+      </Items>
+    </AddUserInterfaces>
     <ImportFiles id="MORELENSES_IMPORT_FILES">
+      <!-- ML replacements after all lens files imported -->
+      <Properties>
+        <LoadOrder>2</LoadOrder>
+      </Properties>
       <Items>
         <File>Integrations/ML/UI/minimappanel.lua</File>
         <File>Integrations/ML/UI/minimappanel.xml</File>
         <File>Integrations/ML/UI/Panels/modallenspanel.lua</File>
         <File>Integrations/ML/UI/Panels/modallenspanel.xml</File>
-        <File>Integrations/ML/UI/Lenses/modlens_cityoverlap.xml</File>
-        <!-- ModLens_CityOverlap.lua implied -->
-        <File>Integrations/ML/UI/Lenses/modlens_resource.xml</File>
       </Items>
     </ImportFiles>
     <LocalizedText id="MORELENSES_TEXT">

@@ -1,6 +1,7 @@
 -- Provides info about currently active Modal Lens
 
 include( "InstanceManager" );
+include( "Civ6Common" );
 
 -- ===========================================================================
 --  MODDED LENS
@@ -173,7 +174,7 @@ end
 --============================================================================
 function ShowModLensKey(lensName:string)
   -- This is printed even if the modal panel is hidden
-  print("Showing " .. lensName .. " modal panel")
+  print_debug("Showing " .. lensName .. " modal panel")
 
   m_KeyStackIM: ResetInstances();
 
@@ -260,13 +261,12 @@ function OnLensLayerOn( layerNum:number )
   elseif layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL then
     -- Check for mod lens
     local lens = {}
-    local lens = {}
     LuaEvents.MinimapPanel_GetActiveModLens(lens)
     if lens ~= nil and lens[1] ~= "NONE" then
       if lens[1] == "VANILLA_APPEAL" then
         Controls.LensText:SetText(Locale.ToUpper(Locale.Lookup("LOC_HUD_APPEAL_LENS")));
         ShowAppealLensKey();
-      else
+      elseif lens[1] ~= "ML_CUSTOM" and lens[1] ~= "NONE" then
         ShowModLensKey(lens[1])
       end
     end

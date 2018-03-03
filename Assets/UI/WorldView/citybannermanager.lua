@@ -172,6 +172,7 @@ local SIZEOFPOPANDPRODMETERS    :number = 15; --The amount to add to the city ba
 local CQUI_ShowCitizenIconsOnCityHover:boolean = false;
 local CQUI_ShowCityManageAreaOnCityHover:boolean = true;
 local CQUI_CityManageAreaShown:boolean = false;
+local CQUI_CityManageAreaShouldShow:boolean = false;
 
 -- ===========================================================================
 --  QUI
@@ -200,6 +201,7 @@ function CQUI_OnSettingsInitialized()
 
   CQUI_ShowCitizenIconsOnCityHover = GameConfiguration.GetValue("CQUI_ShowCitizenIconsOnCityHover");
   CQUI_ShowCityManageAreaOnCityHover = GameConfiguration.GetValue("CQUI_ShowCityManageAreaOnCityHover");
+  CQUI_ShowCityManageAreaInScreen = GameConfiguration.GetValue("CQUI_ShowCityMangeAreaInScreen")
 end
 
 function CQUI_OnSettingsUpdate()
@@ -284,8 +286,7 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
     if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)
         and UI.GetInterfaceMode() == InterfaceModeTypes.SELECTION
         and UI.GetHeadSelectedUnit() == nil then
-      LuaEvents.Area_ShowCitizenManagement(cityID);
-      CQUI_CityManageAreaShown = true;
+      CQUI_ShowCitizenManagementLens(cityID)
     end
 
     local kPlayer = Players[playerID];
@@ -361,6 +362,10 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
     end
 
     tResults  = CityManager.GetCommandTargets( kCity, CityCommandTypes.PURCHASE, tParameters );
+    if tResults == nil then
+      return;
+    end
+
     tPlots    = tResults[CityCommandResults.PLOTS];
 
     if (tPlots ~= nil and table.count(tPlots) ~= 0) and UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) == false then
@@ -438,10 +443,9 @@ function CQUI_OnBannerMouseExit(playerID: number, cityID: number)
   end
 
   -- Astog: Fix for lens being cleared when having other lenses on
-  if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)
+  if CQUI_ShowCityManageAreaOnCityHover and UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_MANAGEMENT
       and CQUI_CityManageAreaShown then
-    LuaEvents.Area_ClearCitizenManagement();
-    CQUI_CityManageAreaShown = false;
+    CQUI_ClearCitizenManagementLens()
   end
 
   local tPlots    :table = tResults[CityCommandResults.PLOTS];
@@ -3120,6 +3124,29 @@ function OnLensLayerOn( layerNum:number )
     m_isReligionLensActive = true;
     RealizeReligion();
   end
+
+  -- ASTOG: Hack solution to appeal lens being cleared on entry to city.
+  -- it is worse when citizen changes since it causes a complete refresh of lenses including resource icons and yield icons
+  -- TODO: Improve this system so it does not cause a complete refresh
+  if CQUI_ShowCityManageAreaInScreen then
+    if layerNum == LensLayers.CITIZEN_MANAGEMENT then
+      local pCity:table = UI.GetHeadSelectedCity()
+      if pCity ~= nil then
+        UILens.SetActive("Appeal")
+        CQUI_ShowCitizenManagementLens(pCity:GetID())
+      end
+    end
+
+    -- Should we reapply citizen management area because it got cleared?
+    if layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL and CQUI_CityManageAreaShouldShow then
+      local pCity:table = UI.GetHeadSelectedCity()
+      if pCity ~= nil then
+        UILens.SetActive("Appeal")
+        CQUI_ShowCitizenManagementLens(pCity:GetID())
+        CQUI_CityManageAreaShouldShow = false
+      end
+    end
+  end
 end
 
 -- ===========================================================================
@@ -3131,6 +3158,15 @@ function OnLensLayerOff( layerNum:number )
   if  layerNum == LensLayers.HEX_COLORING_RELIGION then
     m_isReligionLensActive = false;
     RealizeReligion();
+  end
+
+  -- Catch uninteded clear of appeal lens because of event chain
+  if CQUI_ShowCityManageAreaInScreen then
+    if layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL and CQUI_CityManageAreaShown then
+      UILens.SetActive("Appeal")
+      CQUI_CityManageAreaShouldShow = true
+      CQUI_CityManageAreaShown = false
+    end
   end
 end
 
@@ -3167,6 +3203,73 @@ function OnCameraUpdate( vFocusX:number, vFocusY:number, fZoomLevel:number )
     OnRefreshBannerPositions();
   end
   m_prevZoomMultiplier = m_zoomMultiplier;
+end
+
+-- ===========================================================================
+function CQUI_ShowCitizenManagementLens(cityID:number)
+  local playerID:number = Game.GetLocalPlayer()
+  local pCity:table = Players[playerID]:GetCities():FindID(cityID);
+  if pCity ~= nil then
+    print_debug("Show citizens for " .. Locale.Lookup(pCity:GetName()))
+
+    local tParameters:table = {};
+    local cityPlotID = Map.GetPlot(pCity:GetX(), pCity:GetY()):GetIndex()
+    tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
+
+    local workingColor:number = UI.GetColorValue("COLOR_CITY_PLOT_WORKING");
+    local lockedColor:number = UI.GetColorValue("COLOR_CITY_PLOT_LOCKED");
+    local colorPlot:table = {}
+    colorPlot[workingColor] = {}
+    colorPlot[lockedColor] = {}
+
+    -- Get city plot and citizens info
+    local tResults:table = CityManager.GetCommandTargets(pCity, CityCommandTypes.MANAGE, tParameters);
+    if tResults == nil then
+      print("ERROR : Could not find plots")
+      return
+    end
+
+    local tPlots:table = tResults[CityCommandResults.PLOTS];
+    local tUnits:table = tResults[CityCommandResults.CITIZENS];
+    local tLockedUnits:table = tResults[CityCommandResults.LOCKED_CITIZENS];
+
+    if tPlots ~= nil and table.count(tPlots) > 0 then
+      for i, plotID in ipairs(tPlots) do
+        if (tLockedUnits[i] > 0 or cityPlotID == plotID) then
+          table.insert(colorPlot[lockedColor], plotID);
+        elseif (tUnits[i] > 0) then
+          table.insert(colorPlot[workingColor], plotID);
+        end
+      end
+    end
+
+    -- Next culture expansion plot, show it only if not in city panel
+    if UI.GetHeadSelectedCity() == nil then
+      local pCityCulture:table  = pCity:GetCulture();
+      local culturePlotColor:number = UI.GetColorValue("COLOR_CITY_PLOT_CULTURE")
+      if pCityCulture ~= nil then
+        local pNextPlotID:number = pCityCulture:GetNextPlot();
+        if pNextPlotID ~= nil and Map.IsPlot(pNextPlotID) then
+          colorPlot[culturePlotColor] = {pNextPlotID}
+        end
+      end
+    end
+
+    CQUI_CityManageAreaShown = true;
+    LuaEvents.MinimapPanel_ApplyCustomLens(colorPlot);
+  end
+end
+
+-- ===========================================================================
+function CQUI_ClearCitizenManagementLens()
+  CQUI_CityManageAreaShown = false;
+  LuaEvents.MinimapPanel_ClearCustomLens()
+end
+
+-- ===========================================================================
+function CQUI_RefreshCitizenManagementLens(cityID:number)
+  CQUI_ClearCitizenManagementLens()
+  CQUI_ShowCitizenManagementLens(cityID)
 end
 
 -- ===========================================================================
@@ -3247,6 +3350,11 @@ function OnInterfaceModeChanged( oldMode:number, newMode:number )
         end
       end
     end
+  end
+
+  if (newMode == InterfaceModeTypes.DISTRICT_PLACEMENT) then
+    CQUI_CityManageAreaShown = false
+    CQUI_CityManageAreaShouldShow = false
   end
 end
 
