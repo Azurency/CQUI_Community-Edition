@@ -1207,7 +1207,8 @@ function Initialize()
   Events.LocalPlayerChanged.Add( OnLocalPlayerChanged );
   Events.LoadScreenClose.Add(
     function()
-      UILens.SetActive("Default");
+      -- AZURENCY : already done in LoadScreen.lua OnActivateButtonClicked()
+      --UILens.SetActive("Default");
     end
   )
 

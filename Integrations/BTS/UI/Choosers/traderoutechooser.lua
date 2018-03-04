@@ -1336,7 +1336,8 @@ function KeyUpHandler( key:number )
   end
   if key == Keys.VK_ESCAPE then
     OnClose();
-    return true;
+    -- AZURENCY : on ESC also unselect the unit
+    --return true;
   end
   return false;
 end
