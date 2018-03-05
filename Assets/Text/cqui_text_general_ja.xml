@@ -66,5 +66,10 @@
       <Text>このターンは政策を変更できます。</Text>
     </Replace>
 
+    <!-- Diplomacy View -->
+    <Replace Tag="LOC_CQUI_DIPLOMACY_VIEW_TOTAL_SCORE_PER_TURN_TEXT" Language="ja_JP">
+      <Text>合計</Text>
+    </Replace>
+
   </LocalizedText>
 </GameData>
