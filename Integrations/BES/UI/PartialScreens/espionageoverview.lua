@@ -143,6 +143,7 @@ function RefreshOperatives()
 
   Controls.OperativeStack:CalculateSize();
   Controls.OperativeStack:ReprocessAnchoring();
+  Controls.OperativeScrollPanel:CalculateSize();
 end
 
 -- ===========================================================================

@@ -253,58 +253,56 @@ function PopulateSignatureArea(player:table)
   end
 
   -- Set the leader name, civ name, and civ icon data
-  local leader:string = PlayerConfigurations[player:GetID()]:GetLeaderTypeName();
-  if GameInfo.CivilizationLeaders[leader] == nil then
-    UI.DataError("Banners found a leader \""..leader.."\" which is not/no longer in the game; icon may be whack.");
+  local playerConfig = PlayerConfigurations[player:GetID()]
+  local civTypeName = playerConfig:GetCivilizationTypeName();
+  if civTypeName == nil then
+    UI.DataError("Invalid type name returned by GetCivilizationTypeName");
   else
-    if(GameInfo.CivilizationLeaders[leader].CivilizationType ~= nil) then
-      local civTypeName = GameInfo.CivilizationLeaders[leader].CivilizationType
-      local civIconName = "ICON_"..civTypeName;
+    local civIconName = "ICON_"..civTypeName;
 
-      local leaderName = Locale.ToUpper(Locale.Lookup(GameInfo.Leaders[leader].Name))
-      local playerName = PlayerConfigurations[player:GetID()]:GetPlayerName();
-      if GameConfiguration.IsAnyMultiplayer() and player:IsHuman() then
-        leaderName = leaderName .. " ("..Locale.ToUpper(playerName)..")"
+    local leaderName = Locale.ToUpper(Locale.Lookup(playerConfig:GetLeaderName()))
+    local playerName = PlayerConfigurations[player:GetID()]:GetPlayerName();
+    if GameConfiguration.IsAnyMultiplayer() and player:IsHuman() then
+      leaderName = leaderName .. " ("..Locale.ToUpper(playerName)..")"
+    end
+
+    --Create a tooltip which shows a list of this Civ's cities
+    local civTooltip = Locale.Lookup(GameInfo.Civilizations[civTypeName].Name);
+    local pPlayerConfig = PlayerConfigurations[player:GetID()];
+    local playerName = pPlayerConfig:GetPlayerName();
+    local playerCities = player:GetCities();
+    if(playerCities ~= nil) then
+      civTooltip = civTooltip .. "[NEWLINE]"..Locale.Lookup("LOC_PEDIA_CONCEPTS_PAGEGROUP_CITIES_NAME").. ":[NEWLINE]----------";
+      for i,city in playerCities:Members() do
+        civTooltip = civTooltip.. "[NEWLINE]".. Locale.Lookup(city:GetName());
       end
-
-      --Create a tooltip which shows a list of this Civ's cities
-      local civTooltip = Locale.Lookup(GameInfo.Civilizations[civTypeName].Name);
-      local pPlayerConfig = PlayerConfigurations[player:GetID()];
-      local playerName = pPlayerConfig:GetPlayerName();
-      local playerCities = player:GetCities();
-      if(playerCities ~= nil) then
-        civTooltip = civTooltip .. "[NEWLINE]"..Locale.Lookup("LOC_PEDIA_CONCEPTS_PAGEGROUP_CITIES_NAME").. ":[NEWLINE]----------";
-        for i,city in playerCities:Members() do
-          civTooltip = civTooltip.. "[NEWLINE]".. Locale.Lookup(city:GetName());
-        end
-      end
+    end
 
 
-      -- Populate relevant controls
-      if(player == ms_LocalPlayer) then
+    -- Populate relevant controls
+    if(player == ms_LocalPlayer) then
 
-        Controls.PlayerCivIcon:SetIcon(civIconName);
-        Controls.PlayerCivName:SetText(Locale.ToUpper(Locale.Lookup(GameInfo.Civilizations[civTypeName].Name)));
-        Controls.PlayerCivName:SetColor(m_primaryColor);
-        Controls.PlayerLeaderName:SetText(leaderName);
-        Controls.PlayerLeaderName:SetColor(m_secondaryColor);
+      Controls.PlayerCivIcon:SetIcon(civIconName);
+      Controls.PlayerCivName:SetText(Locale.ToUpper(Locale.Lookup(GameInfo.Civilizations[civTypeName].Name)));
+      Controls.PlayerCivName:SetColor(m_primaryColor);
+      Controls.PlayerLeaderName:SetText(leaderName);
+      Controls.PlayerLeaderName:SetColor(m_secondaryColor);
 
-        Controls.PlayerCivIcon:SetToolTipString(Locale.Lookup(civTooltip));
-        Controls.PlayerSignatureStack:CalculateSize();
-        Controls.PlayerSignatureStack:ReprocessAnchoring();
-      else
+      Controls.PlayerCivIcon:SetToolTipString(Locale.Lookup(civTooltip));
+      Controls.PlayerSignatureStack:CalculateSize();
+      Controls.PlayerSignatureStack:ReprocessAnchoring();
+    else
 
 
-        Controls.PartnerCivIcon:SetIcon(civIconName);
-        Controls.PartnerCivName:SetText(Locale.ToUpper(Locale.Lookup(GameInfo.Civilizations[civTypeName].Name)));
-        Controls.PartnerCivName:SetColor(m_primaryColor);
-        Controls.PartnerLeaderName:SetText(leaderName);
-        Controls.PartnerLeaderName:SetColor(m_secondaryColor);
+      Controls.PartnerCivIcon:SetIcon(civIconName);
+      Controls.PartnerCivName:SetText(Locale.ToUpper(Locale.Lookup(GameInfo.Civilizations[civTypeName].Name)));
+      Controls.PartnerCivName:SetColor(m_primaryColor);
+      Controls.PartnerLeaderName:SetText(leaderName);
+      Controls.PartnerLeaderName:SetColor(m_secondaryColor);
 
-        Controls.PartnerCivIcon:SetToolTipString(Locale.Lookup(civTooltip));
-        Controls.PartnerSignatureStack:CalculateSize();
-        Controls.PartnerSignatureStack:ReprocessAnchoring();
-      end
+      Controls.PartnerCivIcon:SetToolTipString(Locale.Lookup(civTooltip));
+      Controls.PartnerSignatureStack:CalculateSize();
+      Controls.PartnerSignatureStack:ReprocessAnchoring();
     end
   end
 
@@ -1503,9 +1501,17 @@ function OnClickAvailableCity(player, valueType, subType)
   local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
   if (pDeal ~= nil) then
 
+    -- Since we're ceding this city make sure to look for this city in the current owners city list
+    local cityName;
+    if subType == 1 then -- CitySubTypes:CEDE_OCCUPIED
+      cityName = GetCityData(GetOtherPlayer(player):GetCities():FindID(valueType)).CityName
+    else
+      cityName = GetCityData(player:GetCities():FindID(valueType)).CityName
+    end
+
     -- Already there?
     local pDealItem = pDeal:FindItemByValueType(DealItemTypes.CITIES, subType, valueType, player:GetID());
-    if (pDealItem == nil or pDealItem:GetValueTypeNameID() ~= GetCityData(player:GetCities():FindID(valueType)).CityName) then --ARISTOS
+    if (pDealItem == nil or pDealItem:GetValueTypeNameID() ~= cityName) then --ARISTOS
 
       -- No
       pDealItem = pDeal:AddItemOfType(DealItemTypes.CITIES, player:GetID());

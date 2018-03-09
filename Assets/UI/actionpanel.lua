@@ -118,6 +118,7 @@ local m_lastTurnTickTime  : number  = 0;                    -- When did we last 
 local m_numberVisibleBlockers :number = 0;
 local m_visibleBlockerTypes : table   = {};
 local m_isSlowTurnEnable  : boolean = false;                  -- Tutorial: when active slow to allow clicks when turn raises.
+local m_unreadiedTurn		: boolean   = false;									-- Did the local player unready their turn during the current game turn?
 
 -- CQUI Members
 local CQUI_PolicyReminderClosed = false;
@@ -150,9 +151,9 @@ function OnRefresh()
     return;
   end
 
-	Controls.EndTurnButton:SetDisabled( false );
-	Controls.EndTurnButtonLabel:SetDisabled( false );	
-	
+  Controls.EndTurnButton:SetDisabled( false );
+  Controls.EndTurnButtonLabel:SetDisabled( false );	
+  
   local message       :string;
   local icon          :string;
   local toolTipString     :string;
@@ -203,7 +204,7 @@ function OnRefresh()
     -- Special "City Ranged Attack" state for when there are no end turn blockers but
     -- there is a city can that perform a ranged attack in 'auto end turn mode'.
     message     = cityRangedAttackString;
-		icon            = "ICON_NOTIFICATION_CITY_RANGE_ATTACK";
+    icon            = "ICON_NOTIFICATION_CITY_RANGE_ATTACK";
     toolTipString = cityRangedAttackTip;
     iFlashingState  = FLASHING_END_TURN;
   elseif (CQUI_CheckEncampmentRangeAttackState()) then
@@ -411,7 +412,7 @@ end
 -- ===========================================================================
 function HaveCityRangeAttackStateEnabled()
   -- When is the "City Ranged Attack" end turn button enabled?
-	return 	(UserConfiguration.IsCityRangeAttackTurnBlocking()) and Game.IsAllowTacticalCommands(Game.GetLocalPlayer());
+  return 	(UserConfiguration.IsCityRangeAttackTurnBlocking()) and Game.IsAllowTacticalCommands(Game.GetLocalPlayer());
 end
 
 -- ===========================================================================
@@ -434,12 +435,12 @@ function CheckCityRangeAttackState()
     return false;
   end
 
-	if(not HaveCityRangeAttackStateEnabled()) then
+  if(not HaveCityRangeAttackStateEnabled()) then
     return false;
   end
 
-	local pNotification :table = NotificationManager.FindType(NotificationTypes.CITY_RANGE_ATTACK, Game.GetLocalPlayer());
-	if pNotification == nil or pNotification:IsDismissed() then
+  local pNotification :table = NotificationManager.FindType(NotificationTypes.CITY_RANGE_ATTACK, Game.GetLocalPlayer());
+  if pNotification == nil or pNotification:IsDismissed() then
     return false;
   end
 
@@ -539,10 +540,11 @@ end
 function CheckAutoEndTurn( eCurrentEndTurnBlockingType:number )
   local pPlayer = Players[Game.GetLocalPlayer()];
   if pPlayer ~= nil then
-    if eCurrentEndTurnBlockingType == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING
+    if not m_unreadiedTurn -- If the player intentionally unreadied their turn, do not auto end turn.
+      and eCurrentEndTurnBlockingType == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING
       and (UserConfiguration.IsAutoEndTurn() and not UI.SkipNextAutoEndTurn())
       -- In tactical phases, all units must have orders or used up their movement points.
-			and (not CheckUnitsHaveMovesState() and not CheckCityRangeAttackState() and not CQUI_CheckEncampmentRangeAttackState()) then 
+      and (not CheckUnitsHaveMovesState() and not CheckCityRangeAttackState() and not CQUI_CheckEncampmentRangeAttackState()) then 
         if not UI.CanEndTurn() then
           error("CheckAutoEndTurn thinks that we can't end turn, but the notification system disagrees");
         end
@@ -585,7 +587,7 @@ function DoEndTurn( optionalNewBlocker:number )
   if UI.GetInterfaceMode() ~= InterfaceModeTypes.SELECTION and UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK and not (UI.GetInterfaceMode() == InterfaceModeTypes.CITY_MANAGEMENT and m_activeBlockerId == EndTurnBlockingTypes.ENDTURN_BLOCKING_PRODUCTION) then
     UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
   end
-	
+  
   if m_activeBlockerId == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING then
     if (CheckUnitsHaveMovesState()) then
       UI.SelectNextReadyUnit();
@@ -709,30 +711,30 @@ function OnEndTurnRightClicked()
     return;
   end
 
-	-- local activeBlockerId = NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
-	-- if activeBlockerId == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING then
-	-- 	if (CheckUnitsHaveMovesState()) then
-	-- 		-- Do Nothing
-	-- 	elseif(CheckCityRangeAttackState()) then
-	-- 		-- Remove the city range attack notification so the turn can proceed.
-	-- 		local pNotification :table = NotificationManager.FindType(NotificationTypes.CITY_RANGE_ATTACK, Game.GetLocalPlayer());
-	-- 		if pNotification ~= nil and not pNotification:IsDismissed() then
-	-- 			NotificationManager.Dismiss( pNotification:GetPlayerID(), pNotification:GetID() );
-	-- 		end
-	-- 	else
-	-- 		-- Do Nothing
-	-- 	end
-	-- end
+  -- local activeBlockerId = NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
+  -- if activeBlockerId == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING then
+  -- 	if (CheckUnitsHaveMovesState()) then
+  -- 		-- Do Nothing
+  -- 	elseif(CheckCityRangeAttackState()) then
+  -- 		-- Remove the city range attack notification so the turn can proceed.
+  -- 		local pNotification :table = NotificationManager.FindType(NotificationTypes.CITY_RANGE_ATTACK, Game.GetLocalPlayer());
+  -- 		if pNotification ~= nil and not pNotification:IsDismissed() then
+  -- 			NotificationManager.Dismiss( pNotification:GetPlayerID(), pNotification:GetID() );
+  -- 		end
+  -- 	else
+  -- 		-- Do Nothing
+  -- 	end
+  -- end
 
   -- AZURENCY : Added the original behavior to skip turn on right click (and kept the notification removal)
   if(CheckCityRangeAttackState()) then
-		-- Remove the city range attack notification so the turn can proceed.
-		local pNotification :table = NotificationManager.FindType(NotificationTypes.CITY_RANGE_ATTACK, Game.GetLocalPlayer());
-		if pNotification ~= nil and not pNotification:IsDismissed() then
-			NotificationManager.Dismiss( pNotification:GetPlayerID(), pNotification:GetID() );
-		end
-	else
-	  UI.RequestAction(ActionTypes.ACTION_ENDTURN);
+    -- Remove the city range attack notification so the turn can proceed.
+    local pNotification :table = NotificationManager.FindType(NotificationTypes.CITY_RANGE_ATTACK, Game.GetLocalPlayer());
+    if pNotification ~= nil and not pNotification:IsDismissed() then
+      NotificationManager.Dismiss( pNotification:GetPlayerID(), pNotification:GetID() );
+    end
+  else
+    UI.RequestAction(ActionTypes.ACTION_ENDTURN);
     UI.PlaySound("Stop_Unit_Movement_Master");
   end
 end
@@ -859,14 +861,14 @@ end
 
 -- ===========================================================================
 function OnUserOptionChanged(eOptionSet, hOptionKey, iNewOptionValue)
-	-- If we enable certain user options, we need to check auto end turns because our auto end turn status might be affected.
-	if(hOptionKey == autoEndTurnOptionHash or hOptionKey == cityRangeAttackTurnOptionHash) then
+  -- If we enable certain user options, we need to check auto end turns because our auto end turn status might be affected.
+  if(hOptionKey == autoEndTurnOptionHash or hOptionKey == cityRangeAttackTurnOptionHash) then
     if(UserConfiguration.IsAutoEndTurn()) then
       local blockingType  :number= NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
       CheckAutoEndTurn( blockingType );
     end
-		-- Changing these user options can result in a different end turn state.
-		ContextPtr:RequestRefresh();
+    -- Changing these user options can result in a different end turn state.
+    ContextPtr:RequestRefresh();
   end
 end
 
@@ -908,6 +910,11 @@ function OnLocalPlayerTurnEnd()
   SetEndTurnWaiting();
   UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
   m_kSoundsPlayed = {};
+end
+
+-- ===========================================================================
+function OnLocalPlayerTurnUnready()
+  m_unreadiedTurn = true;
 end
 
 -- ===========================================================================
@@ -956,23 +963,23 @@ end
 function OnNotificationDismissed( playerID:number, notificationID:number )
   if playerID == Game.GetLocalPlayer() then
     ContextPtr:RequestRefresh();
-		
-		-- Need to check auto end turn if this was a NotificationTypes.CITY_RANGE_ATTACK
-		local wasCityRangeNotification = false;
-		local pNotification:table = NotificationManager.Find( playerID, notificationID );
-		if pNotification == nil then
-			-- It is possible, that by the time we get this event, the notification was 'expired' by some other action in the game.
-			-- To be safe, assume it was a NotificationTypes.CITY_RANGE_ATTACK.
-			wasCityRangeNotification = true;
-		elseif(pNotification:GetType() == NotificationTypes.CITY_RANGE_ATTACK) then
-			wasCityRangeNotification = true;
-		end
+    
+    -- Need to check auto end turn if this was a NotificationTypes.CITY_RANGE_ATTACK
+    local wasCityRangeNotification = false;
+    local pNotification:table = NotificationManager.Find( playerID, notificationID );
+    if pNotification == nil then
+      -- It is possible, that by the time we get this event, the notification was 'expired' by some other action in the game.
+      -- To be safe, assume it was a NotificationTypes.CITY_RANGE_ATTACK.
+      wasCityRangeNotification = true;
+    elseif(pNotification:GetType() == NotificationTypes.CITY_RANGE_ATTACK) then
+      wasCityRangeNotification = true;
+    end
 
-		if (wasCityRangeNotification and HaveCityRangeAttackStateEnabled()) then
-			local pPlayer		:table = Players[Game.GetLocalPlayer()];
-			local blockingType	:number= NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
-			CheckAutoEndTurn( blockingType );
-		end		
+    if (wasCityRangeNotification and HaveCityRangeAttackStateEnabled()) then
+      local pPlayer		:table = Players[Game.GetLocalPlayer()];
+      local blockingType	:number= NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
+      CheckAutoEndTurn( blockingType );
+    end		
   end
 end
 
@@ -996,6 +1003,14 @@ function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
   if eOldMode == InterfaceModeTypes.VIEW_MODAL_LENS then
     ContextPtr:SetHide(false);
   end
+end
+
+-- ===========================================================================
+--	Game Event
+--	Game Turn Began
+-- ===========================================================================
+function OnTurnBegin()
+  m_unreadiedTurn = false;
 end
 
 -- ===========================================================================
@@ -1254,9 +1269,11 @@ function Initialize()
   Events.EndTurnDirty.Add(        OnEndTurnDirty );
   Events.InputActionTriggered.Add(    OnInputActionTriggered );
   Events.InterfaceModeChanged.Add(    OnInterfaceModeChanged );
+  Events.TurnBegin.Add(               OnTurnBegin);
   Events.LocalPlayerChanged.Add(      OnLocalPlayerChanged );
   Events.LocalPlayerTurnBegin.Add(    OnLocalPlayerTurnBegin );
   Events.LocalPlayerTurnEnd.Add(      OnLocalPlayerTurnEnd );
+  Events.LocalPlayerTurnUnready.Add(  OnLocalPlayerTurnUnready );
   Events.RemotePlayerTurnEnd.Add(     OnRemotePlayerTurnEnd );
   Events.NotificationAdded.Add(     OnNotificationAdded );
   Events.NotificationDismissed.Add(   OnNotificationDismissed );

@@ -503,13 +503,13 @@
   </Instance>
 
   <Instance			Name="IconInfoInstance">
-    <Container	ID="Top" Size="230,auto">
+    <Container	ID="Top" Size="300,auto">
       <Image    Texture="Controls_CircleRim40" Size="40,40" Offset="-5,-2" Color="255,255,255,150">
         <Image		ID="Icon"					Size="32,32" Anchor="C,C" />
       </Image>
       <Stack		ID="TextStack"		Offset="36,0"		StackGrowth="Bottom" StackPadding="4">
-        <Label	ID="Header"				WrapWidth="195" SmallCapsType="EveryWord" SmallCaps="20" Style="FontFlair14"		String="$Header$"/>
-        <Label	ID="Description"	WrapWidth="195"	Style="DawnText"	String="$Description$"/>
+        <Label	ID="Header"				WrapWidth="parent" SmallCapsType="EveryWord" SmallCaps="20" Style="FontFlair14"		String="$Header$"/>
+        <Label	ID="Description"	WrapWidth="parent"	Style="DawnText"	String="$Description$"/>
       </Stack>
     </Container>
   </Instance>

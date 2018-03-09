@@ -425,15 +425,11 @@ function ViewMain( data:table )
   end
   Controls.CityHealthMeter:SetToolTipString(tooltip);
 
-  local leader:string = PlayerConfigurations[data.Owner]:GetLeaderTypeName();
-  local civIconName:string = "ICON_";
-  if GameInfo.CivilizationLeaders[leader] == nil then
-    UI.DataError("Banners found a leader \""..leader.."\" which is not/no longer in the game; icon may be whack.");
+  local civType:string = PlayerConfigurations[data.Owner]:GetCivilizationTypeName();
+  if civType ~= nil then
+    Controls.CivIcon:SetIcon("ICON_" .. civType);
   else
-    if(GameInfo.CivilizationLeaders[leader].CivilizationType ~= nil) then
-      civIconName = civIconName..GameInfo.CivilizationLeaders[leader].CivilizationType;
-      Controls.CivIcon:SetIcon(civIconName);
-    end
+    UI.DataError("Invalid type name returned by GetCivilizationTypeName");
   end
 
   -- Divine Yuri's Tooltip calculations (Some changes made for CQUI)

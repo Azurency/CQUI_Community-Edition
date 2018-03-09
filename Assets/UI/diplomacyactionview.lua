@@ -567,6 +567,10 @@ function ApplyStatement(handler : table, statementTypeName : string, statementSu
     local reasonStrKey : string = DiplomacyManager.FindReasonTextKey( kParsedStatement.ReasonText, kStatement.FromPlayer, kStatement.AiReason, kStatement.AiModifier);
     if ( reasonStrKey ~= nil ) then
       reasonStr = Locale.Lookup( reasonStrKey );
+      local agendaStr = DiplomacyManager.FindReasonAgendaTextKey(kStatement.FromPlayer, toPlayer, kStatement.AiReason, kStatement.AiModifier);
+      if (agendaStr ~= nil ) then
+        reasonStr = reasonStr .. agendaStr;
+      end
     end
     Controls.LeaderResponseText:SetText( leaderstr );
     m_voiceoverText = leaderstr;
@@ -1893,8 +1897,8 @@ function SetUniqueCivLeaderData()
   local uniqueAbilities;
   local uniqueUnits;
   local uniqueBuildings;
-  uniqueAbilities, uniqueUnits, uniqueBuildings = GetLeaderUniqueTraits( leaderType );
-  local CivUniqueAbilities, CivUniqueUnits, CivUniqueBuildings = GetCivilizationUniqueTraits( civType );
+  uniqueAbilities, uniqueUnits, uniqueBuildings = GetLeaderUniqueTraits( leaderType, true );
+  local CivUniqueAbilities, CivUniqueUnits, CivUniqueBuildings = GetCivilizationUniqueTraits( civType, true );
 
   -- Merge tables
   for i,v in ipairs(CivUniqueAbilities)	do table.insert(uniqueAbilities, v) end

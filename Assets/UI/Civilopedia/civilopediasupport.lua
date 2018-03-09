@@ -604,7 +604,7 @@ function FindChapterTextKey(SectionId, PageId, ChapterId, Tag)
 
     local suffix =  "_CHAPTER_" .. ChapterId .. "_" .. Tag;
 
- 		local keys = {
+     local keys = {
       "LOC_PEDIA_" .. SectionId .. "_PAGE_" .. PageId .. suffix,
       "LOC_PEDIA_" .. SectionId .. "_PAGE" .. suffix,
       "LOC_PEDIA_PAGE_" .. PageId .. suffix,
@@ -908,6 +908,8 @@ end
 function OnToggleCivilopedia()
   if(ContextPtr:IsHidden()) then 
     OnOpenCivilopedia();
+    -- Set focus on search bar
+    Controls.SearchEditBox:TakeFocus();
   else
     OnClose();
   end

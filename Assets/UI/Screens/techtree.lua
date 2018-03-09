@@ -20,6 +20,7 @@
 --  4
 --
 -- ===========================================================================
+-- Include self contained additional tabs
 include( "ToolTipHelper" );
 include( "SupportFunctions" );
 include( "Civ6Common" );      -- Tutorial check support
@@ -125,13 +126,13 @@ STATUS_ART[ITEM_STATUS.RESEARCHED]  = { Name="RESEARCHED",  TextColor0=0xaafffff
 --  MEMBERS / VARIABLES
 -- ===========================================================================
 local m_kNodeIM       :table = InstanceManager:new( "NodeInstance",       "Top",    Controls.NodeScroller );
-local m_kLineIM       :table = InstanceManager:new( "LineImageInstance",    "LineImage",Controls.NodeScroller );
+local m_kLineIM       :table = InstanceManager:new( "LineImageInstance",    "LineImage",Controls.LineScroller );
 local m_kEraArtIM     :table = InstanceManager:new( "EraArtInstance",     "Top",    Controls.FarBackArtScroller );
 local m_kEraLabelIM     :table = InstanceManager:new( "EraLabelInstance",     "Top",    Controls.ArtScroller );
 local m_kEraDotIM     :table = InstanceManager:new( "EraDotInstance",     "Dot",    Controls.ScrollbarBackgroundArt );
 local m_kMarkerIM     :table = InstanceManager:new( "PlayerMarkerInstance", "Top",    Controls.TimelineScrollbar );
 local m_kSearchResultIM   :table = InstanceManager:new( "SearchResultInstance",   "Root",     Controls.SearchResultsStack);
-local m_kPathMarkerIM   :table = InstanceManager:new( "TechPathMarker",     "Top",    Controls.NodeScroller);
+local m_kPathMarkerIM   :table = InstanceManager:new( "TechPathMarker",     "Top",    Controls.LineScroller);
 
 local m_researchHash    :number;
 local m_width       :number= SIZE_MIN_SPEC_X; -- Screen Width (default / min spec)
@@ -597,7 +598,6 @@ function AllocateUI()
   Controls.ModalScreenTitle:SetText(Locale.ToUpper(Locale.Lookup("LOC_TECH_TREE_HEADER")));
 end
 
-
 -- ===========================================================================
 --  UI Event
 --  Callback when the main scroll panel is scrolled.
@@ -606,6 +606,7 @@ function OnScroll( control:table, percent:number )
 
   -- Parallax
   Controls.ArtScroller:SetScrollValue( percent );
+  Controls.LineScroller:SetScrollValue( percent );
   Controls.FarBackArtScroller:SetScrollValue( percent );
 
   -- Audio
@@ -623,171 +624,177 @@ end
 
 
 -- ===========================================================================
---  Display the state of the tree (filter, node display, etc...) based on the
---  active player's item data.
+--	Separated into its own function so Mods / Expansions can modify the nodes
 -- ===========================================================================
-function View( playerTechData:table )
+function PopulateNode(node, playerTechData)
+  local item    :table = m_kItemDefaults[node.Type];            -- static item data
+  local live    :table = playerTechData[DATA_FIELD_LIVEDATA][node.Type];  -- live (changing) data
+  local artInfo :table = STATUS_ART[live.Status];             -- art/styles for this state
 
-  -- Output the node states for the tree
-  for _,node in pairs(m_uiNodes) do
-    local item    :table = m_kItemDefaults[node.Type];            -- static item data
-    local live    :table = playerTechData[DATA_FIELD_LIVEDATA][node.Type];  -- live (changing) data
-    local artInfo :table = STATUS_ART[live.Status];             -- art/styles for this state
+  if(live.Status == ITEM_STATUS.RESEARCHED) then
+    for _,prereqId in pairs(item.Prereqs) do
+      if(prereqId ~= PREREQ_ID_TREE_START) then
+        local prereq    :table = m_kItemDefaults[prereqId];
+        local previousRow :number = prereq.UITreeRow;
+        local previousColumn:number = m_kEras[prereq.EraType].PriorColumns;
 
-    if(live.Status == ITEM_STATUS.RESEARCHED) then
-      for _,prereqId in pairs(item.Prereqs) do
-        if(prereqId ~= PREREQ_ID_TREE_START) then
-          local prereq    :table = m_kItemDefaults[prereqId];
-          local previousRow :number = prereq.UITreeRow;
-          local previousColumn:number = m_kEras[prereq.EraType].PriorColumns;
+        for lineNum,line in pairs(m_uiConnectorSets[item.Type..","..prereqId]) do
+          if(lineNum == 1 or lineNum == 5) then
+            line:SetTexture("Controls_TreePathEW");
+          end
+          if( lineNum == 3) then
+            line:SetTexture("Controls_TreePathNS");
+          end
 
-          for lineNum,line in pairs(m_uiConnectorSets[item.Type..","..prereqId]) do
-            if(lineNum == 1 or lineNum == 5) then
-              line:SetTexture("Controls_TreePathEW");
+          if(lineNum==2)then
+            if previousRow < item.UITreeRow  then
+              line:SetTexture("Controls_TreePathSE");
+            else
+              line:SetTexture("Controls_TreePathNE");
             end
-            if( lineNum == 3) then
-              line:SetTexture("Controls_TreePathNS");
-            end
+          end
 
-            if(lineNum==2)then
-              if previousRow < item.UITreeRow  then
-                line:SetTexture("Controls_TreePathSE");
-              else
-                line:SetTexture("Controls_TreePathNE");
-              end
-            end
-
-            if(lineNum==4)then
-              if previousRow < item.UITreeRow  then
-                line:SetTexture("Controls_TreePathES");
-              else
-                line:SetTexture("Controls_TreePathEN");
-              end
+          if(lineNum==4)then
+            if previousRow < item.UITreeRow  then
+              line:SetTexture("Controls_TreePathES");
+            else
+              line:SetTexture("Controls_TreePathEN");
             end
           end
         end
       end
     end
+  end
 
-    node.NodeName:SetColor( artInfo.TextColor0, 0 );
-    node.NodeName:SetColor( artInfo.TextColor1, 1 );
-    if m_debugShowIDWithName then
-      node.NodeName:SetText( tostring(item.Index).."  "..Locale.Lookup(item.Name) );  -- Debug output
-    else
-      node.NodeName:SetText( Locale.ToUpper( Locale.Lookup(item.Name) ));       -- Normal output
-    end
+  node.NodeName:SetColor( artInfo.TextColor0, 0 );
+  node.NodeName:SetColor( artInfo.TextColor1, 1 );
+  if m_debugShowIDWithName then
+    node.NodeName:SetText( tostring(item.Index).."  "..Locale.Lookup(item.Name) );  -- Debug output
+  else
+    node.NodeName:SetText( Locale.ToUpper( Locale.Lookup(item.Name) ));       -- Normal output
+  end
 
-    if live.Turns > 0 then
-      node.Turns:SetHide( false );
-      node.Turns:SetColor( artInfo.TextColor0, 0 );
-      node.Turns:SetColor( artInfo.TextColor1, 1 );
-      node.Turns:SetText( Locale.Lookup("LOC_TECH_TREE_TURNS",live.Turns) );
-    else
-      node.Turns:SetHide( true );
-    end
+  if live.Turns > 0 then
+    node.Turns:SetHide( false );
+    node.Turns:SetColor( artInfo.TextColor0, 0 );
+    node.Turns:SetColor( artInfo.TextColor1, 1 );
+    node.Turns:SetText( Locale.Lookup("LOC_TECH_TREE_TURNS",live.Turns) );
+  else
+    node.Turns:SetHide( true );
+  end
 
-    if item.IsBoostable and live.Status ~= ITEM_STATUS.RESEARCHED then
-      node.BoostIcon:SetHide( false );
-      node.BoostText:SetHide( false );
-      node.BoostText:SetColor( artInfo.TextColor0, 0 );
-      node.BoostText:SetColor( artInfo.TextColor1, 1 );
+  if item.IsBoostable and live.Status ~= ITEM_STATUS.RESEARCHED then
+    node.BoostIcon:SetHide( false );
+    node.BoostText:SetHide( false );
+    node.BoostText:SetColor( artInfo.TextColor0, 0 );
+    node.BoostText:SetColor( artInfo.TextColor1, 1 );
 
-      local boostText:string;
-      if live.IsBoosted then
-        boostText = TXT_BOOSTED.." "..item.BoostText;
-        node.BoostIcon:SetTexture( PIC_BOOST_ON );
-        node.BoostMeter:SetHide( true );
-    node.BoostedBack:SetHide( false );
-      else
-        boostText = TXT_TO_BOOST.." "..item.BoostText;
-        node.BoostedBack:SetHide( true );
-        node.BoostIcon:SetTexture( PIC_BOOST_OFF );
-        node.BoostMeter:SetHide( false );
-        local boostAmount = (item.BoostAmount*.01) + (live.Progress/ live.Cost);
-        node.BoostMeter:SetPercent( boostAmount );
-      end
-      TruncateStringWithTooltip(node.BoostText, MAX_BEFORE_TRUNC_TO_BOOST, boostText);
-    else
-      node.BoostIcon:SetHide( true );
-      node.BoostText:SetHide( true );
-      node.BoostedBack:SetHide( true );
+    local boostText:string;
+    if live.IsBoosted then
+      boostText = TXT_BOOSTED.." "..item.BoostText;
+      node.BoostIcon:SetTexture( PIC_BOOST_ON );
       node.BoostMeter:SetHide( true );
-    end
-
-    if live.Status == ITEM_STATUS.CURRENT then
-      node.GearAnim:SetHide( false );
+  node.BoostedBack:SetHide( false );
     else
-      node.GearAnim:SetHide( true );
+      boostText = TXT_TO_BOOST.." "..item.BoostText;
+      node.BoostedBack:SetHide( true );
+      node.BoostIcon:SetTexture( PIC_BOOST_OFF );
+      node.BoostMeter:SetHide( false );
+      local boostAmount = (item.BoostAmount*.01) + (live.Progress/ live.Cost);
+      node.BoostMeter:SetPercent( boostAmount );
     end
+    TruncateStringWithTooltip(node.BoostText, MAX_BEFORE_TRUNC_TO_BOOST, boostText);
+  else
+    node.BoostIcon:SetHide( true );
+    node.BoostText:SetHide( true );
+    node.BoostedBack:SetHide( true );
+    node.BoostMeter:SetHide( true );
+  end
 
-    if live.Progress > 0 then
-      node.ProgressMeter:SetHide( false );
-      node.ProgressMeter:SetPercent(live.Progress / live.Cost);
+  if live.Status == ITEM_STATUS.CURRENT then
+    node.GearAnim:SetHide( false );
+  else
+    node.GearAnim:SetHide( true );
+  end
+
+  if live.Progress > 0 then
+    node.ProgressMeter:SetHide( false );
+    node.ProgressMeter:SetPercent(live.Progress / live.Cost);
+  else
+    node.ProgressMeter:SetHide( true );
+  end
+
+  -- Show/Hide Recommended Icon
+  -- CQUI : only if show tech civ enabled in settings
+  if live.IsRecommended and live.AdvisorType ~= nil and CQUI_ShowTechCivicRecommendations then
+    node.RecommendedIcon:SetIcon(live.AdvisorType);
+    node.RecommendedIcon:SetHide(false);
+  else
+    node.RecommendedIcon:SetHide(true);
+  end
+
+  -- Set art for icon area
+  if(node.Type ~= nil) then
+    local iconName :string = DATA_ICON_PREFIX .. node.Type;
+    if (artInfo.Name == "BLOCKED") then
+      node.IconBacking:SetHide(true);
+      iconName = iconName .. "_FOW";
+      node.BoostMeter:SetColor(0x66ffffff);
+      node.BoostIcon:SetColor(0x66000000);
     else
-      node.ProgressMeter:SetHide( true );
+      node.IconBacking:SetHide(false);
+      iconName = iconName;
+      node.BoostMeter:SetColor(0xffffffff);
+      node.BoostIcon:SetColor(0xffffffff);
     end
-
-    -- Show/Hide Recommended Icon
-    -- CQUI : only if show tech civ enabled in settings
-    if live.IsRecommended and live.AdvisorType ~= nil and CQUI_ShowTechCivicRecommendations then
-      node.RecommendedIcon:SetIcon(live.AdvisorType);
-      node.RecommendedIcon:SetHide(false);
-    else
-      node.RecommendedIcon:SetHide(true);
+    local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(iconName, 42);
+    if (textureOffsetX ~= nil) then
+      node.Icon:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
     end
+  end
 
-    -- Set art for icon area
-    if(node.Type ~= nil) then
-      local iconName :string = DATA_ICON_PREFIX .. node.Type;
-      if (artInfo.Name == "BLOCKED") then
-        node.IconBacking:SetHide(true);
-        iconName = iconName .. "_FOW";
-        node.BoostMeter:SetColor(0x66ffffff);
-        node.BoostIcon:SetColor(0x66000000);
-      else
-        node.IconBacking:SetHide(false);
-        iconName = iconName;
-        node.BoostMeter:SetColor(0xffffffff);
-        node.BoostIcon:SetColor(0xffffffff);
-      end
-      local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(iconName, 42);
-      if (textureOffsetX ~= nil) then
-        node.Icon:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
-      end
-    end
+  if artInfo.IsButton then
+    node.OtherStates:SetHide( true );
+    node.NodeButton:SetTextureOffsetVal( artInfo.BGU, artInfo.BGV );
+  else
+    node.OtherStates:SetHide( false );
+    node.OtherStates:SetTextureOffsetVal( artInfo.BGU, artInfo.BGV );
+  end
 
-    if artInfo.IsButton then
-      node.OtherStates:SetHide( true );
-      node.NodeButton:SetTextureOffsetVal( artInfo.BGU, artInfo.BGV );
-    else
-      node.OtherStates:SetHide( false );
-      node.OtherStates:SetTextureOffsetVal( artInfo.BGU, artInfo.BGV );
-    end
+  if artInfo.FillTexture ~= nil then
+    node.FillTexture:SetHide( false );
+    node.FillTexture:SetTexture( artInfo.FillTexture );
+  else
+    node.FillTexture:SetHide( true );
+  end
 
-    if artInfo.FillTexture ~= nil then
-      node.FillTexture:SetHide( false );
-      node.FillTexture:SetTexture( artInfo.FillTexture );
-    else
-      node.FillTexture:SetHide( true );
-    end
+  if artInfo.BoltOn then
+    node.Bolt:SetTexture(PIC_BOLT_ON);
+  else
+    node.Bolt:SetTexture(PIC_BOLT_OFF);
+  end
 
-    if artInfo.BoltOn then
-      node.Bolt:SetTexture(PIC_BOLT_ON);
-    else
-      node.Bolt:SetTexture(PIC_BOLT_OFF);
-    end
+  node.NodeButton:SetToolTipString(ToolTipHelper.GetToolTip(item.Type, Game.GetLocalPlayer()));
+  node.IconBacking:SetTexture(artInfo.IconBacking);
 
-    node.NodeButton:SetToolTipString(ToolTipHelper.GetToolTip(item.Type, Game.GetLocalPlayer()));
-    node.IconBacking:SetTexture(artInfo.IconBacking);
+  -- Darken items not making it past filter.
+  local currentFilter:table = playerTechData[DATA_FIELD_UIOPTIONS].filter;
+  if currentFilter == nil or currentFilter.Func == nil or currentFilter.Func( item.Type ) then
+    node.FilteredOut:SetHide( true );
+  else
+    node.FilteredOut:SetHide( false );
+  end
+end
 
-    -- Darken items not making it past filter.
-    local currentFilter:table = playerTechData[DATA_FIELD_UIOPTIONS].filter;
-    if currentFilter == nil or currentFilter.Func == nil or currentFilter.Func( item.Type ) then
-      node.FilteredOut:SetHide( true );
-    else
-      node.FilteredOut:SetHide( false );
-    end
+-- ===========================================================================
+--	Display the state of the tree (filter, node display, etc...) based on the 
+--	active player's item data. 
+-- ===========================================================================
+function View( playerTechData:table )
 
+  -- Output the node states for the tree
+  for _,node in pairs(m_uiNodes) do
+    PopulateNode(node, playerTechData);
   end
 
   -- Fill in where the markers (representing players) are at:
@@ -1142,13 +1149,18 @@ end
 
 -- ===========================================================================
 function OnResearchChanged( ePlayer:number, eTech:number )
-  if ePlayer == Game.GetLocalPlayer() then
-    m_ePlayer = ePlayer;
+  if not ContextPtr:IsHidden() and ShouldUpdateWhenResearchChanges(ePlayer) then
     m_kCurrentData = GetLivePlayerData( m_ePlayer, -1 );
-    if not ContextPtr:IsHidden() then
-      View( m_kCurrentData );
-    end
+    View( m_kCurrentData );
   end
+end
+
+-- ===========================================================================
+--	This function was separated so behavior can be modified in mods/expasions
+-- ===========================================================================
+function ShouldUpdateWhenResearchChanges(ePlayer)
+  m_ePlayer = Game.GetLocalPlayer();
+  return m_ePlayer == ePlayer;
 end
 
 -- ===========================================================================
@@ -1211,6 +1223,8 @@ function Resize()
   Controls.ArtParchmentRippleTop:SetSizeX( artAndEraScrollWidth );
   Controls.ArtParchmentRippleBottom:SetSizeX( artAndEraScrollWidth );
   Controls.ForceSizeX:SetSizeX( artAndEraScrollWidth  );
+  Controls.LineForceSizeX:SetSizeX( scrollPanelX );
+  Controls.LineScroller:CalculateSize();
   Controls.ArtScroller:CalculateSize();
   Controls.ArtCornerGrungeTR:ReprocessAnchoring();
   Controls.ArtCornerGrungeBR:ReprocessAnchoring();

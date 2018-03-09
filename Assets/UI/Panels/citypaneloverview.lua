@@ -308,8 +308,7 @@ function ViewPanelBreakdown( data:table )
       local iconColor = 0xFFFFFFFF;
       if pTradePostPlayer:IsMinor() then
         -- If we're a city-state display our city-state icon instead of leader since we don't have one
-        local leader:string = pTradePostPlayerConfig:GetLeaderTypeName();
-        local civType:string = GameInfo.CivilizationLeaders[leader].CivilizationType;
+        local civType:string = pTradePostPlayerConfig:GetCivilizationTypeName();
         local primaryColor, secondaryColor = UI.GetPlayerColors(tradePostPlayerId);
         iconName = "ICON_"..civType;
         iconColor = secondaryColor;

@@ -859,9 +859,9 @@ function View(data)
 
   -- Portrait Icons
   if(data.IconName ~= nil) then
-		if not Controls.UnitIcon:SetIcon(data.IconName) then
-			Controls.UnitIcon:SetIcon(data.FallbackIconName)
-		end
+    if not Controls.UnitIcon:SetIcon(data.IconName) then
+      Controls.UnitIcon:SetIcon(data.FallbackIconName)
+    end
   end
   if(data.CivIconName ~= nil) then
     local darkerBackColor = DarkenLightenColor(m_primaryColor,(-85),238);
@@ -1303,7 +1303,7 @@ function AddUnitStat(statType:number, statData:table, unitData:table, relativeSi
   -- Update icon
   local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(statData.IconName,22);
   statInstance.StatCheckBox:SetCheckTexture(textureSheet);
-	statInstance.StatCheckBox:SetUnCheckTexture(textureSheet)
+  statInstance.StatCheckBox:SetUnCheckTexture(textureSheet)
   statInstance.StatCheckBox:SetCheckTextureOffsetVal(textureOffsetX,textureOffsetY);
   statInstance.StatCheckBox:SetUnCheckTextureOffsetVal(textureOffsetX,textureOffsetY);
 
@@ -1930,7 +1930,7 @@ function ReadUnitData( unit:table )
   m_subjectData.Name            = unit:GetName();
   m_subjectData.UnitTypeName        = GameInfo.Units[unit:GetUnitType()].Name;
   m_subjectData.IconName          = GetUnitPortraitPrefix(unit:GetOwner())..GameInfo.Units[unit:GetUnitType()].UnitType.."_PORTRAIT";
-	m_subjectData.FallbackIconName			= "ICON_"..GameInfo.Units[unit:GetUnitType()].UnitType.."_PORTRAIT";
+  m_subjectData.FallbackIconName			= "ICON_"..GameInfo.Units[unit:GetUnitType()].UnitType.."_PORTRAIT";
   m_subjectData.Moves           = unit:GetMovesRemaining();
   m_subjectData.MovementMoves       = unit:GetMovementMovesRemaining();
   m_subjectData.InFormation       = unit:GetFormationUnitCount() > 1;
@@ -2085,14 +2085,12 @@ function ReadDistrictData( pDistrict:table )
 
     m_primaryColor, m_secondaryColor  = UI.GetPlayerColors( pDistrict:GetOwner() );
 
-    local leader:string = PlayerConfigurations[pDistrict:GetOwner()]:GetLeaderTypeName();
-    if GameInfo.CivilizationLeaders[leader] == nil then
-      UI.DataError("Banners found a leader \""..leader.."\" which is not/no longer in the game; icon may be whack.");
+    local civTypeName:string = PlayerConfigurations[pDistrict:GetOwner()]:GetCivilizationTypeName();
+    if civTypeName ~= nil then
+      local civIconName = "ICON_"..civTypeName;
+      m_subjectData.CivIconName	= civIconName;
     else
-      if(GameInfo.CivilizationLeaders[leader].CivilizationType ~= nil) then
-        local civIconName = "ICON_"..GameInfo.CivilizationLeaders[leader].CivilizationType;
-        m_subjectData.CivIconName = civIconName;
-      end
+      UI.DataError("Invalid type name returned by GetCivilizationTypeName");
     end
     View(m_subjectData);
   end
@@ -2474,9 +2472,9 @@ function OnPromptToDeleteUnit()
     end
 
   if(pUnit) then
-		-- Only show the prompt if it's possible to delete this unit
-		local bCanStart = UnitManager.CanStartCommand( pUnit, UnitCommandTypes.DELETE, true);
-		if bCanStart then
+    -- Only show the prompt if it's possible to delete this unit
+    local bCanStart = UnitManager.CanStartCommand( pUnit, UnitCommandTypes.DELETE, true);
+    if bCanStart then
       local unitName  :string = GameInfo.Units[pUnit:GetUnitType()].Name;
       local msg   :string = Locale.Lookup("LOC_HUD_UNIT_PANEL_ARE_YOU_SURE_DELETE", unitName);
       -- Pass the unit ID through, the user can take their time in the dialog and it is possible that the selected unit will change
@@ -2484,7 +2482,7 @@ function OnPromptToDeleteUnit()
       local popup = PopupDialogInGame:new( "UnitPanelPopup" );
       popup:ShowYesNoDialog( msg, function() OnDeleteUnit(unitID) end, OnNoDelete);
       m_DeleteInProgress = true;
-		end
+    end
   end
 end
 
@@ -2811,10 +2809,10 @@ function ShowCombatAssessment( )
       end
     end
     if (attacker[CombatResultParameters.FINAL_DAMAGE_TO] + (extraDamage/2) < attacker[CombatResultParameters.MAX_HIT_POINTS]) then
-			if (iDefenderStrength > 0) then
+      if (iDefenderStrength > 0) then
       isSafe = true;
     end
-		end
+    end
 
     local combatAssessmentStr :string = "";
     local damageToDefender = defender[CombatResultParameters.DAMAGE_TO];
@@ -2890,7 +2888,7 @@ function ShowCombatAssessment( )
             end
           end
         else
-					if (damageToDefender >= defenderHitpoints) then
+          if (damageToDefender >= defenderHitpoints) then
             combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_DECISIVE_VICTORY");
             ShowCombatVictoryBanner();
           else
@@ -2904,7 +2902,7 @@ function ShowCombatAssessment( )
           end
         end
       else  --non ranged attacks
-				if (damageToDefender >= defenderHitpoints) then
+        if (damageToDefender >= defenderHitpoints) then
           combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_DECISIVE_VICTORY");
           ShowCombatVictoryBanner();
         else
@@ -2972,28 +2970,28 @@ function ShowCombatAssessment( )
         end
       end
     else
-			if (iDefenderStrength > 0) then
+      if (iDefenderStrength > 0) then
       combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_INEFFECTIVE");
       ShowCombatStalemateBanner();
-			else
-				combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_DECISIVE_VICTORY");
-				ShowCombatVictoryBanner();
-			end
+      else
+        combatAssessmentStr = Locale.Lookup("LOC_HUD_UNIT_PANEL_OUTCOME_DECISIVE_VICTORY");
+        ShowCombatVictoryBanner();
+      end
     end
 
     Controls.CombatAssessmentText:SetText(Locale.ToUpper(combatAssessmentStr));
 
     -- Show interceptor information
-		local interceptorData = m_combatResults[CombatResultParameters.INTERCEPTOR];
-		local interceptorID = interceptorData[CombatResultParameters.ID];
-		local defenderID = defender[CombatResultParameters.ID];
-		local pkInterceptor = UnitManager.GetUnit(interceptorID.player, interceptorID.id);
-		if (pkInterceptor ~= nil and interceptorID.id ~= defenderID.id) then
-			local interceptorStrength = interceptorData[CombatResultParameters.COMBAT_STRENGTH];
-			local interceptorStrengthModifier = interceptorData[CombatResultParameters.STRENGTH_MODIFIER];
-			local modifiedStrength = interceptorStrength + interceptorStrengthModifier;
+    local interceptorData = m_combatResults[CombatResultParameters.INTERCEPTOR];
+    local interceptorID = interceptorData[CombatResultParameters.ID];
+    local defenderID = defender[CombatResultParameters.ID];
+    local pkInterceptor = UnitManager.GetUnit(interceptorID.player, interceptorID.id);
+    if (pkInterceptor ~= nil and interceptorID.id ~= defenderID.id) then
+      local interceptorStrength = interceptorData[CombatResultParameters.COMBAT_STRENGTH];
+      local interceptorStrengthModifier = interceptorData[CombatResultParameters.STRENGTH_MODIFIER];
+      local modifiedStrength = interceptorStrength + interceptorStrengthModifier;
       Controls.InterceptorName:SetText(m_targetData.InterceptorName);
-			Controls.InterceptorStrength:SetText(modifiedStrength);
+      Controls.InterceptorStrength:SetText(modifiedStrength);
 
       UpdateInterceptorModifiers(0);
 
@@ -3007,16 +3005,16 @@ function ShowCombatAssessment( )
       Controls.InterceptorGrid:SetHide(true);
     end
 
-		-- Show anti-air information if the anti-air unit is not the same as the defender
-		local antiAirData = m_combatResults[CombatResultParameters.ANTI_AIR];
-		local antiAirID = antiAirData[CombatResultParameters.ID];
-		local pkAntiAir = UnitManager.GetUnit(antiAirID.player, antiAirID.id);
-		if (pkAntiAir ~= nil and antiAirID.id ~= defenderID.id) then
-			local antiAirStrength = m_combatResults[CombatResultParameters.ANTI_AIR][CombatResultParameters.COMBAT_STRENGTH];
-			local antiAirStrengthModifier = m_combatResults[CombatResultParameters.ANTI_AIR][CombatResultParameters.STRENGTH_MODIFIER];
+    -- Show anti-air information if the anti-air unit is not the same as the defender
+    local antiAirData = m_combatResults[CombatResultParameters.ANTI_AIR];
+    local antiAirID = antiAirData[CombatResultParameters.ID];
+    local pkAntiAir = UnitManager.GetUnit(antiAirID.player, antiAirID.id);
+    if (pkAntiAir ~= nil and antiAirID.id ~= defenderID.id) then
+      local antiAirStrength = m_combatResults[CombatResultParameters.ANTI_AIR][CombatResultParameters.COMBAT_STRENGTH];
+      local antiAirStrengthModifier = m_combatResults[CombatResultParameters.ANTI_AIR][CombatResultParameters.STRENGTH_MODIFIER];
       Controls.AAName:SetText(m_targetData.AntiAirName);
-			local modifiedStrength = antiAirStrength + antiAirStrengthModifier;
-			Controls.AAStrength:SetText(modifiedStrength);
+      local modifiedStrength = antiAirStrength + antiAirStrengthModifier;
+      Controls.AAStrength:SetText(modifiedStrength);
 
       UpdateAntiAirModifiers(0);
 
@@ -3132,7 +3130,7 @@ function OnUnitFlagPointerEntered( playerID:number, unitID:number )
           local pDefender = UnitManager.GetUnit(playerID, unitID);
           if (pDefender ~= nil) then
             m_combatResults = CombatManager.SimulateAttackVersus( pDistrict:GetComponentID(), pDefender:GetComponentID() );
-						isValidToShow = ReadTargetData(attackingCity);		
+            isValidToShow = ReadTargetData(attackingCity);		
           end
         end
       end
@@ -3142,7 +3140,7 @@ function OnUnitFlagPointerEntered( playerID:number, unitID:number )
         local pDefender = UnitManager.GetUnit(playerID, unitID);
         if (pDefender ~= nil) then
           m_combatResults = CombatManager.SimulateAttackVersus( pDistrict:GetComponentID(), pDefender:GetComponentID() );
-					isValidToShow = ReadTargetData(pDistrict);		
+          isValidToShow = ReadTargetData(pDistrict);		
         end
       end
     else
@@ -3332,14 +3330,12 @@ function ReadTargetData_District(pDistrict)
 
   m_primaryColor, m_secondaryColor = UI.GetPlayerColors(districtOwner);
 
-  local leader:string = PlayerConfigurations[districtOwner]:GetLeaderTypeName();
-  if GameInfo.CivilizationLeaders[leader] == nil then
-    UI.DataError("Banners found a leader \""..leader.."\" which is not/no longer in the game; icon may be whack.");
+  local civTypeName:string = PlayerConfigurations[districtOwner]:GetCivilizationTypeName();
+  if civTypeName ~= nil then
+    local civIconName = "ICON_"..civTypeName;
+    m_targetData.CivIconName = civIconName;
   else
-    if(GameInfo.CivilizationLeaders[leader].CivilizationType ~= nil) then
-      local civIconName = "ICON_"..GameInfo.CivilizationLeaders[leader].CivilizationType;
-      m_targetData.CivIconName  = civIconName;
-    end
+    UI.DataError("Invalid type name returned by GetCivilizationTypeName");
   end
 end
 
@@ -3380,27 +3376,23 @@ function ReadTargetData_Plot(pkPlot)
 
     --For now we are using the civ icon instead of the district icon since the district icon doesn't fit into the window very well
     --m_targetData.IconName = "ICON_"..districtInfo.DistrictType;
-    local leader:string = PlayerConfigurations[owner]:GetLeaderTypeName();
-    if GameInfo.CivilizationLeaders[leader] == nil then
-      UI.DataError("Banners found a leader \""..leader.."\" which is not/no longer in the game; icon may be whack.");
+    local civTypeName:string = PlayerConfigurations[owner]:GetCivilizationTypeName();
+    if civTypeName ~= nil then
+      local civIconName = "ICON_"..civTypeName;
+      m_targetData.CivIconName = civIconName;
     else
-      if(GameInfo.CivilizationLeaders[leader].CivilizationType ~= nil) then
-        local civIconName = "ICON_"..GameInfo.CivilizationLeaders[leader].CivilizationType;
-        m_targetData.CivIconName	= civIconName;
-      end
+      UI.DataError("Invalid type name returned by GetCivilizationTypeName");
     end
 
     m_targetData.HasImprovementOrDistrict = true;
   else
     -- Set the owning player civ icon
-    local leader:string = PlayerConfigurations[owner]:GetLeaderTypeName();
-    if GameInfo.CivilizationLeaders[leader] == nil then
-      UI.DataError("Banners found a leader \""..leader.."\" which is not/no longer in the game; icon may be whack.");
+    local civTypeName:string = PlayerConfigurations[owner]:GetCivilizationTypeName();
+    if civTypeName ~= nil then
+      local civIconName = "ICON_"..civTypeName;
+      m_targetData.CivIconName = civIconName;
     else
-      if(GameInfo.CivilizationLeaders[leader].CivilizationType ~= nil) then
-        local civIconName = "ICON_"..GameInfo.CivilizationLeaders[leader].CivilizationType;
-        m_targetData.CivIconName	= civIconName;
-      end
+      UI.DataError("Invalid type name returned by GetCivilizationTypeName");
     end
   end
 end
@@ -3812,7 +3804,7 @@ function AddUnitToUnitList(pUnit:table)
   unitEntry.Button:SetVoids(i, pUnit:GetID());
 
   -- Update unit icon
-	local iconInfo:table, iconShadowInfo:table = GetUnitIcon(pUnit, 22, true);
+  local iconInfo:table, iconShadowInfo:table = GetUnitIcon(pUnit, 22, true);
   if iconInfo.textureSheet then
     unitEntry.UnitTypeIcon:SetTexture( iconInfo.textureOffsetX, iconInfo.textureOffsetY, iconInfo.textureSheet );
   end

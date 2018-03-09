@@ -148,7 +148,7 @@ function RequestMoveOperation( kUnit:table, tParameters:table, plotX:number, plo
     end
   else
     tParameters[UnitOperationTypes.PARAM_MODIFIERS] = UnitOperationMoveModifiers.NONE;
-    if (UnitManager.CanStartOperation( kUnit, UnitOperationTypes.RANGE_ATTACK, nil, tParameters) and (kUnit:GetRangedCombat() > kUnit:GetCombat() or kUnit:GetBombardCombat() > kUnit:GetCombat() ) ) then
+    if (UnitManager.CanStartOperation( kUnit, UnitOperationTypes.RANGE_ATTACK, nil, tParameters)) then
       UnitManager.RequestOperation(kUnit, UnitOperationTypes.RANGE_ATTACK, tParameters);
     else
       -- Allow for attacking and don't early out if the destination is blocked, etc., but is in the fog.
@@ -453,32 +453,32 @@ end
 -- ===========================================================================
 function GetUnitIcon( pUnit:table, iconSize:number )	
 
-	local iconInfo:table = {};
+  local iconInfo:table = {};
   if pUnit then
 
-		local unitIcon:string = nil;
+    local unitIcon:string = nil;
 
     local individual:number = pUnit:GetGreatPerson():GetIndividual();
     if individual >= 0 then
       local individualType:string = GameInfo.GreatPersonIndividuals[individual].GreatPersonIndividualType;
       local iconModifier:table = GameInfo.GreatPersonIndividualIconModifiers[individualType];
       if iconModifier then
-				unitIcon = iconModifier.OverrideUnitIcon;
+        unitIcon = iconModifier.OverrideUnitIcon;
       end
     end
 
-		if not unitIcon then
-			local unit:table = GameInfo.Units[pUnit:GetUnitType()];
-			unitIcon = "ICON_" .. unit.UnitType;
+    if not unitIcon then
+      local unit:table = GameInfo.Units[pUnit:GetUnitType()];
+      unitIcon = "ICON_" .. unit.UnitType;
     end
 
-		iconInfo.textureOffsetX, iconInfo.textureOffsetY, iconInfo.textureSheet = IconManager:FindIconAtlas(unitIcon, iconSize);
+    iconInfo.textureOffsetX, iconInfo.textureOffsetY, iconInfo.textureSheet = IconManager:FindIconAtlas(unitIcon, iconSize);
     if (iconInfo.textureSheet == nil) then      --Check to see if the unit has an icon atlas index defined
-			print("UIWARNING: Could not find icon for " .. unitIcon);
-			iconInfo.textureOffsetX, iconInfo.textureOffsetY, iconInfo.textureSheet = IconManager:FindIconAtlas("ICON_UNIT_UNKNOWN", iconSize);		--If not, resolve the index to be a generic unknown index
+      print("UIWARNING: Could not find icon for " .. unitIcon);
+      iconInfo.textureOffsetX, iconInfo.textureOffsetY, iconInfo.textureSheet = IconManager:FindIconAtlas("ICON_UNIT_UNKNOWN", iconSize);		--If not, resolve the index to be a generic unknown index
       end
     end
-	return iconInfo;
+  return iconInfo;
 end
 
 -- ===========================================================================
@@ -515,7 +515,7 @@ function AutoSizeGridButton(gridButton:table,minX: number, minY: number, padding
 end
 
 -- ===========================================================================
-function GetLeaderUniqueTraits( leaderType:string )
+function GetLeaderUniqueTraits( leaderType:string, useFullDescriptions:boolean )
 
   -- Gather info.
     local base_leader = GameInfo.Leaders[leaderType];
@@ -570,7 +570,7 @@ function GetLeaderUniqueTraits( leaderType:string )
       not_ability[trait] = true;
       if(has_trait[trait] == true) then
         local description :string = Locale.Lookup("LOC_LOADING_"..row.Domain);
-        if m_isTraitsFullDescriptions then
+        if m_isTraitsFullDescriptions or useFullDescriptions then
           description = Locale.Lookup(GameInfo.Units[row.UnitType].Description);
         end
         table.insert(uu, { Type = row.UnitType, Name = row.Name, Description = description });
@@ -587,7 +587,7 @@ function GetLeaderUniqueTraits( leaderType:string )
       if(has_trait[trait] == true) then
         local districtName:string = Locale.Lookup(GameInfo.Districts[row.PrereqDistrict].Name);
         local description :string = Locale.Lookup("LOC_LOADING_DISTRICT_BUILDING", districtName);
-        if m_isTraitsFullDescriptions then
+        if m_isTraitsFullDescriptions or useFullDescriptions then
           description = Locale.Lookup(GameInfo.Buildings[row.BuildingType].Description);
         end
         table.insert(ub, {Type = row.BuildingType, Name = row.Name, Description = description});
@@ -601,7 +601,7 @@ function GetLeaderUniqueTraits( leaderType:string )
       not_ability[trait] = true;
       if(has_trait[trait] == true) then
         local description :string = Locale.Lookup("LOC_LOADING_UNIQUE_DISTRICT");
-        if m_isTraitsFullDescriptions then
+        if m_isTraitsFullDescriptions or useFullDescriptions then
           description = Locale.Lookup(GameInfo.Districts[row.DistrictType].Description);
         end
         table.insert(ub, {Type = row.DistrictType, Name = row.Name, Description = description});
@@ -615,7 +615,7 @@ function GetLeaderUniqueTraits( leaderType:string )
       not_ability[trait] = true;
       if(has_trait[trait] == true) then
         local description :string = Locale.Lookup("LOC_LOADING_UNIQUE_IMPROVEMENT");
-        if m_isTraitsFullDescriptions then
+        if m_isTraitsFullDescriptions or useFullDescriptions then
           description = Locale.Lookup(GameInfo.Improvements[row.ImprovementType].Description);
         end
         table.insert(ub, {Type = row.ImprovementType, Name = row.Name, Description = description});
@@ -635,7 +635,7 @@ end
 
 
 -- ===========================================================================
-function GetCivilizationUniqueTraits( civType:string )
+function GetCivilizationUniqueTraits( civType:string, useFullDescriptions:boolean )
 
   local traits = {};
     for row in GameInfo.CivilizationTraits() do
@@ -659,7 +659,7 @@ function GetCivilizationUniqueTraits( civType:string )
       not_abilities[trait] = true;
       if(traits[trait] == true) then
         local description :string = Locale.Lookup("LOC_LOADING_"..row.Domain);
-        if m_isTraitsFullDescriptions then
+        if m_isTraitsFullDescriptions or useFullDescriptions then
           description = Locale.Lookup(GameInfo.Units[row.UnitType].Description);
         end
         table.insert(uu, { Type = row.UnitType, Name = row.Name, Description = description });
@@ -676,7 +676,7 @@ function GetCivilizationUniqueTraits( civType:string )
       if(traits[trait] == true) then
         local building    :table  = GameInfo.Buildings[row.BuildingType];
         local description :string = Locale.Lookup("LOC_LOADING_UNIQUE_BUILDING");
-        if m_isTraitsFullDescriptions then
+        if m_isTraitsFullDescriptions or useFullDescriptions then
           if building == nil then
             UI.DataError("Could not get CIV trait as GameInfo.Buildings["..row.BuildingType.."] does not exist.");
           elseif building.Description == nil then
@@ -696,7 +696,7 @@ function GetCivilizationUniqueTraits( civType:string )
       not_abilities[trait] = true;
       if(traits[trait] == true) then
         local description :string = Locale.Lookup("LOC_LOADING_UNIQUE_DISTRICT");
-        if m_isTraitsFullDescriptions then
+        if m_isTraitsFullDescriptions or useFullDescriptions then
           description = Locale.Lookup(GameInfo.Districts[row.DistrictType].Description);
         end
         table.insert(ub, {Type = row.DistrictType, Name = row.Name, Description = description});
@@ -710,7 +710,7 @@ function GetCivilizationUniqueTraits( civType:string )
       not_abilities[trait] = true;
       if(traits[trait] == true) then
         local description :string = Locale.Lookup("LOC_LOADING_UNIQUE_IMPROVEMENT");
-        if m_isTraitsFullDescriptions then
+        if m_isTraitsFullDescriptions or useFullDescriptions then
           description = Locale.Lookup(GameInfo.Improvements[row.ImprovementType].Description);
         end
         table.insert(ub, {Type = row.ImprovementType, Name = row.Name, Description = description});
@@ -776,26 +776,23 @@ function DifferentiateCiv(playerID:number, tooltipControl:table, icon:table, ico
   end
 
   -- Set the leader name, civ name, and civ icon data
-  local leader:string = playerConfig:GetLeaderTypeName();
-  if GameInfo.CivilizationLeaders[leader] == nil then
-    UI.DataError("Banners found a leader \""..leader.."\" which is not/no longer in the game; icon may be whack.");
-  else
-    if(GameInfo.CivilizationLeaders[leader].CivilizationType ~= nil) then
+  local civTypeName = playerConfig:GetCivilizationTypeName();
+  if civTypeName ~= nil then
+    local civIcon:string;
+    local civTooltip:string;
+    if hasMet then
+      civIcon = "ICON_"..civTypeName;
 
-      local civIcon:string;
-      local civTooltip:string;
-      if hasMet then
-        local civTypeName = GameInfo.CivilizationLeaders[leader].CivilizationType;
-        local civName = Locale.Lookup(GameInfo.Civilizations[civTypeName].Name);
-        local leaderName = Locale.Lookup(GameInfo.Leaders[leader].Name);
+      local leaderTypeName:string = playerConfig:GetLeaderTypeName();
+      if leaderTypeName ~= nil then
+        local leaderName = Locale.Lookup(GameInfo.Leaders[leaderTypeName].Name);
         if GameConfiguration.IsAnyMultiplayer() and player:IsHuman() then
           local playerName = Locale.Lookup(playerConfig:GetPlayerName());
           leaderName = leaderName .. " ("..Locale.ToUpper(playerName)..")"
         end
 
-        civIcon = "ICON_"..civTypeName;
-
         --Create a tooltip which shows a list of this Civ's cities
+        local civName = Locale.Lookup(GameInfo.Civilizations[civTypeName].Name);
         civTooltip = civName .. "[NEWLINE]".. leaderName;
         local playerCities = player:GetCities();
         if(playerCities ~= nil) then
@@ -805,23 +802,26 @@ function DifferentiateCiv(playerID:number, tooltipControl:table, icon:table, ico
           end
         end
       else
-        civIcon = "ICON_LEADER_DEFAULT";
-        civTooltip = Locale.Lookup("LOC_DIPLOPANEL_UNMET_PLAYER");
-        if GameConfiguration.IsAnyMultiplayer() and player:IsHuman() then
-          local playerName = Locale.Lookup(playerConfig:GetPlayerName());
-          civTooltip = civTooltip .. " ("..Locale.ToUpper(playerName)..")";
-        end
-
+        UI.DataError("Invalid type name returned by GetLeaderTypeName");
       end
-
-      if (icon ~= nil) then
-        icon:SetIcon(civIcon);
+    else
+      civIcon = "ICON_LEADER_DEFAULT";
+      civTooltip = Locale.Lookup("LOC_DIPLOPANEL_UNMET_PLAYER");
+      if GameConfiguration.IsAnyMultiplayer() and player:IsHuman() then
+        local playerName = Locale.Lookup(playerConfig:GetPlayerName());
+        civTooltip = civTooltip .. " ("..Locale.ToUpper(playerName)..")";
       end
-      if (tooltipControl ~= nil) then
-        tooltipControl:SetToolTipString(Locale.Lookup(civTooltip));
-      end
-      return civTooltip;
     end
+
+    if (icon ~= nil) then
+      icon:SetIcon(civIcon);
+    end
+    if (tooltipControl ~= nil) then
+      tooltipControl:SetToolTipString(Locale.Lookup(civTooltip));
+    end
+    return civTooltip;
+  else
+    UI.DataError("Invalid type name returned by GetCivilizationTypeName");
   end
 end
 

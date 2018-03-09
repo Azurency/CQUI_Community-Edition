@@ -16,10 +16,12 @@ local m_strEllipsis = Locale.Lookup("LOC_GENERIC_DOT_DOT_DOT");
 -- ===========================================================================
 function TruncateString(control, resultSize, longStr, trailingText)
 
+  local textControl = control;
+
   -- Ensure this has the actual text control
   if control.GetTextControl ~= nil then
-    control = control:GetTextControl();
-    UI.AssertMsg(control.SetTruncateWidth ~= nil, "Calling TruncateString with an unsupported control");
+    textControl = control:GetTextControl();
+    UI.AssertMsg(textControl.SetTruncateWidth ~= nil, "Calling TruncateString with an unsupported control");
   end
 
   
@@ -36,15 +38,20 @@ function TruncateString(control, resultSize, longStr, trailingText)
     --trailingText could be added, right now its just an ellipsis but it could be arbitrary
     --this would avoid the weird type shenanigans when truncating TextButtons, TextControls, etc
   
-  if(control ~= nil)then
-    control:SetTruncateWidth(resultSize);
-    control:SetText(longStr);
+  if textControl ~= nil then
+    textControl:SetTruncateWidth(resultSize);
+
+    if control.SetText ~= nil then
+      control:SetText(longStr);
+    else
+      textControl:SetText(longStr);
+    end
   else
     UI.AssertMsg(false, "Attempting to truncate a NIL control");
   end
   
-  if control.IsTextTruncated ~= nil then
-    return control:IsTextTruncated();
+  if textControl.IsTextTruncated ~= nil then
+    return textControl:IsTextTruncated();
   else
     UI.AssertMsg(false, "Calling IsTextTruncated with an unsupported control");
     return true;
@@ -71,14 +78,14 @@ end
 --	before truncation
 -- ===========================================================================
 function TruncateStringWithTooltipClean(control, resultSize, longStr, trailingText)
-	local cleanString = longStr:match("^%s*(.-)%s*$");
-	local isTruncated = TruncateString( control, resultSize, longStr, trailingText );
-	if isTruncated then
-		control:SetToolTipString( cleanString );
-	else
-		control:SetToolTipString( nil );
-	end
-	return isTruncated;
+  local cleanString = longStr:match("^%s*(.-)%s*$");
+  local isTruncated = TruncateString( control, resultSize, longStr, trailingText );
+  if isTruncated then
+    control:SetToolTipString( cleanString );
+  else
+    control:SetToolTipString( nil );
+  end
+  return isTruncated;
 end
 
 
@@ -104,35 +111,35 @@ function TruncateStringByLength( textString, textLen )
 end
 
 function GetGreatWorksForCity(pCity:table)
-	local result:table = {};
-	if pCity then
-		local pCityBldgs:table = pCity:GetBuildings();
-		for buildingInfo in GameInfo.Buildings() do
-			local buildingIndex:number = buildingInfo.Index;
-			local buildingType:string = buildingInfo.BuildingType;
-			if(pCityBldgs:HasBuilding(buildingIndex)) then
-				local numSlots:number = pCityBldgs:GetNumGreatWorkSlots(buildingIndex);
-				if (numSlots ~= nil and numSlots > 0) then
-					local greatWorksInBuilding:table = {};
+  local result:table = {};
+  if pCity then
+    local pCityBldgs:table = pCity:GetBuildings();
+    for buildingInfo in GameInfo.Buildings() do
+      local buildingIndex:number = buildingInfo.Index;
+      local buildingType:string = buildingInfo.BuildingType;
+      if(pCityBldgs:HasBuilding(buildingIndex)) then
+        local numSlots:number = pCityBldgs:GetNumGreatWorkSlots(buildingIndex);
+        if (numSlots ~= nil and numSlots > 0) then
+          local greatWorksInBuilding:table = {};
 
-					-- populate great works
-					for index:number=0, numSlots - 1 do
-						local greatWorkIndex:number = pCityBldgs:GetGreatWorkInSlot(buildingIndex, index);
-						if greatWorkIndex ~= -1 then
-							local greatWorkType:number = pCityBldgs:GetGreatWorkTypeFromIndex(greatWorkIndex);
-							table.insert(greatWorksInBuilding, GameInfo.GreatWorks[greatWorkType]);
-						end
-					end
+          -- populate great works
+          for index:number=0, numSlots - 1 do
+            local greatWorkIndex:number = pCityBldgs:GetGreatWorkInSlot(buildingIndex, index);
+            if greatWorkIndex ~= -1 then
+              local greatWorkType:number = pCityBldgs:GetGreatWorkTypeFromIndex(greatWorkIndex);
+              table.insert(greatWorksInBuilding, GameInfo.GreatWorks[greatWorkType]);
+            end
+          end
 
-					-- create association between building type and great works
-					if #greatWorksInBuilding > 0 then
-						result[buildingType] = greatWorksInBuilding;
-					end
-				end
-			end
-		end
-	end
-	return result;
+          -- create association between building type and great works
+          if #greatWorksInBuilding > 0 then
+            result[buildingType] = greatWorksInBuilding;
+          end
+        end
+      end
+    end
+  end
+  return result;
 end
 
 -- Wraps a string according to the provided length, but, unlike the built in wrapping, will ignore the limit if a single continuous word exceeds the length of the wrap width

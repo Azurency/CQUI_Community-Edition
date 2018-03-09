@@ -14,9 +14,9 @@
         <Stack					ID="BuildActionsStack"				Anchor="R,T" Offset="11,26" StackGrowth="Left" Padding="6" />
       </Grid>
       <Container				ID="UnitPanelBaseContainer" Anchor="R,B" Offset="172,0" Size="310,160" ConsumeMouseOver="1" >
-        <Grid						ID="MainPanelBacking"				Anchor="R,B" Texture="SelectionPanel_WoodBacking" SliceTextureSize="150,154" SliceCorner="85,47" Size="Parent-10,Parent-6">
+        <GridButton 		ID="MainPanelBacking"				Anchor="R,B" Texture="SelectionPanel_WoodBacking" SliceTextureSize="150,154" SliceCorner="85,47" Size="Parent-10,Parent-6">
           <Grid																			AnchorSide="I,O" Texture="SelectionPanel_TopRim" SliceTextureSize="14,5" SliceCorner="7,2" Size="parent,5"/>
-        </Grid>
+        </GridButton>
 
         <Container			ID="CombatPreviewBanners" Anchor="L,B" Offset="-86,-10" Size="169,194"	AnchorSide="O,I"													Hidden="1">
           <Image				ID="BannerDefeat"																				Size="169,194"	Texture="CombatPreview_BannerDefeat.dds"  Hidden="1"/>
