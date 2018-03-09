@@ -189,18 +189,28 @@ function SetCurrentNode( hash:number )
     local pathToTech = localPlayerTechs:GetResearchPath( hash );
 
     local tParameters = {};
-    tParameters[PlayerOperations.PARAM_TECH_TYPE] = pathToTech;
-    if m_shiftDown then
-      tParameters[PlayerOperations.PARAM_INSERT_MODE] = PlayerOperations.VALUE_APPEND;
-    else
+
+    -- Azurency : fix future civic not being able to be repeated from the tree
+    local tech = GameInfo.Technologies[hash] -- the selected tech
+    if next(pathToTech) ~= nil then -- if there is a path
+      tParameters[PlayerOperations.PARAM_TECH_TYPE] = pathToTech;
+      if m_shiftDown then
+        tParameters[PlayerOperations.PARAM_INSERT_MODE] = PlayerOperations.VALUE_APPEND;
+      else
+        tParameters[PlayerOperations.PARAM_INSERT_MODE] = PlayerOperations.VALUE_EXCLUSIVE;
+      end
+      UI.RequestPlayerOperation(Game.GetLocalPlayer(), PlayerOperations.RESEARCH, tParameters);
+      UI.PlaySound("Confirm_Tech_TechTree");
+    elseif tech.Repeatable and localPlayerTechs:CanResearch(tech.Index) then -- if the tech can be researched
+      tParameters[PlayerOperations.PARAM_TECH_TYPE] = hash;
       tParameters[PlayerOperations.PARAM_INSERT_MODE] = PlayerOperations.VALUE_EXCLUSIVE;
+
+      UI.RequestPlayerOperation(Game.GetLocalPlayer(), PlayerOperations.RESEARCH, tParameters);
+      UI.PlaySound("Confirm_Tech_TechTree");
     end
-    UI.RequestPlayerOperation(Game.GetLocalPlayer(), PlayerOperations.RESEARCH, tParameters);
-        UI.PlaySound("Confirm_Tech_TechTree");
   else
     UI.DataError("Attempt to change current tree item with NIL hash!");
   end
-
 end
 
 
