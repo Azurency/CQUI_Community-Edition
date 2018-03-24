@@ -77,6 +77,9 @@
     <File>Assets/Text/cqui_text_settings_pt.xml</File>
     <File>Assets/Text/cqui_text_settings_ru.xml</File>
     <File>Assets/Text/cqui_text_settings_zh.xml</File>
+    <File>Assets/Expansion1/CityBanners/citybannermanager.lua</File>
+    <File>Assets/Expansion1/CityBanners/citybannermanager.xml</File>
+    <File>Assets/Expansion1/CityBanners/citybannerinstances.xml</File>
     <File>Assets/UI/actionpanel.lua</File>
     <File>Assets/UI/citysupport.lua</File>
     <File>Assets/UI/civ6common.lua</File>
@@ -305,6 +308,15 @@
         <File>Assets/UI/WorldView/citybannermanager.xml</File>
         <File>Assets/UI/WorldView/plotinfo.lua</File>
         <File>Assets/UI/WorldView/plotinfo.xml</File>
+      </Items>
+    </ImportFiles>
+
+    <!-- CQUI Expansion 1 (Rise and Fall) files -->
+    <ImportFiles id="CQUI_IMPORT_FILES" criteria="Expansion1">
+      <Items>
+        <File>Assets/Expansion1/CityBanners/citybannermanager.lua</File>
+        <File>Assets/Expansion1/CityBanners/citybannermanager.xml</File>
+        <File>Assets/Expansion1/CityBanners/citybannerinstances.xml</File>
       </Items>
     </ImportFiles>
 
