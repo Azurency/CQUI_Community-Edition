@@ -1403,6 +1403,17 @@ function OnTutorial_ContextDisableItems( contextName:string, kIdsToDisable:table
 end
 
 -- ===========================================================================
+-- CQUI update all cities data including real housing when tech/civic that adds housing is boosted and research is completed
+function CQUI_UpdateAllCitiesData()
+
+  local PlayerID = Game.GetLocalPlayer();
+  local m_kCity:table = Players[PlayerID]:GetCities();
+  for i, kCity in m_kCity:Members() do
+    CityManager.RequestCommand(kCity, CityCommandTypes.SET_FOCUS, nil);
+  end
+end
+
+-- ===========================================================================
 -- CQUI get real housing from improvements
 function CQUI_HousingFromImprovementsTableInsert (pCityID, CQUI_HousingFromImprovements)
   CQUI_HousingFromImprovementsTable[pCityID] = CQUI_HousingFromImprovements;
@@ -1503,9 +1514,8 @@ function Initialize()
   LuaEvents.CQUI_SettingsUpdate.Add( CQUI_SettingsUpdate );
   LuaEvents.RefreshCityPanel.Add(Refresh);
   LuaEvents.CQUI_RealHousingFromImprovementsCalculated.Add(CQUI_HousingFromImprovementsTableInsert);    -- CQUI get real housing from improvements values
-  LuaEvents.CQUI_CityLostTileToCultureBomb.Add( Refresh );    -- CQUI update real housing from improvements when a city lost tile to a Culture Bomb
-  LuaEvents.CQUI_IndiaPlayerResearchedSanitation.Add( Refresh );    -- CQUI update real housing from improvements when play as India and researched Sanitation
-  LuaEvents.CQUI_IndonesiaPlayerResearchedMassProduction.Add( Refresh );    -- CQUI update real housing from improvements when play as Indonesia and researched Mass Production
+  LuaEvents.CQUI_AllCitiesInfoUpdated.Add( Refresh );    -- CQUI update real housing from improvements for a selected city when all cities are updated
+  LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost.Add( CQUI_UpdateAllCitiesData );    -- CQUI update all cities data when tech/civic that adds housing is boosted and research is completed
 
   -- Truncate possible static text overflows
   TruncateStringWithTooltip(Controls.BreakdownLabel,  MAX_BEFORE_TRUNC_STATIC_LABELS, Controls.BreakdownLabel:GetText());

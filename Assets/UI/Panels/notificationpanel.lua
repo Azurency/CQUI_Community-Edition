@@ -1319,6 +1319,22 @@ function OnTechBoostActivateNotification( notificationEntry : NotificationType, 
 			local techSource = pNotification:GetValue("TechSource"); 
 			if(techIndex ~= nil and techProgress ~= nil and techSource ~= nil) then
 				LuaEvents.NotificationPanel_ShowTechBoost(notificationEntry.m_PlayerID, techIndex, techProgress, techSource);
+
+				-- CQUI update all cities real housing when play as India and boosted and researched Sanitation
+				if techIndex == GameInfo.Technologies["TECH_SANITATION"].Index then    -- Sanitation
+				  if PlayerConfigurations[notificationEntry.m_PlayerID]:GetCivilizationTypeName() == "CIVILIZATION_INDIA" then
+				    if Players[notificationEntry.m_PlayerID]:GetTechs():HasTech(techIndex) then
+				      LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost();
+				    end
+				  end
+				-- CQUI update all cities real housing when play as Indonesia and boosted and researched Mass Production
+				elseif techIndex == GameInfo.Technologies["TECH_MASS_PRODUCTION"].Index then    -- Mass Production
+				  if PlayerConfigurations[notificationEntry.m_PlayerID]:GetCivilizationTypeName() == "CIVILIZATION_INDONESIA" then
+				    if Players[notificationEntry.m_PlayerID]:GetTechs():HasTech(techIndex) then
+				      LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost();
+				    end
+				  end
+				end
 			end
     end
   end
@@ -1441,8 +1457,8 @@ function OnNotificationAdded( playerID:number, notificationID:number )
       UI.DataError("Notification added Event but not found in manager. PlayerID - " .. tostring(playerID) .. " Notification ID - " .. tostring(notificationID));
     end
 
-    if notificationID	== 577 then                   -- CQUI: Notification when a City lost tile to a Culture Bomb (Index == 577)
-      LuaEvents.CQUI_CityLostTileToCultureBomb();
+    if pNotification:GetType() == GameInfo.Notifications["NOTIFICATION_TILE_LOST_CULTURE_BOMB"].Hash then    -- CQUI: Notification when a City lost tile to a Culture Bomb. We use it to update real housing.
+      LuaEvents.CQUI_AllCitiesInfoUpdated();
     end
   end
 end

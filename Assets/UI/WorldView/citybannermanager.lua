@@ -3370,15 +3370,15 @@ function CQUI_RealHousingFromImprovements(pCity)
         if kImprovementData == 1 then    -- farms, pastures etc.
           CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 1;
         elseif kImprovementData == 2 then    -- stepwells and kampungs
-          if eImprovementType == 23 then    -- stepwells (Index == 23)
-            local CQUI_PlayerResearchedSanitation :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(40);    -- check if a player researched Sanitation (Index == 40)
+          if GameInfo.Improvements[eImprovementType].ImprovementType == "IMPROVEMENT_STEPWELL" then    -- stepwells
+            local CQUI_PlayerResearchedSanitation :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(GameInfo.Technologies["TECH_SANITATION"].Index);    -- check if a player researched Sanitation
             if not CQUI_PlayerResearchedSanitation then
               CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
             else
               CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
             end
-          else    -- kampungs (Index == 26, but after load a game Index == 25)
-            local CQUI_PlayerResearchedMassProduction :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(27);    -- check if a player researched Mass Production (Index == 27)
+          elseif GameInfo.Improvements[eImprovementType].ImprovementType == "IMPROVEMENT_KAMPUNG" then    -- kampungs
+            local CQUI_PlayerResearchedMassProduction :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(GameInfo.Technologies["TECH_MASS_PRODUCTION"].Index);    -- check if a player researched Mass Production
             if not CQUI_PlayerResearchedMassProduction then
               CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
             else
@@ -3477,9 +3477,7 @@ function Initialize()
   Events.CityWorkerChanged.Add(           OnCityWorkerChanged );
 
   LuaEvents.CQUI_CityInfoUpdated.Add( CQUI_OnCityInfoUpdated );    -- CQUI update city's real housing from improvements
-  LuaEvents.CQUI_CityLostTileToCultureBomb.Add( CQUI_OnAllCitiesInfoUpdated );    -- CQUI update all cities real housing from improvements
-  LuaEvents.CQUI_IndiaPlayerResearchedSanitation.Add( CQUI_OnAllCitiesInfoUpdated );    -- CQUI update all cities real housing from improvements
-  LuaEvents.CQUI_IndonesiaPlayerResearchedMassProduction.Add( CQUI_OnAllCitiesInfoUpdated );    -- CQUI update all cities real housing from improvements
+  LuaEvents.CQUI_AllCitiesInfoUpdated.Add( CQUI_OnAllCitiesInfoUpdated );    -- CQUI update all cities real housing from improvements
 
   LuaEvents.GameDebug_Return.Add(OnGameDebugReturn);
 

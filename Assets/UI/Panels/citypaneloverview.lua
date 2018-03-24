@@ -81,7 +81,7 @@ m_tabs = nil;
 
 
 --CQUI Members
-local CQUI_HousingFromImprovementsTable = {};
+local CQUI_HousingFromImprovementsTable :table = {};    -- CQUI real housing from improvements table
 local CQUI_ShowCityDetailAdvisor :boolean = false;
 
 function CQUI_OnSettingsUpdate()
