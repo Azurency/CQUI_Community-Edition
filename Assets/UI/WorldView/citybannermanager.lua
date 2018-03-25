@@ -3377,7 +3377,7 @@ function CQUI_RealHousingFromImprovements(pCity)
             else
               CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
             end
-          elseif GameInfo.Improvements[eImprovementType].ImprovementType == "IMPROVEMENT_KAMPUNG" then    -- kampungs
+          else    -- kampungs
             local CQUI_PlayerResearchedMassProduction :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(GameInfo.Technologies["TECH_MASS_PRODUCTION"].Index);    -- check if a player researched Mass Production
             if not CQUI_PlayerResearchedMassProduction then
               CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
