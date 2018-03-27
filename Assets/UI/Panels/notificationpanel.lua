@@ -1457,7 +1457,8 @@ function OnNotificationAdded( playerID:number, notificationID:number )
       UI.DataError("Notification added Event but not found in manager. PlayerID - " .. tostring(playerID) .. " Notification ID - " .. tostring(notificationID));
     end
 
-    if pNotification:GetType() == GameInfo.Notifications["NOTIFICATION_TILE_LOST_CULTURE_BOMB"].Hash then    -- CQUI: Notification when a City lost tile to a Culture Bomb. We use it to update real housing.
+    -- CQUI: Notification when a City lost tile to a Culture Bomb. We use it to update real housing.
+    if pNotification:GetType() == GameInfo.Notifications["NOTIFICATION_TILE_LOST_CULTURE_BOMB"].Hash then
       LuaEvents.CQUI_AllCitiesInfoUpdated();
     end
   end

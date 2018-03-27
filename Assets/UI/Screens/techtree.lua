@@ -1211,7 +1211,6 @@ function OnResearchComplete( ePlayer:number, eTech:number)
         LuaEvents.CQUI_AllCitiesInfoUpdated();
       end
     end
-
   end
 end
 
