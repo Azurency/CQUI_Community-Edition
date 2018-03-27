@@ -1353,14 +1353,14 @@ function OnCivicBoostActivateNotification( notificationEntry : NotificationType,
 			if(civicIndex ~= nil and civicProgress ~= nil and civicSource ~= nil) then
 				LuaEvents.NotificationPanel_ShowCivicBoost(notificationEntry.m_PlayerID, civicIndex, civicProgress, civicSource);
 
-				-- CQUI update all cities real housing when play as Cree and researched Civil Service
+				-- CQUI update all cities real housing when play as Cree and boosted and researched Civil Service
 				if civicIndex == GameInfo.Civics["CIVIC_CIVIL_SERVICE"].Index then    -- Civil Service
 				  if PlayerConfigurations[notificationEntry.m_PlayerID]:GetCivilizationTypeName() == "CIVILIZATION_CREE" then
 				    if Players[notificationEntry.m_PlayerID]:GetCulture():HasCivic(civicIndex) then
 				      LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost();
 				    end
 				  end
-				-- CQUI update all cities real housing when play as Scotland and researched Globalization
+				-- CQUI update all cities real housing when play as Scotland and boosted and researched Globalization
 				elseif civicIndex == GameInfo.Civics["CIVIC_GLOBALIZATION"].Index then    -- Globalization
 				  if PlayerConfigurations[notificationEntry.m_PlayerID]:GetCivilizationTypeName() == "CIVILIZATION_SCOTLAND" then
 				    if Players[notificationEntry.m_PlayerID]:GetCulture():HasCivic(civicIndex) then
@@ -1473,7 +1473,8 @@ function OnNotificationAdded( playerID:number, notificationID:number )
       UI.DataError("Notification added Event but not found in manager. PlayerID - " .. tostring(playerID) .. " Notification ID - " .. tostring(notificationID));
     end
 
-    if pNotification:GetType() == GameInfo.Notifications["NOTIFICATION_TILE_LOST_CULTURE_BOMB"].Hash then    -- CQUI: Notification when a City lost tile to a Culture Bomb. We use it to update real housing.
+    -- CQUI: Notification when a City lost tile to a Culture Bomb. We use it to update real housing.
+    if pNotification:GetType() == GameInfo.Notifications["NOTIFICATION_TILE_LOST_CULTURE_BOMB"].Hash then
       LuaEvents.CQUI_AllCitiesInfoUpdated();
     end
   end
