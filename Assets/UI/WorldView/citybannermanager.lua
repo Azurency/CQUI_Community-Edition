@@ -3364,25 +3364,27 @@ function CQUI_RealHousingFromImprovements(pCity)
   if tPlots ~= nil and (table.count(tPlots) > 0) then
     for i, plotId in pairs(tPlots) do
       local kPlot	:table = Map.GetPlotByIndex(plotId);
-      local eImprovementType :number = kPlot:GetImprovementType();
-      if( eImprovementType ~= -1 ) then
-        local kImprovementData = GameInfo.Improvements[eImprovementType].Housing;
-        if kImprovementData == 1 then    -- farms, pastures etc.
-          CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 1;
-        elseif kImprovementData == 2 then    -- stepwells and kampungs
-          if GameInfo.Improvements[eImprovementType].ImprovementType == "IMPROVEMENT_STEPWELL" then    -- stepwells
-            local CQUI_PlayerResearchedSanitation :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(GameInfo.Technologies["TECH_SANITATION"].Index);    -- check if a player researched Sanitation
-            if not CQUI_PlayerResearchedSanitation then
-              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
-            else
-              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
-            end
-          else    -- kampungs
-            local CQUI_PlayerResearchedMassProduction :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(GameInfo.Technologies["TECH_MASS_PRODUCTION"].Index);    -- check if a player researched Mass Production
-            if not CQUI_PlayerResearchedMassProduction then
-              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
-            else
-              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
+      if not kPlot:IsImprovementPillaged() then
+        local eImprovementType :number = kPlot:GetImprovementType();
+        if( eImprovementType ~= -1 ) then
+          local kImprovementData = GameInfo.Improvements[eImprovementType].Housing;
+          if kImprovementData == 1 then    -- farms, pastures etc.
+            CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 1;
+          elseif kImprovementData == 2 then    -- stepwells and kampungs
+            if GameInfo.Improvements[eImprovementType].ImprovementType == "IMPROVEMENT_STEPWELL" then    -- stepwells
+              local CQUI_PlayerResearchedSanitation :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(GameInfo.Technologies["TECH_SANITATION"].Index);    -- check if a player researched Sanitation
+              if not CQUI_PlayerResearchedSanitation then
+                CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
+              else
+                CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
+              end
+            else    -- kampungs
+              local CQUI_PlayerResearchedMassProduction :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(GameInfo.Technologies["TECH_MASS_PRODUCTION"].Index);    -- check if a player researched Mass Production
+              if not CQUI_PlayerResearchedMassProduction then
+                CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
+              else
+                CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
+              end
             end
           end
         end
