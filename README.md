@@ -19,7 +19,7 @@ If you want to have the cutting edge version (that might not be push on steam wo
 
 ```
 Windows : Documents\my games\Sid Meier's Civilization VI\Mods
-Mac : /Users/[user]/Library/Application Support/Sid Meier's Civilization VI
+Mac : /Users/[user]/Library/Application Support/Sid Meier's Civilization VI/Mods
 Linux : ~/.local/share/aspyr-media/Sid Meier's Civilization VI/Mods
 ```
 
