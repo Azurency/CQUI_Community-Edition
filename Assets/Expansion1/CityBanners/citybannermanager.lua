@@ -4242,9 +4242,12 @@ end
 function CQUI_OnInfluenceGiven()
   for i, pPlayer in ipairs(PlayerManager.GetAliveMinors()) do
     local iPlayer = pPlayer:GetID();
-    local iCapital = pPlayer:GetCities():GetCapitalCity():GetID();
-    local bannerInstance = GetCityBanner(iPlayer, iCapital);
-    CQUI_UpdateSuzerainIcon(pPlayer, bannerInstance);
+    -- AZURENCY : check if there's a CapitalCity
+    if pPlayer:GetCities():GetCapitalCity() ~= nil then
+      local iCapital = pPlayer:GetCities():GetCapitalCity():GetID();
+      local bannerInstance = GetCityBanner(iPlayer, iCapital);
+      CQUI_UpdateSuzerainIcon(pPlayer, bannerInstance);
+    end
   end
 end
 
