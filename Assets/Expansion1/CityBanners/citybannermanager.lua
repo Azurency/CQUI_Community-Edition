@@ -863,7 +863,7 @@ function CityBanner:CreateEncampmentBanner()
     self.m_Instance.DistrictDefenseStrengthLabel:SetText(districtDefense);
 
     -- Setup strike button callback
-    self.m_Instance.CityStrikeButton:RegisterCallback( Mouse.eLClick, OnDistrictStrikeButtonClick );
+    self.m_Instance.CityStrikeButton:RegisterCallback( Mouse.eLClick, OnDistrictRangeStrikeButtonClick );
     self.m_Instance.CityStrikeButton:SetVoid1(self.m_Player:GetID());
     self.m_Instance.CityStrikeButton:SetVoid2(self.m_DistrictID);
   end

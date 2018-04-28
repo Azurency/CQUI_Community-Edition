@@ -218,8 +218,8 @@
         <Label    ID="BonusText6"            Anchor="R,T"  Offset="3,2"                          Style="FontNormal12"              String="6" />
         <Image    ID="BonusIcon6"            Anchor="C,B"                  Size="26,26"          Texture="EnvoyBonuses26"          TextureOffset="104,0"  />
       </Image>
-      <!-- CQUI Note: The size of the container below was changed from 108 to 120 in order to fix a spacing issue. -->
-      <Container                             Anchor="L,C"  Offset="346,0"  Size="120,42">
+      <!-- CQUI Note: The size of the container below was changed from 108 to 110 in order to fix a spacing issue. -->
+      <Container                             Anchor="L,C"  Offset="346,0"  Size="110,42">
         <Grid     ID="BonusImageSuzerainOff"                               Size="parent,parent"  Texture="CityState_BonusSlotBigOff" SliceCorner="31,21" SliceTextureSize="34,42"  />
         <Grid     ID="BonusImageSuzerainOn"                                Size="parent,parent"  Texture="CityState_BonusSlotBigOn"  SliceCorner="31,21" SliceTextureSize="34,42"    />
         <Label    ID="BonusTextSuzerain"     Anchor="R,B"  Offset="4,2"                          Style="FontNormal12"                String="4" />
@@ -231,7 +231,7 @@
         <Label    ID="SecondHighestEnvoys"   Anchor="R,T"  Offset="4,0"                          Style="FontNormal12" />
       </Container>
 
-      <Button      ID="LookAtButton"          Anchor="R,C"  Offset="3,-7"    Size="23,31"          Texture="Controls_ShowMe"          StateOffsetIncrement="0,0"  ToolTip="LOC_CITY_STATES_LOOK_AT" />
+      <Button Hidden="1" ID="LookAtButton"          Anchor="R,C"  Offset="3,-7"    Size="23,31"          Texture="Controls_ShowMe"          StateOffsetIncrement="0,0"  ToolTip="LOC_CITY_STATES_LOOK_AT" />
       <Button      ID="AmbassadorButton"      Anchor="R,C"  Offset="4,0"     Size="32,32"          Texture="XP1_GovernorsCityBannerFill32" TextureOffset="96,0" StateOffsetIncrement="0,0" ToolTip="LOC_CITY_STATE_PANEL_HAS_AMBASSADOR_TOOLTIP"/>
 
       <Label      ID="TypeLabel"            Anchor="L,C"  Offset="125,0"                        Style="FontNormal16"  Hidden="1"  String="[ICON_Faith]Religious" Note="DEPRECATED" />
@@ -278,13 +278,13 @@
   <Instance        Name="InfluenceRowInstance">
     <Container    ID="Top"          Anchor="L,C" Offset="10,0" Size="parent-24,30" >
       <Label      ID="CityName"      Anchor="L,T" String="$City$" Style="FontFlair14" SmallCaps="18" SmallCapsType="EveryWord"   ColorSet="CityStateCS" />
-      <Bar        ID="AmountBar"    Anchor="L,B"                  Size="parent-40,16" Direction="Right" FGColor="200,190,169" Percent="1.0" />
-      <Stack                        Anchor="R,B" Offset="0,-4" StackGrowth="Left">
+      <Bar        ID="AmountBar"    Anchor="L,B"                  Size="parent-78,16" Direction="Right" FGColor="200,190,169" Percent="1.0" />
+      <Stack                        Anchor="R,B" Offset="38,-4" StackGrowth="Left">
         <!-- TODO: non-font icon version<Image Icon="" /> -->
         <Label    ID="Amount"        Style="FontFlair24" String="0" Color="200,190,169,255" />
         <Label                      Style="FontFlair24" String="[Icon_Envoy]" Color="200,190,169,255" />
       </Stack>
-      <Image ID="AmbassadorIcon" Anchor="R,B" Offset="0,-2" Size="32,32" IconSize="32" Icon="ICON_GOVERNOR_THE_AMBASSADOR_FILL"/>
+      <Image ID="AmbassadorIcon" Anchor="R,B" Offset="0,-5" Size="32,32" IconSize="32" Icon="ICON_GOVERNOR_THE_AMBASSADOR_FILL"/>
     </Container>
   </Instance>
 

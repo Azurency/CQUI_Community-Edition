@@ -46,6 +46,7 @@
     <File>Assets/cqui_main.lua</File>
     <File>Assets/cqui_toplayer.xml</File>
     <File>Assets/cqui_toplayer.lua</File>
+    <File>Assets/Expansion1/Additions/citypanelculture.lua</File>
     <File>Assets/Expansion1/CityBanners/citybannermanager.lua</File>
     <File>Assets/Expansion1/CityBanners/citybannermanager.xml</File>
     <File>Assets/Expansion1/CityBanners/citybannerinstances.xml</File>
@@ -53,6 +54,9 @@
     <File>Assets/Expansion1/Replacements/citystates.xml</File>
     <File>Assets/Expansion1/Replacements/citysupport.lua</File>
     <File>Assets/Expansion1/Replacements/diplomacyactionview_expansion1.lua</File>
+    <File>Assets/Expansion1/Replacements/leadericon.lua</File>
+    <File>Assets/Expansion1/Replacements/leadericon.xml</File>
+    <File>Assets/Expansion1/Replacements/productionpanel.lua</File>
     <File>Assets/Expansion1/Replacements/worldtracker_expansion1.lua</File>
     <File>Assets/Text/Gossip_Text.xml</File>
     <File>Assets/Text/Gossip_Text_de.xml</File>
@@ -321,6 +325,7 @@
     <!-- CQUI Expansion 1 (Rise and Fall) files -->
     <ImportFiles id="CQUI_IMPORT_FILES" criteria="Expansion1">
       <Items>
+        <File>Assets/Expansion1/Additions/citypanelculture.lua</File>
         <File>Assets/Expansion1/CityBanners/citybannermanager.lua</File>
         <File>Assets/Expansion1/CityBanners/citybannermanager.xml</File>
         <File>Assets/Expansion1/CityBanners/citybannerinstances.xml</File>
@@ -328,6 +333,9 @@
         <File>Assets/Expansion1/Replacements/citystates.xml</File>
         <File>Assets/Expansion1/Replacements/citysupport.lua</File>
         <File>Assets/Expansion1/Replacements/diplomacyactionview_expansion1.lua</File>
+        <File>Assets/Expansion1/Replacements/leadericon.lua</File>
+        <File>Assets/Expansion1/Replacements/leadericon.xml</File>
+        <File>Assets/Expansion1/Replacements/productionpanel.lua</File>
         <File>Assets/Expansion1/Replacements/worldtracker_expansion1.lua</File>
       </Items>
     </ImportFiles>
