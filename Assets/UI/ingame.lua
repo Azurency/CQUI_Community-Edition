@@ -178,7 +178,7 @@ function OnInputActionTriggered( actionId )
             local gameFile = {};
             gameFile.Name = "quicksave";
             gameFile.Location = SaveLocations.LOCAL_STORAGE;
-            gameFile.Type= SaveTypes.SINGLE_PLAYER;
+            gameFile.Type= Network.GetGameConfigurationSaveType();
             gameFile.IsAutosave = false;
             gameFile.IsQuicksave = true;
 
