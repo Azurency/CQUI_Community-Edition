@@ -225,15 +225,15 @@ end
 
 -- ===========================================================================
 function OnResearchCompleted( player:number, tech:number )
-	if player == Game.GetLocalPlayer() and not m_isTradeRoutesUnlocked then
-		local localPlayer = Players[player];
-		if localPlayer then
-			return;
-		end
-		CheckTradeCapacity(localPlayer);
+  if player == Game.GetLocalPlayer() and not m_isTradeRoutesUnlocked then
+    local localPlayer = Players[player];
+    if localPlayer then
+      return;
+    end
+    CheckTradeCapacity(localPlayer);
 
-		Resize();
-	end
+    Resize();
+  end
 end
 
 -- Check trade, spy, and partial screen hooks OnTurnBegin
@@ -258,8 +258,8 @@ function CheckCityStatesUnlocked(localPlayer:table)
     local localDiplomacy:table = localPlayer:GetDiplomacy();
     local aPlayers = PlayerManager.GetAliveMinors();
     for _, pPlayer in ipairs(aPlayers) do
-	  if (pPlayer:IsMinor() and localDiplomacy:HasMet(pPlayer:GetID())) then
-		m_isCityStatesUnlocked = true;	
+      if (pPlayer:IsMinor() and localDiplomacy:HasMet(pPlayer:GetID())) then
+        m_isCityStatesUnlocked = true;
       end
     end
   end

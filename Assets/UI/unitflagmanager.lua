@@ -1360,7 +1360,7 @@ function UpdateIconStack( plotX:number, plotY:number )
                   end
                 end
                 DuoFlag = flag;
-				
+
                 flag.m_Instance.Formation2:SetHide(false);
                 flag.m_Instance.Formation2:SetOffsetVal(m_LinkOffsets[1][1], m_LinkOffsets[1][2]);
                 flag.m_Instance.Formation2:SetSizeX(64);
