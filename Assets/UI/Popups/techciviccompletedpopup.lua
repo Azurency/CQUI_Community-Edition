@@ -260,17 +260,17 @@ end
 
 -- ===========================================================================
 function AddCompletedPopup( player:number, civic, tech, isCanceled:boolean, ignoreMultiplayerCheck:boolean)
-    if player == Game.GetLocalPlayer() 
-        and (not m_isDisabledByTutorial) 
-        and (ignoreMultiplayerCheck or not GameConfiguration.IsNetworkMultiplayer()) then
-	    local completedEntry:table = { player=player, civic=civic, tech=tech, isCanceled=isCanceled };
+  if player == Game.GetLocalPlayer() 
+    and (not m_isDisabledByTutorial) 
+    and (ignoreMultiplayerCheck or not GameConfiguration.IsNetworkMultiplayer()) then
+      local completedEntry:table = { player=player, civic=civic, tech=tech, isCanceled=isCanceled };
 
-        if not m_isWaitingToShowPopup then
-          ShowCompletedPopup(completedEntry);
-    else
-      -- Add to queue if already showing a tech/civic completed popup
-      table.insert(m_kQueuedPopups, completedEntry);
-    end
+      if not m_isWaitingToShowPopup then
+        ShowCompletedPopup(completedEntry);    
+      else
+        -- Add to queue if already showing a tech/civic completed popup
+        table.insert(m_kQueuedPopups, completedEntry);
+      end
   end
 end
 
