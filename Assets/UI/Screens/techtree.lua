@@ -127,7 +127,7 @@ STATUS_ART[ITEM_STATUS.RESEARCHED]  = { Name="RESEARCHED",  TextColor0=0xaafffff
 -- ===========================================================================
 local m_kNodeIM       :table = InstanceManager:new( "NodeInstance",       "Top",    Controls.NodeScroller );
 local m_kLineIM       :table = InstanceManager:new( "LineImageInstance",    "LineImage",Controls.LineScroller );
-local m_kEraArtIM     :table = InstanceManager:new( "EraArtInstance", 		"Top", 		Controls.EraArtScroller );
+local m_kEraArtIM     :table = InstanceManager:new( "EraArtInstance",     "Top",    Controls.EraArtScroller );
 local m_kEraLabelIM     :table = InstanceManager:new( "EraLabelInstance",     "Top",    Controls.ArtScroller );
 local m_kEraDotIM     :table = InstanceManager:new( "EraDotInstance",     "Dot",    Controls.ScrollbarBackgroundArt );
 local m_kMarkerIM     :table = InstanceManager:new( "PlayerMarkerInstance", "Top",    Controls.TimelineScrollbar );
@@ -265,12 +265,12 @@ function GetMaxScrollWidth()
 end
 
 -- ===========================================================================
---	Get the x offset of an era art instance
+--  Get the x offset of an era art instance
 -- ===========================================================================
 function GetEraArtXOffset(instArt, eraData, firstEraPadding)
-	if firstEraPadding == nil then firstEraPadding = PADDING_FIRST_ERA_INDICATOR; end
-	local centerx = ColumnRowToPixelXY(eraData.MiddleColumn, 0) - PADDING_PAST_ERA_LEFT;
-	return (centerx + (eraData.Index == m_FirstEraIndex and firstEraPadding or 0)) * (1 / PARALLAX_ART_SPEED);
+  if firstEraPadding == nil then firstEraPadding = PADDING_FIRST_ERA_INDICATOR; end
+  local centerx = ColumnRowToPixelXY(eraData.MiddleColumn, 0) - PADDING_PAST_ERA_LEFT;
+  return (centerx + (eraData.Index == m_FirstEraIndex and firstEraPadding or 0)) * (1 / PARALLAX_ART_SPEED);
 end
 
 -- ===========================================================================
@@ -340,9 +340,9 @@ function AllocateUI()
     for era,eraData in pairs(m_kEras) do
       if eraData.Index == index then                  -- Ensure indexed order
         eraData.PriorColumns = priorColumns;
-		eraData.MiddleColumn = priorColumns + ((eraData.NumColumns + 1) / 2);
+        eraData.MiddleColumn = priorColumns + ((eraData.NumColumns + 1) / 2);
         priorColumns = priorColumns + eraData.NumColumns + 1; -- Add one for era art between
-		m_FirstEraIndex = m_FirstEraIndex < 0 and index or math.min(m_FirstEraIndex, index);
+        m_FirstEraIndex = m_FirstEraIndex < 0 and index or math.min(m_FirstEraIndex, index);
         break;
       end
     end
@@ -378,7 +378,7 @@ function AllocateUI()
     end
 
     instArt.Top:SetOffsetX(GetEraArtXOffset(instArt, eraData));
-    instArt.Top:SetOffsetY((SIZE_WIDESCREEN_HEIGHT * 0.5) - (instArt.BG:GetSizeY() * 0.5));
+    instArt.Top:SetOffsetY((SIZE_WIDESCREEN_HEIGHT * 0.5) - (instArt.BG:GetSizeY() * 0.5));  
     instArt.Top:SetSizeVal(eraData.NumColumns * SIZE_NODE_X, 600);
 
     local inst:table = m_kEraLabelIM:GetInstance();
@@ -608,7 +608,7 @@ function AllocateUI()
 
   Controls.NodeScroller:CalculateSize();
   Controls.NodeScroller:ReprocessAnchoring();
-  
+
   Controls.ArtScroller:CalculateSize();
   Controls.EraArtScroller:CalculateSize();
 
@@ -1174,7 +1174,7 @@ function OnResearchChanged( ePlayer:number, eTech:number )
   -- Always refresh the live data for this tech in case it was boosted
   m_kCurrentData = GetLivePlayerData( m_ePlayer, -1 );
 
-  if not ContextPtr:IsHidden() and ShouldUpdateWhenResearchChanges(ePlayer) then    
+  if not ContextPtr:IsHidden() and ShouldUpdateWhenResearchChanges(ePlayer) then
     View( m_kCurrentData );
   end
 end
