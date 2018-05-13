@@ -1173,6 +1173,7 @@ end
 function OnResearchChanged( ePlayer:number, eTech:number )
   -- Always refresh the live data for this tech in case it was boosted
   m_kCurrentData = GetLivePlayerData( m_ePlayer, -1 );
+
   if not ContextPtr:IsHidden() and ShouldUpdateWhenResearchChanges(ePlayer) then
     View( m_kCurrentData );
   end

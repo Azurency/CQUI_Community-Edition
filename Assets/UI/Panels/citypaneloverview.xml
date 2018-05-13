@@ -40,6 +40,10 @@
                   <Label                                  Anchor="L,C"                                      Style="CityPanelTextSmall"    String="LOC_HUD_CITY_FOOD_CONSUMPTION" />
                   <Label  ID="FoodConsumption"            Anchor="R,C"                                      Style="CityPanelTextSmall"      String="-" />
                 </Grid>
+                <Grid                                                  Offset="0,40"                        Style="CityPanelLineItem">
+                  <Label                                  Anchor="L,C"                                      Style="CityPanelTextSmall"    String="LOC_HUD_CITY_FOOD_NEEDED_FOR_GROWTH" />
+                  <Label  ID="FoodNeededForGrowth"        Anchor="R,C"                                      Style="CityPanelTextSmall"    String="-" />
+                </Grid>
               </Grid>
               <Grid                                                    Offset="0,0"     Size="parent,8"     Style="Divider3Grid"  />
               <Grid                                       Anchor="L,T" Offset="0,-2"    Size="parent,auto" Style="CityPanelSubPanelContainer" InnerPadding="0,10" InnerOffset="0,5">
@@ -81,7 +85,7 @@
                 <Image        ID="GrowthLongTurns"      Offset="0,1" Anchor="R,C" Size="182,21"               Texture="CityPanel_MeterBacking" >
                   <Label        ID="GrowthLongLabel"      Anchor="L,C" AnchorSide="O,I" Style="CityPanelText"       String="{LOC_HUD_CITY_GROWTH_IN:upper}" WrapWidth="100" Offset="2,0"/>
                   <TextureBar ID="GrowthLongTurnsBar"   Anchor="L,T"  Size="parent-4,parent-3"    Texture="CityPanel_CitizenMeter"        ShadowColor="255,255,255,100">
-                    <Label        ID="GrowthLongNum"                                      Style="CityPanelNumLarge"   String="-" WrapWidth="parent" Offset="4,0"/>
+                    <Label        ID="GrowthLongNum"                                      Style="CityPanelNumLarge"   String="-" WrapWidth="parent" Offset="4,-2"/>
                   </TextureBar>
                 </Image>
               </Grid>

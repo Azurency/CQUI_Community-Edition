@@ -281,6 +281,9 @@ function ViewPanelBreakdown( data:table )
   for _, wonder in ipairs(data.Wonders) do
     local kInstanceWonder:table = m_kWondersIM:GetInstance();
     kInstanceWonder.WonderName:SetText( wonder.Name );
+    local pRow = GameInfo.Buildings[wonder.Type];
+    local sToolTip = ToolTipHelper.GetBuildingToolTip( pRow.Hash, playerID, m_pCity );
+    kInstanceWonder.Top:SetToolTipString( sToolTip );	
     local yieldString:string = "";
     for _,kYield in ipairs(wonder.Yields) do
       yieldString = yieldString .. GetYieldString(kYield.YieldType,kYield.YieldChange);
@@ -640,6 +643,7 @@ function ViewPanelCitizensGrowth( data:table )
   Controls.GrowthLongTurnsBar:SetPercent( data.CurrentFoodPercent );
   Controls.GrowthLongTurnsBar:SetShadowPercent( data.FoodPercentNextTurn );
   Controls.GrowthLongNum:SetText( math.abs(data.TurnsUntilGrowth));
+  Controls.FoodNeededForGrowth:SetText( math.abs(data.GrowthThreshold));
 
   local iModifiedFood;
   local total :number;
