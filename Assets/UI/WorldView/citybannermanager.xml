@@ -303,8 +303,10 @@
 
         <InstanceData Name="UnitListEntry">
           <GridButton  ID="Button" Style="UnitPanelHeader" Size="200,24" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" StateOffsetIncrement="0,24" TruncateWidth="180">
-            <Label ID="UnitName" Anchor="C,C" Offset="0,1" Style="UnitPanelHeader"/>
-            <Image ID="UnitTypeIcon" Anchor="L,C" Size="22,22" Offset="2,0" Texture="UnitFlagAtlas22"/>
+            <Stack StackGrowth="Right">
+              <Image ID="UnitTypeIcon" Anchor="L,C" Size="22,22" Offset="2,0" Texture="UnitFlagAtlas22"/>
+              <Label ID="UnitName" Anchor="C,C" Offset="0,1" Style="UnitPanelHeader" TruncateWidth="173"/>
+            </Stack>
           </GridButton>
         </InstanceData>
       </PullDown>

@@ -1349,14 +1349,21 @@ function UpdateIconStack( plotX:number, plotY:number )
               flag.m_Instance.Formation2:SetHide(true);
               flag.m_Instance.Formation3:SetHide(true);
               if formationClassString ~= "FORMATION_CLASS_LAND_COMBAT" then
-                if(DuoFlag and (formationClassString == "FORMATION_CLASS_CIVILIAN" or formationClassString == "FORMATION_CLASS_SUPPORT")) then
+                -- Only show formation links on the last flag
+                if DuoFlag then
                   DuoFlag.m_Instance.Formation2:SetHide(true);
-                else
-                  flag.m_Instance.Formation2:SetHide(false);
-                  flag.m_Instance.Formation2:SetOffsetVal(m_LinkOffsets[1][1], m_LinkOffsets[1][2]);
-                  flag.m_Instance.Formation2:SetSizeX(64);
+
+                  -- If the flags share the same parent, ensure the flag with the formation control renders below the DuoFlag
+                  local flagParent = flag.m_Instance.Anchor:GetParent();
+                  if flagParent == DuoFlag.m_Instance.Anchor:GetParent() then
+                    flagParent:AddChildAtIndex(flag.m_Instance.Anchor, 0);
+                  end
                 end
                 DuoFlag = flag;
+
+                flag.m_Instance.Formation2:SetHide(false);
+                flag.m_Instance.Formation2:SetOffsetVal(m_LinkOffsets[1][1], m_LinkOffsets[1][2]);
+                flag.m_Instance.Formation2:SetSizeX(64);
               end
 
             else
