@@ -721,61 +721,61 @@ function OnDefaultAddNotification( pNotification:table )
     and pNotification:GetEndTurnBlocking() == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING
     and pNotification:IsIconDisplayable() ) then
 
-    notificationEntry.m_Instance    = m_genericItemIM:GetInstance();
-    notificationEntry.m_InstanceManager = m_genericItemIM;
-		notificationEntry.m_Instance.m_MouseIn = false;	-- Manually track since 2 different, overlapping objects are tracking if a pointer is in/out
+      notificationEntry.m_Instance    = m_genericItemIM:GetInstance();
+      notificationEntry.m_InstanceManager = m_genericItemIM;
+      notificationEntry.m_Instance.m_MouseIn = false;	-- Manually track since 2 different, overlapping objects are tracking if a pointer is in/out
 
-		if notificationEntry.m_Instance then
-        -- Use the (collapse) button as the actual mouse-in area, but a larger rectangle will
-        -- track the mouse out, since the player may be interacting with the extended
-        -- information that flew out to the left of the notification.
+      if notificationEntry.m_Instance then
+          -- Use the (collapse) button as the actual mouse-in area, but a larger rectangle will
+          -- track the mouse out, since the player may be interacting with the extended
+          -- information that flew out to the left of the notification.
 
-			if pNotification:IsValidForPhase() then
-				notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eLClick, function() kHandlers.TryActivate(notificationEntry); end );
-				notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eRClick, function() kHandlers.TryDismiss(notificationEntry); end );
-				notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eLClick, function() OnClickMouseOutArea(notificationEntry); end );
-				notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eRClick, function() OnClickMouseOutArea(notificationEntry, true); end );
-			else
-				--A notification in the wrong phase can be dismissed but not activated.
-				local messageName:string = Locale.Lookup(pNotification:GetMessage());
-				notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eLClick, OnDoNothing );
-				notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eRClick, function() kHandlers.TryDismiss(notificationEntry); end );
-				notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eLClick, OnDoNothing );
-				notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eRClick, function() kHandlers.TryDismiss(notificationEntry); end );
-				local toolTip:string = messageName .. "[NEWLINE]" .. Locale.Lookup("LOC_NOTIFICATION_WRONG_PHASE_TT", messageName);
-				notificationEntry.m_Instance.MouseInArea:SetToolTipString(toolTip);
-			end
-			notificationEntry.m_Instance.MouseInArea:RegisterMouseEnterCallback( function() OnMouseEnterNotification( notificationEntry.m_Instance ); end );
-      notificationEntry.m_Instance.MouseOutArea:RegisterMouseExitCallback( function()  OnMouseExitNotification( notificationEntry.m_Instance ); end );
-
-      --Set the notification icon
-      if (notificationEntry.m_IconName ~= nil) then
-        local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(notificationEntry.m_IconName,40);
-        if (textureOffsetX ~= nil) then
-            notificationEntry.m_Instance.Icon:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
+        if pNotification:IsValidForPhase() then
+          notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eLClick, function() kHandlers.TryActivate(notificationEntry); end );
+          notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eRClick, function() kHandlers.TryDismiss(notificationEntry); end );
+          notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eLClick, function() OnClickMouseOutArea(notificationEntry); end );
+          notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eRClick, function() OnClickMouseOutArea(notificationEntry, true); end );
+        else
+          --A notification in the wrong phase can be dismissed but not activated.
+          local messageName:string = Locale.Lookup(pNotification:GetMessage());
+          notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eLClick, OnDoNothing );
+          notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eRClick, function() kHandlers.TryDismiss(notificationEntry); end );
+          notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eLClick, OnDoNothing );
+          notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eRClick, function() kHandlers.TryDismiss(notificationEntry); end );
+          local toolTip:string = messageName .. "[NEWLINE]" .. Locale.Lookup("LOC_NOTIFICATION_WRONG_PHASE_TT", messageName);
+          notificationEntry.m_Instance.MouseInArea:SetToolTipString(toolTip);
         end
-      else
-        if (notificationEntry.m_TypeName ~= nil) then
-          local iconName :string = DATA_ICON_PREFIX .. notificationEntry.m_TypeName;
-          local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(iconName,40);
+        notificationEntry.m_Instance.MouseInArea:RegisterMouseEnterCallback( function() OnMouseEnterNotification( notificationEntry.m_Instance ); end );
+        notificationEntry.m_Instance.MouseOutArea:RegisterMouseExitCallback( function()  OnMouseExitNotification( notificationEntry.m_Instance ); end );
+
+        --Set the notification icon
+        if (notificationEntry.m_IconName ~= nil) then
+          local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(notificationEntry.m_IconName,40);
           if (textureOffsetX ~= nil) then
-            notificationEntry.m_Instance.Icon:SetTexture(textureOffsetX, textureOffsetY, textureSheet);
+              notificationEntry.m_Instance.Icon:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
+          end
+        else
+          if (notificationEntry.m_TypeName ~= nil) then
+            local iconName :string = DATA_ICON_PREFIX .. notificationEntry.m_TypeName;
+            local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(iconName,40);
+            if (textureOffsetX ~= nil) then
+              notificationEntry.m_Instance.Icon:SetTexture(textureOffsetX, textureOffsetY, textureSheet);
+            end
           end
         end
+
+        -- If notification is auto generated, it will have an internal count.
+        notificationEntry.m_isAuto = pNotification:IsAutoNotify();
+
+        -- Sets current phase state.
+        notificationEntry.m_kHandlers.OnPhaseBegin( playerID, notificationID );
+
+        -- Reset animation control
+        notificationEntry.m_Instance.NotificationSlide:Stop();
+        notificationEntry.m_Instance.NotificationSlide:SetToBeginning();
       end
-
-      -- If notification is auto generated, it will have an internal count.
-      notificationEntry.m_isAuto = pNotification:IsAutoNotify();
-
-      -- Sets current phase state.
-      notificationEntry.m_kHandlers.OnPhaseBegin( playerID, notificationID );
-
-			-- Reset animation control
-			notificationEntry.m_Instance.NotificationSlide:Stop();
-			notificationEntry.m_Instance.NotificationSlide:SetToBeginning();
-    end
   end
-  -- Update size of notification
+    -- Update size of notification
   RealizeStandardNotification( playerID, notificationID );
 end
 
