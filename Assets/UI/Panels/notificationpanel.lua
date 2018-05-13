@@ -752,7 +752,7 @@ function OnDefaultAddNotification( pNotification:table )
         if (notificationEntry.m_IconName ~= nil) then
           local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(notificationEntry.m_IconName,40);
           if (textureOffsetX ~= nil) then
-              notificationEntry.m_Instance.Icon:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
+            notificationEntry.m_Instance.Icon:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
           end
         else
           if (notificationEntry.m_TypeName ~= nil) then
@@ -1396,7 +1396,7 @@ function OnDebugAdd( name:string, fakeID:number )
 
   notificationEntry.m_Instance    = m_genericItemIM:GetInstance();
   notificationEntry.m_InstanceManager = m_genericItemIM;
-	notificationEntry.m_Instance.m_MouseIn = false;	-- Manually track since 2 different, overlapping objects are tracking if a pointer is in/out
+  notificationEntry.m_Instance.m_MouseIn = false;	-- Manually track since 2 different, overlapping objects are tracking if a pointer is in/out
 
   if notificationEntry.m_Instance ~= nil then
 		if (notificationEntry.m_Instance.MouseInArea ~= nil) then
