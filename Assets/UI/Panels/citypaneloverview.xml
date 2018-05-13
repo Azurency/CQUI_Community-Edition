@@ -85,7 +85,7 @@
                 <Image        ID="GrowthLongTurns"      Offset="0,1" Anchor="R,C" Size="182,21"               Texture="CityPanel_MeterBacking" >
                   <Label        ID="GrowthLongLabel"      Anchor="L,C" AnchorSide="O,I" Style="CityPanelText"       String="{LOC_HUD_CITY_GROWTH_IN:upper}" WrapWidth="100" Offset="2,0"/>
                   <TextureBar ID="GrowthLongTurnsBar"   Anchor="L,T"  Size="parent-4,parent-3"    Texture="CityPanel_CitizenMeter"        ShadowColor="255,255,255,100">
-                    <Label        ID="GrowthLongNum"                                      Style="CityPanelNumLarge"   String="-" WrapWidth="parent" Offset="4,0"/>
+                    <Label        ID="GrowthLongNum"                                      Style="CityPanelNumLarge"   String="-" WrapWidth="parent" Offset="4,-2"/>
                   </TextureBar>
                 </Image>
               </Grid>
