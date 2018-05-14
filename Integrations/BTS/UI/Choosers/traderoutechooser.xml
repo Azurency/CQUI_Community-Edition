@@ -60,8 +60,8 @@
                 </Stack>
 
                 <!-- Confirm Button -->
-                <GridButton ID="BeginRouteButton" Size="parent-100,26" Offset="0,7" Anchor="C,B" String="LOC_ROUTECHOOSER_BEGIN_ROUTE_BUTTON" Style="FontFlair14" FontStyle="Shadows" TextOffset="0,2" EffectColor="0,0,0,255" SmallCaps="20" SmallCapsType="EveryWord">
-                  <GridData Texture="Controls_ConfirmSmall" StateOffsetIncrement="0,26" SliceCorner="26,13" SliceSize="2,2" SliceTextureSize="51,26"/>
+                <GridButton ID="BeginRouteButton" Size="parent-100,41" Offset="0,7" Anchor="C,B" String="LOC_ROUTECHOOSER_BEGIN_ROUTE_BUTTON" Style="FontFlair14" FontStyle="Shadows" TextOffset="0,2" EffectColor="0,0,0,255" SmallCaps="20" SmallCapsType="EveryWord">
+                  <GridData Texture="Controls_Confirm" StateOffsetIncrement="0,41" SliceCorner="40,21" SliceSize="1,1" SliceTextureSize="80,41"/>
                 </GridButton>
 
               </Stack>
