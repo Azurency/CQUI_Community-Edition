@@ -565,7 +565,8 @@ function DoEndTurn( optionalNewBlocker:number )
 
   -- If the player can unready their turn, request that.
   -- CanUnreadyTurn() is only true when the player should unready their turn instead of turn completing.
-  if pPlayer:CanUnreadyTurn() then
+  if pPlayer:CanUnreadyTurn()
+    and not UI.IsTurnTimerElapsed(Game.GetLocalPlayer()) then
     UI.RequestAction(ActionTypes.ACTION_UNREADYTURN);
     return;
   end

@@ -48,7 +48,7 @@ local COLUMN_WIDTH          :number = 220;      -- Space of node and line(s) aft
 local COLUMNS_NODES_SPAN      :number = 2;      -- How many colunms do the nodes span
 local PADDING_TIMELINE_LEFT      :number = 275;
 local PADDING_PAST_ERA_LEFT      :number = 30;
-local PADDING_FIRST_ERA_INDICATOR  :number = -15;
+local PADDING_FIRST_ERA_INDICATOR  :number = -300;
 
 -- Graphic constants
 local PIC_BOLT_OFF        :string = "Controls_BoltOff";
@@ -127,7 +127,7 @@ STATUS_ART[ITEM_STATUS.RESEARCHED]  = { Name="RESEARCHED",  TextColor0=0xaafffff
 -- ===========================================================================
 local m_kNodeIM       :table = InstanceManager:new( "NodeInstance",       "Top",    Controls.NodeScroller );
 local m_kLineIM       :table = InstanceManager:new( "LineImageInstance",    "LineImage",Controls.LineScroller );
-local m_kEraArtIM     :table = InstanceManager:new( "EraArtInstance",     "Top",    Controls.FarBackArtScroller );
+local m_kEraArtIM     :table = InstanceManager:new( "EraArtInstance",     "Top",    Controls.EraArtScroller );
 local m_kEraLabelIM     :table = InstanceManager:new( "EraLabelInstance",     "Top",    Controls.ArtScroller );
 local m_kEraDotIM     :table = InstanceManager:new( "EraDotInstance",     "Dot",    Controls.ScrollbarBackgroundArt );
 local m_kMarkerIM     :table = InstanceManager:new( "PlayerMarkerInstance", "Top",    Controls.TimelineScrollbar );
@@ -154,6 +154,7 @@ local m_kFilters      :table = {};
 local m_shiftDown     :boolean = false;
 
 local m_lastPercent   :number = 0.1;
+local m_FirstEraIndex = -1;
 
 -- CQUI variables
 local CQUI_halfwayNotified  :table = {};
@@ -264,6 +265,15 @@ function GetMaxScrollWidth()
 end
 
 -- ===========================================================================
+--  Get the x offset of an era art instance
+-- ===========================================================================
+function GetEraArtXOffset(instArt, eraData, firstEraPadding)
+  if firstEraPadding == nil then firstEraPadding = PADDING_FIRST_ERA_INDICATOR; end
+  local centerx = ColumnRowToPixelXY(eraData.MiddleColumn, 0) - PADDING_PAST_ERA_LEFT;
+  return (centerx + (eraData.Index == m_FirstEraIndex and firstEraPadding or 0)) * (1 / PARALLAX_ART_SPEED);
+end
+
+-- ===========================================================================
 --  Take the default item data and build the nodes that work with it.
 --  One time creation, any dynamic pieces should be
 --
@@ -330,7 +340,9 @@ function AllocateUI()
     for era,eraData in pairs(m_kEras) do
       if eraData.Index == index then                  -- Ensure indexed order
         eraData.PriorColumns = priorColumns;
+        eraData.MiddleColumn = priorColumns + ((eraData.NumColumns + 1) / 2);
         priorColumns = priorColumns + eraData.NumColumns + 1; -- Add one for era art between
+        m_FirstEraIndex = m_FirstEraIndex < 0 and index or math.min(m_FirstEraIndex, index);
         break;
       end
     end
@@ -365,8 +377,7 @@ function AllocateUI()
       instArt.BG:SetTexture(PIC_DEFAULT_ERA_BACKGROUND);
     end
 
-    local startx, _  = ColumnRowToPixelXY(eraData.PriorColumns + 1, 0);
-    instArt.Top:SetOffsetX((startx ) * (1/PARALLAX_ART_SPEED));
+    instArt.Top:SetOffsetX(GetEraArtXOffset(instArt, eraData));
     instArt.Top:SetOffsetY((SIZE_WIDESCREEN_HEIGHT * 0.5) - (instArt.BG:GetSizeY() * 0.5));  
     instArt.Top:SetSizeVal(eraData.NumColumns * SIZE_NODE_X, 600);
 
@@ -597,8 +608,9 @@ function AllocateUI()
 
   Controls.NodeScroller:CalculateSize();
   Controls.NodeScroller:ReprocessAnchoring();
+
   Controls.ArtScroller:CalculateSize();
-  Controls.FarBackArtScroller:CalculateSize();
+  Controls.EraArtScroller:CalculateSize();
 
   Controls.NodeScroller:RegisterScrollCallback( OnScroll );
 
@@ -617,7 +629,7 @@ function OnScroll( control:table, percent:number )
   -- Parallax
   Controls.ArtScroller:SetScrollValue( percent );
   Controls.LineScroller:SetScrollValue( percent );
-  Controls.FarBackArtScroller:SetScrollValue( percent );
+  Controls.EraArtScroller:SetScrollValue( percent );
 
   -- Audio
   if percent==0 or percent==1.0 then
@@ -1159,8 +1171,10 @@ end
 
 -- ===========================================================================
 function OnResearchChanged( ePlayer:number, eTech:number )
+  -- Always refresh the live data for this tech in case it was boosted
+  m_kCurrentData = GetLivePlayerData( m_ePlayer, -1 );
+
   if not ContextPtr:IsHidden() and ShouldUpdateWhenResearchChanges(ePlayer) then
-    m_kCurrentData = GetLivePlayerData( m_ePlayer, -1 );
     View( m_kCurrentData );
   end
 end
@@ -1233,18 +1247,14 @@ function Resize()
   Controls.ArtParchmentRippleTop:SetSizeX( artAndEraScrollWidth );
   Controls.ArtParchmentRippleBottom:SetSizeX( artAndEraScrollWidth );
   Controls.ForceSizeX:SetSizeX( artAndEraScrollWidth  );
+  Controls.ForceArtSizeX:SetSizeX( scrollPanelX * (1/PARALLAX_ART_SPEED) );
   Controls.LineForceSizeX:SetSizeX( scrollPanelX );
   Controls.LineScroller:CalculateSize();
   Controls.ArtScroller:CalculateSize();
   Controls.ArtCornerGrungeTR:ReprocessAnchoring();
   Controls.ArtCornerGrungeBR:ReprocessAnchoring();
 
-
-  local PADDING_DUE_TO_LAST_BACKGROUND_ART_IMAGE:number = 100;
-  local backArtScrollWidth:number = scrollPanelX * (1/PARALLAX_ART_SPEED);
-  Controls.Background:SetSizeX( backArtScrollWidth + PADDING_DUE_TO_LAST_BACKGROUND_ART_IMAGE );
   Controls.Background:SetSizeY( SIZE_WIDESCREEN_HEIGHT - (SIZE_TIMELINE_AREA_Y-8) );
-  Controls.FarBackArtScroller:CalculateSize();
 end
 
 -- ===========================================================================
