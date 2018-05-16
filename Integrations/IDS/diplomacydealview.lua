@@ -2009,6 +2009,9 @@ function MakeCityToolTip(pCity : table)
       end
     end
 
+    local player = Players[pCity:GetOwner()];
+    local cityID = pCity:GetID();
+
     -- Add Resources
     local extractedResources = player:GetResources():GetResourcesExtractedByCity( cityID, ResultFormat.SUMMARY );
     if extractedResources ~= nil and #extractedResources > 0 then
