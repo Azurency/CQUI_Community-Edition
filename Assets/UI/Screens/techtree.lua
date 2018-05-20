@@ -1203,12 +1203,12 @@ function OnResearchComplete( ePlayer:number, eTech:number)
     -- CQUI update all cities real housing when play as India and researched Sanitation
     if eTech == GameInfo.Technologies["TECH_SANITATION"].Index then    -- Sanitation
       if (PlayerConfigurations[ePlayer]:GetCivilizationTypeName() == "CIVILIZATION_INDIA") then
-        LuaEvents.CQUI_AllCitiesInfoUpdated();
+        LuaEvents.CQUI_AllCitiesInfoUpdated(ePlayer);
       end
     -- CQUI update all cities real housing when play as Indonesia and researched Mass Production
     elseif eTech == GameInfo.Technologies["TECH_MASS_PRODUCTION"].Index then    -- Mass Production
       if (PlayerConfigurations[ePlayer]:GetCivilizationTypeName() == "CIVILIZATION_INDONESIA") then
-        LuaEvents.CQUI_AllCitiesInfoUpdated();
+        LuaEvents.CQUI_AllCitiesInfoUpdated(ePlayer);
       end
     end
   end

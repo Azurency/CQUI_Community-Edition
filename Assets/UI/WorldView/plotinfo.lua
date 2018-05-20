@@ -46,6 +46,7 @@ local CQUI_SmartWorkIconSize: number = 64;
 local CQUI_SmartWorkIconAlpha = .45;
 local CQUI_isMouseDragging = false;
 local CQUI_hasMouseDragged = false;
+local CQUI_SwapTileCity :table = {};    -- CQUI: a table we use to update data and real housing for cities when swap tiles
 
 function CQUI_OnSettingsUpdate()
   CQUI_WorkIconSize = GameConfiguration.GetValue("CQUI_WorkIconSize");
@@ -81,9 +82,12 @@ function OnClickSwapTile( plotId:number )
   local tResults :table = CityManager.RequestCommand( pSelectedCity, CityCommandTypes.SWAP_TILE_OWNER, tParameters );
 
   -- CQUI update citizens, data and real housing for both cities
-  CQUI_UpdateCitiesCitizensWhenSwapTiles(pSelectedCity);    -- CQUI update citizens and data for a city that is a new tile owner
-  local pCity = Cities.GetPlotPurchaseCity(kPlot);    -- CQUI a city that was a previous tile owner
-  CQUI_UpdateCitiesCitizensWhenSwapTiles(pCity);    -- CQUI update citizens and data for a city that was a previous tile owner
+	local pSelectedCityID = pSelectedCity:GetID();    -- CQUI ID of a city that is a new tile owner
+	local pCity = Cities.GetPlotPurchaseCity(kPlot);    -- CQUI a city that was a previous tile owner
+	local pCityID = pCity:GetID();
+	CQUI_SwapTileCity[pSelectedCityID] = true;
+	CQUI_SwapTileCity[pCityID] = true;
+
   return true;
 end
 
@@ -516,8 +520,7 @@ function OnDistrictAddedToMap( playerID: number, districtID : number, cityID :nu
     -- CQUI update citizens, data and real housing for close cities within 4 tiles when city founded
     -- we use it only to update real housing for a city that loses a 3rd radius tile to a city that is founded within 4 tiles
   elseif playerID == Game.GetLocalPlayer() then
-    local kCity = CityManager.GetCity(playerID, cityID);
-    CQUI_UpdateCloseCitiesCitizensWhenCityFounded(kCity);
+    CQUI_UpdateCloseCitiesCitizensWhenCityFounded(playerID, cityID);
   end
 end
 
@@ -799,6 +802,15 @@ function OnCityTileOwnershipChanged(owner:number, cityID:number)
   if owner == Game.GetLocalPlayer() then
     RefreshPurchasePlots();
     RefreshCitizenManagement();
+
+		-- CQUI update citizens, data and real housing for both cities when swap tiles
+		if CQUI_SwapTileCity[cityID] == true then
+		  local pCity = CityManager.GetCity(owner, cityID);
+		  CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, nil);
+		  CQUI_SwapTileCity[cityID] = nil;
+
+		  LuaEvents.CQUI_CityInfoUpdated(owner, cityID);
+		end
   end
 end
 
@@ -971,27 +983,17 @@ function OnInputHandler( pInputStruct:table )
 end
 
 -- ===========================================================================
--- CQUI update citizens, data and real housing for both cities when swap tiles
-function CQUI_UpdateCitiesCitizensWhenSwapTiles(pCity)
-
-  CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, nil);
-
-  local pCityID = pCity:GetID();
-  LuaEvents.CQUI_CityInfoUpdated(pCityID);
-end
-
--- ===========================================================================
 -- CQUI update citizens, data and real housing for close cities within 4 tiles when city founded
 -- we use it only to update real housing for a city that loses a 3rd radius tile to a city that is founded within 4 tiles
-function CQUI_UpdateCloseCitiesCitizensWhenCityFounded(kCity)
-
-  local m_pCity:table = Players[Game.GetLocalPlayer()]:GetCities();
+function CQUI_UpdateCloseCitiesCitizensWhenCityFounded(playerID, cityID)
+  local kCity = CityManager.GetCity(playerID, cityID);
+  local m_pCity:table = Players[playerID]:GetCities();
   for i, pCity in m_pCity:Members() do
-    if Map.GetPlotDistance(kCity:GetX(), kCity:GetY(), pCity:GetX(), pCity:GetY()) == 4 then
+    if Map.GetPlotDistance( kCity:GetX(), kCity:GetY(), pCity:GetX(), pCity:GetY() ) == 4 then
       CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, nil);
 
       local pCityID = pCity:GetID();
-      LuaEvents.CQUI_CityInfoUpdated(pCityID);
+      LuaEvents.CQUI_CityInfoUpdated(playerID, pCityID);
     end
   end
 end

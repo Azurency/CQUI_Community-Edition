@@ -1324,14 +1324,14 @@ function OnTechBoostActivateNotification( notificationEntry : NotificationType, 
 				if techIndex == GameInfo.Technologies["TECH_SANITATION"].Index then    -- Sanitation
 				  if PlayerConfigurations[notificationEntry.m_PlayerID]:GetCivilizationTypeName() == "CIVILIZATION_INDIA" then
 				    if Players[notificationEntry.m_PlayerID]:GetTechs():HasTech(techIndex) then
-				      LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost();
+				      LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost(notificationEntry.m_PlayerID);
 				    end
 				  end
 				-- CQUI update all cities real housing when play as Indonesia and boosted and researched Mass Production
 				elseif techIndex == GameInfo.Technologies["TECH_MASS_PRODUCTION"].Index then    -- Mass Production
 				  if PlayerConfigurations[notificationEntry.m_PlayerID]:GetCivilizationTypeName() == "CIVILIZATION_INDONESIA" then
 				    if Players[notificationEntry.m_PlayerID]:GetTechs():HasTech(techIndex) then
-				      LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost();
+				      LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost(notificationEntry.m_PlayerID);
 				    end
 				  end
 				end
@@ -1459,7 +1459,7 @@ function OnNotificationAdded( playerID:number, notificationID:number )
 
     -- CQUI: Notification when a City lost tile to a Culture Bomb. We use it to update real housing.
     if pNotification:GetType() == GameInfo.Notifications["NOTIFICATION_TILE_LOST_CULTURE_BOMB"].Hash then
-      LuaEvents.CQUI_AllCitiesInfoUpdated();
+      LuaEvents.CQUI_AllCitiesInfoUpdated(playerID);
     end
   end
 end
