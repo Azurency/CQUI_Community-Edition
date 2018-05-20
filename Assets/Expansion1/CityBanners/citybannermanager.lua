@@ -4424,8 +4424,20 @@ function CQUI_OnAllCitiesInfoUpdated(PlayerID)
   local m_pCity:table = Players[PlayerID]:GetCities();
   for i, pCity in m_pCity:Members() do
     local pCityID = pCity:GetID();
-    CQUI_HousingUpdated[pCityID] = nil;
-    CQUI_RealHousingFromImprovements(PlayerID, pCityID)
+    CQUI_OnCityInfoUpdated(PlayerID, pCityID)
+  end
+end
+
+-- ===========================================================================
+-- CQUI update close to a culture bomb cities data and real housing from improvements
+function CQUI_OnCityLostTileToCultureBomb(PlayerID, x, y)
+  local m_pCity:table = Players[PlayerID]:GetCities();
+  for i, pCity in m_pCity:Members() do
+    if Map.GetPlotDistance( pCity:GetX(), pCity:GetY(), x, y ) <= 4 then
+      local pCityID = pCity:GetID();
+      CQUI_OnCityInfoUpdated(PlayerID, pCityID)
+      CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, nil);
+    end
   end
 end
 
@@ -4519,6 +4531,7 @@ function Initialize()
   -- CQUI related events
   LuaEvents.CQUI_CityInfoUpdated.Add( CQUI_OnCityInfoUpdated );    -- CQUI update city's real housing from improvements
   LuaEvents.CQUI_AllCitiesInfoUpdated.Add( CQUI_OnAllCitiesInfoUpdated );    -- CQUI update all cities real housing from improvements
+  LuaEvents.CQUI_CityLostTileToCultureBomb.Add( CQUI_OnCityLostTileToCultureBomb );    -- CQUI update close to a culture bomb cities data and real housing from improvements
   Events.CityRemovedFromMap.Add( CQUI_OnCityRemovedFromMap );    -- CQUI erase real housing from improvements data everywhere when a city removed from map
   LuaEvents.CQUI_SettingsInitialized.Add( CQUI_OnSettingsInitialized );
   Events.CitySelectionChanged.Add( CQUI_OnBannerMouseExit );
