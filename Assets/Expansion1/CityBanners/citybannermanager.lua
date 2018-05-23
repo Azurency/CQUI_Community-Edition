@@ -3242,6 +3242,59 @@ function OnDistrictAddedToMap( playerID: number, districtID : number, cityID :nu
               elseif (pDistrict:GetDefenseStrength() > 0 ) then
                 AddMiniBannerToMap( playerID, cityID, districtID, BANNERTYPE_ENCAMPMENT );
               end
+
+              -- CQUI update city's real housing from improvements when completed a district that triggers a Culture Bomb
+              if playerID == Game.GetLocalPlayer() then
+              	if districtType == GameInfo.Districts["DISTRICT_ENCAMPMENT"].Index then
+              	  if PlayerConfigurations[playerID]:GetCivilizationTypeName() == "CIVILIZATION_POLAND" then
+              	    CQUI_OnCityInfoUpdated(playerID, cityID);
+              	  end
+              	end
+              	if districtType == GameInfo.Districts["DISTRICT_HOLY_SITE"].Index or districtType == GameInfo.Districts["DISTRICT_LAVRA"].Index then
+              	  if PlayerConfigurations[playerID]:GetCivilizationTypeName() == "CIVILIZATION_KHMER" then
+              	    CQUI_OnCityInfoUpdated(playerID, cityID);
+              	  else
+              	    local playerReligion :table = pPlayer:GetReligion();
+              	    local playerReligionType :number = playerReligion:GetReligionTypeCreated();
+              	    if playerReligionType ~= -1 then
+              	      local cityReligion :table = pCity:GetReligion();
+              	      local eDominantReligion :number = cityReligion:GetMajorityReligion();
+              	      if eDominantReligion == playerReligionType then
+              	        local pGameReligion :table = Game.GetReligion();
+              	        local pAllReligions :table = pGameReligion:GetReligions();
+              	        for _, kFoundReligion in ipairs(pAllReligions) do
+              	          if kFoundReligion.Religion == eDominantReligion then
+              	            for _, belief in pairs(kFoundReligion.Beliefs) do
+              	              if GameInfo.Beliefs[belief].BeliefType == "BELIEF_BURIAL_GROUNDS" then
+              	                CQUI_OnCityInfoUpdated(playerID, cityID);
+              	                break;
+              	              end
+              	            end
+              	            break;
+              	          end
+              	        end
+              	      end
+              	    end
+              	  end
+              	end
+              	if districtType == GameInfo.Districts["DISTRICT_HARBOR"].Index then
+              	  if PlayerConfigurations[playerID]:GetCivilizationTypeName() == "CIVILIZATION_NETHERLANDS" then
+              	    CQUI_OnCityInfoUpdated(playerID, cityID);
+              	  end
+              	end
+              	if districtType == GameInfo.Districts["DISTRICT_INDUSTRIAL_ZONE"].Index or districtType == GameInfo.Districts["DISTRICT_HANSA"].Index then
+              	  local pGreatPeople :table  = Game.GetGreatPeople();
+              	  local pTimeline :table = pGreatPeople:GetPastTimeline();
+              	  for _, kPerson in ipairs(pTimeline) do
+              	    if GameInfo.GreatPersonIndividuals[kPerson.Individual].GreatPersonIndividualType == "GREAT_PERSON_INDIVIDUAL_MIMAR_SINAN" then
+              	      if playerID == kPerson.Claimant then
+              	        CQUI_OnCityInfoUpdated(playerID, cityID);
+              	      end
+              	      break;
+              	    end
+              	  end
+              	end
+              end
             end
           else
             miniBanner:UpdateStats();
