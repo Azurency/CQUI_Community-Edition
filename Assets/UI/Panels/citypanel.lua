@@ -1536,7 +1536,6 @@ function Initialize()
   LuaEvents.CQUI_SettingsUpdate.Add( CQUI_SettingsUpdate );
   LuaEvents.RefreshCityPanel.Add(Refresh);
   LuaEvents.CQUI_RealHousingFromImprovementsCalculated.Add(CQUI_HousingFromImprovementsTableInsert);    -- CQUI get real housing from improvements values
-  LuaEvents.CQUI_AllCitiesInfoUpdated.Add( Refresh );    -- CQUI update real housing from improvements for a selected city when all cities are updated
   LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost.Add( CQUI_UpdateAllCitiesData );    -- CQUI update all cities data including real housing when tech/civic that adds housing is boosted and research is completed
   Events.ImprovementRemovedFromMap.Add( CQUI_OnImprovementRemoved );    -- CQUI add plot ID to a table when improvement removed. We use it to update real housing
 
