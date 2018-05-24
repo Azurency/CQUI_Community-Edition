@@ -2355,6 +2355,17 @@ function OnImprovementAddedToMap(locX, locY, eImprovementType, eOwner)
     return;
   end
 
+  -- CQUI update city's real housing from improvements when built an improvement that triggers a Culture Bomb
+  if eOwner == Game.GetLocalPlayer() then
+    if improvementData.ImprovementType == "IMPROVEMENT_FORT" then
+      if PlayerConfigurations[eOwner]:GetCivilizationTypeName() == "CIVILIZATION_POLAND" then
+        local ownerCity = Cities.GetPlotPurchaseCity(locX, locY);
+        local cityID = ownerCity:GetID();
+        CQUI_OnCityInfoUpdated(eOwner, cityID);
+      end
+    end
+  end
+
   -- Right now we're only interested in the Airstrip improvement
   if ( improvementData.AirSlots == 0 and improvementData.WeaponSlots == 0) then
     return;
