@@ -1074,7 +1074,7 @@ function CityBanner:UpdatePopulation(isLocalPlayer:boolean, pCity:table, pCityGr
     -- Get real housing from improvements value
     local localPlayerID = Game.GetLocalPlayer();
     local pCityID = pCity:GetID();
-    if CQUI_HousingUpdated[pCityID] ~= true then
+    if CQUI_HousingUpdated[localPlayerID][pCityID] ~= true then
       CQUI_RealHousingFromImprovements(localPlayerID, pCityID);
     end
 
@@ -1082,7 +1082,7 @@ function CityBanner:UpdatePopulation(isLocalPlayer:boolean, pCity:table, pCityGr
     -- CQUI : housing left
     if g_smartbanner and g_smartbanner_population then
 
-      local CQUI_HousingFromImprovements = CQUI_HousingFromImprovementsTable[pCityID];    -- CQUI real housing from improvements value
+      local CQUI_HousingFromImprovements = CQUI_HousingFromImprovementsTable[localPlayerID][pCityID];    -- CQUI real housing from improvements value
       if CQUI_HousingFromImprovements ~= nil then    -- CQUI real housing from improvements fix to show correct values when waiting for the next turn
         local housingLeft = pCityGrowth:GetHousing() - pCityGrowth:GetHousingFromImprovements() + CQUI_HousingFromImprovements - currentPopulation; -- CQUI calculate real housing
         CQUI_housingLeftPopupText = housingLeft
