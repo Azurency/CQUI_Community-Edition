@@ -1130,12 +1130,12 @@ function CityBanner.UpdateStats( self : CityBanner)
 
         -- CQUI get real housing from improvements value
         local pCityID = pCity:GetID();
-        if CQUI_HousingUpdated[pCityID] ~= true then
+        if CQUI_HousingUpdated[localPlayerID][pCityID] ~= true then
           CQUI_RealHousingFromImprovements(localPlayerID, pCityID);
         end
 
         if g_smartbanner and g_smartbanner_population then
-          local CQUI_HousingFromImprovements = CQUI_HousingFromImprovementsTable[pCityID];    -- CQUI real housing from improvements value
+          local CQUI_HousingFromImprovements = CQUI_HousingFromImprovementsTable[localPlayerID][pCityID];    -- CQUI real housing from improvements value
           if CQUI_HousingFromImprovements ~= nil then    -- CQUI real housing from improvements fix to show correct values when waiting for the next turn
             local popTooltip:string = GetPopulationTooltip(self, turnsUntilGrowth, currentPopulation, foodSurplus);
             self.m_Instance.CityPopulation:SetToolTipString(popTooltip);
