@@ -1130,7 +1130,7 @@ function CityBanner.UpdateStats( self : CityBanner)
 
         -- CQUI get real housing from improvements value
         local pCityID = pCity:GetID();
-        if CQUI_HousingUpdated[localPlayerID][pCityID] ~= true then
+        if CQUI_HousingUpdated[localPlayerID] == nil or CQUI_HousingUpdated[localPlayerID][pCityID] ~= true then
           CQUI_RealHousingFromImprovements(localPlayerID, pCityID);
         end
 
