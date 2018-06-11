@@ -3437,8 +3437,14 @@ function CQUI_RealHousingFromImprovements(PlayerID, pCityID)
       end
     end
     CQUI_HousingFromImprovements = CQUI_HousingFromImprovements * 0.5;
-    CQUI_HousingFromImprovementsTable[pCityID] = CQUI_HousingFromImprovements;
-    CQUI_HousingUpdated[pCityID] = true;
+    if CQUI_HousingFromImprovementsTable[PlayerID] == nil then
+      CQUI_HousingFromImprovementsTable[PlayerID] = {};
+    end
+    if CQUI_HousingUpdated[PlayerID] == nil then
+      CQUI_HousingUpdated[PlayerID] = {};
+    end
+    CQUI_HousingFromImprovementsTable[PlayerID][pCityID] = CQUI_HousingFromImprovements;
+    CQUI_HousingUpdated[PlayerID][pCityID] = true;
     LuaEvents.CQUI_RealHousingFromImprovementsCalculated(pCityID, CQUI_HousingFromImprovements);
   end
 end
@@ -3446,7 +3452,7 @@ end
 -- ===========================================================================
 -- CQUI update city's real housing from improvements
 function CQUI_OnCityInfoUpdated(PlayerID, pCityID)
-  CQUI_HousingUpdated[pCityID] = nil;
+  CQUI_HousingUpdated[PlayerID][pCityID] = nil;
   CQUI_RealHousingFromImprovements(PlayerID, pCityID)
 end
 
@@ -3475,11 +3481,11 @@ end
 
 -- ===========================================================================
 -- CQUI erase real housing from improvements data everywhere when a city removed from map
-function CQUI_OnCityRemovedFromMap(playerID, cityID)
+function CQUI_OnCityRemovedFromMap(PlayerID, pCityID)
   if playerID == Game.GetLocalPlayer() then
-    CQUI_HousingFromImprovementsTable[cityID] = nil;
-    CQUI_HousingUpdated[cityID] = nil;
-    LuaEvents.CQUI_RealHousingFromImprovementsCalculated(cityID, nil);
+    CQUI_HousingFromImprovementsTable[PlayerID][pCityID] = nil;
+    CQUI_HousingUpdated[PlayerID][pCityID] = nil;
+    LuaEvents.CQUI_RealHousingFromImprovementsCalculated(pCityID, nil);
   end
 end
 
