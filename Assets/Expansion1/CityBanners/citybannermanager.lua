@@ -1074,7 +1074,7 @@ function CityBanner:UpdatePopulation(isLocalPlayer:boolean, pCity:table, pCityGr
     -- Get real housing from improvements value
     local localPlayerID = Game.GetLocalPlayer();
     local pCityID = pCity:GetID();
-    if CQUI_HousingUpdated[localPlayerID][pCityID] ~= true then
+    if CQUI_HousingUpdated[localPlayerID] == nil or CQUI_HousingUpdated[localPlayerID][pCityID] ~= true then
       CQUI_RealHousingFromImprovements(localPlayerID, pCityID);
     end
 
