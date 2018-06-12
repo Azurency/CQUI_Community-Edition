@@ -81,9 +81,9 @@ function OnClickSwapTile( plotId:number )
   local tResults :table = CityManager.RequestCommand( pSelectedCity, CityCommandTypes.SWAP_TILE_OWNER, tParameters );
 
   -- CQUI update citizens, data and real housing for both cities
-	CQUI_UpdateCitiesCitizensWhenSwapTiles(pSelectedCity);    -- CQUI update citizens and data for a city that is a new tile owner
-	local pCity = Cities.GetPlotPurchaseCity(kPlot);    -- CQUI a city that was a previous tile owner
-	CQUI_UpdateCitiesCitizensWhenSwapTiles(pCity);    -- CQUI update citizens and data for a city that was a previous tile owner
+  CQUI_UpdateCitiesCitizensWhenSwapTiles(pSelectedCity);    -- CQUI update citizens and data for a city that is a new tile owner
+  local pCity = Cities.GetPlotPurchaseCity(kPlot);    -- CQUI a city that was a previous tile owner
+  CQUI_UpdateCitiesCitizensWhenSwapTiles(pCity);    -- CQUI update citizens and data for a city that was a previous tile owner
   return true;
 end
 
