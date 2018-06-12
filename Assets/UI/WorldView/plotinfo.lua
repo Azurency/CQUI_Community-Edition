@@ -46,7 +46,6 @@ local CQUI_SmartWorkIconSize: number = 64;
 local CQUI_SmartWorkIconAlpha = .45;
 local CQUI_isMouseDragging = false;
 local CQUI_hasMouseDragged = false;
-local CQUI_SwapTileCity :table = {};    -- CQUI: a table we use to update data and real housing for cities when swap tiles
 
 function CQUI_OnSettingsUpdate()
   CQUI_WorkIconSize = GameConfiguration.GetValue("CQUI_WorkIconSize");
@@ -82,12 +81,9 @@ function OnClickSwapTile( plotId:number )
   local tResults :table = CityManager.RequestCommand( pSelectedCity, CityCommandTypes.SWAP_TILE_OWNER, tParameters );
 
   -- CQUI update citizens, data and real housing for both cities
-	local pSelectedCityID = pSelectedCity:GetID();    -- CQUI ID of a city that is a new tile owner
+	CQUI_UpdateCitiesCitizensWhenSwapTiles(pSelectedCity);    -- CQUI update citizens and data for a city that is a new tile owner
 	local pCity = Cities.GetPlotPurchaseCity(kPlot);    -- CQUI a city that was a previous tile owner
-	local pCityID = pCity:GetID();
-	CQUI_SwapTileCity[pSelectedCityID] = true;
-	CQUI_SwapTileCity[pCityID] = true;
-
+	CQUI_UpdateCitiesCitizensWhenSwapTiles(pCity);    -- CQUI update citizens and data for a city that was a previous tile owner
   return true;
 end
 
@@ -802,15 +798,6 @@ function OnCityTileOwnershipChanged(owner:number, cityID:number)
   if owner == Game.GetLocalPlayer() then
     RefreshPurchasePlots();
     RefreshCitizenManagement();
-
-		-- CQUI update citizens, data and real housing for both cities when swap tiles
-		if CQUI_SwapTileCity[cityID] == true then
-		  local pCity = CityManager.GetCity(owner, cityID);
-		  CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, nil);
-		  CQUI_SwapTileCity[cityID] = nil;
-
-		  LuaEvents.CQUI_CityInfoUpdated(owner, cityID);
-		end
   end
 end
 
@@ -980,6 +967,16 @@ function OnInputHandler( pInputStruct:table )
   end
 
   return false;
+end
+
+-- ===========================================================================
+-- CQUI update citizens, data and real housing for both cities when swap tiles
+function CQUI_UpdateCitiesCitizensWhenSwapTiles(pCity)
+  CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, nil);
+
+  local PlayerID = Game.GetLocalPlayer();
+  local pCityID = pCity:GetID();
+  LuaEvents.CQUI_CityInfoUpdated(PlayerID, pCityID);
 end
 
 -- ===========================================================================

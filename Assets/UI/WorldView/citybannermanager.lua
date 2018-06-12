@@ -1131,7 +1131,7 @@ function CityBanner.UpdateStats( self : CityBanner)
         -- CQUI get real housing from improvements value
         local pCityID = pCity:GetID();
         if CQUI_HousingUpdated[localPlayerID] == nil or CQUI_HousingUpdated[localPlayerID][pCityID] ~= true then
-          CQUI_RealHousingFromImprovements(localPlayerID, pCityID);
+          CQUI_RealHousingFromImprovements(pCity, localPlayerID, pCityID);
         end
 
         if g_smartbanner and g_smartbanner_population then
@@ -3401,9 +3401,8 @@ end
 
 -- ===========================================================================
 -- CQUI calculate real housing from improvements
-function CQUI_RealHousingFromImprovements(PlayerID, pCityID)
+function CQUI_RealHousingFromImprovements(pCity, PlayerID, pCityID)
   local CQUI_HousingFromImprovements = 0;
-  local pCity = CityManager.GetCity(PlayerID, pCityID);
   local kCityPlots :table = Map.GetCityPlots():GetPurchasedPlots(pCity);
   if kCityPlots ~= nil then
     for _, plotID in pairs(kCityPlots) do
@@ -3453,7 +3452,6 @@ end
 -- CQUI update city's real housing from improvements
 function CQUI_OnCityInfoUpdated(PlayerID, pCityID)
   CQUI_HousingUpdated[PlayerID][pCityID] = nil;
-  CQUI_RealHousingFromImprovements(PlayerID, pCityID)
 end
 
 -- ===========================================================================
