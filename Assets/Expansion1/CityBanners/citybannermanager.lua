@@ -3249,8 +3249,7 @@ function OnDistrictAddedToMap( playerID: number, districtID : number, cityID :nu
               	  if PlayerConfigurations[playerID]:GetCivilizationTypeName() == "CIVILIZATION_POLAND" then
               	    CQUI_OnCityInfoUpdated(playerID, cityID);
               	  end
-              	end
-              	if districtType == GameInfo.Districts["DISTRICT_HOLY_SITE"].Index or districtType == GameInfo.Districts["DISTRICT_LAVRA"].Index then
+              	elseif districtType == GameInfo.Districts["DISTRICT_HOLY_SITE"].Index or districtType == GameInfo.Districts["DISTRICT_LAVRA"].Index then
               	  if PlayerConfigurations[playerID]:GetCivilizationTypeName() == "CIVILIZATION_KHMER" then
               	    CQUI_OnCityInfoUpdated(playerID, cityID);
               	  else
@@ -3276,13 +3275,11 @@ function OnDistrictAddedToMap( playerID: number, districtID : number, cityID :nu
               	      end
               	    end
               	  end
-              	end
-              	if districtType == GameInfo.Districts["DISTRICT_HARBOR"].Index then
+              	elseif districtType == GameInfo.Districts["DISTRICT_HARBOR"].Index then
               	  if PlayerConfigurations[playerID]:GetCivilizationTypeName() == "CIVILIZATION_NETHERLANDS" then
               	    CQUI_OnCityInfoUpdated(playerID, cityID);
               	  end
-              	end
-              	if districtType == GameInfo.Districts["DISTRICT_INDUSTRIAL_ZONE"].Index or districtType == GameInfo.Districts["DISTRICT_HANSA"].Index then
+              	elseif districtType == GameInfo.Districts["DISTRICT_INDUSTRIAL_ZONE"].Index or districtType == GameInfo.Districts["DISTRICT_HANSA"].Index then
               	  local pGreatPeople :table  = Game.GetGreatPeople();
               	  local pTimeline :table = pGreatPeople:GetPastTimeline();
               	  for _, kPerson in ipairs(pTimeline) do
