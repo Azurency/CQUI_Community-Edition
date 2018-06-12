@@ -2300,8 +2300,7 @@ function OnDistrictAddedToMap( playerID: number, districtID : number, cityID :nu
               	  if PlayerConfigurations[playerID]:GetCivilizationTypeName() == "CIVILIZATION_POLAND" then
               	    CQUI_OnCityInfoUpdated(playerID, cityID);
               	  end
-              	end
-              	if districtType == GameInfo.Districts["DISTRICT_HOLY_SITE"].Index or districtType == GameInfo.Districts["DISTRICT_LAVRA"].Index then
+              	elseif districtType == GameInfo.Districts["DISTRICT_HOLY_SITE"].Index or districtType == GameInfo.Districts["DISTRICT_LAVRA"].Index then
               	  if PlayerConfigurations[playerID]:GetCivilizationTypeName() == "CIVILIZATION_KHMER" then
               	    CQUI_OnCityInfoUpdated(playerID, cityID);
               	  else
