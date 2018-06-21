@@ -88,6 +88,8 @@ local ms_DefaultMultiTurnGoldDuration = 30;
 
 local ms_bForceUpdateOnCommit = false;
 
+local MAX_DEAL_ITEM_EDIT_HEIGHT = 300;
+
 --CQUI Addition
 -- local YIELD_FONT_ICONS:table = {
 --         YIELD_FOOD				= "[ICON_FoodLarge]",
@@ -1525,21 +1527,159 @@ function OnClickAvailableAgreement(player, agreementType, agreementTurns)
       -- No
       -- AZURENCY : Joint War and Research Agreements need special treatment (can be only modified on the player side)
       if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.THIRD_PARTY_WAR or agreementType == DealAgreementTypes.RESEARCH_AGREEMENT) then
-        pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, ms_LocalPlayer:GetID());
+        ShowAgreementOptionPopup(agreementType, agreementTurns, player:GetID());
       else
         pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, player:GetID());
-      end
 
-      if (pDealItem ~= nil) then
-        pDealItem:SetSubType(agreementType);
-        pDealItem:SetDuration(agreementTurns);
+        if (pDealItem ~= nil) then
+          pDealItem:SetSubType(agreementType);
+          pDealItem:SetDuration(agreementTurns);
 
-        UpdateDealPanel(player);
-        UpdateProposedWorkingDeal();
-        UI.PlaySound("UI_GreatWorks_Put_Down");
+          UpdateDealPanel(player);
+          UpdateProposedWorkingDeal();
+          UI.PlaySound("UI_GreatWorks_Put_Down");
+        end
       end
     end
   end
+end
+
+-- ===========================================================================
+function OnSelectAgreementOption(agreementType, agreementTurns, agreementValue, agreementParameters, fromPlayerId)
+  local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+  if (pDeal ~= nil) then
+
+    -- Already there?
+    local pDealItem = pDeal:FindItemByType(DealItemTypes.AGREEMENTS, agreementType, fromPlayerId);
+    if (pDealItem == nil) then
+      -- No
+      pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, fromPlayerId);
+      if (pDealItem ~= nil) then
+        pDealItem:SetSubType(agreementType);
+        pDealItem:SetDuration(agreementTurns);
+      end
+    end
+
+    if (pDealItem ~= nil) then
+      -- Modify the selection of this agreement
+      pDealItem:SetValueType(agreementValue);
+
+      if (agreementType == DealAgreementTypes.JOINT_WAR or
+        agreementType == DealAgreementTypes.THIRD_PARTY_WAR) then
+        pDealItem:SetParameterValue("WarType", agreementParameters.WarType);
+      end
+    end
+
+    UpdateDealPanel(ms_LocalPlayer);
+    UpdateProposedWorkingDeal();
+    UI.PlaySound("UI_GreatWorks_Put_Down");
+
+    Controls.ValueEditPopupBackground:SetHide(true);
+  end
+end
+
+-- ===========================================================================
+function ShowAgreementOptionPopup(agreementType, agreementTurns, fromPlayerId)
+
+  -- Hide/show everything for AGREEMENTS options
+  ms_AgreementOptionIM:ResetInstances();
+  Controls.ValueEditIconGrid:SetHide(true);
+  Controls.ValueAmountEditBoxContainer:SetHide(true);
+
+  if agreementType == DealAgreementTypes.RESEARCH_AGREEMENT then
+    Controls.ValueEditHeaderLabel:SetText(Locale.Lookup("LOC_DIPLOMACY_DEAL_SELECT_TECH"));
+  elseif agreementType == DealAgreementTypes.ALLIANCE then
+    Controls.ValueEditHeaderLabel:SetText(Locale.Lookup("LOC_DIPLOMACY_DEAL_SELECT_ALLIANCE"));
+  else
+    Controls.ValueEditHeaderLabel:SetText(Locale.Lookup("LOC_DIPLOMACY_DEAL_SELECT_TARGET"));
+  end
+
+  local toPlayerId = ms_LocalPlayer:GetID();
+  if (toPlayerId == fromPlayerId ) then
+    toPlayerId = ms_OtherPlayer:GetID();
+  end
+  local pForDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+  local possibleValues = DealManager.GetPossibleDealItems(fromPlayerId, toPlayerId, DealItemTypes.AGREEMENTS, agreementType, pForDeal);
+  if (possibleValues ~= nil) then
+    for i, entry in ipairs(possibleValues) do
+      local instance:table = ms_AgreementOptionIM:GetInstance();
+
+      local szDisplayName = "";
+      local szItemName = Locale.Lookup(entry.ForTypeDisplayName);
+      if (entry.SubType == DealAgreementTypes.RESEARCH_AGREEMENT) then
+        local eTech = GameInfo.Technologies[entry.ForType].Index;
+        local iTurns =   ms_LocalPlayer:GetDiplomacy():ComputeResearchAgreementTurns(ms_OtherPlayer, eTech);
+        szDisplayName = Locale.Lookup("LOC_DIPLOMACY_DEAL_PARAMETER_WITH_TURNS", szItemName, iTurns);
+        instance.AgreementOptionIcon:SetIcon("ICON_" .. entry.ForTypeName);
+        instance.AgreementOptionIcon:SetHide(false);
+      else
+        if (entry.SubType == DealAgreementTypes.JOINT_WAR or
+          entry.SubType == DealAgreementTypes.THIRD_PARTY_WAR) then
+          szDisplayName = szItemName;
+
+          -- Have a type of war that describes the joint war?
+          if entry.Parameters ~= nil then
+            if entry.Parameters.WarType ~= nil then
+              local warDef = GameInfo.Wars[entry.Parameters.WarType];
+              if warDef ~= nil then
+                szDisplayName = szDisplayName .. "[newline]" .. Locale.Lookup(warDef.Name);
+              end
+            end
+          end
+
+          instance.AgreementOptionIcon:SetHide(true);
+        else
+          szDisplayName = szItemName;
+          instance.AgreementOptionIcon:SetHide(true);
+        end
+      end
+
+      instance.AgreementOptionLabel:SetText(szDisplayName);
+
+      if agreementType == DealAgreementTypes.ALLIANCE then
+        local allianceLevel:number = ms_LocalPlayer:GetDiplomacy():GetAllianceLevel(ms_OtherPlayer);
+        local allianceData:table = GameInfo.Alliances[entry.ForTypeName];
+        local tooltip = Game.GetGameDiplomacy():GetAllianceBenefitsString(allianceData.Index, allianceLevel, true);
+        instance.AgreementOptionButton:SetToolTipString(tooltip);
+      else
+        instance.AgreementOptionButton:SetToolTipString("");
+      end
+
+      local agreementValueType = entry.ForType;
+      local agreementParameters = entry.Parameters;
+      instance.AgreementOptionButton:RegisterCallback(Mouse.eLClick, function()
+        OnSelectAgreementOption(agreementType, agreementTurns, agreementValueType, agreementParameters, fromPlayerId);
+      end);
+
+      Controls.ValueEditButton:RegisterCallback( Mouse.eLClick, OnAgreementBackButton );
+    end
+  end
+
+  Controls.ValueEditIconGrid:DoAutoSize();
+
+  ResizeValueEditScrollPanel();
+
+  Controls.ValueEditPopup:DoAutoSize();
+  Controls.ValueEditPopupBackground:SetHide(false);
+end
+
+-- ===========================================================================
+function ResizeValueEditScrollPanel()
+  -- Resize scroll panel to a maximum height of five agreement options
+  Controls.ValueEditStack:CalculateSize();
+  if Controls.ValueEditStack:GetSizeY() > MAX_DEAL_ITEM_EDIT_HEIGHT then
+    Controls.ValueEditScrollPanel:SetSizeY(MAX_DEAL_ITEM_EDIT_HEIGHT);
+  else
+    Controls.ValueEditScrollPanel:SetSizeY(Controls.ValueEditStack:GetSizeY());
+  end
+  Controls.ValueEditScrollPanel:CalculateSize();
+end
+
+-- ===========================================================================
+function OnAgreementBackButton()
+  UpdateDealPanel(ms_LocalPlayer);
+  UpdateProposedWorkingDeal();
+  Controls.ValueEditPopupBackground:SetHide(true);
 end
 
 -- ===========================================================================
@@ -2008,6 +2148,9 @@ function MakeCityToolTip(pCity : table)
         szToolTip = szToolTip .. "[NEWLINE]" .. Locale.Lookup(name);
       end
     end
+
+    local player = Players[pCity:GetOwner()];
+    local cityID = pCity:GetID();
 
     -- Add Resources
     local extractedResources = player:GetResources():GetResourcesExtractedByCity( cityID, ResultFormat.SUMMARY );
