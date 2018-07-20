@@ -125,7 +125,7 @@
                 <Label      ID="CitizenGrowth"            Anchor="L,C" Offset="48,0"    WrapWidth="235"     Style="CityPanelTextSmall" String="$CitizenGrowth$" LeadingOffset="4" />
               </Grid>
               <Grid                                       Anchor="L,T" Offset="0,0"     Size="parent,auto" Style="CityPanelSubPanelContainer" InnerPadding="0,10" InnerOffset="0,5">
-                <Stack ID="AmenityStack" Anchor="C,C" WrapWidth="150" WrapGrowth="Right" StackGrowth="Down" />
+                <Stack ID="AmenityStack" Anchor="C,T" StackGrowth="Right" WrapWidth="parent" WrapGrowth="Bottom" />
                 <Container Anchor="L,B" Size="1,50" />
               </Grid>
               <Container ID="AmenitiesAdvisorBubble" Size="parent,auto">
@@ -466,13 +466,19 @@
   </Instance>
 
   <Instance Name="CQUI_BubbleInstance">
-    <Grid ID="Top" Anchor="L,C" MinSize="65,65" AutoSize="H" Color="0,0,0,0">
+    <Grid ID="Top" Anchor="L,T" MinSize="70,65" AutoSize="H" Color="0,0,0,0">
       <Image ID="BubbleContainer" Size="50,50" Anchor="C,T" Texture="CityPanel_StatusIcon">
         <Image ID="BubbleIcon" Anchor="C,C" Offset="-2,-3" Size="35,35" Texture="Stats45" Icon="ICON_IMPROVEMENT_BEACH_RESORT" />
         <Label ID="BubbleAmount" Anchor="C,C" Offset="-2,0" Style="CityPanelSubPanelTitle" String="Amount" />
       </Image>
       <Label ID="BubbleLabel" Anchor="C,T" Offset="-2,45" Style="UnitPanelStatLabel" Align="Center" String="Bubble Label" />
     </Grid>
+  </Instance>
+
+  <Instance Name="TabButtonInstance">
+    <Button ID="Button" Offset="0,2" Anchor="L,C" Size="44,44"  Texture="LaunchBar_Hook_ButtonMedium" Style="ButtonNormalText" ToolTip="LOC_HUD_CITY_OVERVIEW_BUILDINGS_TOOLTIP" >
+      <Image ID="Icon" Offset="0,0" Texture="Stats32" Size="32,32" Anchor="C,C"  Icon="ICON_BUILDINGS"/>
+    </Button>
   </Instance>
 
 </Context>

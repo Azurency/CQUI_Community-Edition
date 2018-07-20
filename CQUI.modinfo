@@ -46,6 +46,18 @@
     <File>Assets/cqui_main.lua</File>
     <File>Assets/cqui_toplayer.xml</File>
     <File>Assets/cqui_toplayer.lua</File>
+    <File>Assets/Expansion1/Additions/citypanelculture.lua</File>
+    <File>Assets/Expansion1/CityBanners/citybannermanager.lua</File>
+    <File>Assets/Expansion1/CityBanners/citybannermanager.xml</File>
+    <File>Assets/Expansion1/CityBanners/citybannerinstances.xml</File>
+    <File>Assets/Expansion1/Replacements/citypaneloverview_expansion1.lua</File>
+    <File>Assets/Expansion1/Replacements/citystates.xml</File>
+    <File>Assets/Expansion1/Replacements/citysupport.lua</File>
+    <File>Assets/Expansion1/Replacements/diplomacyactionview_expansion1.lua</File>
+    <File>Assets/Expansion1/Replacements/leadericon.lua</File>
+    <File>Assets/Expansion1/Replacements/leadericon.xml</File>
+    <File>Assets/Expansion1/Replacements/productionpanel.lua</File>
+    <File>Assets/Expansion1/Replacements/worldtracker_expansion1.lua</File>
     <File>Assets/Text/Gossip_Text.xml</File>
     <File>Assets/Text/Gossip_Text_de.xml</File>
     <File>Assets/Text/Gossip_Text_ja.xml</File>
@@ -161,6 +173,8 @@
     <File>Integrations/BTS/Text/bts_text_pt.xml</File>
     <File>Integrations/BTS/Text/bts_text_ru.xml</File>
     <File>Integrations/BTS/Text/bts_text_zh.xml</File>
+    <File>Integrations/URS/Expansion1/Replacements/reportscreen_expansion1.lua</File>
+    <File>Integrations/URS/Expansion1/Replacements/reportscreen.xml</File>
     <File>Integrations/URS/reportscreen.lua</File>
     <File>Integrations/URS/reportscreen.xml</File>
     <File>Integrations/URS/unitpromotionpopup.lua</File>
@@ -308,6 +322,24 @@
       </Items>
     </ImportFiles>
 
+    <!-- CQUI Expansion 1 (Rise and Fall) files -->
+    <ImportFiles id="CQUI_IMPORT_FILES" criteria="Expansion1">
+      <Items>
+        <File>Assets/Expansion1/Additions/citypanelculture.lua</File>
+        <File>Assets/Expansion1/CityBanners/citybannermanager.lua</File>
+        <File>Assets/Expansion1/CityBanners/citybannermanager.xml</File>
+        <File>Assets/Expansion1/CityBanners/citybannerinstances.xml</File>
+        <File>Assets/Expansion1/Replacements/citypaneloverview_expansion1.lua</File>
+        <File>Assets/Expansion1/Replacements/citystates.xml</File>
+        <File>Assets/Expansion1/Replacements/citysupport.lua</File>
+        <File>Assets/Expansion1/Replacements/diplomacyactionview_expansion1.lua</File>
+        <File>Assets/Expansion1/Replacements/leadericon.lua</File>
+        <File>Assets/Expansion1/Replacements/leadericon.xml</File>
+        <File>Assets/Expansion1/Replacements/productionpanel.lua</File>
+        <File>Assets/Expansion1/Replacements/worldtracker_expansion1.lua</File>
+      </Items>
+    </ImportFiles>
+
     <!-- CQUI specific LOCs  -->
     <LocalizedText id="CQUI_TEXT">
       <Items>
@@ -426,6 +458,12 @@
         <File>Integrations/URS/Text/urs_text_zh.xml</File>
       </Items>
     </LocalizedText>
+    <ImportFiles id="UNITREPORT_EXPANSION1_IMPORT_FILES" criteria="Expansion1">
+      <Items>
+        <File>Integrations/URS/Expansion1/Replacements/reportscreen_expansion1.lua</File>
+        <File>Integrations/URS/Expansion1/Replacements/reportscreen.xml</File>
+      </Items>
+    </ImportFiles>
     <ImportFiles id="UNITREPORT_IMPORT_FILES">
       <Items>
         <File>Integrations/URS/reportscreen.lua</File>

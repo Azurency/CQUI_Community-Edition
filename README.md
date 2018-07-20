@@ -1,27 +1,20 @@
-# Community Quick User Interface (CQUI)
-> CQUI is an open source Civilization 6 mod that is maintened by it's community
+# Community Quick User Interface (CQUI) - R&F Fork
+CQUI is an open source Civilization VI mod maintened by the open community.  CQUI is a UI mod that helps you manage your empire faster and easier by giving you the information you need with fewer clicks. It also adds improved functionality that makes the game even better by simpifying empire management.
 
-CQUI is an UI mod that helps you manage your empire faster and easier. It's an enhancement of the original UI that gives you the informations you need with less clicks. It also have a lot of usefull functionnality that makes the game even better.
+This fork works ONLY with the Rise and Fall expansion pack and at this time only with the Windows version of the game.
 
-This repository is the official repository of the [CQUI steam mod](http://steamcommunity.com/sharedfiles/filedetails/?id=1125169247).
+This repository was originally forked from the great work done by Azurency:
+
+> https://github.com/Azurency/CQUI_Community-Edition
 
 ![cquiscreens](https://user-images.githubusercontent.com/8012430/31862026-75c5822e-b737-11e7-9ac3-afe993e26eb6.jpg)
 
 ## Installation
 
-_**Note for Mac/Linux users :** as the latest patch is still not avaible to your platform, please follow the manual installation steps with this version of CQUI : https://github.com/Azurency/CQUI_Community-Edition/releases/tag/mac-1.0.0.220_
+Download from this repository, the master branch, and place the CQUI folder into your mod folder:
 
-### Steam Workshop
-If you want to install the latest official version, you can go to the [steam workshop page](http://steamcommunity.com/sharedfiles/filedetails/?id=1125169247) of CQUI and add it to your game.
-
-### Manually
-If you want to have the cutting edge version (that might not be push on steam workshop) you can download this repository and place the cqui folder into your mod folder : 
-
-```
 Windows : Documents\my games\Sid Meier's Civilization VI\Mods
-Mac : /Users/[user]/Library/Application Support/Sid Meier's Civilization VI
-Linux : ~/.local/share/aspyr-media/Sid Meier's Civilization VI/Mods
-```
+
 
 ## Key Features
 
@@ -183,17 +176,9 @@ Mod by FinalFreak16, from the [steam workshop](https://steamcommunity.com/shared
 
 - Each message has its own icon to categorise each entry and make it easier to see what happened at a glance
 
-## What's next
-This section should not always be up to date, so don't hesitate to check the milestones and the issues.
-
-- [ ] Add custom notification on a new (or revamped) notification system _- [here](https://github.com/Azurency/CQUI_Community-Edition/issues/104)_
-- [ ] Finish the beta milestone release _- [here](https://github.com/Azurency/CQUI_Community-Edition/milestone/1)_
-- [ ] Plan the next milestone from the multiple enhancement ideas in the issues
-
 ## Contributing
-> This part still need some love
 
-You want to contribute to the mod ? We're always welcoming new contributors and the pull request are open if you wish to tacle an issue. Some issues are labeled "easy" it should be a great entry point if you want to join the team. A comprehensive [contribution guide](https://github.com/CQUI-Org/cqui/wiki/How-to-contribute-to-CQUI) created for the predecessor of this mod is a good starting point.
+You want to contribute to the mod?  We're always welcoming new contributors and the pull request are open if you wish to tackle an issue. Some issues are labeled "easy" it should be a great entry point if you want to join the team. A comprehensive [contribution guide](https://github.com/CQUI-Org/cqui/wiki/How-to-contribute-to-CQUI) created for the predecessor of this mod is a good starting point.
 
 ### Quick coding style
 - Please use 2 spaces for indentation
@@ -206,6 +191,7 @@ You want to contribute to the mod ? We're always welcoming new contributors and 
 
 
 ## Credits
+@Azurency for being the caretaker of this mode for so long.  I hope you're alright!
 @Vans163 for his original QUI mod, @Chaorace for the Chao's QUI, @Sparrow for this reborn as a Community QUI, @astog, Aristos/@ricanuck, @JHCD, Greg Miller, Ace, Divine Yuri, @ZhouYzzz, @deggesim, @e1ectron, @sejbr, @frytom, @maxap, @lctrs, @wbqd, @jacks0nX, @RatchetJ, @Frozen-In-Ice, @zgavin, @olegbl, @Proustldee, @kblease, @bolbass, @SpaceOgre, @OfekA, @zeyangl, @Remolten, @bestekov, @cpinter, @paavohuhtala, @perseghini, @benjaminjackman, @velit, @the-m4a, @MarkusKV, @apskim, @8h42
 
 Firaxis for eventually delivering mod tools and steam workshop. 
@@ -213,5 +199,3 @@ Firaxis for eventually delivering mod tools and steam workshop.
 The lovely folks over at Civfanatics for their guides, knowledge, tools, and resources. 
 
 The even lovelier folks over at /r/civ for their input and testing. 
-
-The, arguably, lovely folks back at the Steam Workshop :p
