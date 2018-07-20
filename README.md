@@ -4,7 +4,8 @@ CQUI is an open source Civilization VI mod maintened by the open community.  CQU
 This fork works ONLY with the Rise and Fall expansion pack and at this time only with the Windows version of the game.
 
 This repository was originally forked from the great work done by Azurency:
-https://github.com/Azurency/CQUI_Community-Edition
+
+> https://github.com/Azurency/CQUI_Community-Edition
 
 ![cquiscreens](https://user-images.githubusercontent.com/8012430/31862026-75c5822e-b737-11e7-9ac3-afe993e26eb6.jpg)
 
