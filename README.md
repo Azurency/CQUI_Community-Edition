@@ -1,7 +1,7 @@
 # Community Quick User Interface (CQUI) - R&F Fork
-CQUI is an open source Civilization VI mod maintened by the open community.  CQUI is an UI mod that helps you manage your empire faster and easier. It's an enhancement of the original UI that gives you the informations you need with fewer clicks. It also adds lot of usefull functionality that makes the game even better.
+CQUI is an open source Civilization VI mod maintened by the open community.  CQUI is a UI mod that helps you manage your empire faster and easier by giving you the information you need with fewer clicks. It also adds improved functionality that makes the game even better by simpifying empire management.
 
-This fork works ONLY with the Rise and Fall expansion pack and this time only with the Windows version of the game.
+This fork works ONLY with the Rise and Fall expansion pack and at this time only with the Windows version of the game.
 
 This repository was originally forked from the great work done by Azurency:
 https://github.com/Azurency/CQUI_Community-Edition
