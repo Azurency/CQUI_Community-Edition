@@ -48,6 +48,8 @@ end
 function plotResourceImprovable(plot)
   local plotIndex = plot:GetIndex()
   local playerID = Game.GetLocalPlayer()
+  local valid_terrain = false;
+  local terrainType = GameInfo.Terrains[plot:GetTerrainType()].TerrainType
   
   -- If the plot has a resource, and the player has discovered it, get the improvement specific to that
   if playerHasDiscoveredResource(playerID, plotIndex) then
@@ -57,7 +59,36 @@ function plotResourceImprovable(plot)
       for validResourceInfo in GameInfo.Improvement_ValidResources() do
         if validResourceInfo ~= nil and validResourceInfo.ResourceType == resourceInfo.ResourceType then
           improvementType = validResourceInfo.ImprovementType;
-          break
+
+          -- AZURENCY : check the terrain also
+          local has_terrain = false;
+          for inner_row in GameInfo.Improvement_ValidTerrains() do
+            if(inner_row.ImprovementType == improvementType) then
+              has_terrain = true;
+              if(inner_row.TerrainType == terrainType) then
+                valid_terrain = true;
+              end
+            end
+          end
+          valid_terrain = not has_terrain or valid_terrain;
+
+          if( GameInfo.Terrains[terrainType].TerrainType  == "TERRAIN_COAST") then
+            if ("DOMAIN_SEA" == GameInfo.Improvements[improvementType].Domain) then
+              valid_terrain = true;
+            elseif ("DOMAIN_LAND" == GameInfo.Improvements[improvementType].Domain) then
+              valid_terrain = false;
+            end
+          else
+            if ("DOMAIN_SEA" == GameInfo.Improvements[improvementType].Domain) then
+              valid_terrain = false;
+            elseif ("DOMAIN_LAND" == GameInfo.Improvements[improvementType].Domain) then
+              valid_terrain = true;
+            end
+          end
+
+          if valid_terrain then
+            break
+          end
         end
       end
       
@@ -68,7 +99,7 @@ function plotResourceImprovable(plot)
       end
     end
   end
-  
+
   return false
 end
 
