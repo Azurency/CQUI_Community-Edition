@@ -148,6 +148,7 @@ function GetCityData( pCity:table )
     FoodSurplus = 0,
     GoldPerTurn = 0,
     GrowthPercent = 100,
+    GrowthThreshold = 0,
     Happiness = 0,
     HappinessGrowthModifier = 0, -- Multiplier
     HappinessNonFoodYieldModifier = 0, -- Multiplier
@@ -294,6 +295,7 @@ function GetCityData( pCity:table )
   data.CurrentTurnsLeft = prodTurnsLeft;
   data.FoodPercentNextTurn = foodpctNextTurn;
   data.FoodSurplus = Round( foodSurplus, 1);
+  data.GrowthThreshold = growthThreshold - food;
   data.Happiness = pCityGrowth:GetHappiness();
   data.HappinessGrowthModifier = pCityGrowth:GetHappinessGrowthModifier();
   data.HappinessNonFoodYieldModifier = pCityGrowth:GetHappinessNonFoodYieldModifier();

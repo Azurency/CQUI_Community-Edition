@@ -1177,6 +1177,7 @@ function UpdateProposalButtons(bDealValid)
           if (pDeal:HasUnacceptableItems()) then
             Controls.EqualizeDeal:SetHide(true);
             Controls.AcceptDeal:SetHide(true);
+            Controls.WhatWouldItTakeButton:SetHide(true);
           elseif (iItemsFromLocal > 0 and iItemsFromOther == 0) then
             -- One way gift?
             Controls.WhatWouldYouGiveMe:SetHide(false);
@@ -1536,7 +1537,7 @@ function OnClickAvailableAgreement(player, agreementType, agreementTurns)
     if (pDealItem == nil) then
       -- No
       -- AZURENCY : Joint War and Research Agreements need special treatment (can be only modified on the player side)
-      if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.THIRD_PARTY_WAR or agreementType == DealAgreementTypes.RESEARCH_AGREEMENT) then
+      if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.RESEARCH_AGREEMENT) then
         pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, ms_LocalPlayer:GetID());
         
         -- AZURENCY : Fix, select the first possibily by default
@@ -2567,8 +2568,6 @@ function PopulateDealAgreements(player : table, iconList : table)
           elseif(info.DiplomaticActionType == "DIPLOACTION_RESEARCH_AGREEMENT" and pDealItem:GetFromPlayerID() == ms_OtherPlayer:GetID()) then
             icon.SelectButton:SetDisabled(true);
             --icon.SelectButton:SetToolTipString(Locale.Lookup("LOC_JOINT_WAR_CANNOT_EDIT_THEIRS_TOOLTIP"));
-          elseif(info.DiplomaticActionType == "DIPLOACTION_THIRD_PARTY_WAR" and pDealItem:GetFromPlayerID() == ms_OtherPlayer:GetID()) then
-            icon.SelectButton:SetDisabled(true);
           else
             icon.SelectButton:SetDisabled(false);
             icon.SelectButton:RegisterCallback( Mouse.eLClick, function(void1, void2, self) OnSelectValueDealItem(player, dealItemID, self); end );
