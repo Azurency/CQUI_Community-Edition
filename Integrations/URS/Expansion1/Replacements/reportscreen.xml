@@ -677,13 +677,13 @@
             <Label Style="ReportHeaderSmallText" String="LOC_REPORTS_LOYALTY" />
         </Container>
         <Box																													Size="2,parent"	Color="46,70,95,255" />
-        <Container																										Size="100,parent">
+        <Container																										Size="92,parent">
           <GridButton		ID="CityPopulationButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
             <Label													Style="ReportHeaderSmallText"		String="LOC_HUD_REPORTS_HEADER_POPULATION" />
           </GridButton>
         </Container>
         <Box																													Size="2,parent"	Color="46,70,95,255" />
-        <Container																										Size="80,parent">
+        <Container																										Size="70,parent">
           <GridButton		ID="CityHousingButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
             <Label													Style="ReportHeaderSmallText"		String="LOC_HUD_REPORTS_HEADER_HOUSING" />
           </GridButton>
@@ -695,19 +695,19 @@
           </GridButton>
         </Container>
         <Box																													Size="2,parent"	Color="46,70,95,255" />
-        <Container																										Size="80,parent">
+        <Container																										Size="70,parent">
           <GridButton		ID="CityAmenitiesButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
             <Label													Style="ReportHeaderSmallText"		String="LOC_HUD_REPORTS_HEADER_AMENITIES" />
           </GridButton>
         </Container>
         <Box																													Size="2,parent"	Color="46,70,95,255" />
-        <Container																										Size="110,parent">
+        <Container																										Size="100,parent">
           <GridButton		ID="CityHappinessButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
             <Label													Style="ReportHeaderSmallText"		String="LOC_HUD_REPORTS_HEADER_CITIZEN_HAPPINESS" />
           </GridButton>
         </Container>
         <Box																													Size="2,parent"	Color="46,70,95,255" />
-        <Container																										Size="110,parent">
+        <Container																										Size="80,parent">
           <GridButton		ID="CityWarButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
             <Label													Style="ReportHeaderSmallText"		String="LOC_HUD_REPORTS_HEADER_WAR_WEARINESS" />
           </GridButton>
@@ -719,13 +719,13 @@
           </GridButton>
         </Container>
         <Box																													Size="2,parent"	Color="46,70,95,255" />
-        <Container																										Size="78,parent">
+        <Container																										Size="75,parent">
           <GridButton		ID="CityStrengthButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
             <Label													Style="ReportHeaderSmallText"		String="LOC_HUD_REPORTS_HEADER_STRENGTH" />
           </GridButton>
         </Container>
         <Box																													Size="2,parent"	Color="46,70,95,255" />
-        <Container																										Size="78,parent">
+        <Container																										Size="75,parent">
           <GridButton		ID="CityDamageButton"  Size="parent,parent" Style="ButtonLightWeightSquareGrid" Anchor="C,C">
             <Label													Style="ReportHeaderSmallText"		String="LOC_HUD_REPORTS_HEADER_DAMAGE" />
           </GridButton>
@@ -752,11 +752,11 @@
             <Label				ID="Loyalty"																		Style="ReportValueText"	String="$Status$" />
         </Container>
         <Box																													Size="2,parent"	Color="46,70,95,255" />
-        <Container																										Size="100,parent">
+        <Container																										Size="92,parent">
           <Label				ID="Population"																Style="ReportValueText"	String="$Population$" />
         </Container>
         <Box																													Size="2,parent"	Color="46,70,95,255" />
-        <Container																										Size="80,parent">
+        <Container																										Size="70,parent">
           <Label				ID="Housing"																	Style="ReportValueText"	String="$Housing$" />
         </Container>
         <Box																													Size="2,parent"	Color="46,70,95,255" />
@@ -764,15 +764,15 @@
           <Label				ID="GrowthRateStatus"													Style="ReportValueText"	String="$GrowthRateStatus$" />
         </Container>
         <Box																													Size="2,parent"	Color="46,70,95,255" />
-        <Container																										Size="80,parent">
+        <Container																										Size="70,parent">
           <Label				ID="Amenities"																Style="ReportValueText"	String="$Amenities$" />
         </Container>
         <Box																													Size="2,parent"	Color="46,70,95,255" />
-        <Container																										Size="110,parent">
+        <Container																										Size="100,parent">
           <Label				ID="CitizenHappiness"													Style="ReportValueText"	String="$CitizenHappiness$" />
         </Container>
         <Box																													Size="2,parent"	Color="46,70,95,255" />
-        <Container																										Size="110,parent">
+        <Container																										Size="80,parent">
           <Label				ID="WarWeariness"															Style="ReportValueText"	String="$WarWeariness$" />
         </Container>
         <Box																													Size="2,parent"	Color="46,70,95,255" />
@@ -780,11 +780,11 @@
           <Label				ID="Status"																		Style="ReportValueText"	String="$Status$" />
         </Container>
         <Box																													Size="2,parent"	Color="46,70,95,255" />
-        <Container																										Size="78,parent">
+        <Container																										Size="75,parent">
           <Label				ID="Strength"																	Style="ReportValueText"	String="$Strength$" />
         </Container>
         <Box																													Size="2,parent"	Color="46,70,95,255" />
-        <Container																										Size="78,parent">
+        <Container																										Size="75,parent">
           <Label				ID="Damage"																		Style="ReportValueText"	String="$Damage$" />
         </Container>
         <Box																						Offset="1,0"	Size="2,parent"	Color="46,70,95,128" />
