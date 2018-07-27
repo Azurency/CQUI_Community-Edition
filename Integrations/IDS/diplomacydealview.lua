@@ -448,14 +448,26 @@ function PopulateValuePulldown(pullDown, pDealItem)
       pullDown:BuildEntry( "InstanceOne", entryControlTable );
 
       local szItemName = Locale.Lookup(entry.ForTypeDisplayName);
-      if (entry.Duration == -1) then
+      if (entry.SubType == DealAgreementTypes.RESEARCH_AGREEMENT) then
         local eTech = GameInfo.Technologies[entry.ForType].Index;
         local iTurns = 	ms_LocalPlayer:GetDiplomacy():ComputeResearchAgreementTurns(ms_OtherPlayer, eTech);
         szDisplayName = Locale.Lookup("LOC_DIPLOMACY_DEAL_PARAMETER_WITH_TURNS", szItemName, iTurns);
+      elseif (entry.SubType == DealAgreementTypes.JOINT_WAR or entry.SubType == DealAgreementTypes.THIRD_PARTY_WAR) then
+        szDisplayName = szItemName;
+        -- Have a type of war that describes the joint war?
+        if entry.Parameters ~= nil then
+          if entry.Parameters.WarType ~= nil then
+            local warDef = GameInfo.Wars[entry.Parameters.WarType];
+            if warDef ~= nil then
+              szDisplayName = szDisplayName .. " [COLOR:Grey](" .. Locale.Lookup(warDef.Name) .. ")[ENDCOLOR]";
+            end
+          end
+        end
       else
         szDisplayName = szItemName;
       end
 
+      entryControlTable.Button:SetSizeX(280);
       entryControlTable.Button:LocalizeAndSetText(szDisplayName);						
       local eType = entry.ForType;
       entryControlTable.Button:RegisterCallback(Mouse.eLClick, function()
@@ -1526,6 +1538,26 @@ function OnClickAvailableAgreement(player, agreementType, agreementTurns)
       -- AZURENCY : Joint War and Research Agreements need special treatment (can be only modified on the player side)
       if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.THIRD_PARTY_WAR or agreementType == DealAgreementTypes.RESEARCH_AGREEMENT) then
         pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, ms_LocalPlayer:GetID());
+        
+        -- AZURENCY : Fix, select the first possibily by default
+        local toPlayerId = ms_LocalPlayer:GetID();
+        if (toPlayerId == player:GetID() ) then
+          toPlayerId = ms_OtherPlayer:GetID();
+        end
+        local possibleValues = DealManager.GetPossibleDealItems(player:GetID(), toPlayerId, DealItemTypes.AGREEMENTS, agreementType, pDeal);
+        if (possibleValues ~= nil) then
+          for i, entry in ipairs(possibleValues) do
+            pDealItem:SetValueType(entry.ForType);
+
+            if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.THIRD_PARTY_WAR) then
+              if entry.Parameters and entry.Parameters.WarType then
+                pDealItem:SetParameterValue("WarType", entry.Parameters.WarType);
+              end
+            end
+            break;
+          end
+        end
+
       else
         pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, player:GetID());
       end
@@ -2535,6 +2567,8 @@ function PopulateDealAgreements(player : table, iconList : table)
           elseif(info.DiplomaticActionType == "DIPLOACTION_RESEARCH_AGREEMENT" and pDealItem:GetFromPlayerID() == ms_OtherPlayer:GetID()) then
             icon.SelectButton:SetDisabled(true);
             --icon.SelectButton:SetToolTipString(Locale.Lookup("LOC_JOINT_WAR_CANNOT_EDIT_THEIRS_TOOLTIP"));
+          elseif(info.DiplomaticActionType == "DIPLOACTION_THIRD_PARTY_WAR" and pDealItem:GetFromPlayerID() == ms_OtherPlayer:GetID()) then
+            icon.SelectButton:SetDisabled(true);
           else
             icon.SelectButton:SetDisabled(false);
             icon.SelectButton:RegisterCallback( Mouse.eLClick, function(void1, void2, self) OnSelectValueDealItem(player, dealItemID, self); end );
