@@ -956,7 +956,7 @@ function OnActivateIntelRelationshipPanel(relationshipInstance : table)
     -- HACK: This is completely faked in for now... Ultimately this list will need to be much smarter
     local playerConfig = PlayerConfigurations[ms_SelectedPlayer:GetID()];
     if (playerConfig ~= nil) then
-      selectedCivName = Locale.ToUpper( Locale.Lookup(playerConfig:GetCivilizationDescription()));
+      selectedCivName = playerConfig:GetCivilizationDescription();
     end
 
     local advisorTextlower = "[COLOR_Grey]";

@@ -123,6 +123,7 @@ function GetCityData( pCity:table )
     AmenitiesFromStartingEra = 0,
 	AmenitiesFromImprovements = 0,
     AmenitiesRequiredNum = 0,
+    AmenitiesFromGovernors = 0,
     BeliefsOfDominantReligion = {},
     Buildings = {}, -- Per Entry Format: { Name, CitizenNum }
     BuildingsNum = 0,
@@ -276,10 +277,11 @@ function GetCityData( pCity:table )
   data.AmenitiesFromReligion = pCityGrowth:GetAmenitiesFromReligion();
   data.AmenitiesFromNationalParks = pCityGrowth:GetAmenitiesFromNationalParks();
   data.AmenitiesFromStartingEra = pCityGrowth:GetAmenitiesFromStartingEra();
-	data.AmenitiesFromImprovements		= pCityGrowth:GetAmenitiesFromImprovements();
+  data.AmenitiesFromImprovements = pCityGrowth:GetAmenitiesFromImprovements();
   data.AmenitiesLostFromWarWeariness = pCityGrowth:GetAmenitiesLostFromWarWeariness();
   data.AmenitiesLostFromBankruptcy = pCityGrowth:GetAmenitiesLostFromBankruptcy();
   data.AmenitiesRequiredNum = pCityGrowth:GetAmenitiesNeeded();
+  data.AmenitiesFromGovernors = pCityGrowth:GetAmenitiesFromGovernors();
   data.AmenityAdvice = pCity:GetAmenityAdvice();
   data.CityWallHPPercent = (wallHitpoints-currentWallDamage) / wallHitpoints;
   data.CityWallCurrentHP = wallHitpoints-currentWallDamage;

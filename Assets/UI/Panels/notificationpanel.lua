@@ -182,6 +182,8 @@ function RegisterHandlers()
   g_notificationHandlers[NotificationTypes.SPY_ENEMY_KILLED]                = MakeDefaultHandlers();
 	g_notificationHandlers[NotificationTypes.TECH_BOOST]							        = MakeDefaultHandlers();
 	g_notificationHandlers[NotificationTypes.CIVIC_BOOST]							        = MakeDefaultHandlers();
+  g_notificationHandlers[NotificationTypes.TECH_DISCOVERED]							    = MakeDefaultHandlers();
+  g_notificationHandlers[NotificationTypes.CIVIC_DISCOVERED]							  = MakeDefaultHandlers();  
 
   -- Custom function handlers for the "Activate" signal:
   g_notificationHandlers[DEBUG_NOTIFICATION_TYPE].Activate            = OnDebugActivate;
@@ -206,6 +208,8 @@ function RegisterHandlers()
   g_notificationHandlers[NotificationTypes.DISCOVER_CONTINENT].Activate     = OnDiscoverContinentActivateNotification;
 	g_notificationHandlers[NotificationTypes.TECH_BOOST].Activate					= OnTechBoostActivateNotification;
 	g_notificationHandlers[NotificationTypes.CIVIC_BOOST].Activate					= OnCivicBoostActivateNotification;
+  g_notificationHandlers[NotificationTypes.TECH_DISCOVERED].Activate				= OnTechDiscoveredActivateNotification;
+  g_notificationHandlers[NotificationTypes.CIVIC_DISCOVERED].Activate				= OnCivicDiscoveredActivateNotification;
 
   -- Sound to play when added
   g_notificationHandlers[NotificationTypes.SPY_KILLED].AddSound             = "ALERT_NEGATIVE";
@@ -712,40 +716,43 @@ function OnDefaultAddNotification( pNotification:table )
   -- Only add a visual entry for this notification if:
   -- It is not a blocking type (otherwise assume the ActionPanel is displaying it)
   -- It is the first notification entry in a group
-  if ( table.count(notificationEntry.m_IDs)==1 and pNotification:GetEndTurnBlocking() == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING ) then
+  -- The icon is displayable in the current mode.
+  if ( table.count(notificationEntry.m_IDs)==1 
+    and pNotification:GetEndTurnBlocking() == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING
+    and pNotification:IsIconDisplayable() ) then
 
     notificationEntry.m_Instance    = m_genericItemIM:GetInstance();
     notificationEntry.m_InstanceManager = m_genericItemIM;
-		notificationEntry.m_Instance.m_MouseIn = false;	-- Manually track since 2 different, overlapping objects are tracking if a pointer is in/out
+    notificationEntry.m_Instance.m_MouseIn = false;	-- Manually track since 2 different, overlapping objects are tracking if a pointer is in/out
 
-		if notificationEntry.m_Instance then
+    if notificationEntry.m_Instance then
         -- Use the (collapse) button as the actual mouse-in area, but a larger rectangle will
         -- track the mouse out, since the player may be interacting with the extended
         -- information that flew out to the left of the notification.
 
-			if pNotification:IsValidForPhase() then
-				notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eLClick, function() kHandlers.TryActivate(notificationEntry); end );
-				notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eRClick, function() kHandlers.TryDismiss(notificationEntry); end );
-				notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eLClick, function() OnClickMouseOutArea(notificationEntry); end );
-				notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eRClick, function() OnClickMouseOutArea(notificationEntry, true); end );
-			else
-				--A notification in the wrong phase can be dismissed but not activated.
-				local messageName:string = Locale.Lookup(pNotification:GetMessage());
-				notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eLClick, OnDoNothing );
-				notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eRClick, function() kHandlers.TryDismiss(notificationEntry); end );
-				notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eLClick, OnDoNothing );
-				notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eRClick, function() kHandlers.TryDismiss(notificationEntry); end );
-				local toolTip:string = messageName .. "[NEWLINE]" .. Locale.Lookup("LOC_NOTIFICATION_WRONG_PHASE_TT", messageName);
-				notificationEntry.m_Instance.MouseInArea:SetToolTipString(toolTip);
-			end
-			notificationEntry.m_Instance.MouseInArea:RegisterMouseEnterCallback( function() OnMouseEnterNotification( notificationEntry.m_Instance ); end );
+      if pNotification:IsValidForPhase() then
+        notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eLClick, function() kHandlers.TryActivate(notificationEntry); end );
+        notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eRClick, function() kHandlers.TryDismiss(notificationEntry); end );
+        notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eLClick, function() OnClickMouseOutArea(notificationEntry); end );
+        notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eRClick, function() OnClickMouseOutArea(notificationEntry, true); end );
+      else
+        --A notification in the wrong phase can be dismissed but not activated.
+        local messageName:string = Locale.Lookup(pNotification:GetMessage());
+        notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eLClick, OnDoNothing );
+        notificationEntry.m_Instance.MouseInArea:RegisterCallback( Mouse.eRClick, function() kHandlers.TryDismiss(notificationEntry); end );
+        notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eLClick, OnDoNothing );
+        notificationEntry.m_Instance.MouseOutArea:RegisterCallback( Mouse.eRClick, function() kHandlers.TryDismiss(notificationEntry); end );
+        local toolTip:string = messageName .. "[NEWLINE]" .. Locale.Lookup("LOC_NOTIFICATION_WRONG_PHASE_TT", messageName);
+        notificationEntry.m_Instance.MouseInArea:SetToolTipString(toolTip);
+      end
+      notificationEntry.m_Instance.MouseInArea:RegisterMouseEnterCallback( function() OnMouseEnterNotification( notificationEntry.m_Instance ); end );
       notificationEntry.m_Instance.MouseOutArea:RegisterMouseExitCallback( function()  OnMouseExitNotification( notificationEntry.m_Instance ); end );
 
       --Set the notification icon
       if (notificationEntry.m_IconName ~= nil) then
         local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(notificationEntry.m_IconName,40);
         if (textureOffsetX ~= nil) then
-            notificationEntry.m_Instance.Icon:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
+          notificationEntry.m_Instance.Icon:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
         end
       else
         if (notificationEntry.m_TypeName ~= nil) then
@@ -763,12 +770,12 @@ function OnDefaultAddNotification( pNotification:table )
       -- Sets current phase state.
       notificationEntry.m_kHandlers.OnPhaseBegin( playerID, notificationID );
 
-			-- Reset animation control
-			notificationEntry.m_Instance.NotificationSlide:Stop();
-			notificationEntry.m_Instance.NotificationSlide:SetToBeginning();
+      -- Reset animation control
+      notificationEntry.m_Instance.NotificationSlide:Stop();
+      notificationEntry.m_Instance.NotificationSlide:SetToBeginning();
     end
   end
-  -- Update size of notification
+    -- Update size of notification
   RealizeStandardNotification( playerID, notificationID );
 end
 
@@ -1319,6 +1326,22 @@ function OnTechBoostActivateNotification( notificationEntry : NotificationType, 
 			local techSource = pNotification:GetValue("TechSource"); 
 			if(techIndex ~= nil and techProgress ~= nil and techSource ~= nil) then
 				LuaEvents.NotificationPanel_ShowTechBoost(notificationEntry.m_PlayerID, techIndex, techProgress, techSource);
+
+				-- CQUI update all cities real housing when play as India and boosted and researched Sanitation
+				if techIndex == GameInfo.Technologies["TECH_SANITATION"].Index then    -- Sanitation
+				  if PlayerConfigurations[notificationEntry.m_PlayerID]:GetCivilizationTypeName() == "CIVILIZATION_INDIA" then
+				    if Players[notificationEntry.m_PlayerID]:GetTechs():HasTech(techIndex) then
+				      LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost(notificationEntry.m_PlayerID);
+				    end
+				  end
+				-- CQUI update all cities real housing when play as Indonesia and boosted and researched Mass Production
+				elseif techIndex == GameInfo.Technologies["TECH_MASS_PRODUCTION"].Index then    -- Mass Production
+				  if PlayerConfigurations[notificationEntry.m_PlayerID]:GetCivilizationTypeName() == "CIVILIZATION_INDONESIA" then
+				    if Players[notificationEntry.m_PlayerID]:GetTechs():HasTech(techIndex) then
+				      LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost(notificationEntry.m_PlayerID);
+				    end
+				  end
+				end
 			end
     end
   end
@@ -1336,8 +1359,54 @@ function OnCivicBoostActivateNotification( notificationEntry : NotificationType,
 			local civicSource = pNotification:GetValue("CivicSource"); 
 			if(civicIndex ~= nil and civicProgress ~= nil and civicSource ~= nil) then
 				LuaEvents.NotificationPanel_ShowCivicBoost(notificationEntry.m_PlayerID, civicIndex, civicProgress, civicSource);
+
+				-- CQUI update all cities real housing when play as Cree and boosted and researched Civil Service
+				if civicIndex == GameInfo.Civics["CIVIC_CIVIL_SERVICE"].Index then    -- Civil Service
+				  if PlayerConfigurations[notificationEntry.m_PlayerID]:GetCivilizationTypeName() == "CIVILIZATION_CREE" then
+				    if Players[notificationEntry.m_PlayerID]:GetCulture():HasCivic(civicIndex) then
+				      LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost(notificationEntry.m_PlayerID);
+				    end
+				  end
+				-- CQUI update all cities real housing when play as Scotland and boosted and researched Globalization
+				elseif civicIndex == GameInfo.Civics["CIVIC_GLOBALIZATION"].Index then    -- Globalization
+				  if PlayerConfigurations[notificationEntry.m_PlayerID]:GetCivilizationTypeName() == "CIVILIZATION_SCOTLAND" then
+				    if Players[notificationEntry.m_PlayerID]:GetCulture():HasCivic(civicIndex) then
+				      LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost(notificationEntry.m_PlayerID);
+				    end
+				  end
+				end
 			end
         end
+  end
+end
+
+-- =======================================================================================
+-- Tech Discovered Handlers
+-- =======================================================================================
+function OnTechDiscoveredActivateNotification( notificationEntry : NotificationType, notificationID : number )
+  if (notificationEntry ~= nil and notificationEntry.m_PlayerID == Game.GetLocalPlayer()) then
+    local pNotification :table = GetActiveNotificationFromEntry(notificationEntry, notificationID);
+    if pNotification ~= nil then
+      local techIndex = pNotification:GetValue("TechIndex");
+      if(techIndex ~= nil) then
+        LuaEvents.NotificationPanel_ShowTechDiscovered(notificationEntry.m_PlayerID, techIndex);
+      end
+    end
+  end
+end
+
+-- =======================================================================================
+-- Civic Discovered Handlers
+-- =======================================================================================
+function OnCivicDiscoveredActivateNotification( notificationEntry : NotificationType, notificationID : number )
+  if (notificationEntry ~= nil and notificationEntry.m_PlayerID == Game.GetLocalPlayer()) then
+    local pNotification :table = GetActiveNotificationFromEntry(notificationEntry, notificationID);
+    if pNotification ~= nil then
+      local civicIndex = pNotification:GetValue("CivicIndex");
+      if(civicIndex ~= nil) then
+        LuaEvents.NotificationPanel_ShowCivicDiscovered(notificationEntry.m_PlayerID, civicIndex);
+      end
+    end
   end
 end
 
@@ -1359,7 +1428,7 @@ function OnDebugAdd( name:string, fakeID:number )
 
   notificationEntry.m_Instance    = m_genericItemIM:GetInstance();
   notificationEntry.m_InstanceManager = m_genericItemIM;
-	notificationEntry.m_Instance.m_MouseIn = false;	-- Manually track since 2 different, overlapping objects are tracking if a pointer is in/out
+  notificationEntry.m_Instance.m_MouseIn = false;	-- Manually track since 2 different, overlapping objects are tracking if a pointer is in/out
 
   if notificationEntry.m_Instance ~= nil then
 		if (notificationEntry.m_Instance.MouseInArea ~= nil) then
@@ -1441,8 +1510,10 @@ function OnNotificationAdded( playerID:number, notificationID:number )
       UI.DataError("Notification added Event but not found in manager. PlayerID - " .. tostring(playerID) .. " Notification ID - " .. tostring(notificationID));
     end
 
-    if notificationID	== 577 then                   -- CQUI: Notification when a City lost tile to a Culture Bomb (Index == 577)
-      LuaEvents.CQUI_CityLostTileToCultureBomb();
+    -- CQUI: Notification when a City lost tile to a Culture Bomb. We use it to update real housing.
+    if pNotification:GetType() == GameInfo.Notifications["NOTIFICATION_TILE_LOST_CULTURE_BOMB"].Hash then
+      local x, y = pNotification:GetLocation();
+      LuaEvents.CQUI_CityLostTileToCultureBomb(playerID, x, y);
     end
   end
 end

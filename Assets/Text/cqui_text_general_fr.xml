@@ -43,5 +43,24 @@
       <Text>Votre campement peut attaquer à distance</Text>
     </Row>
 
+    <!-- Policyreminderpopup -->
+    <Row Tag="LOC_POLICY_REMINDER_TITLE" Language="fr_FR">
+		  <Text>RAPPEL DOCTRINES</Text>
+    </Row>
+    <Row Tag="LOC_POLICY_REMINDER_TEXT" Language="fr_FR">
+      <Text>De nouvelles doctrines ont été déverrouillées.</Text>
+    </Row>
+    <Row Tag="LOC_POLICY_REMINDER_ACTION_BUTTON" Language="fr_FR">
+      <Text>CHANGER DE DOCTRINE</Text>
+    </Row>
+    <Row Tag="LOC_POLICY_REMINDER_ACTION_BUTTON_TOOLTIP" Language="fr_FR">
+      <Text>Vous pouvez changez vos doctrine durant ce tour.</Text>
+    </Row>
+
+    <!-- Smartbanner unlocked citizen -->
+    <Row Tag="LOC_CQUI_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="fr_FR">
+      <Text>Des citoyens sont automatiquement assignés par l'IA du gouverneur de ville.</Text>
+    </Row>
+
   </LocalizedText>
 </GameData>

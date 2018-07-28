@@ -245,7 +245,6 @@ end
 
 -- ===========================================================================
 function ShowNextQueuedPopup()
-
   -- Find first entry in table, display that, then remove it from the internal queue
   for i, entry in ipairs(m_kQueuedPopups) do
     table.remove(m_kQueuedPopups, i);
@@ -260,29 +259,17 @@ function ShowNextQueuedPopup()
 end
 
 -- ===========================================================================
-function OnCivicCompleted( player:number, civic:number, isCanceled:boolean)
-  if player == Game.GetLocalPlayer() and (not m_isDisabledByTutorial) then
-    local civicCompletedEntry:table = { player=player, civic=civic, isCanceled=isCanceled };
+function AddCompletedPopup( player:number, civic, tech, isCanceled:boolean, ignoreMultiplayerCheck:boolean)
+  if player == Game.GetLocalPlayer() 
+    and (not m_isDisabledByTutorial) 
+    and (ignoreMultiplayerCheck or not GameConfiguration.IsNetworkMultiplayer()) then
+    local completedEntry:table = { player=player, civic=civic, tech=tech, isCanceled=isCanceled };
 
-    if not m_isWaitingToShowPopup and UI.CanShowPopup() then
-      ShowCompletedPopup(civicCompletedEntry);
+    if not m_isWaitingToShowPopup then
+      ShowCompletedPopup(completedEntry);    
     else
       -- Add to queue if already showing a tech/civic completed popup
-      table.insert(m_kQueuedPopups, civicCompletedEntry);
-    end
-  end
-end
-
--- ===========================================================================
-function OnResearchCompleted( player:number, tech:number, isCanceled:boolean)
-  if player == Game.GetLocalPlayer() and (not m_isDisabledByTutorial) then
-    local techCompletedEntry:table = { player=player, tech=tech, isCanceled=isCanceled };
-
-    if not m_isWaitingToShowPopup and UI.CanShowPopup() then
-      ShowCompletedPopup(techCompletedEntry);
-    else
-      -- Add to queue if already showing a tech/civic completed popup
-      table.insert(m_kQueuedPopups, techCompletedEntry);
+      table.insert(m_kQueuedPopups, completedEntry);
     end
   end
 end
@@ -414,6 +401,20 @@ function OnEnableTechAndCivicPopups()
 end
 
 -- ===========================================================================
+--	LUA Event
+-- ===========================================================================
+function OnNotificationPanel_ShowTechDiscovered(ePlayer, techIndex)
+  AddCompletedPopup( ePlayer, nil, techIndex, false, true );
+end
+
+-- ===========================================================================
+--	LUA Event
+-- ===========================================================================
+function OnNotificationPanel_ShowCivicDiscovered(ePlayer, civicIndex)
+  AddCompletedPopup( ePlayer, civicIndex, nil, false, true );
+end
+
+-- ===========================================================================
 function Initialize()
   -- Controls Events
   Controls.CloseButton:RegisterCallback( eLClick, OnClose );
@@ -427,10 +428,10 @@ function Initialize()
   LuaEvents.GameDebug_Return.Add( OnGameDebugReturn );
   LuaEvents.TutorialUIRoot_DisableTechAndCivicPopups.Add( OnDisableTechAndCivicPopups );
   LuaEvents.TutorialUIRoot_EnableTechAndCivicPopups.Add( OnEnableTechAndCivicPopups );
+  LuaEvents.NotificationPanel_ShowTechDiscovered.Add( OnNotificationPanel_ShowTechDiscovered);
+  LuaEvents.NotificationPanel_ShowCivicDiscovered.Add( OnNotificationPanel_ShowCivicDiscovered);
 
   -- Game Events
-  Events.ResearchCompleted.Add(OnResearchCompleted);
-  Events.CivicCompleted.Add(OnCivicCompleted);
   Events.LocalPlayerTurnEnd.Add( OnLocalPlayerTurnEnd );
   Events.UIIdle.Add( OnUIIdle );
 end

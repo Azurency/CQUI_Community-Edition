@@ -448,14 +448,26 @@ function PopulateValuePulldown(pullDown, pDealItem)
       pullDown:BuildEntry( "InstanceOne", entryControlTable );
 
       local szItemName = Locale.Lookup(entry.ForTypeDisplayName);
-      if (entry.Duration == -1) then
+      if (entry.SubType == DealAgreementTypes.RESEARCH_AGREEMENT) then
         local eTech = GameInfo.Technologies[entry.ForType].Index;
         local iTurns = 	ms_LocalPlayer:GetDiplomacy():ComputeResearchAgreementTurns(ms_OtherPlayer, eTech);
         szDisplayName = Locale.Lookup("LOC_DIPLOMACY_DEAL_PARAMETER_WITH_TURNS", szItemName, iTurns);
+      elseif (entry.SubType == DealAgreementTypes.JOINT_WAR or entry.SubType == DealAgreementTypes.THIRD_PARTY_WAR) then
+        szDisplayName = szItemName;
+        -- Have a type of war that describes the joint war?
+        if entry.Parameters ~= nil then
+          if entry.Parameters.WarType ~= nil then
+            local warDef = GameInfo.Wars[entry.Parameters.WarType];
+            if warDef ~= nil then
+              szDisplayName = szDisplayName .. " [COLOR:Grey](" .. Locale.Lookup(warDef.Name) .. ")[ENDCOLOR]";
+            end
+          end
+        end
       else
         szDisplayName = szItemName;
       end
 
+      entryControlTable.Button:SetSizeX(280);
       entryControlTable.Button:LocalizeAndSetText(szDisplayName);						
       local eType = entry.ForType;
       entryControlTable.Button:RegisterCallback(Mouse.eLClick, function()
@@ -624,7 +636,9 @@ function UpdateDealStatus()
   end
 
   if (bDealValid) then
-    bDealValid = pDeal:Validate();
+    if pDeal:Validate() ~= DealValidationResult.VALID then
+      bDealValid = false;
+    end
   end
 
   Controls.EqualizeDeal:SetHide(ms_bIsDemand);
@@ -700,6 +714,7 @@ function OnProposeOrAcceptDeal()
         -- Yes, we can accept
         -- if deal will trigger war, prompt user before confirming deal
         local sendDealAndContinue = function()
+          -- Send the deal.  This will also send out a POSITIVE response statement
           DealManager.SendWorkingDeal(DealProposalAction.ACCEPTED, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
           OnContinue();
           UI.PlaySound("Confirm_Bed_Positive");
@@ -707,15 +722,33 @@ function OnProposeOrAcceptDeal()
 
         local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
         local pJointWarItem = pDeal:FindItemByType(DealItemTypes.AGREEMENTS, DealAgreementTypes.JOINT_WAR);
-        if pJointWarItem then
+        if DealAgreementTypes.JOINT_WAR and pJointWarItem then
+          local iWarType = pJointWarItem:GetParameterValue("WarType");
+
+          if (iWarType == nil) then iWarType = WarTypes.FORMAL_WAR; end
+
           local targetPlayerID = pJointWarItem:GetValueType();
           if (targetPlayerID >= 0) then
-            LuaEvents.DiplomacyActionView_ConfirmWarDialog(ms_LocalPlayer:GetID(), targetPlayerID, WarTypes.FORMAL_WAR, sendDealAndContinue);
+            LuaEvents.DiplomacyActionView_ConfirmWarDialog(ms_LocalPlayer:GetID(), targetPlayerID, iWarType, sendDealAndContinue);
           else
             UI.DataError("Invalid Player ID to declare Joint War to: " .. targetPlayerID);
           end
         else
-          sendDealAndContinue();
+          local pThirdPartyWarItem = pDeal:FindItemByType(DealItemTypes.AGREEMENTS, DealAgreementTypes.THIRD_PARTY_WAR);
+          if (DealAgreementTypes.THIRD_PARTY_WAR and pThirdPartyWarItem) then
+            local iWarType = pThirdPartyWarItem:GetParameterValue("WarType");
+
+            if (iWarType == nil) then iWarType = WarTypes.FORMAL_WAR; end
+
+            local targetPlayerID = pThirdPartyWarItem:GetValueType();
+            if (targetPlayerID >= 0) then
+              LuaEvents.DiplomacyActionView_ConfirmWarDialog(ms_LocalPlayer:GetID(), targetPlayerID, iWarType, sendDealAndContinue);
+            else
+              UI.DataError("Invalid Player ID to declare Third Party War to: " .. targetPlayerID);
+            end
+          else
+            sendDealAndContinue();
+          end			
         end
       else
         -- No, send an adjustment and stay in the deal view.
@@ -962,6 +995,11 @@ end
 -- ===========================================================================
 function OnClickAvailableOneTimeGold(player, iAddAmount : number)
 
+  if (ms_bIsDemand == true and ms_InitiatedByPlayerID == ms_OtherPlayerID) then
+    -- Can't modifiy demand that is not ours
+    return;
+  end
+
   local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
   if (pDeal ~= nil) then
 
@@ -1021,6 +1059,11 @@ end
 
 -- ===========================================================================
 function OnClickAvailableMultiTurnGold(player, iAddAmount : number, iDuration : number)
+
+  if (ms_bIsDemand == true and ms_InitiatedByPlayerID == ms_OtherPlayerID) then
+    -- Can't modifiy demand that is not ours
+    return;
+  end
 
   local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
   if (pDeal ~= nil) then
@@ -1134,6 +1177,7 @@ function UpdateProposalButtons(bDealValid)
           if (pDeal:HasUnacceptableItems()) then
             Controls.EqualizeDeal:SetHide(true);
             Controls.AcceptDeal:SetHide(true);
+            Controls.WhatWouldItTakeButton:SetHide(true);
           elseif (iItemsFromLocal > 0 and iItemsFromOther == 0) then
             -- One way gift?
             Controls.WhatWouldYouGiveMe:SetHide(false);
@@ -1404,6 +1448,11 @@ end
 -- ===========================================================================
 function OnClickAvailableBasic(itemType, player, valueType)
 
+  if (ms_bIsDemand == true and ms_InitiatedByPlayerID == ms_OtherPlayerID) then
+    -- Can't modifiy demand that is not ours
+    return;
+  end
+
   local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
   if (pDeal ~= nil) then
 
@@ -1423,27 +1472,50 @@ end
 
 -- ===========================================================================
 function OnClickAvailableResource(player, resourceType)
+
+  if (ms_bIsDemand == true and ms_InitiatedByPlayerID == ms_OtherPlayerID) then
+    -- Can't modifiy demand that is not ours
+    return;
+  end
+
   local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
   if (pDeal ~= nil) then
 
     -- Already there?
-    local pDealItem = pDeal:FindItemByValueType(DealItemTypes.RESOURCES, DealItemSubTypes.NONE, resourceType, player:GetID());
-    if (pDealItem == nil) then
-      -- No
-      local pPlayerResources = player:GetResources();
-      local iAmount = pPlayerResources:GetResourceAmount( resourceType );
-      if (iAmount > 0) then
-        pDealItem = pDeal:AddItemOfType(DealItemTypes.RESOURCES, player:GetID());
-        if (pDealItem ~= nil) then
-          -- Add one
-          pDealItem:SetValueType(resourceType);
-          pDealItem:SetAmount(1);
-          pDealItem:SetDuration(30);	-- Default to this many turns
+    local dealItems = pDeal:FindItemsByType(DealItemTypes.RESOURCES, DealItemSubTypes.NONE, player:GetID());
+    local pDealItem;
+    if (dealItems ~= nil) then
+      for i, pDealItem in ipairs(dealItems) do
+        if pDealItem:GetValueType() == resourceType then
+          -- Check for non-zero duration.  There may already be a one-time transfer of the resource if a city is in the deal.
+          if (pDealItem:GetDuration() ~= 0) then
+            return;	-- Already in there.
+          end
+        end
+      end
+    end
 
-          UpdateDealPanel(player);
-          UpdateProposedWorkingDeal();
+    local pPlayerResources = player:GetResources();
+    -- Get the total amount of the resource we have. This does not take into account anything already in the deal.
+    local iAmount = pPlayerResources:GetResourceAmount( resourceType );
+    if (iAmount > 0) then
+      pDealItem = pDeal:AddItemOfType(DealItemTypes.RESOURCES, player:GetID());
+      if (pDealItem ~= nil) then
+        -- Add one
+        pDealItem:SetValueType(resourceType);
+        pDealItem:SetAmount(1);
+        pDealItem:SetDuration(30);	-- Default to this many turns		
+
+        -- After we add the item, test to see if the item is valid, it is possible that we have exceeded the amount of resources we can trade.
+        if not pDealItem:IsValid() then
+          pDeal:RemoveItemByID(pDealItem:GetID());
+          pDealItem = nil;
+        else
           UI.PlaySound("UI_GreatWorks_Put_Down");
         end
+
+        UpdateDealPanel(player);
+        UpdateProposedWorkingDeal();
       end
     end
   end
@@ -1451,6 +1523,11 @@ end
 
 -- ===========================================================================
 function OnClickAvailableAgreement(player, agreementType, agreementTurns)
+
+  if (ms_bIsDemand == true and ms_InitiatedByPlayerID == ms_OtherPlayerID) then
+    -- Can't modifiy demand that is not ours
+    return;
+  end
 
   local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
   if (pDeal ~= nil) then
@@ -1460,10 +1537,28 @@ function OnClickAvailableAgreement(player, agreementType, agreementTurns)
     if (pDealItem == nil) then
       -- No
       -- AZURENCY : Joint War and Research Agreements need special treatment (can be only modified on the player side)
-      -- AZURENCY : Bug ? RESEARCH_AGREEMENT is not in DealAgreementTypes (see hack line 1824)
       if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.RESEARCH_AGREEMENT) then
-      --if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == ms_DealAgreementTypesResearchAgreement) then
         pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, ms_LocalPlayer:GetID());
+        
+        -- AZURENCY : Fix, select the first possibily by default
+        local toPlayerId = ms_LocalPlayer:GetID();
+        if (toPlayerId == player:GetID() ) then
+          toPlayerId = ms_OtherPlayer:GetID();
+        end
+        local possibleValues = DealManager.GetPossibleDealItems(player:GetID(), toPlayerId, DealItemTypes.AGREEMENTS, agreementType, pDeal);
+        if (possibleValues ~= nil) then
+          for i, entry in ipairs(possibleValues) do
+            pDealItem:SetValueType(entry.ForType);
+
+            if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.THIRD_PARTY_WAR) then
+              if entry.Parameters and entry.Parameters.WarType then
+                pDealItem:SetParameterValue("WarType", entry.Parameters.WarType);
+              end
+            end
+            break;
+          end
+        end
+
       else
         pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, player:GetID());
       end
@@ -1498,6 +1593,12 @@ end
 
 -- ===========================================================================
 function OnClickAvailableCity(player, valueType, subType)
+
+  if (ms_bIsDemand == true and ms_InitiatedByPlayerID == ms_OtherPlayerID) then
+    -- Can't modifiy demand that is not ours
+    return;
+  end
+
   local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
   if (pDeal ~= nil) then
 
@@ -1940,6 +2041,34 @@ function MakeCityToolTip(pCity : table)
         szToolTip = szToolTip .. "[NEWLINE]" .. Locale.Lookup(name);
       end
     end
+
+    local player = Players[pCity:GetOwner()];
+    local cityID = pCity:GetID();
+
+    -- Add Resources
+    local extractedResources = player:GetResources():GetResourcesExtractedByCity( cityID, ResultFormat.SUMMARY );
+    if extractedResources ~= nil and #extractedResources > 0 then
+      szToolTip = szToolTip .. "[NEWLINE]" .. Locale.Lookup("LOC_DEAL_CITY_RESOURCES_TOOLTIP");
+      for i, entry in ipairs(extractedResources) do
+        local resourceDesc = GameInfo.Resources[entry.ResourceType];
+        if resourceDesc ~= nil then
+          szToolTip = szToolTip .. "[NEWLINE]" .. Locale.Lookup(resourceDesc.Name) .. " : " .. tostring(entry.Amount);
+        end
+      end
+    end
+
+    -- Add Great Works
+    local cityGreatWorks = player:GetCulture():GetGreatWorksInCity( cityID );
+    if cityGreatWorks ~= nil and #cityGreatWorks > 0 then
+      szToolTip = szToolTip .. "[NEWLINE]" .. Locale.Lookup("LOC_DEAL_CITY_GREAT_WORKS_TOOLTIP");
+      for i, entry in ipairs(cityGreatWorks) do
+        local greatWorksDesc = GameInfo.GreatWorks[entry.GreatWorksType];
+        if greatWorksDesc ~= nil then
+          szToolTip = szToolTip .. "[NEWLINE]" .. Locale.Lookup(greatWorksDesc.Name);
+        end
+      end
+    end
+
     return szToolTip;
   end
 
@@ -2320,6 +2449,25 @@ function PopulateDealGold(player : table, iconList : table)
 
     ReAttachValueEdit();
   end
+end
+
+-- ===========================================================================
+function GetParentItemTransferToolTip(parentDealItem)
+  local szToolTip = "";
+
+  -- If it is from a city, put the city name in the tool tip.
+  if (parentDealItem:GetType() == DealItemTypes.CITIES) then
+
+    local cityTypeName = parentDealItem:GetValueTypeNameID();
+    if (cityTypeName ~= nil) then
+      local cityName = Locale.Lookup(cityTypeName);
+      local szTransfer = Locale.Lookup("LOC_DEAL_ITEM_TRANSFERRED_WITH_CITY_TOOLTIP", cityName);
+
+      szToolTip = "[NEWLINE]" .. szTransfer;
+    end
+  end
+
+  return szToolTip;
 end
 
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

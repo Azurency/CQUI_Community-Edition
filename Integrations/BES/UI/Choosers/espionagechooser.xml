@@ -129,21 +129,23 @@
         </Grid>
 
         <!-- MissionStack -->
-        <ScrollPanel    ID="MissionScrollPanel" Offset="19,0" Size="parent-22,parent-200" Vertical="1" AutoScrollBar="0">
+        <ScrollPanel 		ID="MissionScrollPanel" Anchor="L,B"	Offset="18,0" Size="parent-22,parent-135" Vertical="1" AutoScrollBar="0">
           <ScrollBar    Anchor="L,C" Size="11,parent" AnchorSide="O,I" Offset="4,0" Style="ScrollVerticalBar" />
           <Stack        ID="MissionStack" StackGrowth="Bottom" StackPadding="2" />
         </ScrollPanel>
 
-        <Grid ID="DestinationChooserButtons" Anchor="L,B" Size="parent,78" Offset="0,4" Texture="Controls_SubHeader3" SliceCorner="10,10" SliceSize="14,14" SliceTextureSize="34,34">
+        <Grid ID="DestinationChooserButtons" Anchor="C,B" Size="parent,90" Texture="Controls_DrawerUp" SliceCorner="5,4" SliceSize="3,2" SliceTextureSize="14,8">
+         <Stack Anchor="C,C">
           <!-- Confirm Button -->
-          <GridButton ID="ConfirmButton" Size="270,26" Offset="0,40" Anchor="C,B" String="LOC_ESPIONAGECHOOSER_CONFIRM_PLACEMENT" Style="FontFlair14" FontStyle="Shadows" TextOffset="0,1" EffectColor="0,0,0,255" SmallCaps="20" SmallCapsType="EveryWord">
-            <GridData Texture="Controls_ConfirmSmall" StateOffsetIncrement="0,26" SliceCorner="26,13" SliceSize="2,2" SliceTextureSize="51,26"/>
+          <GridButton ID="ConfirmButton" Size="285,41" Offset="0,-3" Anchor="C,B" String="LOC_ESPIONAGECHOOSER_CONFIRM_PLACEMENT" Style="FontFlair14" FontStyle="Shadows" TextOffset="0,0" EffectColor="0,0,0,255" SmallCaps="18" SmallCapsType="EveryWord">
+            <GridData Texture="Controls_Confirm" StateOffsetIncrement="0,41" SliceCorner="40,21" SliceSize="1,1" SliceTextureSize="80,41"/>
           </GridButton>
 
           <!-- Cancel Button -->
-          <GridButton ID="CancelButton" Size="240,26" Offset="0,10" Anchor="C,B" String="LOC_ESPIONAGECHOOSER_CANCEL" Style="FontFlair14" FontStyle="Shadows" TextOffset="0,2" EffectColor="0,0,0,255" SmallCaps="20" SmallCapsType="EveryWord">
+           <GridButton ID="CancelButton" Size="285,24" Offset="0,4" Anchor="C,B" String="LOC_ESPIONAGECHOOSER_CANCEL" Style="FontFlair14" FontStyle="Shadows" TextOffset="0,6" EffectColor="0,0,0,255" SmallCaps="18" SmallCapsType="EveryWord">
             <GridData Style="ButtonLightWeightGrid"/>
           </GridButton>
+         </Stack>
         </Grid>
       </Stack>
     </Grid>
