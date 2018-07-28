@@ -1326,6 +1326,22 @@ function OnTechBoostActivateNotification( notificationEntry : NotificationType, 
 			local techSource = pNotification:GetValue("TechSource"); 
 			if(techIndex ~= nil and techProgress ~= nil and techSource ~= nil) then
 				LuaEvents.NotificationPanel_ShowTechBoost(notificationEntry.m_PlayerID, techIndex, techProgress, techSource);
+
+				-- CQUI update all cities real housing when play as India and boosted and researched Sanitation
+				if techIndex == GameInfo.Technologies["TECH_SANITATION"].Index then    -- Sanitation
+				  if PlayerConfigurations[notificationEntry.m_PlayerID]:GetCivilizationTypeName() == "CIVILIZATION_INDIA" then
+				    if Players[notificationEntry.m_PlayerID]:GetTechs():HasTech(techIndex) then
+				      LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost(notificationEntry.m_PlayerID);
+				    end
+				  end
+				-- CQUI update all cities real housing when play as Indonesia and boosted and researched Mass Production
+				elseif techIndex == GameInfo.Technologies["TECH_MASS_PRODUCTION"].Index then    -- Mass Production
+				  if PlayerConfigurations[notificationEntry.m_PlayerID]:GetCivilizationTypeName() == "CIVILIZATION_INDONESIA" then
+				    if Players[notificationEntry.m_PlayerID]:GetTechs():HasTech(techIndex) then
+				      LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost(notificationEntry.m_PlayerID);
+				    end
+				  end
+				end
 			end
     end
   end
@@ -1343,6 +1359,22 @@ function OnCivicBoostActivateNotification( notificationEntry : NotificationType,
 			local civicSource = pNotification:GetValue("CivicSource"); 
 			if(civicIndex ~= nil and civicProgress ~= nil and civicSource ~= nil) then
 				LuaEvents.NotificationPanel_ShowCivicBoost(notificationEntry.m_PlayerID, civicIndex, civicProgress, civicSource);
+
+				-- CQUI update all cities real housing when play as Cree and boosted and researched Civil Service
+				if civicIndex == GameInfo.Civics["CIVIC_CIVIL_SERVICE"].Index then    -- Civil Service
+				  if PlayerConfigurations[notificationEntry.m_PlayerID]:GetCivilizationTypeName() == "CIVILIZATION_CREE" then
+				    if Players[notificationEntry.m_PlayerID]:GetCulture():HasCivic(civicIndex) then
+				      LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost(notificationEntry.m_PlayerID);
+				    end
+				  end
+				-- CQUI update all cities real housing when play as Scotland and boosted and researched Globalization
+				elseif civicIndex == GameInfo.Civics["CIVIC_GLOBALIZATION"].Index then    -- Globalization
+				  if PlayerConfigurations[notificationEntry.m_PlayerID]:GetCivilizationTypeName() == "CIVILIZATION_SCOTLAND" then
+				    if Players[notificationEntry.m_PlayerID]:GetCulture():HasCivic(civicIndex) then
+				      LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost(notificationEntry.m_PlayerID);
+				    end
+				  end
+				end
 			end
         end
   end
@@ -1478,8 +1510,10 @@ function OnNotificationAdded( playerID:number, notificationID:number )
       UI.DataError("Notification added Event but not found in manager. PlayerID - " .. tostring(playerID) .. " Notification ID - " .. tostring(notificationID));
     end
 
-    if notificationID	== 577 then                   -- CQUI: Notification when a City lost tile to a Culture Bomb (Index == 577)
-      LuaEvents.CQUI_CityLostTileToCultureBomb();
+    -- CQUI: Notification when a City lost tile to a Culture Bomb. We use it to update real housing.
+    if pNotification:GetType() == GameInfo.Notifications["NOTIFICATION_TILE_LOST_CULTURE_BOMB"].Hash then
+      local x, y = pNotification:GetLocation();
+      LuaEvents.CQUI_CityLostTileToCultureBomb(playerID, x, y);
     end
   end
 end
