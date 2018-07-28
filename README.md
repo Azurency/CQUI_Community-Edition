@@ -9,8 +9,6 @@ This repository is the official repository of the [CQUI steam mod](http://steamc
 
 ## Installation
 
-_**Note for Mac/Linux users :** as the latest patch is still not avaible to your platform, please follow the manual installation steps with this version of CQUI : https://github.com/Azurency/CQUI_Community-Edition/releases/tag/mac-1.0.0.220_
-
 ### Steam Workshop
 If you want to install the latest official version, you can go to the [steam workshop page](http://steamcommunity.com/sharedfiles/filedetails/?id=1125169247) of CQUI and add it to your game.
 
