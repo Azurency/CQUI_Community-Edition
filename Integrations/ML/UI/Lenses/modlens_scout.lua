@@ -63,17 +63,19 @@ end
 local function OnUnitSelectionChanged( playerID:number, unitID:number, hexI:number, hexJ:number, hexK:number, bSelected:boolean, bEditable:boolean )
   if playerID == Game.GetLocalPlayer() then
     local unitType = GetUnitType(playerID, unitID);
-    local promotionClass = GameInfo.Units[unitType].PromotionClass;
-    if unitType then
-      if bSelected then
-        -- AZURENCY : apply the scout lenses to all the recon units
-        if promotionClass == "PROMOTION_CLASS_RECON" and AUTO_APPLY_SCOUT_LENS then
-          ShowScoutLens();
-        end
-        -- Deselection
-      else
-        if promotionClass == "PROMOTION_CLASS_RECON" and AUTO_APPLY_SCOUT_LENS then
-          ClearScoutLens();
+    if unitType and GameInfo.Units[unitType] then
+      local promotionClass = GameInfo.Units[unitType].PromotionClass;
+      if unitType then
+        if bSelected then
+          -- AZURENCY : apply the scout lenses to all the recon units
+          if promotionClass == "PROMOTION_CLASS_RECON" and AUTO_APPLY_SCOUT_LENS then
+            ShowScoutLens();
+          end
+          -- Deselection
+        else
+          if promotionClass == "PROMOTION_CLASS_RECON" and AUTO_APPLY_SCOUT_LENS then
+            ClearScoutLens();
+          end
         end
       end
     end
