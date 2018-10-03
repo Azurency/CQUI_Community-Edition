@@ -831,7 +831,7 @@ end
 
 
 -- ===========================================================================
-function AddCityStateRow( kCityState:table )
+function AddCityStateRowMod( kCityState:table )
 
   local kInst        :table = m_CityStateRowIM:GetInstance();
   local textureOffsetX  :number;
@@ -999,7 +999,7 @@ function ViewList()
   m_uiCityStateRows = {};
   for iPlayer, kCityState in pairs( m_kCityStates ) do
     if kCityState.isHasMet then
-      local kInst :table = AddCityStateRow( kCityState );
+      local kInst :table = AddCityStateRowMod( kCityState );
       m_uiCityStateRows[iPlayer] = kInst;
     end
   end
