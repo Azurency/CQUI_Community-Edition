@@ -93,6 +93,10 @@ local m_kCurrentTab = 1
 
 local CQUI_HousingFromImprovementsTable :table = {};
 
+function getCQUI_HousingFromImprovementsTable()
+  return CQUI_HousingFromImprovementsTable
+end
+
 -- ===========================================================================
 --	Single exit point for display
 -- ===========================================================================

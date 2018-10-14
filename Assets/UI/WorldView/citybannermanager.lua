@@ -1130,12 +1130,12 @@ function CityBanner.UpdateStats( self : CityBanner)
 
         -- CQUI get real housing from improvements value
         local pCityID = pCity:GetID();
-        if CQUI_HousingUpdated[pCityID] ~= true then
-          CQUI_RealHousingFromImprovements(pCity);
+        if CQUI_HousingUpdated[localPlayerID] == nil or CQUI_HousingUpdated[localPlayerID][pCityID] ~= true then
+          CQUI_RealHousingFromImprovements(pCity, localPlayerID, pCityID);
         end
 
         if g_smartbanner and g_smartbanner_population then
-          local CQUI_HousingFromImprovements = CQUI_HousingFromImprovementsTable[pCityID];    -- CQUI real housing from improvements value
+          local CQUI_HousingFromImprovements = CQUI_HousingFromImprovementsTable[localPlayerID][pCityID];    -- CQUI real housing from improvements value
           if CQUI_HousingFromImprovements ~= nil then    -- CQUI real housing from improvements fix to show correct values when waiting for the next turn
             local popTooltip:string = GetPopulationTooltip(self, turnsUntilGrowth, currentPopulation, foodSurplus);
             self.m_Instance.CityPopulation:SetToolTipString(popTooltip);
@@ -2293,6 +2293,41 @@ function OnDistrictAddedToMap( playerID: number, districtID : number, cityID :nu
               elseif (pDistrict:GetDefenseStrength() > 0 ) then
                 AddMiniBannerToMap( playerID, cityID, districtID, BANNERTYPE_ENCAMPMENT );
               end
+
+              -- CQUI update city's real housing from improvements when completed a district that triggers a Culture Bomb
+              if playerID == Game.GetLocalPlayer() then
+              	if districtType == GameInfo.Districts["DISTRICT_ENCAMPMENT"].Index then
+              	  if PlayerConfigurations[playerID]:GetCivilizationTypeName() == "CIVILIZATION_POLAND" then
+              	    CQUI_OnCityInfoUpdated(playerID, cityID);
+              	  end
+              	elseif districtType == GameInfo.Districts["DISTRICT_HOLY_SITE"].Index or districtType == GameInfo.Districts["DISTRICT_LAVRA"].Index then
+              	  if PlayerConfigurations[playerID]:GetCivilizationTypeName() == "CIVILIZATION_KHMER" then
+              	    CQUI_OnCityInfoUpdated(playerID, cityID);
+              	  else
+              	    local playerReligion :table = pPlayer:GetReligion();
+              	    local playerReligionType :number = playerReligion:GetReligionTypeCreated();
+              	    if playerReligionType ~= -1 then
+              	      local cityReligion :table = pCity:GetReligion();
+              	      local eDominantReligion :number = cityReligion:GetMajorityReligion();
+              	      if eDominantReligion == playerReligionType then
+              	        local pGameReligion :table = Game.GetReligion();
+              	        local pAllReligions :table = pGameReligion:GetReligions();
+              	        for _, kFoundReligion in ipairs(pAllReligions) do
+              	          if kFoundReligion.Religion == eDominantReligion then
+              	            for _, belief in pairs(kFoundReligion.Beliefs) do
+              	              if GameInfo.Beliefs[belief].BeliefType == "BELIEF_BURIAL_GROUNDS" then
+              	                CQUI_OnCityInfoUpdated(playerID, cityID);
+              	                break;
+              	              end
+              	            end
+              	            break;
+              	          end
+              	        end
+              	      end
+              	    end
+              	  end
+              	end
+              end
             end
           else
             miniBanner:UpdateStats();
@@ -2317,6 +2352,17 @@ function OnImprovementAddedToMap(locX, locY, eImprovementType, eOwner)
   if improvementData == nil then
     UI.DataError("No database entry for eImprovementType #"..tostring(eImprovementType).." for ("..tostring(locX)..","..tostring(locY)..") and owner "..tostring(eOwner));
     return;
+  end
+
+  -- CQUI update city's real housing from improvements when built an improvement that triggers a Culture Bomb
+  if eOwner == Game.GetLocalPlayer() then
+    if improvementData.ImprovementType == "IMPROVEMENT_FORT" then
+      if PlayerConfigurations[eOwner]:GetCivilizationTypeName() == "CIVILIZATION_POLAND" then
+        local ownerCity = Cities.GetPlotPurchaseCity(locX, locY);
+        local cityID = ownerCity:GetID();
+        CQUI_OnCityInfoUpdated(eOwner, cityID);
+      end
+    end
   end
 
   -- Right now we're only interested in the Airstrip improvement
@@ -3354,62 +3400,89 @@ end
 
 -- ===========================================================================
 -- CQUI calculate real housing from improvements
-function CQUI_RealHousingFromImprovements(pCity)
+function CQUI_RealHousingFromImprovements(pCity, PlayerID, pCityID)
   local CQUI_HousingFromImprovements = 0;
-  local pCityID = pCity:GetID();
-  local tParameters :table = {};
-  tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
-  local tResults :table = CityManager.GetCommandTargets( pCity, CityCommandTypes.MANAGE, tParameters );
-  local tPlots :table = tResults[CityCommandResults.PLOTS];
-  if tPlots ~= nil and (table.count(tPlots) > 0) then
-    for i, plotId in pairs(tPlots) do
-      local kPlot	:table = Map.GetPlotByIndex(plotId);
-      local eImprovementType :number = kPlot:GetImprovementType();
-      if( eImprovementType ~= -1 ) then
-        local kImprovementData = GameInfo.Improvements[eImprovementType].Housing;
-        if kImprovementData == 1 then    -- farms, pastures etc.
-          CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 1;
-        elseif kImprovementData == 2 then    -- stepwells and kampungs
-          if eImprovementType == 23 then    -- stepwells (Index == 23)
-            local CQUI_PlayerResearchedSanitation :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(40);    -- check if a player researched Sanitation (Index == 40)
-            if not CQUI_PlayerResearchedSanitation then
-              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
-            else
-              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
-            end
-          else    -- kampungs (Index == 26, but after load a game Index == 25)
-            local CQUI_PlayerResearchedMassProduction :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(27);    -- check if a player researched Mass Production (Index == 27)
-            if not CQUI_PlayerResearchedMassProduction then
-              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
-            else
-              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
+  local kCityPlots :table = Map.GetCityPlots():GetPurchasedPlots(pCity);
+  if kCityPlots ~= nil then
+    for _, plotID in pairs(kCityPlots) do
+      local kPlot	:table = Map.GetPlotByIndex(plotID);
+      if Map.GetPlotDistance( pCity:GetX(), pCity:GetY(), kPlot:GetX(), kPlot:GetY() ) <= 3 then
+        local eImprovementType :number = kPlot:GetImprovementType();
+        if eImprovementType ~= -1 then
+          if not kPlot:IsImprovementPillaged() then
+            local kImprovementData = GameInfo.Improvements[eImprovementType].Housing;
+            if kImprovementData == 1 then    -- farms, pastures etc.
+              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 1;
+            elseif kImprovementData == 2 then    -- stepwells, kampungs
+              if GameInfo.Improvements[eImprovementType].ImprovementType == "IMPROVEMENT_STEPWELL" then    -- stepwells
+                local CQUI_PlayerResearchedSanitation :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(GameInfo.Technologies["TECH_SANITATION"].Index);    -- check if a player researched Sanitation
+                if not CQUI_PlayerResearchedSanitation then
+                  CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
+                else
+                  CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
+                end
+              else    -- kampungs
+                local CQUI_PlayerResearchedMassProduction :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(GameInfo.Technologies["TECH_MASS_PRODUCTION"].Index);    -- check if a player researched Mass Production
+                if not CQUI_PlayerResearchedMassProduction then
+                  CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
+                else
+                  CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
+                end
+              end
             end
           end
         end
       end
     end
     CQUI_HousingFromImprovements = CQUI_HousingFromImprovements * 0.5;
-    CQUI_HousingFromImprovementsTable[pCityID] = CQUI_HousingFromImprovements;
-    CQUI_HousingUpdated[pCityID] = true;
+    if CQUI_HousingFromImprovementsTable[PlayerID] == nil then
+      CQUI_HousingFromImprovementsTable[PlayerID] = {};
+    end
+    if CQUI_HousingUpdated[PlayerID] == nil then
+      CQUI_HousingUpdated[PlayerID] = {};
+    end
+    CQUI_HousingFromImprovementsTable[PlayerID][pCityID] = CQUI_HousingFromImprovements;
+    CQUI_HousingUpdated[PlayerID][pCityID] = true;
     LuaEvents.CQUI_RealHousingFromImprovementsCalculated(pCityID, CQUI_HousingFromImprovements);
-  else
-    return;
   end
 end
 
 -- ===========================================================================
 -- CQUI update city's real housing from improvements
-function CQUI_OnCityInfoUpdated(pCityID)
-  CQUI_HousingUpdated[pCityID] = false;
+function CQUI_OnCityInfoUpdated(PlayerID, pCityID)
+  CQUI_HousingUpdated[PlayerID][pCityID] = nil;
 end
 
 -- ===========================================================================
 -- CQUI update all cities real housing from improvements
-function CQUI_OnAllCitiesInfoUpdated()
-  local m_pCity:table = Players[Game.GetLocalPlayer()]:GetCities();
+function CQUI_OnAllCitiesInfoUpdated(PlayerID)
+  local m_pCity:table = Players[PlayerID]:GetCities();
   for i, pCity in m_pCity:Members() do
     local pCityID = pCity:GetID();
-    CQUI_HousingUpdated[pCityID] = false;
+    CQUI_OnCityInfoUpdated(PlayerID, pCityID)
+  end
+end
+
+-- ===========================================================================
+-- CQUI update close to a culture bomb cities data and real housing from improvements
+function CQUI_OnCityLostTileToCultureBomb(PlayerID, x, y)
+  local m_pCity:table = Players[PlayerID]:GetCities();
+  for i, pCity in m_pCity:Members() do
+    if Map.GetPlotDistance( pCity:GetX(), pCity:GetY(), x, y ) <= 4 then
+      local pCityID = pCity:GetID();
+      CQUI_OnCityInfoUpdated(PlayerID, pCityID)
+      CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, nil);
+    end
+  end
+end
+
+-- ===========================================================================
+-- CQUI erase real housing from improvements data everywhere when a city removed from map
+function CQUI_OnCityRemovedFromMap(PlayerID, pCityID)
+  if playerID == Game.GetLocalPlayer() then
+    CQUI_HousingFromImprovementsTable[PlayerID][pCityID] = nil;
+    CQUI_HousingUpdated[PlayerID][pCityID] = nil;
+    LuaEvents.CQUI_RealHousingFromImprovementsCalculated(pCityID, nil);
   end
 end
 
@@ -3477,9 +3550,9 @@ function Initialize()
   Events.CityWorkerChanged.Add(           OnCityWorkerChanged );
 
   LuaEvents.CQUI_CityInfoUpdated.Add( CQUI_OnCityInfoUpdated );    -- CQUI update city's real housing from improvements
-  LuaEvents.CQUI_CityLostTileToCultureBomb.Add( CQUI_OnAllCitiesInfoUpdated );    -- CQUI update all cities real housing from improvements
-  LuaEvents.CQUI_IndiaPlayerResearchedSanitation.Add( CQUI_OnAllCitiesInfoUpdated );    -- CQUI update all cities real housing from improvements
-  LuaEvents.CQUI_IndonesiaPlayerResearchedMassProduction.Add( CQUI_OnAllCitiesInfoUpdated );    -- CQUI update all cities real housing from improvements
+  LuaEvents.CQUI_AllCitiesInfoUpdated.Add( CQUI_OnAllCitiesInfoUpdated );    -- CQUI update all cities real housing from improvements
+  LuaEvents.CQUI_CityLostTileToCultureBomb.Add( CQUI_OnCityLostTileToCultureBomb );    -- CQUI update close to a culture bomb cities data and real housing from improvements
+  Events.CityRemovedFromMap.Add( CQUI_OnCityRemovedFromMap );    -- CQUI erase real housing from improvements data everywhere when a city removed from map
 
   LuaEvents.GameDebug_Return.Add(OnGameDebugReturn);
 

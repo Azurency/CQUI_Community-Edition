@@ -1305,6 +1305,17 @@ function OnCivicComplete( ePlayer:number, eTech:number)
 
     --------------------------------------------------------------------------
 
+    -- CQUI update all cities real housing when play as Cree and researched Civil Service
+    if eTech == GameInfo.Civics["CIVIC_CIVIL_SERVICE"].Index then    -- Civil Service
+      if (PlayerConfigurations[ePlayer]:GetCivilizationTypeName() == "CIVILIZATION_CREE") then
+        LuaEvents.CQUI_AllCitiesInfoUpdated(ePlayer);
+      end
+    -- CQUI update all cities real housing when play as Scotland and researched Globalization
+    elseif eTech == GameInfo.Civics["CIVIC_GLOBALIZATION"].Index then    -- Globalization
+      if (PlayerConfigurations[ePlayer]:GetCivilizationTypeName() == "CIVILIZATION_SCOTLAND") then
+        LuaEvents.CQUI_AllCitiesInfoUpdated(ePlayer);
+      end
+    end
   end
 end
 

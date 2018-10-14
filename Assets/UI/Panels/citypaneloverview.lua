@@ -81,7 +81,7 @@ m_tabs = nil;
 
 
 --CQUI Members
-local CQUI_HousingFromImprovementsTable = {};
+local CQUI_HousingFromImprovementsTable :table = {};    -- CQUI real housing from improvements table
 local CQUI_ShowCityDetailAdvisor :boolean = false;
 
 function CQUI_OnSettingsUpdate()
@@ -986,7 +986,7 @@ function OnHide()
 end
 
 -- ===========================================================================
---CQUI get real housing from improvements
+-- CQUI get real housing from improvements
 function CQUI_HousingFromImprovementsTableInsert (pCityID, CQUI_HousingFromImprovements)
   CQUI_HousingFromImprovementsTable[pCityID] = CQUI_HousingFromImprovements;
 end
@@ -1012,7 +1012,7 @@ function Initialize()
   LuaEvents.CityPanel_ToggleOverviewBuildings.Add( OnToggleBuildingsTab );
   LuaEvents.CityPanel_ToggleOverviewReligion.Add( OnToggleReligionTab );
   LuaEvents.CityPanel_LiveCityDataChanged.Add( OnLiveCityDataChanged )
-  LuaEvents.CQUI_RealHousingFromImprovementsCalculated.Add(CQUI_HousingFromImprovementsTableInsert);    --CQUI get real housing from improvements values
+  LuaEvents.CQUI_RealHousingFromImprovementsCalculated.Add(CQUI_HousingFromImprovementsTableInsert);    -- CQUI get real housing from improvements values
 
   Events.SystemUpdateUI.Add( OnUpdateUI );
   Events.CityNameChanged.Add(OnCityNameChanged);

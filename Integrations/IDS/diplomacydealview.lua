@@ -111,7 +111,7 @@ function SetIconToSize(iconControl, iconName, iconSize)
   if iconSize == nil then
     iconSize = 64;
   end
-  
+
   local x, y, szIconName, iconSize = IconManager:FindIconAtlasNearestSize(iconName, iconSize, true);
   iconControl:SetTexture(x, y, szIconName);
   iconControl:SetSizeVal(iconSize, iconSize);
@@ -440,7 +440,7 @@ end
 
 -- ===========================================================================
 function PopulateValuePulldown(pullDown, pDealItem)
-  
+
   local possibleValues = DealManager.GetPossibleDealItems(pDealItem:GetFromPlayerID(), pDealItem:GetToPlayerID(), pDealItem:GetType(), pDealItem:GetSubType());
   if (possibleValues ~= nil) then
     pullDown:ClearEntries();
@@ -450,15 +450,27 @@ function PopulateValuePulldown(pullDown, pDealItem)
       pullDown:BuildEntry( "InstanceOne", entryControlTable );
 
       local szItemName = Locale.Lookup(entry.ForTypeDisplayName);
-      if (entry.Duration == -1) then
+      if (entry.SubType == DealAgreementTypes.RESEARCH_AGREEMENT) then
         local eTech = GameInfo.Technologies[entry.ForType].Index;
         local iTurns = 	ms_LocalPlayer:GetDiplomacy():ComputeResearchAgreementTurns(ms_OtherPlayer, eTech);
         szDisplayName = Locale.Lookup("LOC_DIPLOMACY_DEAL_PARAMETER_WITH_TURNS", szItemName, iTurns);
+      elseif (entry.SubType == DealAgreementTypes.JOINT_WAR or entry.SubType == DealAgreementTypes.THIRD_PARTY_WAR) then
+        szDisplayName = szItemName;
+        -- Have a type of war that describes the joint war?
+        if entry.Parameters ~= nil then
+          if entry.Parameters.WarType ~= nil then
+            local warDef = GameInfo.Wars[entry.Parameters.WarType];
+            if warDef ~= nil then
+              szDisplayName = szDisplayName .. " [COLOR:Grey](" .. Locale.Lookup(warDef.Name) .. ")[ENDCOLOR]";
+            end
+          end
+        end
       else
         szDisplayName = szItemName;
       end
 
-      entryControlTable.Button:LocalizeAndSetText(szDisplayName);						
+      entryControlTable.Button:SetSizeX(280);
+      entryControlTable.Button:LocalizeAndSetText(szDisplayName);
       local eType = entry.ForType;
       entryControlTable.Button:RegisterCallback(Mouse.eLClick, function()
         OnValuePulldownCommit(eType);
@@ -473,7 +485,7 @@ function PopulateValuePulldown(pullDown, pDealItem)
 
     pullDown:SetHide(false);
     pullDown:CalculateInternals();
-  end	
+  end
 end
 
 -- ===========================================================================
@@ -691,8 +703,8 @@ function OnProposeOrAcceptDeal()
 
   ClearValueEdit();
 
-  if (ms_LastIncomingDealProposalAction == DealProposalAction.PENDING or 
-        ms_LastIncomingDealProposalAction == DealProposalAction.REJECTED or 
+  if (ms_LastIncomingDealProposalAction == DealProposalAction.PENDING or
+        ms_LastIncomingDealProposalAction == DealProposalAction.REJECTED or
         ms_LastIncomingDealProposalAction == DealProposalAction.EQUALIZE_FAILED) then
     ProposeWorkingDeal();
     UpdateDealStatus();
@@ -738,7 +750,7 @@ function OnProposeOrAcceptDeal()
             end
           else
             sendDealAndContinue();
-          end			
+          end
         end
       else
         -- No, send an adjustment and stay in the deal view.
@@ -1167,6 +1179,7 @@ function UpdateProposalButtons(bDealValid)
           if (pDeal:HasUnacceptableItems()) then
             Controls.EqualizeDeal:SetHide(true);
             Controls.AcceptDeal:SetHide(true);
+            Controls.WhatWouldItTakeButton:SetHide(true);
           elseif (iItemsFromLocal > 0 and iItemsFromOther == 0) then
             -- One way gift?
             Controls.WhatWouldYouGiveMe:SetHide(false);
@@ -1493,7 +1506,7 @@ function OnClickAvailableResource(player, resourceType)
         -- Add one
         pDealItem:SetValueType(resourceType);
         pDealItem:SetAmount(1);
-        pDealItem:SetDuration(30);	-- Default to this many turns		
+        pDealItem:SetDuration(30);	-- Default to this many turns
 
         -- After we add the item, test to see if the item is valid, it is possible that we have exceeded the amount of resources we can trade.
         if not pDealItem:IsValid() then
@@ -1526,8 +1539,28 @@ function OnClickAvailableAgreement(player, agreementType, agreementTurns)
     if (pDealItem == nil) then
       -- No
       -- AZURENCY : Joint War and Research Agreements need special treatment (can be only modified on the player side)
-      if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.THIRD_PARTY_WAR or agreementType == DealAgreementTypes.RESEARCH_AGREEMENT) then
-        ShowAgreementOptionPopup(agreementType, agreementTurns, player:GetID());
+      if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.RESEARCH_AGREEMENT) then
+        pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, ms_LocalPlayer:GetID());
+
+        -- AZURENCY : Fix, select the first possibily by default
+        local toPlayerId = ms_LocalPlayer:GetID();
+        if (toPlayerId == player:GetID() ) then
+          toPlayerId = ms_OtherPlayer:GetID();
+        end
+        local possibleValues = DealManager.GetPossibleDealItems(player:GetID(), toPlayerId, DealItemTypes.AGREEMENTS, agreementType, pDeal);
+        if (possibleValues ~= nil) then
+          for i, entry in ipairs(possibleValues) do
+            pDealItem:SetValueType(entry.ForType);
+
+            if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.THIRD_PARTY_WAR) then
+              if entry.Parameters and entry.Parameters.WarType then
+                pDealItem:SetParameterValue("WarType", entry.Parameters.WarType);
+              end
+            end
+            break;
+          end
+        end
+
       else
         pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, player:GetID());
 
@@ -2195,12 +2228,12 @@ function renderCity(pCity : table, player : table, targetContainer : table)
   if pCity:IsOccupied() then
     -- Cede
     if pCity:GetOwner() == otherPlayer:GetID() then
-      button.IconText:SetText(button.IconText:GetText() .. '[COLOR_Civ6Green] - ' .. Locale.Lookup("LOC_IDS_DEAL_CEDE") .. '[ENDCOLOR]'); 
+      button.IconText:SetText(button.IconText:GetText() .. '[COLOR_Civ6Green] - ' .. Locale.Lookup("LOC_IDS_DEAL_CEDE") .. '[ENDCOLOR]');
       button.SelectButton:SetTextureOffsetVal(0, 64);
     -- Return
     else
       if pCity:GetOriginalOwner() == otherPlayer:GetID() then
-        button.IconText:SetText(button.IconText:GetText() .. '[COLOR_Civ6Red] - ' .. Locale.Lookup("LOC_IDS_DEAL_RETURN") .. '[ENDCOLOR]'); 
+        button.IconText:SetText(button.IconText:GetText() .. '[COLOR_Civ6Red] - ' .. Locale.Lookup("LOC_IDS_DEAL_RETURN") .. '[ENDCOLOR]');
         button.SelectButton:SetTextureOffsetVal(0, 96);
       end
     end

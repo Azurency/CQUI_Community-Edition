@@ -75,7 +75,7 @@ function city_fields( kCityData, pCityInstance )
 
   -- CQUI get real housing from improvements value
   local kCityID = kCityData.City:GetID();
-  local CQUI_HousingFromImprovements = CQUI_HousingFromImprovementsTable[kCityID];
+  local CQUI_HousingFromImprovements = getCQUI_HousingFromImprovementsTable()[kCityID];
   pCityInstance.Housing:SetText( tostring( kCityData.Housing - kCityData.HousingFromImprovements + CQUI_HousingFromImprovements ) );    -- CQUI calculate real housing
   pCityInstance.Amenities:SetText( tostring(kCityData.AmenitiesNum).." / "..tostring(kCityData.AmenitiesRequiredNum) );
 

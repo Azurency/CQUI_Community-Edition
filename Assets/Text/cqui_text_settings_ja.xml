@@ -178,16 +178,28 @@
       <Text>研究の選択時、常にツリー全体を開く</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL" Language="ja_JP">
-      <Text>技術 / 社会制度 のポップアップを表示する</Text>
+      <Text>技術 / 社会制度のポップアップを表示する</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS_TECHVISUAL_TOOLTIP" Language="ja_JP">
       <Text>技術や社会制度の研究完了時にポップアップを表示する</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO" Language="ja_JP">
-      <Text>技術 / 社会制度 の音声を再生する</Text>
+      <Text>技術 / 社会制度の音声を再生する</Text>
     </Row>
     <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="ja_JP">
       <Text>技術や社会制度の研究完了時に音声を再生する[NEWLINE]ポップアップの設定とは無関係</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_WONDERBUILTVISUAL" Language="ja_JP">
+      <Text>遺産の動画を再生する</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_WONDERBUILTVISUAL_TOOLTIP" Language="ja_JP">
+      <Text>遺産完成時に動画を再生する</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_WONDERBUILTAUDIO" Language="ja_JP">
+      <Text>遺産の音声を再生する</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_WONDERBUILTAUDIO_TOOLTIP" Language="ja_JP">
+      <Text>遺産完成時に音声を再生する[NEWLINE]動画の再生設定とは完全に独立しているため、音声だけを再生することも可能</Text>
     </Row>
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="ja_JP">
       <Text>備考: CQUI の設定は個別のセーブに関連づけられています！[NEWLINE]デフォルトの設定を変更したい場合、 [MOD のインストール先]/CQUI/Assets フォルダ内の cqui_settings.sql を読んでください。</Text>
