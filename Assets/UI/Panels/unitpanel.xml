@@ -14,9 +14,9 @@
         <Stack					ID="BuildActionsStack"				Anchor="R,T" Offset="11,26" StackGrowth="Left" Padding="6" />
       </Grid>
       <Container				ID="UnitPanelBaseContainer" Anchor="R,B" Offset="172,0" Size="310,160" ConsumeMouseOver="1" >
-        <Grid						ID="MainPanelBacking"				Anchor="R,B" Texture="SelectionPanel_WoodBacking" SliceTextureSize="150,154" SliceCorner="85,47" Size="Parent-10,Parent-6">
+        <GridButton 		ID="MainPanelBacking"				Anchor="R,B" Texture="SelectionPanel_WoodBacking" SliceTextureSize="150,154" SliceCorner="85,47" Size="Parent-10,Parent-6">
           <Grid																			AnchorSide="I,O" Texture="SelectionPanel_TopRim" SliceTextureSize="14,5" SliceCorner="7,2" Size="parent,5"/>
-        </Grid>
+        </GridButton>
 
         <Container			ID="CombatPreviewBanners" Anchor="L,B" Offset="-86,-10" Size="169,194"	AnchorSide="O,I"													Hidden="1">
           <Image				ID="BannerDefeat"																				Size="169,194"	Texture="CombatPreview_BannerDefeat.dds"  Hidden="1"/>
@@ -50,14 +50,14 @@
         </Container>
 
         <!-- UNIT SELECTION PULLDOWN -->
-        <PullDown ID="UnitListPopup" ConsumeMouse="0" Offset="22,-18" Anchor="C,T" Size="200,20" AutoSizePopUp="0" AutoFlip="1" ScrollThreshold="200">
+        <PullDown ID="UnitListPopup" ConsumeMouse="0" Offset="22,-18" Anchor="C,T" Size="220,20" AutoSizePopUp="1" SpaceForScroll="1" AutoFlip="1" ScrollThreshold="200"> 
           <ButtonData>
             <GridButton   ID="UnitName" String="$UnitName$" Style="UnitPanelHeader" Offset="0,27" Size="50,20" Texture="Controls_ButtonControl" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" TruncateWidth="210" StateOffsetIncrement="0,24"/>
           </ButtonData>
 
-          <GridData InnerPadding="10,10" Offset="-2,0" Anchor="L,B" Texture="Controls_DrawerUp" SliceCorner="5,4" SliceSize="3,2" SliceTextureSize="14,8"/>
+          <GridData InnerPadding="10,10" Offset="-1,0" Anchor="L,B" Texture="Controls_DrawerUp" SliceCorner="5,4" SliceSize="3,2" SliceTextureSize="14,8"/>
 
-          <ScrollPanelData Anchor="L,C" Vertical="1" Size="11,14" Offset="-7,0"  AutoScrollBar="1">
+          <ScrollPanelData Anchor="L,C" Vertical="1" Size="11,14" Offset="0,0"  AutoScrollBar="1">
             <ScrollBar Style="ScrollVerticalBacking" Anchor="R,T" AnchorSide="O,I" Color="28,60,90,255" Offset="1,0">
               <Thumb Style="ScrollThumbAlt" Color="28,60,90,255" />
             </ScrollBar>
@@ -66,7 +66,7 @@
           <StackData StackGrowth="Top" Offset="0,0" Size="200,400" Anchor="L,T" />
 
           <InstanceData Name="UnitListEntry">
-            <GridButton  Anchor="L,T" ID="Button" Style="UnitPanelHeader" Size="200,24" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" StateOffsetIncrement="0,24" TruncateWidth="180">
+            <GridButton  Anchor="L,T" ID="Button" Style="UnitPanelHeader" Size="200,24" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" StateOffsetIncrement="0,24" TruncateWidth="160">
               <Image ID="UnitTypeIcon" Anchor="L,C" Size="22,22" Offset="2,0" Texture="UnitFlagAtlas22"/>
               <Image ID="UnitStatusIcon" Anchor="R,C" Size="22,22" Offset="2,0" Texture="Stats22"/>
             </GridButton>
@@ -197,6 +197,23 @@
           </Grid>
 
           <Stack Anchor="L,B" AnchorSide="O,I" Offset="0,0" StackGrowth="Left">
+            <!-- AA Grid -->
+            <Grid ID="AAGrid" Size="160,parent+30" Texture="CombatPreview_ExtraFrame" SliceCorner="8,8" SliceSize="3,3">
+              <!-- AA Name and Strength -->
+              <Label ID="AAName" Anchor="C,T" Offset="0,10" Style="UnitPanelSupportName"/>
+              <Label ID="AAStrength" Anchor="C,T" Offset="0,38" Style="UnitPanelSupportStrength"/>
+ 
+              <!-- AA Icon -->
+              <Image Anchor="R,T" Offset="8,30" Texture="CombatPreview_CombatStatFoe" >
+                <Image Anchor="C,C" Size="22,22" Texture="Stats22" TextureOffset="110,66"/>
+              </Image>
+ 
+              <!-- AA Modifier Stack -->
+              <AlphaAnim	ID="AntiAirModifierStackAnim" Anchor="L,T" Size="150,105" Offset="5,76" AlphaBegin="1" AlphaEnd="0" Speed="2" Cycle="Once" Stopped="true" Pause="3">
+                <Stack ID="AntiAirModifierStack" Anchor="C,T" Offset="0,0" StackGrowth="Down" />
+              </AlphaAnim>
+            </Grid>
+          
             <!-- Interceptor Grid -->
             <Grid ID="InterceptorGrid" Size="160,parent+30" Texture="CombatPreview_ExtraFrame" SliceCorner="8,8" SliceSize="3,3">
               <!-- Interceptor Name and Strength -->
@@ -222,22 +239,6 @@
               </AlphaAnim>
             </Grid>
 
-            <!-- AA Grid -->
-            <Grid ID="AAGrid" Size="160,parent+30" Texture="CombatPreview_ExtraFrame" SliceCorner="8,8" SliceSize="3,3">
-              <!-- AA Name and Strength -->
-              <Label ID="AAName" Anchor="C,T" Offset="0,10" Style="UnitPanelSupportName"/>
-              <Label ID="AAStrength" Anchor="C,T" Offset="0,38" Style="UnitPanelSupportStrength"/>
-
-              <!-- AA Icon -->
-              <Image Anchor="R,T" Offset="8,30" Texture="CombatPreview_CombatStatFoe" >
-                <Image Anchor="C,C" Size="22,22" Texture="Stats22" TextureOffset="110,66"/>
-              </Image>
-
-              <!-- AA Modifier Stack -->
-              <AlphaAnim	ID="AntiAirModifierStackAnim" Anchor="L,T" Size="150,105" Offset="5,76" AlphaBegin="1" AlphaEnd="0" Speed="2" Cycle="Once" Stopped="true" Pause="3">
-                <Stack ID="AntiAirModifierStack" Anchor="C,T" Offset="0,0" StackGrowth="Down" />
-              </AlphaAnim>
-            </Grid>
           </Stack>
 
           <Grid     Anchor="R,B"	Offset="6,0"	Size ="Parent-6,138" Texture="CombatPreview_FrameMask.dds"  SliceCorner="150,0" SliceTextureSize="296,138"/>
@@ -265,10 +266,10 @@
 
           </Image>
 
-
-
           <!--Unit Icon-->
-          <Image        ID="TargetUnitIcon"               Texture="UnitPortraits95_1" Size="95,95" Anchor="R,B" Offset="10,38" Icon="ICON_UNIT_WARRIOR_PORTRAIT"/>
+          <Container  ID="TargetUnitIconArea"                               Size="95,95" Anchor="R,B" Hidden="1">
+            <Image        ID="TargetUnitIcon"               Texture="UnitPortraits95_1" Size="95,95" Anchor="R,B" Offset="10,38" Icon="ICON_UNIT_WARRIOR_PORTRAIT"/>
+          </Container>
           <!-- City Icon -->
           <Container  ID="TargetCityIconArea"                               Size="95,95" Anchor="R,B" Offset="10,38" Hidden="1">
             <Image    ID="TargetCircleBacking"  Texture="Circle80_Base"     Size="80,80" Anchor="C,C" Offset="0,-2">
@@ -508,27 +509,6 @@
     </Grid>
   </Instance>
 
-  <!-- Stat Instance -->
-  <Instance				Name="BigStatInstance">
-    <Container		ID="Top"																		Size="200,26" >
-      <Container																							Size="28,22"	>
-        <Label		ID="Value"		Anchor="C,T"																String="-1?"			Style="UnitPanelBigValue" />
-      </Container>
-      <Label			ID="Text"									Offset="36,10"									String="?Details" Style="UnitPanelBigLabel" />
-    </Container>
-  </Instance>
-
-  <!-- Ratio Stat Instance (e.g., 2/3 moves) -->
-  <Instance				Name="BigRatioStatInstance">
-    <Container		ID="Top"																		Size="200,26" >
-      <Stack			ID="Ratio"		StackGrowth="Right">
-        <Label		ID="Value"		Anchor="C,T"																String="-1?"			Style="UnitPanelBigValue" />
-        <Label		ID="FullVal"	Anchor="C,T"	Offset="0,11"									String="-1?"			Style="UnitPanelBigValue" FontSize="18" />
-      </Stack>
-      <Label			ID="Text"										Offset="36,10"								String="?Details" Style="UnitPanelBigLabel" />
-    </Container>
-  </Instance>
-
   <!-- A column of 3 build actions Instance -->
   <Instance				Name="BuildActionsColumnInstance">
     <Container		ID="Top"																		Size="38,140" >
@@ -543,10 +523,6 @@
       <Image			ID="Top"			Size="32,32" Texture="PromotionsSmall"  TextureOffset="32,0" />
   </Instance>
 
-  <Instance				Name="EmptyPromotionInstance">
-    <Image				ID="Top"			Size="32,32" Texture="PromotionsSmall"	TextureOffset="0,0" Offset="0,2" />
-  </Instance>
-
   <!-- Promotion Selection Instance -->
   <Instance				Name="PromotionSelectionInstance">
     <Container		ID="PromotionSelection"															Size="280,80" >
@@ -559,10 +535,6 @@
         <Label		ID="PromotionDescription"							 Offset="44,26"							Style="FontNormalMedium14" WrapWidth="230" String="Promotion Description" />
       </GridButton>
     </Container>
-  </Instance>
-
-  <Instance Name="DetailInstance">
-    <Label			ID="DetailInstanceLabel" String="?Details" Style="FontFlair12" />
   </Instance>
 
   <!-- Trade Unit Resource Instance -->

@@ -11,7 +11,11 @@
       </Grid>
 
       <!-- Operative Stack  -->
-      <Stack ID="OperativeStack" Anchor="C,T" Offset="0,120" StackGrowth="Down" StackPadding="6"/>
+      <ScrollPanel ID="OperativeScrollPanel" Anchor="R,B" Size="parent-22,parent-124" Offset="12,6" Vertical="1">
+        <ScrollBar Anchor="R,C" AnchorSide="O,I"  Offset="-2,0" Style="ScrollVerticalBar"/>
+
+        <Stack ID="OperativeStack" Anchor="C,T" Offset="0,0" StackGrowth="Down" StackPadding="6"/>
+      </ScrollPanel>
     </Container>
 
     <!-- ================================================================== -->

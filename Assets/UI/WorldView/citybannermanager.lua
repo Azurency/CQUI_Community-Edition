@@ -26,6 +26,9 @@ local DATA_FIELD_RELIGION_ICONS_IM :string = "m_IconsIM";
 local DATA_FIELD_RELIGION_FOLLOWER_LIST_IM :string = "m_FollowerListIM";
 local DATA_FIELD_RELIGION_POP_CHART_IM :string = "m_PopChartIM";
 local DATA_FIELD_RELIGION_INFO_INSTANCE :string = "m_ReligionInfoInst";
+
+local RELIGION_POP_CHART_TOOLTIP_HEADER		:string = Locale.Lookup("LOC_CITY_BANNER_FOLLOWER_PRESSURE_TOOLTIP_HEADER");
+
 local OFFSET_RELIGION_BANNER  :number = 25;
 local ICON_HOLY_SITE      :string = "Faith";
 local ICON_PRESSURE_DOWN    :string = "PressureDown";
@@ -93,27 +96,28 @@ end
 
 -- The structure that holds the banner instance data
 hstructure CityBanner
-  meta              : CityBannerMeta;
+  meta                    : CityBannerMeta;
 
-  m_InstanceManager       : table;              -- The instance manager that made the control set.
-    m_Instance            : table;              -- The instanced control set.
+  m_InstanceManager       : table;           -- The instance manager that made the control set.
+  m_Instance              : table;           -- The instanced control set.
 
-    m_Type              : number;             -- Full, mini, etc...
-  m_Style             : number;             -- Team or other
-    m_IsSelected          : boolean;
-    m_IsCurrentlyVisible      : boolean;
-  m_IsForceHide         : boolean;
-    m_IsDimmed            : boolean;
-  m_OverrideDim         : boolean;
-  m_FogState            : number;
+  m_Type                  : number;          -- Full, mini, etc...
+  m_Style                 : number;          -- Team or other
+  m_IsSelected            : boolean;
+  m_IsCurrentlyVisible    : boolean;
+  m_IsForceHide           : boolean;
+  m_IsDimmed              : boolean;
+  m_OverrideDim           : boolean;
+  m_FogState              : number;
 
-    m_Player            : table;
-    m_CityID            : number;   -- The city ID.  Keeping just the ID, rather than a reference because there will be times when we need the value, but the city instance will not exist.
-  m_DistrictID          : number;   -- The district ID.
-  m_PlotX             : number;   -- the X and Y location of the plot associated with the banner. We need this in cases where we need a banner not associated with a district (ex. Airstrip Improvement)
-  m_PlotY             : number;
-  m_IsImprovementBanner     : boolean;
-  m_eMajorityReligion       : number;
+  m_Player                : table;
+  m_CityID                : number;          -- The city ID.  Keeping just the ID, rather than a reference because there will be times when we need the value, but the city instance will not exist.
+  m_DistrictID            : number;          -- The district ID.
+  m_PlotX                 : number;          -- the X and Y location of the plot associated with the banner. We need this in cases where we need a banner not associated with a district (ex. Airstrip Improvement)
+  m_PlotY                 : number;
+  m_IsImprovementBanner   : boolean;
+  m_eMajorityReligion     : number;
+  m_UnitListEnabled				: boolean;         -- if this is an aerodome marks whether the unit dropdown is enabled when fully visible.
 end
 
 
@@ -168,6 +172,7 @@ local SIZEOFPOPANDPRODMETERS    :number = 15; --The amount to add to the city ba
 local CQUI_ShowCitizenIconsOnCityHover:boolean = false;
 local CQUI_ShowCityManageAreaOnCityHover:boolean = true;
 local CQUI_CityManageAreaShown:boolean = false;
+local CQUI_CityManageAreaShouldShow:boolean = false;
 
 -- ===========================================================================
 --  QUI
@@ -196,6 +201,7 @@ function CQUI_OnSettingsInitialized()
 
   CQUI_ShowCitizenIconsOnCityHover = GameConfiguration.GetValue("CQUI_ShowCitizenIconsOnCityHover");
   CQUI_ShowCityManageAreaOnCityHover = GameConfiguration.GetValue("CQUI_ShowCityManageAreaOnCityHover");
+  CQUI_ShowCityManageAreaInScreen = GameConfiguration.GetValue("CQUI_ShowCityMangeAreaInScreen")
 end
 
 function CQUI_OnSettingsUpdate()
@@ -280,8 +286,7 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
     if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)
         and UI.GetInterfaceMode() == InterfaceModeTypes.SELECTION
         and UI.GetHeadSelectedUnit() == nil then
-      LuaEvents.Area_ShowCitizenManagement(cityID);
-      CQUI_CityManageAreaShown = true;
+      CQUI_ShowCitizenManagementLens(cityID)
     end
 
     local kPlayer = Players[playerID];
@@ -357,6 +362,10 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
     end
 
     tResults  = CityManager.GetCommandTargets( kCity, CityCommandTypes.PURCHASE, tParameters );
+    if tResults == nil then
+      return;
+    end
+
     tPlots    = tResults[CityCommandResults.PLOTS];
 
     if (tPlots ~= nil and table.count(tPlots) ~= 0) and UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) == false then
@@ -434,10 +443,9 @@ function CQUI_OnBannerMouseExit(playerID: number, cityID: number)
   end
 
   -- Astog: Fix for lens being cleared when having other lenses on
-  if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)
+  if CQUI_ShowCityManageAreaOnCityHover and UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_MANAGEMENT
       and CQUI_CityManageAreaShown then
-    LuaEvents.Area_ClearCitizenManagement();
-    CQUI_CityManageAreaShown = false;
+    CQUI_ClearCitizenManagementLens()
   end
 
   local tPlots    :table = tResults[CityCommandResults.PLOTS];
@@ -569,6 +577,7 @@ function CityBanner.Initialize( self : CityBanner, playerID: number, cityID : nu
   self.m_IsDimmed = false;
   self.m_OverrideDim = false;
   self.m_FogState = 0;
+  self.m_UnitListEnabled = false;
 
   self:UpdateName();
   self:UpdatePosition();
@@ -699,14 +708,16 @@ function CityBanner.UpdateAerodromeBanner( self : CityBanner )
   self.m_Instance.AerodromeMaxUnitCount:SetText(iAirCapacity);
 
   -- Update tooltip to show unit capacity
-  self.m_Instance.AerodromeBannerGrid:SetToolTipString(Locale.Lookup("LOC_CITY_BANNER_AERODROME_AIRCRAFT_STATIONED", iAirUnitCount, iAirCapacity));
+  self.m_Instance.AerodromeBase:SetToolTipString(Locale.Lookup("LOC_CITY_BANNER_AERODROME_AIRCRAFT_STATIONED", iAirUnitCount, iAirCapacity));
 
   -- If current air unit count is 0 then disabled popup
   if iAirUnitCount <= 0 then
-    self.m_Instance.UnitListPopup:SetDisabled(true);
+    self.m_UnitListEnabled = false;
   else
-    self.m_Instance.UnitListPopup:SetDisabled(false);
+    self.m_UnitListEnabled = true;
   end
+
+  self:SetFogState( self.m_FogState );
 
   self.m_Instance.UnitListPopup:CalculateInternals();
 
@@ -1052,6 +1063,8 @@ end
     if turnsUntilGrowth > 0 then
       popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_TURNS_GROWTH", turnsUntilGrowth);
       popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_FOOD_SURPLUS", round(foodSurplus,1));
+    elseif turnsUntilGrowth == 0 then
+      popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_STAGNATE");
     elseif turnsUntilGrowth < 0 then
       popTooltip = popTooltip .. "[NEWLINE]  " .. Locale.Lookup("LOC_CITY_BANNER_TURNS_STARVATION", -turnsUntilGrowth);
     end
@@ -1117,12 +1130,12 @@ function CityBanner.UpdateStats( self : CityBanner)
 
         -- CQUI get real housing from improvements value
         local pCityID = pCity:GetID();
-        if CQUI_HousingUpdated[pCityID] ~= true then
-          CQUI_RealHousingFromImprovements(pCity);
+        if CQUI_HousingUpdated[localPlayerID] == nil or CQUI_HousingUpdated[localPlayerID][pCityID] ~= true then
+          CQUI_RealHousingFromImprovements(pCity, localPlayerID, pCityID);
         end
 
         if g_smartbanner and g_smartbanner_population then
-          local CQUI_HousingFromImprovements = CQUI_HousingFromImprovementsTable[pCityID];    -- CQUI real housing from improvements value
+          local CQUI_HousingFromImprovements = CQUI_HousingFromImprovementsTable[localPlayerID][pCityID];    -- CQUI real housing from improvements value
           if CQUI_HousingFromImprovements ~= nil then    -- CQUI real housing from improvements fix to show correct values when waiting for the next turn
             local popTooltip:string = GetPopulationTooltip(self, turnsUntilGrowth, currentPopulation, foodSurplus);
             self.m_Instance.CityPopulation:SetToolTipString(popTooltip);
@@ -1493,12 +1506,25 @@ end
 function CityBanner.SetFogState( self : CityBanner, fogState : number )
 
   if( fogState == PLOT_HIDDEN ) then
-        self:SetHide( true );
-    else
-        self:SetHide( false );
-    end
+    self:SetHide( true );
+  else
+    self:SetHide( false );
 
-    self.m_FogState = fogState;
+    --If this is an Aerodrome we need to hide the numbers and dropdown if in FOW
+    if( self.m_Instance ~= nil ) then
+      if( self.m_Type == BANNERTYPE_AERODROME) then
+        if( fogState == PLOT_REVEALED ) then
+          self.m_Instance.AerodromeBase:SetHide(true);
+          self.m_Instance.UnitListPopup:SetDisabled(true);
+        else
+          self.m_Instance.AerodromeBase:SetHide(false);
+          self.m_Instance.UnitListPopup:SetDisabled(not self.m_UnitListEnabled);
+        end
+      end
+    end
+  end
+
+  self.m_FogState = fogState;
 end
 
 -- ===========================================================================
@@ -1526,18 +1552,12 @@ function CityBanner.UpdateName( self : CityBanner )
       local cityName    :string = capitalIcon .. Locale.ToUpper(pCity:GetName());
 
       if not self:IsTeam() then
-        local leader:string = PlayerConfigurations[owner]:GetLeaderTypeName();
-        if leader ~= nil then
-        if GameInfo.CivilizationLeaders[leader] == nil then
-          UI.DataError("Banners found a leader \""..leader.."\" which is not/no longer in the game; icon may be whack.");
+        local civType:string = PlayerConfigurations[owner]:GetCivilizationTypeName();
+        if civType ~= nil then
+          self.m_Instance.CivIcon:SetIcon("ICON_" .. civType);
         else
-          local civIconName :string = "ICON_";
-          local civType   :string = GameInfo.CivilizationLeaders[leader].CivilizationType;
-          if civType ~= nil then
-            self.m_Instance.CivIcon:SetIcon(civIconName..civType);
-          end
+          UI.DataError("Invalid type name returned by GetCivilizationTypeName");
         end
-      end
       end
 
       local questsManager : table = Game.GetQuestsManager();
@@ -1779,6 +1799,7 @@ function CityBanner.UpdateReligion( self : CityBanner )
         Religion=religion,
         Followers=followers,
         Pressure=pCityReligion:GetTotalPressureOnCity(religion),
+        LifetimePressure=cityReligion.Pressure,
         FillPercent=fillPercent,
         Color=GameInfo.Religions[religion].Color });
     end
@@ -1816,9 +1837,9 @@ function CityBanner.UpdateReligion( self : CityBanner )
       end
 
       -- Color hexes in this city the same color as religion
-      local visiblePlots:table = Map.GetCityPlots():GetVisiblePurchasedPlots(pCity);
-      if(table.count(visiblePlots) > 0) then
-        UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_RELIGION, Game.GetLocalPlayer(), visiblePlots, majorityReligionColor );
+      local plots:table = Map.GetCityPlots():GetPurchasedPlots(pCity);
+      if(table.count(plots) > 0) then
+        UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_RELIGION, Game.GetLocalPlayer(), plots, majorityReligionColor );
       end
     end
   end
@@ -1861,13 +1882,22 @@ function CityBanner.UpdateReligion( self : CityBanner )
       popChartIM:ResetInstances();
     end
 
+    local populationChartTooltip:string = RELIGION_POP_CHART_TOOLTIP_HEADER;
+
     -- Add religion icons for each active religion
     for i,religionInfo in ipairs(activeReligions) do
       local religionDef:table = GameInfo.Religions[religionInfo.Religion];
 
       local icon = "ICON_" .. religionDef.ReligionType;
       local religionColor = UI.GetColorValue(religionDef.Color);
-      local religionName = Game.GetReligion():GetName(religionDef.Index);
+
+      -- The first index is the predominant religion. Label it as such.
+      local religionName = "";
+      if i == 1 then
+        religionName = Locale.Lookup("LOC_CITY_BANNER_PREDOMINANT_RELIGION", Game.GetReligion():GetName(religionDef.Index));
+      else
+        religionName = Game.GetReligion():GetName(religionDef.Index);
+      end
 
       -- Add icon to main icon list
       local iconInst:table = iconIM:GetInstance();
@@ -1881,10 +1911,16 @@ function CityBanner.UpdateReligion( self : CityBanner )
       followerListInst.ReligionFollowerIcon:SetIcon(icon);
       followerListInst.ReligionFollowerIcon:SetColor(religionColor);
       followerListInst.ReligionFollowerIconBacking:SetColor(religionColor);
-      followerListInst.ReligionFollowerIconBacking:SetToolTipString(religionName);
       followerListInst.ReligionFollowerCount:SetText(religionInfo.Followers);
-      followerListInst.ReligionFollowerPressure:SetText(Locale.Lookup("LOC_CITY_BANNER_RELIGIOUS_PRESSURE", religionInfo.Pressure));
+      followerListInst.ReligionFollowerPressure:SetText(Locale.Lookup("LOC_CITY_BANNER_RELIGIOUS_PRESSURE", Round(religionInfo.Pressure)));
+
+      -- Add the follower tooltip to the population chart tooltip
+      local followerTooltip:string = Locale.Lookup("LOC_CITY_BANNER_FOLLOWER_PRESSURE_TOOLTIP", religionName, religionInfo.Followers, Round(religionInfo.LifetimePressure));
+      followerListInst.ReligionFollowerIconBacking:SetToolTipString(followerTooltip);
+      populationChartTooltip = populationChartTooltip .. "[NEWLINE][NEWLINE]" .. followerTooltip;
     end
+
+    religionInfoInst.ReligionPopChartContainer:SetToolTipString(populationChartTooltip);
 
     religionInfoInst.ReligionFollowerListStack:CalculateSize();
     religionInfoInst.ReligionFollowerListScrollPanel:CalculateInternalSize();
@@ -1943,7 +1979,7 @@ function CityBanner.UpdateReligion( self : CityBanner )
 
     -- Show how much religion this city is exerting outwards
     local outwardReligiousPressure = pCityReligion:GetPressureFromCity();
-    religionInfoInst.ExertedReligiousPressure:SetText(Locale.Lookup("LOC_CITY_BANNER_RELIGIOUS_PRESSURE", outwardReligiousPressure));
+    religionInfoInst.ExertedReligiousPressure:SetText(Locale.Lookup("LOC_CITY_BANNER_RELIGIOUS_PRESSURE", Round(outwardReligiousPressure)));
 
     -- Reset buttons to default state
     religionInfoInst.ReligionInfoButton:SetHide(false);
@@ -2193,11 +2229,11 @@ end
 
 -- ===========================================================================
 function DestroyCityBanner( playerID: number, cityID : number )
-	local bannerInstance = GetCityBanner( playerID, cityID );
-	if (bannerInstance ~= nil) then
-		bannerInstance:destroy();
-		CityBannerInstances[ playerID ][ cityID ] = nil;
-	end
+  local bannerInstance = GetCityBanner( playerID, cityID );
+  if (bannerInstance ~= nil) then
+    bannerInstance:destroy();
+    CityBannerInstances[ playerID ][ cityID ] = nil;
+  end
 end
 
 -- ===========================================================================
@@ -2257,6 +2293,41 @@ function OnDistrictAddedToMap( playerID: number, districtID : number, cityID :nu
               elseif (pDistrict:GetDefenseStrength() > 0 ) then
                 AddMiniBannerToMap( playerID, cityID, districtID, BANNERTYPE_ENCAMPMENT );
               end
+
+              -- CQUI update city's real housing from improvements when completed a district that triggers a Culture Bomb
+              if playerID == Game.GetLocalPlayer() then
+              	if districtType == GameInfo.Districts["DISTRICT_ENCAMPMENT"].Index then
+              	  if PlayerConfigurations[playerID]:GetCivilizationTypeName() == "CIVILIZATION_POLAND" then
+              	    CQUI_OnCityInfoUpdated(playerID, cityID);
+              	  end
+              	elseif districtType == GameInfo.Districts["DISTRICT_HOLY_SITE"].Index or districtType == GameInfo.Districts["DISTRICT_LAVRA"].Index then
+              	  if PlayerConfigurations[playerID]:GetCivilizationTypeName() == "CIVILIZATION_KHMER" then
+              	    CQUI_OnCityInfoUpdated(playerID, cityID);
+              	  else
+              	    local playerReligion :table = pPlayer:GetReligion();
+              	    local playerReligionType :number = playerReligion:GetReligionTypeCreated();
+              	    if playerReligionType ~= -1 then
+              	      local cityReligion :table = pCity:GetReligion();
+              	      local eDominantReligion :number = cityReligion:GetMajorityReligion();
+              	      if eDominantReligion == playerReligionType then
+              	        local pGameReligion :table = Game.GetReligion();
+              	        local pAllReligions :table = pGameReligion:GetReligions();
+              	        for _, kFoundReligion in ipairs(pAllReligions) do
+              	          if kFoundReligion.Religion == eDominantReligion then
+              	            for _, belief in pairs(kFoundReligion.Beliefs) do
+              	              if GameInfo.Beliefs[belief].BeliefType == "BELIEF_BURIAL_GROUNDS" then
+              	                CQUI_OnCityInfoUpdated(playerID, cityID);
+              	                break;
+              	              end
+              	            end
+              	            break;
+              	          end
+              	        end
+              	      end
+              	    end
+              	  end
+              	end
+              end
             end
           else
             miniBanner:UpdateStats();
@@ -2281,6 +2352,17 @@ function OnImprovementAddedToMap(locX, locY, eImprovementType, eOwner)
   if improvementData == nil then
     UI.DataError("No database entry for eImprovementType #"..tostring(eImprovementType).." for ("..tostring(locX)..","..tostring(locY)..") and owner "..tostring(eOwner));
     return;
+  end
+
+  -- CQUI update city's real housing from improvements when built an improvement that triggers a Culture Bomb
+  if eOwner == Game.GetLocalPlayer() then
+    if improvementData.ImprovementType == "IMPROVEMENT_FORT" then
+      if PlayerConfigurations[eOwner]:GetCivilizationTypeName() == "CIVILIZATION_POLAND" then
+        local ownerCity = Cities.GetPlotPurchaseCity(locX, locY);
+        local cityID = ownerCity:GetID();
+        CQUI_OnCityInfoUpdated(eOwner, cityID);
+      end
+    end
   end
 
   -- Right now we're only interested in the Airstrip improvement
@@ -3082,6 +3164,29 @@ function OnLensLayerOn( layerNum:number )
     m_isReligionLensActive = true;
     RealizeReligion();
   end
+
+  -- ASTOG: Hack solution to appeal lens being cleared on entry to city.
+  -- it is worse when citizen changes since it causes a complete refresh of lenses including resource icons and yield icons
+  -- TODO: Improve this system so it does not cause a complete refresh
+  -- if CQUI_ShowCityManageAreaInScreen then
+  --   if layerNum == LensLayers.CITIZEN_MANAGEMENT then
+  --     local pCity:table = UI.GetHeadSelectedCity()
+  --     if pCity ~= nil then
+  --       UILens.SetActive("Appeal")
+  --       CQUI_ShowCitizenManagementLens(pCity:GetID())
+  --     end
+  --   end
+
+  --   -- Should we reapply citizen management area because it got cleared?
+  --   if layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL and CQUI_CityManageAreaShouldShow then
+  --     local pCity:table = UI.GetHeadSelectedCity()
+  --     if pCity ~= nil then
+  --       UILens.SetActive("Appeal")
+  --       CQUI_ShowCitizenManagementLens(pCity:GetID())
+  --       CQUI_CityManageAreaShouldShow = false
+  --     end
+  --   end
+  -- end
 end
 
 -- ===========================================================================
@@ -3094,6 +3199,15 @@ function OnLensLayerOff( layerNum:number )
     m_isReligionLensActive = false;
     RealizeReligion();
   end
+
+  -- Catch uninteded clear of appeal lens because of event chain
+  -- if CQUI_ShowCityManageAreaInScreen then
+  --   if layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL and CQUI_CityManageAreaShown then
+  --     UILens.SetActive("Appeal")
+  --     CQUI_CityManageAreaShouldShow = true
+  --     CQUI_CityManageAreaShown = false
+  --   end
+  -- end
 end
 
 -- ===========================================================================
@@ -3129,6 +3243,73 @@ function OnCameraUpdate( vFocusX:number, vFocusY:number, fZoomLevel:number )
     OnRefreshBannerPositions();
   end
   m_prevZoomMultiplier = m_zoomMultiplier;
+end
+
+-- ===========================================================================
+function CQUI_ShowCitizenManagementLens(cityID:number)
+  local playerID:number = Game.GetLocalPlayer()
+  local pCity:table = Players[playerID]:GetCities():FindID(cityID);
+  if pCity ~= nil then
+    print_debug("Show citizens for " .. Locale.Lookup(pCity:GetName()))
+
+    local tParameters:table = {};
+    local cityPlotID = Map.GetPlot(pCity:GetX(), pCity:GetY()):GetIndex()
+    tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
+
+    local workingColor:number = UI.GetColorValue("COLOR_CITY_PLOT_WORKING");
+    local lockedColor:number = UI.GetColorValue("COLOR_CITY_PLOT_LOCKED");
+    local colorPlot:table = {}
+    colorPlot[workingColor] = {}
+    colorPlot[lockedColor] = {}
+
+    -- Get city plot and citizens info
+    local tResults:table = CityManager.GetCommandTargets(pCity, CityCommandTypes.MANAGE, tParameters);
+    if tResults == nil then
+      print("ERROR : Could not find plots")
+      return
+    end
+
+    local tPlots:table = tResults[CityCommandResults.PLOTS];
+    local tUnits:table = tResults[CityCommandResults.CITIZENS];
+    local tLockedUnits:table = tResults[CityCommandResults.LOCKED_CITIZENS];
+
+    if tPlots ~= nil and table.count(tPlots) > 0 then
+      for i, plotID in ipairs(tPlots) do
+        if (tLockedUnits[i] > 0 or cityPlotID == plotID) then
+          table.insert(colorPlot[lockedColor], plotID);
+        elseif (tUnits[i] > 0) then
+          table.insert(colorPlot[workingColor], plotID);
+        end
+      end
+    end
+
+    -- Next culture expansion plot, show it only if not in city panel
+    if UI.GetHeadSelectedCity() == nil then
+      local pCityCulture:table  = pCity:GetCulture();
+      local culturePlotColor:number = UI.GetColorValue("COLOR_CITY_PLOT_CULTURE")
+      if pCityCulture ~= nil then
+        local pNextPlotID:number = pCityCulture:GetNextPlot();
+        if pNextPlotID ~= nil and Map.IsPlot(pNextPlotID) then
+          colorPlot[culturePlotColor] = {pNextPlotID}
+        end
+      end
+    end
+
+    CQUI_CityManageAreaShown = true;
+    LuaEvents.MinimapPanel_ApplyCustomLens(colorPlot);
+  end
+end
+
+-- ===========================================================================
+function CQUI_ClearCitizenManagementLens()
+  CQUI_CityManageAreaShown = false;
+  LuaEvents.MinimapPanel_ClearCustomLens()
+end
+
+-- ===========================================================================
+function CQUI_RefreshCitizenManagementLens(cityID:number)
+  CQUI_ClearCitizenManagementLens()
+  CQUI_ShowCitizenManagementLens(cityID)
 end
 
 -- ===========================================================================
@@ -3210,66 +3391,98 @@ function OnInterfaceModeChanged( oldMode:number, newMode:number )
       end
     end
   end
+
+  if (newMode == InterfaceModeTypes.DISTRICT_PLACEMENT) then
+    CQUI_CityManageAreaShown = false
+    CQUI_CityManageAreaShouldShow = false
+  end
 end
 
 -- ===========================================================================
 -- CQUI calculate real housing from improvements
-function CQUI_RealHousingFromImprovements(pCity)
+function CQUI_RealHousingFromImprovements(pCity, PlayerID, pCityID)
   local CQUI_HousingFromImprovements = 0;
-  local pCityID = pCity:GetID();
-  local tParameters :table = {};
-  tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
-  local tResults :table = CityManager.GetCommandTargets( pCity, CityCommandTypes.MANAGE, tParameters );
-  local tPlots :table = tResults[CityCommandResults.PLOTS];
-  if tPlots ~= nil and (table.count(tPlots) > 0) then
-    for i, plotId in pairs(tPlots) do
-      local kPlot	:table = Map.GetPlotByIndex(plotId);
-      local eImprovementType :number = kPlot:GetImprovementType();
-      if( eImprovementType ~= -1 ) then
-        local kImprovementData = GameInfo.Improvements[eImprovementType].Housing;
-        if kImprovementData == 1 then    -- farms, pastures etc.
-          CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 1;
-        elseif kImprovementData == 2 then    -- stepwells and kampungs
-          if eImprovementType == 23 then    -- stepwells (Index == 23)
-            local CQUI_PlayerResearchedSanitation :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(40);    -- check if a player researched Sanitation (Index == 40)
-            if not CQUI_PlayerResearchedSanitation then
-              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
-            else
-              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
-            end
-          else    -- kampungs (Index == 26, but after load a game Index == 25)
-            local CQUI_PlayerResearchedMassProduction :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(27);    -- check if a player researched Mass Production (Index == 27)
-            if not CQUI_PlayerResearchedMassProduction then
-              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
-            else
-              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
+  local kCityPlots :table = Map.GetCityPlots():GetPurchasedPlots(pCity);
+  if kCityPlots ~= nil then
+    for _, plotID in pairs(kCityPlots) do
+      local kPlot	:table = Map.GetPlotByIndex(plotID);
+      if Map.GetPlotDistance( pCity:GetX(), pCity:GetY(), kPlot:GetX(), kPlot:GetY() ) <= 3 then
+        local eImprovementType :number = kPlot:GetImprovementType();
+        if eImprovementType ~= -1 then
+          if not kPlot:IsImprovementPillaged() then
+            local kImprovementData = GameInfo.Improvements[eImprovementType].Housing;
+            if kImprovementData == 1 then    -- farms, pastures etc.
+              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 1;
+            elseif kImprovementData == 2 then    -- stepwells, kampungs
+              if GameInfo.Improvements[eImprovementType].ImprovementType == "IMPROVEMENT_STEPWELL" then    -- stepwells
+                local CQUI_PlayerResearchedSanitation :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(GameInfo.Technologies["TECH_SANITATION"].Index);    -- check if a player researched Sanitation
+                if not CQUI_PlayerResearchedSanitation then
+                  CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
+                else
+                  CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
+                end
+              else    -- kampungs
+                local CQUI_PlayerResearchedMassProduction :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(GameInfo.Technologies["TECH_MASS_PRODUCTION"].Index);    -- check if a player researched Mass Production
+                if not CQUI_PlayerResearchedMassProduction then
+                  CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
+                else
+                  CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
+                end
+              end
             end
           end
         end
       end
     end
     CQUI_HousingFromImprovements = CQUI_HousingFromImprovements * 0.5;
-    CQUI_HousingFromImprovementsTable[pCityID] = CQUI_HousingFromImprovements;
-    CQUI_HousingUpdated[pCityID] = true;
+    if CQUI_HousingFromImprovementsTable[PlayerID] == nil then
+      CQUI_HousingFromImprovementsTable[PlayerID] = {};
+    end
+    if CQUI_HousingUpdated[PlayerID] == nil then
+      CQUI_HousingUpdated[PlayerID] = {};
+    end
+    CQUI_HousingFromImprovementsTable[PlayerID][pCityID] = CQUI_HousingFromImprovements;
+    CQUI_HousingUpdated[PlayerID][pCityID] = true;
     LuaEvents.CQUI_RealHousingFromImprovementsCalculated(pCityID, CQUI_HousingFromImprovements);
-  else
-    return;
   end
 end
 
 -- ===========================================================================
 -- CQUI update city's real housing from improvements
-function CQUI_OnCityInfoUpdated(pCityID)
-  CQUI_HousingUpdated[pCityID] = false;
+function CQUI_OnCityInfoUpdated(PlayerID, pCityID)
+  CQUI_HousingUpdated[PlayerID][pCityID] = nil;
 end
 
 -- ===========================================================================
 -- CQUI update all cities real housing from improvements
-function CQUI_OnAllCitiesInfoUpdated()
-  local m_pCity:table = Players[Game.GetLocalPlayer()]:GetCities();
+function CQUI_OnAllCitiesInfoUpdated(PlayerID)
+  local m_pCity:table = Players[PlayerID]:GetCities();
   for i, pCity in m_pCity:Members() do
     local pCityID = pCity:GetID();
-    CQUI_HousingUpdated[pCityID] = false;
+    CQUI_OnCityInfoUpdated(PlayerID, pCityID)
+  end
+end
+
+-- ===========================================================================
+-- CQUI update close to a culture bomb cities data and real housing from improvements
+function CQUI_OnCityLostTileToCultureBomb(PlayerID, x, y)
+  local m_pCity:table = Players[PlayerID]:GetCities();
+  for i, pCity in m_pCity:Members() do
+    if Map.GetPlotDistance( pCity:GetX(), pCity:GetY(), x, y ) <= 4 then
+      local pCityID = pCity:GetID();
+      CQUI_OnCityInfoUpdated(PlayerID, pCityID)
+      CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, nil);
+    end
+  end
+end
+
+-- ===========================================================================
+-- CQUI erase real housing from improvements data everywhere when a city removed from map
+function CQUI_OnCityRemovedFromMap(PlayerID, pCityID)
+  if playerID == Game.GetLocalPlayer() then
+    CQUI_HousingFromImprovementsTable[PlayerID][pCityID] = nil;
+    CQUI_HousingUpdated[PlayerID][pCityID] = nil;
+    LuaEvents.CQUI_RealHousingFromImprovementsCalculated(pCityID, nil);
   end
 end
 
@@ -3337,15 +3550,19 @@ function Initialize()
   Events.CityWorkerChanged.Add(           OnCityWorkerChanged );
 
   LuaEvents.CQUI_CityInfoUpdated.Add( CQUI_OnCityInfoUpdated );    -- CQUI update city's real housing from improvements
-  LuaEvents.CQUI_CityLostTileToCultureBomb.Add( CQUI_OnAllCitiesInfoUpdated );    -- CQUI update all cities real housing from improvements
-  LuaEvents.CQUI_IndiaPlayerResearchedSanitation.Add( CQUI_OnAllCitiesInfoUpdated );    -- CQUI update all cities real housing from improvements
-  LuaEvents.CQUI_IndonesiaPlayerResearchedMassProduction.Add( CQUI_OnAllCitiesInfoUpdated );    -- CQUI update all cities real housing from improvements
+  LuaEvents.CQUI_AllCitiesInfoUpdated.Add( CQUI_OnAllCitiesInfoUpdated );    -- CQUI update all cities real housing from improvements
+  LuaEvents.CQUI_CityLostTileToCultureBomb.Add( CQUI_OnCityLostTileToCultureBomb );    -- CQUI update close to a culture bomb cities data and real housing from improvements
+  Events.CityRemovedFromMap.Add( CQUI_OnCityRemovedFromMap );    -- CQUI erase real housing from improvements data everywhere when a city removed from map
 
   LuaEvents.GameDebug_Return.Add(OnGameDebugReturn);
 
   LuaEvents.CQUI_SettingsInitialized.Add( CQUI_OnSettingsInitialized );
   Events.CitySelectionChanged.Add( CQUI_OnBannerMouseExit );
   Events.InfluenceGiven.Add( CQUI_OnInfluenceGiven );
+
+  LuaEvents.CQUI_ShowCitizenManagement.Add( CQUI_ShowCitizenManagementLens );
+  LuaEvents.CQUI_RefreshCitizenManagement.Add( CQUI_RefreshCitizenManagementLens );
+  LuaEvents.CQUI_ClearCitizenManagement.Add( CQUI_ClearCitizenManagementLens );
 end
 Initialize();
 

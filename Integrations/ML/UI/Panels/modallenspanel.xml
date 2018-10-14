@@ -2,17 +2,17 @@
 <Context>
 
   <!-- Darken the screen -->
-  <Box Color="0,0,0,0" Size="Full,Full" ConsumeMouse="0"/>
-  <Image ID="GradientL" Texture="Controls_GradientSmall" Size="20,full"  Color="0,0,0,255" Anchor="L,T" Rotate="270"/>
-  <Image ID="GradientR" Texture="Controls_GradientSmall" Size="20,full"  Color="0,0,0,255" Anchor="R,T" Rotate="90"/>
-  <Image ID="GradientB" Texture="Controls_Gradient" Size="full,150"  Color="0,0,0,255" Anchor="L,B"/>
-    
-  <Grid ID="HeaderGrid" Texture="Controls_LensHeaderSmall" Offset="0,29" SliceTextureSize="71,49" SliceCorner="20,24" Size="full,49" Color="255,255,255,255">
-    <Image ID="HeaderDropshadow" Texture="Controls_GradientSmall" Size="full,22"  Color="0,0,0,255" Anchor="L,B" AnchorSide="I,O"/>
+  <Box Color="0,0,0,0" Size="parent,parent" ConsumeMouse="0"/>
+  <Image ID="GradientL" Texture="Controls_GradientSmall" Size="20,parent"  Color="0,0,0,255" Anchor="L,T" Rotate="270"/>
+  <Image ID="GradientR" Texture="Controls_GradientSmall" Size="20,parent"  Color="0,0,0,255" Anchor="R,T" Rotate="90"/>
+  <Image ID="GradientB" Texture="Controls_Gradient" Size="parent,150"  Color="0,0,0,255" Anchor="L,B"/>
+
+  <Grid ID="HeaderGrid" Texture="Controls_LensHeaderSmall" Offset="0,29" SliceTextureSize="71,49" SliceCorner="20,24" Size="parent,49" Color="255,255,255,255">
+    <Image ID="HeaderDropshadow" Texture="Controls_GradientSmall" Size="parent,22"  Color="0,0,0,255" Anchor="L,B" AnchorSide="I,O"/>
     <Label ID="LensText" String="{LOC_HUD_RELIGION_LENS:upper}"  Style="FontFlair22" SmallCaps="26" FontStyle="glow" ColorSet="WonderHeader" Anchor="L,C" Offset="25,0"/>
     <Button ID="CloseButton" Texture="Controls_CloseButtonAlt" Size="32,32" Anchor="R,C" Offset="2,0"/>
   </Grid>
-  
+
   <!-- Lens Key -->
   <Grid									ID="KeyPanel"			Anchor="L,T"			Offset="10,86"	Size="230,400" AutoSize="Vertical"	AutoSizePadding="0,10" Texture="Controls_PanelBlue"  SliceCorner="25,28" SliceSize="33,18" SliceTextureSize="83,75">
     <Line																Start="20,16"			End="210,16"		Color="55,95,126,255" Width="2" />
@@ -27,7 +27,7 @@
   <Instance Name="KeyEntry">
     <Image ID="KeyColorImage" Size="32,36" Texture="Controls_KeySwatchHex">
       <Stack ID="KeyInfoStack" StackGrowth="Down" Anchor="L,C" Offset="38,0">
-        <Label ID="KeyLabel" Style="FontNormal14" String="LOC_HUD_UNIT_PANEL_TOOLTIP_NO_WATER" WrapWidth="130"/>
+        <Label ID="KeyLabel" Style="FontNormal14" String="LOC_HUD_UNIT_PANEL_TOOLTIP_NO_WATER" WrapWidth="160"/>
         <Stack ID="KeyBonusStack" StackGrowth="Right">
           <Image ID="KeyBonusImage" Size="16,16" Icon="ICON_HOUSING" IconSize="16"/>
           <Label ID="KeyBonusLabel" Offset="0,2" Style="FontNormal14"/>

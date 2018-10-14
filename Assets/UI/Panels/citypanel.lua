@@ -63,6 +63,7 @@ local m_kTutorialDisabledControls :table  = nil;
 local m_GrowthPlot          :number = -1;
 
 local CQUI_HousingFromImprovementsTable :table = {};    -- CQUI real housing from improvements table
+local CQUI_ImprovementRemoved :table = {};    -- CQUI: a table we use to update real housing when improvement removed
 
 -- ====================CQUI Cityview==========================================
 
@@ -103,6 +104,7 @@ function CQUI_OnCityviewEnabled()
     UI.SetFixedTiltMode(true);
     DisplayGrowthTile();
     UI.SetInterfaceMode(InterfaceModeTypes.CITY_MANAGEMENT);
+
 end
 
 function CQUI_OnCityviewDisabled()
@@ -424,15 +426,11 @@ function ViewMain( data:table )
   end
   Controls.CityHealthMeter:SetToolTipString(tooltip);
 
-  local leader:string = PlayerConfigurations[data.Owner]:GetLeaderTypeName();
-  local civIconName:string = "ICON_";
-  if GameInfo.CivilizationLeaders[leader] == nil then
-    UI.DataError("Banners found a leader \""..leader.."\" which is not/no longer in the game; icon may be whack.");
+  local civType:string = PlayerConfigurations[data.Owner]:GetCivilizationTypeName();
+  if civType ~= nil then
+    Controls.CivIcon:SetIcon("ICON_" .. civType);
   else
-    if(GameInfo.CivilizationLeaders[leader].CivilizationType ~= nil) then
-      civIconName = civIconName..GameInfo.CivilizationLeaders[leader].CivilizationType;
-      Controls.CivIcon:SetIcon(civIconName);
-    end
+    UI.DataError("Invalid type name returned by GetCivilizationTypeName");
   end
 
   -- Divine Yuri's Tooltip calculations (Some changes made for CQUI)
@@ -953,9 +951,18 @@ function OnTileImproved(x, y)
       LuaEvents.CityPanel_LiveCityDataChanged( m_kData, true );
       --LuaEvents.UpdateBanner(Game.GetLocalPlayer(), m_pCity:GetID());
 
-      -- CQUI update city's real housing
-      local pCityID = m_pCity:GetID();
-      LuaEvents.CQUI_CityInfoUpdated(pCityID);
+      -- CQUI update city's real housing only if improvement adds housing or if it's removed
+      local plotID = plot:GetIndex();
+      if Map.GetPlotDistance(m_pCity:GetX(), m_pCity:GetY(), x, y) <= 3 then
+        local eImprovementType :number = plot:GetImprovementType();
+        if ( eImprovementType ~= -1 and GameInfo.Improvements[eImprovementType].Housing > 0 ) or CQUI_ImprovementRemoved[plotID] == true then
+          local pCityID = m_pCity:GetID();
+          LuaEvents.CQUI_CityInfoUpdated(PlayerID, pCityID);
+        end
+      end
+      if CQUI_ImprovementRemoved[plotID] == true then
+        CQUI_ImprovementRemoved[plotID] = nil;
+      end
     end
   end
 end
@@ -1048,6 +1055,7 @@ function OnUnitSelectionChanged( playerID:number, unitID:number, hexI:number, he
   if playerID == Game.GetLocalPlayer() then
     if ContextPtr:IsHidden()==false then
       Close();
+      Controls.ToggleOverviewPanel:SetAndCall(false);
     end
   end
 end
@@ -1116,8 +1124,6 @@ function OnTutorialOpen()
   Refresh();
 end
 
-
-
 -- ===========================================================================
 function OnBreakdown()
   LuaEvents.CityPanel_ShowBreakdownTab();
@@ -1152,7 +1158,6 @@ end
 function OnCitizensGrowth()
   LuaEvents.CityPanel_ShowCitizensTab();
 end
-
 
 -- ===========================================================================
 --  Set a yield to one of 3 check states.
@@ -1348,7 +1353,6 @@ function OnLocalPlayerChanged( eLocalPlayer:number , ePrevLocalPlayer:number )
   end
 end
 
-
 -- ===========================================================================
 --  Show/hide an area based on the status of a checkbox control
 --  checkBoxControl   A checkbox control that when selected is open
@@ -1375,7 +1379,6 @@ function SetupCollapsibleToggle( pCheckBoxControl:table, pButtonControl:table, p
     );
   end
 end
-
 
 -- ===========================================================================
 --  LUA Event
@@ -1405,6 +1408,29 @@ function OnTutorial_ContextDisableItems( contextName:string, kIdsToDisable:table
       else
         UI.DataError("Tutorial requested the control '"..name.."' be disabled in the city panel, but no such control exists in that context.");
       end
+    end
+  end
+end
+
+-- ===========================================================================
+-- CQUI update all cities data including real housing when tech/civic that adds housing is boosted and research is completed
+function CQUI_UpdateAllCitiesData(PlayerID)
+  local m_kCity :table = Players[PlayerID]:GetCities();
+  for i, kCity in m_kCity:Members() do
+    CityManager.RequestCommand(kCity, CityCommandTypes.SET_FOCUS, nil);
+  end
+end
+
+-- ===========================================================================
+-- CQUI add plot ID to a table when improvement removed. We use it to update real housing
+function CQUI_OnImprovementRemoved(x, y)
+  local plot :table = Map.GetPlot(x, y);
+  local PlayerID = Game.GetLocalPlayer();
+  m_pCity = Cities.GetPlotPurchaseCity(plot);
+  if m_pCity ~= nil then
+    if PlayerID == m_pCity:GetOwner() then
+      local plotID = plot:GetIndex();
+      CQUI_ImprovementRemoved[plotID] = true;
     end
   end
 end
@@ -1496,15 +1522,22 @@ function Initialize()
   LuaEvents.ProductionPanel_Close.Add( OnProductionPanelClose );
   LuaEvents.Tutorial_CityPanelOpen.Add( OnTutorialOpen );
   LuaEvents.Tutorial_ContextDisableItems.Add( OnTutorial_ContextDisableItems );
+  LuaEvents.CityPanel_SetOverViewState.Add(function(isOpened)
+    Controls.ToggleOverviewPanel:SetCheck(isOpened);
+  end);
+  LuaEvents.CityPanel_ToggleManageCitizens.Add(function()
+    Controls.ManageCitizensCheck:SetAndCall(not Controls.ManageCitizensCheck:IsChecked());
+  end);
+
+  -- CQUI Events
   LuaEvents.CQUI_GoNextCity.Add( CQUI_OnNextCity );
   LuaEvents.CQUI_GoPrevCity.Add( CQUI_OnPreviousCity );
   LuaEvents.CQUI_ToggleGrowthTile.Add( CQUI_ToggleGrowthTile );
   LuaEvents.CQUI_SettingsUpdate.Add( CQUI_SettingsUpdate );
   LuaEvents.RefreshCityPanel.Add(Refresh);
   LuaEvents.CQUI_RealHousingFromImprovementsCalculated.Add(CQUI_HousingFromImprovementsTableInsert);    -- CQUI get real housing from improvements values
-  LuaEvents.CQUI_CityLostTileToCultureBomb.Add( Refresh );    -- CQUI update real housing from improvements when a city lost tile to a Culture Bomb
-  LuaEvents.CQUI_IndiaPlayerResearchedSanitation.Add( Refresh );    -- CQUI update real housing from improvements when play as India and researched Sanitation
-  LuaEvents.CQUI_IndonesiaPlayerResearchedMassProduction.Add( Refresh );    -- CQUI update real housing from improvements when play as Indonesia and researched Mass Production
+  LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost.Add( CQUI_UpdateAllCitiesData );    -- CQUI update all cities data including real housing when tech/civic that adds housing is boosted and research is completed
+  Events.ImprovementRemovedFromMap.Add( CQUI_OnImprovementRemoved );    -- CQUI add plot ID to a table when improvement removed. We use it to update real housing
 
   -- Truncate possible static text overflows
   TruncateStringWithTooltip(Controls.BreakdownLabel,  MAX_BEFORE_TRUNC_STATIC_LABELS, Controls.BreakdownLabel:GetText());

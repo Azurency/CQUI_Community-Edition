@@ -120,12 +120,12 @@ function View( playerID:number, kData:table )
   table.sort(kData, function(a, b) return Locale.Compare(a.Name, b.Name) == -1; end);
   for i, data in ipairs(kData) do
     if data.IsCurrent or data.IsLastCompleted then
-      RealizeCurrentCivic( playerID, data, nil, m_CachedModifiers, extraIconDataCache );
+      RealizeCurrentCivic( playerID, data, nil, m_CachedModifiers );
       if (data.Repeatable) then
-        AddAvailableCivic( playerID, data, extraIconDataCache );
+        AddAvailableCivic( playerID, data );
       end
     else
-      AddAvailableCivic( playerID, data, extraIconDataCache );
+      AddAvailableCivic( playerID, data );
     end
   end
   
@@ -173,26 +173,28 @@ function AddAvailableCivic( playerID:number, kData:table )
   -- Include extra icons in total unlocks
   local extraUnlocks:table = {};
   local hideDescriptionIcon:boolean = false;
-  local cachedModifier:table = m_CachedModifiers[kData.CivicType];
-  for _,iconData in pairs(g_ExtraIconData) do
-    if iconData.ModifierType == cachedModifier.ModifierType then
-      hideDescriptionIcon = hideDescriptionIcon or iconData.HideDescriptionIcon;
-      table.insert(extraUnlocks, iconData);
-    end
+  local cachedModifiers:table = m_CachedModifiers[kData.CivicType];
+  if ( cachedModifiers ) then
+    for _,tModifier in ipairs(cachedModifiers) do
+      local tIconData :table = g_ExtraIconData[tModifier.ModifierType];
+      if ( tIconData ) then
+        hideDescriptionIcon = hideDescriptionIcon or tIconData.HideDescriptionIcon;
+        table.insert(extraUnlocks, {IconData=tIconData, ModifierTable=tModifier});
+      end  
+  end
   end
   
-
   -- Handle overflow for unlock icons
   numUnlockables = PopulateUnlockablesForCivic( playerID, kData.ID, unlockIM, nil, callback, hideDescriptionIcon );
   
   -- Initialize extra icons
-  for _,iconData in pairs(extraUnlocks) do
-    iconData:Initialize(kItemInstance.UnlockStack, cachedModifier);
+  for _,tUnlock in pairs(extraUnlocks) do
+    tUnlock.IconData:Initialize(kItemInstance.UnlockStack, tUnlock.ModifierTable);
     numUnlockables = numUnlockables + 1;
   end
   
   if numUnlockables ~= nil then
-    HandleOverflow(numUnlockables, kItemInstance);
+    HandleOverflow(numUnlockables, kItemInstance, 5, 5);
   end
 
   if kData.ResearchQueuePosition ~= -1 then
@@ -372,7 +374,7 @@ end
 -- input processing) so we can defer the rebuild until here.
 -- ===========================================================================
 function FlushChanges()
-  if m_needsRefresh then
+  if m_needsRefresh and ContextPtr:IsVisible() then
     Refresh();
   end
 end
@@ -403,6 +405,13 @@ function OnInit( isReload:boolean )
     end
   end
 end
+
+-- ===========================================================================
+function OnShow()
+  Refresh();
+end
+
+
 -- ===========================================================================
 function OnShutdown()
   LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID, "m_currentID", m_currentID);
@@ -430,47 +439,16 @@ end
 
 
 -- ===========================================================================
---	Obtain the data from the DB that doesn't change
---	Base costs and relationships (prerequisites)
---	RETURN: A table of node data (techs/civics/etc...) with a prereq for each entry.
--- ===========================================================================
-function PopulateCachedModifiers()	
-  -- Build main item table.
-  for row:table in GameInfo.Civics() do
-    local entry:table  = {};
-    -- Look up and cache any civic modifiers we reward like envoys awarded
-    for civicModifier in GameInfo.CivicModifiers() do
-      if (row.CivicType == civicModifier.CivicType) then
-        for modifierType in GameInfo.Modifiers() do
-          if civicModifier.ModifierId == modifierType.ModifierId then
-            entry.ModifierId    = modifierType.ModifierId;
-            entry.ModifierType  = modifierType.ModifierType;
-          end
-        end
-        for modifierArguments in GameInfo.ModifierArguments() do
-          if civicModifier.ModifierId == modifierArguments.ModifierId then
-            entry.ModifierValue = modifierArguments.Value;
-          end
-        end
-      end
-    end
-
-    m_CachedModifiers[row.CivicType] = entry;
-  end
-end
-
-
-
--- ===========================================================================
 --	INIT
 -- ===========================================================================
 function Initialize()
 
   -- Cache frequently used / expensive data
-  PopulateCachedModifiers();
-  
+  m_CachedModifiers = TechAndCivicSupport_BuildCivicModifierCache(); 
+ 
   -- Hot-reload events
   ContextPtr:SetInitHandler(OnInit);
+  ContextPtr:SetShowHandler(OnShow); 
   ContextPtr:SetShutdown(OnShutdown);
   LuaEvents.GameDebug_Return.Add(OnGameDebugReturn);
 
@@ -480,6 +458,7 @@ function Initialize()
   -- Screen events
   LuaEvents.ActionPanel_OpenChooseCivic.Add(OnOpenPanel);
   LuaEvents.WorldTracker_OpenChooseCivic.Add(OnOpenPanel);
+  LuaEvents.LaunchBar_CloseChoosers.Add(OnClosePanel); 
 
   -- Game events
   Events.CityInitialized.Add(			OnCityInitialized );

@@ -11,7 +11,7 @@ include( "GameCapabilities" );
 
 -- include("LaunchBarItem_", true);
 
-local m_numTreesOpen    :number = 0;
+local m_numOpen         :number = 0;
 local isTechTreeOpen    :boolean = false;
 local isCivicsTreeOpen  :boolean = false;
 local isGreatPeopleOpen :boolean = false;
@@ -24,6 +24,13 @@ local m_isGreatWorksUnlocked  :boolean = false;
 local m_isReligionUnlocked    :boolean = false;
 local m_isGovernmentUnlocked  :boolean = false;
 
+local m_isTechTreeAvailable    :boolean = false;
+local m_isCivicsTreeAvailable  :boolean = false;
+local m_isGovernmentAvailable  :boolean = false;
+local m_isReligionAvailable    :boolean = false;
+local m_isGreatPeopleAvailable :boolean = false;
+local m_isGreatWorksAvailable  :boolean = false;
+
 local isDebug:boolean = false;     -- Set to true to force all hook buttons to show on game start
 
 -- Launchbar Extras. Contains the callback and the button text
@@ -32,17 +39,25 @@ local m_LaunchbarExtras:table = {};
 -- ===========================================================================
 --  Callbacks
 -- ===========================================================================
-function OnGovernmentClick()
+function OnOpenGovernment()
   local ePlayer:number = Game.GetLocalPlayer();
-  if ePlayer ~= -1 then
-    localPlayer = Players[ePlayer];
-    if localPlayer == nil then
-      return;
-    end
-  else
+  if ePlayer == -1 then
+    return; -- Probably autoplay
+  end
+
+  localPlayer = Players[ePlayer];
+  if localPlayer == nil then
     return;
   end
+
   local kCulture:table = localPlayer:GetCulture();
+  if ( kCulture:IsInAnarchy() ) then -- Anarchy? No gov't for you.
+    if isGovernmentOpen then
+      LuaEvents.LaunchBar_CloseGovernmentPanel()
+    end
+    return;
+  end
+
   if isGovernmentOpen then
     LuaEvents.LaunchBar_CloseGovernmentPanel()
   else
@@ -126,62 +141,62 @@ end
 
 function SetCivicsTreeOpen()
   isCivicsTreeOpen = true;
-  OpenTree();
+  OnOpen();
 end
 
 function SetTechTreeOpen()
   isTechTreeOpen = true;
-  OpenTree();
+  OnOpen();
 end
 
 function SetGreatPeopleOpen()
   isGreatPeopleOpen = true;
-  OpenTree();
+  OnOpen();
 end
 
 function SetGreatWorksOpen()
   isGreatWorksOpen = true;
-  OpenTree();
+  OnOpen();
 end
 
 function SetReligionOpen()
   isReligionOpen = true;
-  OpenTree();
+  OnOpen();
 end
 
 function SetGovernmentOpen()
   isGovernmentOpen = true;
-  OpenTree();
+  OnOpen();
 end
 
 function SetCivicsTreeClosed()
   isCivicsTreeOpen = false;
-  CloseTree();
+  OnClose();
 end
 
 function SetTechTreeClosed()
   isTechTreeOpen = false;
-  CloseTree();
+  OnClose();
 end
 
 function SetGreatPeopleClosed()
   isGreatPeopleOpen = false;
-  CloseTree();
+  OnClose();
 end
 
 function SetGreatWorksClosed()
   isGreatWorksOpen = false;
-  CloseTree();
+  OnClose();
 end
 
 function SetReligionClosed()
   isReligionOpen = false;
-  CloseTree();
+  OnClose();
 end
 
 function SetGovernmentClosed()
   isGovernmentOpen = false;
-  CloseTree();
+  OnClose();
 end
 
 -- ===========================================================================
@@ -325,29 +340,29 @@ end
 --  Refresh Data and View
 -- ===========================================================================
 function RealizeHookVisibility()
-  local isShown:boolean = isDebug or HasCapability("CAPABILITY_TECH_TREE");
-  Controls.ScienceButton:SetShow(isShown);
-  Controls.ScienceBolt:SetShow(isShown);
+  m_isTechTreeAvailable = isDebug or HasCapability("CAPABILITY_TECH_TREE");
+  Controls.ScienceButton:SetShow(m_isTechTreeAvailable);
+  Controls.ScienceBolt:SetShow(m_isTechTreeAvailable);
 
-  isShown = isDebug or HasCapability("CAPABILITY_CIVICS_TREE");
-  Controls.CultureButton:SetShow(isShown);
-  Controls.CultureBolt:SetShow(isShown);
+  m_isCivicsTreeAvailable = isDebug or HasCapability("CAPABILITY_CIVICS_TREE");
+  Controls.CultureButton:SetShow(m_isCivicsTreeAvailable);
+  Controls.CultureBolt:SetShow(m_isCivicsTreeAvailable);
 
-  isShown = isDebug or (m_isGreatPeopleUnlocked and HasCapability("CAPABILITY_GREAT_PEOPLE_VIEW"));
-  Controls.GreatPeopleButton:SetShow(isShown);
-  Controls.GreatPeopleBolt:SetShow(isShown);
+  m_isGreatPeopleAvailable = isDebug or (m_isGreatPeopleUnlocked and HasCapability("CAPABILITY_GREAT_PEOPLE_VIEW"));
+  Controls.GreatPeopleButton:SetShow(m_isGreatPeopleAvailable);
+  Controls.GreatPeopleBolt:SetShow(m_isGreatPeopleAvailable);
 
-  isShown = isDebug or (m_isReligionUnlocked and HasCapability("CAPABILITY_RELIGION_VIEW"));
-  Controls.ReligionButton:SetShow(isShown);
-  Controls.ReligionBolt:SetShow(isShown);
-  
-  isShown = isDebug or (m_isGreatWorksUnlocked and HasCapability("CAPABILITY_GREAT_WORKS_VIEW"));
-  Controls.GreatWorksButton:SetShow(isShown);
-  Controls.GreatWorksBolt:SetShow(isShown);
-  
-  isShown = isDebug or (m_isGovernmentUnlocked and HasCapability("CAPABILITY_GOVERNMENTS_VIEW"));
-  Controls.GovernmentButton:SetShow(isShown);
-  Controls.GovernmentBolt:SetShow(isShown);
+  m_isReligionAvailable = isDebug or (m_isReligionUnlocked and HasCapability("CAPABILITY_RELIGION_VIEW"));
+  Controls.ReligionButton:SetShow(m_isReligionAvailable);
+  Controls.ReligionBolt:SetShow(m_isReligionAvailable);
+
+  m_isGreatWorksAvailable = isDebug or (m_isGreatWorksUnlocked and HasCapability("CAPABILITY_GREAT_WORKS_VIEW"));
+  Controls.GreatWorksButton:SetShow(m_isGreatWorksAvailable);
+  Controls.GreatWorksBolt:SetShow(m_isGreatWorksAvailable);
+
+  m_isGovernmentAvailable = isDebug or (m_isGovernmentUnlocked and HasCapability("CAPABILITY_GOVERNMENTS_VIEW"));
+  Controls.GovernmentButton:SetShow(m_isGovernmentAvailable);
+  Controls.GovernmentBolt:SetShow(m_isGovernmentAvailable);
 
   RefreshView();
 end
@@ -382,7 +397,7 @@ function RefreshReligion()
   end
   local localPlayer = Players[ePlayer];
   local playerReligion:table  = localPlayer:GetReligion();
-    
+
   local hasFaithYield			:boolean = playerReligion:GetFaithYield() > 0;
   local hasFaithBalance		:boolean = playerReligion:GetFaithBalance() > 0;
   if (hasFaithYield or hasFaithBalance) then
@@ -406,6 +421,13 @@ end
 
 -- also need to capture when a deal has left us with a great work
 function OnDiplomacyDealEnacted()
+  if (not m_isGreatWorksUnlocked) then
+    RefreshGreatWorks();
+  end
+end
+
+-- turns out, capturing a city can also net us pretty great works
+function OnCityCaptured()
   if (not m_isGreatWorksUnlocked) then
     RefreshGreatWorks();
   end
@@ -490,37 +512,33 @@ function RefreshGovernment()
     return;
   end
 
+  local fnSetFreePolicyFlag = function( bIsFree:boolean )
+    Controls.PoliciesAvailableIndicator:SetShow(bIsFree);
+    Controls.PoliciesAvailableIndicator:SetToolTipString(
+      bIsFree and Locale.Lookup("LOC_HUD_GOVT_FREE_CHANGES") or nil );
+  end
+
   -- GOVERNMENT BUTTON
-  local playerCulture:table = Players[ePlayer]:GetCulture();
-  if (playerCulture:GetNumPoliciesUnlocked() <= 0) then
+  local kCulture:table = Players[ePlayer]:GetCulture();
+  if ( kCulture:GetNumPoliciesUnlocked() <= 0 ) then
     Controls.GovernmentButton:SetToolTipString(Locale.Lookup("LOC_GOVERNMENT_DOESNT_UNLOCK"));
     Controls.GovernmentButton:GetTextControl():SetColor(0xFF666666);
   else
     m_isGovernmentUnlocked = true;
     Controls.GovernmentButton:SetHide(false);
     Controls.GovernmentBolt:SetHide(false);
-    Controls.GovernmentButton:SetToolTipString(Locale.Lookup("LOC_GOVERNMENT_MANAGE_GOVERNMENT_AND_POLICIES"));
-    local bPoliciesChanged = playerCulture:PolicyChangeMade();
-    local bInAnarchy = playerCulture:IsInAnarchy();
-    if (bInAnarchy == true) then
-      Controls.GovernmentButton:SetToolTipString("[COLOR_RED]".. Locale.Lookup("LOC_GOVERNMENT_ANARCHY_NAME") .. "[ENDCOLOR]");
+    if ( kCulture:IsInAnarchy() ) then
       Controls.GovernmentButton:SetDisabled(true);
+      local iAnarchyTurns = kCulture:GetAnarchyEndTurn() - Game.GetCurrentGameTurn();
+      Controls.GovernmentButton.SetDisabled(true);
       Controls.GovernmentIcon:SetColorByName("Civ6Red");
-    elseif (bPoliciesChanged == true) then
-      Controls.GovernmentButton:SetToolTipString(Locale.Lookup("LOC_GOVERNMENT_MANAGE_GOVERNMENT_AND_POLICIES"));
-      Controls.GovernmentButton:SetDisabled(false);
-      Controls.GovernmentIcon:SetColorByName("White");
+      Controls.GovernmentButton:SetToolTipString("[COLOR_RED]".. Locale.Lookup("LOC_GOVERNMENT_ANARCHY_TURNS", iAnarchyTurns) .. "[ENDCOLOR]");
+      fnSetFreePolicyFlag( false );
     else
-      Controls.GovernmentIcon:SetColorByName("White");
-      local iPolicyUnlockCost = playerCulture:GetCostToUnlockPolicies();
-      if (iPolicyUnlockCost == 0) then
-        Controls.PoliciesAvailableIndicator:SetHide(false);
-        Controls.PoliciesAvailableIndicator:SetToolTipString(Locale.Lookup("LOC_HUD_GOVT_FREE_CHANGES"));
-      else
-        Controls.PoliciesAvailableIndicator:SetHide(true);
-        Controls.PoliciesAvailableIndicator:SetToolTipString();
-      end
       Controls.GovernmentButton:SetDisabled(false);
+      Controls.GovernmentIcon:SetColorByName("White");
+      Controls.GovernmentButton:SetToolTipString(Locale.Lookup("LOC_GOVERNMENT_MANAGE_GOVERNMENT_AND_POLICIES"));
+      fnSetFreePolicyFlag( kCulture:GetCostToUnlockPolicies() == 0 );
     end
   end
   RealizeHookVisibility();
@@ -576,12 +594,12 @@ function UpdateCivicMeter( localPlayer:table)
     if(currentCivicID >= 0) then
       local civicProgress:number = playerCivics:GetCulturalProgress(currentCivicID);
       local civicCost:number = playerCivics:GetCultureCost(currentCivicID);
-      
+
       Controls.CultureMeter:SetPercent(civicProgress/civicCost);
     else
       Controls.CultureMeter:SetPercent(0);
     end
-    
+
     local CivicInfo:table = GameInfo.Civics[currentCivicID];
     if (CivicInfo ~= nil) then
       local civictextureString = "ICON_" .. CivicInfo.CivicType;
@@ -594,8 +612,8 @@ function UpdateCivicMeter( localPlayer:table)
     Controls.CultureIcon:SetTexture(0, 0, "LaunchBar_Hook_CivicsTree");
   end
 end
-  
-  
+
+
 -- ===========================================================================
 function OnTurnBegin()
   local localPlayer	= Players[Game.GetLocalPlayer()];
@@ -605,7 +623,7 @@ function OnTurnBegin()
 
   UpdateTechMeter(localPlayer);
   UpdateCivicMeter(localPlayer);
-  
+
   RefreshGovernment();
   RefreshGreatWorks();
   RefreshGreatPeople();
@@ -613,22 +631,23 @@ function OnTurnBegin()
   RefreshView();
 end
 
-function OpenTree()
-  m_numTreesOpen = m_numTreesOpen+1;
+function OnOpen()
+  m_numOpen = m_numOpen+1;
   local screenX, screenY:number = UIManager:GetScreenSizeVal();
   if screenY <= 850 then
     Controls.LaunchContainer:SetOffsetY(-35);
     Controls.ScienceHookWithMeter:SetOffsetY(-5);
     Controls.CultureHookWithMeter:SetOffsetY(-5);
   end
+  LuaEvents.Launchbar_CloseChoosers();
 end
 
-function CloseTree()
-  m_numTreesOpen = m_numTreesOpen-1;
-  if(m_numTreesOpen < 0 )then
-    m_numTreesOpen = 0;
+function OnClose()
+  m_numOpen = m_numOpen-1;
+  if(m_numOpen < 0 )then
+    m_numOpen = 0;
   end
-  if m_numTreesOpen == 0 then
+  if m_numOpen == 0 then
     Controls.LaunchContainer:SetOffsetY(-5);
     -- Controls.ScienceHookWithMeter:SetOffsetY(25);
     -- Controls.CultureHookWithMeter:SetOffsetY(25);
@@ -656,6 +675,52 @@ function OnLocalPlayerChanged()
   RefreshGreatPeople();
   RefreshGreatWorks();
   RefreshReligion();
+end
+
+-- ===========================================================================
+--  Input Hotkey Event (Extended in XP1 to hook extra panels)
+-- ===========================================================================
+function OnInputActionTriggered( actionId )
+  if ( m_isTechTreeAvailable ) then
+    if ( actionId == Input.GetActionId("ToggleTechTree") ) then
+      OnOpenResearch();
+    end
+  end
+
+  if ( m_isCivicsTreeAvailable ) then
+    if ( actionId == Input.GetActionId("ToggleCivicsTree") ) then
+      OnOpenCulture();
+    end
+  end
+
+  if ( m_isGovernmentAvailable ) then
+    if ( actionId == Input.GetActionId("ToggleGovernment") ) then
+      OnOpenGovernment();
+    end
+  end
+
+  if ( m_isReligionAvailable ) then
+    if ( actionId == Input.GetActionId("ToggleReligion") ) then
+      OnOpenReligion();
+    end
+  end
+
+  if ( m_isGreatPeopleAvailable ) then
+    if ( actionId == Input.GetActionId("ToggleGreatPeople") and UI.QueryGlobalParameterInt("DISABLE_GREAT_PEOPLE_HOTKEY") ~= 1 ) then
+      OnOpenGreatPeople();
+    end
+  end
+
+  if ( m_isGreatWorksAvailable ) then
+    if ( actionId == Input.GetActionId("ToggleGreatWorks") and UI.QueryGlobalParameterInt("DISABLE_GREAT_WORKS_HOTKEY") ~= 1 ) then
+      OnOpenGreatWorks();
+    end
+  end
+end
+
+-- ===========================================================================
+function PlayMouseoverSound()
+  UI.PlaySound("Main_Menu_Mouse_Over");
 end
 
 -- ===========================================================================
@@ -695,18 +760,18 @@ function Initialize()
 
   -- InitializeTrackedItems();
   Controls.CultureButton:RegisterCallback(Mouse.eLClick, OnOpenCulture);
-  Controls.CultureButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+  Controls.CultureButton:RegisterCallback( Mouse.eMouseEnter, PlayMouseoverSound);
   -- Controls.CultureMeterButton:RegisterCallback(Mouse.eLClick, OnOpenCulture);
-  Controls.GovernmentButton:RegisterCallback( Mouse.eLClick, OnGovernmentClick );
-  Controls.GovernmentButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+  Controls.GovernmentButton:RegisterCallback( Mouse.eLClick, OnOpenGovernment );
+  Controls.GovernmentButton:RegisterCallback( Mouse.eMouseEnter, PlayMouseoverSound);
   Controls.GreatPeopleButton:RegisterCallback( Mouse.eLClick, OnOpenGreatPeople );
-  Controls.GreatPeopleButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+  Controls.GreatPeopleButton:RegisterCallback( Mouse.eMouseEnter, PlayMouseoverSound);
   Controls.GreatWorksButton:RegisterCallback( Mouse.eLClick, OnOpenGreatWorks );
-  Controls.GreatWorksButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+  Controls.GreatWorksButton:RegisterCallback( Mouse.eMouseEnter, PlayMouseoverSound);
   Controls.ReligionButton:RegisterCallback( Mouse.eLClick, OnOpenReligion );
-  Controls.ReligionButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+  Controls.ReligionButton:RegisterCallback( Mouse.eMouseEnter, PlayMouseoverSound);
   Controls.ScienceButton:RegisterCallback(Mouse.eLClick, OnOpenResearch);
-  Controls.ScienceButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+  Controls.ScienceButton:RegisterCallback( Mouse.eMouseEnter, PlayMouseoverSound);
   -- Controls.ScienceMeterButton:RegisterCallback(Mouse.eLClick, OnOpenResearch);
 
   -- CQUI --
@@ -733,6 +798,7 @@ function Initialize()
   Events.FaithChanged.Add( OnFaithChanged );
   Events.LocalPlayerChanged.Add( OnLocalPlayerChanged );
   Events.DiplomacyDealEnacted.Add( OnDiplomacyDealEnacted );
+  Events.CityOccupationChanged.Add( OnCityCaptured ); -- kinda bootleg, but effective
 
   LuaEvents.CivicsTree_CloseCivicsTree.Add(SetCivicsTreeClosed);
   LuaEvents.CivicsTree_OpenCivicsTree.Add( SetCivicsTreeOpen );
@@ -754,6 +820,10 @@ function Initialize()
   if HasCapability("CAPABILITY_CIVICS_TREE") then
     LuaEvents.WorldTracker_ToggleCivicPanel.Add(OnToggleCivicPanel);
   end
+
+  -- Hotkeys!
+  -- Yes, it needs to be wrapped in an anonymous function, because OnInputActionTriggered is overriden elsewhere (like XP1)
+  Events.InputActionTriggered.Add( function(actionId) OnInputActionTriggered(actionId) end );
 
   OnTurnBegin();
 

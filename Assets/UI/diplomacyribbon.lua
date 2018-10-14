@@ -226,6 +226,9 @@ function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean
       end
     end
   end
+
+  -- Returning these so mods can override them and modify the icons
+	return leaderIcon, instance;
 end
 
 --ARISTOS: To display key information in leader tooltip inside Diplo Ribbon

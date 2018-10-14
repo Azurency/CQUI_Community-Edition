@@ -3,7 +3,6 @@
 -- ===========================================================================
 
 local showSortOrdersPermanently = false
-local colorYieldValues = true
 local RoutePanelBaseOffsetX = 8;
 local RoutePanelScrollPanelExtraOffset = 9;
 
@@ -78,7 +77,6 @@ m_SortBySettings[1] = {
 
 function CQUI_OnSettingsUpdate()
   showSortOrdersPermanently = GameConfiguration.GetValue("CQUI_TraderShowSortOrder");
-  colorYieldValues = GameConfiguration.GetValue("CQUI_TraderColorYields");
 
   -- Don't call refresh here, since CQUI panel and trade route chooser can't be open simultaneously.
 end
@@ -256,9 +254,11 @@ function RefreshTopPanel()
     Controls.OriginResourceList:ReprocessAnchoring();
     Controls.DestinationResourceList:CalculateSize();
     Controls.DestinationResourceList:ReprocessAnchoring();
+    Controls.TopGrid:DoAutoSize();
 
     -- Show Panel
     Controls.CurrentSelectionContainer:SetHide(false);
+    Controls.CurrentSelectionContainer:DoAutoSize();
 
     -- Hide Status Message
     Controls.StatusMessage:SetHide(true);
@@ -268,6 +268,7 @@ function RefreshTopPanel()
 
     -- Show Status Message
     Controls.StatusMessage:SetHide(false);
+    Controls.StatusMessage:DoAutoSize();
   end
 end
 
@@ -1335,7 +1336,8 @@ function KeyUpHandler( key:number )
   end
   if key == Keys.VK_ESCAPE then
     OnClose();
-    return true;
+    -- AZURENCY : on ESC also unselect the unit
+    --return true;
   end
   return false;
 end

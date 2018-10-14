@@ -71,5 +71,10 @@
       <Text>Total</Text>
     </Row>
 
+    <!-- Smartbanner unlocked citizen -->
+    <Row Tag="LOC_CQUI_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="en_US">
+      <Text>There are unlocked citizens being automatically assigned by the AI city governor.</Text>
+    </Row>
+
   </LocalizedText>
 </GameData>

@@ -112,17 +112,18 @@ end
 function OnShow()
   Controls.WorldViewControls:SetHide( false );
 
-  if (Steam ~= nil) then
+  local pFriends = Network.GetFriends();
+  if (pFriends ~= nil) then
     if (GameConfiguration.IsAnyMultiplayer()) then
       if GameConfiguration.IsHotseat() then
-        Steam.SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_HOTSEAT");
+        pFriends:SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_HOTSEAT"); 
       elseif GameConfiguration.IsLANMultiplayer() then
-        Steam.SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_LAN");
+        pFriends:SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_LAN"); 
       else
-        Steam.SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_ONLINE");
+        pFriends:SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_ONLINE"); 
       end
     else
-      Steam.SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_SP");
+      pFriends:SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_SP"); 
     end
   end
 end
@@ -177,7 +178,7 @@ function OnInputActionTriggered( actionId )
             local gameFile = {};
             gameFile.Name = "quicksave";
             gameFile.Location = SaveLocations.LOCAL_STORAGE;
-            gameFile.Type= SaveTypes.SINGLE_PLAYER;
+            gameFile.Type= Network.GetGameConfigurationSaveType();
             gameFile.IsAutosave = false;
             gameFile.IsQuicksave = true;
 

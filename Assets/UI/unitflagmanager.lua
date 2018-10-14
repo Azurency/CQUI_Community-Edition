@@ -334,12 +334,14 @@ function UnitFlag.SetInteractivity( self )
     self.m_Instance.NormalButton:SetVoid1( flagPlayerID );
     self.m_Instance.NormalButton:SetVoid2( unitID );
     self.m_Instance.NormalButton:RegisterCallback( Mouse.eLClick, OnUnitFlagClick );
+    self.m_Instance.NormalButton:RegisterCallback( Mouse.eRClick, OnUnitFlagClick );
     -- self.m_Instance.NormalButton:RegisterCallback( Mouse.eMouseEnter, UnitFlagEnter );
     -- self.m_Instance.NormalButton:RegisterCallback( Mouse.eMouseExit, UnitFlagExit );
 
     self.m_Instance.HealthBarButton:SetVoid1( flagPlayerID );
     self.m_Instance.HealthBarButton:SetVoid2( unitID );
     self.m_Instance.HealthBarButton:RegisterCallback( Mouse.eLClick, OnUnitFlagClick );
+    self.m_Instance.HealthBarButton:RegisterCallback( Mouse.eRClick, OnUnitFlagClick );
     -- self.m_Instance.HealthBarButton:RegisterCallback( Mouse.eMouseEnter, UnitFlagEnter );
     -- self.m_Instance.HealthBarButton:RegisterCallback( Mouse.eMouseExit, UnitFlagExit );
 
@@ -855,11 +857,12 @@ function UnitFlag.UpdateReligion( self )
 		if (religionType > 0 and pUnit:GetReligiousStrength() > 0) then
 			local religion:table = GameInfo.Religions[religionType];
 			local religionIcon:string = "ICON_" .. religion.ReligionType;
-			local religionColor:number = UI.GetColorValue(religion.Color);
+      local religionColor:number = UI.GetColorValue(religion.Color);
+      local religionName:string = Game.GetReligion():GetName(religion.Index);
 
 			self.m_Instance.ReligionIcon:SetIcon(religionIcon);
 			self.m_Instance.ReligionIcon:SetColor(religionColor);
-			self.m_Instance.ReligionIconBacking:LocalizeAndSetToolTip(religion.Name);
+			self.m_Instance.ReligionIconBacking:LocalizeAndSetToolTip(religionName);
 			self.m_Instance.ReligionIconBacking:SetHide(false);
 		else
 			self.m_Instance.ReligionIconBacking:SetHide(true);
@@ -1339,18 +1342,28 @@ function UpdateIconStack( plotX:number, plotY:number )
             flag.m_Instance.Formation2:SetHide(true);
             flag.m_Instance.Formation3:SetHide(true);
           else
+            if(formationClassString == "FORMATION_CLASS_CIVILIAN" or formationClassString == "FORMATION_CLASS_SUPPORT") then
+              civilianOffsetX = civilianOffsetX + multiSpacingX;
+            end
             if (iFormationCount < 3) then
               flag.m_Instance.Formation2:SetHide(true);
               flag.m_Instance.Formation3:SetHide(true);
               if formationClassString ~= "FORMATION_CLASS_LAND_COMBAT" then
-                if(DuoFlag and (formationClassString == "FORMATION_CLASS_CIVILIAN" or formationClassString == "FORMATION_CLASS_SUPPORT")) then
+                -- Only show formation links on the last flag
+                if DuoFlag then
                   DuoFlag.m_Instance.Formation2:SetHide(true);
-                else
-                  flag.m_Instance.Formation2:SetHide(false);
-                  flag.m_Instance.Formation2:SetOffsetVal(m_LinkOffsets[1][1], m_LinkOffsets[1][2]);
-                  flag.m_Instance.Formation2:SetSizeX(64);
+
+                  -- If the flags share the same parent, ensure the flag with the formation control renders below the DuoFlag
+                  local flagParent = flag.m_Instance.Anchor:GetParent();
+                  if flagParent == DuoFlag.m_Instance.Anchor:GetParent() then
+                    flagParent:AddChildAtIndex(flag.m_Instance.Anchor, 0);
+                  end
                 end
                 DuoFlag = flag;
+
+                flag.m_Instance.Formation2:SetHide(false);
+                flag.m_Instance.Formation2:SetOffsetVal(m_LinkOffsets[1][1], m_LinkOffsets[1][2]);
+                flag.m_Instance.Formation2:SetSizeX(64);
               end
 
             else

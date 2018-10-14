@@ -196,7 +196,7 @@ function AddAvailableResearch( playerID:number, kData:table )
 
   numUnlockables = PopulateUnlockablesForTech( playerID, kData.ID, techUnlockIM, callback );
   if numUnlockables ~= nil then
-    HandleOverflow(numUnlockables, kItemInstance);
+    HandleOverflow(numUnlockables, kItemInstance, 5, 5);
   end
 
   if kData.ResearchQueuePosition ~= -1 then
@@ -235,6 +235,8 @@ function AddAvailableResearch( playerID:number, kData:table )
   else
     kItemInstance.RecommendedIcon:SetHide(true);
   end
+
+  return kItemInstance;
 end
 
 -- ===========================================================================
@@ -262,9 +264,9 @@ function RealizeSize()
   Controls.ResearchStack:CalculateSize();
   Controls.ResearchStack:ReprocessAnchoring();
 
-	Controls.ChooseResearchList:SetSizeY(screenY - Controls.ChooseResearchList:GetOffsetY() - 30);
-	Controls.ChooseResearchList:CalculateInternalSize();
-	
+  Controls.ChooseResearchList:SetSizeY(screenY - Controls.ChooseResearchList:GetOffsetY() - 30);
+  Controls.ChooseResearchList:CalculateInternalSize();
+  
   if(Controls.ChooseResearchList:GetScrollBar():IsHidden()) then
     Controls.ChooseResearchList:SetOffsetX(10);
   else
@@ -347,18 +349,26 @@ end
 --	May be active or value boosted for an item further in the list.
 -- ===========================================================================
 function OnResearchChanged( ePlayer:number, eTech:number )
+  m_needsRefresh = ShouldRefreshWhenResearchChanges(ePlayer);
+end
+
+-- ===========================================================================
+--	This function was separated so behavior can be modified in mods/expasions
+-- ===========================================================================
+function ShouldRefreshWhenResearchChanges(ePlayer:number)
   local localPlayer = Game.GetLocalPlayer();
   if localPlayer ~= -1 and localPlayer == ePlayer then
     local pPlayerTechs :table = Players[localPlayer]:GetTechs();
     m_currentID			= pPlayerTechs:GetResearchingTech();
-		
-		-- Only reset last completed tech once a new tech has been selected
-		if m_currentID >= 0 then
-    		m_lastCompletedID	= -1;
-		end
+    
+    -- Only reset last completed tech once a new tech has been selected
+    if m_currentID >= 0 then
+        m_lastCompletedID	= -1;
+    end
 
-    m_needsRefresh = true;
+    return true;
   end
+  return false;
 end
 
 -- ===========================================================================
@@ -383,7 +393,7 @@ end
 -- input processing) so we can defer the rebuild until here.
 -- ===========================================================================
 function FlushChanges()
-  if m_needsRefresh then
+  if m_needsRefresh and ContextPtr:IsVisible() then
     Refresh();
   end
 end
@@ -414,12 +424,19 @@ function OnInit( isReload:boolean )
     end
   end
 end
+
+-- ===========================================================================
+function OnShow()
+  Refresh();
+end
+
 -- ===========================================================================
 function OnShutdown()
   LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID, "m_currentID", m_currentID);
   LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID, "m_isExpanded", m_isExpanded);
   LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID, "m_lastCompletedID", m_lastCompletedID);
 end
+
 -- ===========================================================================
 function OnGameDebugReturn(context:string, contextTable:table)
   if context == RELOAD_CACHE_ID then
@@ -446,6 +463,7 @@ function Initialize()
 
   -- Hot-reload events
   ContextPtr:SetInitHandler(OnInit);
+  ContextPtr:SetShowHandler(OnShow); 
   ContextPtr:SetShutdown(OnShutdown);
   LuaEvents.GameDebug_Return.Add(OnGameDebugReturn);
 
@@ -456,6 +474,7 @@ function Initialize()
   LuaEvents.Tutorial_ResearchOpen.Add(OnOpenPanel);
   LuaEvents.ActionPanel_OpenChooseResearch.Add(OnOpenPanel);
   LuaEvents.WorldTracker_OpenChooseResearch.Add(OnOpenPanel);
+  LuaEvents.LaunchBar_CloseChoosers.Add(OnClosePanel); 
 
   -- Game events
   Events.CityInitialized.Add(			OnCityInitialized );

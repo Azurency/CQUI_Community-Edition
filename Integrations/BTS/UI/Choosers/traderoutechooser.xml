@@ -8,8 +8,8 @@
         <Stack StackGrowth="Down">
 
           <!-- Top Panel -->
-          <Grid ID="TopGrid" Size="parent-4,240" Texture="DestinationChooser_CurrentSlot" SliceStart="0,0" SliceCorner="30,30" SliceSize="200,60" SliceTextureSize="308,173">
-            <Container ID="CurrentSelectionContainer" Size="parent, parent" Offset="0,7">
+          <Grid ID="TopGrid" Size="parent-4,auto" MinSize="0,240" Texture="DestinationChooser_CurrentSlot" SliceStart="0,0" SliceCorner="30,30" SliceSize="200,60" SliceTextureSize="308,173">
+            <Container ID="CurrentSelectionContainer" Size="parent, auto" Offset="0,7">
               <Stack Anchor="C,T" StackGrowth="Down">
 
                 <!-- Selected City -->
@@ -60,14 +60,14 @@
                 </Stack>
 
                 <!-- Confirm Button -->
-                <GridButton ID="BeginRouteButton" Size="parent-100,26" Offset="0,7" Anchor="C,B" String="LOC_ROUTECHOOSER_BEGIN_ROUTE_BUTTON" Style="FontFlair14" FontStyle="Shadows" TextOffset="0,2" EffectColor="0,0,0,255" SmallCaps="20" SmallCapsType="EveryWord">
-                  <GridData Texture="Controls_ConfirmSmall" StateOffsetIncrement="0,26" SliceCorner="26,13" SliceSize="2,2" SliceTextureSize="51,26"/>
+                <GridButton ID="BeginRouteButton" Size="parent-100,41" Offset="0,7" Anchor="C,B" String="LOC_ROUTECHOOSER_BEGIN_ROUTE_BUTTON" Style="FontFlair14" FontStyle="Shadows" TextOffset="0,2" EffectColor="0,0,0,255" SmallCaps="20" SmallCapsType="EveryWord">
+                  <GridData Texture="Controls_Confirm" StateOffsetIncrement="0,41" SliceCorner="40,21" SliceSize="1,1" SliceTextureSize="80,41"/>
                 </GridButton>
 
               </Stack>
             </Container>
 
-            <Container Size="parent, parent">
+            <Container Size="parent, auto" MinSize="0,240">
               <Label ID="StatusMessage" Size="300,50" Anchor="C,C" Style="FontNormal16" Color="0,0,0,150"/>
             </Container>
           </Grid>

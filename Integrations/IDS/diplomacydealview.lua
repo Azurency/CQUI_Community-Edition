@@ -7,6 +7,7 @@ include( "Civ6Common" ); -- AutoSizeGridButton
 include( "SupportFunctions" ); -- DarkenLightenColor
 include( "PopupDialog" );
 include( "ToolTipHelper_PlayerYields" );
+include( "GreatWorksSupport" );
 
 -- ===========================================================================
 --	VARIABLES
@@ -87,28 +88,30 @@ local ms_DefaultMultiTurnGoldDuration = 30;
 
 local ms_bForceUpdateOnCommit = false;
 
---CQUI Addition
-local YIELD_FONT_ICONS:table = {
-        YIELD_FOOD				= "[ICON_FoodLarge]",
-        YIELD_PRODUCTION	= "[ICON_ProductionLarge]",
-        YIELD_GOLD				= "[ICON_GoldLarge]",
-        YIELD_SCIENCE			= "[ICON_ScienceLarge]",
-        YIELD_CULTURE			= "[ICON_CultureLarge]",
-        YIELD_FAITH				= "[ICON_FaithLarge]",
-        TourismYield			= "[ICON_TourismLarge]"
-};
+local MAX_DEAL_ITEM_EDIT_HEIGHT = 300;
 
-local CQUI_GreatWork_YieldChanges = {}
-for row in GameInfo.GreatWork_YieldChanges() do
-  CQUI_GreatWork_YieldChanges[row.GreatWorkType] = row
-end
+--CQUI Addition
+-- local YIELD_FONT_ICONS:table = {
+--         YIELD_FOOD				= "[ICON_FoodLarge]",
+--         YIELD_PRODUCTION	= "[ICON_ProductionLarge]",
+--         YIELD_GOLD				= "[ICON_GoldLarge]",
+--         YIELD_SCIENCE			= "[ICON_ScienceLarge]",
+--         YIELD_CULTURE			= "[ICON_CultureLarge]",
+--         YIELD_FAITH				= "[ICON_FaithLarge]",
+--         TourismYield			= "[ICON_TourismLarge]"
+-- };
+
+-- local CQUI_GreatWork_YieldChanges = {}
+-- for row in GameInfo.GreatWork_YieldChanges() do
+--   CQUI_GreatWork_YieldChanges[row.GreatWorkType] = row
+-- end
 
 -- ===========================================================================
 function SetIconToSize(iconControl, iconName, iconSize)
   if iconSize == nil then
     iconSize = 64;
   end
-  
+
   local x, y, szIconName, iconSize = IconManager:FindIconAtlasNearestSize(iconName, iconSize, true);
   iconControl:SetTexture(x, y, szIconName);
   iconControl:SetSizeVal(iconSize, iconSize);
@@ -252,58 +255,56 @@ function PopulateSignatureArea(player:table)
   end
 
   -- Set the leader name, civ name, and civ icon data
-  local leader:string = PlayerConfigurations[player:GetID()]:GetLeaderTypeName();
-  if GameInfo.CivilizationLeaders[leader] == nil then
-    UI.DataError("Banners found a leader \""..leader.."\" which is not/no longer in the game; icon may be whack.");
+  local playerConfig = PlayerConfigurations[player:GetID()]
+  local civTypeName = playerConfig:GetCivilizationTypeName();
+  if civTypeName == nil then
+    UI.DataError("Invalid type name returned by GetCivilizationTypeName");
   else
-    if(GameInfo.CivilizationLeaders[leader].CivilizationType ~= nil) then
-      local civTypeName = GameInfo.CivilizationLeaders[leader].CivilizationType
-      local civIconName = "ICON_"..civTypeName;
+    local civIconName = "ICON_"..civTypeName;
 
-      local leaderName = Locale.ToUpper(Locale.Lookup(GameInfo.Leaders[leader].Name))
-      local playerName = PlayerConfigurations[player:GetID()]:GetPlayerName();
-      if GameConfiguration.IsAnyMultiplayer() and player:IsHuman() then
-        leaderName = leaderName .. " ("..Locale.ToUpper(playerName)..")"
+    local leaderName = Locale.ToUpper(Locale.Lookup(playerConfig:GetLeaderName()))
+    local playerName = PlayerConfigurations[player:GetID()]:GetPlayerName();
+    if GameConfiguration.IsAnyMultiplayer() and player:IsHuman() then
+      leaderName = leaderName .. " ("..Locale.ToUpper(playerName)..")"
+    end
+
+    --Create a tooltip which shows a list of this Civ's cities
+    local civTooltip = Locale.Lookup(GameInfo.Civilizations[civTypeName].Name);
+    local pPlayerConfig = PlayerConfigurations[player:GetID()];
+    local playerName = pPlayerConfig:GetPlayerName();
+    local playerCities = player:GetCities();
+    if(playerCities ~= nil) then
+      civTooltip = civTooltip .. "[NEWLINE]"..Locale.Lookup("LOC_PEDIA_CONCEPTS_PAGEGROUP_CITIES_NAME").. ":[NEWLINE]----------";
+      for i,city in playerCities:Members() do
+        civTooltip = civTooltip.. "[NEWLINE]".. Locale.Lookup(city:GetName());
       end
-
-      --Create a tooltip which shows a list of this Civ's cities
-      local civTooltip = Locale.Lookup(GameInfo.Civilizations[civTypeName].Name);
-      local pPlayerConfig = PlayerConfigurations[player:GetID()];
-      local playerName = pPlayerConfig:GetPlayerName();
-      local playerCities = player:GetCities();
-      if(playerCities ~= nil) then
-        civTooltip = civTooltip .. "[NEWLINE]"..Locale.Lookup("LOC_PEDIA_CONCEPTS_PAGEGROUP_CITIES_NAME").. ":[NEWLINE]----------";
-        for i,city in playerCities:Members() do
-          civTooltip = civTooltip.. "[NEWLINE]".. Locale.Lookup(city:GetName());
-        end
-      end
+    end
 
 
-      -- Populate relevant controls
-      if(player == ms_LocalPlayer) then
+    -- Populate relevant controls
+    if(player == ms_LocalPlayer) then
 
-        Controls.PlayerCivIcon:SetIcon(civIconName);
-        Controls.PlayerCivName:SetText(Locale.ToUpper(Locale.Lookup(GameInfo.Civilizations[civTypeName].Name)));
-        Controls.PlayerCivName:SetColor(m_primaryColor);
-        Controls.PlayerLeaderName:SetText(leaderName);
-        Controls.PlayerLeaderName:SetColor(m_secondaryColor);
+      Controls.PlayerCivIcon:SetIcon(civIconName);
+      Controls.PlayerCivName:SetText(Locale.ToUpper(Locale.Lookup(GameInfo.Civilizations[civTypeName].Name)));
+      Controls.PlayerCivName:SetColor(m_primaryColor);
+      Controls.PlayerLeaderName:SetText(leaderName);
+      Controls.PlayerLeaderName:SetColor(m_secondaryColor);
 
-        Controls.PlayerCivIcon:SetToolTipString(Locale.Lookup(civTooltip));
-        Controls.PlayerSignatureStack:CalculateSize();
-        Controls.PlayerSignatureStack:ReprocessAnchoring();
-      else
+      Controls.PlayerCivIcon:SetToolTipString(Locale.Lookup(civTooltip));
+      Controls.PlayerSignatureStack:CalculateSize();
+      Controls.PlayerSignatureStack:ReprocessAnchoring();
+    else
 
 
-        Controls.PartnerCivIcon:SetIcon(civIconName);
-        Controls.PartnerCivName:SetText(Locale.ToUpper(Locale.Lookup(GameInfo.Civilizations[civTypeName].Name)));
-        Controls.PartnerCivName:SetColor(m_primaryColor);
-        Controls.PartnerLeaderName:SetText(leaderName);
-        Controls.PartnerLeaderName:SetColor(m_secondaryColor);
+      Controls.PartnerCivIcon:SetIcon(civIconName);
+      Controls.PartnerCivName:SetText(Locale.ToUpper(Locale.Lookup(GameInfo.Civilizations[civTypeName].Name)));
+      Controls.PartnerCivName:SetColor(m_primaryColor);
+      Controls.PartnerLeaderName:SetText(leaderName);
+      Controls.PartnerLeaderName:SetColor(m_secondaryColor);
 
-        Controls.PartnerCivIcon:SetToolTipString(Locale.Lookup(civTooltip));
-        Controls.PartnerSignatureStack:CalculateSize();
-        Controls.PartnerSignatureStack:ReprocessAnchoring();
-      end
+      Controls.PartnerCivIcon:SetToolTipString(Locale.Lookup(civTooltip));
+      Controls.PartnerSignatureStack:CalculateSize();
+      Controls.PartnerSignatureStack:ReprocessAnchoring();
     end
   end
 
@@ -439,7 +440,7 @@ end
 
 -- ===========================================================================
 function PopulateValuePulldown(pullDown, pDealItem)
-  
+
   local possibleValues = DealManager.GetPossibleDealItems(pDealItem:GetFromPlayerID(), pDealItem:GetToPlayerID(), pDealItem:GetType(), pDealItem:GetSubType());
   if (possibleValues ~= nil) then
     pullDown:ClearEntries();
@@ -449,15 +450,27 @@ function PopulateValuePulldown(pullDown, pDealItem)
       pullDown:BuildEntry( "InstanceOne", entryControlTable );
 
       local szItemName = Locale.Lookup(entry.ForTypeDisplayName);
-      if (entry.Duration == -1) then
+      if (entry.SubType == DealAgreementTypes.RESEARCH_AGREEMENT) then
         local eTech = GameInfo.Technologies[entry.ForType].Index;
         local iTurns = 	ms_LocalPlayer:GetDiplomacy():ComputeResearchAgreementTurns(ms_OtherPlayer, eTech);
         szDisplayName = Locale.Lookup("LOC_DIPLOMACY_DEAL_PARAMETER_WITH_TURNS", szItemName, iTurns);
+      elseif (entry.SubType == DealAgreementTypes.JOINT_WAR or entry.SubType == DealAgreementTypes.THIRD_PARTY_WAR) then
+        szDisplayName = szItemName;
+        -- Have a type of war that describes the joint war?
+        if entry.Parameters ~= nil then
+          if entry.Parameters.WarType ~= nil then
+            local warDef = GameInfo.Wars[entry.Parameters.WarType];
+            if warDef ~= nil then
+              szDisplayName = szDisplayName .. " [COLOR:Grey](" .. Locale.Lookup(warDef.Name) .. ")[ENDCOLOR]";
+            end
+          end
+        end
       else
         szDisplayName = szItemName;
       end
 
-      entryControlTable.Button:LocalizeAndSetText(szDisplayName);						
+      entryControlTable.Button:SetSizeX(280);
+      entryControlTable.Button:LocalizeAndSetText(szDisplayName);
       local eType = entry.ForType;
       entryControlTable.Button:RegisterCallback(Mouse.eLClick, function()
         OnValuePulldownCommit(eType);
@@ -472,7 +485,7 @@ function PopulateValuePulldown(pullDown, pDealItem)
 
     pullDown:SetHide(false);
     pullDown:CalculateInternals();
-  end	
+  end
 end
 
 -- ===========================================================================
@@ -625,7 +638,9 @@ function UpdateDealStatus()
   end
 
   if (bDealValid) then
-    bDealValid = pDeal:Validate();
+    if pDeal:Validate() ~= DealValidationResult.VALID then
+      bDealValid = false;
+    end
   end
 
   Controls.EqualizeDeal:SetHide(ms_bIsDemand);
@@ -688,8 +703,8 @@ function OnProposeOrAcceptDeal()
 
   ClearValueEdit();
 
-  if (ms_LastIncomingDealProposalAction == DealProposalAction.PENDING or 
-        ms_LastIncomingDealProposalAction == DealProposalAction.REJECTED or 
+  if (ms_LastIncomingDealProposalAction == DealProposalAction.PENDING or
+        ms_LastIncomingDealProposalAction == DealProposalAction.REJECTED or
         ms_LastIncomingDealProposalAction == DealProposalAction.EQUALIZE_FAILED) then
     ProposeWorkingDeal();
     UpdateDealStatus();
@@ -701,6 +716,7 @@ function OnProposeOrAcceptDeal()
         -- Yes, we can accept
         -- if deal will trigger war, prompt user before confirming deal
         local sendDealAndContinue = function()
+          -- Send the deal.  This will also send out a POSITIVE response statement
           DealManager.SendWorkingDeal(DealProposalAction.ACCEPTED, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
           OnContinue();
           UI.PlaySound("Confirm_Bed_Positive");
@@ -708,15 +724,33 @@ function OnProposeOrAcceptDeal()
 
         local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
         local pJointWarItem = pDeal:FindItemByType(DealItemTypes.AGREEMENTS, DealAgreementTypes.JOINT_WAR);
-        if pJointWarItem then
+        if DealAgreementTypes.JOINT_WAR and pJointWarItem then
+          local iWarType = pJointWarItem:GetParameterValue("WarType");
+
+          if (iWarType == nil) then iWarType = WarTypes.FORMAL_WAR; end
+
           local targetPlayerID = pJointWarItem:GetValueType();
           if (targetPlayerID >= 0) then
-            LuaEvents.DiplomacyActionView_ConfirmWarDialog(ms_LocalPlayerID, targetPlayerID, WarTypes.FORMAL_WAR, sendDealAndContinue);
+            LuaEvents.DiplomacyActionView_ConfirmWarDialog(ms_LocalPlayer:GetID(), targetPlayerID, iWarType, sendDealAndContinue);
           else
             UI.DataError("Invalid Player ID to declare Joint War to: " .. targetPlayerID);
           end
         else
-          sendDealAndContinue();
+          local pThirdPartyWarItem = pDeal:FindItemByType(DealItemTypes.AGREEMENTS, DealAgreementTypes.THIRD_PARTY_WAR);
+          if (DealAgreementTypes.THIRD_PARTY_WAR and pThirdPartyWarItem) then
+            local iWarType = pThirdPartyWarItem:GetParameterValue("WarType");
+
+            if (iWarType == nil) then iWarType = WarTypes.FORMAL_WAR; end
+
+            local targetPlayerID = pThirdPartyWarItem:GetValueType();
+            if (targetPlayerID >= 0) then
+              LuaEvents.DiplomacyActionView_ConfirmWarDialog(ms_LocalPlayer:GetID(), targetPlayerID, iWarType, sendDealAndContinue);
+            else
+              UI.DataError("Invalid Player ID to declare Third Party War to: " .. targetPlayerID);
+            end
+          else
+            sendDealAndContinue();
+          end
         end
       else
         -- No, send an adjustment and stay in the deal view.
@@ -963,6 +997,11 @@ end
 -- ===========================================================================
 function OnClickAvailableOneTimeGold(player, iAddAmount : number)
 
+  if (ms_bIsDemand == true and ms_InitiatedByPlayerID == ms_OtherPlayerID) then
+    -- Can't modifiy demand that is not ours
+    return;
+  end
+
   local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
   if (pDeal ~= nil) then
 
@@ -1022,6 +1061,11 @@ end
 
 -- ===========================================================================
 function OnClickAvailableMultiTurnGold(player, iAddAmount : number, iDuration : number)
+
+  if (ms_bIsDemand == true and ms_InitiatedByPlayerID == ms_OtherPlayerID) then
+    -- Can't modifiy demand that is not ours
+    return;
+  end
 
   local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
   if (pDeal ~= nil) then
@@ -1102,7 +1146,7 @@ function IsAutoPropose()
       local iItemsFromLocal = pDeal:GetItemCount(ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
       local iItemsFromOther = pDeal:GetItemCount(ms_OtherPlayer:GetID(), ms_LocalPlayer:GetID());
 
-      if (iItemsFromLocal > 0 and iItemsFromOther > 0) then
+      if (iItemsFromLocal > 0 or iItemsFromOther > 0) then
         return true;
       end
     end
@@ -1135,22 +1179,33 @@ function UpdateProposalButtons(bDealValid)
           if (pDeal:HasUnacceptableItems()) then
             Controls.EqualizeDeal:SetHide(true);
             Controls.AcceptDeal:SetHide(true);
+            Controls.WhatWouldItTakeButton:SetHide(true);
           elseif (iItemsFromLocal > 0 and iItemsFromOther == 0) then
             -- One way gift?
             Controls.WhatWouldYouGiveMe:SetHide(false);
             Controls.WhatWouldItTakeButton:SetHide(true);
             -- If the AI rejects after trying to equalize a gift then hide equalize button
-            local canAccept = true;
             if ms_LastIncomingDealProposalAction == DealProposalAction.EQUALIZE_FAILED then
-              Controls.EqualizeDeal:SetHide(true);
+              -- Equalize failed, hide the button, and we can't accept now!
+              -- Except... not.
+              -- The AI will yield EQUALIZE_FAILED if it would have accepted the gift without modifications.
+              -- The AI does not distinguish between 'this gift is fine as is' and 'i would not give you anything for that'.
+              Controls.AcceptDeal:SetShow(false);
+              Controls.EqualizeDeal:SetShow(false);
             elseif ms_LastIncomingDealProposalAction == DealProposalAction.REJECTED then
-              canAccept = false;
-              Controls.EqualizeDeal:SetHide(true);
+              -- Most likely autoproposed, there's a chance for an equalize. No accept, again.
+              Controls.AcceptDeal:SetShow(false);
+              Controls.EqualizeDeal:SetShow(true);
+              Controls.EqualizeDeal:LocalizeAndSetText("LOC_DIPLOMACY_DEAL_WHAT_WOULD_IT_TAKE");
+              Controls.EqualizeDeal:LocalizeAndSetToolTip("LOC_DIPLOMACY_DEAL_WHAT_IT_WILL_TAKE_TOOLTIP");
             else
-              Controls.EqualizeDeal:SetHide(false);
+              -- No immediate complaints, I guess we can show both equalize and accept.
+              Controls.AcceptDeal:SetShow(true);
+              Controls.AcceptDeal:LocalizeAndSetText("LOC_DIPLOMACY_DEAL_GIFT_DEAL");
+              Controls.EqualizeDeal:SetShow(true);
+              Controls.EqualizeDeal:LocalizeAndSetText("LOC_DIPLOMACY_DEAL_WHAT_WOULD_YOU_GIVE_ME");
+              Controls.EqualizeDeal:LocalizeAndSetToolTip("LOC_DIPLO_DEAL_WHAT_WOULD_YOU_GIVE_ME_TOOLTIP");
             end
-            Controls.AcceptDeal:SetHide(not canAccept);
-            Controls.AcceptDeal:LocalizeAndSetText("LOC_DIPLOMACY_DEAL_GIFT_DEAL");
           else
             if (iItemsFromLocal == 0 and iItemsFromOther > 0) then
               Controls.WhatWouldYouGiveMe:SetHide(true);
@@ -1346,7 +1401,8 @@ function PopulateAvailableGold(player : table, iconList : table)
   local eFromPlayerID = player:GetID();
   local eToPlayerID = GetOtherPlayer(player):GetID();
 
-  local possibleResources = DealManager.GetPossibleDealItems(eFromPlayerID, eToPlayerID, DealItemTypes.GOLD);
+  local pForDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+  local possibleResources = DealManager.GetPossibleDealItems(eFromPlayerID, eToPlayerID, DealItemTypes.GOLD, pForDeal);
   if (possibleResources ~= nil) then
     for i, entry in ipairs(possibleResources) do
       if (entry.Duration == 0) then
@@ -1394,6 +1450,11 @@ end
 -- ===========================================================================
 function OnClickAvailableBasic(itemType, player, valueType)
 
+  if (ms_bIsDemand == true and ms_InitiatedByPlayerID == ms_OtherPlayerID) then
+    -- Can't modifiy demand that is not ours
+    return;
+  end
+
   local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
   if (pDeal ~= nil) then
 
@@ -1405,7 +1466,7 @@ function OnClickAvailableBasic(itemType, player, valueType)
       if (pDealItem ~= nil) then
         pDealItem:SetValueType(valueType);
         UpdateDealPanel(player);
-        DealManager.SendWorkingDeal(DealProposalAction.INSPECT, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+        UpdateProposedWorkingDeal();
       end
     end
   end
@@ -1413,27 +1474,50 @@ end
 
 -- ===========================================================================
 function OnClickAvailableResource(player, resourceType)
+
+  if (ms_bIsDemand == true and ms_InitiatedByPlayerID == ms_OtherPlayerID) then
+    -- Can't modifiy demand that is not ours
+    return;
+  end
+
   local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
   if (pDeal ~= nil) then
 
     -- Already there?
-    local pDealItem = pDeal:FindItemByValueType(DealItemTypes.RESOURCES, DealItemSubTypes.NONE, resourceType, player:GetID());
-    if (pDealItem == nil) then
-      -- No
-      local pPlayerResources = player:GetResources();
-      local iAmount = pPlayerResources:GetResourceAmount( resourceType );
-      if (iAmount > 0) then
-        pDealItem = pDeal:AddItemOfType(DealItemTypes.RESOURCES, player:GetID());
-        if (pDealItem ~= nil) then
-          -- Add one
-          pDealItem:SetValueType(resourceType);
-          pDealItem:SetAmount(1);
-          pDealItem:SetDuration(30);	-- Default to this many turns
-
-          UpdateDealPanel(player);
-          UI.PlaySound("UI_GreatWorks_Put_Down");
-          DealManager.SendWorkingDeal(DealProposalAction.INSPECT, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+    local dealItems = pDeal:FindItemsByType(DealItemTypes.RESOURCES, DealItemSubTypes.NONE, player:GetID());
+    local pDealItem;
+    if (dealItems ~= nil) then
+      for i, pDealItem in ipairs(dealItems) do
+        if pDealItem:GetValueType() == resourceType then
+          -- Check for non-zero duration.  There may already be a one-time transfer of the resource if a city is in the deal.
+          if (pDealItem:GetDuration() ~= 0) then
+            return;	-- Already in there.
+          end
         end
+      end
+    end
+
+    local pPlayerResources = player:GetResources();
+    -- Get the total amount of the resource we have. This does not take into account anything already in the deal.
+    local iAmount = pPlayerResources:GetResourceAmount( resourceType );
+    if (iAmount > 0) then
+      pDealItem = pDeal:AddItemOfType(DealItemTypes.RESOURCES, player:GetID());
+      if (pDealItem ~= nil) then
+        -- Add one
+        pDealItem:SetValueType(resourceType);
+        pDealItem:SetAmount(1);
+        pDealItem:SetDuration(30);	-- Default to this many turns
+
+        -- After we add the item, test to see if the item is valid, it is possible that we have exceeded the amount of resources we can trade.
+        if not pDealItem:IsValid() then
+          pDeal:RemoveItemByID(pDealItem:GetID());
+          pDealItem = nil;
+        else
+          UI.PlaySound("UI_GreatWorks_Put_Down");
+        end
+
+        UpdateDealPanel(player);
+        UpdateProposedWorkingDeal();
       end
     end
   end
@@ -1441,6 +1525,11 @@ end
 
 -- ===========================================================================
 function OnClickAvailableAgreement(player, agreementType, agreementTurns)
+
+  if (ms_bIsDemand == true and ms_InitiatedByPlayerID == ms_OtherPlayerID) then
+    -- Can't modifiy demand that is not ours
+    return;
+  end
 
   local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
   if (pDeal ~= nil) then
@@ -1450,24 +1539,180 @@ function OnClickAvailableAgreement(player, agreementType, agreementTurns)
     if (pDealItem == nil) then
       -- No
       -- AZURENCY : Joint War and Research Agreements need special treatment (can be only modified on the player side)
-      -- AZURENCY : Bug ? RESEARCH_AGREEMENT is not in DealAgreementTypes (see hack line 1824)
       if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.RESEARCH_AGREEMENT) then
-      --if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == ms_DealAgreementTypesResearchAgreement) then
         pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, ms_LocalPlayer:GetID());
+
+        -- AZURENCY : Fix, select the first possibily by default
+        local toPlayerId = ms_LocalPlayer:GetID();
+        if (toPlayerId == player:GetID() ) then
+          toPlayerId = ms_OtherPlayer:GetID();
+        end
+        local possibleValues = DealManager.GetPossibleDealItems(player:GetID(), toPlayerId, DealItemTypes.AGREEMENTS, agreementType, pDeal);
+        if (possibleValues ~= nil) then
+          for i, entry in ipairs(possibleValues) do
+            pDealItem:SetValueType(entry.ForType);
+
+            if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.THIRD_PARTY_WAR) then
+              if entry.Parameters and entry.Parameters.WarType then
+                pDealItem:SetParameterValue("WarType", entry.Parameters.WarType);
+              end
+            end
+            break;
+          end
+        end
+
       else
         pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, player:GetID());
-      end
 
-      if (pDealItem ~= nil) then
-        pDealItem:SetSubType(agreementType);
-        pDealItem:SetDuration(agreementTurns);
+        if (pDealItem ~= nil) then
+          pDealItem:SetSubType(agreementType);
+          pDealItem:SetDuration(agreementTurns);
 
-        UpdateDealPanel(player);
-        UI.PlaySound("UI_GreatWorks_Put_Down");
-        DealManager.SendWorkingDeal(DealProposalAction.INSPECT, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+          UpdateDealPanel(player);
+          UpdateProposedWorkingDeal();
+          UI.PlaySound("UI_GreatWorks_Put_Down");
+        end
       end
     end
   end
+end
+
+-- ===========================================================================
+function OnSelectAgreementOption(agreementType, agreementTurns, agreementValue, agreementParameters, fromPlayerId)
+  local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+  if (pDeal ~= nil) then
+
+    -- Already there?
+    local pDealItem = pDeal:FindItemByType(DealItemTypes.AGREEMENTS, agreementType, fromPlayerId);
+    if (pDealItem == nil) then
+      -- No
+      pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, fromPlayerId);
+      if (pDealItem ~= nil) then
+        pDealItem:SetSubType(agreementType);
+        pDealItem:SetDuration(agreementTurns);
+      end
+    end
+
+    if (pDealItem ~= nil) then
+      -- Modify the selection of this agreement
+      pDealItem:SetValueType(agreementValue);
+
+      if (agreementType == DealAgreementTypes.JOINT_WAR or
+        agreementType == DealAgreementTypes.THIRD_PARTY_WAR) then
+        pDealItem:SetParameterValue("WarType", agreementParameters.WarType);
+      end
+    end
+
+    UpdateDealPanel(ms_LocalPlayer);
+    UpdateProposedWorkingDeal();
+    UI.PlaySound("UI_GreatWorks_Put_Down");
+
+    Controls.ValueEditPopupBackground:SetHide(true);
+  end
+end
+
+-- ===========================================================================
+function ShowAgreementOptionPopup(agreementType, agreementTurns, fromPlayerId)
+
+  -- Hide/show everything for AGREEMENTS options
+  ms_AgreementOptionIM:ResetInstances();
+  Controls.ValueEditIconGrid:SetHide(true);
+  Controls.ValueAmountEditBoxContainer:SetHide(true);
+
+  if agreementType == DealAgreementTypes.RESEARCH_AGREEMENT then
+    Controls.ValueEditHeaderLabel:SetText(Locale.Lookup("LOC_DIPLOMACY_DEAL_SELECT_TECH"));
+  elseif agreementType == DealAgreementTypes.ALLIANCE then
+    Controls.ValueEditHeaderLabel:SetText(Locale.Lookup("LOC_DIPLOMACY_DEAL_SELECT_ALLIANCE"));
+  else
+    Controls.ValueEditHeaderLabel:SetText(Locale.Lookup("LOC_DIPLOMACY_DEAL_SELECT_TARGET"));
+  end
+
+  local toPlayerId = ms_LocalPlayer:GetID();
+  if (toPlayerId == fromPlayerId ) then
+    toPlayerId = ms_OtherPlayer:GetID();
+  end
+  local pForDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+  local possibleValues = DealManager.GetPossibleDealItems(fromPlayerId, toPlayerId, DealItemTypes.AGREEMENTS, agreementType, pForDeal);
+  if (possibleValues ~= nil) then
+    for i, entry in ipairs(possibleValues) do
+      local instance:table = ms_AgreementOptionIM:GetInstance();
+
+      local szDisplayName = "";
+      local szItemName = Locale.Lookup(entry.ForTypeDisplayName);
+      if (entry.SubType == DealAgreementTypes.RESEARCH_AGREEMENT) then
+        local eTech = GameInfo.Technologies[entry.ForType].Index;
+        local iTurns =   ms_LocalPlayer:GetDiplomacy():ComputeResearchAgreementTurns(ms_OtherPlayer, eTech);
+        szDisplayName = Locale.Lookup("LOC_DIPLOMACY_DEAL_PARAMETER_WITH_TURNS", szItemName, iTurns);
+        instance.AgreementOptionIcon:SetIcon("ICON_" .. entry.ForTypeName);
+        instance.AgreementOptionIcon:SetHide(false);
+      else
+        if (entry.SubType == DealAgreementTypes.JOINT_WAR or
+          entry.SubType == DealAgreementTypes.THIRD_PARTY_WAR) then
+          szDisplayName = szItemName;
+
+          -- Have a type of war that describes the joint war?
+          if entry.Parameters ~= nil then
+            if entry.Parameters.WarType ~= nil then
+              local warDef = GameInfo.Wars[entry.Parameters.WarType];
+              if warDef ~= nil then
+                szDisplayName = szDisplayName .. "[newline]" .. Locale.Lookup(warDef.Name);
+              end
+            end
+          end
+
+          instance.AgreementOptionIcon:SetHide(true);
+        else
+          szDisplayName = szItemName;
+          instance.AgreementOptionIcon:SetHide(true);
+        end
+      end
+
+      instance.AgreementOptionLabel:SetText(szDisplayName);
+
+      if agreementType == DealAgreementTypes.ALLIANCE then
+        local allianceLevel:number = ms_LocalPlayer:GetDiplomacy():GetAllianceLevel(ms_OtherPlayer);
+        local allianceData:table = GameInfo.Alliances[entry.ForTypeName];
+        local tooltip = Game.GetGameDiplomacy():GetAllianceBenefitsString(allianceData.Index, allianceLevel, true);
+        instance.AgreementOptionButton:SetToolTipString(tooltip);
+      else
+        instance.AgreementOptionButton:SetToolTipString("");
+      end
+
+      local agreementValueType = entry.ForType;
+      local agreementParameters = entry.Parameters;
+      instance.AgreementOptionButton:RegisterCallback(Mouse.eLClick, function()
+        OnSelectAgreementOption(agreementType, agreementTurns, agreementValueType, agreementParameters, fromPlayerId);
+      end);
+
+      Controls.ValueEditButton:RegisterCallback( Mouse.eLClick, OnAgreementBackButton );
+    end
+  end
+
+  Controls.ValueEditIconGrid:DoAutoSize();
+
+  ResizeValueEditScrollPanel();
+
+  Controls.ValueEditPopup:DoAutoSize();
+  Controls.ValueEditPopupBackground:SetHide(false);
+end
+
+-- ===========================================================================
+function ResizeValueEditScrollPanel()
+  -- Resize scroll panel to a maximum height of five agreement options
+  Controls.ValueEditStack:CalculateSize();
+  if Controls.ValueEditStack:GetSizeY() > MAX_DEAL_ITEM_EDIT_HEIGHT then
+    Controls.ValueEditScrollPanel:SetSizeY(MAX_DEAL_ITEM_EDIT_HEIGHT);
+  else
+    Controls.ValueEditScrollPanel:SetSizeY(Controls.ValueEditStack:GetSizeY());
+  end
+  Controls.ValueEditScrollPanel:CalculateSize();
+end
+
+-- ===========================================================================
+function OnAgreementBackButton()
+  UpdateDealPanel(ms_LocalPlayer);
+  UpdateProposedWorkingDeal();
+  Controls.ValueEditPopupBackground:SetHide(true);
 end
 
 -- ===========================================================================
@@ -1488,12 +1733,26 @@ end
 
 -- ===========================================================================
 function OnClickAvailableCity(player, valueType, subType)
+
+  if (ms_bIsDemand == true and ms_InitiatedByPlayerID == ms_OtherPlayerID) then
+    -- Can't modifiy demand that is not ours
+    return;
+  end
+
   local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
   if (pDeal ~= nil) then
 
+    -- Since we're ceding this city make sure to look for this city in the current owners city list
+    local cityName;
+    if subType == 1 then -- CitySubTypes:CEDE_OCCUPIED
+      cityName = GetCityData(GetOtherPlayer(player):GetCities():FindID(valueType)).CityName
+    else
+      cityName = GetCityData(player:GetCities():FindID(valueType)).CityName
+    end
+
     -- Already there?
     local pDealItem = pDeal:FindItemByValueType(DealItemTypes.CITIES, subType, valueType, player:GetID());
-    if (pDealItem == nil or pDealItem:GetValueTypeNameID() ~= GetCityData(player:GetCities():FindID(valueType)).CityName) then --ARISTOS
+    if (pDealItem == nil or pDealItem:GetValueTypeNameID() ~= cityName) then --ARISTOS
 
       -- No
       pDealItem = pDeal:AddItemOfType(DealItemTypes.CITIES, player:GetID());
@@ -1505,7 +1764,7 @@ function OnClickAvailableCity(player, valueType, subType)
           pDeal:RemoveItemByID(pDealItem:GetID());
         end
         UpdateDealPanel(player);
-        DealManager.SendWorkingDeal(DealProposalAction.INSPECT, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+        UpdateProposedWorkingDeal();
       end
     end
   end
@@ -1531,7 +1790,7 @@ function OnRemoveDealItem(player, itemID)
       if (not pDealItem:IsLocked()) then
         if (pDeal:RemoveItemByID(itemID)) then
           UpdateDealPanel(player);
-          DealManager.SendWorkingDeal(DealProposalAction.INSPECT, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+          UpdateProposedWorkingDeal();
           UI.PlaySound("UI_GreatWorks_Pick_Up");
         end
       end
@@ -1686,8 +1945,8 @@ end
 function PopulateAvailableResources(player : table, iconList : table, className : string)
 
   local iAvailableItemCount = 0;
-
-  local playerResources = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.RESOURCES);
+  local pForDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+  local playerResources = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.RESOURCES, pForDeal);
   local playerDuplicateResources = {};
   local playerUntradeableResources = {};
   local playerImportedResources = getImportedResources(player:GetID());
@@ -1832,7 +2091,8 @@ end
 function PopulateAvailableAgreements(player : table, iconList : table)
 
   local iAvailableItemCount = 0;
-  local possibleAgreements = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.AGREEMENTS);
+  local pForDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+  local possibleAgreements = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.AGREEMENTS, pForDeal);
 
   -- sort alpha
   local sort_func = function( a,b ) return a.SubTypeName < b.SubTypeName end;
@@ -1921,6 +2181,34 @@ function MakeCityToolTip(pCity : table)
         szToolTip = szToolTip .. "[NEWLINE]" .. Locale.Lookup(name);
       end
     end
+
+    local player = Players[pCity:GetOwner()];
+    local cityID = pCity:GetID();
+
+    -- Add Resources
+    local extractedResources = player:GetResources():GetResourcesExtractedByCity( cityID, ResultFormat.SUMMARY );
+    if extractedResources ~= nil and #extractedResources > 0 then
+      szToolTip = szToolTip .. "[NEWLINE]" .. Locale.Lookup("LOC_DEAL_CITY_RESOURCES_TOOLTIP");
+      for i, entry in ipairs(extractedResources) do
+        local resourceDesc = GameInfo.Resources[entry.ResourceType];
+        if resourceDesc ~= nil then
+          szToolTip = szToolTip .. "[NEWLINE]" .. Locale.Lookup(resourceDesc.Name) .. " : " .. tostring(entry.Amount);
+        end
+      end
+    end
+
+    -- Add Great Works
+    local cityGreatWorks = player:GetCulture():GetGreatWorksInCity( cityID );
+    if cityGreatWorks ~= nil and #cityGreatWorks > 0 then
+      szToolTip = szToolTip .. "[NEWLINE]" .. Locale.Lookup("LOC_DEAL_CITY_GREAT_WORKS_TOOLTIP");
+      for i, entry in ipairs(cityGreatWorks) do
+        local greatWorksDesc = GameInfo.GreatWorks[entry.GreatWorksType];
+        if greatWorksDesc ~= nil then
+          szToolTip = szToolTip .. "[NEWLINE]" .. Locale.Lookup(greatWorksDesc.Name);
+        end
+      end
+    end
+
     return szToolTip;
   end
 
@@ -1940,12 +2228,12 @@ function renderCity(pCity : table, player : table, targetContainer : table)
   if pCity:IsOccupied() then
     -- Cede
     if pCity:GetOwner() == otherPlayer:GetID() then
-      button.IconText:SetText(button.IconText:GetText() .. '[COLOR_Civ6Green] - ' .. Locale.Lookup("LOC_IDS_DEAL_CEDE") .. '[ENDCOLOR]'); 
+      button.IconText:SetText(button.IconText:GetText() .. '[COLOR_Civ6Green] - ' .. Locale.Lookup("LOC_IDS_DEAL_CEDE") .. '[ENDCOLOR]');
       button.SelectButton:SetTextureOffsetVal(0, 64);
     -- Return
     else
       if pCity:GetOriginalOwner() == otherPlayer:GetID() then
-        button.IconText:SetText(button.IconText:GetText() .. '[COLOR_Civ6Red] - ' .. Locale.Lookup("LOC_IDS_DEAL_RETURN") .. '[ENDCOLOR]'); 
+        button.IconText:SetText(button.IconText:GetText() .. '[COLOR_Civ6Red] - ' .. Locale.Lookup("LOC_IDS_DEAL_RETURN") .. '[ENDCOLOR]');
         button.SelectButton:SetTextureOffsetVal(0, 96);
       end
     end
@@ -1973,7 +2261,8 @@ end
 -- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 function PopulateAvailableCities(player : table, iconList : table)
   local iAvailableItemCount = 0;
-  local possibleItems = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.CITIES);
+  local pForDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+  local possibleItems = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.CITIES, pForDeal);
   local otherPlayer = GetOtherPlayer(player);
   local occupiedCities = {};
 
@@ -2059,31 +2348,11 @@ function PopulateAvailableOtherPlayers(player : table, iconList : table)
 end
 
 -- ===========================================================================
-function GetGreatWorkTooltipString(greatWorkTypeID)
-  local greatWorkDesc = GameInfo.GreatWorks[greatWorkTypeID];
-  if (greatWorkDesc ~= nil) then
-
-    local greatWorkName = Locale.Lookup(greatWorkDesc.Name);
-
-    local greatWorkType = GameInfo.GreatWorkObjectTypes[greatWorkDesc.GreatWorkObjectType];
-    if (greatWorkType ~= nil) then
-      greatWorkName = greatWorkName .. "[newline]" .. Locale.Lookup(greatWorkType.Name);
-    end
-    local greatWorkArtist = GameInfo.GreatPersonIndividuals[greatWorkDesc.GreatPersonIndividualType];
-    if (greatWorkArtist ~= nil) then
-      greatWorkName = greatWorkName .. "[newline]" .. Locale.Lookup(greatWorkArtist.Name);
-    end
-
-    return greatWorkName;
-  end
-  return nil;
-end
-
--- ===========================================================================
 function PopulateAvailableGreatWorks(player : table, iconList : table)
 
   local iAvailableItemCount = 0;
-  local possibleItems = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.GREATWORK);
+  local pForDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+  local possibleItems = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.GREATWORK, pForDeal);
   if (possibleItems ~= nil) then
     -- Sort by great work type
     local sort_func = function( a,b ) return a.ForTypeDescriptionID < b.ForTypeDescriptionID end;
@@ -2109,18 +2378,19 @@ function PopulateAvailableGreatWorks(player : table, iconList : table)
 
 
         --CQUI Changes
-        local yieldType:string = CQUI_GreatWork_YieldChanges[greatWorkDesc.GreatWorkType].YieldType;
-        local yieldValue:number = CQUI_GreatWork_YieldChanges[greatWorkDesc.GreatWorkType].YieldChange;
-        local greatWorkYields:string = YIELD_FONT_ICONS[yieldType] .. yieldValue .. " [ICON_TourismLarge]" .. greatWorkDesc.Tourism;
-        local tooltipText:string;
-        local greatWorkTypeName:string;
+        -- local yieldType:string = CQUI_GreatWork_YieldChanges[greatWorkDesc.GreatWorkType].YieldType;
+        -- local yieldValue:number = CQUI_GreatWork_YieldChanges[greatWorkDesc.GreatWorkType].YieldChange;
+        -- local greatWorkYields:string = YIELD_FONT_ICONS[yieldType] .. yieldValue .. " [ICON_TourismLarge]" .. greatWorkDesc.Tourism;
+        -- local tooltipText:string;
+        -- local greatWorkTypeName:string;
 
-        if (greatWorkDesc.EraType ~= nil) then
-          greatWorkTypeName = Locale.Lookup("LOC_" .. greatWorkDesc.GreatWorkObjectType .. "_" .. greatWorkDesc.EraType);
-        else
-          greatWorkTypeName = Locale.Lookup("LOC_" .. greatWorkDesc.GreatWorkObjectType);
-        end
-        tooltipText = Locale.Lookup(greatWorkDesc.Name) .. " (" .. greatWorkTypeName .. ")[NEWLINE]" .. greatWorkYields;
+        -- if (greatWorkDesc.EraType ~= nil) then
+        --   greatWorkTypeName = Locale.Lookup("LOC_" .. greatWorkDesc.GreatWorkObjectType .. "_" .. greatWorkDesc.EraType);
+        -- else
+        --   greatWorkTypeName = Locale.Lookup("LOC_" .. greatWorkDesc.GreatWorkObjectType);
+        -- end
+        -- tooltipText = Locale.Lookup(greatWorkDesc.Name) .. " (" .. greatWorkTypeName .. ")[NEWLINE]" .. greatWorkYields;
+        local tooltipText = GreatWorksSupport_GetBasicTooltip(entry.ForType, false);
         icon.SelectButton:SetToolTipString(tooltipText);
         --end CQUI Changes
 
@@ -2146,7 +2416,8 @@ function PopulateAvailableCaptives(player : table, iconList : table)
 
   local iAvailableItemCount = 0;
 
-  local possibleItems = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.CAPTIVE);
+  local pForDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, ms_LocalPlayer:GetID(), ms_OtherPlayer:GetID());
+  local possibleItems = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.CAPTIVE, pForDeal);
   if (possibleItems ~= nil) then
     -- Sort by cpative name
     local sort_func = function( a,b ) return a.ForTypeName < b.ForTypeName end;
@@ -2320,6 +2591,25 @@ function PopulateDealGold(player : table, iconList : table)
   end
 end
 
+-- ===========================================================================
+function GetParentItemTransferToolTip(parentDealItem)
+  local szToolTip = "";
+
+  -- If it is from a city, put the city name in the tool tip.
+  if (parentDealItem:GetType() == DealItemTypes.CITIES) then
+
+    local cityTypeName = parentDealItem:GetValueTypeNameID();
+    if (cityTypeName ~= nil) then
+      local cityName = Locale.Lookup(cityTypeName);
+      local szTransfer = Locale.Lookup("LOC_DEAL_ITEM_TRANSFERRED_WITH_CITY_TOOLTIP", cityName);
+
+      szToolTip = "[NEWLINE]" .. szTransfer;
+    end
+  end
+
+  return szToolTip;
+end
+
 -- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 function PopulateDealResources(player : table, iconList : table, className)
 
@@ -2457,11 +2747,13 @@ function PopulateDealGreatWorks(player : table, iconList : table)
           local typeName = pDealItem:GetValueTypeNameID();
           if (typeName ~= nil) then
             icon.IconText:LocalizeAndSetText(typeName);
-            icon.SelectButton:LocalizeAndSetToolTip(typeName);
+            local strTooltip :string = GreatWorksSupport_GetBasicTooltip(pDealItem:GetValueType(), false);
+            icon.SelectButton:LocalizeAndSetToolTip(strTooltip);
           else
             icon.IconText:SetText(nil);
             icon.SelectButton:SetToolTipString(nil);
           end
+          icon.ValueText:SetHide(true);
 
           -- Show/hide unacceptable item notification
           icon.UnacceptableIcon:SetHide(not pDealItem:IsUnacceptable());
@@ -2911,6 +3203,27 @@ function OnLocalPlayerTurnEnd()
     else
       OnRefuseDeal(true);
     end
+    OnContinue();
+  end
+end
+
+-- ===========================================================================
+function OnPlayerDefeat( player, defeat, eventID)
+  local localPlayer = Game.GetLocalPlayer();
+  if (localPlayer and localPlayer >= 0) then		-- Check to see if there is any local player
+    -- Was it the local player?
+    if (localPlayer == player) then
+      OnLocalPlayerTurnEnd();
+    end
+  end
+end
+
+-- ===========================================================================
+function OnTeamVictory(team, victory, eventID)
+
+  local localPlayer = Game.GetLocalPlayer();
+  if (localPlayer and localPlayer >= 0) then		-- Check to see if there is any local player
+    OnLocalPlayerTurnEnd();
   end
 end
 
@@ -2941,6 +3254,9 @@ function Initialize()
   ContextPtr:SetHideHandler( OnHide );
 
   Events.LocalPlayerTurnEnd.Add( OnLocalPlayerTurnEnd );
+  Events.PlayerDefeat.Add( OnPlayerDefeat );
+  Events.TeamVictory.Add( OnTeamVictory );
+
   Events.UserRequestClose.Add( OnUserRequestClose );
 
   m_kPopupDialog = PopupDialog:new( "DiplomacyDealView" );

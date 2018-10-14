@@ -20,6 +20,7 @@
 --  4
 --
 -- ===========================================================================
+-- Include self contained additional tabs
 include( "ToolTipHelper" );
 include( "SupportFunctions" );
 include( "Civ6Common" );      -- Tutorial check support
@@ -43,11 +44,11 @@ local m_debugShowAllMarkers   :boolean= false;  -- (false default) Show all play
 -- ===========================================================================
 
 -- Spacing / Positioning Constants
-local COLUMN_WIDTH					:number = 220;			-- Space of node and line(s) after it to the next node
-local COLUMNS_NODES_SPAN			:number = 2;			-- How many colunms do the nodes span
-local PADDING_TIMELINE_LEFT			:number = 275;
-local PADDING_PAST_ERA_LEFT			:number = 30;
-local PADDING_FIRST_ERA_INDICATOR	:number = -35;
+local COLUMN_WIDTH          :number = 220;      -- Space of node and line(s) after it to the next node
+local COLUMNS_NODES_SPAN      :number = 2;      -- How many colunms do the nodes span
+local PADDING_TIMELINE_LEFT      :number = 275;
+local PADDING_PAST_ERA_LEFT      :number = 30;
+local PADDING_FIRST_ERA_INDICATOR  :number = -300;
 
 -- Graphic constants
 local PIC_BOLT_OFF        :string = "Controls_BoltOff";
@@ -61,7 +62,7 @@ local PIC_METER_BACK      :string = "Tree_Meter_GearBack";
 local PIC_METER_BACK_DONE   :string = "TechTree_Meter_Done";
 local SIZE_ART_ERA_OFFSET_X   :number = 40;     -- How far to push each era marker
 local SIZE_ART_ERA_START_X    :number = 40;     -- How far to set the first era marker
-local SIZE_MARKER_PLAYER_X    :number = 122;      -- Marker of player
+local SIZE_MARKER_PLAYER_X    :number = 42;      -- Marker of player
 local SIZE_MARKER_PLAYER_Y    :number = 42;     -- "
 local SIZE_MARKER_OTHER_X   :number = 34;     -- Marker of other players
 local SIZE_MARKER_OTHER_Y   :number = 37;     -- "
@@ -125,13 +126,13 @@ STATUS_ART[ITEM_STATUS.RESEARCHED]  = { Name="RESEARCHED",  TextColor0=0xaafffff
 --  MEMBERS / VARIABLES
 -- ===========================================================================
 local m_kNodeIM       :table = InstanceManager:new( "NodeInstance",       "Top",    Controls.NodeScroller );
-local m_kLineIM       :table = InstanceManager:new( "LineImageInstance",    "LineImage",Controls.NodeScroller );
-local m_kEraArtIM     :table = InstanceManager:new( "EraArtInstance",     "Top",    Controls.FarBackArtScroller );
+local m_kLineIM       :table = InstanceManager:new( "LineImageInstance",    "LineImage",Controls.LineScroller );
+local m_kEraArtIM     :table = InstanceManager:new( "EraArtInstance",     "Top",    Controls.EraArtScroller );
 local m_kEraLabelIM     :table = InstanceManager:new( "EraLabelInstance",     "Top",    Controls.ArtScroller );
 local m_kEraDotIM     :table = InstanceManager:new( "EraDotInstance",     "Dot",    Controls.ScrollbarBackgroundArt );
 local m_kMarkerIM     :table = InstanceManager:new( "PlayerMarkerInstance", "Top",    Controls.TimelineScrollbar );
 local m_kSearchResultIM   :table = InstanceManager:new( "SearchResultInstance",   "Root",     Controls.SearchResultsStack);
-local m_kPathMarkerIM   :table = InstanceManager:new( "TechPathMarker",     "Top",    Controls.NodeScroller);
+local m_kPathMarkerIM   :table = InstanceManager:new( "TechPathMarker",     "Top",    Controls.LineScroller);
 
 local m_researchHash    :number;
 local m_width       :number= SIZE_MIN_SPEC_X; -- Screen Width (default / min spec)
@@ -151,7 +152,9 @@ local m_uiConnectorSets   :table = {};
 local m_kFilters      :table = {};
 
 local m_shiftDown     :boolean = false;
-local m_ToggleTechTreeId;
+
+local m_lastPercent   :number = 0.1;
+local m_FirstEraIndex = -1;
 
 -- CQUI variables
 local CQUI_halfwayNotified  :table = {};
@@ -187,18 +190,28 @@ function SetCurrentNode( hash:number )
     local pathToTech = localPlayerTechs:GetResearchPath( hash );
 
     local tParameters = {};
-    tParameters[PlayerOperations.PARAM_TECH_TYPE] = pathToTech;
-    if m_shiftDown then
-      tParameters[PlayerOperations.PARAM_INSERT_MODE] = PlayerOperations.VALUE_APPEND;
-    else
+
+    -- Azurency : fix future civic not being able to be repeated from the tree
+    local tech = GameInfo.Technologies[hash] -- the selected tech
+    if next(pathToTech) ~= nil then -- if there is a path
+      tParameters[PlayerOperations.PARAM_TECH_TYPE] = pathToTech;
+      if m_shiftDown then
+        tParameters[PlayerOperations.PARAM_INSERT_MODE] = PlayerOperations.VALUE_APPEND;
+      else
+        tParameters[PlayerOperations.PARAM_INSERT_MODE] = PlayerOperations.VALUE_EXCLUSIVE;
+      end
+      UI.RequestPlayerOperation(Game.GetLocalPlayer(), PlayerOperations.RESEARCH, tParameters);
+      UI.PlaySound("Confirm_Tech_TechTree");
+    elseif tech.Repeatable and localPlayerTechs:CanResearch(tech.Index) then -- if the tech can be researched
+      tParameters[PlayerOperations.PARAM_TECH_TYPE] = hash;
       tParameters[PlayerOperations.PARAM_INSERT_MODE] = PlayerOperations.VALUE_EXCLUSIVE;
+
+      UI.RequestPlayerOperation(Game.GetLocalPlayer(), PlayerOperations.RESEARCH, tParameters);
+      UI.PlaySound("Confirm_Tech_TechTree");
     end
-    UI.RequestPlayerOperation(Game.GetLocalPlayer(), PlayerOperations.RESEARCH, tParameters);
-        UI.PlaySound("Confirm_Tech_TechTree");
   else
     UI.DataError("Attempt to change current tree item with NIL hash!");
   end
-
 end
 
 
@@ -248,7 +261,16 @@ end
 --  Get the width of the scroll panel
 -- ===========================================================================
 function GetMaxScrollWidth()
-	return m_maxColumns + (m_maxColumns * COLUMN_WIDTH) + PADDING_TIMELINE_LEFT + PADDING_PAST_ERA_LEFT;
+  return m_maxColumns + (m_maxColumns * COLUMN_WIDTH) + PADDING_TIMELINE_LEFT + PADDING_PAST_ERA_LEFT;
+end
+
+-- ===========================================================================
+--  Get the x offset of an era art instance
+-- ===========================================================================
+function GetEraArtXOffset(instArt, eraData, firstEraPadding)
+  if firstEraPadding == nil then firstEraPadding = PADDING_FIRST_ERA_INDICATOR; end
+  local centerx = ColumnRowToPixelXY(eraData.MiddleColumn, 0) - PADDING_PAST_ERA_LEFT;
+  return (centerx + (eraData.Index == m_FirstEraIndex and firstEraPadding or 0)) * (1 / PARALLAX_ART_SPEED);
 end
 
 -- ===========================================================================
@@ -316,9 +338,11 @@ function AllocateUI()
   m_maxColumns = 0;
   for row:table in GameInfo.Eras() do
     for era,eraData in pairs(m_kEras) do
-			if eraData.Index == index then									-- Ensure indexed order
+      if eraData.Index == index then                  -- Ensure indexed order
         eraData.PriorColumns = priorColumns;
+        eraData.MiddleColumn = priorColumns + ((eraData.NumColumns + 1) / 2);
         priorColumns = priorColumns + eraData.NumColumns + 1; -- Add one for era art between
+        m_FirstEraIndex = m_FirstEraIndex < 0 and index or math.min(m_FirstEraIndex, index);
         break;
       end
     end
@@ -353,18 +377,17 @@ function AllocateUI()
       instArt.BG:SetTexture(PIC_DEFAULT_ERA_BACKGROUND);
     end
 
-		local startx, _	= ColumnRowToPixelXY(eraData.PriorColumns + 1, 0);
-		instArt.Top:SetOffsetX((startx ) * (1/PARALLAX_ART_SPEED));
-		instArt.Top:SetOffsetY((SIZE_WIDESCREEN_HEIGHT * 0.5) - (instArt.BG:GetSizeY() * 0.5));	
-		instArt.Top:SetSizeVal(eraData.NumColumns * SIZE_NODE_X, 600);
+    instArt.Top:SetOffsetX(GetEraArtXOffset(instArt, eraData));
+    instArt.Top:SetOffsetY((SIZE_WIDESCREEN_HEIGHT * 0.5) - (instArt.BG:GetSizeY() * 0.5));  
+    instArt.Top:SetSizeVal(eraData.NumColumns * SIZE_NODE_X, 600);
 
     local inst:table = m_kEraLabelIM:GetInstance();
     local eraMarkerx, _ = ColumnRowToPixelXY( eraData.PriorColumns + 1, 0) - PADDING_PAST_ERA_LEFT; -- Need to undo the padding in place that nodes use to get past the era marker column
-		if m_kEraLabelIM.m_iAllocatedInstances == 1 then
-			eraMarkerx = eraMarkerx + PADDING_FIRST_ERA_INDICATOR;
-		end
-		inst.Top:SetOffsetX((eraMarkerx - (SIZE_NODE_X * 0.5)) * (1 / PARALLAX_SPEED));
-		inst.EraTitle:SetText(Locale.Lookup("LOC_GAME_ERA_DESC",eraData.Description));
+    if eraData.Index == 1 then
+      eraMarkerx = eraMarkerx + PADDING_FIRST_ERA_INDICATOR;
+    end
+    inst.Top:SetOffsetX((eraMarkerx - (SIZE_NODE_X * 0.5)) * (1 / PARALLAX_SPEED));
+    inst.EraTitle:SetText(Locale.Lookup("LOC_GAME_ERA_DESC",eraData.Description));
 
     -- Dots on scrollbar
     local markerx:number = (eraData.PriorColumns / m_maxColumns) * Controls.ScrollbarBackgroundArt:GetSizeX();
@@ -382,8 +405,8 @@ function AllocateUI()
   -- Actually build UI nodes
   for _,item in pairs(m_kItemDefaults) do
 
-		local tech:table		= GameInfo.Technologies[item.Type];
-		local techType:string	= tech and tech.TechnologyType;
+    local tech:table    = GameInfo.Technologies[item.Type];
+    local techType:string  = tech and tech.TechnologyType;
 
     local unlockableTypes = GetUnlockablesForTech_Cached(techType, playerId);
     local node        :table;
@@ -419,7 +442,7 @@ function AllocateUI()
     end
     node["unlockGOV"] = InstanceManager:new( "GovernmentIcon", "GovernmentInstanceGrid", node.UnlockStack );
 
-		PopulateUnlockablesForTech(playerId, tech.Index, node["unlockIM"], function() SetCurrentNode(item.Hash); end);
+    PopulateUnlockablesForTech(playerId, tech.Index, node["unlockIM"], function() SetCurrentNode(item.Hash); end);
 
     -- What happens when clicked
     function OpenPedia()
@@ -585,8 +608,9 @@ function AllocateUI()
 
   Controls.NodeScroller:CalculateSize();
   Controls.NodeScroller:ReprocessAnchoring();
+
   Controls.ArtScroller:CalculateSize();
-  Controls.FarBackArtScroller:CalculateSize();
+  Controls.EraArtScroller:CalculateSize();
 
   Controls.NodeScroller:RegisterScrollCallback( OnScroll );
 
@@ -596,7 +620,6 @@ function AllocateUI()
   Controls.ModalScreenTitle:SetText(Locale.ToUpper(Locale.Lookup("LOC_TECH_TREE_HEADER")));
 end
 
-
 -- ===========================================================================
 --  UI Event
 --  Callback when the main scroll panel is scrolled.
@@ -605,183 +628,195 @@ function OnScroll( control:table, percent:number )
 
   -- Parallax
   Controls.ArtScroller:SetScrollValue( percent );
-  Controls.FarBackArtScroller:SetScrollValue( percent );
+  Controls.LineScroller:SetScrollValue( percent );
+  Controls.EraArtScroller:SetScrollValue( percent );
 
   -- Audio
   if percent==0 or percent==1.0 then
-    UI.PlaySound("UI_TechTree_ScrollTick_End");
+    if m_lastPercent == percent then
+      return;
+    end
+    UI.PlaySound("UI_TechTree_ScrollTick_End"); 
   else
     UI.PlaySound("UI_TechTree_ScrollTick");
   end
+  
+  m_lastPercent = percent;
 end
 
 
 -- ===========================================================================
---  Display the state of the tree (filter, node display, etc...) based on the
---  active player's item data.
+--	Separated into its own function so Mods / Expansions can modify the nodes
 -- ===========================================================================
-function View( playerTechData:table )
+function PopulateNode(node, playerTechData)
+  local item    :table = m_kItemDefaults[node.Type];            -- static item data
+  local live    :table = playerTechData[DATA_FIELD_LIVEDATA][node.Type];  -- live (changing) data
+  local artInfo :table = STATUS_ART[live.Status];             -- art/styles for this state
 
-  -- Output the node states for the tree
-  for _,node in pairs(m_uiNodes) do
-    local item    :table = m_kItemDefaults[node.Type];            -- static item data
-    local live    :table = playerTechData[DATA_FIELD_LIVEDATA][node.Type];  -- live (changing) data
-    local artInfo :table = STATUS_ART[live.Status];             -- art/styles for this state
+  if(live.Status == ITEM_STATUS.RESEARCHED) then
+    for _,prereqId in pairs(item.Prereqs) do
+      if(prereqId ~= PREREQ_ID_TREE_START) then
+        local prereq    :table = m_kItemDefaults[prereqId];
+        local previousRow :number = prereq.UITreeRow;
+        local previousColumn:number = m_kEras[prereq.EraType].PriorColumns;
 
-    if(live.Status == ITEM_STATUS.RESEARCHED) then
-      for _,prereqId in pairs(item.Prereqs) do
-        if(prereqId ~= PREREQ_ID_TREE_START) then
-          local prereq    :table = m_kItemDefaults[prereqId];
-          local previousRow :number = prereq.UITreeRow;
-          local previousColumn:number = m_kEras[prereq.EraType].PriorColumns;
+        for lineNum,line in pairs(m_uiConnectorSets[item.Type..","..prereqId]) do
+          if(lineNum == 1 or lineNum == 5) then
+            line:SetTexture("Controls_TreePathEW");
+          end
+          if( lineNum == 3) then
+            line:SetTexture("Controls_TreePathNS");
+          end
 
-          for lineNum,line in pairs(m_uiConnectorSets[item.Type..","..prereqId]) do
-            if(lineNum == 1 or lineNum == 5) then
-              line:SetTexture("Controls_TreePathEW");
+          if(lineNum==2)then
+            if previousRow < item.UITreeRow  then
+              line:SetTexture("Controls_TreePathSE");
+            else
+              line:SetTexture("Controls_TreePathNE");
             end
-            if( lineNum == 3) then
-              line:SetTexture("Controls_TreePathNS");
-            end
+          end
 
-            if(lineNum==2)then
-              if previousRow < item.UITreeRow  then
-                line:SetTexture("Controls_TreePathSE");
-              else
-                line:SetTexture("Controls_TreePathNE");
-              end
-            end
-
-            if(lineNum==4)then
-              if previousRow < item.UITreeRow  then
-                line:SetTexture("Controls_TreePathES");
-              else
-                line:SetTexture("Controls_TreePathEN");
-              end
+          if(lineNum==4)then
+            if previousRow < item.UITreeRow  then
+              line:SetTexture("Controls_TreePathES");
+            else
+              line:SetTexture("Controls_TreePathEN");
             end
           end
         end
       end
     end
+  end
 
-    node.NodeName:SetColor( artInfo.TextColor0, 0 );
-    node.NodeName:SetColor( artInfo.TextColor1, 1 );
-    if m_debugShowIDWithName then
-      node.NodeName:SetText( tostring(item.Index).."  "..Locale.Lookup(item.Name) );  -- Debug output
-    else
-      node.NodeName:SetText( Locale.ToUpper( Locale.Lookup(item.Name) ));       -- Normal output
-    end
+  node.NodeName:SetColor( artInfo.TextColor0, 0 );
+  node.NodeName:SetColor( artInfo.TextColor1, 1 );
+  if m_debugShowIDWithName then
+    node.NodeName:SetText( tostring(item.Index).."  "..Locale.Lookup(item.Name) );  -- Debug output
+  else
+    node.NodeName:SetText( Locale.ToUpper( Locale.Lookup(item.Name) ));       -- Normal output
+  end
 
-    if live.Turns > 0 then
-      node.Turns:SetHide( false );
-      node.Turns:SetColor( artInfo.TextColor0, 0 );
-      node.Turns:SetColor( artInfo.TextColor1, 1 );
-      node.Turns:SetText( Locale.Lookup("LOC_TECH_TREE_TURNS",live.Turns) );
-    else
-      node.Turns:SetHide( true );
-    end
+  if live.Turns > 0 then
+    node.Turns:SetHide( false );
+    node.Turns:SetColor( artInfo.TextColor0, 0 );
+    node.Turns:SetColor( artInfo.TextColor1, 1 );
+    node.Turns:SetText( Locale.Lookup("LOC_TECH_TREE_TURNS",live.Turns) );
+  else
+    node.Turns:SetHide( true );
+  end
 
-    if item.IsBoostable and live.Status ~= ITEM_STATUS.RESEARCHED then
-      node.BoostIcon:SetHide( false );
-      node.BoostText:SetHide( false );
-      node.BoostText:SetColor( artInfo.TextColor0, 0 );
-      node.BoostText:SetColor( artInfo.TextColor1, 1 );
+  if item.IsBoostable and live.Status ~= ITEM_STATUS.RESEARCHED then
+    node.BoostIcon:SetHide( false );
+    node.BoostText:SetHide( false );
+    node.BoostText:SetColor( artInfo.TextColor0, 0 );
+    node.BoostText:SetColor( artInfo.TextColor1, 1 );
 
-      local boostText:string;
-      if live.IsBoosted then
-        boostText = TXT_BOOSTED.." "..item.BoostText;
-        node.BoostIcon:SetTexture( PIC_BOOST_ON );
-        node.BoostMeter:SetHide( true );
-		node.BoostedBack:SetHide( false );
-      else
-        boostText = TXT_TO_BOOST.." "..item.BoostText;
-        node.BoostedBack:SetHide( true );
-        node.BoostIcon:SetTexture( PIC_BOOST_OFF );
-        node.BoostMeter:SetHide( false );
-        local boostAmount = (item.BoostAmount*.01) + (live.Progress/ live.Cost);
-        node.BoostMeter:SetPercent( boostAmount );
-      end
-      TruncateStringWithTooltip(node.BoostText, MAX_BEFORE_TRUNC_TO_BOOST, boostText);
-    else
-      node.BoostIcon:SetHide( true );
-      node.BoostText:SetHide( true );
-      node.BoostedBack:SetHide( true );
+    local boostText:string;
+    if live.IsBoosted then
+      boostText = TXT_BOOSTED.." "..item.BoostText;
+      node.BoostIcon:SetTexture( PIC_BOOST_ON );
       node.BoostMeter:SetHide( true );
-    end
-
-    if live.Status == ITEM_STATUS.CURRENT then
-      node.GearAnim:SetHide( false );
+  node.BoostedBack:SetHide( false );
     else
-      node.GearAnim:SetHide( true );
+      boostText = TXT_TO_BOOST.." "..item.BoostText;
+      node.BoostedBack:SetHide( true );
+      node.BoostIcon:SetTexture( PIC_BOOST_OFF );
+      node.BoostMeter:SetHide( false );
+      local boostAmount = (item.BoostAmount*.01) + (live.Progress/ live.Cost);
+      node.BoostMeter:SetPercent( boostAmount );
     end
+    TruncateStringWithTooltip(node.BoostText, MAX_BEFORE_TRUNC_TO_BOOST, boostText);
+  else
+    node.BoostIcon:SetHide( true );
+    node.BoostText:SetHide( true );
+    node.BoostedBack:SetHide( true );
+    node.BoostMeter:SetHide( true );
+  end
 
-    if live.Progress > 0 then
-      node.ProgressMeter:SetHide( false );
-      node.ProgressMeter:SetPercent(live.Progress / live.Cost);
+  if live.Status == ITEM_STATUS.CURRENT then
+    node.GearAnim:SetHide( false );
+  else
+    node.GearAnim:SetHide( true );
+  end
+
+  if live.Progress > 0 then
+    node.ProgressMeter:SetHide( false );
+    node.ProgressMeter:SetPercent(live.Progress / live.Cost);
+  else
+    node.ProgressMeter:SetHide( true );
+  end
+
+  -- Show/Hide Recommended Icon
+  -- CQUI : only if show tech civ enabled in settings
+  if live.IsRecommended and live.AdvisorType ~= nil and CQUI_ShowTechCivicRecommendations then
+    node.RecommendedIcon:SetIcon(live.AdvisorType);
+    node.RecommendedIcon:SetHide(false);
+  else
+    node.RecommendedIcon:SetHide(true);
+  end
+
+  -- Set art for icon area
+  if(node.Type ~= nil) then
+    local iconName :string = DATA_ICON_PREFIX .. node.Type;
+    if (artInfo.Name == "BLOCKED") then
+      node.IconBacking:SetHide(true);
+      iconName = iconName .. "_FOW";
+      node.BoostMeter:SetColor(0x66ffffff);
+      node.BoostIcon:SetColor(0x66000000);
     else
-      node.ProgressMeter:SetHide( true );
+      node.IconBacking:SetHide(false);
+      iconName = iconName;
+      node.BoostMeter:SetColor(0xffffffff);
+      node.BoostIcon:SetColor(0xffffffff);
     end
-
-    -- Show/Hide Recommended Icon
-    -- CQUI : only if show tech civ enabled in settings
-    if live.IsRecommended and live.AdvisorType ~= nil and CQUI_ShowTechCivicRecommendations then
-      node.RecommendedIcon:SetIcon(live.AdvisorType);
-      node.RecommendedIcon:SetHide(false);
-    else
-      node.RecommendedIcon:SetHide(true);
+    local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(iconName, 42);
+    if (textureOffsetX ~= nil) then
+      node.Icon:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
     end
+  end
 
-    -- Set art for icon area
-    if(node.Type ~= nil) then
-      local iconName :string = DATA_ICON_PREFIX .. node.Type;
-      if (artInfo.Name == "BLOCKED") then
-        node.IconBacking:SetHide(true);
-        iconName = iconName .. "_FOW";
-        node.BoostMeter:SetColor(0x66ffffff);
-        node.BoostIcon:SetColor(0x66000000);
-      else
-        node.IconBacking:SetHide(false);
-        iconName = iconName;
-        node.BoostMeter:SetColor(0xffffffff);
-        node.BoostIcon:SetColor(0xffffffff);
-      end
-      local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(iconName, 42);
-      if (textureOffsetX ~= nil) then
-        node.Icon:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
-      end
-    end
+  if artInfo.IsButton then
+    node.OtherStates:SetHide( true );
+    node.NodeButton:SetTextureOffsetVal( artInfo.BGU, artInfo.BGV );
+  else
+    node.OtherStates:SetHide( false );
+    node.OtherStates:SetTextureOffsetVal( artInfo.BGU, artInfo.BGV );
+  end
 
-    if artInfo.IsButton then
-      node.OtherStates:SetHide( true );
-      node.NodeButton:SetTextureOffsetVal( artInfo.BGU, artInfo.BGV );
-    else
-      node.OtherStates:SetHide( false );
-      node.OtherStates:SetTextureOffsetVal( artInfo.BGU, artInfo.BGV );
-    end
+  if artInfo.FillTexture ~= nil then
+    node.FillTexture:SetHide( false );
+    node.FillTexture:SetTexture( artInfo.FillTexture );
+  else
+    node.FillTexture:SetHide( true );
+  end
 
-    if artInfo.FillTexture ~= nil then
-      node.FillTexture:SetHide( false );
-      node.FillTexture:SetTexture( artInfo.FillTexture );
-    else
-      node.FillTexture:SetHide( true );
-    end
+  if artInfo.BoltOn then
+    node.Bolt:SetTexture(PIC_BOLT_ON);
+  else
+    node.Bolt:SetTexture(PIC_BOLT_OFF);
+  end
 
-    if artInfo.BoltOn then
-      node.Bolt:SetTexture(PIC_BOLT_ON);
-    else
-      node.Bolt:SetTexture(PIC_BOLT_OFF);
-    end
+  node.NodeButton:SetToolTipString(ToolTipHelper.GetToolTip(item.Type, Game.GetLocalPlayer()));
+  node.IconBacking:SetTexture(artInfo.IconBacking);
 
-    node.NodeButton:SetToolTipString(ToolTipHelper.GetToolTip(item.Type, Game.GetLocalPlayer()));
-    node.IconBacking:SetTexture(artInfo.IconBacking);
+  -- Darken items not making it past filter.
+  local currentFilter:table = playerTechData[DATA_FIELD_UIOPTIONS].filter;
+  if currentFilter == nil or currentFilter.Func == nil or currentFilter.Func( item.Type ) then
+    node.FilteredOut:SetHide( true );
+  else
+    node.FilteredOut:SetHide( false );
+  end
+end
 
-    -- Darken items not making it past filter.
-    local currentFilter:table = playerTechData[DATA_FIELD_UIOPTIONS].filter;
-    if currentFilter == nil or currentFilter.Func == nil or currentFilter.Func( item.Type ) then
-      node.FilteredOut:SetHide( true );
-    else
-      node.FilteredOut:SetHide( false );
-    end
+-- ===========================================================================
+--	Display the state of the tree (filter, node display, etc...) based on the 
+--	active player's item data. 
+-- ===========================================================================
+function View( playerTechData:table )
 
+  -- Output the node states for the tree
+  for _,node in pairs(m_uiNodes) do
+    PopulateNode(node, playerTechData);
   end
 
   -- Fill in where the markers (representing players) are at:
@@ -892,14 +927,14 @@ function GetLivePlayerData( ePlayer:number, eCompletedTech:number )
   local playerTechs :table  = kPlayer:GetTechs();
   local currentTechID :number = playerTechs:GetResearchingTech();
 
-	-- Get recommendations
-	local techRecommendations:table = {};
-	local kGrandAI:table = kPlayer:GetGrandStrategicAI();
-	if kGrandAI then
-		for i,recommendation in pairs(kGrandAI:GetTechRecommendations()) do
-			techRecommendations[recommendation.TechHash] = recommendation.TechScore;
-		end
-	end
+  -- Get recommendations
+  local techRecommendations:table = {};
+  local kGrandAI:table = kPlayer:GetGrandStrategicAI();
+  if kGrandAI then
+    for i,recommendation in pairs(kGrandAI:GetTechRecommendations()) do
+      techRecommendations[recommendation.TechHash] = recommendation.TechScore;
+    end
+  end
 
   -- DEBUG: Output header to console.
   if m_debugOutputTechInfo then
@@ -910,34 +945,34 @@ function GetLivePlayerData( ePlayer:number, eCompletedTech:number )
   -- Loop through all items and place in appropriate buckets as well
   -- read in the associated information for it.
   for type,item in pairs(m_kItemDefaults) do
-		local techID	:number = GameInfo.Technologies[item.Type].Index;
+    local techID  :number = GameInfo.Technologies[item.Type].Index;
     local status  :number = ITEM_STATUS.BLOCKED;
-		local turnsLeft	:number = playerTechs:GetTurnsToResearch(techID);
-		if playerTechs:HasTech(techID) or techID == eCompletedTech then
+    local turnsLeft  :number = playerTechs:GetTurnsToResearch(techID);
+    if playerTechs:HasTech(techID) or techID == eCompletedTech then
       status = ITEM_STATUS.RESEARCHED;
       turnsLeft = 0;
-		elseif techID == currentTechID then
+    elseif techID == currentTechID then
       status = ITEM_STATUS.CURRENT;
       turnsLeft = playerTechs:GetTurnsLeft();
-		elseif playerTechs:CanResearch(techID) then
+    elseif playerTechs:CanResearch(techID) then
       status = ITEM_STATUS.READY;
     end
 
     data[DATA_FIELD_LIVEDATA][type] = {
-			Cost		= playerTechs:GetResearchCost(techID),
-			IsBoosted	= playerTechs:HasBoostBeenTriggered(techID),
-			Progress	= playerTechs:GetResearchProgress(techID),
+      Cost    = playerTechs:GetResearchCost(techID),
+      IsBoosted  = playerTechs:HasBoostBeenTriggered(techID),
+      Progress  = playerTechs:GetResearchProgress(techID),
       Status    = status,
       Turns   = turnsLeft
     }
 
-		-- Determine if tech is recommended
-		if techRecommendations[item.Hash] then
-			data[DATA_FIELD_LIVEDATA][type].AdvisorType = GameInfo.Technologies[item.Type].AdvisorType;
-			data[DATA_FIELD_LIVEDATA][type].IsRecommended = true;
-		else
-			data[DATA_FIELD_LIVEDATA][type].IsRecommended = false;
-		end
+    -- Determine if tech is recommended
+    if techRecommendations[item.Hash] then
+      data[DATA_FIELD_LIVEDATA][type].AdvisorType = GameInfo.Technologies[item.Type].AdvisorType;
+      data[DATA_FIELD_LIVEDATA][type].IsRecommended = true;
+    else
+      data[DATA_FIELD_LIVEDATA][type].IsRecommended = false;
+    end
 
     -- DEBUG: Output to console detailed information about the tech.
     if m_debugOutputTechInfo then
@@ -976,8 +1011,8 @@ function GetLivePlayerData( ePlayer:number, eCompletedTech:number )
       local highestColumn :number = -1;
       local highestEra  :string = "";
       for _,item in pairs(m_kItemDefaults) do
-				local techID:number = GameInfo.Technologies[item.Type].Index;
-				if playerTech:HasTech(techID) then
+        local techID:number = GameInfo.Technologies[item.Type].Index;
+        if playerTech:HasTech(techID) then
           local column:number = item.Column + m_kEras[item.EraType].PriorColumns;
           if column > highestColumn then
             highestColumn = column;
@@ -1136,13 +1171,20 @@ end
 
 -- ===========================================================================
 function OnResearchChanged( ePlayer:number, eTech:number )
-  if ePlayer == Game.GetLocalPlayer() then
-    m_ePlayer = ePlayer;
-    m_kCurrentData = GetLivePlayerData( m_ePlayer, -1 );
-    if not ContextPtr:IsHidden() then
-      View( m_kCurrentData );
-    end
+  -- Always refresh the live data for this tech in case it was boosted
+  m_kCurrentData = GetLivePlayerData( m_ePlayer, -1 );
+
+  if not ContextPtr:IsHidden() and ShouldUpdateWhenResearchChanges(ePlayer) then
+    View( m_kCurrentData );
   end
+end
+
+-- ===========================================================================
+--	This function was separated so behavior can be modified in mods/expasions
+-- ===========================================================================
+function ShouldUpdateWhenResearchChanges(ePlayer)
+  m_ePlayer = Game.GetLocalPlayer();
+  return m_ePlayer == ePlayer;
 end
 
 -- ===========================================================================
@@ -1173,17 +1215,16 @@ function OnResearchComplete( ePlayer:number, eTech:number)
         --------------------------------------------------------------------------
 
     -- CQUI update all cities real housing when play as India and researched Sanitation
-    if eTech == 40 then    -- Sanitation (Index == 40)
+    if eTech == GameInfo.Technologies["TECH_SANITATION"].Index then    -- Sanitation
       if (PlayerConfigurations[ePlayer]:GetCivilizationTypeName() == "CIVILIZATION_INDIA") then
-        LuaEvents.CQUI_IndiaPlayerResearchedSanitation();
+        LuaEvents.CQUI_AllCitiesInfoUpdated(ePlayer);
       end
     -- CQUI update all cities real housing when play as Indonesia and researched Mass Production
-    elseif eTech == 27 then    -- Mass Production (Index == 27)
+    elseif eTech == GameInfo.Technologies["TECH_MASS_PRODUCTION"].Index then    -- Mass Production
       if (PlayerConfigurations[ePlayer]:GetCivilizationTypeName() == "CIVILIZATION_INDONESIA") then
-        LuaEvents.CQUI_IndonesiaPlayerResearchedMassProduction();
+        LuaEvents.CQUI_AllCitiesInfoUpdated(ePlayer);
       end
     end
-
   end
 end
 
@@ -1205,16 +1246,14 @@ function Resize()
   Controls.ArtParchmentRippleTop:SetSizeX( artAndEraScrollWidth );
   Controls.ArtParchmentRippleBottom:SetSizeX( artAndEraScrollWidth );
   Controls.ForceSizeX:SetSizeX( artAndEraScrollWidth  );
+  Controls.ForceArtSizeX:SetSizeX( scrollPanelX * (1/PARALLAX_ART_SPEED) );
+  Controls.LineForceSizeX:SetSizeX( scrollPanelX );
+  Controls.LineScroller:CalculateSize();
   Controls.ArtScroller:CalculateSize();
   Controls.ArtCornerGrungeTR:ReprocessAnchoring();
   Controls.ArtCornerGrungeBR:ReprocessAnchoring();
 
-
-  local PADDING_DUE_TO_LAST_BACKGROUND_ART_IMAGE:number = 100;
-  local backArtScrollWidth:number = scrollPanelX * (1/PARALLAX_ART_SPEED);
-  Controls.Background:SetSizeX( backArtScrollWidth + PADDING_DUE_TO_LAST_BACKGROUND_ART_IMAGE );
   Controls.Background:SetSizeY( SIZE_WIDESCREEN_HEIGHT - (SIZE_TIMELINE_AREA_Y-8) );
-  Controls.FarBackArtScroller:CalculateSize();
 end
 
 -- ===========================================================================
@@ -1384,98 +1423,98 @@ function PopulateSearchData()
   local searchContext = "Technologies";
   if(Search.CreateContext(searchContext, "[COLOR_LIGHTBLUE]", "[ENDCOLOR]", "...")) then
 
-		-- Hash modifier types that grant envoys or spies.
-		local envoyModifierTypes = {};
-		local spyModifierTypes = {};
+    -- Hash modifier types that grant envoys or spies.
+    local envoyModifierTypes = {};
+    local spyModifierTypes = {};
 
-		for row in GameInfo.DynamicModifiers() do
-			local effect = row.EffectType;
-			if(effect == "EFFECT_GRANT_INFLUENCE_TOKEN") then
-				envoyModifierTypes[row.ModifierType] = true;
-			elseif(effect == "EFFECT_GRANT_SPY") then
-				spyModifierTypes[row.ModifierType] = true;
-			end
-		end
+    for row in GameInfo.DynamicModifiers() do
+      local effect = row.EffectType;
+      if(effect == "EFFECT_GRANT_INFLUENCE_TOKEN") then
+        envoyModifierTypes[row.ModifierType] = true;
+      elseif(effect == "EFFECT_GRANT_SPY") then
+        spyModifierTypes[row.ModifierType] = true;
+      end
+    end
 
-		-- Hash tech types that grant envoys or spies via modifiers.
-		local envoyTechs = {};
-		local spyTechs = {};
-		for row in GameInfo.TechnologyModifiers() do			
-			local modifier = GameInfo.Modifiers[row.ModifierId];
-			if(modifier) then
-				local modifierType = modifier.ModifierType;
-				if(envoyModifierTypes[modifierType]) then
-					envoyTechs[row.TechnologyType] = true;
-				end
+    -- Hash tech types that grant envoys or spies via modifiers.
+    local envoyTechs = {};
+    local spyTechs = {};
+    for row in GameInfo.TechnologyModifiers() do      
+      local modifier = GameInfo.Modifiers[row.ModifierId];
+      if(modifier) then
+        local modifierType = modifier.ModifierType;
+        if(envoyModifierTypes[modifierType]) then
+          envoyTechs[row.TechnologyType] = true;
+        end
 
-				if(spyModifierTypes[modifierType]) then
-					spyTechs[row.TechnologyType] = true;
-				end
-			end
-		end
+        if(spyModifierTypes[modifierType]) then
+          spyTechs[row.TechnologyType] = true;
+        end
+      end
+    end
 
-		local envoyTypeName = Locale.Lookup("LOC_ENVOY_NAME");
-		local spyTypeName = Locale.Lookup("LOC_SPY_NAME");
+    local envoyTypeName = Locale.Lookup("LOC_ENVOY_NAME");
+    local spyTypeName = Locale.Lookup("LOC_SPY_NAME");
 
     for row in GameInfo.Technologies() do
-			local techType = row.TechnologyType;
+      local techType = row.TechnologyType;
       local description = row.Description and Locale.Lookup(row.Description) or "";
-			local tags = {};
-			if(envoyTechs[techType]) then
-				table.insert(tags, envoyTypeName);
+      local tags = {};
+      if(envoyTechs[techType]) then
+        table.insert(tags, envoyTypeName);
     end
 
-			if(spyTechs[techType]) then
-				table.insert(tags, spyTypeName);
-			end
+      if(spyTechs[techType]) then
+        table.insert(tags, spyTypeName);
+      end
 
-			Search.AddData(searchContext, row.TechnologyType, Locale.Lookup(row.Name), description, tags);
-		end
-	
-		local buildingType = Locale.Lookup("LOC_BUILDING_NAME");
-		local wonderTypeName = Locale.Lookup("LOC_WONDER_NAME");
-		for row in GameInfo.Buildings() do
+      Search.AddData(searchContext, row.TechnologyType, Locale.Lookup(row.Name), description, tags);
+    end
+  
+    local buildingType = Locale.Lookup("LOC_BUILDING_NAME");
+    local wonderTypeName = Locale.Lookup("LOC_WONDER_NAME");
+    for row in GameInfo.Buildings() do
       if(row.PrereqTech) then
-				local tags = {buildingTypeName};
-				if(row.IsWonder) then
-					table.insert(tags, wonderTypeName);
-				end
-				Search.AddData(searchContext, row.PrereqTech, Locale.Lookup(GameInfo.Technologies[row.PrereqTech].Name), Locale.Lookup(row.Name), tags);
+        local tags = {buildingTypeName};
+        if(row.IsWonder) then
+          table.insert(tags, wonderTypeName);
+        end
+        Search.AddData(searchContext, row.PrereqTech, Locale.Lookup(GameInfo.Technologies[row.PrereqTech].Name), Locale.Lookup(row.Name), tags);
       end
     end
 
-		local districtType = Locale.Lookup("LOC_DISTRICT_NAME");
-		for row in GameInfo.Districts() do
+    local districtType = Locale.Lookup("LOC_DISTRICT_NAME");
+    for row in GameInfo.Districts() do
       if(row.PrereqTech) then
-				Search.AddData(searchContext, row.PrereqTech, Locale.Lookup(GameInfo.Technologies[row.PrereqTech].Name), Locale.Lookup(row.Name), { districtType });
+        Search.AddData(searchContext, row.PrereqTech, Locale.Lookup(GameInfo.Technologies[row.PrereqTech].Name), Locale.Lookup(row.Name), { districtType });
       end
     end
 
-		local improvementType = Locale.Lookup("LOC_IMPROVEMENT_NAME");
-		for row in GameInfo.Improvements() do
+    local improvementType = Locale.Lookup("LOC_IMPROVEMENT_NAME");
+    for row in GameInfo.Improvements() do
       if(row.PrereqTech) then
-				Search.AddData(searchContext, row.PrereqTech, Locale.Lookup(GameInfo.Technologies[row.PrereqTech].Name), Locale.Lookup(row.Name), { improvementType });
+        Search.AddData(searchContext, row.PrereqTech, Locale.Lookup(GameInfo.Technologies[row.PrereqTech].Name), Locale.Lookup(row.Name), { improvementType });
       end
     end
 
-		local projectType = Locale.Lookup("LOC_PROJECT_NAME");
-		for row in GameInfo.Projects() do
+    local projectType = Locale.Lookup("LOC_PROJECT_NAME");
+    for row in GameInfo.Projects() do
       if(row.PrereqTech) then
-				Search.AddData(searchContext, row.PrereqTech, Locale.Lookup(GameInfo.Technologies[row.PrereqTech].Name), Locale.Lookup(row.Name), { projectType });
+        Search.AddData(searchContext, row.PrereqTech, Locale.Lookup(GameInfo.Technologies[row.PrereqTech].Name), Locale.Lookup(row.Name), { projectType });
       end
     end
 
-		local resourceType = Locale.Lookup("LOC_RESOURCE_NAME");
+    local resourceType = Locale.Lookup("LOC_RESOURCE_NAME");
     for row in GameInfo.Resources() do
       if(row.PrereqTech) then
-				Search.AddData(searchContext, row.PrereqTech, Locale.Lookup(GameInfo.Technologies[row.PrereqTech].Name), Locale.Lookup(row.Name), { resourceType });
-			end
-		end
+        Search.AddData(searchContext, row.PrereqTech, Locale.Lookup(GameInfo.Technologies[row.PrereqTech].Name), Locale.Lookup(row.Name), { resourceType });
+      end
+    end
 
-		local unitType = Locale.Lookup("LOC_UNIT_NAME");
-		for row in GameInfo.Units() do
-			if(row.PrereqTech) then
-				Search.AddData(searchContext, row.PrereqTech, Locale.Lookup(GameInfo.Technologies[row.PrereqTech].Name), Locale.Lookup(row.Name), { unitType });
+    local unitType = Locale.Lookup("LOC_UNIT_NAME");
+    for row in GameInfo.Units() do
+      if(row.PrereqTech) then
+        Search.AddData(searchContext, row.PrereqTech, Locale.Lookup(GameInfo.Technologies[row.PrereqTech].Name), Locale.Lookup(row.Name), { unitType });
       end
     end
 
@@ -1587,9 +1626,9 @@ end
 --  Main close function all exit points should call.
 -- ===========================================================================
 function Close()
-	if not ContextPtr:IsHidden() then
+  if not ContextPtr:IsHidden() then
   UI.PlaySound("UI_Screen_Close");
-	end
+  end
 
   ContextPtr:SetHide(true);
   LuaEvents.TechTree_CloseTechTree();
@@ -1676,125 +1715,111 @@ function OnTutorialScrollToNode( typeName:string )
 end
 
 -- ===========================================================================
---  Input Hotkey Event
--- ===========================================================================
-function OnInputActionTriggered( actionId )
-  if actionId == m_ToggleTechTreeId then
-        UI.PlaySound("Play_UI_Click");
-    if(ContextPtr:IsHidden()) then
-      LuaEvents.LaunchBar_RaiseTechTree();
-    else
-      OnClose();
-    end
-  end
-end
-
--- ===========================================================================
---	Searching
+--  Searching
 -- ===========================================================================
 function OnSearchCharCallback()
-	local str = Controls.SearchEditBox:GetText();
+  local str = Controls.SearchEditBox:GetText();
 
-	local defaultText = Locale.Lookup("LOC_TREE_SEARCH_W_DOTS")
-	if(str == defaultText) then
-		-- We cannot immediately clear the results..
-		-- When the edit box loses focus, it resets the text which triggers this call back.
-		-- if the user is in the process of clicking a result, wiping the results in this callback will make the user
-		-- click whatever was underneath.
-		-- Instead, trigger a timer will wipe the results.
-		Controls.SearchResultsTimer:SetToBeginning();
-		Controls.SearchResultsTimer:Play();
+  local defaultText = Locale.Lookup("LOC_TREE_SEARCH_W_DOTS")
+  if(str == defaultText) then
+    -- We cannot immediately clear the results..
+    -- When the edit box loses focus, it resets the text which triggers this call back.
+    -- if the user is in the process of clicking a result, wiping the results in this callback will make the user
+    -- click whatever was underneath.
+    -- Instead, trigger a timer will wipe the results.
+    Controls.SearchResultsTimer:SetToBeginning();
+    Controls.SearchResultsTimer:Play();
 
-	elseif(str == nil or #str == 0) then
-		-- Clear results.
-		m_kSearchResultIM:DestroyInstances();
-		Controls.SearchResultsStack:CalculateSize();
-		Controls.SearchResultsStack:ReprocessAnchoring();
-		Controls.SearchResultsPanel:CalculateSize();
-		Controls.SearchResultsPanelContainer:SetHide(true);
-
-	elseif(str and #str > 0) then
-		local hasResults = false;
+  elseif(str == nil or #str == 0) then
+    -- Clear results.
     m_kSearchResultIM:DestroyInstances();
-		local results = Search.Search("Technologies", str, 100);
+    Controls.SearchResultsStack:CalculateSize();
+    Controls.SearchResultsStack:ReprocessAnchoring();
+    Controls.SearchResultsPanel:CalculateSize();
+    Controls.SearchResultsPanelContainer:SetHide(true);
+
+  elseif(str and #str > 0) then
+    local hasResults = false;
+    m_kSearchResultIM:DestroyInstances();
+    local results = Search.Search("Technologies", str, 100);
     if (results and #results > 0) then
-			hasResults = true;
-			local has_found = {};
+      hasResults = true;
+      local has_found = {};
       for i, v in ipairs(results) do
         if has_found[v[1]] == nil then
-					-- v[1] == Type
-					-- v[2] == Name w/ search term highlighted.
-					-- v[3] == Snippet description w/ search term highlighted.
+          -- v[1] == Type
+          -- v[2] == Name w/ search term highlighted.
+          -- v[3] == Snippet description w/ search term highlighted.
           local instance = m_kSearchResultIM:GetInstance();
 
           -- Search results already localized.
-					local name = v[2];
-					instance.Name:SetText(name);
-					local iconName = DATA_ICON_PREFIX .. v[1];
+          local name = v[2];
+          instance.Name:SetText(name);
+          local iconName = DATA_ICON_PREFIX .. v[1];
           instance.SearchIcon:SetIcon(iconName);
 
-					instance.Button:RegisterCallback(Mouse.eLClick, function() 
-						Controls.SearchEditBox:SetText(defaultText);
-						ScrollToNode(v[1]); 
-					end);
+          instance.Button:RegisterCallback(Mouse.eLClick, function() 
+            Controls.SearchEditBox:SetText(defaultText);
+            ScrollToNode(v[1]); 
+          end);
 
           instance.Button:SetToolTipString(ToolTipHelper.GetToolTip(v[1], Game.GetLocalPlayer()));
 
           has_found[v[1]] = true;
         end
       end
-		end
+    end
 
       Controls.SearchResultsStack:CalculateSize();
       Controls.SearchResultsStack:ReprocessAnchoring();
       Controls.SearchResultsPanel:CalculateSize();
-		Controls.SearchResultsPanelContainer:SetHide(not hasResults);
-	end
+    Controls.SearchResultsPanelContainer:SetHide(not hasResults);
+  end
 end
 
 function OnSearchCommitCallback()
-	local str = Controls.SearchEditBox:GetText();
+  local str = Controls.SearchEditBox:GetText();
 
-	local defaultText = Locale.Lookup("LOC_TREE_SEARCH_W_DOTS")
-	if(str and #str > 0 and str ~= defaultText) then
-		local results = Search.Search("Technologies", str, 1);
-		if (results and #results > 0) then
-			local result = results[1];
-			if(result) then
-				ScrollToNode(result[1]); 
+  local defaultText = Locale.Lookup("LOC_TREE_SEARCH_W_DOTS")
+  if(str and #str > 0 and str ~= defaultText) then
+    local results = Search.Search("Technologies", str, 1);
+    if (results and #results > 0) then
+      local result = results[1];
+      if(result) then
+        ScrollToNode(result[1]); 
     end
   end
 
-		Controls.SearchEditBox:SetText(defaultText);
-	end
+    Controls.SearchEditBox:SetText(defaultText);
+  end
 end
 
 function OnSearchBarGainFocus()
-	Controls.SearchResultsTimer:Stop();
-	Controls.SearchEditBox:ClearString();
+  Controls.SearchResultsTimer:Stop();
+  Controls.SearchEditBox:ClearString();
 end
 
 function OnSearchBarLoseFocus()
-	Controls.SearchEditBox:SetText(Locale.Lookup("LOC_TREE_SEARCH_W_DOTS"));
+  Controls.SearchEditBox:SetText(Locale.Lookup("LOC_TREE_SEARCH_W_DOTS"));
 end
 
 function OnSearchResultsTimerEnd()
-	m_kSearchResultIM:DestroyInstances();
-	Controls.SearchResultsStack:CalculateSize();
-	Controls.SearchResultsStack:ReprocessAnchoring();
-	Controls.SearchResultsPanel:CalculateSize();
-	Controls.SearchResultsPanelContainer:SetHide(true);
+  m_kSearchResultIM:DestroyInstances();
+  Controls.SearchResultsStack:CalculateSize();
+  Controls.SearchResultsStack:ReprocessAnchoring();
+  Controls.SearchResultsPanel:CalculateSize();
+  Controls.SearchResultsPanelContainer:SetHide(true);
 end
 
 function OnSearchResultsPanelContainerMouseEnter()
-	Controls.SearchResultsTimer:Stop();
+  Controls.SearchResultsTimer:Stop();
 end
 
 function OnSearchResultsPanelContainerMouseExit()
-	if(not Controls.SearchEditBox:HasFocus()) then
-		Controls.SearchResultsTimer:SetToBeginning();
-		Controls.SearchResultsTimer:Play();
-	end
+  if(not Controls.SearchEditBox:HasFocus()) then
+    Controls.SearchResultsTimer:SetToBeginning();
+    Controls.SearchResultsTimer:Play();
+  end
 end
 
 -- ===========================================================================
@@ -1831,9 +1856,9 @@ function Initialize()
   Controls.SearchEditBox:RegisterStringChangedCallback(OnSearchCharCallback);
   Controls.SearchEditBox:RegisterHasFocusCallback( OnSearchBarGainFocus);
   Controls.SearchEditBox:RegisterCommitCallback( OnSearchBarLoseFocus);
-	Controls.SearchResultsTimer:RegisterEndCallback(OnSearchResultsTimerEnd);
-	Controls.SearchResultsPanelContainer:RegisterMouseEnterCallback(OnSearchResultsPanelContainerMouseEnter);
-	Controls.SearchResultsPanelContainer:RegisterMouseExitCallback(OnSearchResultsPanelContainerMouseExit);
+  Controls.SearchResultsTimer:RegisterEndCallback(OnSearchResultsTimerEnd);
+  Controls.SearchResultsPanelContainer:RegisterMouseEnterCallback(OnSearchResultsPanelContainerMouseEnter);
+  Controls.SearchResultsPanelContainer:RegisterMouseExitCallback(OnSearchResultsPanelContainerMouseExit);
   Controls.ToggleKeyButton:RegisterCallback(Mouse.eLClick, OnClickToggleKey);
 
 
@@ -1852,12 +1877,6 @@ function Initialize()
   Events.ResearchQueueChanged.Add( OnResearchChanged );
   Events.ResearchCompleted.Add( OnResearchComplete );
   Events.SystemUpdateUI.Add( OnUpdateUI );
-
-  --  Hot Key Handling
-  m_ToggleTechTreeId = Input.GetActionId("ToggleTechTree");
-  if (m_ToggleTechTreeId ~= nil) then
-    Events.InputActionTriggered.Add( OnInputActionTriggered );
-  end
 
   -- Key Label Truncation to Tooltip
   TruncateStringWithTooltip(Controls.AvailableLabelKey, MAX_BEFORE_TRUNC_KEY_LABEL, Controls.AvailableLabelKey:GetText());

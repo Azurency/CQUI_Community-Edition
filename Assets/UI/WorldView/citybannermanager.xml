@@ -264,7 +264,7 @@
     <WorldAnchor    ID="Anchor">
       <Grid ID="AerodromeBannerGrid" Anchor="C,C" Size="54,24" Texture="Banner_UnitBacking" SliceCorner="13,1" SliceSize="4,22">
         <!-- Current and max air unit capacity -->
-        <Stack Anchor="R,C" Offset="6,0" StackGrowth="Right">
+        <Stack ID="AerodromeBase" Anchor="R,C" Offset="6,0" StackGrowth="Right">
           <Label ID="AerodromeCurrentUnitCount" Style="FontNormal14" String="1"/>
           <Label Style="FontNormal14" String="/"/>
           <Label ID="AerodromeMaxUnitCount" Style="FontNormal14" String="4"/>
@@ -303,8 +303,10 @@
 
         <InstanceData Name="UnitListEntry">
           <GridButton  ID="Button" Style="UnitPanelHeader" Size="200,24" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" StateOffsetIncrement="0,24" TruncateWidth="180">
-            <Label ID="UnitName" Anchor="C,C" Offset="0,1" Style="UnitPanelHeader"/>
-            <Image ID="UnitTypeIcon" Anchor="L,C" Size="22,22" Offset="2,0" Texture="UnitFlagAtlas22"/>
+            <Stack StackGrowth="Right">
+              <Image ID="UnitTypeIcon" Anchor="L,C" Size="22,22" Offset="2,0" Texture="UnitFlagAtlas22"/>
+              <Label ID="UnitName" Anchor="C,C" Offset="0,1" Style="UnitPanelHeader" TruncateWidth="173"/>
+            </Stack>
           </GridButton>
         </InstanceData>
       </PullDown>
@@ -417,8 +419,10 @@
         <Image ID="ReligionFollowerIcon" Anchor="C,C" Size="22,22" IconSize="22"/>
       </Image>
       <Label ID="ReligionFollowerCount" Anchor="L,C" Offset="30,0" Style="FontNormal16" String="22"/>
-      <Label Anchor="L,C" Offset="45,3" FontSize="16" String="[Icon_PressureLeft]"/>
-      <Label ID="ReligionFollowerPressure" Anchor="L,C" Offset="65,0" Style="FontNormal16" String="22"/>
+      <Container Anchor="L,C" Size="auto,auto" Offset="45,3" ToolTip="LOC_CITY_BANNER_INCOMING_RELIGION_PRESSURE">
+        <Label Anchor="L,C" FontSize="16" String="[Icon_PressureLeft]"/>
+        <Label ID="ReligionFollowerPressure" Anchor="L,C" Offset="20,-3" Style="FontNormal16" String="22"/>
+      </Container>
     </Container>
   </Instance>
 
@@ -465,10 +469,12 @@
         <Box Anchor="C,C" Size="2,parent-12" Color="0,0,0,255"/>
 
         <!-- Religious Pressure by this City -->
-        <Stack Anchor="C,T" Offset="54,16" StackGrowth="Right" StackPadding="0">
-          <Label Offset="0,3" FontSize="16" String="[Icon_PressureRight]"/>
-          <Label ID="ExertedReligiousPressure" Anchor="L,C" Offset="0,-1" Style="FontNormal16" String="+22"/>
-        </Stack>
+        <Container Anchor="C,T" Offset="54,16" Size="auto,auto" ToolTip="LOC_CITY_BANNER_OUTGOING_RELIGION_PRESSURE">
+          <Stack StackGrowth="Right" StackPadding="0">
+            <Label Offset="0,3" FontSize="16" String="[Icon_PressureRight]"/>
+            <Label ID="ExertedReligiousPressure" Anchor="L,C" Offset="0,-1" Style="FontNormal16" String="+22"/>
+          </Stack>
+        </Container>
 
         <!-- Religion Follower Chart -->
         <Container Anchor="C,T" Offset="54,30" Size="110,parent" >

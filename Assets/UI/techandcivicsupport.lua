@@ -191,32 +191,37 @@ function ResetOverflowArrow( kItemInstance:table )
   kItemInstance.UnlockPageTurner:ClearCallback(Mouse.eLClick);
 end
 
-function OnOverflowArrowPressed( kItemInstance:table )
+function OnOverflowArrowPressed( kItemInstance:table, nUnlockableOffset:number )
   local unlockables :table = kItemInstance.UnlockStack:GetChildren();
   local overflowPage :boolean = kItemInstance.PageTurnerImage:IsFlippedHorizontal();
   kItemInstance.PageTurnerImage:FlipX(not overflowPage);
-  for i=1, table.count(unlockables), 1 do
+  for i=nUnlockableOffset+1, #unlockables, 1 do
     unlockables[i]:SetHide(not unlockables[i]:IsHidden());
   end
   kItemInstance.UnlockStack:ReprocessAnchoring();
 end
 
-function HandleOverflow( numUnlockables:number, kItemInstance:table )
+function HandleOverflow( numUnlockables:number, kItemInstance:table, numMaxVisible:number, numMaxPerPage:number )
   if kItemInstance == nil then
     return nil;
   end
 
   kItemInstance.UnlockPageTurner:SetHide(true);
 
-  if numUnlockables <= MAX_ICONS_BEFORE_OVERFLOW then
+  if numUnlockables <= numMaxVisible then
     return;
   end
   
   local unlockables :table = kItemInstance.UnlockStack:GetChildren();
-  kItemInstance.UnlockPageTurner:SetHide(false);
-  kItemInstance.UnlockPageTurner:RegisterCallback( Mouse.eLClick, function() OnOverflowArrowPressed(kItemInstance); end);
+  -- Stack may contain hidden controls due to InstanceManager use.
+  -- Luckily, they should all be pushed to the back of the list due to reparenting.
+  -- So, only toggle the visibility states of the last numUnlockables unlocks!
+  local nUnlockableOffset :number = #unlockables - numUnlockables;
   
-  for i=MAX_ICONS_BEFORE_OVERFLOW, numUnlockables, 1 do
+  kItemInstance.UnlockPageTurner:SetHide(false);
+  kItemInstance.UnlockPageTurner:RegisterCallback( Mouse.eLClick, function() OnOverflowArrowPressed(kItemInstance, nUnlockableOffset); end);
+  
+  for i=nUnlockableOffset+numMaxPerPage+1, #unlockables, 1 do
     unlockables[i]:SetHide(true);
   end
   kItemInstance.UnlockStack:ReprocessAnchoring();
@@ -606,7 +611,7 @@ function RealizeCurrentResearch( playerID:number, kData:table, kControl:table )
 
     numUnlockables = PopulateUnlockablesForTech( playerID, kData.ID, techUnlockIM, nil );
     if numUnlockables ~= nil and kControl ~= nil then
-      HandleOverflow(numUnlockables, kControl);
+      HandleOverflow(numUnlockables, kControl, MAX_ICONS_BEFORE_OVERFLOW, MAX_ICONS_BEFORE_OVERFLOW-1);
     end
 
     -- Show/Hide Recommended Icon
@@ -694,13 +699,8 @@ end
 --	the current research, the recently completed research or NIL if player
 --	has just started the game.
 -- ===========================================================================
-function RealizeCurrentCivic( playerID:number, kData:table, kControl:table, cachedModifiers:table, resetExtraIcons:boolean )
+function RealizeCurrentCivic( playerID:number, kData:table, kControl:table, cachedModifiers:table )
 
-  if resetExtraIcons then
-    for _,iconData in pairs(g_ExtraIconData) do
-      iconData:Reset();
-    end
-  end
   -- If a control instance is passed in, use that for the controls, otherwise
   -- assume the control exists off of the main control set of the context.
   if kControl == nil then
@@ -711,20 +711,19 @@ function RealizeCurrentCivic( playerID:number, kData:table, kControl:table, cach
   kControl.MainPanel:ClearMouseExitCallback();
 
   local isNonActive:boolean = false;
-  local techUnlockIM:table = GetUnlockIM( kControl );	-- Use this context's "Controls" table for the currnet IM
-  techUnlockIM:ResetInstances();
+  local unlockIM:table = GetUnlockIM( kControl );	-- Use this context's "Controls" table for the currnet IM
 
   if kData ~= nil then
     local techType:string = kData.CivicType;
-    local numUnlockables:number;
+    local numUnlockables:number = 0;
     kControl.TitleButton:SetText( Locale.ToUpper(kData.Name) );
 
     if(not IsTutorialRunning()) then
       kControl.TitleButton:RegisterCallback(Mouse.eRClick,	function() LuaEvents.OpenCivilopedia(techType); end);
     end
 
-    kControl.MainPanel:RegisterMouseEnterCallback(			function() kControl.MainGearAnim:Play(); end);
-    kControl.MainPanel:RegisterMouseExitCallback(			function() kControl.MainGearAnim:Stop(); end);
+    kControl.MainPanel:RegisterMouseEnterCallback(	function() kControl.MainGearAnim:Play(); end);
+    kControl.MainPanel:RegisterMouseExitCallback(	function() kControl.MainGearAnim:Stop(); end);
     
     RealizeMeterAndBoosts( kControl, kData );
     RealizeIcon( kControl.Icon, kData.CivicType, SIZE_ICON_CIVIC_LARGE );		
@@ -732,25 +731,26 @@ function RealizeCurrentCivic( playerID:number, kData:table, kControl:table, cach
     -- Include extra icons in total unlocks
     local extraUnlocks:table = {};
     local hideDescriptionIcon:boolean = false;
-    local cachedModifier:table = cachedModifiers[kData.CivicType];
-    for _,iconData in pairs(g_ExtraIconData) do
-      if iconData.ModifierType == cachedModifier.ModifierType then
-        hideDescriptionIcon = hideDescriptionIcon or iconData.HideDescriptionIcon;
-        table.insert(extraUnlocks, iconData);
+    local civicModifiers:table = cachedModifiers[kData.CivicType];
+    if ( civicModifiers ) then
+      for _,tModifier in ipairs(civicModifiers) do
+        local tIconData :table = g_ExtraIconData[tModifier.ModifierType];
+        if ( tIconData ) then
+          hideDescriptionIcon = hideDescriptionIcon or tIconData.HideDescriptionIcon;
+          table.insert(extraUnlocks, {IconData=tIconData, ModifierTable=tModifier});
+        end
       end
     end
     
-    numUnlockables = PopulateUnlockablesForCivic( playerID, kData.ID, techUnlockIM, nil, nil, hideDescriptionIcon );
+    numUnlockables = numUnlockables + PopulateUnlockablesForCivic( playerID, kData.ID, unlockIM, nil, nil, hideDescriptionIcon );
     
     -- Initialize extra icons
-    for _,iconData in pairs(extraUnlocks) do
-      iconData:Initialize(kControl.UnlockStack, cachedModifier);
+    for _,tUnlock in pairs(extraUnlocks) do
+      tUnlock.IconData:Initialize(kControl.UnlockStack, tUnlock.ModifierTable);
       numUnlockables = numUnlockables + 1;
     end
-    
-    if numUnlockables ~= nil then
-      HandleOverflow(numUnlockables, kControl);
-    end
+
+    HandleOverflow(numUnlockables, kControl, MAX_ICONS_BEFORE_OVERFLOW, MAX_ICONS_BEFORE_OVERFLOW-1);
 
     -- Show/Hide Recommended Icon
     -- CQUI : only if show tech civ enabled in settings
@@ -778,4 +778,39 @@ function RealizeCurrentCivic( playerID:number, kData:table, kControl:table, cach
   RealizeTurnsLeft( kControl, kData );
   kControl.TitleButton:SetHide( isNonActive );
   kControl.Icon:SetHide( isNonActive );
+end
+
+-- Returns a table: strCivicType -> Array of Modifiers
+-- Each modifier is a table containing ModifierType, ModifierId, and an optional ModifierValue
+function TechAndCivicSupport_BuildCivicModifierCache()
+  -- Collect modifiers into list
+  local tModCache :table = {}; -- ModifierId -> table of modifier data
+  for tModInfo in GameInfo.Modifiers() do
+    tModCache[tModInfo.ModifierId] = {
+      ModifierId = tModInfo.ModifierId,
+      ModifierType = tModInfo.ModifierType,
+    };
+  end
+
+  -- Collect modifier arguments, add to relevant modifier table
+  for tModArgs in GameInfo.ModifierArguments() do
+    -- ModifierValue should be changed into an array if we must track multiple args per modifier.
+    tModCache[tModArgs.ModifierId].ModifierValue = tModArgs.Value;
+  end
+  
+  -- Collect modifiers used by civics
+  local tCache :table = {}; -- strCivicType -> Array of Modifiers
+  for tCivicMod:table in GameInfo.CivicModifiers() do
+    local tCivicCache :table = tCache[tCivicMod.CivicType];
+    if ( not tCivicCache ) then
+      tCivicCache = {};
+      tCache[tCivicMod.CivicType] = tCivicCache;
+    end
+    
+    local tModInfo :table = tModCache[tCivicMod.ModifierId];
+    assert( tModInfo );
+    table.insert( tCivicCache, tModInfo );
+  end
+
+  return tCache;
 end
