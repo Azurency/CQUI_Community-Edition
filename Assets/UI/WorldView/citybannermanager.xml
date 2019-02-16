@@ -28,30 +28,27 @@
 
   <!-- Local Team Banner -->
   <Instance               Name="TeamCityBanner">
-    <WorldAnchor          ID="Anchor">
+    <!-- To match old behavior, it would go from 0 to -25 on the Y axis -->
+    <!-- Moving on the Z axis looks about the same but works with camera rotation -->
+    <ZoomAnchor ID="Anchor" ZoomOffsetNear="0,0,0" ZoomOffsetFar="0,0,-20">
       <Container                                          Anchor="C,C"  Offset="0,-20"  Size="200,34">
         <Button             ID="CityBannerButton"         Anchor="C,T"                  Size="Parent-20,34"   NoStateChange="true">
-          <AlphaAnim                                      Anchor="L,T"                  Size="Parent,Parent"  AlphaStart="0" AlphaEnd=".9" Speed="2" Function="Root" Cycle="Once">
-            <Grid           ID="CityBannerBackground"     Anchor="C,T"  Offset="1,0"    Size="Parent,34"      Color="255,255,255,150" SliceTextureSize="50,34" SliceCorner="25,17" Texture="Banner_BannerBacking">
-              <Image        ID="CityProductionProgress"   Anchor="R,C"  Offset="2,0"    Size="14,32"  TextureOffset="14,0" Speed="1" Texture="Banner_ProductionMeter" >
-                <TextureBar ID="CityProductionNextTurn"   Anchor="L,C"                  Size="14,32"  Direction="Up" Speed="1"  Texture="Banner_ProductionMeter"/>
-                <TextureBar ID="CityProductionMeter"      Anchor="L,C"                  Size="14,32"  Direction="Up" Speed="1"  Texture="Banner_ProductionMeter"/>
-              </Image>
-              <Image                                      Anchor="L,C"  Offset="2,0"    Size="14,32" Speed="1" TextureOffset="14,0" Texture="Banner_PopulationMeter" >
-                <TextureBar ID="CityPopulationNextTurn"   Anchor="R,C"                  Size="14,32" Direction="Up" Speed="1" Texture="Banner_PopulationMeter" CounterClockwise="1"/>
-                <TextureBar ID="CityPopulationMeter"      Anchor="R,C"                  Size="14,32" Direction="Up" Speed="1" Texture="Banner_PopulationMeter" CounterClockwise="1"/>
-              </Image>
-            </Grid>
-            <Grid           ID="CityBannerFill"           Anchor="C,T"                  Size="Parent,Parent"  Texture="Banner_Base"     SliceTextureSize="196,34" SliceCorner="98,17"/>
-            <Grid           ID="CityBannerFill2"          Anchor="C,T"                  Size="Parent,Parent"  Texture="Banner_Darker"   SliceTextureSize="196,34" SliceCorner="98,17"/>
-            <Grid           ID="CityBannerFill3"          Anchor="C,T"                  Size="Parent,Parent"  Texture="Banner_Lighter"  SliceTextureSize="196,34" SliceCorner="98,17"/>
-            <Grid           ID="CityBannerFill4"          Anchor="C,T"                  Size="Parent,Parent"  Texture="Banner_None"     SliceTextureSize="196,34" SliceCorner="98,17"/>
-          </AlphaAnim>
+          <Grid           ID="CityBannerBackground"     Anchor="C,T"  Offset="1,0"    Size="Parent,34"      Color="255,255,255,150" SliceTextureSize="50,34" SliceCorner="25,17" Texture="Banner_BannerBacking">
+            <Image        ID="CityProductionProgress"   Anchor="R,C"  Offset="2,0"    Size="14,32"  TextureOffset="14,0" Speed="1" Texture="Banner_ProductionMeter" >
+              <TextureBar ID="CityProductionNextTurn"   Anchor="L,C"                  Size="14,32"  Direction="Up" Speed="1"  Texture="Banner_ProductionMeter"/>
+              <TextureBar ID="CityProductionMeter"      Anchor="L,C"                  Size="14,32"  Direction="Up" Speed="1"  Texture="Banner_ProductionMeter"/>
+            </Image>
+            <Image                                      Anchor="L,C"  Offset="2,0"    Size="14,32" Speed="1" TextureOffset="14,0" Texture="Banner_PopulationMeter" >
+              <TextureBar ID="CityPopulationNextTurn"   Anchor="R,C"                  Size="14,32" Direction="Up" Speed="1" Texture="Banner_PopulationMeter" CounterClockwise="1"/>
+              <TextureBar ID="CityPopulationMeter"      Anchor="R,C"                  Size="14,32" Direction="Up" Speed="1" Texture="Banner_PopulationMeter" CounterClockwise="1"/>
+            </Image>
+          </Grid>
+          <Grid						ID="CityBannerFill"						  Anchor="C,T"									Size="Parent,Parent"	Texture="Banner_Base_Combo"			SliceTextureSize="196,34" SliceCorner="98,17"/>
           <AlphaAnim                                      Anchor="L,T"                  Size="Parent,Parent" ShowOnMouseOver="1" AlphaStart="0" AlphaEnd="1" Speed="2" Function="Root" Cycle="Once">
-            <Grid           ID="CityBannerFillOver"       Anchor="C,T"                  Size="Parent,Parent"     Texture="Banner_Secondary"    SliceTextureSize="196,34" SliceCorner="98,17"/>
+            <Grid						ID="CityBannerFillOver"				Anchor="C,T"									Size="Parent,Parent"     Texture="Banner_Secondary_Combo"    SliceTextureSize="196,34" SliceCorner="98,17"/>
           </AlphaAnim>
           <AlphaAnim                                                                    Size="Parent,Parent" ShowOnMouseOut="1" AlphaStart="1" AlphaEnd="0" Speed="2" Function="Root" Cycle="Once">
-            <Grid           ID="CityBannerFillOut"        Anchor="C,T"                  Size="Parent,Parent"    Texture="Banner_Secondary" SliceTextureSize="196,34" SliceCorner="98,17"/>
+            <Grid						ID="CityBannerFillOut"				Anchor="C,T"									Size="Parent,Parent"    Texture="Banner_Secondary_Combo" SliceTextureSize="196,34" SliceCorner="98,17"/>
           </AlphaAnim>
         </Button>
 
@@ -146,38 +143,31 @@
         <Container ID="DynamicContentAnchor" Anchor="C,B"/>
 
       </Container>
-    </WorldAnchor>
+    </ZoomAnchor>
   </Instance>
 
 
   <!-- Other Team Banners' -->
   <Instance               Name="OtherCityBanner">
-    <WorldAnchor          ID="Anchor" >
-      <Container                                        Anchor="C,C" Offset="0,-20" Size="200,34" >
-
-        <Button             ID="CityBannerButton" Size="Parent-20,34" Anchor="C,T" NoStateChange="true">
-          <AlphaAnim        Size="Parent,Parent" AlphaStart="0" AlphaEnd=".9" Anchor="L,T" Speed="2" Function="Root" Cycle="Once">
-            <Grid           ID="CityBannerBackground" Size="Parent,34" Offset="1,0" Anchor="C,T"  Color="255,255,255,150" SliceTextureSize="50,34" SliceCorner="25,17" Texture="Banner_BannerBacking" Hidden="1">
-
-              <Image        ID="CityProductionProgress" TextureOffset="14,0" Offset="2,0" Speed="1" Anchor="R,C" Size="14,32" Texture="Banner_ProductionMeter" Hidden="1">
-                <TextureBar ID="CityProductionNextTurn"  Direction="Up" Speed="1" Anchor="L,C" Size="14,32" Texture="Banner_ProductionMeter"/>
-                <TextureBar ID="CityProductionMeter"     Direction="Up" Speed="1" Anchor="L,C" Size="14,32" Texture="Banner_ProductionMeter"/>
-              </Image>
-              <Image                                      Offset="2,0" Speed="1" TextureOffset="14,0" Anchor="L,C" Size="14,32" Texture="Banner_PopulationMeter" >
-                <TextureBar ID="CityPopulationNextTurn"  Direction="Up" Speed="1" Anchor="R,C" Size="14,32" Texture="Banner_PopulationMeter" CounterClockwise="1"/>
-                <TextureBar ID="CityPopulationMeter"     Direction="Up" Speed="1" Anchor="R,C" Size="14,32" Texture="Banner_PopulationMeter" CounterClockwise="1"/>
-              </Image>
-            </Grid>
-            <Grid           ID="CityBannerFill"         Texture="Banner_Base"             Size="Parent,Parent"    Anchor="R,T"  SliceTextureSize="196,34" SliceCorner="98,17"/>
-            <Grid           ID="CityBannerFill2"        Texture="Banner_Darker"           Size="Parent,Parent"    Anchor="R,T"  SliceTextureSize="196,34" SliceCorner="98,17"/>
-            <Grid           ID="CityBannerFill3"        Texture="Banner_Lighter"          Size="Parent,Parent"    Anchor="R,T"  SliceTextureSize="196,34" SliceCorner="98,17"/>
-            <Grid           ID="CityBannerFill4"        Texture="Banner_None"             Size="Parent,Parent"    Anchor="R,T"  SliceTextureSize="196,34" SliceCorner="98,17"/>
+    <ZoomAnchor ID="Anchor" ZoomOffsetNear="0,0,0" ZoomOffsetFar="0,0,-20">
+      <Container                                          Anchor="C,C"  Offset="0,-20"  Size="200,34">
+        <Button             ID="CityBannerButton"         Anchor="C,T"                  Size="Parent-20,34"   NoStateChange="true">
+          <Grid           ID="CityBannerBackground"     Anchor="C,T"  Offset="1,0"    Size="Parent,34"      Color="255,255,255,150" SliceTextureSize="50,34" SliceCorner="25,17" Texture="Banner_BannerBacking">
+            <Image        ID="CityProductionProgress"   Anchor="R,C"  Offset="2,0"    Size="14,32"  TextureOffset="14,0" Speed="1" Texture="Banner_ProductionMeter" >
+              <TextureBar ID="CityProductionNextTurn"   Anchor="L,C"                  Size="14,32"  Direction="Up" Speed="1"  Texture="Banner_ProductionMeter"/>
+              <TextureBar ID="CityProductionMeter"      Anchor="L,C"                  Size="14,32"  Direction="Up" Speed="1"  Texture="Banner_ProductionMeter"/>
+            </Image>
+            <Image                                      Anchor="L,C"  Offset="2,0"    Size="14,32" Speed="1" TextureOffset="14,0" Texture="Banner_PopulationMeter" >
+              <TextureBar ID="CityPopulationNextTurn"   Anchor="R,C"                  Size="14,32" Direction="Up" Speed="1" Texture="Banner_PopulationMeter" CounterClockwise="1"/>
+              <TextureBar ID="CityPopulationMeter"      Anchor="R,C"                  Size="14,32" Direction="Up" Speed="1" Texture="Banner_PopulationMeter" CounterClockwise="1"/>
+            </Image>
+          </Grid>
+          <Grid						ID="CityBannerFill"						  Anchor="C,T"									Size="Parent,Parent"	Texture="Banner_Base_Combo"			SliceTextureSize="196,34" SliceCorner="98,17"/>
+          <AlphaAnim                                      Anchor="L,T"                  Size="Parent,Parent" ShowOnMouseOver="1" AlphaStart="0" AlphaEnd="1" Speed="2" Function="Root" Cycle="Once">
+            <Grid						ID="CityBannerFillOver"				Anchor="C,T"									Size="Parent,Parent"     Texture="Banner_Secondary_Combo"    SliceTextureSize="196,34" SliceCorner="98,17"/>
           </AlphaAnim>
-          <AlphaAnim                                    Size="Parent,Parent" ShowOnMouseOver="1" AlphaStart="0" AlphaEnd="1" Speed="2" Function="Root" Cycle="Once">
-            <Grid           ID="CityBannerFillOver"     Texture="Banner_Secondary"  Size="Parent,Parent"    Anchor="C,T"  SliceTextureSize="196,34" SliceCorner="98,17"/>
-          </AlphaAnim>
-          <AlphaAnim                                    Size="Parent,Parent" ShowOnMouseOut="1" AlphaStart="1" AlphaEnd="0" Speed="2" Function="Root" Cycle="Once">
-            <Grid           ID="CityBannerFillOut"      Texture="Banner_Secondary" Size="Parent,Parent"    Anchor="C,T"  SliceTextureSize="196,34" SliceCorner="98,17"/>
+          <AlphaAnim                                                                    Size="Parent,Parent" ShowOnMouseOut="1" AlphaStart="1" AlphaEnd="0" Speed="2" Function="Root" Cycle="Once">
+            <Grid						ID="CityBannerFillOut"				Anchor="C,T"									Size="Parent,Parent"    Texture="Banner_Secondary_Combo" SliceTextureSize="196,34" SliceCorner="98,17"/>
           </AlphaAnim>
         </Button>
 
@@ -256,15 +246,16 @@
         <Container ID="DynamicContentAnchor" Anchor="C,B"/>
 
       </Container>
-    </WorldAnchor>
+    </ZoomAnchor>
   </Instance>
 
   <!-- Aerodrome Minibanner -->
   <Instance         Name="AerodromeBanner">
-    <WorldAnchor    ID="Anchor">
-      <Grid ID="AerodromeBannerGrid" Anchor="C,C" Size="54,24" Texture="Banner_UnitBacking" SliceCorner="13,1" SliceSize="4,22">
+    <ZoomAnchor ID="Anchor" ZoomOffsetNear="0,0,0" ZoomOffsetFar="0,0,-20">
+      <Grid ID="AerodromeBase" Anchor="L,C" Size="auto,24" Offset="-25,0" Texture="Banner_UnitBacking" SliceCorner="13,1" SliceSize="4,22">
         <!-- Current and max air unit capacity -->
-        <Stack ID="AerodromeBase" Anchor="R,C" Offset="6,0" StackGrowth="Right">
+        <Stack Anchor="R,C" Offset="6,0" StackGrowth="Right">
+          <Container Size="25,1"/>
           <Label ID="AerodromeCurrentUnitCount" Style="FontNormal14" String="1"/>
           <Label Style="FontNormal14" String="/"/>
           <Label ID="AerodromeMaxUnitCount" Style="FontNormal14" String="4"/>
@@ -275,18 +266,15 @@
         <ButtonData>
           <Button ID="AerodromeButton" Anchor="C,C" Size="28,28" Offset="-14,0" NoStateChange="1">
             <!-- Aerodrome button textures -->
-            <Image ID="AerodromeUnitsButton_Base"     Anchor="C,C" Size="28,28" Texture="Banner_UnitButton_Base"/>
-            <Image ID="AerodromeUnitsButton_Darker"   Anchor="C,C" Size="28,28" Texture="Banner_UnitButton_Darker"/>
-            <Image ID="AerodromeUnitsButton_Lighter"  Anchor="C,C" Size="28,28" Texture="Banner_UnitButton_Lighter"/>
-            <Image ID="AerodromeUnitsButton_None"     Anchor="C,C" Size="28,28" Texture="Banner_UnitButton_None"/>
+            <Image ID="AerodromeUnitsButton_Base"     Anchor="C,C" Size="28,28" Texture="Banner_UnitButton_Combo"/>
             <!-- Aerodrome button icon -->
             <Image ID="AerodromeUnitsButtonIcon" Anchor="C,C" Size="22,22" Texture="Banner_Planes"/>
             <!-- Hover over animations -->
             <AlphaAnim Anchor="C,C" Size="28,28" ShowOnMouseOver="1" AlphaStart="0" AlphaEnd="1" Speed="2" Function="Root" Cycle="Once">
-              <Image Size="28,28" Texture="Banner_UnitButton_Secondary"/>
+              <Image ID="AerodromeMouseOver" Size="28,28" Texture="Banner_UnitButton_Secondary"/>
             </AlphaAnim>
             <AlphaAnim Anchor="C,C" Size="28,28" ShowOnMouseOut="1" AlphaStart="1" AlphaEnd="0" Speed="2" Function="Root" Cycle="Once">
-              <Image Size="28,28" Texture="Banner_UnitButton_Secondary"/>
+              <Image ID="AerodromeMouseOut" Size="28,28" Texture="Banner_UnitButton_Secondary"/>
             </AlphaAnim>
           </Button>
         </ButtonData>
@@ -304,24 +292,21 @@
         <InstanceData Name="UnitListEntry">
           <GridButton  ID="Button" Style="UnitPanelHeader" Size="200,24" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" StateOffsetIncrement="0,24" TruncateWidth="180">
             <Stack StackGrowth="Right">
-              <Image ID="UnitTypeIcon" Anchor="L,C" Size="22,22" Offset="2,0" Texture="UnitFlagAtlas22"/>
+              <Image ID="UnitTypeIcon" Anchor="L,C" Size="22,22" Offset="2,0" />
               <Label ID="UnitName" Anchor="C,C" Offset="0,1" Style="UnitPanelHeader" TruncateWidth="173"/>
             </Stack>
           </GridButton>
         </InstanceData>
       </PullDown>
-    </WorldAnchor>
+    </ZoomAnchor>
   </Instance>
 
   <!-- WMD Minibanner -->
   <Instance Name="WMDBanner">
-    <WorldAnchor ID="Anchor">
+    <ZoomAnchor ID="Anchor" ZoomOffsetNear="0,0,0" ZoomOffsetFar="0,0,-20">
       <Container ID="WMDBannerContainer" Anchor="C,C" Size="88,34">
         <!-- Banner Background -->
-        <Grid ID="Banner_Base"    Size="Parent,Parent" Texture="BannerMini_Base" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
-        <Grid ID="Banner_Darker"  Size="Parent,Parent" Texture="BannerMini_Darker" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
-        <Grid ID="Banner_Lighter" Size="Parent,Parent" Texture="BannerMini_Lighter" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
-        <Grid ID="Banner_None"    Size="Parent,Parent" Texture="BannerMini_None" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
+        <Grid ID="Banner_Base"    Size="Parent,Parent" Texture="BannerMini_Base_Combo" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
 
         <!-- Nukes -->
         <Container Anchor="L,C" Offset="25,0">
@@ -345,18 +330,15 @@
           </Image>
         </Container>
       </Container>
-    </WorldAnchor>
+    </ZoomAnchor>
   </Instance>
 
   <!-- Encampment Minibanner -->
   <Instance Name="EncampmentBanner">
-    <WorldAnchor ID="Anchor">
+    <ZoomAnchor ID="Anchor" ZoomOffsetNear="0,0,0" ZoomOffsetFar="0,0,-20">
       <Container ID="EncampmentBannerContainer" Anchor="C,C" Size="106,34">
         <!-- Banner Background -->
-        <Grid ID="Banner_Base"    Size="Parent,Parent" Texture="BannerMini_Base" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
-        <Grid ID="Banner_Darker"  Size="Parent,Parent" Texture="BannerMini_Darker" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
-        <Grid ID="Banner_Lighter" Size="Parent,Parent" Texture="BannerMini_Lighter" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
-        <Grid ID="Banner_None"    Size="Parent,Parent" Texture="BannerMini_None" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
+        <Grid ID="Banner_Base"    Size="Parent,Parent" Texture="BannerMini_Base_Combo" SliceCorner="18,9" SliceSize="44,16" SliceTextureSize="80,34"/>
 
         <!-- District Font Icon -->
         <Label Anchor="L,C" Offset="7,3" Style="FontNormal14" String="[Icon_DISTRICT_ENCAMPMENT]"/>
@@ -378,7 +360,7 @@
           <Button   ID="CityRangeStrikeButton" Style="CityBannerRangeAttack" Anchor="C,B" Offset="0,10" StateOffsetIncrement="0,25" ConsumeMouse="1" ToolTip="LOC_CITY_BANNER_DISTRICT_RANGE_STRIKE"/>
         </Image>
       </Container>
-    </WorldAnchor>
+    </ZoomAnchor>
   </Instance>
 
   <Instance       Name="ReligionChange">
@@ -392,10 +374,10 @@
   </Instance>
 
   <Instance Name="HolySiteIcon">
-    <WorldAnchor ID="Anchor" Size="22,22">
+    <ZoomAnchor ID="Anchor" ZoomOffsetNear="0,0,0" ZoomOffsetFar="0,0,-20">
       <Image ID="HolySiteIcon" Size="22,22" Anchor="L,T" Texture="FontIcons" />
       <Label ID="HolySiteLabel"  Anchor="L,T" Offset ="20,0" Style="FontFlair22" Text="TextLabel" />
-    </WorldAnchor>
+    </ZoomAnchor>
   </Instance>
 
   <Instance Name="ReligionFollowers">
@@ -486,6 +468,18 @@
 
       <Image Anchor="C,T" Offset="0,-4" Size="23,15" Texture="Banner_DataFrameArrow"/>
     </Container>
+  </Instance>
+
+  <!-- District Minibanner -->
+  <Instance	Name="DistrictBanner">
+    <ZoomAnchor ID="Anchor" ZoomOffsetNear="0,0,0" ZoomOffsetFar="0,0,-20">
+      <Container ID="DistrictBannerContainer" Anchor="C,C" Size="34,34">
+        <!-- Banner Background -->
+        <Image ID="Banner_Base" Size="parent,parent" Texture="BannerMini2_Base_Combo"/>
+        <Image ID="DistrictIcon" Anchor="C,C" Offset="0,0" Size="22,22" IconSize="22" Icon="ICON_DISTRICT_CITY_CENTER"/>
+        <Image ID="UnderConstructionIcon" Anchor="C,C" Size="22,22" IconSize="22" Icon="ICON_DISTRICT_UNDER_CONSTRUCTION"/>
+      </Container>
+    </ZoomAnchor>
   </Instance>
 
 </Context>

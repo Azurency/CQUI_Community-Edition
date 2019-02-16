@@ -3,6 +3,8 @@
 ------------------------------------------------------------------------------
 
 include( "ToolTipHelper" );
+include( "Colors" );
+include( "PortraitSupport" );
 
 
 -- ===========================================================================
@@ -35,6 +37,12 @@ LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 --  FUNCTIONS
 -- ===========================================================================
 
+-- ===========================================================================
+--	Return the height of the top panel
+-- ===========================================================================
+function GetTopBarHeight() 
+  return 29;	-- Not height of context but where art/offset should start for content below it.
+end
 
 -- ===========================================================================
 --  Return the inline text-icon for a given yield
@@ -180,251 +188,6 @@ function GetColorPercentString( multiplier:number )
   elseif  multiplier < 1 then return "[COLOR:StatBadCS]-"..tostring((1-multiplier)*100).."%[ENDCOLOR]";
   else          return "[COLOR:StatNormalCS]100%[ENDCOLOR]";
   end
-end
-
-function GetFilteredUnitStatString( statData:table )
-  if statData == nil then
-    UI.DataError("Invalid stat data passed to GetFilteredUnitStatString");
-    return "";
-  end
-
-  local statString = "";
-  local statStringTooltip = "";
-  local newlineCounter = 0;
-  for _,statTable in pairs(statData) do
-    statString = statString.. statTable.FontIcon.. " ".. statTable.Value.. " ";
-    if (newlineCounter == 2) then
-      statString = statString.. "[NEWLINE]";
-      newlineCounter = 0;
-    end
-    newlineCounter = newlineCounter + 1;
-
-    statStringTooltip = statStringTooltip.. Locale.Lookup(statTable.Label).. " ".. statTable.Value.. "[NEWLINE]";
-  end
-  --return statString, statStringTooltip;
-  return statString;
-end
-
-function FilterUnitStats( hashOrType:number, ignoreStatType:number )
-  local unitInfo = GameInfo.Units[hashOrType];
-
-  if(unitInfo == nil) then
-    UI.DataError("Invalid unit hash passed to FilterUnitStats");
-    return {};
-  end
-
-
-  local data:table = {};
-
-  -- Strength
-  if ( unitInfo.Combat > 0 and (ignoreStatType == nil or ignoreStatType ~= CombatTypes.MELEE)) then
-    table.insert(data, {Value = unitInfo.Combat, Type = "Combat", Label = "LOC_HUD_UNIT_PANEL_STRENGTH",        FontIcon="[ICON_Strength_Large]",   IconName="ICON_STRENGTH"});
-  end
-  if ( unitInfo.RangedCombat > 0 and (ignoreStatType == nil or ignoreStatType ~= CombatTypes.RANGED)) then
-    table.insert(data, {Value = unitInfo.RangedCombat,    Label = "LOC_HUD_UNIT_PANEL_RANGED_STRENGTH",   FontIcon="[ICON_RangedStrength_Large]", IconName="ICON_RANGED_STRENGTH"});
-  end
-  if (unitInfo.Bombard > 0 and (ignoreStatType == nil or ignoreStatType ~= CombatTypes.BOMBARD)) then
-    table.insert(data, {Value = unitInfo.Bombard, Label = "LOC_HUD_UNIT_PANEL_BOMBARD_STRENGTH",    FontIcon="[ICON_Bombard_Large]",    IconName="ICON_BOMBARD"});
-  end
-  if (unitInfo.ReligiousStrength > 0 and (ignoreStatType == nil or ignoreStatType ~= CombatTypes.RELIGIOUS)) then
-    table.insert(data, {Value = unitInfo.ReligiousStrength, Label = "LOC_HUD_UNIT_PANEL_RELIGIOUS_STRENGTH",  FontIcon="[ICON_ReligionStat_Large]", IconName="ICON_RELIGION"});
-  end
-  if (unitInfo.AntiAirCombat > 0 and (ignoreStatType == nil or ignoreStatType ~= CombatTypes.AIR)) then
-    table.insert(data, {Value = unitInfo.AntiAirCombat, Label = "LOC_HUD_UNIT_PANEL_ANTI_AIR_STRENGTH",   FontIcon="[ICON_AntiAir_Large]",    IconName="ICON_STATS_ANTIAIR"});
-  end
-
-  -- Movement
-  if(unitInfo.BaseMoves > 0) then
-    table.insert(data, {Value = unitInfo.BaseMoves, Type = "BaseMoves",   Label = "LOC_HUD_UNIT_PANEL_MOVEMENT",        FontIcon="[ICON_Movement_Large]",   IconName="ICON_MOVES"});
-  end
-
-  -- Range
-  if (unitInfo.Range > 0) then
-    table.insert(data, {Value = unitInfo.Range;     Label = "LOC_HUD_UNIT_PANEL_ATTACK_RANGE",      FontIcon="[ICON_Range_Large]",      IconName="ICON_RANGE"});
-  end
-
-  -- Charges
-  if (unitInfo.SpreadCharges > 0) then
-    table.insert(data, {Value = unitInfo.SpreadCharges, Type = "SpreadCharges", Label = "LOC_HUD_UNIT_PANEL_SPREADS",       FontIcon="[ICON_ReligionStat_Large]", IconName="ICON_RELIGION"});
-  end
-  if (unitInfo.BuildCharges > 0) then
-    table.insert(data, {Value = unitInfo.BuildCharges, Type = "BuildCharges",   Label = "LOC_HUD_UNIT_PANEL_BUILDS",        FontIcon="[ICON_Charges_Large]",    IconName="ICON_BUILD_CHARGES"});
-  end
-  if (unitInfo.ReligiousHealCharges > 0) then
-    table.insert(data, {Value = unitInfo.ReligiousHealCharges, Type = "ReligiousHealCharges",		Label = "LOC_HUD_UNIT_PANEL_HEALS",				FontIcon="[ICON_Charges_Large]",		IconName="ICON_RELIGION"});
-  end
-
-  -- If we have more than 4 stats then try to remove melee strength
-  if (table.count(data) > 4) then
-    for i,stat in ipairs(data) do
-      if stat.Type == "Combat" then
-        table.remove(data, i);
-      end
-    end
-  end
-
-  -- If we still have more than 4 stats through a data error
-  if (table.count(data) > 4) then
-    UI.DataError("More than four stats were picked to display for unit ".. unitInfo.UnitType);
-  end
-
-  return data;
-end
-
--- ===========================================================================
---  Obtains the texture for a city's current production.
---  pCity       The city
---  productionHash    the production hash (present or past) that you want the info for
---
---  RETURNS NIL if error, otherwise a table containing:
---      name of production item
---      description
---      icon texture of the produced item
---      u offset of the icon texture
---      v offset of the icon texture
---      (0-1) percent complete
---      (0-1) percent complete after next turn
--- ===========================================================================
-function GetProductionInfoOfCity( pCity:table, productionHash:number )
-  local pBuildQueue :table = pCity:GetBuildQueue();
-  if pBuildQueue == nil then
-    UI.DataError("No production queue in city!");
-    return nil;
-  end
-
-  local hash            = productionHash;
-  local progress          :number = 0;
-  local cost              :number = 0;
-  local percentComplete   :number = 0;
-  local percentCompleteNextTurn :number = 0;
-  local productionName    :string;
-  local description       :string;
-  local tooltip					  :string; 
-  local statString        :string;      -- stats for unit to display
-  local iconName          :string;      -- name of icon to look up
-  local texture           :string;      -- texture of icon
-  local u                 :number = 0;  -- texture horiztonal offset
-  local v                 :number = 0;  -- texture vertical offset
-
-  -- Nothing being produced.
-  if hash == 0 then
-    return {
-      Name          = Locale.Lookup("LOC_HUD_CITY_NOTHING_PRODUCED"),
-      Description       = "",
-      Texture         = "CityPanel_CitizenIcon",  -- Default texture
-      u           = 0,
-      v           = 0,
-      PercentComplete     = 0,
-      PercentCompleteNextTurn = 0,
-      Turns         = 0,
-      Progress        = 0,
-      Cost          = 0
-    };
-  end
-
-  -- Find the information
-  local buildingDef :table = GameInfo.Buildings[hash];
-  local districtDef :table = GameInfo.Districts[hash];
-  local unitDef   :table = GameInfo.Units[hash];
-  local projectDef  :table = GameInfo.Projects[hash];
-  local type      :string= "";
-
-  if( buildingDef ~= nil ) then
-    prodTurnsLeft = pBuildQueue:GetTurnsLeft(buildingDef.BuildingType);
-    productionName  = Locale.Lookup(buildingDef.Name);
-    description   = buildingDef.Description;
-    tooltip			= ToolTipHelper.GetBuildingToolTip(hash, Game.GetLocalPlayer(), pCity ) 
-    progress    = pBuildQueue:GetBuildingProgress(buildingDef.Index);
-    percentComplete = progress / pBuildQueue:GetBuildingCost(buildingDef.Index);
-    cost      = pBuildQueue:GetBuildingCost(buildingDef.Index);
-    iconName    = "ICON_"..buildingDef.BuildingType;
-    type      = ProductionType.BUILDING;
-
-  elseif( districtDef ~= nil ) then
-    prodTurnsLeft = pBuildQueue:GetTurnsLeft(districtDef.DistrictType);
-    productionName  = Locale.Lookup(districtDef.Name);
-    description   = districtDef.Description;
-    tooltip			= ToolTipHelper.GetDistrictToolTip(hash); 
-    progress    = pBuildQueue:GetDistrictProgress(districtDef.Index);
-    percentComplete = progress / pBuildQueue:GetDistrictCost(districtDef.Index);
-    cost      = pBuildQueue:GetDistrictCost(districtDef.Index);
-    iconName    = "ICON_"..districtDef.DistrictType;
-    type      = ProductionType.DISTRICT;
-
-  elseif( unitDef ~= nil ) then
-    prodTurnsLeft = pBuildQueue:GetTurnsLeft(unitDef.UnitType);
-    local eMilitaryFormationType :number = pBuildQueue:GetCurrentProductionTypeModifier();
-    productionName  = Locale.Lookup(unitDef.Name);
-    description   = unitDef.Description;
-    tooltip			= ToolTipHelper.GetUnitToolTip(hash); 
-    progress    = pBuildQueue:GetUnitProgress(unitDef.Index);
-    prodTurnsLeft = pBuildQueue:GetTurnsLeft(unitDef.UnitType, eMilitaryFormationType);
-    iconName    = "ICON_"..unitDef.UnitType.."_PORTRAIT";
-    statString    = GetFilteredUnitStatString(FilterUnitStats(hash));
-    type      = ProductionType.UNIT;
-
-    --Units need some additional information to represent the Standard, Corps, and Army versions. This is determined by the MilitaryFormationType
-    if (eMilitaryFormationType == MilitaryFormationTypes.STANDARD_FORMATION) then
-      percentComplete = progress / pBuildQueue:GetUnitCost(unitDef.Index);
-      cost      = pBuildQueue:GetUnitCost(unitDef.Index);
-    elseif (eMilitaryFormationType == MilitaryFormationTypes.CORPS_FORMATION) then
-      percentComplete = progress / pBuildQueue:GetUnitCorpsCost(unitDef.Index);
-      cost      = pBuildQueue:GetUnitCorpsCost(unitDef.Index);
-      if (unitDef.Domain == "DOMAIN_SEA") then
-        productionName = productionName .. " " .. Locale.Lookup("LOC_UNITFLAG_FLEET_SUFFIX");
-      else
-        productionName = productionName .. " " .. Locale.Lookup("LOC_UNITFLAG_CORPS_SUFFIX");
-      end
-    elseif (eMilitaryFormationType == MilitaryFormationTypes.ARMY_FORMATION) then
-      percentComplete = progress / pBuildQueue:GetUnitArmyCost(unitDef.Index);
-      cost      = pBuildQueue:GetUnitArmyCost(unitDef.Index);
-      if (unitDef.Domain == "DOMAIN_SEA") then
-        productionName = productionName .. " " .. Locale.Lookup("LOC_UNITFLAG_ARMADA_SUFFIX");
-      else
-        productionName = productionName .. " " .. Locale.Lookup("LOC_UNITFLAG_ARMY_SUFFIX");
-      end
-    end
-
-  elseif (projectDef ~= nil) then
-    prodTurnsLeft = pBuildQueue:GetTurnsLeft(projectDef.ProjectType);
-    productionName  = Locale.Lookup(projectDef.Name);
-    description   = projectDef.Description;
-    tooltip			= ToolTipHelper.GetProjectToolTip(hash); 
-    progress    = pBuildQueue:GetProjectProgress(projectDef.Index);
-    cost      = pBuildQueue:GetProjectCost(projectDef.Index);
-    percentComplete = progress / pBuildQueue:GetProjectCost(projectDef.Index);
-    iconName    = "ICON_"..projectDef.ProjectType;
-    type      = ProductionType.PROJECT;
-  else
-    for row in GameInfo.Types() do
-      if row.Hash == hash then
-        UI.DataError("Unknown kind of item being produced in city \""..tostring(row.Kind).."\"");
-        return nil;
-      end
-    end
-    UI.DataError("Game database does not contain information that matches what the city "..Locale.Lookup(data.CityName).." is producing!");
-    return nil;
-  end
-  if percentComplete > 1 then
-    percentComplete = 1;
-  end
-
-  percentCompleteNextTurn = (1-percentComplete)/prodTurnsLeft;
-  percentCompleteNextTurn = percentComplete + percentCompleteNextTurn;
-
-  return {
-    Name          = productionName,
-    Description   = description,
-    Tooltip				= tooltip, 
-    Type          = type;
-    Icon          = iconName,
-    PercentComplete         = percentComplete,
-    PercentCompleteNextTurn = percentCompleteNextTurn,
-    Turns         = prodTurnsLeft,
-    StatString    = statString;
-    Progress      = progress;
-    Cost          = cost;
-  };
 end
 
 -- ===========================================================================
@@ -585,8 +348,8 @@ function GetLeaderUniqueTraits( leaderType:string, useFullDescriptions:boolean )
         if(trait) then
       not_ability[trait] = true;
       if(has_trait[trait] == true) then
-        local districtName:string = Locale.Lookup(GameInfo.Districts[row.PrereqDistrict].Name);
-        local description :string = Locale.Lookup("LOC_LOADING_DISTRICT_BUILDING", districtName);
+        local districtName:string = GameInfo.Districts[row.PrereqDistrict].Name;
+        local description :string = Locale.Lookup("LOC_LOADING_UNIQUE_BUILDING");
         if m_isTraitsFullDescriptions or useFullDescriptions then
           description = Locale.Lookup(GameInfo.Buildings[row.BuildingType].Description);
         end
@@ -788,7 +551,7 @@ function DifferentiateCiv(playerID:number, tooltipControl:table, icon:table, ico
         local leaderName = Locale.Lookup(GameInfo.Leaders[leaderTypeName].Name);
         if GameConfiguration.IsAnyMultiplayer() and player:IsHuman() then
           local playerName = Locale.Lookup(playerConfig:GetPlayerName());
-          leaderName = leaderName .. " ("..Locale.ToUpper(playerName)..")"
+          leaderName = leaderName .. " ("..Locale.Lookup(playerName)..")"
         end
 
         --Create a tooltip which shows a list of this Civ's cities
@@ -809,7 +572,7 @@ function DifferentiateCiv(playerID:number, tooltipControl:table, icon:table, ico
       civTooltip = Locale.Lookup("LOC_DIPLOPANEL_UNMET_PLAYER");
       if GameConfiguration.IsAnyMultiplayer() and player:IsHuman() then
         local playerName = Locale.Lookup(playerConfig:GetPlayerName());
-        civTooltip = civTooltip .. " ("..Locale.ToUpper(playerName)..")";
+        civTooltip = civTooltip .. " ("..Locale.Lookup(playerName)..")";
       end
     end
 
@@ -825,72 +588,136 @@ function DifferentiateCiv(playerID:number, tooltipControl:table, icon:table, ico
   end
 end
 
--- Duplicating this function from SupportFunctions so that we won't have to pull in the entire file just to support DifferentiateCivs
+
 -- ===========================================================================
---  Transforms a ABGR color by some amount
---  ARGS: hexColor  Hex color value (0xAAGGBBRR)
---      amt     (0-255) the amount to darken or lighten the color
---      alpha   ???
---  RETURNS:  transformed color (0xAAGGBBRR)
+function GetGreatWorksForCity( pCity:table )
+  local result:table = {};
+  if pCity then
+    local pCityBldgs:table = pCity:GetBuildings();
+    for buildingInfo in GameInfo.Buildings() do
+      local buildingIndex:number = buildingInfo.Index;
+      local buildingType:string = buildingInfo.BuildingType;
+      if(pCityBldgs:HasBuilding(buildingIndex)) then
+        local numSlots:number = pCityBldgs:GetNumGreatWorkSlots(buildingIndex);
+        if (numSlots ~= nil and numSlots > 0) then
+          local greatWorksInBuilding:table = {};
+
+          -- populate great works
+          for index:number=0, numSlots - 1 do
+            local greatWorkIndex:number = pCityBldgs:GetGreatWorkInSlot(buildingIndex, index);
+            if greatWorkIndex ~= -1 then
+              local greatWorkType:number = pCityBldgs:GetGreatWorkTypeFromIndex(greatWorkIndex);
+              table.insert(greatWorksInBuilding, GameInfo.GreatWorks[greatWorkType]);
+            end
+          end
+
+          -- create association between building type and great works
+          if table.count(greatWorksInBuilding) > 0 then
+            result[buildingType] = greatWorksInBuilding;
+          end
+        end
+      end
+    end
+  end
+  return result;
+end
+
 -- ===========================================================================
-function DarkenLightenColor( hexColor:number, amt:number, alpha:number )
-
-  --Parse the a,g,b,r hex values from the string
-  local hexString :string = string.format("%x",hexColor);
-  local b = string.sub(hexString,3,4);
-  local g = string.sub(hexString,5,6);
-  local r = string.sub(hexString,7,8);
-  b = tonumber(b,16);
-  g = tonumber(g,16);
-  r = tonumber(r,16);
-
-  if (b == nil) then b = 0; end
-  if (g == nil) then g = 0; end
-  if (r == nil) then r = 0; end
-
-  local a = string.format("%x",alpha);
-  if (string.len(a)==1) then
-      a = "0"..a;
+--	Is a diplomacy for the local player.
+-- ===========================================================================
+function IsDiplomacyPending()
+  local localPlayerId:number = Game.GetLocalPlayer();
+  if localPlayerId == -1 then
+    return false;
   end
+  if (DiplomacyManager.HasQueuedSession(localPlayerId) ) then
+    return true;
+  end
+  return false;
+end
 
-  b = b + amt;
-  if (b < 0 or b == 0) then
-    b = "00";
-  elseif (b > 255 or b == 255) then
-    b = "FF";
-  else
-    b = string.format("%x",b);
-    if (string.len(b)==1) then
-      b = "0"..b;
+-- ===========================================================================
+--	Is diplomacy open for thelocal player.
+-- ===========================================================================
+function IsDiplomacyOpen()
+  local localPlayerId:number = Game.GetLocalPlayer();
+  if localPlayerId == -1 then
+    return false;
+  end
+  
+  local localPlayer :table = Players[localPlayerId];
+  local pOtherPlayer:table = nil;
+  
+  -- Loop through all the players whom could have 
+  for iPlayer = 0,63,1 do
+    local pPlayerConfig = PlayerConfigurations[iPlayer];
+
+    pOtherPlayer = Players[iPlayer];
+    if pOtherPlayer then
+      local sessionID :number = DiplomacyManager.FindOpenSessionID( localPlayerId, pOtherPlayer:GetID());
+      if sessionID ~= nil then
+        return true;
+      end
     end
   end
+  return false;
+end
 
-  g = g + amt;
-  if (g < 0 or g == 0) then
-    g = "00";
-  elseif (g > 255 or g == 255) then
-    g = "FF";
-  else
-    g = string.format("%x",g);
-    if (string.len(g)==1) then
-      g = "0"..g;
-    end
+-- ===========================================================================
+--	RETURNS: true if a player does not have any cities.
+-- ===========================================================================
+function IsPlayerCityless( playerID:number )
+  if playerID < 0 then return true; end
+  local pPlayer		:table = Players[playerID];
+  local pPlayerCities	:table = pPlayer:GetCities();
+  for i, pCity in pPlayerCities:Members() do
+    return false;
   end
+  return true;
+end
 
-  r = r + amt;
-  if (r < 0 or r == 0) then
-    r = "00";
-  elseif (r > 255 or r == 255) then
-    r = "FF";
+-- ===========================================================================
+--	Serialize custom data in the custom data table.
+--	key		must be a string
+--	value	can be anything
+-- ===========================================================================
+function WriteCustomData( key:string, value )
+  local pParameters :table = UI.GetGameParameters():Add("CustomData");
+  if pParameters ~= nil then
+    pParameters:Remove( key );
+    local pData:table = pParameters:Add( key );
+    pData:AppendValue( value );
   else
-    r = string.format("%x",r);
-    if (string.len(r)==1) then
-      r = "0"..r;
-    end
+    UI.DataError("Could not write CustomData: ",key,value);
   end
+end
 
-  hexString = a..b..g..r;
-  return tonumber(hexString,16);
+-- ===========================================================================
+--	Read back custom data, returns NIL if not found.
+--	key		must be a string
+--	RETURNS: all values from the associated key (or nil if key isn't found)
+-- ===========================================================================
+function ReadCustomData( key:string )
+  local pParameters	:table = UI.GetGameParameters():Get("CustomData");
+  local kReturn		:table = {};
+  if pParameters ~= nil then
+    local pValues:table = pParameters:Get( key );		
+    -- No key or empty key?  Return nil...
+    if pValues == nil then
+      return nil;
+    end
+    local count:number = pValues:GetCount();
+    if count == 0 then
+      return nil;
+    end
+    for i = 1, count, 1 do
+      local value = pValues:GetValueAt(i-1);
+      table.insert(kReturn, value);
+    end
+  else
+    return nil;
+  end
+  return unpack(kReturn);
 end
 
 --CQUI setting control support functions
