@@ -123,7 +123,6 @@
     <File>Assets/UI/worldtracker.xml</File>
     <File>Assets/UI/Choosers/civicschooser.lua</File>
     <File>Assets/UI/Choosers/researchchooser.lua</File>
-    <File>Assets/UI/Civilopedia/civilopediasupport.lua</File>
     <File>Assets/UI/Panels/citypanel.lua</File>
     <File>Assets/UI/Panels/citypanel.xml</File>
     <File>Assets/UI/Panels/citypaneloverview.lua</File>
@@ -277,9 +276,9 @@
         <File>Assets/UI/partialscreenhooks.lua</File>
         <File>Assets/UI/partialscreenhooks.xml</File>
         <File>Assets/UI/productionpanel.xml</File>
-        <File>Assets/UI/strategicview_mapplacement.lua</File>
+        <File>Assets/UI/strategicview_mapplacement.lua</File>-->
         <File>Assets/UI/supportfunctions.lua</File>
-        <File>Assets/UI/techandcivicsupport.lua</File>
+        <!--<File>Assets/UI/techandcivicsupport.lua</File>
         <File>Assets/UI/toppanel.lua</File>
         <File>Assets/UI/toppanel.xml</File>
         <File>Assets/UI/unitflagmanager.lua</File>
@@ -290,12 +289,12 @@
         <File>Assets/UI/worldtracker.xml</File>
         <File>Assets/UI/Choosers/civicschooser.lua</File>
         <File>Assets/UI/Choosers/researchchooser.lua</File>
-        <File>Assets/UI/Civilopedia/civilopediasupport.lua</File>-->
+        -->
         <File>Assets/UI/Panels/citypanel.lua</File>
         <File>Assets/UI/Panels/citypanel.xml</File>
-        <!--<File>Assets/UI/Panels/citypaneloverview.lua</File>
+        <File>Assets/UI/Panels/citypaneloverview.lua</File>
         <File>Assets/UI/Panels/citypaneloverview.xml</File>
-        <File>Assets/UI/Panels/notificationpanel.lua</File>
+        <!--<File>Assets/UI/Panels/notificationpanel.lua</File>
         <File>Assets/UI/Panels/productionpanel.lua</File>
         <File>Assets/UI/Panels/statusmessagepanel.lua</File>
         <File>Assets/UI/Panels/statusmessagepanel.xml</File>

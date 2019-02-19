@@ -110,38 +110,6 @@ function TruncateStringByLength( textString, textLen )
   return textString;
 end
 
-function GetGreatWorksForCity(pCity:table)
-  local result:table = {};
-  if pCity then
-    local pCityBldgs:table = pCity:GetBuildings();
-    for buildingInfo in GameInfo.Buildings() do
-      local buildingIndex:number = buildingInfo.Index;
-      local buildingType:string = buildingInfo.BuildingType;
-      if(pCityBldgs:HasBuilding(buildingIndex)) then
-        local numSlots:number = pCityBldgs:GetNumGreatWorkSlots(buildingIndex);
-        if (numSlots ~= nil and numSlots > 0) then
-          local greatWorksInBuilding:table = {};
-
-          -- populate great works
-          for index:number=0, numSlots - 1 do
-            local greatWorkIndex:number = pCityBldgs:GetGreatWorkInSlot(buildingIndex, index);
-            if greatWorkIndex ~= -1 then
-              local greatWorkType:number = pCityBldgs:GetGreatWorkTypeFromIndex(greatWorkIndex);
-              table.insert(greatWorksInBuilding, GameInfo.GreatWorks[greatWorkType]);
-            end
-          end
-
-          -- create association between building type and great works
-          if #greatWorksInBuilding > 0 then
-            result[buildingType] = greatWorksInBuilding;
-          end
-        end
-      end
-    end
-  end
-  return result;
-end
-
 -- Wraps a string according to the provided length, but, unlike the built in wrapping, will ignore the limit if a single continuous word exceeds the length of the wrap width
 function CQUI_SmartWrap( textString, wrapWidth )
   local lines = {""}; --Table that holds each individual line as it's build
@@ -408,6 +376,20 @@ function RemoveTableEntry( T:table, key:string, theValue )
 end
 
 -- ===========================================================================
+--	LUA Helper function
+-- ===========================================================================
+-- Using Fisher-Yates algorithm
+function ShuffleTable(tbl : table)
+  if table == nil then return nil end;
+  local size = #tbl;
+  for i = size, 1, -1 do
+    local rand = Game.GetRandNum(size, "Support: Shuffle Table") + 1;
+    tbl[i], tbl[rand] = tbl[rand], tbl[i]
+  end
+  return tbl;
+end
+
+-- ===========================================================================
 --	orderedPairs()
 --	Allows an ordered iteratation of the pairs in a table.  Use like pairs().
 --	Original version from: http://lua-users.org/wiki/SortedIteration
@@ -496,6 +478,17 @@ function Clamp( value:number, min:number, max:number )
   end
 end
 
+-- ===========================================================================
+--	SoftRound()
+--	Rounds the passed in parameter with no decimal places.
+-- ===========================================================================
+function SoftRound(x)
+	if(x >= 0) then
+		return math.floor(x+0.5);
+	else
+		return math.ceil(x-0.5);
+	end
+end
 
 
 -- ===========================================================================
@@ -506,6 +499,32 @@ end
 function Round(num:number, idp:number)
   local mult:number = 10^(idp or 0);
   return math.floor(num * mult + 0.5) / mult;
+end
+
+
+-- ===========================================================================
+--	RandRange()
+--	Returns a value between min and max (inclusive) using gamecore synced RNG.
+-- ===========================================================================
+function RandRange(min:number, max:number, logString:string)
+	logString = logString or "Support: Rand Range";
+	if (Game.GetRandNum ~= nil) then
+		return Game.GetRandNum(max - min, logString) + min;
+	else
+		return min;
+	end
+end
+
+-- ===========================================================================
+--	Triangular()
+--	Returns the triangular number for n.
+-- ===========================================================================
+function Triangular(iN : number)
+	-- Pos only
+	iN = math.abs(iN);
+	-- Whole numbers only
+	iN = Round(iN);
+	return iN * (iN + 1) / 2;
 end
 
 
@@ -524,73 +543,6 @@ function PolarToCartesian( r:number, phi:number )
 end
 function PolarToRatioCartesian( r:number, phi:number, ratio:number )
   return r * math.cos( math.rad(phi) ), r * math.sin( math.rad(phi) ) * ratio;
-end
-
--- ===========================================================================
---	Transforms a ABGR color by some amount
---	ARGS:	hexColor	Hex color value (0xAAGGBBRR)
---			amt			(0-255) the amount to darken or lighten the color
---			alpha		???
---RETURNS:	transformed color (0xAAGGBBRR)
--- ===========================================================================
-function DarkenLightenColor( hexColor:number, amt:number, alpha:number )
-
-  --Parse the a,g,b,r hex values from the string
-  local hexString :string = string.format("%x",hexColor);
-  local b = string.sub(hexString,3,4);
-  local g = string.sub(hexString,5,6);
-  local r = string.sub(hexString,7,8);
-  b = tonumber(b,16);
-  g = tonumber(g,16);
-  r = tonumber(r,16);
-
-  if (b == nil) then b = 0; end
-  if (g == nil) then g = 0; end
-  if (r == nil) then r = 0; end
-
-  local a = string.format("%x",alpha);
-  if (string.len(a)==1) then
-      a = "0"..a;
-  end
-
-  b = b + amt;
-  if (b < 0 or b == 0) then
-    b = "00";
-  elseif (b > 255 or b == 255) then
-    b = "FF";
-  else
-    b = string.format("%x",b);
-    if (string.len(b)==1) then
-      b = "0"..b;
-    end
-  end
-
-  g = g + amt;
-  if (g < 0 or g == 0) then
-    g = "00";
-  elseif (g > 255 or g == 255) then
-    g = "FF";
-  else
-    g = string.format("%x",g);
-    if (string.len(g)==1) then
-      g = "0"..g;
-    end
-  end
-
-  r = r + amt;
-  if (r < 0 or r == 0) then
-    r = "00";
-  elseif (r > 255 or r == 255) then
-    r = "FF";
-  else
-    r = string.format("%x",r);
-    if (string.len(r)==1) then
-      r = "0"..r;
-    end
-  end
-
-  hexString = a..b..g..r;
-  return tonumber(hexString,16);
 end
 
 

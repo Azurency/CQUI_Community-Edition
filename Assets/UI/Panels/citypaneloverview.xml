@@ -5,12 +5,12 @@
   <!-- AZURENCY : same speed and begin that the slideanim of the panel -->
   <SlideAnim ID="PauseDismissWindow" Speed="3.5" Start="-330,27" End="0,27" Cycle="Once"/>
 
-  <SlideAnim    ID="OverviewSlide"  Anchor="L,T"                  Size="300,parent"       Start="-330,27" End="0,27" Cycle="Once" Speed="3.5" Function="OutSine" Stopped="1" >
-    <Box          ID="OverviewBackground" Anchor="L,T"                  Size="parent,parent+5" ConsumeMouse="1" Color="8,34,56,255">
+  <SlideAnim ID="OverviewSlide" Size="300,parent" Start="-330,27" End="0,27" Cycle="Once" Speed="3.5" Function="OutSine" Stopped="1" >
+    <Box ID="OverviewBackground" Size="parent,parent+5" ConsumeMouse="1" Color="8,34,56,255">			
       <Image ID="PanelDropShadow" Texture="Controls_GradientSmall" Size="22,parent" AnchorSide="O,I" Anchor="R,T" Color="0,0,0,190" Rotate="270" Offset="-1,0"/>
       <Image Texture="Controls_Gradient" Size="parent, 120" Anchor="C,B" Color="13,57,92,255"/>
       <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" Offset="0,30" Anchor="C,B" Color="72,103,130,255"/>
-      <Image Texture="Controls_Compass" Size="193, 122" Anchor="C,B" Offset="0,35" Color="62,93,120,150"/>
+      <Image Texture="Controls_Compass" Size="193, 122" Offset="0,35" Anchor="C,B" Color="62,93,120,150"/>
       <ScrollPanel        ID="PanelScrollPanel"       Anchor="R,B"                  Size="parent,parent-100" AutoScrollBar="1" Vertical="1" Offset="0,30">
         <Stack            ID="PanelStack"             Anchor="R,T" Offset="0,0"     Size="parent,0"       StackGrowth="Down" Hidden="0" >
           <Grid           ID="PanelCitizensGrowth"        Anchor="L,T"                  Size="parent,0"       Style="CityPanelStatPanelGrid">
@@ -93,8 +93,8 @@
             </Stack>
           </Grid>
 
-          <Grid           ID="PanelAmenities"             Anchor="L,T" Offset="0,0"     Size="parent,0"       Style="CityPanelStatPanelGrid" ConsumeAllMouse="1">
-            <Grid                                     Anchor="L,T"                  Size="parent,24"    Style="DivHeader">
+          <Grid ID="PanelAmenities" Size="parent,0" Style="CityPanelStatPanelGrid">
+            <Grid Size="parent,24" Style="DivHeader">
               <Container Size="parent,24">
                 <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" FlipY="1" Anchor="C,T" Color="72,103,130,255"/>
               </Container>
@@ -142,8 +142,8 @@
             </Stack>
           </Grid>
 
-          <Grid           ID="PanelHousing"               Anchor="L,T"                  Size="parent,0"       Style="CityPanelStatPanelGrid" ConsumeAllMouse="1">
-            <Grid                                     Anchor="L,T"                  Size="parent,24"    Style="DivHeader">
+          <Grid ID="PanelHousing" Size="parent,0" Style="CityPanelStatPanelGrid" >
+            <Grid Size="parent,24" Style="DivHeader">
               <Container Size="parent,24">
                 <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" FlipY="1" Anchor="C,T" Color="72,103,130,255"/>
               </Container>
@@ -186,7 +186,7 @@
             </Stack>
           </Grid>
 
-          <Grid           ID="PanelBreakdown"         Anchor="L,T" Offset="0,0"     Size="parent,0"       Style="CityPanelStatPanelGrid" ConsumeAllMouse="1">
+          <Grid           ID="PanelBreakdown"         Anchor="L,T" Offset="0,0"     Size="parent,0"       Style="CityPanelStatPanelGrid">
             <Stack        ID="BreakdownStack"                      Offset="0,0"   Size="parent,auto" InnerPadding="16,0" StackPadding="1">
               <Grid                                     Anchor="L,T"                  Size="parent,24"      Style="DivHeader">
                 <Container Size="parent,24">
@@ -340,9 +340,10 @@
         </Stack>
         <ScrollBar Style="Slider_Blue" Anchor="R,C" AnchorSide="O,I"/>
       </ScrollPanel>
-      <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent-12,30" Color="8,34,56,255" Offset="0,60"/>
-      <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent-12,20" Color="8,34,56,255" Offset="0,60"/>
-      <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent-12,20" Color="8,34,56,255" Offset="0,60"/>
+
+      <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent,30" Color="8,34,56,255" Offset="0,90"/>
+			<Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent,20" Color="8,34,56,255" Offset="0,90"/>
+			<Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent,20" Color="8,34,56,255" Offset="0,90"/>
 
     </Box>
     <Grid         ID="OverviewHeader"     Style="HeaderBannerLeft" Size="320,65" Anchor="L,T" Offset="0,0">
@@ -372,8 +373,7 @@
           <!--<Button ID="StrengthButton" Offset="0,2" Anchor="L,C" Size="44,44"  Texture="LaunchBar_Hook_ButtonMedium" Style="ButtonNormalText">
             <Image ID="StrengthIcon" Offset="-1,-1" Texture="Stats32" Size="32,32" Anchor="C,C"  Icon="ICON_DEFENSE"/>
           </Button>-->
-        </Container>
-        <Container Anchor="C,B" Offset="0,4" Size="parent,36">
+
           <SlideAnim        ID="TabAnim" Begin="0,0" End="0,0" Cycle="Once" Speed="3.5" Function="OutQuint" Size="67,68">
             <Image          ID="TabArrow" Texture="LaunchBar_HookSelectArrow_Medium2" Size="67,68"/>
           </SlideAnim>
