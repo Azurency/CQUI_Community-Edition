@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd" Style="FontNormal16" FontStyle="Shadow">
+<Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd" Style="FontNormal16" FontStyle="Shadow">
 
   <Include File="CivilizationIcon" />
   <Include File="LeaderIcon"/>
@@ -154,7 +154,7 @@
   </Instance>
 
   <Instance Name="IntelOverviewDividerInstance">
-    <Box ID="Top" Anchor="C,C" Size="parent-20,1" Color="255,255,255,80"/>
+    <Box ID="Top" Anchor="TheDivide" Size="parent-20,1" Color="255,255,255,80"/>
   </Instance>
 
   <Instance Name="IntelOverviewGossipInstance">
@@ -433,15 +433,20 @@
     </AlphaAnim>
     <AlphaAnim ID="NameFade" AlphaBegin="0" AlphaEnd="1" Speed="3" Cycle="Once" Function="Root"   Pause="0.4" Size="parent,parent">
       <SlideAnim ID="NameSlide" Begin="-20,0" End="0,0" Speed="3" Cycle="Once" Function="Root"    Pause="0.4" Size="parent,parent">
-          <Stack StackGrowth="Down" Padding="3" Offset="10,25">
+        <Stack Padding="3" Offset="30,35">
+          <Stack StackGrowth="Down" Padding="3">
             <Label      ID="PlayerNameText" Style="DiplomacyCivHeaderLarge" ColorSet="BodyTextCool"/>
             <Label      ID="CivNameText" Style="DiplomacyCivHeaderLarge" Color0="Dark_Gray"/>
           </Stack>
-          <Stack				ID="UniqueInfoStack"	Anchor="L,C" StackGrowth="Down" StackPadding="10">
+          <Stack				ID="UniqueInfoStack" StackGrowth="Down" StackPadding="10">
             <Label														Anchor="L,T" Offset="10,10"		Style="FontFlair14"		String="{LOC_LOADING_FEATURES_ABILITIES:upper}" SmallCapsType="EveryWord" SmallCaps="20" />
             <Line															Start="0,0"	 End="350,0"			Width="2"							Color="200,200,200,100" />
-            <Stack			ID="FeaturesStack"		Anchor="L,T" Offset="10,0"		WrapWidth="400"				StackGrowth="Right" WrapGrowth="Down" Padding="10" WrapPadding="14" />
+            <ScrollPanel	ID="LeaderInfoScrollPanel" Anchor="L,B" Size="parent-10,parent-200"	Vertical="1" AutoScrollBar="1">
+              <Stack			ID="FeaturesStack"		     Anchor="L,T" Offset="10,8" StackGrowth="Right" WrapWidth="400" WrapGrowth="Down" Padding="10" WrapPadding="14" />
+              <ScrollBar  Anchor="L,T" AnchorSide="O,I" Size="11,parent" Style="Slider_Blue" Vertical="1" Offset="-2,-2"/>
+            </ScrollPanel>
           </Stack>
+        </Stack>
       </SlideAnim>
     </AlphaAnim>
     <!-- Close button -->
