@@ -189,7 +189,7 @@ end
 -- ===========================================================================
 function OnInputActionTriggered( actionId )
   if actionId == m_PauseId then
-    if( Controls.TopOptionsMenu:IsHidden() ) then
+    if(Controls.TopOptionsMenu:IsHidden()) then
       OpenInGameOptionsMenu();
       return true;
     end
@@ -228,7 +228,7 @@ end
 -- ===========================================================================
 function OnLensLayerOff( layerHash:number )
   if layerHash == m_HexColoringReligion or layerHash == m_CulturalIdentityLens or
-       layerHash == m_TouristTokens then
+      layerHash == m_TouristTokens then
     Controls.UnitFlagManager:ChangeParent(Controls.BannerAndFlags);
   end
 end
