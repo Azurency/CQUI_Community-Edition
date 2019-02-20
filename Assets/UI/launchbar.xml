@@ -14,7 +14,7 @@
           <Image ID="ScienceHookWithMeter" Anchor="C,C" Offset="0,-5" Size="57,57" Hidden="1" Texture="LaunchBar_Hook_ScienceMeter_Backing.dds">
             <Meter ID="ScienceMeter" Anchor="C,C" Size="57,57" Percent="0" Speed="1.0" Follow="1" Texture="LaunchBar_Hook_ScienceMeter_Fill.dds"/>
           </Image>
-            
+
         </Button>
         <Image ID="ScienceBolt" Anchor="L,C" Offset="0,-2" Size="7,7" Texture="LaunchBar_TrackPip" Color="255,255,255,200"/>
 
@@ -23,7 +23,7 @@
           <Image ID="CultureHookWithMeter" Anchor="C,C" Offset="0,-5" Size="57,57" Hidden="1" Texture="LaunchBar_Hook_CultureMeter_Backing.dds">
             <Meter ID="CultureMeter" Anchor="C,C" Size="57,57" Percent="0" Speed="1.0" Follow="1" Texture="LaunchBar_Hook_CultureMeter_Fill.dds"/>
           </Image>
-            
+
         </Button>
         <Image  ID="CultureBolt"      Anchor="L,C" Offset="0,-2"  Size="7,7"      Texture="LaunchBar_TrackPip"    Color="255,255,255,200" />
 
@@ -48,7 +48,7 @@
         </Button>
         <Image  ID="GreatWorksBolt"     Anchor="L,C" Offset="0,-2"  Size="7,7"      Texture="LaunchBar_TrackPip"     Color="255,255,255,200" />
       </Stack>
-      
+
       <!-- Toggle Show/Hide Button -->
       <CheckBox ID="LaunchExtraShow" Offset="-4,49" Anchor="R,T" ButtonSize="35,35" ButtonTexture="Controls_RadioButtonLarge" CheckTexture="Controls_RadioButtonLarge" CheckSize="35,35" CheckTextureOffset="0,35"/>
     </Stack>
@@ -76,7 +76,7 @@
         </SlideAnim>
       </AlphaAnim>
     </Container>
-    
+
     <Tutorial ID="TutOpenGovernment" Style="TutorialContainer" Anchor="L,B" AnchorSide="O,O" Offset="-220, 120" TriggerBy="TutorialOpenGovernment">
       <Grid Style="TutorialCalloutGrid">
         <Label Style="TutorialHeaderText" String="LOC_META_93b_HEAD"/>
@@ -106,7 +106,7 @@
         <Image Texture="Tutorial_ArrowV" Offset="5,-15" Size="44,58" FlipY="true"/>
       </SlideAnim>
     </Tutorial>
-    
+
     <Tutorial ID="TutOpenTechs" Style="TutorialContainer" Anchor="L,B" AnchorSide="O,O" Offset="-220, 120" TriggerBy="TutorialOpenTechTree">
       <Grid Style="TutorialCalloutGrid">
         <Label Style="TutorialHeaderText" String="LOC_META_46a_HEAD"/>
@@ -116,7 +116,7 @@
         <Image Texture="Tutorial_ArrowV" Offset="-148,-15" Size="44,58" FlipY="true"/>
       </SlideAnim>
     </Tutorial>
-    
+
     <Tutorial ID="TutOpenGP" Style="TutorialContainer" Anchor="L,B" AnchorSide="O,O" Offset="-374, 120" TriggerBy="TutorialOpenGP">
       <Grid Style="TutorialCalloutGrid">
         <Label Style="TutorialHeaderText" String="LOC_META_136b_HEAD"/>
@@ -130,13 +130,12 @@
   </Container>
 
   <!-- INSTANCES -->
-  
+
   <Instance Name="LaunchBarItem">
-    <Container ID="Content" Size="49,49">
-      <Button ID="LaunchItemButton" Anchor="L,C" Size="49,49" Texture="LaunchBar_Hook_GovernmentButton" Style="ButtonNormalText" StateOffsetIncrement="0,49">
-        <Image ID="LaunchItemIcon" Size="35,35" Anchor="C,C" Offset="0,0"/>
-      </Button>
-    </Container>
+    <Button ID="LaunchItemButton" Anchor="L,C" Size="49,49" Texture="LaunchBar_Hook_GovernmentButton" Style="ButtonNormalText" StateOffsetIncrement="0,49">
+      <Image ID="LaunchItemIcon" Size="35,35" Anchor="C,C" Offset="0,0"/>
+      <Label ID="AlertIndicator" String="[ICON_New]" Anchor="R,T" AnchorSide="O,O" Offset="-18,-18" Hidden="1"/>
+    </Button>
   </Instance>
 
   <Instance Name="LaunchBarPinInstance">
