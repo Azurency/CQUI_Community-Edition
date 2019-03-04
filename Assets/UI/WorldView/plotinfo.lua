@@ -1074,12 +1074,12 @@ function OnLensLayerOn( layerNum:number )
   if layerNum == m_CitizenManagement then
     ShowCitizens();
     RealizeShadowMask();
-    RealizeTilt();
+    --RealizeTilt();
     RefreshCityYieldsPlotList();
   elseif layerNum == m_PurchasePlot then
     ShowPurchases();
     RealizeShadowMask();
-    RealizeTilt();
+    --RealizeTilt();
     RefreshCityYieldsPlotList();
   elseif layerNum == m_CityDetails then
     if UILens.IsLensActive("EnemyCityDetails") then
@@ -1088,7 +1088,7 @@ function OnLensLayerOn( layerNum:number )
     end
     ShowCityDetails();
     RealizeShadowMask();
-    RealizeTilt();
+    --RealizeTilt();
     RefreshCityYieldsPlotList();
   elseif layerNum == m_EmpireDetails then
     ShowEmpireDetails();
@@ -1108,17 +1108,17 @@ function OnLensLayerOff( layerNum:number )
   if  layerNum == m_CitizenManagement then
     HideCitizens();
     RealizeShadowMask();
-    RealizeTilt();
+    --RealizeTilt();
     RefreshCityYieldsPlotList();
   elseif  layerNum == m_PurchasePlot then
     HidePurchases();
     RealizeShadowMask();
-    RealizeTilt();
+    --RealizeTilt();
     RefreshCityYieldsPlotList();
   elseif layerNum == m_CityDetails then
     HideCityDetails();
     RealizeShadowMask();
-    RealizeTilt();
+    --RealizeTilt();
     RefreshCityYieldsPlotList();
   elseif layerNum == m_EmpireDetails then
     HideEmpireDetails();
@@ -1153,6 +1153,15 @@ function OnPlayerTurnActivated( ePlayer:number, isFirstTimeThisTurn:boolean )
   if ePlayer == Game.GetLocalPlayer() then
     Rebuild();
   end
+end
+
+
+function KeyHandler( key:number )
+  if key == Keys.VK_TAB then
+    UILens.ClearLayerHexes( m_MapHexMask );   -- ??TRON debug clear
+    return true;
+  end
+  return false;
 end
 
 function OnInputHandler( pInputStruct:table )
