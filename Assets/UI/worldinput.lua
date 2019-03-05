@@ -1,6 +1,6 @@
 -- ===========================================================================
 --  World Input
---  Copyright 2015-2016, Firaxis Games
+--  Copyright 2015-2018, Firaxis Games
 --
 --  Handle input that occurs within the 3D world.
 --
@@ -69,7 +69,8 @@ InterfaceModeMessageHandler =
   [InterfaceModeTypes.WB_SELECT_PLOT]     = {},
   [InterfaceModeTypes.SPY_CHOOSE_MISSION] = {},
   [InterfaceModeTypes.SPY_TRAVEL_TO_CITY] = {},
-  [InterfaceModeTypes.NATURAL_WONDER]   = {},
+  [InterfaceModeTypes.NATURAL_WONDER]    = {},  -- DEPRECATED: Use CINEMATIC
+  [InterfaceModeTypes.CINEMATIC]      = {},
   [InterfaceModeTypes.VIEW_MODAL_LENS]  = {}
 }
 
@@ -136,7 +137,14 @@ local m_kTutorialPermittedHexes       :table = nil;   -- Which hexes are permitt
 local m_kTutorialUnitHexRestrictions  :table = nil;   -- Any restrictions on where units can move.  (Key=UnitType, Value={restricted plotIds})
 local m_isPlotFlaggedRestricted       :boolean = false; -- In a previous operation to determine a move path, was a plot flagged restrticted/bad? (likely due to the tutorial system)
 local m_kTutorialUnitMoveRestrictions :table = nil;   -- Restrictions for moving (anywhere) of a selected unit type.
-local m_isPauseMenuOpen               :boolean = false;
+local m_isInputBlocked          :boolean = false;
+
+g_MovementPath = UILens.CreateLensLayerHash("Movement_Path");
+g_Numbers = UILens.CreateLensLayerHash("Numbers");
+g_AttackRange = UILens.CreateLensLayerHash("Attack_Range");
+g_HexColoringAttack = UILens.CreateLensLayerHash("Hex_Coloring_Attack");
+g_HexColoringMovement = UILens.CreateLensLayerHash("Hex_Coloring_Movement");
+g_HexColoringPlacement = UILens.CreateLensLayerHash("Hex_Coloring_Placement");
 
 --CQUI MEMBERS
 local CQUI_cityview = false;
@@ -361,6 +369,7 @@ function SelectInPlot( plotX:number, plotY:number )
         if (pNewSelectedUnit ~= nil and UI.RebuildSelectionList ~= nil) then    -- Checking UI.RebuildSelectionList, so that if an artist fetches the scripts before the next build, they won't be stuck.  Remove that check ASAP.
           -- The user has manually selected a unit, rebuild the selection list from that unit.
           UI.RebuildSelectionList(pNewSelectedUnit);
+          UI.SetCycleAdvanceTimer(0);    -- Cancel any auto-advance timer
         end
       end
     end
@@ -372,6 +381,7 @@ function SelectInPlot( plotX:number, plotY:number )
   if tryCity then
     if pCity ~= nil then
       UI.SelectCity(pCity);
+      UI.SetCycleAdvanceTimer(0);    -- Cancel any auto-advance timer
     end
     -- No else, as this would be the case when click on a city banner,
     -- and so the CityBannerManager will handle the selection.
@@ -685,6 +695,13 @@ function UnitMovementCancel()
 end
 
 -- ===========================================================================
+function OnUnitCommandStarted(player, unitId, hCommand, iData1)
+    if (hCommand == UnitCommandTypes.CANCEL) then
+    UnitMovementCancel();
+    end
+end
+
+-- ===========================================================================
 --  Unit Range Attack
 -- ===========================================================================
 function UnitRangeAttack( plotID:number )
@@ -713,10 +730,10 @@ end
 --  Clear the visual representation (and cache) of the movement path
 -- ===========================================================================
 function ClearMovementPath()
-  UILens.ClearLayerHexes( LensLayers.MOVEMENT_PATH );
-  UILens.ClearLayerHexes( LensLayers.NUMBERS );
+  UILens.ClearLayerHexes( g_MovementPath );
+  UILens.ClearLayerHexes( g_Numbers );
   if (UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK) then
-    UILens.ClearLayerHexes( LensLayers.ATTACK_RANGE );
+    UILens.ClearLayerHexes( g_AttackRange );
   end
   m_cachedPathUnit = nil;
   m_cachedPathPlotId = -1;
@@ -761,7 +778,7 @@ function RealizeMovementPath(showQueuedPath:boolean, unitID:number)
   -- Bail if end plot is not determined.
   local endPlotId :number = UI.GetCursorPlotID();
 
-  -- Use the queued destinationt o show the queued path
+  -- Use the queued destination to show the queued path
   if (showQueuedPath) then
     local queuedEndPlotId:number = UnitManager.GetQueuedDestination( kUnit );
     if queuedEndPlotId then
@@ -778,11 +795,11 @@ function RealizeMovementPath(showQueuedPath:boolean, unitID:number)
 
   -- Only update if a new unit or new plot from the previous update.
   if m_cachedPathUnit ~= kUnit or m_cachedPathPlotId  ~= endPlotId then
-    UILens.ClearLayerHexes( LensLayers.MOVEMENT_PATH );
-    UILens.ClearLayerHexes( LensLayers.NUMBERS );
-    UILens.ClearLayerHexes( LensLayers.ATTACK_RANGE );
+    UILens.ClearLayerHexes( g_MovementPath );
+    UILens.ClearLayerHexes( g_Numbers );
+    UILens.ClearLayerHexes( g_AttackRange );
     if m_cachedPathPlotId ~= -1 then
-      UILens.UnFocusHex( LensLayers.ATTACK_RANGE, m_cachedPathPlotId );
+      UILens.UnFocusHex( g_AttackRange, m_cachedPathPlotId );
     end
 
     m_cachedPathUnit  = kUnit;
@@ -790,15 +807,13 @@ function RealizeMovementPath(showQueuedPath:boolean, unitID:number)
 
 
     -- Obtain ordered list of plots.
-    local turnsList   : table;
-    local obstacles   : table;
-    local variations  : table = {}; -- 2 to 3 values
-    local pathPlots   : table = {};
+    local variations  : table = {};  -- 2 to 3 values
     local eLocalPlayer  : number = Game.GetLocalPlayer();
 
     --check for unit position swap first
     local startPlotId :number = Map.GetPlot(kUnit:GetX(),kUnit:GetY()):GetIndex();
     if startPlotId ~= endPlotId then
+      local pathPlots    :table = {};
       local plot      :table        = Map.GetPlotByIndex(endPlotId);
       local tParameters :table        = {};
       tParameters[UnitOperationTypes.PARAM_X] = plot:GetX();
@@ -816,51 +831,56 @@ function RealizeMovementPath(showQueuedPath:boolean, unitID:number)
         table.insert(variations, {lensNameBase.."_Destination",endPlotId} );
         table.insert(variations, {lensNameBase.."_Counter", endPlotId} ); -- show counter pip
         UI.AddNumberToPath( 1, endPlotId);
-        UILens.SetLayerHexesPath(LensLayers.MOVEMENT_PATH, eLocalPlayer, pathPlots, variations);
+        UILens.SetLayerHexesPath(g_MovementPath, eLocalPlayer, pathPlots, variations);
         return;
       end
     end
 
-    pathPlots, turnsList, obstacles = UnitManager.GetMoveToPath( kUnit, endPlotId );
+    local pathInfo : table = UnitManager.GetMoveToPathEx( kUnit, endPlotId );
 
-    if table.count(pathPlots) > 1 then
+    if table.count(pathInfo.plots) > 1 then
       -- Start and end art "variations" when drawing path
       local startHexId:number = kUnit:GetPlotId();
-      local endHexId  :number = pathPlots[table.count(pathPlots)];
+      local endHexId  :number = pathInfo.plots[table.count(pathInfo.plots)];
 
-      -- Check if our desired "movement" is actually a ranged attack. Early out if so.
-      local isImplicitRangedAttack :boolean = false;
+      -- Don't show the implicit arrow if the unit has no remaining moves
+      -- NOTE: UnitManager.CanStartOperation and kUnit:GetAttacksRemaining both indicate a ranged
+      -- unit with 0 remaining moves can still attack, so we check using kUnit:GetMovesRemaining
+      if kUnit:GetMovesRemaining() > 0 then
+        -- Check if our desired "movement" is actually a ranged attack. Early out if so.
+        local isImplicitRangedAttack :boolean = false;
 
-      local pResults = UnitManager.GetOperationTargets(kUnit, UnitOperationTypes.RANGE_ATTACK );
-      local pAllPlots = pResults[UnitOperationResults.PLOTS];
-      if pAllPlots ~= nil then
-        for i, modifier in ipairs( pResults[UnitOperationResults.MODIFIERS] ) do
-          if modifier == UnitOperationResults.MODIFIER_IS_TARGET then
-            if pAllPlots[i] == endPlotId then
-              isImplicitRangedAttack = true;
-              break;
+        local pResults = UnitManager.GetOperationTargets(kUnit, UnitOperationTypes.RANGE_ATTACK );
+        local pAllPlots = pResults[UnitOperationResults.PLOTS];
+        if pAllPlots ~= nil then
+          for i, modifier in ipairs( pResults[UnitOperationResults.MODIFIERS] ) do
+            if modifier == UnitOperationResults.MODIFIER_IS_TARGET then
+              if pAllPlots[i] == endPlotId then
+                isImplicitRangedAttack = true;
+                break;
+              end
             end
           end
         end
-      end
 
-      if isImplicitRangedAttack then
-        -- Unit can apparently perform a ranged attack on that hex. Show the arrow!
-        local kVariations:table = {};
-        local kEmpty:table = {};
-        table.insert(kVariations, {"EmptyVariant", startHexId, endHexId} );
-        UILens.SetLayerHexesArea(LensLayers.ATTACK_RANGE, eLocalPlayer, kEmpty, kVariations);
+        if isImplicitRangedAttack then
+          -- Unit can apparently perform a ranged attack on that hex. Show the arrow!
+          local kVariations:table = {};
+          local kEmpty:table = {};
+          table.insert(kVariations, {"EmptyVariant", startHexId, endHexId} );
+          UILens.SetLayerHexesArea(g_AttackRange, eLocalPlayer, kEmpty, kVariations);
 
-        -- Focus must be called AFTER the attack range variants are set.
-        UILens.FocusHex( LensLayers.ATTACK_RANGE, endHexId );
-        return; -- We're done here. Do not show a movement path.
+          -- Focus must be called AFTER the attack range variants are set.
+          UILens.FocusHex( g_AttackRange, endHexId );
+          return; -- We're done here. Do not show a movement path.
+        end
       end
 
       -- Any plots of path in Fog Of War or midfog?
       local isPathInFog:boolean = false;
       local pPlayerVis :table = PlayersVisibility[eLocalPlayer];
       if pPlayerVis ~= nil then
-        for _,plotIds in pairs(pathPlots) do
+        for _,plotIds in pairs(pathInfo.plots) do
           isPathInFog = not pPlayerVis:IsVisible(plotIds);
           if isPathInFog then
             break;
@@ -869,9 +889,9 @@ function RealizeMovementPath(showQueuedPath:boolean, unitID:number)
       end
 
       -- If any plots are in Fog Of War (FOW) then switch to the FOW movement lens.
-      local lensNameBase              :string = "MovementGood";
-      local movePostfix             :string = "";
-      local isPathHaveRestriction,restrictedPlotId = IsPlotPathRestrictedForUnit( pathPlots, turnsList, kUnit );
+      local lensNameBase      :string = "MovementGood";
+      local movePostfix      :string = "";
+      local isPathHaveRestriction,restrictedPlotId = IsPlotPathRestrictedForUnit( pathInfo.plots, pathInfo.turns, kUnit );
 
       if showQueuedPath then
         lensNameBase = "MovementQueue";
@@ -907,35 +927,35 @@ function RealizeMovementPath(showQueuedPath:boolean, unitID:number)
       if not showQueuedPath then
         table.insert(variations, {lensNameBase.."_Origin",startHexId} );
       end
-      local nTurnCount :number = turnsList[table.count( turnsList )];
+      local nTurnCount :number = pathInfo.turns[table.count( pathInfo.turns )];
       if not bIsEnemyAtEnd or nTurnCount > 1 then
         table.insert(variations, {lensNameBase.."_Destination",endHexId} );
       end
 
-      -- Since turnsList are matched against plots, this should be the same # as above.
-      if table.count(turnsList) > 1 then
+      -- Since pathInfo.turns are matched against plots, this should be the same # as above.
+      if table.count(pathInfo.turns) > 1 then
 
         -- Track any "holes" in the path.
         local pathHole:table = {};
-        for i=1,table.count(pathPlots),1 do
+        for i=1,table.count(pathInfo.plots),1 do
           pathHole[i] = true;
         end
 
         local lastTurn:number = 1;
-        for i,value in pairs(turnsList) do
+        for i,value in pairs(pathInfo.turns) do
 
           -- If a new turn entry exists, or it's the very last entry of the path... show turn INFO.
           if value > lastTurn then
             if i > 1 then
-              table.insert(variations, {lensNameBase.."_Counter", pathPlots[i-1]} );                -- show counter pip
-              UI.AddNumberToPath( lastTurn, pathPlots[i-1] );
+              table.insert(variations, {lensNameBase.."_Counter", pathInfo.plots[i-1]} );                -- show counter pip
+              UI.AddNumberToPath( lastTurn, pathInfo.plots[i-1] );
               pathHole[i-1]=false;
             end
             lastTurn = value;
           end
-          if i == table.count(turnsList) and i > 1 then
-            table.insert(variations, {lensNameBase.."_Counter", pathPlots[i]} );                -- show counter pip
-            UI.AddNumberToPath( lastTurn, pathPlots[i] );
+          if i == table.count(pathInfo.turns) and i > 1 then
+            table.insert(variations, {lensNameBase.."_Counter", pathInfo.plots[i]} );                -- show counter pip
+            UI.AddNumberToPath( lastTurn, pathInfo.plots[i] );
             if lastTurn == 2 then
               if m_previousTurnsCount == 1 then
                 UI.PlaySound("UI_Multi_Turn_Movement_Alert");
@@ -948,17 +968,17 @@ function RealizeMovementPath(showQueuedPath:boolean, unitID:number)
 
         -- Any obstacles? (e.g., rivers)
         if not showQueuedPath then
-        local plotIndex:number = 1;
-        for i,value in pairs(obstacles) do
-          while( pathPlots[plotIndex] ~= value ) do plotIndex = plotIndex + 1; end  -- Get ID to use for river's next plot
-          table.insert(variations, {lensNameBase.."_Minus", value, pathPlots[plotIndex+1]} );
-        end
+          local plotIndex:number = 1;
+          for i,value in pairs(pathInfo.obstacles) do
+            while( pathInfo.plots[plotIndex] ~= value ) do plotIndex = plotIndex + 1; end  -- Get ID to use for river's next plot
+            table.insert(variations, {lensNameBase.."_Minus", value, pathInfo.plots[plotIndex+1]} );
+          end
         end
 
         -- Any variations not filled in earlier (holes), are filled in with Pips
         for i,isHole in pairs(pathHole) do
           if isHole then
-            table.insert(variations, {lensNameBase.."_Pip", pathPlots[i]} );    -- non-counter pip
+            table.insert(variations, {lensNameBase.."_Pip", pathInfo.plots[i]} );    -- non-counter pip
           end
         end
       end
@@ -971,15 +991,41 @@ function RealizeMovementPath(showQueuedPath:boolean, unitID:number)
           UILens.SetActive("MovementBad");
           lensNameBase = "MovementBad";
         end
-        table.insert(pathPlots, endPlotId);
+        table.insert(pathInfo.plots, endPlotId);
         table.insert(variations, {"MovementBad_Destination", endPlotId} );
       else
-        table.insert(pathPlots, endPlotId);
+        table.insert(pathInfo.plots, endPlotId);
         table.insert(variations, {"MovementGood_Destination", endPlotId} );
       end
     end
 
-    UILens.SetLayerHexesPath(LensLayers.MOVEMENT_PATH, eLocalPlayer, pathPlots, variations);
+    -- Handle mountain tunnels
+    -- TODO consider adding variations for entering/exiting portals
+    local pPathSegment = { };
+    for i,plot in pairs(pathInfo.plots) do
+
+      -- Prepend an exit portal if one exists
+      local pExit = pathInfo.exitPortals[i];
+      if (pExit and pExit >= 0) then
+        table.insert(pPathSegment, pExit);
+      end
+
+      -- Add the next plot to the segment
+      table.insert(pPathSegment, plot);
+
+      -- Append an entrance portal if one exists
+      local pEntrance = pathInfo.entrancePortals[i];
+      if (pEntrance and pEntrance >= 0) then
+        table.insert(pPathSegment, pEntrance);
+
+        -- Submit the segment so far and start a new segment
+        UILens.SetLayerHexesPath(g_MovementPath, eLocalPlayer, pPathSegment, { });
+        pPathSegment = { };
+      end
+    end
+
+    -- Submit the final segment
+    UILens.SetLayerHexesPath(g_MovementPath, eLocalPlayer, pPathSegment, variations);
   end
 end
 
@@ -1285,18 +1331,28 @@ end
 --
 -- .,;/^`'^\:,.,;/^`'^\:,.,;/^`'^\:,.,;/^`'^\:,.,;/^`'^\:,.,;/^`'^\:,.,;/^`'^\:,.,;/^`'^\:,
 
+-- ===========================================================================
+function OnBlockInput()
+  m_isInputBlocked = true;
+end
+
+-- ===========================================================================
+function OnUnblockInput()
+  m_isInputBlocked = false;
+  ClearAllCachedInputState();
+end
 
 -- ===========================================================================
 function OnDefaultKeyDown( pInputStruct:table )
-  if m_isPauseMenuOpen then return; end
-  local uiKey     :number = pInputStruct:GetKey();
+  if m_isInputBlocked then return; end
+  local uiKey      :number = pInputStruct:GetKey();
   return DefaultKeyDownHandler( uiKey );
 end
 
 -- ===========================================================================
 function OnDefaultKeyUp( pInputStruct:table )
-  if m_isPauseMenuOpen then return; end
-  local uiKey     :number = pInputStruct:GetKey();
+  if m_isInputBlocked then return; end
+  local uiKey      :number = pInputStruct:GetKey();
   return DefaultKeyUpHandler( uiKey );
 end
 
@@ -1304,8 +1360,8 @@ end
 --  Placing a building, wonder, or district; ESC to leave
 -- ===========================================================================
 function OnPlacementKeyUp( pInputStruct:table )
-  if m_isPauseMenuOpen then return; end
-  local uiKey     :number = pInputStruct:GetKey();
+  if m_isInputBlocked then return; end
+  local uiKey      :number = pInputStruct:GetKey();
   if uiKey == Keys.VK_ESCAPE then
     UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
     return true;
@@ -1415,6 +1471,10 @@ function OnMouseSelectionMove( pInputStruct:table )
     UpdateDragMap();
     return true;
   else
+    if m_isMouseButtonRDown then
+
+    end
+
     if m_isMouseButtonLDown then
       -- A mouse button is down but isn't currently marked for "dragging",
       -- do some maths to see if this is actually a drag state.
@@ -1565,6 +1625,7 @@ function OnMouseMakeTradeRouteEnd( pInputStruct:table )
   else
     local plotId:number = UI.GetCursorPlotID();
     if (Map.IsPlot(plotId)) then
+      UI.PlaySound("Play_UI_Click");
       LuaEvents.WorldInput_MakeTradeRouteDestination( plotId );
     end
   end
@@ -1679,7 +1740,7 @@ function OnMouseMoveRangeAttack( pInputStruct:table )
   if (Map.IsPlot(plotID)) then
     if m_focusedTargetPlot ~= plotID then
       if m_focusedTargetPlot ~= -1 then
-        UILens.UnFocusHex(LensLayers.ATTACK_RANGE, m_focusedTargetPlot);
+        UILens.UnFocusHex(g_AttackRange, m_focusedTargetPlot);
         m_focusedTargetPlot = -1;
       end
 
@@ -1694,7 +1755,7 @@ function OnMouseMoveRangeAttack( pInputStruct:table )
 
         if bPlotIsTarget then
           m_focusedTargetPlot = plotID;
-          UILens.FocusHex(LensLayers.ATTACK_RANGE, plotID);
+          UILens.FocusHex(g_AttackRange, plotID);
         end
       end
     end
@@ -2068,7 +2129,7 @@ function OnInterfaceModeChange_UnitRangeAttack(eNewMode)
   if (pSelectedUnit ~= nil) then
 
     if m_focusedTargetPlot ~= -1 then
-      UILens.UnFocusHex(LensLayers.ATTACK_RANGE, m_focusedTargetPlot);
+      UILens.UnFocusHex(g_AttackRange, m_focusedTargetPlot);
       m_focusedTargetPlot = -1;
     end
 
@@ -2093,7 +2154,7 @@ function OnInterfaceModeChange_UnitRangeAttack(eNewMode)
         end
         local eLocalPlayer:number = Game.GetLocalPlayer();
 
-        UILens.SetLayerHexesArea(LensLayers.ATTACK_RANGE, eLocalPlayer, allPlots, kVariations);
+        UILens.SetLayerHexesArea(g_AttackRange, eLocalPlayer, allPlots, kVariations);
       end
     end
   end
@@ -2101,7 +2162,7 @@ end
 
 -------------------------------------------------------------------------------
 function OnInterfaceModeLeave_UnitRangeAttack(eNewMode)
-  UILens.ClearLayerHexes( LensLayers.ATTACK_RANGE );
+  UILens.ClearLayerHexes( g_AttackRange );
 end
 
 -- ===========================================================================
@@ -2161,8 +2222,8 @@ function OnInterfaceModeChange_Air_Attack(eNewMode)
       -- Highlight the plots available to attack
       if (table.count(g_targetPlots) ~= 0) then
         local eLocalPlayer:number = Game.GetLocalPlayer();
-        UILens.ToggleLayerOn(LensLayers.HEX_COLORING_ATTACK);
-        UILens.SetLayerHexesArea(LensLayers.HEX_COLORING_ATTACK, eLocalPlayer, g_targetPlots);
+        UILens.ToggleLayerOn(g_HexColoringAttack);
+        UILens.SetLayerHexesArea(g_HexColoringAttack, eLocalPlayer, g_targetPlots);
       end
     end
   end
@@ -2171,8 +2232,8 @@ end
 ---------------------------------------------------------------------------------
 function OnInterfaceModeLeave_Air_Attack( eNewMode:number )
   UIManager:SetUICursor(CursorTypes.NORMAL);
-  UILens.ToggleLayerOff( LensLayers.HEX_COLORING_ATTACK );
-  UILens.ClearLayerHexes( LensLayers.HEX_COLORING_ATTACK );
+  UILens.ToggleLayerOff( g_HexColoringAttack );
+  UILens.ClearLayerHexes( g_HexColoringAttack );
 end
 
 -- ===========================================================================
@@ -2235,7 +2296,7 @@ function OnInterfaceModeChange_WMD_Strike(eNewMode)
   local pSelectedUnit = UI.GetHeadSelectedUnit();
   if (pSelectedUnit ~= nil) then
     if m_focusedTargetPlot ~= -1 then
-      UILens.UnFocusHex(LensLayers.ATTACK_RANGE, m_focusedTargetPlot);
+      UILens.UnFocusHex(g_AttackRange, m_focusedTargetPlot);
       m_focusedTargetPlot = -1;
     end
     local sourcePlot : number =  Map.GetPlot(pSelectedUnit:GetX(),pSelectedUnit:GetY()):GetIndex();
@@ -2259,8 +2320,8 @@ function OnInterfaceModeChange_WMD_Strike(eNewMode)
           table.insert(kVariations, {"AttackRange_Target", sourcePlot, plotId} );
         end
         local eLocalPlayer:number = Game.GetLocalPlayer();
-        UILens.ToggleLayerOn(LensLayers.HEX_COLORING_ATTACK);
-        UILens.SetLayerHexesArea(LensLayers.HEX_COLORING_ATTACK, eLocalPlayer, g_targetPlots, kVariations);
+        UILens.ToggleLayerOn(g_HexColoringAttack);
+        UILens.SetLayerHexesArea(g_HexColoringAttack, eLocalPlayer, g_targetPlots, kVariations);
       end
     end
   end
@@ -2269,8 +2330,8 @@ end
 -------------------------------------------------------------------------------
 function OnInterfaceModeLeave_WMD_Strike( eNewMode:number )
   UIManager:SetUICursor(CursorTypes.NORMAL);
-  UILens.ToggleLayerOff( LensLayers.HEX_COLORING_ATTACK );
-  UILens.ClearLayerHexes( LensLayers.HEX_COLORING_ATTACK );
+  UILens.ToggleLayerOff( g_HexColoringAttack );
+  UILens.ClearLayerHexes( g_HexColoringAttack );
 end
 
 -- ===========================================================================
@@ -2340,7 +2401,7 @@ function OnInterfaceModeChange_ICBM_Strike(eNewMode)
 
   if (pCity ~= nil) then
     if m_focusedTargetPlot ~= -1 then
-      UILens.UnFocusHex(LensLayers.ATTACK_RANGE, m_focusedTargetPlot);
+      UILens.UnFocusHex(g_AttackRange, m_focusedTargetPlot);
       m_focusedTargetPlot = -1;
     end
     local eWMD = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_WMD_TYPE);
@@ -2369,8 +2430,8 @@ function OnInterfaceModeChange_ICBM_Strike(eNewMode)
           table.insert(kVariations, {"AttackRange_Target", sourcePlot , plotId} );
         end
         local eLocalPlayer:number = Game.GetLocalPlayer();
-        UILens.ToggleLayerOn(LensLayers.HEX_COLORING_ATTACK);
-        UILens.SetLayerHexesArea(LensLayers.HEX_COLORING_ATTACK, eLocalPlayer, g_targetPlots, kVariations);
+        UILens.ToggleLayerOn(g_HexColoringAttack);
+        UILens.SetLayerHexesArea(g_HexColoringAttack, eLocalPlayer, g_targetPlots, kVariations);
       end
     else
       UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
@@ -2381,8 +2442,8 @@ end
 ---------------------------------------------------------------------------------
 function OnInterfaceModeLeave_ICBM_Strike( eNewMode:number )
   UIManager:SetUICursor(CursorTypes.NORMAL);
-  UILens.ToggleLayerOff( LensLayers.HEX_COLORING_ATTACK );
-  UILens.ClearLayerHexes( LensLayers.HEX_COLORING_ATTACK );
+  UILens.ToggleLayerOff( g_HexColoringAttack );
+  UILens.ClearLayerHexes( g_HexColoringAttack );
 end
 
 -- ===========================================================================
@@ -2433,8 +2494,8 @@ function OnInterfaceModeChange_CoastalRaid(eNewMode)
       -- Highlight the plots available to attack
       if (table.count(g_targetPlots) ~= 0) then
         local eLocalPlayer:number = Game.GetLocalPlayer();
-        UILens.ToggleLayerOn(LensLayers.HEX_COLORING_ATTACK);
-        UILens.SetLayerHexesArea(LensLayers.HEX_COLORING_ATTACK, eLocalPlayer, g_targetPlots);
+        UILens.ToggleLayerOn(g_HexColoringAttack);
+        UILens.SetLayerHexesArea(g_HexColoringAttack, eLocalPlayer, g_targetPlots);
       end
     end
   end
@@ -2443,8 +2504,8 @@ end
 ---------------------------------------------------------------------------------
 function OnInterfaceModeLeave_CoastalRaid( eNewMode:number )
   UIManager:SetUICursor(CursorTypes.NORMAL);
-  UILens.ToggleLayerOff( LensLayers.HEX_COLORING_ATTACK );
-  UILens.ClearLayerHexes( LensLayers.HEX_COLORING_ATTACK );
+  UILens.ToggleLayerOff( g_HexColoringAttack );
+  UILens.ClearLayerHexes( g_HexColoringAttack );
 end
 
 -- ===========================================================================
@@ -2501,8 +2562,8 @@ function OnInterfaceModeChange_Deploy(eNewMode)
       -- Highlight the plots available to deploy to
       if (table.count(g_targetPlots) ~= 0) then
         local eLocalPlayer:number = Game.GetLocalPlayer();
-        UILens.ToggleLayerOn(LensLayers.HEX_COLORING_MOVEMENT);
-        UILens.SetLayerHexesArea(LensLayers.HEX_COLORING_MOVEMENT, eLocalPlayer, g_targetPlots);
+        UILens.ToggleLayerOn(g_HexColoringMovement);
+        UILens.SetLayerHexesArea(g_HexColoringMovement, eLocalPlayer, g_targetPlots);
       end
     end
   end
@@ -2511,8 +2572,8 @@ end
 ---------------------------------------------------------------------------------
 function OnInterfaceModeLeave_Deploy( eNewMode:number )
   UIManager:SetUICursor(CursorTypes.NORMAL);
-  UILens.ToggleLayerOff( LensLayers.HEX_COLORING_MOVEMENT );
-  UILens.ClearLayerHexes( LensLayers.HEX_COLORING_MOVEMENT );
+  UILens.ToggleLayerOff( g_HexColoringMovement );
+  UILens.ClearLayerHexes( g_HexColoringMovement );
 end
 
 -- ===========================================================================
@@ -2567,8 +2628,8 @@ function OnInterfaceModeChange_ReBase(eNewMode)
       -- Highlight the plots available to deploy to
       if (table.count(g_targetPlots) ~= 0) then
         local eLocalPlayer:number = Game.GetLocalPlayer();
-        UILens.ToggleLayerOn(LensLayers.HEX_COLORING_MOVEMENT);
-        UILens.SetLayerHexesArea(LensLayers.HEX_COLORING_MOVEMENT, eLocalPlayer, g_targetPlots);
+        UILens.ToggleLayerOn(g_HexColoringMovement);
+        UILens.SetLayerHexesArea(g_HexColoringMovement, eLocalPlayer, g_targetPlots);
       end
     end
   end
@@ -2577,8 +2638,8 @@ end
 ---------------------------------------------------------------------------------
 function OnInterfaceModeLeave_ReBase( eNewMode:number )
   UIManager:SetUICursor(CursorTypes.NORMAL);
-  UILens.ToggleLayerOff( LensLayers.HEX_COLORING_MOVEMENT );
-  UILens.ClearLayerHexes( LensLayers.HEX_COLORING_MOVEMENT );
+  UILens.ToggleLayerOff( g_HexColoringMovement );
+  UILens.ClearLayerHexes( g_HexColoringMovement );
 end
 
 -- ===========================================================================
@@ -2627,7 +2688,7 @@ function OnInterfaceModeChange_CityRangeAttack(eNewMode)
   if (pSelectedCity ~= nil) then
 
     if m_focusedTargetPlot ~= -1 then
-      UILens.UnFocusHex(LensLayers.ATTACK_RANGE, m_focusedTargetPlot);
+      UILens.UnFocusHex(g_AttackRange, m_focusedTargetPlot);
       m_focusedTargetPlot = -1;
     end
 
@@ -2655,7 +2716,7 @@ function OnInterfaceModeChange_CityRangeAttack(eNewMode)
         end
         local eLocalPlayer:number = Game.GetLocalPlayer();
 
-        UILens.SetLayerHexesArea(LensLayers.ATTACK_RANGE, eLocalPlayer, allPlots, kVariations);
+        UILens.SetLayerHexesArea(g_AttackRange, eLocalPlayer, allPlots, kVariations);
 
       end
     end
@@ -2664,7 +2725,7 @@ end
 
 -------------------------------------------------------------------------------
 function OnInterfaceModeLeave_CityRangeAttack(eNewMode)
-  UILens.ClearLayerHexes( LensLayers.ATTACK_RANGE );
+  UILens.ClearLayerHexes( g_AttackRange );
 end
 
 -------------------------------------------------------------------------------
@@ -2697,7 +2758,7 @@ function OnInterfaceModeChange_DistrictRangeAttack(eNewMode)
   if (pSelectedDistrict ~= nil) then
 
     if m_focusedTargetPlot ~= -1 then
-      UILens.UnFocusHex(LensLayers.ATTACK_RANGE, m_focusedTargetPlot);
+      UILens.UnFocusHex(g_AttackRange, m_focusedTargetPlot);
       m_focusedTargetPlot = -1;
     end
 
@@ -2726,7 +2787,7 @@ function OnInterfaceModeChange_DistrictRangeAttack(eNewMode)
         end
         local eLocalPlayer:number = Game.GetLocalPlayer();
 
-        UILens.SetLayerHexesArea(LensLayers.ATTACK_RANGE, eLocalPlayer, allPlots, kVariations);
+        UILens.SetLayerHexesArea(g_AttackRange, eLocalPlayer, allPlots, kVariations);
 
       end
     end
@@ -2735,12 +2796,12 @@ end
 
 -------------------------------------------------------------------------------
 function OnInterfaceModeLeave_DistrictRangeAttack(eNewMode)
-  UILens.ClearLayerHexes( LensLayers.ATTACK_RANGE );
+  UILens.ClearLayerHexes( g_AttackRange );
 end
 
 -------------------------------------------------------------------------------
 function OnInterfaceModeLeave_WMDRangeAttack(eNewMode)
-  UILens.ClearLayerHexes( LensLayers.ATTACK_RANGE );
+  UILens.ClearLayerHexes( g_AttackRange );
 end
 
 ------------------------------------------------------------------------------------------------
@@ -2792,8 +2853,8 @@ function OnInterfaceModeChange_TeleportToCity(eNewMode)
       -- Highlight the plots available to deploy to
       if (table.count(g_targetPlots) ~= 0) then
         local eLocalPlayer:number = Game.GetLocalPlayer();
-        UILens.ToggleLayerOn(LensLayers.HEX_COLORING_MOVEMENT);
-        UILens.SetLayerHexesArea(LensLayers.HEX_COLORING_MOVEMENT, eLocalPlayer, g_targetPlots);
+        UILens.ToggleLayerOn(g_HexColoringMovement);
+        UILens.SetLayerHexesArea(g_HexColoringMovement, eLocalPlayer, g_targetPlots);
       end
     end
   end
@@ -2802,8 +2863,8 @@ end
 ---------------------------------------------------------------------------------
 function OnInterfaceModeLeave_TeleportToCity( eNewMode:number )
   UIManager:SetUICursor(CursorTypes.NORMAL);
-  UILens.ToggleLayerOff( LensLayers.HEX_COLORING_MOVEMENT );
-  UILens.ClearLayerHexes( LensLayers.HEX_COLORING_MOVEMENT );
+  UILens.ToggleLayerOff( g_HexColoringMovement );
+  UILens.ClearLayerHexes( g_HexColoringMovement );
 end
 
 -- =============================================================================================
@@ -2846,13 +2907,14 @@ function OnInterfaceModeChange_SpyTravelToCity()
 
 end
 
-function OnInterfaceModeChange_NaturalWonder()
+-- ===========================================================================
+function OnInterfaceModeChange_Cinematic()
   UIManager:SetUICursor(CursorTypes.NORMAL);
   UI.SetFixedTiltMode( true );
 end
 
 -- ===========================================================================
-function OnInterfaceModeLeave_NaturalWonder( eNewMode:number )
+function OnInterfaceModeLeave_Cinematic( eNewMode:number )
   UIManager:SetUICursor(CursorTypes.NORMAL);
   UI.SetFixedTiltMode( false );
   OnCycleUnitSelectionRequest();
@@ -2885,6 +2947,14 @@ function OnRButtonUp_WBSelectPlot( pInputStruct )
 end
 
 -- ===========================================================================
+function OnRButtonDown_WBSelectPlot( pInputStruct )
+  if (Map.IsPlot(UI.GetCursorPlotID())) then
+    LuaEvents.WorldInput_WBSelectPlot(UI.GetCursorPlotID(), UI.GetCursorNearestPlotEdge(), true);
+  end
+  return true;
+end
+
+-- ===========================================================================
 function OnMouseMove_WBSelectPlot( pInputStruct )
 
   -- Check to see if the plot the mouse is over has changed
@@ -2894,6 +2964,10 @@ function OnMouseMove_WBSelectPlot( pInputStruct )
       if mouseOverPlot ~= m_WBMouseOverPlot then
         m_WBMouseOverPlot = mouseOverPlot;
         LuaEvents.WorldInput_WBMouseOverPlot(mouseOverPlot);
+
+        if m_isMouseButtonRDown then
+          LuaEvents.WorldInput_WBSelectPlot(UI.GetCursorPlotID(), UI.GetCursorNearestPlotEdge(), true);
+        end
       end
     end
   end
@@ -2938,8 +3012,8 @@ function OnInterfaceModeChange_UnitFormCorps(eNewMode)
       local unit = Players[player]:GetUnits():FindID(unitComponentID.id);
       table.insert(unitPlots, Map.GetPlotIndex(unit:GetX(), unit:GetY()));
     end
-    UILens.ToggleLayerOn(LensLayers.HEX_COLORING_PLACEMENT);
-    UILens.SetLayerHexesArea(LensLayers.HEX_COLORING_PLACEMENT, player, unitPlots);
+    UILens.ToggleLayerOn(g_HexColoringPlacement);
+    UILens.SetLayerHexesArea(g_HexColoringPlacement, player, unitPlots);
     g_targetPlots = unitPlots;
   end
 end
@@ -2947,8 +3021,8 @@ end
 --------------------------------------------------------------------------------------------------
 function OnInterfaceModeLeave_UnitFormCorps( eNewMode:number )
   UIManager:SetUICursor(CursorTypes.NORMAL);
-  UILens.ToggleLayerOff( LensLayers.HEX_COLORING_PLACEMENT );
-  UILens.ClearLayerHexes( LensLayers.HEX_COLORING_PLACEMENT );
+  UILens.ToggleLayerOff( g_HexColoringPlacement );
+  UILens.ClearLayerHexes( g_HexColoringPlacement );
 end
 
 ------------------------------------------------------------------------------------------------
@@ -2989,8 +3063,8 @@ function OnInterfaceModeChange_UnitFormArmy(eNewMode)
       local unit = Players[player]:GetUnits():FindID(unitComponentID.id);
       table.insert(unitPlots, Map.GetPlotIndex(unit:GetX(), unit:GetY()));
     end
-    UILens.ToggleLayerOn(LensLayers.HEX_COLORING_PLACEMENT);
-    UILens.SetLayerHexesArea(LensLayers.HEX_COLORING_PLACEMENT, player, unitPlots);
+    UILens.ToggleLayerOn(g_HexColoringPlacement);
+    UILens.SetLayerHexesArea(g_HexColoringPlacement, player, unitPlots);
     g_targetPlots = unitPlots;
   end
 end
@@ -2998,8 +3072,8 @@ end
 --------------------------------------------------------------------------------------------------
 function OnInterfaceModeLeave_UnitFormArmy( eNewMode:number )
   UIManager:SetUICursor(CursorTypes.NORMAL);
-  UILens.ToggleLayerOff( LensLayers.HEX_COLORING_PLACEMENT );
-  UILens.ClearLayerHexes( LensLayers.HEX_COLORING_PLACEMENT );
+  UILens.ToggleLayerOff( g_HexColoringPlacement );
+  UILens.ClearLayerHexes( g_HexColoringPlacement );
 end
 
 ------------------------------------------------------------------------------------------------
@@ -3053,16 +3127,16 @@ function OnInterfaceModeChange_UnitAirlift(eNewMode)
     -- Highlight the plots available to airlift to
     if (table.count(g_targetPlots) ~= 0) then
       local eLocalPlayer:number = Game.GetLocalPlayer();
-      UILens.ToggleLayerOn(LensLayers.HEX_COLORING_MOVEMENT);
-      UILens.SetLayerHexesArea(LensLayers.HEX_COLORING_MOVEMENT, eLocalPlayer, g_targetPlots);
+      UILens.ToggleLayerOn(g_HexColoringMovement);
+      UILens.SetLayerHexesArea(g_HexColoringMovement, eLocalPlayer, g_targetPlots);
     end
   end
 end
 --------------------------------------------------------------------------------------------------
 function OnInterfaceModeLeave_UnitAirlift( eNewMode:number )
   UIManager:SetUICursor(CursorTypes.NORMAL);
-  UILens.ToggleLayerOff( LensLayers.HEX_COLORING_MOVEMENT );
-  UILens.ClearLayerHexes( LensLayers.HEX_COLORING_MOVEMENT );
+  UILens.ToggleLayerOff( g_HexColoringMovement );
+  UILens.ClearLayerHexes( g_HexColoringMovement );
 end
 
 
@@ -3095,7 +3169,7 @@ function OnCycleUnitSelectionRequest()
   --  return;
   --end
 
-  if(UI.GetInterfaceMode() ~= InterfaceModeTypes.NATURAL_WONDER or m_isMouseButtonRDown) then
+  if(UI.GetInterfaceMode() ~= InterfaceModeTypes.CINEMATIC or m_isMouseButtonRDown) then
 
     -- AZURENCY : OnCycleUnitSelectionRequest is called by UI.SetCycleAdvanceTimer()
     -- in SelectedUnit.lua causing a conflict with the auto-cyling of unit
@@ -3115,7 +3189,7 @@ function OnCycleUnitSelectionRequest()
       end
     end
     -- Auto-advance selection to the next unit.
-    -- if not UI.SelectNextReadyUnit() then
+    -- if not UI.SelectClosestReadyUnit() then
     --   UI.DeselectAllUnits();
     -- end
   end
@@ -3154,24 +3228,22 @@ function OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
 end
 
 -- ===========================================================================
---  ENGINE Event
+--  TODO: Move out of WorldInput
 -- ===========================================================================
-function IsEndGameMenuShown()
-  local endGameShown = false;
-  local endGameContext = ContextPtr:LookUpControl("/InGame/EndGameMenu");
-  if(endGameContext) then
-    endGameShown = not endGameContext:IsHidden();
-  end
-  return endGameShown;
+function IsEndGame()
+  return Game.GetWinningTeam() ~= nil;  -- Not great, direct game core call. :/
 end
 
+-- ===========================================================================
+--  TODO: Move out of WorldInput
+-- ===========================================================================
 function OnMultiplayerGameLastPlayer()
   -- Only show the last player popup in multiplayer games where the session is a going concern
   if(GameConfiguration.IsNetworkMultiplayer()
   and not Network.IsSessionInCloseState()
   -- suppress popup when the end game screen is up.
   -- This specifically prevents a turn spinning issue that can occur if the host migrates to a dead human player on the defeated screen. TTP 18902
-  and not IsEndGameMenuShown()) then
+  and not IsEndGame()) then
     local lastPlayerStr = Locale.Lookup( "TXT_KEY_MP_LAST_PLAYER" );
     local lastPlayerTitleStr = Locale.Lookup( "TXT_KEY_MP_LAST_PLAYER_TITLE" );
     local okStr = Locale.Lookup( "LOC_OK_BUTTON" );
@@ -3187,25 +3259,53 @@ end
 --  ENGINE Event
 -- ===========================================================================
 function OnMultiplayerGameAbandoned(eReason)
-  if(GameConfiguration.IsNetworkMultiplayer()) then
+  if(GameConfiguration.IsAnyMultiplayer()) then
     local errorStr = Locale.Lookup( "LOC_GAME_ABANDONED_CONNECTION_LOST" );
+    local errorTitle = Locale.Lookup( "LOC_GAME_ABANDONED_CONNECTION_LOST_TITLE" );
     local exitStr = Locale.Lookup( "LOC_GAME_MENU_EXIT_TO_MAIN" );
 
     -- Select error message based on KickReason.
     -- Not all of these should be possible while in game but we include them anyway.
     if (eReason == KickReason.KICK_HOST) then
       errorStr = Locale.Lookup( "LOC_GAME_ABANDONED_KICKED" );
+      errorTitle = Locale.Lookup( "LOC_GAME_ABANDONED_KICKED_TITLE" );
     elseif (eReason == KickReason.KICK_NO_HOST) then
       errorStr = Locale.Lookup( "LOC_GAME_ABANDONED_HOST_LOSTED" );
+      errorTitle = Locale.Lookup( "LOC_GAME_ABANDONED_HOST_LOSTED_TITLE" );
     elseif (eReason == KickReason.KICK_NO_ROOM) then
       errorStr = Locale.Lookup( "LOC_GAME_ABANDONED_ROOM_FULL" );
+      errorTitle = Locale.Lookup( "LOC_GAME_ABANDONED_ROOM_FULL_TITLE" );
     elseif (eReason == KickReason.KICK_VERSION_MISMATCH) then
       errorStr = Locale.Lookup( "LOC_GAME_ABANDONED_VERSION_MISMATCH" );
+      errorTitle = Locale.Lookup( "LOC_GAME_ABANDONED_VERSION_MISMATCH_TITLE" );
     elseif (eReason == KickReason.KICK_MOD_ERROR) then
       errorStr = Locale.Lookup( "LOC_GAME_ABANDONED_MOD_ERROR" );
+      errorTitle = Locale.Lookup( "LOC_GAME_ABANDONED_MOD_ERROR_TITLE" );
+    elseif (eReason == KickReason.KICK_MATCH_DELETED) then
+      errorStr = Locale.Lookup( "LOC_GAME_ABANDONED_MATCH_DELETED" );
+      errorTitle = Locale.Lookup( "LOC_GAME_ABANDONED_MATCH_DELETED_TITLE" );
     end
 
     local pPopupDialog :table = PopupDialogInGame:new("PlayerKicked");
+    pPopupDialog:AddTitle(errorTitle);
+    pPopupDialog:AddText(errorStr);
+    pPopupDialog:AddDefaultButton(exitStr,
+      function()
+        Events.ExitToMainMenu();
+      end);
+    pPopupDialog:Open();
+  end
+end
+
+function OnMatchEndTurnComplete( success:boolean, resultCode:number )
+  if( success == false ) then
+    -- Something went wrong while trying to commit a PlayByCloud turn.  Display a generic popup and get us out of here.
+    local errorStr = Locale.Lookup( "LOC_GAME_CLOUD_END_TURN_FAILED", resultCode);
+    local errorTitle = Locale.Lookup( "LOC_GAME_CLOUD_END_TURN_FAILED_TITLE" );
+    local exitStr = Locale.Lookup( "LOC_GAME_MENU_EXIT_TO_MAIN" );
+
+    local pPopupDialog :table = PopupDialogInGame:new("TurnCommitFailed");
+    pPopupDialog:AddTitle(errorTitle);
     pPopupDialog:AddText(errorStr);
     pPopupDialog:AddDefaultButton(exitStr,
       function()
@@ -3445,6 +3545,14 @@ end
 
 
 -- ===========================================================================
+function OnUpdateUI( type:number, tag:string, iData1:number, iData2:number, strData1:string )
+  if type == SystemUpdateUI.TouchInputChanged then
+    g_isTouchEnabled = Options.GetAppOption("UI", "IsTouchScreenEnabled") ~= 0;
+  end
+end
+
+
+-- ===========================================================================
 --  UI Event
 --  Called whenever the application regains focus.
 -- ===========================================================================
@@ -3461,6 +3569,228 @@ end
 function OnAppLostFocusHandler()
   ClearAllCachedInputState();
   ProcessPan(0,0);
+end
+
+-- ===========================================================================
+--  UI Event
+-- ===========================================================================
+function LateInitialize()
+
+  g_isTouchEnabled = Options.GetAppOption("UI", "IsTouchScreenEnabled") ~= 0;
+
+  -- Input assignments.
+
+  -- Default handlers:
+  DefaultMessageHandler[KeyEvents.KeyDown]                            = OnDefaultKeyDown;
+  DefaultMessageHandler[KeyEvents.KeyUp]                              = OnDefaultKeyUp;
+  DefaultMessageHandler[MouseEvents.LButtonDown]                          = OnMouseStart;
+  DefaultMessageHandler[MouseEvents.LButtonUp]                          = OnMouseEnd;
+  DefaultMessageHandler[MouseEvents.MouseMove]                          = OnMouseMove;
+  DefaultMessageHandler[MouseEvents.RButtonUp]                          = OnDefaultChangeToSelectionMode;
+  DefaultMessageHandler[MouseEvents.PointerUp]                          = OnDefaultChangeToSelectionMode;
+  DefaultMessageHandler[MouseEvents.MouseWheel]                          = OnMouseWheelZoom;
+  DefaultMessageHandler[MouseEvents.MButtonDown]                          = OnMouseSelectionSnapToPlot;
+
+  -- Interface Mode ENTERING :
+  InterfaceModeMessageHandler[InterfaceModeTypes.AIR_ATTACK]      [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_Air_Attack;
+  InterfaceModeMessageHandler[InterfaceModeTypes.DEBUG]        [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_Debug;
+  InterfaceModeMessageHandler[InterfaceModeTypes.CITY_MANAGEMENT]    [INTERFACEMODE_ENTER]    = OnInterfaceModeEnter_CityManagement;
+  InterfaceModeMessageHandler[InterfaceModeTypes.CINEMATIC]      [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_Cinematic;
+  InterfaceModeMessageHandler[InterfaceModeTypes.WMD_STRIKE]      [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_WMD_Strike;
+  InterfaceModeMessageHandler[InterfaceModeTypes.ICBM_STRIKE]      [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_ICBM_Strike;
+  InterfaceModeMessageHandler[InterfaceModeTypes.COASTAL_RAID]    [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_CoastalRaid;
+  InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]  [INTERFACEMODE_ENTER]    = OnInterfaceModeEnter_BuildingPlacement;  -- StrategicView_MapPlacement.lua
+  InterfaceModeMessageHandler[InterfaceModeTypes.CITY_RANGE_ATTACK]  [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_CityRangeAttack;
+  InterfaceModeMessageHandler[InterfaceModeTypes.DEPLOY]        [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_Deploy;
+  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]  [INTERFACEMODE_ENTER]    = OnInterfaceModeEnter_DistrictPlacement;  -- StrategicView_MapPlacement.lua
+  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_RANGE_ATTACK][INTERFACEMODE_ENTER]    = OnInterfaceModeChange_DistrictRangeAttack;
+  InterfaceModeMessageHandler[InterfaceModeTypes.FORM_ARMY]      [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_UnitFormArmy;
+  InterfaceModeMessageHandler[InterfaceModeTypes.FORM_CORPS]      [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_UnitFormCorps;
+  InterfaceModeMessageHandler[InterfaceModeTypes.AIRLIFT]        [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_UnitAirlift;
+  InterfaceModeMessageHandler[InterfaceModeTypes.MAKE_TRADE_ROUTE]  [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_MakeTradeRoute;
+  InterfaceModeMessageHandler[InterfaceModeTypes.TELEPORT_TO_CITY]  [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_TeleportToCity;
+  InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]        [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_MoveTo;
+  InterfaceModeMessageHandler[InterfaceModeTypes.NATURAL_WONDER]    [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_Cinematic;      -- DEPRECATED mode
+  InterfaceModeMessageHandler[InterfaceModeTypes.RANGE_ATTACK]    [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_UnitRangeAttack;
+  InterfaceModeMessageHandler[InterfaceModeTypes.REBASE]        [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_ReBase;
+  InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]      [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_Selection;
+  InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]        [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_MoveTo;
+  InterfaceModeMessageHandler[InterfaceModeTypes.PLACE_MAP_PIN]    [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_PlaceMapPin;
+  InterfaceModeMessageHandler[InterfaceModeTypes.WB_SELECT_PLOT]    [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_WBSelectPlot;
+  InterfaceModeMessageHandler[InterfaceModeTypes.SPY_CHOOSE_MISSION]  [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_SpyChooseMission;
+  InterfaceModeMessageHandler[InterfaceModeTypes.SPY_TRAVEL_TO_CITY]  [INTERFACEMODE_ENTER]    = OnInterfaceModeChange_SpyTravelToCity;
+
+
+  -- Interface Mode LEAVING (optional):
+  InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]    [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_BuildingPlacement;  -- StrategicView_MapPlacement.lua
+  InterfaceModeMessageHandler[InterfaceModeTypes.CITY_MANAGEMENT]      [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_CityManagement;
+  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]    [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_DistrictPlacement; -- StrategicView_MapPlacement.lua
+  InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]          [INTERFACEMODE_LEAVE]    = OnInterfaceModeChange_MoveToLeave;
+  InterfaceModeMessageHandler[InterfaceModeTypes.RANGE_ATTACK]      [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_UnitRangeAttack;
+  InterfaceModeMessageHandler[InterfaceModeTypes.CINEMATIC]        [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_Cinematic;
+  InterfaceModeMessageHandler[InterfaceModeTypes.NATURAL_WONDER]      [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_Cinematic;      -- DEPRECATED mode
+  InterfaceModeMessageHandler[InterfaceModeTypes.CITY_RANGE_ATTACK]    [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_CityRangeAttack;
+  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_RANGE_ATTACK]  [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_DistrictRangeAttack;
+  InterfaceModeMessageHandler[InterfaceModeTypes.AIR_ATTACK]        [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_Air_Attack;
+  InterfaceModeMessageHandler[InterfaceModeTypes.WMD_STRIKE]        [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_WMD_Strike;
+  InterfaceModeMessageHandler[InterfaceModeTypes.ICBM_STRIKE]        [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_ICBM_Strike;
+  InterfaceModeMessageHandler[InterfaceModeTypes.COASTAL_RAID]      [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_CoastalRaid;
+  InterfaceModeMessageHandler[InterfaceModeTypes.DEPLOY]          [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_Deploy;
+  InterfaceModeMessageHandler[InterfaceModeTypes.REBASE]          [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_ReBase;
+  InterfaceModeMessageHandler[InterfaceModeTypes.TELEPORT_TO_CITY]    [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_TeleportToCity;
+  InterfaceModeMessageHandler[InterfaceModeTypes.FORM_CORPS]        [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_UnitFormCorps;
+  InterfaceModeMessageHandler[InterfaceModeTypes.FORM_ARMY]        [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_UnitFormArmy;
+  InterfaceModeMessageHandler[InterfaceModeTypes.AIRLIFT]          [INTERFACEMODE_LEAVE]    = OnInterfaceModeLeave_UnitAirlift;
+
+  -- Keyboard Events (all happen on up!)
+  InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]    [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.CITY_MANAGEMENT]      [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]    [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]          [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.RANGE_ATTACK]      [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.NATURAL_WONDER]      [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.CINEMATIC]        [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.CITY_RANGE_ATTACK]    [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_RANGE_ATTACK]  [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.WMD_STRIKE]        [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.ICBM_STRIKE]        [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.AIR_ATTACK]        [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.COASTAL_RAID]      [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.DEPLOY]          [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.REBASE]          [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.TELEPORT_TO_CITY]    [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.FORM_CORPS]        [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.FORM_ARMY]        [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+  InterfaceModeMessageHandler[InterfaceModeTypes.AIRLIFT]          [KeyEvents.KeyUp]    = OnPlacementKeyUp;
+
+
+  -- Mouse Events
+  InterfaceModeMessageHandler[InterfaceModeTypes.DEBUG]        [MouseEvents.LButtonUp]    = OnMouseDebugEnd;
+  InterfaceModeMessageHandler[InterfaceModeTypes.DEBUG]        [MouseEvents.RButtonUp]    = OnDebugCancelPlacement;
+  InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]      [MouseEvents.LButtonUp]    = OnMouseSelectionEnd;
+  InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]      [MouseEvents.RButtonDown]  = OnMouseSelectionUnitMoveStart;
+  InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]      [MouseEvents.RButtonUp]    = OnMouseSelectionUnitMoveEnd;
+  InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]      [MouseEvents.MButtonDown]  = OnMouseSelectionSnapToPlot;
+  InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]      [MouseEvents.MouseMove]    = OnMouseSelectionMove;
+  InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]      [MouseEvents.LButtonDoubleClick] = OnSelectionDoubleTap;
+  InterfaceModeMessageHandler[InterfaceModeTypes.VIEW_MODAL_LENS]    [MouseEvents.LButtonUp]    = OnMouseSelectionEnd;
+  InterfaceModeMessageHandler[InterfaceModeTypes.MAKE_TRADE_ROUTE]  [MouseEvents.LButtonUp]    = OnMouseMakeTradeRouteEnd;
+  InterfaceModeMessageHandler[InterfaceModeTypes.MAKE_TRADE_ROUTE]  [MouseEvents.MButtonDown]  = OnMouseMakeTradeRouteSnapToPlot;
+  InterfaceModeMessageHandler[InterfaceModeTypes.TELEPORT_TO_CITY]  [MouseEvents.LButtonUp]    = OnMouseTeleportToCityEnd;
+  InterfaceModeMessageHandler[InterfaceModeTypes.TELEPORT_TO_CITY]  [MouseEvents.MButtonDown]  = OnMouseTeleportToCitySnapToPlot;
+  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]  [MouseEvents.LButtonUp]    = OnMouseDistrictPlacementEnd;
+  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]  [MouseEvents.RButtonUp]    = OnMouseDistrictPlacementCancel;
+  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]  [MouseEvents.MouseMove]    = OnMouseDistrictPlacementMove;
+  InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]        [MouseEvents.LButtonDown]  = OnMouseMoveToStart;
+  InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]        [MouseEvents.LButtonUp]    = OnMouseMoveToEnd;
+  InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]        [MouseEvents.MouseMove]    = OnMouseMoveToUpdate;
+  InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]        [MouseEvents.RButtonUp]    = OnMouseMoveToCancel;
+  InterfaceModeMessageHandler[InterfaceModeTypes.RANGE_ATTACK]    [MouseEvents.LButtonUp]    = OnMouseUnitRangeAttack;
+  InterfaceModeMessageHandler[InterfaceModeTypes.RANGE_ATTACK]    [MouseEvents.MouseMove]    = OnMouseMoveRangeAttack;
+  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_RANGE_ATTACK][MouseEvents.MouseMove]  = OnMouseMoveRangeAttack;
+  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_RANGE_ATTACK][MouseEvents.LButtonUp]  = DistrictRangeAttack;
+  InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]  [MouseEvents.LButtonUp]    = OnMouseBuildingPlacementEnd;
+  InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]  [MouseEvents.RButtonUp]    = OnMouseBuildingPlacementCancel;
+  InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]  [MouseEvents.MouseMove]    = OnMouseBuildingPlacementMove;
+  InterfaceModeMessageHandler[InterfaceModeTypes.CITY_RANGE_ATTACK]  [MouseEvents.LButtonUp]    = CityRangeAttack;
+  InterfaceModeMessageHandler[InterfaceModeTypes.CITY_RANGE_ATTACK]  [MouseEvents.MouseMove]    = OnMouseMoveRangeAttack;
+  InterfaceModeMessageHandler[InterfaceModeTypes.FORM_CORPS]      [MouseEvents.LButtonUp]    = FormCorps;
+  InterfaceModeMessageHandler[InterfaceModeTypes.FORM_ARMY]      [MouseEvents.LButtonUp]    = FormArmy;
+  InterfaceModeMessageHandler[InterfaceModeTypes.AIRLIFT]        [MouseEvents.LButtonUp]    = OnMouseAirliftEnd;
+  InterfaceModeMessageHandler[InterfaceModeTypes.AIR_ATTACK]      [MouseEvents.LButtonUp]    = UnitAirAttack;
+  InterfaceModeMessageHandler[InterfaceModeTypes.WMD_STRIKE]      [MouseEvents.LButtonUp]    = OnWMDStrikeEnd;
+  InterfaceModeMessageHandler[InterfaceModeTypes.WMD_STRIKE]      [MouseEvents.MouseMove]    = OnMouseMoveRangeAttack;
+  InterfaceModeMessageHandler[InterfaceModeTypes.ICBM_STRIKE]      [MouseEvents.LButtonUp]    = OnICBMStrikeEnd;
+  InterfaceModeMessageHandler[InterfaceModeTypes.ICBM_STRIKE]      [MouseEvents.MouseMove]    = OnMouseMoveRangeAttack;
+  InterfaceModeMessageHandler[InterfaceModeTypes.DEPLOY]        [MouseEvents.LButtonUp]    = OnMouseDeployEnd;
+  InterfaceModeMessageHandler[InterfaceModeTypes.REBASE]        [MouseEvents.LButtonUp]    = OnMouseRebaseEnd;
+  InterfaceModeMessageHandler[InterfaceModeTypes.COASTAL_RAID]    [MouseEvents.LButtonUp]    = CoastalRaid;
+  InterfaceModeMessageHandler[InterfaceModeTypes.PLACE_MAP_PIN]    [MouseEvents.LButtonUp]    = PlaceMapPin;
+  InterfaceModeMessageHandler[InterfaceModeTypes.WB_SELECT_PLOT]    [MouseEvents.LButtonUp]    = OnMouseEnd_WBSelectPlot;
+  InterfaceModeMessageHandler[InterfaceModeTypes.WB_SELECT_PLOT]    [MouseEvents.RButtonUp]    = OnRButtonUp_WBSelectPlot;
+  InterfaceModeMessageHandler[InterfaceModeTypes.WB_SELECT_PLOT]    [MouseEvents.RButtonDown]    = OnRButtonDown_WBSelectPlot;
+  InterfaceModeMessageHandler[InterfaceModeTypes.WB_SELECT_PLOT]    [MouseEvents.MouseMove]    = OnMouseMove_WBSelectPlot;
+
+  -- Touch Events (if a touch system)
+  if g_isTouchEnabled then
+    InterfaceModeMessageHandler[InterfaceModeTypes.DEBUG]        [MouseEvents.PointerDown]  = OnTouchStart;
+    InterfaceModeMessageHandler[InterfaceModeTypes.DEBUG]        [MouseEvents.PointerUpdate] = OnTouchUpdate;
+    InterfaceModeMessageHandler[InterfaceModeTypes.DEBUG]        [MouseEvents.PointerUp]    = OnTouchDebugEnd;
+    InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]      [MouseEvents.PointerDown]  = OnTouchSelectionStart;
+    InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]      [MouseEvents.PointerUpdate] = OnTouchSelectionUpdate;
+    InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]      [MouseEvents.PointerUp]    = OnTouchSelectionEnd;
+    InterfaceModeMessageHandler[InterfaceModeTypes.MAKE_TRADE_ROUTE]  [MouseEvents.PointerDown]  = OnTouchStart;
+    InterfaceModeMessageHandler[InterfaceModeTypes.MAKE_TRADE_ROUTE]  [MouseEvents.PointerUpdate] = OnTouchUpdate;
+    InterfaceModeMessageHandler[InterfaceModeTypes.MAKE_TRADE_ROUTE]  [MouseEvents.PointerUp]    = OnTouchTradeRouteEnd;
+    InterfaceModeMessageHandler[InterfaceModeTypes.TELEPORT_TO_CITY]  [MouseEvents.PointerDown]  = OnTouchStart;
+    InterfaceModeMessageHandler[InterfaceModeTypes.TELEPORT_TO_CITY]  [MouseEvents.PointerUpdate] = OnTouchUpdate;
+    InterfaceModeMessageHandler[InterfaceModeTypes.TELEPORT_TO_CITY]  [MouseEvents.PointerUp]    = OnTouchTeleportToCityEnd;
+    InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]  [MouseEvents.PointerDown]  = OnTouchStart;
+    InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]  [MouseEvents.PointerUpdate]  = OnTouchUpdate;
+    InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]  [MouseEvents.PointerUp]    = OnTouchDistrictPlacementEnd;
+    InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]        [MouseEvents.PointerDown]  = OnTouchMoveToStart;
+    InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]        [MouseEvents.PointerUpdate] = OnTouchMoveToUpdate;
+    InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]        [MouseEvents.PointerUp]    = OnTouchMoveToEnd;
+    InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]  [MouseEvents.PointerDown]  = OnTouchStart;
+    InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]  [MouseEvents.PointerUpdate]  = OnTouchUpdate;
+    InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]  [MouseEvents.PointerUp]    = OnTouchBuildingPlacementEnd;
+    InterfaceModeMessageHandler[InterfaceModeTypes.CITY_RANGE_ATTACK]  [MouseEvents.PointerUp]    = CityRangeAttack;
+    InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_RANGE_ATTACK][MouseEvents.PointerUp]  = DistrictRangeAttack;
+    InterfaceModeMessageHandler[InterfaceModeTypes.FORM_ARMY]      [MouseEvents.PointerUp]    = FormArmy;
+    InterfaceModeMessageHandler[InterfaceModeTypes.FORM_CORPS]      [MouseEvents.PointerUp]    = FormCorps;
+    InterfaceModeMessageHandler[InterfaceModeTypes.AIRLIFT]        [MouseEvents.PointerUp]    = Airlift;
+    InterfaceModeMessageHandler[InterfaceModeTypes.RANGE_ATTACK]    [MouseEvents.PointerUp]    = OnTouchUnitRangeAttack;
+    InterfaceModeMessageHandler[InterfaceModeTypes.AIR_ATTACK]      [MouseEvents.PointerUp]    = UnitAirAttack;
+    InterfaceModeMessageHandler[InterfaceModeTypes.WMD_STRIKE]      [MouseEvents.PointerUp]    = OnWMDStrikeEnd;
+    InterfaceModeMessageHandler[InterfaceModeTypes.ICBM_STRIKE]      [MouseEvents.PointerUp]    = OnICBMStrikeEnd;
+    InterfaceModeMessageHandler[InterfaceModeTypes.DEPLOY]        [MouseEvents.PointerUp]    = AirUnitDeploy;
+    InterfaceModeMessageHandler[InterfaceModeTypes.REBASE]        [MouseEvents.PointerUp]    = AirUnitReBase;
+    InterfaceModeMessageHandler[InterfaceModeTypes.COASTAL_RAID]    [MouseEvents.PointerUp]    = CoastalRaid;
+    InterfaceModeMessageHandler[InterfaceModeTypes.PLACE_MAP_PIN]    [MouseEvents.PointerUp]    = PlaceMapPin;
+    InterfaceModeMessageHandler[InterfaceModeTypes.CITY_MANAGEMENT]    [MouseEvents.PointerUp]    = OnDoNothing;
+  end
+
+
+  -- ===== EVENTS =====
+
+  -- Game Engine Events
+  Events.CityMadePurchase.Add( OnCityMadePurchase_StrategicView_MapPlacement );
+  Events.CycleUnitSelectionRequest.Add( OnCycleUnitSelectionRequest );
+  Events.InputActionTriggered.Add( OnInputActionTriggered );
+  Events.InterfaceModeChanged.Add(OnInterfaceModeChanged);
+  Events.MultiplayerGameLastPlayer.Add(OnMultiplayerGameLastPlayer);
+  Events.MultiplayerGameAbandoned.Add(OnMultiplayerGameAbandoned);
+  Events.MatchEndTurnComplete.Add(OnMatchEndTurnComplete);
+  Events.UnitSelectionChanged.Add( OnUnitSelectionChanged );
+  Events.UnitCommandStarted.Add( OnUnitCommandStarted );
+
+  -- LUA Events
+  LuaEvents.Tutorial_ConstrainMovement.Add( OnTutorial_ConstrainMovement );
+  LuaEvents.Tutorial_DisableMapDrag.Add( OnTutorial_DisableMapDrag );
+  LuaEvents.Tutorial_DisableMapSelect.Add( OnTutorial_DisableMapSelect );
+  LuaEvents.Tutorial_DisableMapCancel.Add( OnTutorial_DisableMapCancel );
+
+  LuaEvents.Tutorial_AddUnitHexRestriction.Add( OnTutorial_AddUnitHexRestriction );
+  LuaEvents.Tutorial_RemoveUnitHexRestriction.Add( OnTutorial_RemoveUnitHexRestriction );
+  LuaEvents.Tutorial_ClearAllHexMoveRestrictions.Add( OnTutorial_ClearAllUnitHexRestrictions );
+
+  LuaEvents.Tutorial_AddUnitMoveRestriction.Add( OnTutorial_AddUnitMoveRestriction );
+  LuaEvents.Tutorial_RemoveUnitMoveRestrictions.Add( OnTutorial_RemoveUnitMoveRestrictions );
+
+  LuaEvents.InGameTopOptionsMenu_Show.Add(OnBlockInput);
+  LuaEvents.InGameTopOptionsMenu_Close.Add(OnUnblockInput);
+
+  LuaEvents.DiploScene_SceneClosed.Add(OnUnblockInput);
+  LuaEvents.DiploScene_SceneOpened.Add(OnBlockInput);
+
+end
+
+-- ===========================================================================
+--  Load all static information as well as display information for the
+--  current local player.
+-- ===========================================================================
+function OnInit( isReload:boolean )
+  LateInitialize();
 end
 
 
@@ -3485,6 +3815,7 @@ function OnInputActionTriggered( actionId )
     LuaEvents.MinimapPanel_ToggleGrid();
     LuaEvents.MinimapPanel_RefreshMinimapOptions();
     UI.PlaySound("Play_UI_Click");
+
   elseif actionId == m_actionHotkeyToggleRes then
     if UserConfiguration.ShowMapResources() then
       UserConfiguration.ShowMapResources( false );
@@ -3493,6 +3824,7 @@ function OnInputActionTriggered( actionId )
     end
     UI.PlaySound("Play_UI_Click");
     LuaEvents.MinimapPanel_RefreshMinimapOptions();
+
   elseif actionId == m_actionHotkeyToggleYield then
     if UserConfiguration.ShowMapYield() then    -- yield already visible, hide
       LuaEvents.MinimapPanel_HideYieldIcons();
@@ -3501,20 +3833,26 @@ function OnInputActionTriggered( actionId )
       LuaEvents.MinimapPanel_ShowYieldIcons();
       UserConfiguration.ShowMapYield( true );
     end
+
     LuaEvents.MinimapPanel_RefreshMinimapOptions();
     UI.PlaySound("Play_UI_Click");
+
   elseif actionId == m_actionHotkeyPrevUnit then
     UI.SelectPrevReadyUnit();
     UI.PlaySound("Play_UI_Click");
+
   elseif actionId == m_actionHotkeyNextUnit then
     UI.SelectNextReadyUnit();
     UI.PlaySound("Play_UI_Click");
+
   elseif actionId == m_actionHotkeyPrevCity then
     LuaEvents.CQUI_GoPrevCity();
     UI.PlaySound("Play_UI_Click");
+
   elseif actionId == m_actionHotkeyNextCity then
     LuaEvents.CQUI_GoNextCity();
     UI.PlaySound("Play_UI_Click");
+
   elseif actionId == m_actionHotkeyCapitalCity then
     local capital;
     local ePlayer = Game.GetLocalPlayer();
@@ -3540,13 +3878,23 @@ function OnInputActionTriggered( actionId )
   end
 end
 
+-- Alt-F4 in some situations can cause m_isALTDown to be stuck on after you click "Cancel", so clear it here.
+function OnUserRequestClose()
+  m_isALTDown  = false;
+end
+
+-- called when Hot Seat changes players
+function OnLocalPlayerChanged()
+  ClearMovementPath();
+end
+
 -- ===========================================================================
 --  INCLUDES
---  Other handlers & helpers that may utilze functionality defined in here
+--  Other handlers & helpers that may utilze functionality defined above.
 -- ===========================================================================
 
-include ("StrategicView_MapPlacement"); -- handlers for: BUILDING_PLACEMENT, DISTRICT_PLACEMENT
-include ("StrategicView_DebugSupport"); -- the Debug interface mode
+include ("StrategicView_MapPlacement");  -- handlers for: BUILDING_PLACEMENT, DISTRICT_PLACEMENT
+include ("StrategicView_DebugSupport");  -- the Debug interface mode
 
 
 -- ===========================================================================
@@ -3554,212 +3902,15 @@ include ("StrategicView_DebugSupport"); -- the Debug interface mode
 -- ===========================================================================
 function Initialize()
 
-  g_isTouchEnabled = Options.GetAppOption("UI", "IsTouchScreenEnabled") ~= 0;
-
-  -- Input assignments.
-
-  -- Default handlers:
-  DefaultMessageHandler[KeyEvents.KeyDown] = OnDefaultKeyDown;
-  DefaultMessageHandler[KeyEvents.KeyUp] = OnDefaultKeyUp;
-  DefaultMessageHandler[MouseEvents.LButtonDown] = OnMouseStart;
-  DefaultMessageHandler[MouseEvents.LButtonUp] = OnMouseEnd;
-  DefaultMessageHandler[MouseEvents.MouseMove] = OnMouseMove;
-  DefaultMessageHandler[MouseEvents.RButtonUp] = OnDefaultChangeToSelectionMode;
-  DefaultMessageHandler[MouseEvents.PointerUp] = OnDefaultChangeToSelectionMode;
-  DefaultMessageHandler[MouseEvents.MouseWheel] = OnMouseWheelZoom;
-  DefaultMessageHandler[MouseEvents.MButtonDown] = OnMouseSelectionSnapToPlot;
-
-  -- Interface Mode ENTERING :
-  InterfaceModeMessageHandler[InterfaceModeTypes.AIR_ATTACK]      [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_Air_Attack;
-  InterfaceModeMessageHandler[InterfaceModeTypes.DEBUG]       [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_Debug;
-  InterfaceModeMessageHandler[InterfaceModeTypes.CITY_MANAGEMENT]   [INTERFACEMODE_ENTER]   = OnInterfaceModeEnter_CityManagement;
-  InterfaceModeMessageHandler[InterfaceModeTypes.WMD_STRIKE]      [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_WMD_Strike;
-  InterfaceModeMessageHandler[InterfaceModeTypes.ICBM_STRIKE]     [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_ICBM_Strike;
-  InterfaceModeMessageHandler[InterfaceModeTypes.COASTAL_RAID]    [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_CoastalRaid;
-  InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]  [INTERFACEMODE_ENTER]   = OnInterfaceModeEnter_BuildingPlacement; -- StrategicView_MapPlacement.lua
-  InterfaceModeMessageHandler[InterfaceModeTypes.CITY_RANGE_ATTACK] [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_CityRangeAttack;
-  InterfaceModeMessageHandler[InterfaceModeTypes.DEPLOY]        [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_Deploy;
-  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]  [INTERFACEMODE_ENTER]   = OnInterfaceModeEnter_DistrictPlacement; -- StrategicView_MapPlacement.lua
-  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_RANGE_ATTACK][INTERFACEMODE_ENTER]    = OnInterfaceModeChange_DistrictRangeAttack;
-  InterfaceModeMessageHandler[InterfaceModeTypes.FORM_ARMY]     [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_UnitFormArmy;
-  InterfaceModeMessageHandler[InterfaceModeTypes.FORM_CORPS]      [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_UnitFormCorps;
-  InterfaceModeMessageHandler[InterfaceModeTypes.AIRLIFT]       [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_UnitAirlift;
-  InterfaceModeMessageHandler[InterfaceModeTypes.MAKE_TRADE_ROUTE]  [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_MakeTradeRoute;
-  InterfaceModeMessageHandler[InterfaceModeTypes.TELEPORT_TO_CITY]  [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_TeleportToCity;
-  InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]       [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_MoveTo;
-  InterfaceModeMessageHandler[InterfaceModeTypes.RANGE_ATTACK]    [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_UnitRangeAttack;
-  InterfaceModeMessageHandler[InterfaceModeTypes.REBASE]        [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_ReBase;
-  InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]     [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_Selection;
-  InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]       [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_MoveTo;
-  InterfaceModeMessageHandler[InterfaceModeTypes.PLACE_MAP_PIN]   [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_PlaceMapPin;
-  InterfaceModeMessageHandler[InterfaceModeTypes.WB_SELECT_PLOT]    [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_WBSelectPlot;
-  InterfaceModeMessageHandler[InterfaceModeTypes.SPY_CHOOSE_MISSION]  [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_SpyChooseMission;
-  InterfaceModeMessageHandler[InterfaceModeTypes.SPY_TRAVEL_TO_CITY]  [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_SpyTravelToCity;
-  InterfaceModeMessageHandler[InterfaceModeTypes.NATURAL_WONDER]    [INTERFACEMODE_ENTER]   = OnInterfaceModeChange_NaturalWonder;
-
-  -- Interface Mode LEAVING (optional):
-  InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]    [INTERFACEMODE_LEAVE]   = OnInterfaceModeLeave_BuildingPlacement; -- StrategicView_MapPlacement.lua
-  InterfaceModeMessageHandler[InterfaceModeTypes.CITY_MANAGEMENT]     [INTERFACEMODE_LEAVE]   = OnInterfaceModeLeave_CityManagement;
-  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]    [INTERFACEMODE_LEAVE]   = OnInterfaceModeLeave_DistrictPlacement; -- StrategicView_MapPlacement.lua
-  InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]         [INTERFACEMODE_LEAVE]   = OnInterfaceModeChange_MoveToLeave;
-  InterfaceModeMessageHandler[InterfaceModeTypes.RANGE_ATTACK]      [INTERFACEMODE_LEAVE]   = OnInterfaceModeLeave_UnitRangeAttack;
-  InterfaceModeMessageHandler[InterfaceModeTypes.NATURAL_WONDER]      [INTERFACEMODE_LEAVE]   = OnInterfaceModeLeave_NaturalWonder;
-  InterfaceModeMessageHandler[InterfaceModeTypes.CITY_RANGE_ATTACK]   [INTERFACEMODE_LEAVE]   = OnInterfaceModeLeave_CityRangeAttack;
-  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_RANGE_ATTACK] [INTERFACEMODE_LEAVE]   = OnInterfaceModeLeave_DistrictRangeAttack;
-  InterfaceModeMessageHandler[InterfaceModeTypes.AIR_ATTACK]        [INTERFACEMODE_LEAVE]   = OnInterfaceModeLeave_Air_Attack;
-  InterfaceModeMessageHandler[InterfaceModeTypes.WMD_STRIKE]        [INTERFACEMODE_LEAVE]   = OnInterfaceModeLeave_WMD_Strike;
-  InterfaceModeMessageHandler[InterfaceModeTypes.ICBM_STRIKE]       [INTERFACEMODE_LEAVE]   = OnInterfaceModeLeave_ICBM_Strike;
-  InterfaceModeMessageHandler[InterfaceModeTypes.COASTAL_RAID]      [INTERFACEMODE_LEAVE]   = OnInterfaceModeLeave_CoastalRaid;
-  InterfaceModeMessageHandler[InterfaceModeTypes.DEPLOY]          [INTERFACEMODE_LEAVE]   = OnInterfaceModeLeave_Deploy;
-  InterfaceModeMessageHandler[InterfaceModeTypes.REBASE]          [INTERFACEMODE_LEAVE]   = OnInterfaceModeLeave_ReBase;
-  InterfaceModeMessageHandler[InterfaceModeTypes.TELEPORT_TO_CITY]    [INTERFACEMODE_LEAVE]   = OnInterfaceModeLeave_TeleportToCity;
-  InterfaceModeMessageHandler[InterfaceModeTypes.FORM_CORPS]        [INTERFACEMODE_LEAVE]   = OnInterfaceModeLeave_UnitFormCorps;
-  InterfaceModeMessageHandler[InterfaceModeTypes.FORM_ARMY]       [INTERFACEMODE_LEAVE]   = OnInterfaceModeLeave_UnitFormArmy;
-  InterfaceModeMessageHandler[InterfaceModeTypes.AIRLIFT]         [INTERFACEMODE_LEAVE]   = OnInterfaceModeLeave_UnitAirlift;
-
-  -- Keyboard Events (all happen on up!)
-  InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]    [KeyEvents.KeyUp] = OnPlacementKeyUp;
-  InterfaceModeMessageHandler[InterfaceModeTypes.CITY_MANAGEMENT]       [KeyEvents.KeyUp] = OnPlacementKeyUp;
-  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]    [KeyEvents.KeyUp] = OnPlacementKeyUp;
-  InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]               [KeyEvents.KeyUp] = OnPlacementKeyUp;
-  InterfaceModeMessageHandler[InterfaceModeTypes.RANGE_ATTACK]          [KeyEvents.KeyUp] = OnPlacementKeyUp;
-  InterfaceModeMessageHandler[InterfaceModeTypes.NATURAL_WONDER]        [KeyEvents.KeyUp] = OnPlacementKeyUp;
-  InterfaceModeMessageHandler[InterfaceModeTypes.CITY_RANGE_ATTACK]     [KeyEvents.KeyUp] = OnPlacementKeyUp;
-  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_RANGE_ATTACK] [KeyEvents.KeyUp] = OnPlacementKeyUp;
-  InterfaceModeMessageHandler[InterfaceModeTypes.WMD_STRIKE]            [KeyEvents.KeyUp] = OnPlacementKeyUp;
-  InterfaceModeMessageHandler[InterfaceModeTypes.ICBM_STRIKE]           [KeyEvents.KeyUp] = OnPlacementKeyUp;
-  InterfaceModeMessageHandler[InterfaceModeTypes.AIR_ATTACK]            [KeyEvents.KeyUp] = OnPlacementKeyUp;
-  InterfaceModeMessageHandler[InterfaceModeTypes.COASTAL_RAID]          [KeyEvents.KeyUp] = OnPlacementKeyUp;
-  InterfaceModeMessageHandler[InterfaceModeTypes.DEPLOY]                [KeyEvents.KeyUp] = OnPlacementKeyUp;
-  InterfaceModeMessageHandler[InterfaceModeTypes.REBASE]                [KeyEvents.KeyUp] = OnPlacementKeyUp;
-  InterfaceModeMessageHandler[InterfaceModeTypes.TELEPORT_TO_CITY]      [KeyEvents.KeyUp] = OnPlacementKeyUp;
-  InterfaceModeMessageHandler[InterfaceModeTypes.FORM_CORPS]            [KeyEvents.KeyUp] = OnPlacementKeyUp;
-  InterfaceModeMessageHandler[InterfaceModeTypes.FORM_ARMY]             [KeyEvents.KeyUp] = OnPlacementKeyUp;
-  InterfaceModeMessageHandler[InterfaceModeTypes.AIRLIFT]               [KeyEvents.KeyUp] = OnPlacementKeyUp;
-
-
-
-
-  -- Mouse Events
-  InterfaceModeMessageHandler[InterfaceModeTypes.DEBUG]       [MouseEvents.LButtonUp]   = OnMouseDebugEnd;
-  InterfaceModeMessageHandler[InterfaceModeTypes.DEBUG]       [MouseEvents.RButtonUp]   = OnDebugCancelPlacement;
-  InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]     [MouseEvents.LButtonUp]   = OnMouseSelectionEnd;
-  InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]     [MouseEvents.RButtonDown] = OnMouseSelectionUnitMoveStart;
-  InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]     [MouseEvents.RButtonUp]   = OnMouseSelectionUnitMoveEnd;
-  InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]     [MouseEvents.MButtonDown] = OnMouseSelectionSnapToPlot;
-  InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]     [MouseEvents.MouseMove]   = OnMouseSelectionMove;
-  InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]     [MouseEvents.LButtonDoubleClick] = OnSelectionDoubleTap;
-  InterfaceModeMessageHandler[InterfaceModeTypes.VIEW_MODAL_LENS]   [MouseEvents.LButtonUp]   = OnMouseSelectionEnd;
-  InterfaceModeMessageHandler[InterfaceModeTypes.MAKE_TRADE_ROUTE]  [MouseEvents.LButtonUp]   = OnMouseMakeTradeRouteEnd;
-  InterfaceModeMessageHandler[InterfaceModeTypes.MAKE_TRADE_ROUTE]  [MouseEvents.MButtonDown] = OnMouseMakeTradeRouteSnapToPlot;
-  InterfaceModeMessageHandler[InterfaceModeTypes.TELEPORT_TO_CITY]  [MouseEvents.LButtonUp]   = OnMouseTeleportToCityEnd;
-  InterfaceModeMessageHandler[InterfaceModeTypes.TELEPORT_TO_CITY]  [MouseEvents.MButtonDown] = OnMouseTeleportToCitySnapToPlot;
-  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]  [MouseEvents.LButtonUp]   = OnMouseDistrictPlacementEnd;
-  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]  [MouseEvents.RButtonUp]   = OnMouseDistrictPlacementCancel;
-  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]  [MouseEvents.MouseMove]   = OnMouseDistrictPlacementMove;
-  InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]       [MouseEvents.LButtonDown] = OnMouseMoveToStart;
-  InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]       [MouseEvents.LButtonUp]   = OnMouseMoveToEnd;
-  InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]       [MouseEvents.MouseMove]   = OnMouseMoveToUpdate;
-  InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]       [MouseEvents.RButtonUp]   = OnMouseMoveToCancel;
-  InterfaceModeMessageHandler[InterfaceModeTypes.RANGE_ATTACK]    [MouseEvents.LButtonUp]   = OnMouseUnitRangeAttack;
-  InterfaceModeMessageHandler[InterfaceModeTypes.RANGE_ATTACK]    [MouseEvents.MouseMove]   = OnMouseMoveRangeAttack;
-  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_RANGE_ATTACK][MouseEvents.MouseMove]  = OnMouseMoveRangeAttack;
-  InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_RANGE_ATTACK][MouseEvents.LButtonUp]  = DistrictRangeAttack;
-  InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]  [MouseEvents.LButtonUp]   = OnMouseBuildingPlacementEnd;
-  InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]  [MouseEvents.RButtonUp]   = OnMouseBuildingPlacementCancel;
-  InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]  [MouseEvents.MouseMove]   = OnMouseBuildingPlacementMove;
-  InterfaceModeMessageHandler[InterfaceModeTypes.CITY_RANGE_ATTACK] [MouseEvents.LButtonUp]   = CityRangeAttack;
-  InterfaceModeMessageHandler[InterfaceModeTypes.CITY_RANGE_ATTACK] [MouseEvents.MouseMove]   = OnMouseMoveRangeAttack;
-  InterfaceModeMessageHandler[InterfaceModeTypes.FORM_CORPS]      [MouseEvents.LButtonUp]   = FormCorps;
-  InterfaceModeMessageHandler[InterfaceModeTypes.FORM_ARMY]     [MouseEvents.LButtonUp]   = FormArmy;
-  InterfaceModeMessageHandler[InterfaceModeTypes.AIRLIFT]       [MouseEvents.LButtonUp]   = OnMouseAirliftEnd;
-  InterfaceModeMessageHandler[InterfaceModeTypes.AIR_ATTACK]      [MouseEvents.LButtonUp]   = UnitAirAttack;
-  InterfaceModeMessageHandler[InterfaceModeTypes.WMD_STRIKE]      [MouseEvents.LButtonUp]   = OnWMDStrikeEnd;
-  InterfaceModeMessageHandler[InterfaceModeTypes.WMD_STRIKE]      [MouseEvents.MouseMove]   = OnMouseMoveRangeAttack;
-  InterfaceModeMessageHandler[InterfaceModeTypes.ICBM_STRIKE]     [MouseEvents.LButtonUp]   = OnICBMStrikeEnd;
-  InterfaceModeMessageHandler[InterfaceModeTypes.ICBM_STRIKE]     [MouseEvents.MouseMove]   = OnMouseMoveRangeAttack;
-  InterfaceModeMessageHandler[InterfaceModeTypes.DEPLOY]        [MouseEvents.LButtonUp]   = OnMouseDeployEnd;
-  InterfaceModeMessageHandler[InterfaceModeTypes.REBASE]        [MouseEvents.LButtonUp]   = OnMouseRebaseEnd;
-  InterfaceModeMessageHandler[InterfaceModeTypes.COASTAL_RAID]    [MouseEvents.LButtonUp]   = CoastalRaid;
-  InterfaceModeMessageHandler[InterfaceModeTypes.PLACE_MAP_PIN]   [MouseEvents.LButtonUp]   = PlaceMapPin;
-  InterfaceModeMessageHandler[InterfaceModeTypes.WB_SELECT_PLOT]    [MouseEvents.LButtonUp]   = OnMouseEnd_WBSelectPlot;
-  InterfaceModeMessageHandler[InterfaceModeTypes.WB_SELECT_PLOT]    [MouseEvents.RButtonUp]   = OnRButtonUp_WBSelectPlot;
-  InterfaceModeMessageHandler[InterfaceModeTypes.WB_SELECT_PLOT]    [MouseEvents.MouseMove]   = OnMouseMove_WBSelectPlot;
-
-  -- Touch Events (if a touch system)
-  if g_isTouchEnabled then
-    InterfaceModeMessageHandler[InterfaceModeTypes.DEBUG]       [MouseEvents.PointerDown] = OnTouchStart;
-    InterfaceModeMessageHandler[InterfaceModeTypes.DEBUG]       [MouseEvents.PointerUpdate] = OnTouchUpdate;
-    InterfaceModeMessageHandler[InterfaceModeTypes.DEBUG]       [MouseEvents.PointerUp]   = OnTouchDebugEnd;
-    InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]     [MouseEvents.PointerDown] = OnTouchSelectionStart;
-    InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]     [MouseEvents.PointerUpdate] = OnTouchSelectionUpdate;
-    InterfaceModeMessageHandler[InterfaceModeTypes.SELECTION]     [MouseEvents.PointerUp]   = OnTouchSelectionEnd;
-    InterfaceModeMessageHandler[InterfaceModeTypes.MAKE_TRADE_ROUTE]  [MouseEvents.PointerDown] = OnTouchStart;
-    InterfaceModeMessageHandler[InterfaceModeTypes.MAKE_TRADE_ROUTE]  [MouseEvents.PointerUpdate] = OnTouchUpdate;
-    InterfaceModeMessageHandler[InterfaceModeTypes.MAKE_TRADE_ROUTE]  [MouseEvents.PointerUp]   = OnTouchTradeRouteEnd;
-    InterfaceModeMessageHandler[InterfaceModeTypes.TELEPORT_TO_CITY]  [MouseEvents.PointerDown] = OnTouchStart;
-    InterfaceModeMessageHandler[InterfaceModeTypes.TELEPORT_TO_CITY]  [MouseEvents.PointerUpdate] = OnTouchUpdate;
-    InterfaceModeMessageHandler[InterfaceModeTypes.TELEPORT_TO_CITY]  [MouseEvents.PointerUp]   = OnTouchTeleportToCityEnd;
-    InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]  [MouseEvents.PointerDown] = OnTouchStart;
-    InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]  [MouseEvents.PointerUpdate] = OnTouchUpdate;
-    InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_PLACEMENT]  [MouseEvents.PointerUp]   = OnTouchDistrictPlacementEnd;
-    InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]       [MouseEvents.PointerDown] = OnTouchMoveToStart;
-    InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]       [MouseEvents.PointerUpdate] = OnTouchMoveToUpdate;
-    InterfaceModeMessageHandler[InterfaceModeTypes.MOVE_TO]       [MouseEvents.PointerUp]   = OnTouchMoveToEnd;
-    InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]  [MouseEvents.PointerDown] = OnTouchStart;
-    InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]  [MouseEvents.PointerUpdate] = OnTouchUpdate;
-    InterfaceModeMessageHandler[InterfaceModeTypes.BUILDING_PLACEMENT]  [MouseEvents.PointerUp]   = OnTouchBuildingPlacementEnd;
-    InterfaceModeMessageHandler[InterfaceModeTypes.CITY_RANGE_ATTACK] [MouseEvents.PointerUp]   = CityRangeAttack;
-    InterfaceModeMessageHandler[InterfaceModeTypes.DISTRICT_RANGE_ATTACK][MouseEvents.PointerUp]  = DistrictRangeAttack;
-    InterfaceModeMessageHandler[InterfaceModeTypes.FORM_ARMY]     [MouseEvents.PointerUp]   = FormArmy;
-    InterfaceModeMessageHandler[InterfaceModeTypes.FORM_CORPS]      [MouseEvents.PointerUp]   = FormCorps;
-    InterfaceModeMessageHandler[InterfaceModeTypes.AIRLIFT]       [MouseEvents.PointerUp]   = Airlift;
-    InterfaceModeMessageHandler[InterfaceModeTypes.RANGE_ATTACK]    [MouseEvents.PointerUp]   = OnTouchUnitRangeAttack;
-    InterfaceModeMessageHandler[InterfaceModeTypes.AIR_ATTACK]      [MouseEvents.PointerUp]   = UnitAirAttack;
-    InterfaceModeMessageHandler[InterfaceModeTypes.WMD_STRIKE]      [MouseEvents.PointerUp]   = OnWMDStrikeEnd;
-    InterfaceModeMessageHandler[InterfaceModeTypes.ICBM_STRIKE]     [MouseEvents.PointerUp]   = OnICBMStrikeEnd;
-    InterfaceModeMessageHandler[InterfaceModeTypes.DEPLOY]        [MouseEvents.PointerUp]   = AirUnitDeploy;
-    InterfaceModeMessageHandler[InterfaceModeTypes.REBASE]        [MouseEvents.PointerUp]   = AirUnitReBase;
-    InterfaceModeMessageHandler[InterfaceModeTypes.COASTAL_RAID]    [MouseEvents.PointerUp]   = CoastalRaid;
-    InterfaceModeMessageHandler[InterfaceModeTypes.PLACE_MAP_PIN]   [MouseEvents.PointerUp]   = PlaceMapPin;
-    InterfaceModeMessageHandler[InterfaceModeTypes.CITY_MANAGEMENT]   [MouseEvents.PointerUp]   = OnDoNothing;
-  end
-
-
-  -- ===== EVENTS =====
-
-  -- Game Engine Events
-  Events.CityMadePurchase.Add( OnCityMadePurchase_StrategicView_MapPlacement );
-  Events.CycleUnitSelectionRequest.Add( OnCycleUnitSelectionRequest );
-  Events.InputActionTriggered.Add( OnInputActionTriggered );
-  Events.InterfaceModeChanged.Add(OnInterfaceModeChanged);
-  Events.MultiplayerGameLastPlayer.Add(OnMultiplayerGameLastPlayer);
-  Events.MultiplayerGameAbandoned.Add(OnMultiplayerGameAbandoned);
-  Events.UnitSelectionChanged.Add( OnUnitSelectionChanged );
-
-  -- LUA Events
-  LuaEvents.Tutorial_ConstrainMovement.Add( OnTutorial_ConstrainMovement );
-  LuaEvents.Tutorial_DisableMapDrag.Add( OnTutorial_DisableMapDrag );
-  LuaEvents.Tutorial_DisableMapSelect.Add( OnTutorial_DisableMapSelect );
-  LuaEvents.Tutorial_DisableMapCancel.Add( OnTutorial_DisableMapCancel );
-
-  LuaEvents.Tutorial_AddUnitHexRestriction.Add( OnTutorial_AddUnitHexRestriction );
-  LuaEvents.Tutorial_RemoveUnitHexRestriction.Add( OnTutorial_RemoveUnitHexRestriction );
-  LuaEvents.Tutorial_ClearAllHexMoveRestrictions.Add( OnTutorial_ClearAllUnitHexRestrictions );
-
-  LuaEvents.Tutorial_AddUnitMoveRestriction.Add( OnTutorial_AddUnitMoveRestriction );
-  LuaEvents.Tutorial_RemoveUnitMoveRestrictions.Add( OnTutorial_RemoveUnitMoveRestrictions );
-
-  LuaEvents.InGameTopOptionsMenu_Show.Add(function() m_isPauseMenuOpen = true; end);
-  LuaEvents.InGameTopOptionsMenu_Close.Add(function() m_isPauseMenuOpen = false; ClearAllCachedInputState(); end);
-
-
   -- UI Events
+  ContextPtr:SetInitHandler( OnInit );
   ContextPtr:SetInputHandler( OnInputHandler, true );
+  ContextPtr:SetShutdown( OnShutdown );
   ContextPtr:SetRefreshHandler( OnRefresh );
   ContextPtr:SetAppRegainedFocusHandler( OnAppRegainedFocusHandler );
   ContextPtr:SetAppLostFocusHandler( OnAppLostFocusHandler );
-  ContextPtr:SetShutdown( OnShutdown );
+    Events.UserRequestClose.Add( OnUserRequestClose );
+  Events.LocalPlayerChanged.Add( OnLocalPlayerChanged );
 
   -- CQUI Events
   LuaEvents.CQUI_WorldInput_CityviewEnable.Add( function() CQUI_cityview = true; end );
