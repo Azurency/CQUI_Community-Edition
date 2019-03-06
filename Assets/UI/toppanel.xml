@@ -124,8 +124,8 @@
       <Image Anchor="C,C" Offset="45,0" Size="auto,24" Texture="TopBar_YieldBacking.dds"    />
       <GridButton  ID="YieldBacking" Size="auto,24" AutoSizePadding="1,0" Style="YieldBacking" Color="24,156,216,255">
         <Stack    ID="YieldButtonStack" Anchor="L,C" Offset="0,2"  StackGrowth="Right">
-          <Label  ID="YieldIconString" Anchor="L,B" Offset="0,4"/>
-          <Label  ID="YieldBalance" Anchor="C,T" Style="FontNormal18" ColorSet="ResFaithLabelCS" String="?"/>
+          <Label  ID="YieldIconString" Anchor="L,B" Offset="0,3"/>
+          <Label  ID="YieldBalance" Anchor="C,T" Offset="0,-1" Style="FontNormal18" ColorSet="ResFaithLabelCS" String="?"/>
           <Label  ID="YieldPerTurn" Offset="2,-2" Style="FontNormal14" ColorSet="ResFaithLabelCS" FontStyle="Stroke" String="0"/>
         </Stack>
       </GridButton>

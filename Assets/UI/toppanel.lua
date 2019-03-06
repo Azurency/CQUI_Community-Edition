@@ -5,27 +5,31 @@ include( "InstanceManager" );
 include( "SupportFunctions" ); -- Round
 include( "ToolTipHelper_PlayerYields" );
 
--- ===========================================================================
--- Yield handles
--- ===========================================================================
-m_YieldButtonSingleManager = InstanceManager:new( "YieldButton_SingleLabel", "Top", Controls.YieldStack );
-m_YieldButtonDoubleManager = InstanceManager:new( "YieldButton_DoubleLabel", "Top", Controls.YieldStack )
 
 -- ===========================================================================
-local m_kResourceIM :table = InstanceManager:new( "ResourceInstance", "ResourceText", Controls.ResourceStack );
-local META_PADDING    = 100;  -- The amount of padding to give the meta area to make enough room for the (+) when there is resource overflow
-local FONT_MULTIPLIER = 11; -- The amount to multiply times the string length to approximate the width in pixels of the label control
+--  CONSTANTS
+-- ===========================================================================
+META_PADDING  = 100;  -- The amount of padding to give the meta area to make enough room for the (+) when there is resource overflow
+FONT_MULTIPLIER  = 11;  -- The amount to multiply times the string length to approximate the width in pixels of the label control
+
+
+-- ===========================================================================
+-- VARIABLES
+-- ===========================================================================
+m_YieldButtonSingleManager  = InstanceManager:new( "YieldButton_SingleLabel", "Top", Controls.YieldStack );
+m_YieldButtonDoubleManager  = InstanceManager:new( "YieldButton_DoubleLabel", "Top", Controls.YieldStack );
+m_kResourceIM        = InstanceManager:new( "ResourceInstance", "ResourceText", Controls.ResourceStack );
 local m_OpenPediaId;
-local m_viewReportsX :number = 0;  -- With of view report button
+
 
 -- ===========================================================================
 -- Yield handles
 -- ===========================================================================
-local m_ScienceYieldButton:table = nil;
-local m_CultureYieldButton:table = nil;
-local m_GoldYieldButton:table = nil;
-local m_TourismYieldButton:table = nil;
-local m_FaithYieldButton:table = nil;
+local m_ScienceYieldButton  :table = nil;
+local m_CultureYieldButton  :table = nil;
+local m_GoldYieldButton    :table = nil;
+local m_TourismYieldButton  :table = nil;
+local m_FaithYieldButton  :table = nil;
 
 -- ===========================================================================
 --  QUI
@@ -41,14 +45,8 @@ LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
 -- ===========================================================================
 --  Game Engine Event
 -- ===========================================================================
-function OnCityInitialized(owner, ID)
-  if owner == Game.GetLocalPlayer() then
-    local player = Players[owner];
-    local pPlayerCities :table = player:GetCities();
-    if table.count(pPlayerCities) == 1 then
-      -- Remove?
-      --Controls.YieldStack:SetHide(false);   -- Once the first city is founded, then display the corner.
-    end
+function OnCityInitialized( playerID:number, cityID:number )
+  if playerID == Game.GetLocalPlayer() then
     RefreshYields();
   end
 end
@@ -59,13 +57,13 @@ end
 function OnLocalPlayerChanged( playerID:number , prevLocalPlayerID:number )
   if playerID == -1 then return; end
   local player = Players[playerID];
-  local pPlayerCities :table = player:GetCities();
+  local pPlayerCities  :table = player:GetCities();
   RefreshAll();
 end
 
 -- ===========================================================================
 function OnMenu()
-    UIManager:QueuePopup( LookUpControl( "/InGame/TopOptionsMenu" ), PopupPriority.Utmost );
+  LuaEvents.InGame_OpenInGameOptionsMenu();
 end
 
 -- ===========================================================================
@@ -109,9 +107,8 @@ end
 --  Refresh Data and View
 -- ===========================================================================
 function RefreshYields()
-
-  local ePlayer   :number = Game.GetLocalPlayer();
-  local localPlayer :table= nil;
+  local ePlayer    :number = Game.GetLocalPlayer();
+  local localPlayer  :table= nil;
   if ePlayer ~= -1 then
     localPlayer = Players[ePlayer];
     if localPlayer == nil then
@@ -124,8 +121,8 @@ function RefreshYields()
   ---- SCIENCE ----
   m_ScienceYieldButton = m_ScienceYieldButton or m_YieldButtonSingleManager:GetInstance();
   local playerTechnology    :table  = localPlayer:GetTechs();
-  local currentScienceYield :number = playerTechnology:GetScienceYield();
-  m_ScienceYieldButton.YieldPerTurn:SetText( FormatValuePerTurn(currentScienceYield) );  
+  local currentScienceYield  :number = playerTechnology:GetScienceYield();
+  m_ScienceYieldButton.YieldPerTurn:SetText( FormatValuePerTurn(currentScienceYield) );
 
   m_ScienceYieldButton.YieldBacking:SetToolTipString( GetScienceTooltip() );
   m_ScienceYieldButton.YieldIconString:SetText("[ICON_ScienceLarge]");
@@ -134,9 +131,9 @@ function RefreshYields()
 
   ---- CULTURE----
   m_CultureYieldButton = m_CultureYieldButton or m_YieldButtonSingleManager:GetInstance();
-  local playerCulture     :table  = localPlayer:GetCulture();
-  local currentCultureYield :number = playerCulture:GetCultureYield();
-  m_CultureYieldButton.YieldPerTurn:SetText( FormatValuePerTurn(currentCultureYield) );  
+  local playerCulture      :table  = localPlayer:GetCulture();
+  local currentCultureYield  :number = playerCulture:GetCultureYield();
+  m_CultureYieldButton.YieldPerTurn:SetText( FormatValuePerTurn(currentCultureYield) );
   m_CultureYieldButton.YieldPerTurn:SetColorByName("ResCultureLabelCS");
 
   m_CultureYieldButton.YieldBacking:SetToolTipString( GetCultureTooltip() );
@@ -149,11 +146,11 @@ function RefreshYields()
   local playerReligion    :table  = localPlayer:GetReligion();
   local faithYield      :number = playerReligion:GetFaithYield();
   local faithBalance      :number = playerReligion:GetFaithBalance();
-  m_FaithYieldButton.YieldBalance:SetText( Locale.ToNumber(faithBalance, "#,###.#") );  
+  m_FaithYieldButton.YieldBalance:SetText( Locale.ToNumber(faithBalance, "#,###.#") );
   m_FaithYieldButton.YieldPerTurn:SetText( FormatValuePerTurn(faithYield) );
   m_FaithYieldButton.YieldBacking:SetToolTipString( GetFaithTooltip() );
   m_FaithYieldButton.YieldIconString:SetText("[ICON_FaithLarge]");
-  m_FaithYieldButton.YieldButtonStack:CalculateSize();  
+  m_FaithYieldButton.YieldButtonStack:CalculateSize();
 
   ---- GOLD ----
   if GameCapabilities.HasCapability("CAPABILITY_GOLD") then
@@ -162,10 +159,10 @@ function RefreshYields()
     local goldYield    :number = playerTreasury:GetGoldYield() - playerTreasury:GetTotalMaintenance();
     local goldBalance  :number = math.floor(playerTreasury:GetGoldBalance());
     m_GoldYieldButton.YieldBalance:SetText( Locale.ToNumber(goldBalance, "#,###.#") );
-    m_GoldYieldButton.YieldBalance:SetColorByName("ResGoldLabelCS");  
+    m_GoldYieldButton.YieldBalance:SetColorByName("ResGoldLabelCS");
     m_GoldYieldButton.YieldPerTurn:SetText( FormatValuePerTurn(goldYield) );
     m_GoldYieldButton.YieldIconString:SetText("[ICON_GoldLarge]");
-    m_GoldYieldButton.YieldPerTurn:SetColorByName("ResGoldLabelCS");  
+    m_GoldYieldButton.YieldPerTurn:SetColorByName("ResGoldLabelCS");
 
     m_GoldYieldButton.YieldBacking:SetToolTipString( GetGoldTooltip() );
     m_GoldYieldButton.YieldBacking:SetColorByName("ResGoldLabelCS");
@@ -177,23 +174,23 @@ function RefreshYields()
   ---- TOURISM ----
   if GameCapabilities.HasCapability("CAPABILITY_TOURISM") then
     m_TourismYieldButton = m_TourismYieldButton or m_YieldButtonSingleManager:GetInstance();
-  local tourismRate = Round(localPlayer:GetStats():GetTourism(), 1);
-  local tourismRateTT:string = Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_CULTURE_TOURISM_RATE", tourismRate);
-  local tourismBreakdown = localPlayer:GetStats():GetTourismToolTip();
-  if(tourismBreakdown and #tourismBreakdown > 0) then
-    tourismRateTT = tourismRateTT .. "[NEWLINE][NEWLINE]" .. tourismBreakdown;
-  end
+    local tourismRate = Round(localPlayer:GetStats():GetTourism(), 1);
+    local tourismRateTT:string = Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_CULTURE_TOURISM_RATE", tourismRate);
+    local tourismBreakdown = localPlayer:GetStats():GetTourismToolTip();
+    if(tourismBreakdown and #tourismBreakdown > 0) then
+      tourismRateTT = tourismRateTT .. "[NEWLINE][NEWLINE]" .. tourismBreakdown;
+    end
 
-    m_TourismYieldButton.YieldPerTurn:SetText( tourismRate );  
+    m_TourismYieldButton.YieldPerTurn:SetText( tourismRate );
     m_TourismYieldButton.YieldBacking:SetToolTipString(tourismRateTT);
     m_TourismYieldButton.YieldPerTurn:SetColorByName("ResTourismLabelCS");
     m_TourismYieldButton.YieldBacking:SetColorByName("ResTourismLabelCS");
     m_TourismYieldButton.YieldIconString:SetText("[ICON_TourismLarge]");
-  if (tourismRate > 0) then
+    if (tourismRate > 0) then
       m_TourismYieldButton.Top:SetHide(false);
-  else
+    else
       m_TourismYieldButton.Top:SetHide(true);
-    end 
+    end
   end
 
   Controls.YieldStack:CalculateSize();
@@ -219,7 +216,7 @@ function RefreshTrade()
   end
 
   ---- ROUTES ----
-  local playerTrade :table  = localPlayer:GetTrade();
+  local playerTrade  :table  = localPlayer:GetTrade();
   local routesActive  :number = playerTrade:GetNumOutgoingRoutes();
   local sRoutesActive :string = "" .. routesActive;
   local routesCapacity:number = playerTrade:GetOutgoingRouteCapacity();
@@ -250,43 +247,43 @@ end
 -- ===========================================================================
 function RefreshInfluence()
   if GameCapabilities.HasCapability("CAPABILITY_TOP_PANEL_ENVOYS") then
-  local localPlayer = Players[Game.GetLocalPlayer()];
-  if (localPlayer == nil) then
-    return;
-  end
+    local localPlayer = Players[Game.GetLocalPlayer()];
+    if (localPlayer == nil) then
+      return;
+    end
 
-  local playerInfluence :table  = localPlayer:GetInfluence();
-  local influenceBalance  :number = Round(playerInfluence:GetPointsEarned(), 1);
-  local influenceRate   :number = Round(playerInfluence:GetPointsPerTurn(), 1);
-  local influenceThreshold:number = playerInfluence:GetPointsThreshold();
-  local envoysPerThreshold:number = playerInfluence:GetTokensPerThreshold();
-  local currentEnvoys   :number = playerInfluence:GetTokensToGive();
+    local playerInfluence  :table  = localPlayer:GetInfluence();
+    local influenceBalance  :number  = Round(playerInfluence:GetPointsEarned(), 1);
+    local influenceRate    :number = Round(playerInfluence:GetPointsPerTurn(), 1);
+    local influenceThreshold:number  = playerInfluence:GetPointsThreshold();
+    local envoysPerThreshold:number = playerInfluence:GetTokensPerThreshold();
+    local currentEnvoys    :number = playerInfluence:GetTokensToGive();
 
-  local sTooltip = "";
+    local sTooltip = "";
 
-  if (currentEnvoys > 0) then
-    sTooltip = sTooltip .. Locale.Lookup("LOC_TOP_PANEL_INFLUENCE_TOOLTIP_ENVOYS", currentEnvoys);
+    if (currentEnvoys > 0) then
+      sTooltip = sTooltip .. Locale.Lookup("LOC_TOP_PANEL_INFLUENCE_TOOLTIP_ENVOYS", currentEnvoys);
+      sTooltip = sTooltip .. "[NEWLINE][NEWLINE]";
+    end
+    sTooltip = sTooltip .. Locale.Lookup("LOC_TOP_PANEL_INFLUENCE_TOOLTIP_POINTS_THRESHOLD", envoysPerThreshold, influenceThreshold);
     sTooltip = sTooltip .. "[NEWLINE][NEWLINE]";
-  end
-  sTooltip = sTooltip .. Locale.Lookup("LOC_TOP_PANEL_INFLUENCE_TOOLTIP_POINTS_THRESHOLD", envoysPerThreshold, influenceThreshold);
-  sTooltip = sTooltip .. "[NEWLINE][NEWLINE]";
-  sTooltip = sTooltip .. Locale.Lookup("LOC_TOP_PANEL_INFLUENCE_TOOLTIP_POINTS_BALANCE", influenceBalance);
-  sTooltip = sTooltip .. "[NEWLINE]";
-  sTooltip = sTooltip .. Locale.Lookup("LOC_TOP_PANEL_INFLUENCE_TOOLTIP_POINTS_RATE", influenceRate);
-  sTooltip = sTooltip .. "[NEWLINE][NEWLINE]";
-  sTooltip = sTooltip .. Locale.Lookup("LOC_TOP_PANEL_INFLUENCE_TOOLTIP_SOURCES_HELP");
+    sTooltip = sTooltip .. Locale.Lookup("LOC_TOP_PANEL_INFLUENCE_TOOLTIP_POINTS_BALANCE", influenceBalance);
+    sTooltip = sTooltip .. "[NEWLINE]";
+    sTooltip = sTooltip .. Locale.Lookup("LOC_TOP_PANEL_INFLUENCE_TOOLTIP_POINTS_RATE", influenceRate);
+    sTooltip = sTooltip .. "[NEWLINE][NEWLINE]";
+    sTooltip = sTooltip .. Locale.Lookup("LOC_TOP_PANEL_INFLUENCE_TOOLTIP_SOURCES_HELP");
 
-  local meterRatio = influenceBalance / influenceThreshold;
-  if (meterRatio < 0) then
-    meterRatio = 0;
-  elseif (meterRatio > 1) then
-    meterRatio = 1;
-  end
-  Controls.EnvoysMeter:SetPercent(meterRatio);
-  Controls.EnvoysNumber:SetText(tostring(currentEnvoys));
-  Controls.Envoys:SetToolTipString(sTooltip);
-  Controls.EnvoysStack:CalculateSize();
-  Controls.EnvoysStack:ReprocessAnchoring();
+    local meterRatio = influenceBalance / influenceThreshold;
+    if (meterRatio < 0) then
+      meterRatio = 0;
+    elseif (meterRatio > 1) then
+      meterRatio = 1;
+    end
+    Controls.EnvoysMeter:SetPercent(meterRatio);
+    Controls.EnvoysNumber:SetText(tostring(currentEnvoys));
+    Controls.Envoys:SetToolTipString(sTooltip);
+    Controls.EnvoysStack:CalculateSize();
+    Controls.EnvoysStack:ReprocessAnchoring();
   else
     Controls.Envoys:SetHide(true);
   end
@@ -321,11 +318,11 @@ function RefreshResources()
   if (localPlayerID ~= -1) then
     m_kResourceIM:ResetInstances();
     local pPlayerResources  =  Players[localPlayerID]:GetResources();
-    local yieldStackX   = Controls.YieldStack:GetSizeX();
+    local yieldStackX    = Controls.YieldStack:GetSizeX();
     local infoStackX    = Controls.StaticInfoStack:GetSizeX();
     local metaStackX    = Controls.RightContents:GetSizeX();
     local screenX, _:number = UIManager:GetScreenSizeVal();
-    local maxSize = screenX - yieldStackX - infoStackX - metaStackX - m_viewReportsX - META_PADDING;
+    local maxSize = screenX - yieldStackX - infoStackX - metaStackX - META_PADDING;
     if (maxSize < 0) then maxSize = 0; end
     local currSize = 0;
     local isOverflow = false;
@@ -431,7 +428,6 @@ function OnRefreshTimeTick()
   Controls.TimeCallback:SetToBeginning();
   Controls.TimeCallback:Play();
 end
-Controls.TimeCallback:RegisterEndCallback(OnRefreshTimeTick);
 
 -- ===========================================================================
 function RefreshTurnsRemaining()
@@ -551,51 +547,70 @@ end
 
 
 -- ===========================================================================
-function Initialize()
+function LateInitialize()
 
   Resize();
 
   -- UI Callbacks
-  ContextPtr:SetRefreshHandler( OnRefresh );
-  Controls.CivpediaButton:RegisterCallback( Mouse.eLClick, function() LuaEvents.ToggleCivilopedia(); end );
+  Controls.CivpediaButton:RegisterCallback( Mouse.eLClick, function() LuaEvents.ToggleCivilopedia(); end);
   Controls.CivpediaButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.MenuButton:RegisterCallback( Mouse.eLClick, OnMenu );
   Controls.MenuButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+  Controls.TimeCallback:RegisterEndCallback( OnRefreshTimeTick );
 
   -- Game Events
-  Events.AnarchyBegins.Add(       OnRefreshYields );
-  Events.AnarchyEnds.Add(         OnRefreshYields );
-  Events.BeliefAdded.Add(         OnRefreshYields );
-  Events.CityInitialized.Add(       OnCityInitialized );
+  Events.AnarchyBegins.Add(        OnRefreshYields );
+  Events.AnarchyEnds.Add(          OnRefreshYields );
+  Events.BeliefAdded.Add(          OnRefreshYields );
+  Events.CityInitialized.Add(        OnCityInitialized );
   Events.CityFocusChanged.Add(            OnRefreshYields );
   Events.CityWorkerChanged.Add(           OnRefreshYields );
   Events.DiplomacySessionClosed.Add(    OnRefreshYields );
   Events.FaithChanged.Add(        OnRefreshYields );
-  Events.GovernmentChanged.Add(     OnRefreshYields );
-  Events.GovernmentPolicyChanged.Add(   OnRefreshYields );
-  Events.GovernmentPolicyObsoleted.Add( OnRefreshYields );
+  Events.GovernmentChanged.Add(      OnRefreshYields );
+  Events.GovernmentPolicyChanged.Add(    OnRefreshYields );
+  Events.GovernmentPolicyObsoleted.Add(  OnRefreshYields );
   Events.GreatWorkCreated.Add(            OnGreatWorkCreated );
-  Events.ImprovementAddedToMap.Add(   OnRefreshResources );
-  Events.ImprovementRemovedFromMap.Add( OnRefreshResources );
+  Events.ImprovementAddedToMap.Add(    OnRefreshResources );
+  Events.ImprovementRemovedFromMap.Add(  OnRefreshResources );
   Events.InfluenceChanged.Add(      RefreshInfluence );
-  Events.LoadGameViewStateDone.Add(   OnLoadGameViewStateDone );
+  Events.LoadGameViewStateDone.Add(    OnLoadGameViewStateDone );
   Events.LocalPlayerChanged.Add(      OnLocalPlayerChanged );
-  Events.PantheonFounded.Add(       OnRefreshYields );
+  Events.PantheonFounded.Add(        OnRefreshYields );
   Events.PlayerAgeChanged.Add(      OnRefreshYields );
-  Events.ResearchCompleted.Add(     OnRefreshResources );
-  Events.PlayerResourceChanged.Add(   OnRefreshResources );
+  Events.ResearchCompleted.Add(      OnRefreshResources );
+  Events.PlayerResourceChanged.Add(    OnRefreshResources );
   Events.SystemUpdateUI.Add(        OnUpdateUI );
-  Events.TradeRouteActivityChanged.Add( RefreshTrade );
-  Events.TradeRouteCapacityChanged.Add( RefreshTrade );
-  Events.TreasuryChanged.Add(       OnRefreshYields );
-  Events.TurnBegin.Add(         OnTurnBegin );
+  Events.TradeRouteActivityChanged.Add(  RefreshTrade );
+  Events.TradeRouteCapacityChanged.Add(  RefreshTrade );
+  Events.TreasuryChanged.Add(        OnRefreshYields );
+  Events.TurnBegin.Add(          OnTurnBegin );
   Events.UnitAddedToMap.Add(        OnRefreshYields );
   Events.UnitGreatPersonActivated.Add(    OnGreatPersonActivated );
   Events.UnitKilledInCombat.Add(      OnRefreshYields );
   Events.UnitRemovedFromMap.Add(      OnRefreshYields );
-  Events.VisualStateRestored.Add(     OnTurnBegin );
-  Events.WMDCountChanged.Add(       OnWMDUpdate );
-  OnTurnBegin();
+  Events.VisualStateRestored.Add(      OnTurnBegin );
+  Events.WMDCountChanged.Add(        OnWMDUpdate );
+  Events.CityProductionChanged.Add(    OnRefreshResources);
   LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
+
+  -- If no expansions function are in scope, ready to refresh and show values.
+  if not XP1_LateInitialize then
+    RefreshYields();
+  end
+end
+
+
+-- ===========================================================================
+function OnInit( isReload:boolean )
+  LateInitialize();
+end
+
+
+-- ===========================================================================
+function Initialize()
+  -- UI Callbacks
+  ContextPtr:SetInitHandler( OnInit );
+  ContextPtr:SetRefreshHandler( OnRefresh );
 end
 Initialize();
