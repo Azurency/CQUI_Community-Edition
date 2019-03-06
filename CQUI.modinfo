@@ -128,7 +128,7 @@
     <File>Assets/UI/Panels/citypaneloverview.lua</File>
     <File>Assets/UI/Panels/citypaneloverview.xml</File>
     <File>Assets/UI/Panels/notificationpanel.lua</File>
-    <File>Assets/UI/Panels/productionpanel.lua</File>
+    <File>Assets/UI/Panels/productionpanel_CQUI.lua</File>
     <File>Assets/UI/Panels/statusmessagepanel.lua</File>
     <File>Assets/UI/Panels/statusmessagepanel.xml</File>
     <File>Assets/UI/Panels/unitpanel.lua</File>
@@ -274,9 +274,9 @@
         <File>Assets/UI/minimappanel.lua</File>
         <File>Assets/UI/minimappanel.xml</File>
         <File>Assets/UI/partialscreenhooks.lua</File>
-        <File>Assets/UI/partialscreenhooks.xml</File>
+        <File>Assets/UI/partialscreenhooks.xml</File>-->
         <File>Assets/UI/productionpanel.xml</File>
-        <File>Assets/UI/strategicview_mapplacement.lua</File>-->
+        <!--<File>Assets/UI/strategicview_mapplacement.lua</File>-->
         <File>Assets/UI/supportfunctions.lua</File>
         <!--<File>Assets/UI/techandcivicsupport.lua</File>
         <File>Assets/UI/toppanel.lua</File>
@@ -294,9 +294,8 @@
         <File>Assets/UI/Panels/citypanel.xml</File>
         <File>Assets/UI/Panels/citypaneloverview.lua</File>
         <File>Assets/UI/Panels/citypaneloverview.xml</File>
-        <!--<File>Assets/UI/Panels/notificationpanel.lua</File>
-        <File>Assets/UI/Panels/productionpanel.lua</File>
-        <File>Assets/UI/Panels/statusmessagepanel.lua</File>
+        <!--<File>Assets/UI/Panels/notificationpanel.lua</File>-->
+        <!--<File>Assets/UI/Panels/statusmessagepanel.lua</File>
         <File>Assets/UI/Panels/statusmessagepanel.xml</File>
         <File>Assets/UI/Panels/unitpanel.lua</File>
         <File>Assets/UI/Panels/unitpanel.xml</File>
@@ -415,6 +414,13 @@
         <File>cqui.dep</File>
       </Items>
     </ModArt>
+
+    <ReplaceUIScript id="CQUI_ProductionPanel">
+      <Properties>
+        <LuaContext>ProductionPanel</LuaContext>
+        <LuaReplace>Assets/UI/Panels/productionpanel_CQUI.lua</LuaReplace>
+      </Properties>
+    </ReplaceUIScript>
 
     <!-- Mod integrations -->
     <!-- BTS -->
