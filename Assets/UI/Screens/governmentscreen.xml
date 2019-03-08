@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd">
 
-  <Container Style="FullScreenVignetteConsumer"/>
+  <Container ID="Vignette" Style="FullScreenVignetteConsumer" />
 
   <ScrollPanel Anchor="C,C" Size="parent,768" FullClip="1">
     <Image ConsumeMouse="1" Anchor="L,B" Size="Parent,Parent" Texture="Wood_Pattern" StretchMode="Tile">
-      <Grid ConsumeMouse="1" Size="Parent,Parent" Texture="Wood_CarvedBorder" SliceCorner="240,240" SliceSize="20,20" SliceTextureSize="497,500"/>		
+      <Grid ConsumeMouse="1" Size="Parent,Parent" Texture="Wood_CarvedBorder" SliceCorner="240,240" SliceSize="20,20" SliceTextureSize="497,500"/>
 
-      <!-- Main container, centers the screen -->	
+      <!-- Main container, centers the screen -->
       <Container ID="MainContainer" Offset="0,70">
 
         <AlphaAnim ID="AlphaAnim" AlphaStart="1.0" AlphaEnd="0" Cycle="Once" Speed="3.4" Function="OutSine" Stopped="1">
@@ -22,8 +22,8 @@
                   <Grid ID="GovernmentTop" Size="352,455" Texture="Governments_BackingSelected" SliceCorner="180,70" SliceSize="1,1" SliceTextureSize="352,145">
                     <Stack ID="GovernmentContentStack" StackGrowth="Down">
                       <Container Size="parent,48">
-                        <Label ID="GovernmentName" Anchor="C,C" Offset="0,3" String="$GovernmentName$" Style="FontFlair20" SmallCaps="26" FontStyle="glow" Color0="9,46,75,255" Color1="16,43,67,100"/>
-                        <Label ID="GovernmentInfluence" Anchor="R,C" Offset="20,2" String="[ICON_Envoy]" Style="FontFlair20" Color="0,0,0,255"/>
+                        <Label ID="GovernmentName" Anchor="C,C" Offset="0,4" String="$GovernmentName$" Style="FontFlair20" FontSize="14" SmallCaps="18" FontStyle="glow" Color0="9,46,75,255" Color1="16,43,67,100" TruncateWidth="200" TruncatedTooltip="1"/>
+                        <Label ID="GovernmentStats" Anchor="R,C" Offset="20,2" String="[ICON_Envoy]" Style="FontFlair20" FontSize="14" SmallCaps="18" Color="0,0,0,255"/>
                       </Container>
                       <Image ID="GovernmentImage" Anchor="C,T" Offset="0,0" Size="330,300" Texture="GOVERNMENT_AUTOCRACY">
                         <Grid Anchor="C,C" Offset="0,0" Size="336,310" Texture="Governments_ImageFrame" SliceCorner="168,20" SliceTextureSize="336,91"/>
@@ -70,7 +70,7 @@
                     </Grid>
                   </Image>
                 </Stack>
-                
+
                 <!-- Active Policy Card Rows -->
                 <Image Offset="0,-10" Size="parent,189" Texture="Governments_CardSlot">
                   <Container ID="RowMilitary" Anchor="C,C" Size="parent-20,parent-20"/>
@@ -147,7 +147,7 @@
                   <Box ID="WildcardEmpty" Anchor="C,B" Color="0,0,0,80" Size="parent-20,parent-10" Hidden="1">
                     <Label String="LOC_GOVT_NO_WILDCARD_SLOTS" Style="TabFont" Anchor="C,C" Align="Center" WrapWidth="250"/>
                   </Box>
-                </Image>							
+                </Image>
 
                 <Container ID="CategoryIconsLeft" Offset="0,0" Size="10,700">
                   <Image Offset="6,-5" Texture="Governments_CategoryRim">
@@ -163,16 +163,16 @@
                   <Image Offset="6,345" Texture="Governments_CategoryRim">
                     <Image ID="DiplomacyIconLeft" Anchor="C,C" Offset="0,0" Texture="Governments_Diplomacy">
                       <Label ID="DiplomacyLabelLeft" Style="GovernmentSlotsRemainingText" String="0" Anchor="C,C" Offset="0,15"/>
-                    </Image>							
+                    </Image>
                   </Image>
                   <Image Offset="6,520" Texture="Governments_CategoryRim">
                     <Image ID="WildcardIconLeft" Anchor="C,C" Offset="0,0" Texture="Governments_Wildcard">
                       <Label ID="WildcardLabelLeft" Style="GovernmentSlotsRemainingText" String="0" Anchor="C,C" Offset="0,15"/>
-                    </Image>									
+                    </Image>
                   </Image>
                 </Container>
 
-                <Container ID="PolicyInputShield" Size="parent,parent" ConsumeMouseButton="1"/>
+                <Container ID="PolicyInputShield" Size="parent,parent" ConsumeMouseButton="1" />
               </Container>
 
 
@@ -182,8 +182,8 @@
                   <Label Anchor="C,C" String="{LOC_GOVT_CHOOSE_POLICIES:upper}" Style="FontFlair20" Color="GovInkDarkMark" SmallCaps="28" SmallCapsType="EveryWord" Hidden="1"/>
                 </Grid>
                 <Grid Offset="3,3" Size="parent-5,30" Texture="Controls_Rectangle" SliceCorner="16,16" SliceSize="1,1" SliceTextureSize="32,32" Color="GovWaterDarkMark"/>
-                <Image Offset="-43,0" Size="217,parent" Texture="Parchment_Ripple" Rotate="90" StretchMode="Tile"/>
-                <Image Anchor="R,T" Size="175,parent" Texture="Parchment_Ripple" Rotate="-90" StretchMode="Tile"/>						
+                <Image Size="217,parent" Texture="Parchment_Ripple" Rotate="90" StretchMode="Fill"/>
+                <Image Anchor="R,T" Size="175,parent" Texture="Parchment_Ripple" Rotate="-90" StretchMode="Fill"/>
                 <Grid Offset="3,90" Size="parent-5,parent-200" Texture="Controls_Rectangle" SliceCorner="16,16" SliceSize="1,1" SliceTextureSize="32,32" Color="GovWaterDarkMark" Hidden="1"/>
 
                 <Grid Anchor="R,B" Offset="3,2" Size="parent-5,50" Texture="Controls_Rectangle" SliceCorner="16,16" SliceSize="1,1" SliceTextureSize="32,32" Color="GovWaterDarkMark">
@@ -201,30 +201,23 @@
                 <Image Texture="Controls_Gradient" Color="0,0,0,200" Rotate="270" Size="50,parent" Anchor="R,T"/>
                 <Image Texture="Controls_GradientSmall" Color="0,0,0,255" Rotate="90" Size="20,parent" AnchorSide="O,I"/>
 
-                <PullDown ID="FilterPolicyPulldown" Anchor="R,T" Offset="0,30" Size="194,26" ScrollThreshold="450" SpaceForScroll="0" Hidden="1">		
+                <PullDown ID="FilterPolicyPulldown" Anchor="R,T" Offset="0,30" Size="194,26" ScrollThreshold="450" SpaceForScroll="0" Hidden="1">
                   <ButtonData>
                     <GridButton ID="FilterPolicyPulldownButton" Offset="0,30" Size="194,26" String="LOC_GOVT_FILTER_W_DOTS" Style="TreeOptionText">
                       <GridData Texture="Controls_Dropdown3" StateOffsetIncrement="0,26" SliceCorner="30,14" SliceSize="1,1" SliceTextureSize="41,26"/>
                     </GridButton>
-                  </ButtonData>				
-                  <GridData Offset="0,50" Texture="Controls_OptionPanel" SliceCorner="3,3" SliceSize="10,52" SliceTextureSize="16,64"/>			
+                  </ButtonData>
+                  <GridData Offset="0,50" Texture="Controls_OptionPanel" SliceCorner="3,3" SliceSize="10,52" SliceTextureSize="16,64"/>
                   <StackData StackGrowth="Bottom" Anchor="C,T" Padding="0"/>
-                  <InstanceData Name="FilterPolicyItemInstance">					
+                  <InstanceData Name="FilterPolicyItemInstance">
                     <Button ID="Button" Anchor="L,T" Size="194,30">
-                      <Label ID="DescriptionText" Offset="4,8" String="b" Style="FontNormal14" Color="255,255,255,255"/>	
+                      <Label ID="DescriptionText" Offset="4,8" String="b" Style="FontNormal14" Color="255,255,255,255"/>
                     </Button>
-                  </InstanceData>						
+                  </InstanceData>
                 </PullDown>
 
-                <Stack ID="FilterStack" StackGrowth="Right" Offset="0,6" Anchor="C,T">
-                  <GridButton ID="NoFilterButton" Style="ButtonControlTan" String="LOC_GOVT_FILTER_NONE" Size="100,24" TruncateWidth="96"/>
-                  <GridButton ID="MilitaryFilterButton" Style="ButtonControlTan" String="LOC_GOVT_FILTER_MILITARY" Size="100,24" TruncateWidth="96"/>
-                  <GridButton ID="EconomicFilterButton" Style="ButtonControlTan" String="LOC_GOVT_FILTER_ECONOMIC" Size="100,24" TruncateWidth="96"/>
-                  <GridButton ID="DiplomacyFilterButton" Style="ButtonControlTan" String="LOC_GOVT_FILTER_DIPLOMATIC" Size="100,24" TruncateWidth="96"/>
-                  <GridButton ID="GreatPeopleFilterButton" Style="ButtonControlTan" String="LOC_CATEGORY_GREAT_PEOPLE_NAME" Size="100,24" TruncateWidth="96"/>
-                  <GridButton ID="WildcardFilterButton" Style="ButtonControlTan" String="LOC_GOVT_FILTER_WILDCARD" Size="100,24" TruncateWidth="96"/>
-                </Stack>
-
+                <!--Filters are added dynamically through AddFilterTabButtons-->
+                <Stack ID="FilterStack" StackGrowth="Right" Offset="0,6" Anchor="C,T"/>
 
                 <Box ID="CatalogInputShield" Offset="0,0" Size="parent,parent" ConsumeMouseButton="1" Color="0,0,0,150"/>
 
@@ -257,7 +250,7 @@
         </Box>
       </AlphaAnim>
 
-      <Image Offset="0,-8" Size="245,62" Texture="Governments_BannerCivicUnlocked" Hidden="1">		
+      <Image Offset="0,-8" Size="245,62" Texture="Governments_BannerCivicUnlocked" Hidden="1">
         <Label ID="CompletedRibbon" Anchor="L,C" Offset="4,-4" FontSize="14" WrapWidth="200"/>
       </Image>
     </Image>
@@ -283,6 +276,8 @@
       </GridButton>
     </Grid>
 
+    <Container Style="ModalScreenWide"/>
+
     <Container ID="TabArea" Anchor="C,T" Offset="0,35" Size="parent,31">
       <Image Texture="Controls_TabLedgeFill" Size="parent-100,23" StretchMode="Tile" Anchor="C,T" Offset="0,4"/>
       <Grid Style="WoodenTabBacking" Size="parent-7,31" Anchor="C,T"/>
@@ -302,15 +297,12 @@
             <GridButton Size="parent,parent" Style="TabButtonSelected" ConsumeMouseButton="0" ConsumeMouseOver="1"/>
           </AlphaAnim>
         </GridButton>
-      </Container>
-      <Container Anchor="C,T" Offset="0,0" Size="parent,11">
-        <SlideAnim ID="TabAnim" Begin="0,0" End="0,0" Cycle="Once" Speed="3.5" Function="OutQuint" Size="42,11">
+
+        <SlideAnim ID="TabAnim" Begin="0,0" End="0,0" Cycle="Once" Speed="3.5" Function="OutQuint" Size="67,68">
           <Image ID="TabArrow" Texture="Controls_TabSelectArrow" Size="42,11"/>
         </SlideAnim>
       </Container>
     </Container>
-
-    <Container Style="ModalScreenWide"/>
 
     <Tutorial ID="TutChangePolicies" Style="TutorialContainer" Anchor="C,T" AnchorSide="I,I" Offset="-30,126" TriggerBy="TutorialChangePolicies">
       <Grid Style="TutorialCalloutGrid">
@@ -324,45 +316,45 @@
 
   </Container>
 
-  <!-- ==================================================================	-->
-  <!--	Instances																													-->
-  <!-- ==================================================================	-->
+  <!-- ==================================================================  -->
+  <!--  Instances                                                          -->
+  <!-- ==================================================================  -->
 
-  <Instance Name="PolicyCard">
-    <Container ID="Content" Size="130,150">
-      <Image ID="CardContainer" Anchor="C,C" Offset="0,0" Size="parent,parent" Texture="Governments_CardContainer" Color="GovWaterDarkMark" StretchMode="Fill"/>
-      <Button ID="Button" Size="parent,parent" Alpha="0"/>
-      <Drag ID="Draggable" Size="parent,parent" Buttons="L" SnapBackSpeed="4" DragThreshold="8">
-        <Grid ID="Shadow" Offset="-35,-35" Size="200,238" Style="DropShadow" Hidden="1"/>
-        <Image ID="Background" Size="parent,parent" Texture="Governments_DiplomacyCard">
-          <Image ID="DropTargetGlow" StretchMode="Fill" Size="parent,parent" Texture="Governments_PolicySlotGlow" Hidden="true"/>
-          <Grid ID="TitleContainer" Style="DropShadow4" Anchor="C,T" Size="130,auto" Color="0,0,0,100" AutoSizePadding="0,5">
-            <Label ID="Title" Anchor="C,T" Offset="0,8" WrapWidth="120" Align="Center" Style="FontNormal12" FontStyle="Stroke" String="$Policy Card$" ColorSet="BodyTextCool"/>
-            <Image Texture="Controls_Div6" Anchor="C,B" Offset="0,2" Size="parent,2" Color="255,255,255,20" StretchMode="Fill"/>
+  <Instance            Name="PolicyCard">
+    <Container        ID="Content"                                            Size="130,150">
+      <Image          ID="CardContainer"      Anchor="C,C"                    Size="parent,parent"  Texture="Governments_CardContainer" Color="GovWaterDarkMark" StretchMode="Fill"/>
+      <Button          ID="Button"                                              Size="parent,parent"  Alpha="0" />
+      <Drag            ID="Draggable"                                          Size="parent,parent"  Buttons="L" SnapBackSpeed="4" DragThreshold="8">
+        <Grid          ID="Shadow"                            Offset="-35,-35"  Size="200,238"        Style="DropShadow" Hidden="1"/>
+        <Image        ID="Background"                                          Size="parent,parent"  Texture="Governments_DiplomacyCard">
+          <Image      ID="DropTargetGlow" StretchMode="Fill"                  Size="parent,parent"  Texture="Governments_PolicySlotGlow" Hidden="1"/>
+          <Grid        ID="TitleContainer"      Anchor="C,T"                    Size="130,auto"        Color="0,0,0,100" AutoSizePadding="0,5" Style="DropShadow4" >
+            <Label    ID="Title"              Anchor="C,T"  Offset="0,8"      WrapWidth="120"        Align="Center" Style="FontNormal12" FontStyle="Stroke" String="$Policy Card$" ColorSet="BodyTextCool"/>
+            <Image                            Anchor="C,B"  Offset="0,2"      Size="parent,2"        Texture="Controls_Div6" Color="255,255,255,20" StretchMode="Fill"/>
           </Grid>
-          <Container ID="DescriptionContainer" Size="parent,parent">
-            <Grid ID="DescriptionGrid" Anchor="C,C" AutoSizePadding="2,3" Size="auto,auto" MinSize="106,0" InnerOffset="1,0" Texture="Controls_ItemContainer2" SliceCorner="11,5" SliceTextureSize="22,22">
-              <Label ID="Description" WrapWidth="110" Anchor="L,C" Style="FontNormal12" ColorSet="BodyTextCool" FontStyle="Stroke" String="$Description$" TruncateHeight="110">
-                <Image Texture="Controls_Div6" Size="parent,2" Color="255,255,255,20" Anchor="C,T" StretchMode="Fill" Offset="0,-5"/>
-                <Image Texture="Controls_Div6" Size="parent,2" Color="255,255,255,20" Anchor="C,B" StretchMode="Fill" Offset="0,-5"/>
+          <Container  ID="DescriptionContainer" Size="parent,parent">
+            <Grid      ID="DescriptionGrid"    Anchor="C,C" AutoSizePadding="2,3" Size="auto,auto" MinSize="106,0" InnerOffset="1,0" Texture="Controls_ItemContainer2" SliceCorner="11,5" SliceTextureSize="22,22">
+              <Label  ID="Description"        Anchor="L,C" WrapWidth="110" Style="FontNormal12" ColorSet="BodyTextCool" FontStyle="Stroke" String="$Description$" TruncateHeight="90">
+                <Image                        Anchor="C,T"  Offset="0,-5"      Size="parent,2" Texture="Controls_Div6"  Color="255,255,255,20"  StretchMode="Fill" />
+                <Image                        Anchor="C,B"  Offset="0,-5"      Size="parent,2" Texture="Controls_Div6"  Color="255,255,255,20"  StretchMode="Fill" />
               </Label>
             </Grid>
           </Container>
-          <Label ID="NewIcon" Anchor="R,T" Offset="-4,-4" String="[ICON_New]" Hidden="1" ToolTip="LOC_GOVT_NEW_POLICY"/>
+          <Label      ID="NewIcon"            Anchor="R,T" Offset="-4,-4" String="[ICON_New]" ToolTip="LOC_GOVT_NEW_POLICY" Hidden="1" />
         </Image>
       </Drag>
     </Container>
   </Instance>
 
-  <Instance Name="PolicyListItem">	
-    <Container ID="Content" Size="175,70">		
+  <Instance Name="PolicyListItem">
+    <Container ID="Content" Size="175,70">
       <Image ID="TypeIcon" Size="37,44" Texture="Governments_DiplomacyCard_Small"/>
       <Label ID="Title" Offset="40,1" WrapWidth="230" Style="FontNormal14" String="$Title$"/>
       <Label ID="Description" Offset="40,22" WrapWidth="230" Style="FontNormal12" String="$Description$"/>
     </Container>
   </Instance>
 
-  <Instance Name="PagePip">		
+  <Instance Name="PagePip">
     <Image ID="Image" Texture="Controls_PagePip"/>
   </Instance>
 
@@ -381,8 +373,8 @@
       <GridButton ID="Selected" Size="parent,parent" Texture="Governments_BackingSelected" SliceCorner="180,70" SliceTextureSize="352,145"/>
       <Stack ID="GovernmentContentStack" StackGrowth="Down">
         <Container Size="parent,42">
-          <Label ID="GovernmentName" Anchor="C,C" Offset="0,7" String="$GovernmentName$" Style="FontFlair20" SmallCaps="26" FontStyle="glow" Color0="9,46,75,255" Color1="16,43,67,100"/>
-          <Label ID="GovernmentInfluence" Anchor="R,C" Offset="20,2" String="[ICON_Envoy]" Style="FontFlair20" Color="0,0,0,255"/>
+          <Label ID="GovernmentName" Anchor="C,C" Offset="0,7" String="$GovernmentName$" Style="FontFlair20" FontSize="14" SmallCaps="18" FontStyle="glow" Color0="9,46,75,255" Color1="16,43,67,100" TruncateWidth="200" TruncatedTooltip="1"/>
+          <Label ID="GovernmentStats" Anchor="R,C" Offset="20,5" String="[ICON_Envoy]" Style="FontFlair20" FontSize="14" Color="0,0,0,255"/>
         </Container>
         <Container Size="336,93" Anchor="C,T">
           <Image ID="GovernmentImage" Anchor="C,C" Offset="0,0" Size="330,83" Texture="GOVERNMENT_AUTOCRACY" TextureOffset="0,80"/>
@@ -391,7 +383,7 @@
         <Stack ID="BonusStack" Anchor="C,T" Offset="0,-2" StackGrowth="Down" Padding="0">
           <Container Size="2,2"/>
           <Grid ID="GovernmentBonusBacking" Anchor="C,T" Offset="0,0" Size="290,auto" Texture="Controls_SubContainer2" SliceCorner="17,17" SliceSize="1,1" SliceTextureSize="36,35" Color="GovBonusSelected" MinSize="36,35" AutoSizePadding="0,3">
-            <Label ID="GovernmentBonus" Anchor="C,C" Offset="0,1" Color0="9,46,75,255" Color1="9,46,75,20" WrapWidth="275" Style="BodyText12"/>
+            <Label ID="GovernmentBonus" Anchor="C,C" Offset="0,1" TruncateHeight="27" TruncatedTooltip="1" Color0="9,46,75,255" Color1="9,46,75,20" WrapWidth="275" Style="BodyText12"/>
           </Grid>
           <Container Size="2,4"/>
           <Grid ID="GovPercentBonusArea" Anchor="C,T" Offset="0,0" Size="290,auto" Texture="Controls_SubContainer2" SliceCorner="17,17" SliceSize="1,1" SliceTextureSize="36,35" Color="GovBonusSelected" MinSize="36,35" AutoSizePadding="0,0">
@@ -432,7 +424,7 @@
     <Container ID="Content" Size="130,150">
       <Container ID="LiftableContainer" Size="parent,parent">
         <Image ID="TypeIcon" Size="parent,parent" Texture="Governments_EmptyCard">
-          <Image ID="DropTargetGlow" StretchMode="Fill" Size="parent,parent" Texture="Governments_PolicySlotGlow" Hidden="true"/>
+          <Image ID="DropTargetGlow" StretchMode="Fill" Size="parent,parent" Texture="Governments_PolicySlotGlow" Hidden="1"/>
           <Label ID="DragPolicyLabel" Align="Center" Anchor="C,C" Offset="0,0" WrapWidth="90" Style="FontNormal14" Color0="138,157,175,255" Color1="0,0,0,128" FontStyle="Stroke" String="LOC_GOVERNMENT_DRAG_POLICY_TEXT"/>
         </Image>
       </Container>
@@ -458,6 +450,10 @@
         <Image Anchor="C,C" Offset="1,0" Texture="Governments_LearnedPolicy" Size="38,46" StretchMode="Fill"/>
       </Image>
     </Container>
+  </Instance>
+
+  <Instance Name="PolicyTabButtonInstance">
+    <GridButton ID="Button" Style="ButtonControlTan" String="LOC_GOVT_FILTER_MILITARY" Size="100,24" TruncateWidth="96"/>
   </Instance>
 
 </Context>

@@ -190,13 +190,11 @@ function TooltipOff()
 end
 
 -- ===========================================================================
--- View(data)
--- Update the layout based on the view model
+-- GetDetails(data)
+-- Construct details table used to populate plot tooltip
 -- ===========================================================================
-function View(data:table, bIsUpdate:boolean)
-  -- Build a string that contains all plot details.
+function GetDetails(data)
   local details = {};
-  local debugInfo = {};
 
   --Civilization and city ownership line
   if(data.Owner ~= nil) then
@@ -339,17 +337,21 @@ function View(data:table, bIsUpdate:boolean)
         end
       end
     end
-    if (resourceTechType ~= nil and valid_feature == true and valid_terrain == true) then
-      local localPlayer = Players[Game.GetLocalPlayer()];
-      if (localPlayer ~= nil) then
-        local playerTechs = localPlayer:GetTechs();
-        local techType = GameInfo.Technologies[resourceTechType];
-        if (techType ~= nil and not playerTechs:HasTech(techType.Index)) then
-          resourceString = resourceString .. "[COLOR:Civ6Red]  ( " .. Locale.Lookup("LOC_TOOLTIP_REQUIRES") .. " " .. Locale.Lookup(techType.Name) .. ")[ENDCOLOR]";
+    local localPlayer = Players[Game.GetLocalPlayer()];
+    if (localPlayer ~= nil) then
+      local playerResources = localPlayer:GetResources();
+      if(playerResources:IsResourceVisible(resourceHash)) then
+        if (resourceTechType ~= nil and valid_feature == true and valid_terrain == true) then
+          local playerTechs  = localPlayer:GetTechs();
+          local techType = GameInfo.Technologies[resourceTechType];
+          if (techType ~= nil and not playerTechs:HasTech(techType.Index)) then
+            resourceString = resourceString .. "[COLOR:Civ6Red]  ( " .. Locale.Lookup("LOC_TOOLTIP_REQUIRES") .. " " .. Locale.Lookup(techType.Name) .. ")[ENDCOLOR]";
+          end
         end
+
+        table.insert(details, resourceString);
       end
     end
-    table.insert(details, resourceString)
   end
 
   table.insert(details, "------------------");
@@ -407,9 +409,8 @@ function View(data:table, bIsUpdate:boolean)
     end
   end
 
-  if (data.Continent == nil) then
-    table.insert(details, Locale.Lookup("LOC_TOOLTIP_CONTINENT_NONE"));
-  else
+  -- Do not include ('none') continent line unless continent plot. #35955
+  if (data.Continent ~= nil) then
     table.insert(details, Locale.Lookup("LOC_TOOLTIP_CONTINENT", GameInfo.Continents[data.Continent].Description));
   end
 
@@ -433,7 +434,7 @@ function View(data:table, bIsUpdate:boolean)
   local CQUIYields = {};
 
   -- CITY TILE
-  if(data.IsCity == true) then
+  if(data.IsCity == true and data.DistrictType ~= nil) then
 
     table.insert(details, "------------------");
 
@@ -466,7 +467,7 @@ function View(data:table, bIsUpdate:boolean)
     --end
 
   -- DISTRICT TILE
-  elseif(data.DistrictID ~= -1) then
+  elseif(data.DistrictID ~= -1 and data.DistrictType ~= nil) then
     if (not GameInfo.Districts[data.DistrictType].InternalOnly) then  --Ignore 'Wonder' districts
       -- Plot yields (ie. from Specialists)
       if (data.Yields ~= nil) then
@@ -486,6 +487,8 @@ function View(data:table, bIsUpdate:boolean)
       local sDistrictName :string = Locale.Lookup(Locale.Lookup(GameInfo.Districts[data.DistrictType].Name));
       if (data.DistrictPillaged) then
         sDistrictName = sDistrictName .. " " .. Locale.Lookup("LOC_TOOLTIP_PLOT_PILLAGED_TEXT");
+      elseif (not data.DistrictComplete) then
+        sDistrictName = sDistrictName .. " " .. Locale.Lookup("LOC_TOOLTIP_PLOT_CONSTRUCTION_TEXT");
       end
       table.insert(details, "------------------");
       table.insert(details, sDistrictName);
@@ -582,7 +585,19 @@ function View(data:table, bIsUpdate:boolean)
     table.insert(details, Locale.Lookup("LOC_TOOLTIP_PLOT_CONTAMINATED_TEXT", data.Fallout));
   end
 
+  return details;
+end
+
+-- ===========================================================================
+-- View(data)
+-- Update the layout based on the view model
+-- ===========================================================================
+function View(data:table, bIsUpdate:boolean)
+  -- Build a string that contains all plot details.
+  local details = GetDetails(data);
+
   -- Add debug information in here:
+  local debugInfo = {};
   if m_isShowDebug then
     -- Show plot x,y, id and vis count
     local iVisCount = 0;
@@ -592,10 +607,9 @@ function View(data:table, bIsUpdate:boolean)
         iVisCount = pLocalPlayerVis:GetLayerValue(VisibilityLayerTypes.TERRAIN, data.X, data.Y);
       end
     end
-    table.insert(debugInfo, "Plot #:" .. tostring(data.Index) .. " @("..tostring(data.X) .. ", " .. tostring(data.Y) .. "), vis:" .. tostring(iVisCount));
+    table.insert(debugInfo, "Debug #" .. tostring(data.Index) .. " ("..tostring(data.X) .. "," .. tostring(data.Y) .. "), vis:" .. tostring(iVisCount));
 
   end
-
 
   -- Set the control values
   if (data.IsLake) then
@@ -606,10 +620,6 @@ function View(data:table, bIsUpdate:boolean)
     Controls.PlotName:LocalizeAndSetText(data.TerrainTypeName);
   end
   Controls.PlotDetails:SetText(table.concat(details, "[NEWLINE]"));
-
-  if m_isShowDebug then
-    Controls.DebugTxt:SetText(table.concat(debugInfo, "[NEWLINE]"));
-  end
 
   -- Some conditions, jump past "pause" and show immediately
   if m_isShiftDown or UserConfiguration.GetValue("PlotToolTipFollowsMouse") == 0 then
@@ -629,21 +639,78 @@ function View(data:table, bIsUpdate:boolean)
   local plotName_width :number, plotName_height :number   = Controls.PlotName:GetSizeVal();
   local nameHeight :number                  = Controls.PlotName:GetSizeY();
   local plotDetails_width :number, plotDetails_height :number = Controls.PlotDetails:GetSizeVal();
-  local debugInfoHeight :number               = Controls.DebugTxt:GetSizeY();
-
   local max_width :number = math.max(plotName_width, plotDetails_width);
+
+  if m_isShowDebug then
+    Controls.DebugTxt:SetText(table.concat(debugInfo, "[NEWLINE]"));
+    local debugInfoWidth, debugInfoHeight :number      = Controls.DebugTxt:GetSizeVal();
+    max_width = math.max(max_width, debugInfoWidth);
+  end
 
   Controls.InfoStack:CalculateSize();
   local stackHeight = Controls.InfoStack:GetSizeY();
-
   Controls.PlotInfo:SetSizeVal(max_width + SIZE_WIDTH_MARGIN, stackHeight + SIZE_HEIGHT_PADDING);
 
   m_ttWidth, m_ttHeight = Controls.InfoStack:GetSizeVal();
   Controls.TooltipMain:SetSizeVal(m_ttWidth, m_ttHeight);
   Controls.TooltipMain:SetHide(false);
-
 end
 
+-- ===========================================================================
+-- Collect plot data and return it as a table
+-- ===========================================================================
+function FetchData(plot)
+
+  local kFalloutManager = Game.GetFalloutManager();
+  return {
+    X    = plot:GetX(),
+    Y    = plot:GetY(),
+    Index  = plot:GetIndex(),
+    Appeal        = plot:GetAppeal(),
+    Continent      = ContinentTypeMap[plot:GetContinentType()] or nil,
+    DefenseModifier    = plot:GetDefenseModifier(),
+    DistrictID      = plot:GetDistrictID(),
+    DistrictComplete  = false,
+    DistrictPillaged  = false,
+    DistrictType    = DistrictTypeMap[plot:GetDistrictType()],
+    Fallout        = kFalloutManager:GetFalloutTurnsRemaining(plot:GetIndex());
+    FeatureType      = FeatureTypeMap[plot:GetFeatureType()],
+    FeatureAdded    = plot:HasFeatureBeenAdded();
+    Impassable      = plot:IsImpassable();
+    ImprovementType    = ImprovementTypeMap[plot:GetImprovementType()],
+    ImprovementPillaged = plot:IsImprovementPillaged(),
+    IsCity        = plot:IsCity(),
+    IsLake        = plot:IsLake(),
+    IsRiver        = plot:IsRiver(),
+    IsRoute        = plot:IsRoute(),
+    IsWater        = plot:IsWater(),
+    MovementCost    = plot:GetMovementCost(),
+    Owner        = (plot:GetOwner() ~= -1) and plot:GetOwner() or nil,
+    OwnerCity      = Cities.GetPlotPurchaseCity(plot);
+    ResourceCount    = plot:GetResourceCount(),
+    ResourceType    = ResourceTypeMap[plot:GetResourceType()],
+    RoutePillaged    = plot:IsRoutePillaged(),
+    RouteType      = plot:GetRouteType(),
+    TerrainType      = TerrainTypeMap[plot:GetTerrainType()],
+    TerrainTypeName    = GameInfo.Terrains[TerrainTypeMap[plot:GetTerrainType()]].Name,
+    WonderComplete    = false,
+    WonderType      = BuildingTypeMap[plot:GetWonderType()],
+    Workers        = plot:GetWorkerCount();
+
+    -- Remove these once we have a visualization of cliffs
+    IsNWOfCliff      = plot:IsNWOfCliff(),
+    IsWOfCliff      = plot:IsWOfCliff(),
+    IsNEOfCliff      = plot:IsNEOfCliff(),
+    ---- END REMOVE
+
+    BuildingNames    = {},
+    BuildingsPillaged  = {},
+    BuildingTypes    = {},
+    Constructions    = {},
+    Yields        = {},
+    DistrictYields    = {},
+  };
+end
 
 -- ===========================================================================
 --  Show the information for a given plot
@@ -685,58 +752,10 @@ function ShowPlotInfo( plotId:number, bIsUpdate:boolean )
       m_isValidPlot = pPlayerVis:IsRevealed(plotId);
     end
 
-    local kFalloutManager = Game:GetFalloutManager();
-
     if (not m_isValidPlot) then
       ClearView();
     else
-      local new_data = {
-        X   = plot:GetX(),
-        Y   = plot:GetY(),
-        Index = plot:GetIndex(),
-        Appeal        = plot:GetAppeal(),
-        Continent     = ContinentTypeMap[plot:GetContinentType()] or nil,
-        DefenseModifier   = plot:GetDefenseModifier(),
-        DistrictID      = plot:GetDistrictID();
-        DistrictPillaged  = false;
-        DistrictType    = DistrictTypeMap[plot:GetDistrictType()],
-        Fallout       = kFalloutManager:GetFalloutTurnsRemaining(plot:GetIndex());
-        FeatureType     = FeatureTypeMap[plot:GetFeatureType()],
-        FeatureAdded    = plot:HasFeatureBeenAdded();
-        Impassable      = plot:IsImpassable();
-        ImprovementType   = ImprovementTypeMap[plot:GetImprovementType()],
-        ImprovementPillaged = plot:IsImprovementPillaged(),
-        IsCity        = plot:IsCity(),
-        IsLake        = plot:IsLake(),
-        IsRiver       = plot:IsRiver(),
-        IsRoute       = plot:IsRoute(),
-        IsWater       = plot:IsWater(),
-        MovementCost    = plot:GetMovementCost(),
-        Owner       = (plot:GetOwner() ~= -1) and plot:GetOwner() or nil,
-        OwnerCity     = Cities.GetPlotPurchaseCity(plot);
-        ResourceCount   = plot:GetResourceCount(),
-        ResourceType    = ResourceTypeMap[eResourceType],
-        RoutePillaged   = plot:IsRoutePillaged(),
-        RouteType     = plot:GetRouteType(),
-        TerrainType     = TerrainTypeMap[plot:GetTerrainType()],
-        TerrainTypeName   = GameInfo.Terrains[TerrainTypeMap[plot:GetTerrainType()]].Name,
-        WonderComplete    = false,
-        WonderType      = BuildingTypeMap[plot:GetWonderType()],
-        Workers       = plot:GetWorkerCount();
-
-        -- Remove these once we have a visualization of cliffs
-        IsNWOfCliff     = plot:IsNWOfCliff(),
-        IsWOfCliff      = plot:IsWOfCliff(),
-        IsNEOfCliff     = plot:IsNEOfCliff(),
-        ---- END REMOVE
-
-        BuildingNames   = {},
-        BuildingsPillaged = {},
-        BuildingTypes   = {},
-        Constructions   = {},
-        Yields        = {},
-        DistrictYields    = {},
-      };
+      local new_data = FetchData(plot);
 
       if (plot:IsNationalPark()) then
         new_data.NationalPark = plot:GetNationalParkName();
@@ -751,8 +770,11 @@ function ShowPlotInfo( plotId:number, bIsUpdate:boolean )
         if (eDistrictType) then
           local cityDistricts = new_data.OwnerCity:GetDistricts();
           if (cityDistricts) then
-            if (cityDistricts:IsPillaged(eDistrictType)) then
+            if (cityDistricts:IsPillaged(eDistrictType, plotId)) then
               new_data.DistrictPillaged = true;
+            end
+            if (cityDistricts:IsComplete(eDistrictType, plotId)) then
+              new_data.DistrictComplete = true;
             end
           end
         end
@@ -893,6 +915,8 @@ end
 
 -- ===========================================================================
 function OnShowLeaderScreen()
+    -- stop any existing leader animation sounds, as we're about to show a new one
+    UI.PlaySound("Stop_Leader_VO_SFX");
   m_isActive = false;
   ClearView();
 end
