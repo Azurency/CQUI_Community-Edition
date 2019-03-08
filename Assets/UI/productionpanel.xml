@@ -4,7 +4,8 @@
   <!-- PauseAnim - The amount of time that the list should wait before collapsing. -->
   <SlideAnim ID="PauseCollapseList" Speed="10" Begin="-10,0" End="0,0" Cycle="Once"/>
   <!-- PauseAnim - The amount of time that the window should wait before hiding. -->
-  <SlideAnim ID="PauseDismissWindow" Speed="5" Begin="-10,0" End="0,0" Cycle="Once"/>
+  <!-- AZURENCY : same speed and begin that the slideanim of the panel -->
+  <SlideAnim ID="PauseDismissWindow" Speed="3.4" Begin="330,0" End="0,0" Cycle="Once"/>
 
   <!-- An animated bouncing arrow to point to items in the tutorial's production panel -->
   <Instance Name="TutorialBouncingArrowH">
@@ -188,7 +189,7 @@
      
           <!-- Tab Subheader-->
           
-          <Container  ID="TabContainer" Anchor="C,T" Size="parent,auto" Offset="0,28">
+          <Container  ID="TabContainer" Anchor="C,T" Size="parent,0" Offset="0,28" Hidden="1">
             <Image            Texture="Controls_TabLedgeFill.dds" Size="parent-26,23" Offset="13,4" StretchMode="Tile"/>
             <Grid       ID="WoodenTabBacking" Style="WoodenTabBacking" Size="parent,31"/>
             <Container    ID="TabRow" Size="parent,auto" Anchor="C,T">
@@ -236,6 +237,9 @@
     
         <!-- Blue Window Header -->
         <Grid                  Anchor="R,T"         Size="parent+16,59"    Style="HeaderBannerRight" >
+          <Button ID="CQUI_ShowManagerButton" Offset="0,2" Anchor="L,T" Size="44,44"  Texture="LaunchBar_Hook_ButtonMedium" Style="ButtonNormalText" ToolTip="LOC_PRODUCTION_PANEL_MULTI_QUEUE">
+            <Image Offset="0,-1" Texture="Stats32" Size="32,32" Anchor="C,C"  Icon="ICON_QUEUE"/>
+          </Button>
           <Container              Anchor="L,T"         Size="parent-20,parent-27" >
             <Label      ID="HeaderLabel" Anchor="C,T" Offset="10,10"              Style="BannerHeaderText" String="LOC_HUD_CHOOSE_PRODUCTION" />
           </Container>
@@ -292,8 +296,8 @@
               </Image>
             </Grid>
             <Label        ID="CostText"         String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="8,0"/>
-            <GridButton ID="PurchaseButton" Size="62,parent-9" Style="PanelButtonLightweight" Anchor="R,C"/>
-            <GridButton ID="FaithPurchaseButton" Size="62,parent-9" Style="PanelButtonLightweight" Anchor="R,C"/>
+            <GridButton ID="PurchaseButton" Size="62,23" Style="PanelButtonLightweight" Anchor="R,C"/>
+            <GridButton ID="FaithPurchaseButton" Size="62,23" Style="PanelButtonLightweight" Anchor="R,C"/>
           </Stack>
         </GridButton>
       </Container>
@@ -330,8 +334,8 @@
               </Image>
               <Stack Anchor="R,C" StackGrowth="Left" Offset="3,0" Padding="3">
                 <Label        ID="CostText"         String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="5,0"/>
-                <GridButton ID="PurchaseButton" Size="62,parent-9" Style="PanelButtonLightweight" Anchor="R,C"/>
-                <GridButton ID="FaithPurchaseButton" Size="62,parent-9" Style="PanelButtonLightweight" Anchor="R,C"/>
+                <GridButton ID="PurchaseButton" Size="62,23" Style="PanelButtonLightweight" Anchor="R,C"/>
+                <GridButton ID="FaithPurchaseButton" Size="62,23" Style="PanelButtonLightweight" Anchor="R,C"/>
               </Stack>
             </Container>
           </Stack>
@@ -376,8 +380,8 @@
             </Grid>
             <Stack Anchor="R,C" StackGrowth="Left" Offset="3,0" Padding="3">
               <Label ID="CostText" String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="5,0"/>
-              <GridButton ID="PurchaseButton" Size="62,parent-9" Style="PanelButtonLightweight" Anchor="R,C"/>
-              <GridButton ID="FaithPurchaseButton" Size="62,parent-9" Style="PanelButtonLightweight" Anchor="R,C"/>
+              <GridButton ID="PurchaseButton" Size="62,23" Style="PanelButtonLightweight" Anchor="R,C"/>
+              <GridButton ID="FaithPurchaseButton" Size="62,23" Style="PanelButtonLightweight" Anchor="R,C"/>
             </Stack>
           </Stack>
         </GridButton>
@@ -512,8 +516,8 @@
               <Box Color="22,27,29,200" Size="1,parent" Anchor="L,C"/>
             </Container>
             <Label ID="CostText" String="? Turns" Style="WhiteSemiBold14" Anchor="R,C" Offset="5,0"/>
-            <GridButton ID="PurchaseButton" Size="62,parent-9" Style="PanelButtonLightweight" Anchor="R,C"/>
-            <GridButton ID="FaithPurchaseButton" Size="62,parent-9" Style="PanelButtonLightweight" Anchor="R,C"/>
+            <GridButton ID="PurchaseButton" Size="62,23" Style="PanelButtonLightweight" Anchor="R,C"/>
+            <GridButton ID="FaithPurchaseButton" Size="62,23" Style="PanelButtonLightweight" Anchor="R,C"/>
           </Stack>
         </GridButton>
       </Container>

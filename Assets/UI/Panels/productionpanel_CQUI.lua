@@ -12,11 +12,43 @@ BASE_OnCityBannerManagerProductionToggle = OnCityBannerManagerProductionToggle
 BASE_PopulateGenericItemData = PopulateGenericItemData
 BASE_View = View
 BASE_GetData = GetData
+BASE_Refresh = Refresh
+BASE_OnNotificationPanelChooseProduction = OnNotificationPanelChooseProduction
+BASE_OnCityBannerManagerProductionToggle = OnCityBannerManagerProductionToggle
 
 -- ===========================================================================
 -- CQUI Members
 -- ===========================================================================
 local CQUI_PurchaseTable = {}; -- key = item Hash
+local CQUI_ProductionQueue :boolean = true;
+local CQUI_ShowProductionRecommendations :boolean = false;
+local CQUI_ManagerShowing = false;
+
+function CQUI_OnSettingsUpdate()
+  CQUI_ProductionQueue = GameConfiguration.GetValue("CQUI_ProductionQueue");
+  CQUI_ShowProductionRecommendations = GameConfiguration.GetValue("CQUI_ShowProductionRecommendations") == 1
+  CQUI_SelectRightTab()
+  Controls.CQUI_ShowManagerButton:SetHide(not CQUI_ProductionQueue);
+end
+
+function CQUI_SelectRightTab()
+  if(not CQUI_ProductionQueue) then
+    OnTabChangeProduction();
+  else
+    OnTabChangeQueue();
+  end
+end
+
+function CQUI_ToogleManager()
+  if CQUI_ManagerShowing then
+    CQUI_ManagerShowing = false;
+    OnTabChangeQueue();
+  else
+    CQUI_ManagerShowing = true;
+    OnTabChangeManager();
+  end
+  Controls.CQUI_ShowManagerButton:SetSelected(CQUI_ManagerShowing);
+end
 
 function CQUI_PurchaseUnit(item, city)
   return function()
@@ -207,11 +239,40 @@ end
 -- ===========================================================================
 function PopulateGenericItemData( kInstance:table, kItem:table )
   BASE_PopulateGenericItemData(kInstance, kItem);
+
+  local notEnoughGoldColor = 0xFF222258;
+  local purchaseButtonPadding = 15;
+
+  -- CQUI show recommandations check
+	if not CQUI_ShowProductionRecommendations then
+    kInstance.RecommendedIcon:SetHide(true);
+  end
+
+  -- CQUI Reset the color
+  if kInstance.PurchaseButton then
+    kInstance.PurchaseButton:GetTextControl():SetColor(0xFFFFFFFF);
+  end
+  if kInstance.CorpsPurchaseButton then
+    kInstance.CorpsPurchaseButton:GetTextControl():SetColor(0xFFFFFFFF);
+  end
+  if kInstance.ArmyPurchaseButton then
+    kInstance.ArmyPurchaseButton:GetTextControl():SetColor(0xFFFFFFFF);
+  end
+  if kInstance.FaithPurchaseButton then
+    kInstance.FaithPurchaseButton:GetTextControl():SetColor(0xFFFFFFFF);
+  end
+  if kInstance.CorpsFaithPurchaseButton then
+    kInstance.CorpsFaithPurchaseButton:GetTextControl():SetColor(0xFFFFFFFF);
+  end
+  if kInstance.ArmyFaithPurchaseButton then
+    kInstance.ArmyFaithPurchaseButton:GetTextControl():SetColor(0xFFFFFFFF);
+  end
   
   -- Gold purchase button for building, district and units
   if kInstance.PurchaseButton then
     if CQUI_PurchaseTable[kItem.Hash] and CQUI_PurchaseTable[kItem.Hash]["gold"] then
       kInstance.PurchaseButton:SetText(CQUI_PurchaseTable[kItem.Hash]["gold"] .. "[ICON_GOLD]");
+      kInstance.PurchaseButton:SetSizeX(kInstance.PurchaseButton:GetTextControl():GetSizeX() + purchaseButtonPadding);
       kInstance.PurchaseButton:SetColor(0xFFF38FFF);
       kInstance.PurchaseButton:SetHide(false);
       kInstance.PurchaseButton:SetDisabled(false);
@@ -223,7 +284,7 @@ function PopulateGenericItemData( kInstance:table, kItem:table )
       end
 
       if CQUI_PurchaseTable[kItem.Hash]["goldCantAfford"] then
-        kInstance.PurchaseButton:GetTextControl():SetColor(0.5, 0.2, 0.13);
+        kInstance.PurchaseButton:GetTextControl():SetColor(notEnoughGoldColor);
       end
     else
       kInstance.PurchaseButton:SetHide(true);
@@ -236,12 +297,13 @@ function PopulateGenericItemData( kInstance:table, kItem:table )
       kInstance.CorpsPurchaseButton:SetHide(false);
       kInstance.CorpsPurchaseButton:SetDisabled(false);
       kInstance.CorpsPurchaseButton:SetText(CQUI_PurchaseTable[kItem.Hash]["corpsGold"] .. "[ICON_GOLD]");
+      kInstance.CorpsPurchaseButton:SetSizeX(kInstance.CorpsPurchaseButton:GetTextControl():GetSizeX() + purchaseButtonPadding);
       kInstance.CorpsPurchaseButton:RegisterCallback(Mouse.eLClick, CQUI_PurchaseTable[kItem.Hash]["corpsGoldCallback"]);
 
       if CQUI_PurchaseTable[kItem.Hash]["corpsGoldDisabled"] then
         kInstance.CorpsPurchaseButton:SetDisabled(true);
         kInstance.CorpsPurchaseButton:SetColor(0xDD3366FF);
-        kInstance.CorpsPurchaseButton:GetTextControl():SetColor(0.5, 0.2, 0.13);
+        kInstance.CorpsPurchaseButton:GetTextControl():SetColor(notEnoughGoldColor);
       end
     else
       kInstance.CorpsPurchaseButton:SetHide(true);
@@ -254,12 +316,13 @@ function PopulateGenericItemData( kInstance:table, kItem:table )
       kInstance.ArmyPurchaseButton:SetHide(false);
       kInstance.ArmyPurchaseButton:SetDisabled(false);
       kInstance.ArmyPurchaseButton:SetText(CQUI_PurchaseTable[kItem.Hash]["armyGold"] .. "[ICON_GOLD]");
+      kInstance.ArmyPurchaseButton:SetSizeX(kInstance.ArmyPurchaseButton:GetTextControl():GetSizeX() + purchaseButtonPadding);
       kInstance.ArmyPurchaseButton:RegisterCallback(Mouse.eLClick, CQUI_PurchaseTable[kItem.Hash]["armyGoldCallback"]);
 
       if CQUI_PurchaseTable[kItem.Hash]["armyGoldDisabled"] then
         kInstance.ArmyPurchaseButton:SetDisabled(true);
         kInstance.ArmyPurchaseButton:SetColor(0xDD3366FF);
-        kInstance.ArmyPurchaseButton:GetTextControl():SetColor(0.5, 0.2, 0.13);
+        kInstance.ArmyPurchaseButton:GetTextControl():SetColor(notEnoughGoldColor);
       end
     else
       kInstance.ArmyPurchaseButton:SetHide(true);
@@ -270,6 +333,7 @@ function PopulateGenericItemData( kInstance:table, kItem:table )
   if kInstance.FaithPurchaseButton then
     if CQUI_PurchaseTable[kItem.Hash] and CQUI_PurchaseTable[kItem.Hash]["faith"] then
       kInstance.FaithPurchaseButton:SetText(CQUI_PurchaseTable[kItem.Hash]["faith"] .. "[ICON_FAITH]");
+      kInstance.FaithPurchaseButton:SetSizeX(kInstance.FaithPurchaseButton:GetTextControl():GetSizeX() + purchaseButtonPadding);
       kInstance.FaithPurchaseButton:SetColor(0xFFF38FFF);
       kInstance.FaithPurchaseButton:SetHide(false);
       kInstance.FaithPurchaseButton:SetDisabled(false);
@@ -281,7 +345,7 @@ function PopulateGenericItemData( kInstance:table, kItem:table )
       end
 
       if CQUI_PurchaseTable[kItem.Hash]["faithCantAfford"] then
-        kInstance.FaithPurchaseButton:GetTextControl():SetColor(0.5, 0.2, 0.13);
+        kInstance.FaithPurchaseButton:GetTextControl():SetColor(notEnoughGoldColor);
       end
     else
       kInstance.FaithPurchaseButton:SetHide(true);
@@ -294,12 +358,13 @@ function PopulateGenericItemData( kInstance:table, kItem:table )
       kInstance.CorpsFaithPurchaseButton:SetHide(false);
       kInstance.CorpsFaithPurchaseButton:SetDisabled(false);
       kInstance.CorpsFaithPurchaseButton:SetText(CQUI_PurchaseTable[kItem.Hash]["corpsFaith"] .. "[ICON_GOLD]");
+      kInstance.CorpsFaithPurchaseButton:SetSizeX(kInstance.CorpsFaithPurchaseButton:GetTextControl():GetSizeX() + purchaseButtonPadding);
       kInstance.CorpsFaithPurchaseButton:RegisterCallback(Mouse.eLClick, CQUI_PurchaseTable[kItem.Hash]["corpsFaithCallback"]);
 
       if CQUI_PurchaseTable[kItem.Hash]["corpsFaithDisabled"] then
         kInstance.CorpsFaithPurchaseButton:SetDisabled(true);
         kInstance.CorpsFaithPurchaseButton:SetColor(0xDD3366FF);
-        kInstance.CorpsFaithPurchaseButton:GetTextControl():SetColor(0.5, 0.2, 0.13);
+        kInstance.CorpsFaithPurchaseButton:GetTextControl():SetColor(notEnoughGoldColor);
       end
     else
       kInstance.CorpsFaithPurchaseButton:SetHide(true);
@@ -312,12 +377,13 @@ function PopulateGenericItemData( kInstance:table, kItem:table )
       kInstance.ArmyFaithPurchaseButton:SetHide(false);
       kInstance.ArmyFaithPurchaseButton:SetDisabled(false);
       kInstance.ArmyFaithPurchaseButton:SetText(CQUI_PurchaseTable[kItem.Hash]["armyFaith"] .. "[ICON_GOLD]");
+      kInstance.ArmyFaithPurchaseButton:SetSizeX(kInstance.ArmyFaithPurchaseButton:GetTextControl():GetSizeX() + purchaseButtonPadding);
       kInstance.ArmyFaithPurchaseButton:RegisterCallback(Mouse.eLClick, CQUI_PurchaseTable[kItem.Hash]["armyFaithCallback"]);
 
       if CQUI_PurchaseTable[kItem.Hash]["armyFaithDisabled"] then
         kInstance.ArmyFaithPurchaseButton:SetDisabled(true);
         kInstance.ArmyFaithPurchaseButton:SetColor(0xDD3366FF);
-        kInstance.ArmyFaithPurchaseButton:GetTextControl():SetColor(0.5, 0.2, 0.13);
+        kInstance.ArmyFaithPurchaseButton:GetTextControl():SetColor(notEnoughGoldColor);
       end
     else
       kInstance.ArmyFaithPurchaseButton:SetHide(true);
@@ -326,9 +392,60 @@ function PopulateGenericItemData( kInstance:table, kItem:table )
 end
 
 -- ===========================================================================
+--  CQUI modified BuildBuilding function : removed the InterfaceMode change
+-- ===========================================================================
+function BuildBuilding(city, buildingEntry)
+	if CheckQueueItemSelected() then
+		return;
+	end
+
+	local building			:table		= GameInfo.Buildings[buildingEntry.Type];
+	local bNeedsPlacement	:boolean	= building.RequiresPlacement;
+
+	-- UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+
+	local pBuildQueue = city:GetBuildQueue();
+	if (pBuildQueue:HasBeenPlaced(buildingEntry.Hash)) then
+		bNeedsPlacement = false;
+	end
+
+	-- If it's a Wonder and the city already has the building then it doesn't need to be replaced.
+	if (bNeedsPlacement) then
+		local cityBuildings = city:GetBuildings();
+		if (cityBuildings:HasBuilding(buildingEntry.Hash)) then
+			bNeedsPlacement = false;
+		end
+	end
+
+	-- Does the building need to be placed?
+	if ( bNeedsPlacement ) then			
+		-- If so, set the placement mode
+		local tParameters = {}; 
+		tParameters[CityOperationTypes.PARAM_BUILDING_TYPE] = buildingEntry.Hash;
+		GetBuildInsertMode(tParameters);
+		UI.SetInterfaceMode(InterfaceModeTypes.BUILDING_PLACEMENT, tParameters);
+		Close();
+	else
+		-- If not, add it to the queue.
+		local tParameters = {}; 
+		tParameters[CityOperationTypes.PARAM_BUILDING_TYPE] = buildingEntry.Hash;  
+		GetBuildInsertMode(tParameters);
+		CityManager.RequestOperation(city, CityOperationTypes.BUILD, tParameters);
+    UI.PlaySound("Confirm_Production");
+		CloseAfterNewProduction();
+	end
+end
+
+-- ===========================================================================
 --  CQUI modified Close functiton
+--  Add a check to see if we're placing something down (no need to close)
+--  Changed the condition of closing (not IsReversing)
 -- ===========================================================================
 function Close()
+  if UI.GetInterfaceMode() == InterfaceModeTypes.BUILDING_PLACEMENT or UI.GetInterfaceMode() == InterfaceModeTypes.DISTRICT_PLACEMENT then
+    return;
+  end
+
   if (not Controls.SlideIn:IsReversing()) then      -- Need to check to make sure that we have not already begun the transition before attempting to close the panel.
     UI.PlaySound("Production_Panel_Closed");
     Controls.SlideIn:Reverse();
@@ -340,26 +457,32 @@ function Close()
 end
 
 -- ===========================================================================
+--  CQUI modified OnExpand function : fixed slide speed and list size
+-- ===========================================================================
+function OnExpand(instance:table)
+  instance.ListSlide:SetSpeed(100); -- CQUI : fix the sliding time
+
+  m_kClickedInstance = instance;
+  instance.HeaderOn:SetHide(false);
+  instance.Header:SetHide(true);
+  instance.List:SetHide(false);
+  -- CQUI : fix the list flickering when it's refreshed
+  --instance.ListSlide:SetSizeY(instance.List:GetSizeY());
+  --instance.ListAlpha:SetSizeY(instance.List:GetSizeY());
+  instance.ListSlide:SetToBeginning();
+  instance.ListAlpha:SetToBeginning();
+  instance.ListSlide:Play();
+  instance.ListAlpha:Play();
+  UI.SetInterfaceMode(InterfaceModeTypes.CITY_MANAGEMENT);
+end
+
+-- ===========================================================================
+--  CQUI modified Refresh function : reset the CQUI_PurchaseTable
+-- ===========================================================================
 function Refresh()
-  local playerID	:number = Game.GetLocalPlayer();
-  local pPlayer	:table = Players[playerID];
-  if (pPlayer == nil) then
-    return;
-  end
-
-  local pSelectedCity:table = UI.GetHeadSelectedCity();
-  if pSelectedCity == nil then
-    Close();
-    return;
-  end
-
   CQUI_PurchaseTable = {};
-  local kData:table = GetData();
-  if kData ~= nil then
-    View(kData);
-  else
-    Close();
-  end
+
+  BASE_Refresh()
 end
 
 -- ===========================================================================
@@ -372,6 +495,7 @@ function Open()
     Controls.PauseDismissWindow:SetToBeginning(); -- AZURENCY : fix the callback that hide the pannel to be called during the Openning animation
     LuaEvents.ProductionPanel_Open();
     Refresh();
+    CQUI_SelectRightTab();
     ContextPtr:SetHide(false);
     Controls.ProductionListScroll:SetScrollValue(0);
 
@@ -391,6 +515,13 @@ function OnClose()
 end
 
 -- ===========================================================================
+--	CQUI modified CloseAfterNewProduction
+-- ===========================================================================
+function CloseAfterNewProduction()
+  return;
+end
+
+-- ===========================================================================
 --	CQUI modified OnCityBannerManagerProductionToggle
 -- ===========================================================================
 function OnCityBannerManagerProductionToggle()
@@ -400,7 +531,31 @@ function OnCityBannerManagerProductionToggle()
   end
 end
 
--- ====================CQUI Cityview==========================================
+-- ===========================================================================
+--	CQUI modified OnNotificationPanelChooseProduction : Removed tab selection
+-- ===========================================================================
+function OnNotificationPanelChooseProduction()
+	if ContextPtr:IsHidden() then
+		Open();
+		--m_tabs.SelectTab(m_productionTab);
+	end
+end
+
+-- ===========================================================================
+--	CQUI modified OnCityBannerManagerProductionToggle : Removed tab selection
+-- ===========================================================================
+function OnCityBannerManagerProductionToggle()
+	if(ContextPtr:IsHidden()) then
+		Open();
+		--m_tabs.SelectTab(m_productionTab);
+	else
+		Close();
+	end
+end
+
+-- ===========================================================================
+--  CQUI Cityview
+-- ===========================================================================
 function CQUI_OnCityviewEnabled()
   Open();
 end
@@ -416,6 +571,11 @@ function OnInterfaceModeChanged( eOldMode:number, eNewMode:number )
   return;
 end
 
+-- ===========================================================================
+--  CQUI modified CreateCorrectTabs : no need for tabs, one unified list
+-- ===========================================================================
+function CreateCorrectTabs()
+end
 
 function Initialize()
   Events.InterfaceModeChanged.Remove( BASE_OnInterfaceModeChanged );
@@ -425,10 +585,19 @@ function Initialize()
   LuaEvents.CityBannerManager_ProductionToggle.Remove( BASE_OnCityBannerManagerProductionToggle );
   LuaEvents.CityBannerManager_ProductionToggle.Add( OnCityBannerManagerProductionToggle );
 
+  LuaEvents.NotificationPanel_ChooseProduction.Remove( BASE_OnNotificationPanelChooseProduction );
+  LuaEvents.NotificationPanel_ChooseProduction.Add( OnNotificationPanelChooseProduction );
+
+  LuaEvents.CityBannerManager_ProductionToggle.Remove( BASE_OnCityBannerManagerProductionToggle );
+  LuaEvents.CityBannerManager_ProductionToggle.Add( OnCityBannerManagerProductionToggle );
+
   Controls.CloseButton:ClearCallback(Mouse.eLClick);
   Controls.CloseButton:RegisterCallback(Mouse.eLClick, OnClose);
+  Controls.CQUI_ShowManagerButton:RegisterCallback(Mouse.eLClick, CQUI_ToogleManager);
   
   LuaEvents.CQUI_ProductionPanel_CityviewEnable.Add( CQUI_OnCityviewEnabled);
   LuaEvents.CQUI_ProductionPanel_CityviewDisable.Add( CQUI_OnCityviewDisabled);
+  LuaEvents.CQUI_SettingsUpdate.Add(CQUI_OnSettingsUpdate);
+  LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 end
 Initialize();
