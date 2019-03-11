@@ -51,14 +51,16 @@
     <File>Assets/Expansion1/CityBanners/citybannermanager.lua</File>
     <File>Assets/Expansion1/CityBanners/citybannermanager.xml</File>
     <File>Assets/Expansion1/CityBanners/citybannerinstances.xml</File>
-    <File>Assets/Expansion1/Replacements/citypaneloverview_expansion1.lua</File>
+    <File>Assets/Expansion1/Replacements/citypaneloverview_expansion1_CQUI.lua</File>
     <File>Assets/Expansion1/Replacements/citystates.xml</File>
     <File>Assets/Expansion1/Replacements/citysupport.lua</File>
     <File>Assets/Expansion1/Replacements/diplomacyactionview_expansion1.lua</File>
     <File>Assets/Expansion1/Replacements/leadericon.lua</File>
     <File>Assets/Expansion1/Replacements/leadericon.xml</File>
-    <File>Assets/Expansion1/Replacements/productionpanel.lua</File>
     <File>Assets/Expansion1/Replacements/worldtracker_expansion1.lua</File>
+    <File>Assets/Expansion2/Replacements/citypaneloverview_expansion2_CQUI.lua</File>
+    <File>Assets/Expansion2/CityBanners/citybannermanager.lua</File>
+    <File>Assets/Expansion2/CityBanners/citybannerinstances.xml</File>
     <File>Integrations/URS/Expansion1/Replacements/reportscreen_expansion1.lua</File>
     <File>Integrations/URS/Expansion1/Replacements/reportscreen.xml</File>
     <File>Assets/Text/Gossip_Text.xml</File>
@@ -319,28 +321,43 @@
         <File>Assets/UI/Utilities/extendedrelationship.lua</File>-->
         <File>Assets/UI/WorldView/citybannermanager.lua</File>
         <File>Assets/UI/WorldView/citybannermanager.xml</File>
-        <!--<File>Assets/UI/WorldView/plotinfo.lua</File>
+        <!-- <File>Assets/UI/WorldView/plotinfo.lua</File>
         <File>Assets/UI/WorldView/plotinfo.xml</File> -->
       </Items>
     </ImportFiles>
 
     <!-- CQUI Expansion 1 (Rise and Fall) files -->
-    <!-- <ImportFiles id="CQUI_IMPORT_FILES" criteria="Expansion1">
+    <ImportFiles id="CQUI_EXP1_IMPORT_FILES" criteria="Expansion1">
+      <Properties>
+        <LoadOrder>100</LoadOrder>
+        <Context>InGame</Context>
+      </Properties>
       <Items>
-        <File>Assets/Expansion1/Additions/citypanelculture.lua</File>
+        <!-- <File>Assets/Expansion1/Additions/citypanelculture.lua</File> -->
         <File>Assets/Expansion1/CityBanners/citybannermanager.lua</File>
         <File>Assets/Expansion1/CityBanners/citybannermanager.xml</File>
         <File>Assets/Expansion1/CityBanners/citybannerinstances.xml</File>
-        <File>Assets/Expansion1/Replacements/citypaneloverview_expansion1.lua</File>
-        <File>Assets/Expansion1/Replacements/citystates.xml</File>
+        <!-- <File>Assets/Expansion1/Replacements/citypaneloverview_expansion1_CQUI.lua</File>
+        <File>Assets/Expansion1/Replacements/citystates.xml</File> -->
         <File>Assets/Expansion1/Replacements/citysupport.lua</File>
-        <File>Assets/Expansion1/Replacements/diplomacyactionview_expansion1.lua</File>
+        <!-- <File>Assets/Expansion1/Replacements/diplomacyactionview_expansion1.lua</File>
         <File>Assets/Expansion1/Replacements/leadericon.lua</File>
         <File>Assets/Expansion1/Replacements/leadericon.xml</File>
-        <File>Assets/Expansion1/Replacements/productionpanel.lua</File>
-        <File>Assets/Expansion1/Replacements/worldtracker_expansion1.lua</File>
+        <File>Assets/Expansion1/Replacements/worldtracker_expansion1.lua</File> -->
       </Items>
-    </ImportFiles> -->
+    </ImportFiles>
+
+    <!-- CQUI Expansion 2 (Gathering Storm) files -->
+    <ImportFiles id="CQUI_EXP2_IMPORT_FILES" criteria="Expansion2">
+      <Properties>
+        <LoadOrder>200</LoadOrder>
+        <Context>InGame</Context>
+      </Properties>
+      <Items>
+        <File>Assets/Expansion2/CityBanners/citybannermanager.lua</File>
+        <File>Assets/Expansion2/CityBanners/citybannerinstances.xml</File>
+      </Items>
+    </ImportFiles>
 
     <!-- CQUI specific LOCs  -->
     <LocalizedText id="CQUI_TEXT">
@@ -419,6 +436,22 @@
       <Properties>
         <LuaContext>ProductionPanel</LuaContext>
         <LuaReplace>Assets/UI/Panels/productionpanel_CQUI.lua</LuaReplace>
+      </Properties>
+    </ReplaceUIScript>
+
+    <ReplaceUIScript id="CQUI_EXP1_CityPanelOverview" criteria="Expansion1">
+      <Properties>
+        <LoadOrder>100</LoadOrder>
+        <LuaContext>CityPanelOverview</LuaContext>
+        <LuaReplace>Assets/Expansion1/Replacements/citypaneloverview_expansion1_CQUI.lua</LuaReplace>
+      </Properties>
+    </ReplaceUIScript>
+
+    <ReplaceUIScript id="CQUI_EXP2_CityPanelOverview" criteria="Expansion2">
+      <Properties>
+        <LoadOrder>200</LoadOrder>
+        <LuaContext>CityPanelOverview</LuaContext>
+        <LuaReplace>Assets/Expansion2/Replacements/citypaneloverview_expansion2_CQUI.lua</LuaReplace>
       </Properties>
     </ReplaceUIScript>
 

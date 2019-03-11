@@ -11,7 +11,7 @@
       <Image Texture="Controls_Gradient" Size="parent, 120" Anchor="C,B" Color="13,57,92,255"/>
       <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" Offset="0,30" Anchor="C,B" Color="72,103,130,255"/>
       <Image Texture="Controls_Compass" Size="193, 122" Offset="0,35" Anchor="C,B" Color="62,93,120,150"/>
-      <ScrollPanel        ID="PanelScrollPanel"       Anchor="R,B"                  Size="parent,parent-100" AutoScrollBar="1" Vertical="1" Offset="0,30">
+      <ScrollPanel        ID="PanelScrollPanel"       Anchor="R,B"                  Size="parent,parent-100" AutoScrollBar="1" Vertical="1" Offset="0,20">
         <Stack            ID="PanelStack"             Anchor="R,T" Offset="0,0"     Size="parent,0"       StackGrowth="Down" Hidden="0" >
           <Grid           ID="PanelCitizensGrowth"        Anchor="L,T"                  Size="parent,0"       Style="CityPanelStatPanelGrid">
             <Grid                                     Anchor="L,T"                  Size="parent,24"    Style="DivHeader">
@@ -341,9 +341,9 @@
         <ScrollBar Style="Slider_Blue" Anchor="R,C" AnchorSide="O,I"/>
       </ScrollPanel>
 
-      <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent,30" Color="8,34,56,255" Offset="0,90"/>
-			<Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent,20" Color="8,34,56,255" Offset="0,90"/>
-			<Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent,20" Color="8,34,56,255" Offset="0,90"/>
+      <Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent,30" Color="8,34,56,255" Offset="0,62"/>
+			<Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent,20" Color="8,34,56,255" Offset="0,62"/>
+			<Image Texture="Controls_GradientSmall" Anchor="R,T" Size="parent,20" Color="8,34,56,255" Offset="0,62"/>
 
     </Box>
     <Grid         ID="OverviewHeader"     Style="HeaderBannerLeft" Size="320,65" Anchor="L,T" Offset="0,0">

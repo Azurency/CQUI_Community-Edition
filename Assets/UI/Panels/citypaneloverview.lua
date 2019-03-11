@@ -341,7 +341,9 @@ function ViewPanelReligion( data:table )
     Controls.PantheonBelief:SetToolTipString( Locale.Lookup(kPantheonBelief.Description) );
   end
 
-  local isHasReligion :boolean = (table.count(data.Religions) > 0) or (data.PantheonBelief > -1);
+  -- CQUI (AZURENCY) : there seems to always be a data.Religions[1] named RELIGION_PANTHEON so reverted back to previous "and" version
+  --local isHasReligion :boolean = (table.count(data.Religions) > 0) or (data.PantheonBelief > -1);
+  local isHasReligion :boolean = (table.count(data.Religions) > 0) and (data.PantheonBelief > -1);
   Controls.NoReligionArea:SetHide( isHasReligion );
   Controls.StackReligion:SetHide( not isHasReligion );
 
@@ -1087,6 +1089,7 @@ end
 function OnGameDebugReturn(context:string, contextTable:table)
   if context == RELOAD_CACHE_ID then
     m_isShowingPanel = contextTable["m_isShowingPanel"];
+    CQUI_HousingFromImprovementsTable = contextTable["CQUI_HousingFromImprovementsTable"];
     Refresh();
   end
 end
@@ -1094,6 +1097,7 @@ end
 -- ===========================================================================
 function OnShutdown()
   LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID, "m_isShowingPanel", m_isShowingPanel);
+  LuaEvents.GameDebug_AddValue(RELOAD_CACHE_ID, "CQUI_HousingFromImprovementsTable", CQUI_HousingFromImprovementsTable)
 end
 
 -- ===========================================================================
