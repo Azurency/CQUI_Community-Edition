@@ -277,7 +277,8 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
     if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)
         and UI.GetInterfaceMode() == InterfaceModeTypes.SELECTION
         and UI.GetHeadSelectedUnit() == nil then
-      CQUI_ShowCitizenManagementLens(cityID)
+      LuaEvents.CQUI_ShowCitizenManagement(cityID);
+      CQUI_CityManageAreaShown = true;
     end
 
     local kPlayer = Players[playerID];
@@ -423,7 +424,8 @@ function CQUI_OnBannerMouseExit(playerID: number, cityID: number)
   -- Astog: Fix for lens being cleared when having other lenses on
   if CQUI_ShowCityManageAreaOnCityHover and UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_MANAGEMENT
       and CQUI_CityManageAreaShown then
-    CQUI_ClearCitizenManagementLens()
+    LuaEvents.CQUI_ClearCitizenManagement();
+    CQUI_CityManageAreaShown = false;
   end
 
   local tPlots    :table = tResults[CityCommandResults.PLOTS];
@@ -4260,73 +4262,6 @@ function OnSelectionChanged(owner, ID, i, j, k, bSelected, bEditable)
 end
 
 -- ===========================================================================
-function CQUI_ShowCitizenManagementLens(cityID:number)
-  local playerID:number = Game.GetLocalPlayer()
-  local pCity:table = Players[playerID]:GetCities():FindID(cityID);
-  if pCity ~= nil then
-    print_debug("Show citizens for " .. Locale.Lookup(pCity:GetName()))
-
-    local tParameters:table = {};
-    local cityPlotID = Map.GetPlot(pCity:GetX(), pCity:GetY()):GetIndex()
-    tParameters[CityCommandTypes.PARAM_MANAGE_CITIZEN] = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_MANAGE_CITIZEN);
-
-    local workingColor:number = UI.GetColorValue("COLOR_CITY_PLOT_WORKING");
-    local lockedColor:number = UI.GetColorValue("COLOR_CITY_PLOT_LOCKED");
-    local colorPlot:table = {}
-    colorPlot[workingColor] = {}
-    colorPlot[lockedColor] = {}
-
-    -- Get city plot and citizens info
-    local tResults:table = CityManager.GetCommandTargets(pCity, CityCommandTypes.MANAGE, tParameters);
-    if tResults == nil then
-      print("ERROR : Could not find plots")
-      return
-    end
-
-    local tPlots:table = tResults[CityCommandResults.PLOTS];
-    local tUnits:table = tResults[CityCommandResults.CITIZENS];
-    local tLockedUnits:table = tResults[CityCommandResults.LOCKED_CITIZENS];
-
-    if tPlots ~= nil and table.count(tPlots) > 0 then
-      for i, plotID in ipairs(tPlots) do
-        if (tLockedUnits[i] > 0 or cityPlotID == plotID) then
-          table.insert(colorPlot[lockedColor], plotID);
-        elseif (tUnits[i] > 0) then
-          table.insert(colorPlot[workingColor], plotID);
-        end
-      end
-    end
-
-    -- Next culture expansion plot, show it only if not in city panel
-    if UI.GetHeadSelectedCity() == nil then
-      local pCityCulture:table  = pCity:GetCulture();
-      local culturePlotColor:number = UI.GetColorValue("COLOR_CITY_PLOT_CULTURE")
-      if pCityCulture ~= nil then
-        local pNextPlotID:number = pCityCulture:GetNextPlot();
-        if pNextPlotID ~= nil and Map.IsPlot(pNextPlotID) then
-          colorPlot[culturePlotColor] = {pNextPlotID}
-        end
-      end
-    end
-
-    CQUI_CityManageAreaShown = true;
-    LuaEvents.MinimapPanel_ApplyCustomLens(colorPlot);
-  end
-end
-
--- ===========================================================================
-function CQUI_ClearCitizenManagementLens()
-  CQUI_CityManageAreaShown = false;
-  LuaEvents.MinimapPanel_ClearCustomLens()
-end
-
--- ===========================================================================
-function CQUI_RefreshCitizenManagementLens(cityID:number)
-  CQUI_ClearCitizenManagementLens()
-  CQUI_ShowCitizenManagementLens(cityID)
-end
-
--- ===========================================================================
 function CQUI_OnInfluenceGiven()
   for i, pPlayer in ipairs(PlayerManager.GetAliveMinors()) do
     local iPlayer = pPlayer:GetID();
@@ -4639,8 +4574,5 @@ function Initialize()
   LuaEvents.CQUI_SettingsInitialized.Add( CQUI_OnSettingsInitialized );
   Events.CitySelectionChanged.Add( CQUI_OnBannerMouseExit );
   Events.InfluenceGiven.Add( CQUI_OnInfluenceGiven );
-  LuaEvents.CQUI_ShowCitizenManagement.Add( CQUI_ShowCitizenManagementLens );
-  LuaEvents.CQUI_RefreshCitizenManagement.Add( CQUI_RefreshCitizenManagementLens );
-  LuaEvents.CQUI_ClearCitizenManagement.Add( CQUI_ClearCitizenManagementLens );
 end
 Initialize();

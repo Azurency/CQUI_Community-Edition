@@ -98,6 +98,7 @@ LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 
   function CQUI_OnCityviewDisabled()
     OnShowOverviewPanel(false);
+    LuaEvents.CQUI_ClearCitizenManagement();
   end
 
   LuaEvents.CQUI_CityPanelOverview_CityviewEnable.Add( CQUI_OnCityviewEnabled);
@@ -115,8 +116,9 @@ function SetDesiredLens(desiredLens)
   --UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
   if m_isShowingPanel then
     if m_desiredLens == "CityManagement" then
-      UILens.SetActive("Appeal");
+      UILens.SetActive("Default");
       LuaEvents.CQUI_RefreshCitizenManagement(m_pCity:GetID());
+      UILens.SetActive("Appeal");
     else
       UILens.SetActive(m_desiredLens);
     end
@@ -129,8 +131,9 @@ end
 function EnsureDesiredLens()
   if m_isShowingPanel then
     if m_desiredLens == "CityManagement" then
-      UILens.SetActive("Appeal");
+      UILens.SetActive("Default");
       LuaEvents.CQUI_RefreshCitizenManagement(m_pCity:GetID());
+      UILens.SetActive("Appeal");
     else
       UILens.SetActive(m_desiredLens);
     end
@@ -172,7 +175,7 @@ function OnSelectHealthTab()
     ViewPanelHousing( m_kData );
     
     if m_kData.Owner == Game.GetLocalPlayer() then
-      SetDesiredLens("CityDetails");
+      SetDesiredLens("CityManagement");
     else
       SetDesiredLens("EnemyCityDetails");
       LuaEvents.ShowEnemyCityDetails( m_kData.Owner, m_kData.City:GetID() );
@@ -195,7 +198,7 @@ function OnSelectBuildingsTab()
   if(m_kData ~= nil) then
     ViewPanelBreakdown( m_kData );
     if m_kData.Owner == Game.GetLocalPlayer() then
-      SetDesiredLens("CityDetails");
+      SetDesiredLens("CityManagement");
     else
       SetDesiredLens("EnemyCityDetails");
       LuaEvents.ShowEnemyCityDetails( m_kData.Owner, m_kData.City:GetID() );

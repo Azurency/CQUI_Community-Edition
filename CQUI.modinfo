@@ -220,18 +220,20 @@
     <File>Integrations/ML/UI/Panels/modallenspanel.lua</File>
     <File>Integrations/ML/UI/Panels/modallenspanel.xml</File>
     <File>Integrations/ML/morelenses_colors.sql</File>
-    <File>Integrations/ML/UI/lenssupport.lua</File>
-    <File>Integrations/ML/UI/Lenses/modlens_builder.lua</File>
-    <File>Integrations/ML/UI/Lenses/modlens_scout.lua</File>
-    <File>Integrations/ML/UI/Lenses/modlens_archaeologist.lua</File>
-    <File>Integrations/ML/UI/Lenses/modlens_barbarian.lua</File>
-    <File>Integrations/ML/UI/Lenses/modlens_adjacencyyield.lua</File>
-    <File>Integrations/ML/UI/Lenses/modlens_naturalist.lua</File>
-    <File>Integrations/ML/UI/Lenses/modlens_wonder.lua</File>
-    <File>Integrations/ML/UI/Lenses/modlens_cityoverlap.xml</File>
-    <File>Integrations/ML/UI/Lenses/modlens_cityoverlap.lua</File>
-    <File>Integrations/ML/UI/Lenses/modlens_resource.xml</File>
-    <File>Integrations/ML/UI/Lenses/modlens_resource.lua</File>
+    <File>Integrations/ML/Lenses/LensSupport.lua</File>
+    <File>Integrations/ML/Lenses/ModLens_Builder.lua</File>
+    <File>Integrations/ML/Lenses/ModLens_Builder_Config_Default.lua</File>
+    <File>Integrations/ML/Lenses/ModLens_Scout.lua</File>
+    <File>Integrations/ML/Lenses/ModLens_Archaeologist.lua</File>
+    <File>Integrations/ML/Lenses/ModLens_Barbarian.lua</File>
+    <File>Integrations/ML/Lenses/ModLens_Naturalist.lua</File>
+    <File>Integrations/ML/Lenses/ModLens_Wonder.lua</File>
+    <File>Integrations/ML/Lenses/ModLens_CitizenManagement.lua</File>
+    <File>Integrations/ML/Lenses/ModLens_CityOverlap.xml</File>
+    <File>Integrations/ML/Lenses/ModLens_CityOverlap.lua</File>
+    <File>Integrations/ML/Lenses/ModLens_Resource.xml</File>
+    <File>Integrations/ML/Lenses/ModLens_Resource.lua</File>
+    <File>Integrations/ML/DLC/Expansion1/UI/Replacements/MinimapPanel.xml</File>
     <File>Integrations/BES/UI/espionagesupport.lua</File>
     <File>Integrations/BES/UI/Choosers/espionagechooser.lua</File>
     <File>Integrations/BES/UI/Choosers/espionagechooser.xml</File>
@@ -254,6 +256,12 @@
     </Criteria>
     <Criteria id="Expansion2">
       <GameCoreInUse>Expansion2</GameCoreInUse>
+    </Criteria>
+    <Criteria id="Expansion1AndBeyond" any="1">
+      <GameCoreInUse>Expansion1</GameCoreInUse>
+      <RuleSetInUse>RULESET_EXPANSION_1,RULESET_EXPANSION_2</RuleSetInUse>
+      <LeaderPlayable>Players:Expansion1_Players::LEADER_CHANDRAGUPTA,Players:Expansion1_Players::LEADER_GENGHIS_KHAN,Players:Expansion1_Players::LEADER_LAUTARO,Players:Expansion1_Players::LEADER_POUNDMAKER,Players:Expansion1_Players::LEADER_ROBERT_THE_BRUCE,Players:Expansion1_Players::LEADER_SEONDEOK,Players:Expansion1_Players::LEADER_SHAKA,Players:Expansion1_Players::LEADER_TAMAR,Players:Expansion1_Players::LEADER_WILHELMINA</LeaderPlayable>
+      <LeaderPlayable>Players:Expansion2_Players::LEADER_CHANDRAGUPTA,Players:Expansion2_Players::LEADER_GENGHIS_KHAN,Players:Expansion2_Players::LEADER_LAUTARO,Players:Expansion2_Players::LEADER_POUNDMAKER,Players:Expansion2_Players::LEADER_ROBERT_THE_BRUCE,Players:Expansion2_Players::LEADER_SEONDEOK,Players:Expansion2_Players::LEADER_SHAKA,Players:Expansion2_Players::LEADER_TAMAR,Players:Expansion2_Players::LEADER_WILHELMINA</LeaderPlayable>
     </Criteria>
   </ActionCriteria>
 
@@ -574,41 +582,49 @@
     </LocalizedText> -->
 
     <!-- ML -->
-    <!-- <ImportFiles id="MORELENSES_LENSES">
-      <Properties>
-        <LoadOrder>0</LoadOrder>
-        <Context>InGame</Context>
-      </Properties>
-      <Items> -->
-        <!-- Support file first -->
-        <!-- <File Priority="1">Integrations/ML/UI/lenssupport.lua</File> -->
-
-        <!-- All Lenses later -->
-        <!-- <File>Integrations/ML/UI/Lenses/modlens_builder.lua</File>
-        <File>Integrations/ML/UI/Lenses/modlens_scout.lua</File>
-        <File>Integrations/ML/UI/Lenses/modlens_archaeologist.lua</File>
-        <File>Integrations/ML/UI/Lenses/modlens_barbarian.lua</File>
-        <File>Integrations/ML/UI/Lenses/modlens_adjacencyYield.lua</File>
-        <File>Integrations/ML/UI/Lenses/modlens_naturalist.lua</File>
-        <File>Integrations/ML/UI/Lenses/modlens_wonder.lua</File>
-      </Items>
-    </ImportFiles>
     <AddUserInterfaces id="MORELENSES_LENSES_WPANEL">
       <Properties>
         <Context>InGame</Context>
-        <LoadOrder>1</LoadOrder>
+        <LoadOrder>101</LoadOrder>
       </Properties>
       <Items>
-        <File>Integrations/ML/UI/Lenses/modlens_cityoverlap.xml</File> -->
+        <File>Integrations/ML/Lenses/ModLens_CityOverlap.xml</File>
         <!-- ModLens_CityOverlap.lua implied -->
-        <!-- <File>Integrations/ML/UI/Lenses/modlens_resource.xml</File> -->
-        <!-- ModLens_Resource.lua implied -->
-      <!-- </Items>
+        <File>Integrations/ML/Lenses/ModLens_Resource.xml</File>
+      </Items>
     </AddUserInterfaces>
-    <ImportFiles id="MORELENSES_IMPORT_FILES"> -->
+
+    <ImportFiles id="MORELENSES_LENSES">
+      <Properties>
+        <LoadOrder>10</LoadOrder>
+        <Context>InGame</Context>
+      </Properties>
+      <Items>
+        <File>Integrations/ML/Lenses/ModLens_Builder.lua</File>
+        <File>Integrations/ML/Lenses/ModLens_Scout.lua</File>
+        <File>Integrations/ML/Lenses/ModLens_Archaeologist.lua</File>
+        <File>Integrations/ML/Lenses/ModLens_Barbarian.lua</File>
+        <File>Integrations/ML/Lenses/ModLens_Naturalist.lua</File>
+        <File>Integrations/ML/Lenses/ModLens_Wonder.lua</File>
+        <File>Integrations/ML/Lenses/ModLens_CitizenManagement.lua</File>
+      </Items>
+    </ImportFiles>
+
+    <ImportFiles id="MORELENSES_LENSES_BUILDER_CONIFG">
+      <Properties>
+        <LoadOrder>9</LoadOrder>
+        <Context>InGame</Context>
+      </Properties>
+      <Items>
+        <File>Integrations/ML/Lenses/LensSupport.lua</File>
+        <File>Integrations/ML/Lenses/ModLens_Builder_Config_Default.lua</File>
+      </Items>
+    </ImportFiles>
+
+    <ImportFiles id="MORELENSES_IMPORT_FILES">
       <!-- ML replacements after all lens files imported -->
-      <!-- <Properties>
-        <LoadOrder>2</LoadOrder>
+      <Properties>
+        <LoadOrder>100</LoadOrder>
       </Properties>
       <Items>
         <File>Integrations/ML/UI/minimappanel.lua</File>
@@ -617,6 +633,16 @@
         <File>Integrations/ML/UI/Panels/modallenspanel.xml</File>
       </Items>
     </ImportFiles>
+
+    <ImportFiles id="MORELENSES_EXPANSION1_FILES" criteria="Expansion1AndBeyond">
+      <Properties>
+        <LoadOrder>101</LoadOrder>
+      </Properties>
+      <Items>
+        <File>Integrations/ML/DLC/Expansion1/UI/Replacements/MinimapPanel.xml</File>
+      </Items>
+    </ImportFiles>
+
     <LocalizedText id="MORELENSES_TEXT">
       <Items>
         <File>Integrations/ML/Text/morelenses_text.xml</File>
@@ -632,11 +658,14 @@
         <File>Integrations/ML/Text/morelenses_text_zh.xml</File>
       </Items>
     </LocalizedText>
+
     <UpdateDatabase id="MORELENSES_DATABASE">
       <Items>
         <File>Integrations/ML/morelenses_colors.sql</File>
       </Items>
-    </UpdateDatabase> -->
+    </UpdateDatabase>
+    <!-- End of ML -->
+
   </Components>
 
   <Settings />
