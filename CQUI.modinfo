@@ -465,7 +465,7 @@
 
     <!-- Mod integrations -->
     <!-- BTS -->
-    <!-- <LocalizedText id="BTS_TEXT">
+    <LocalizedText id="BTS_TEXT">
       <Items>
         <File>Integrations/BTS/Text/bts_text.xml</File>
         <File>Integrations/BTS/Text/bts_text_de.xml</File>
@@ -490,7 +490,8 @@
         <File>Integrations/BTS/UI/Choosers/tradeoriginchooser.xml</File>
         <File>Integrations/BTS/UI/Choosers/tradeoriginchooser.lua</File>
       </Items>
-    </ImportFiles> -->
+    </ImportFiles>
+    <!-- End of BTS -->
 
     <!-- UNITREPORT -->
     <!-- <ImportFiles id="UNITREPORT_IMPORT_FILES">

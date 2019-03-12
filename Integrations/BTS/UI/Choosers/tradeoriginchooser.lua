@@ -6,7 +6,8 @@
 include("InstanceManager");
 include("SupportFunctions");
 include("AnimSidePanelSupport");
-include("civ6common")
+include("civ6common");
+include("Colors")
 
 -- ===========================================================================
 --  CONSTANTS
@@ -70,8 +71,7 @@ function Refresh()
 
   -- Calculate Control Size
   Controls.CityStack:CalculateSize();
-  Controls.CityStack:ReprocessAnchoring();
-  Controls.CityScrollPanel:CalculateInternalSize();
+  Controls.CityScrollPanel:CalculateSize();
 end
 
 -- ===========================================================================
@@ -114,7 +114,7 @@ end
 -- ===========================================================================
 function AddCity(cityID:number)
   local city = Players[Game.GetLocalPlayer()]:GetCities():FindID(cityID)
-  print_debug("Adding city " .. Locale.Lookup(city:GetName()))
+  --print("Adding city " .. Locale.Lookup(city:GetName()))
   local cityInstance:table = m_cityIM:GetInstance();
   cityInstance.CityButton:SetHide(false);
   cityInstance.CityButton:SetText(Locale.ToUpper(city:GetName()));
@@ -141,7 +141,7 @@ function OnChangeOriginCityButton()
       -- print (" cant teleport to the same city")
     end
   else
-    print_debug("cities are nil")
+    --print("cities are nil")
   end
 end
 
@@ -195,7 +195,6 @@ function OnChangeOriginCityFromOverview( city:table )
     if (m_AnimSupport:IsVisible()) then
       Refresh();
     else
-      print_debug("open sesame...")
       OnOpen();
     end
   end
