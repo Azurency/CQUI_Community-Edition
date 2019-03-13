@@ -239,11 +239,10 @@
     <File>Integrations/BES/UI/Choosers/espionagechooser.xml</File>
     <File>Integrations/BES/UI/PartialScreens/espionageoverview.lua</File>
     <File>Integrations/BES/UI/PartialScreens/espionageoverview.xml</File>
-    <File>Integrations/BES/Expansion1/Replacements/espionagechooser_expansion1.lua</File>
-    <File>Integrations/BES/Expansion1/Replacements/espionageoverview_expansion1.lua</File>
     <File>Integrations/BES/Text/bes_text.xml</File>
     <File>Integrations/BES/Text/bes_text_de.xml</File>
     <File>Integrations/BES/Text/bes_text_es.xml</File>
+    <File>Integrations/BES/Text/bes_text_fr.xml</File>
     <File>Integrations/BES/Text/bes_text_it.xml</File>
     <File>Integrations/BES/Text/bes_text_ja.xml</File>
     <File>Integrations/BES/Text/bes_text_pt.xml</File>
@@ -555,7 +554,7 @@
     </LocalizedText> -->
 
     <!-- BES -->
-    <!-- <ImportFiles id="BES_IMPORT_FILES">
+    <ImportFiles id="BES_IMPORT_FILES">
       <Items>
         <File>Integrations/BES/UI/espionagesupport.lua</File>
         <File>Integrations/BES/UI/Choosers/espionagechooser.lua</File>
@@ -564,23 +563,20 @@
         <File>Integrations/BES/UI/PartialScreens/espionageoverview.xml</File>
       </Items>
     </ImportFiles>
-    <ImportFiles id="BES_EXPANSION1_FILES" criteria="Expansion1">
-      <Items>
-        <File>Integrations/BES/Expansion1/Replacements/espionagechooser_expansion1.lua</File>
-        <File>Integrations/BES/Expansion1/Replacements/espionageoverview_expansion1.lua</File>
-      </Items>
-    </ImportFiles>
+
     <LocalizedText id="BES_TEXT">
       <Items>
         <File Priority="1">Integrations/BES/Text/bes_text.xml</File>
         <File>Integrations/BES/Text/bes_text_de.xml</File>
         <File>Integrations/BES/Text/bes_text_es.xml</File>
+        <File>Integrations/BES/Text/bes_text_fr.xml</File>
         <File>Integrations/BES/Text/bes_text_it.xml</File>
         <File>Integrations/BES/Text/bes_text_ja.xml</File>
         <File>Integrations/BES/Text/bes_text_pt.xml</File>
         <File>Integrations/BES/Text/bes_text_ru.xml</File>
       </Items>
-    </LocalizedText> -->
+    </LocalizedText>
+    <!-- End of BES -->
 
     <!-- ML -->
     <AddUserInterfaces id="MORELENSES_LENSES_WPANEL">
@@ -646,7 +642,7 @@
 
     <LocalizedText id="MORELENSES_TEXT">
       <Items>
-        <File>Integrations/ML/Text/morelenses_text.xml</File>
+        <File Priority="1">Integrations/ML/Text/morelenses_text.xml</File>
         <File>Integrations/ML/Text/morelenses_text_de.xml</File>
         <File>Integrations/ML/Text/morelenses_text_es.xml</File>
         <File>Integrations/ML/Text/morelenses_text_fr.xml</File>

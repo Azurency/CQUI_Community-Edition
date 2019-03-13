@@ -7,6 +7,12 @@ function GetFormattedOperationDetailText(operation:table, spy:table, city:table)
     outputString = Locale.Lookup("LOC_SPYMISSIONDETAILS_UNITOPERATION_SPY_GREAT_WORK_HEIST", sOperationDetails);
   elseif operation.OperationType == "UNITOPERATION_SPY_SIPHON_FUNDS" then
     outputString = Locale.Lookup("LOC_SPYMISSIONDETAILS_UNITOPERATION_SPY_SIPHON_FUNDS", Locale.ToUpper(city:GetName()), sOperationDetails);
+  elseif operation.OperationType == "UNITOPERATION_SPY_FOMENT_UNREST" then
+    outputString = Locale.Lookup("LOC_SPYMISSIONDETAILS_UNITOPERATION_SPY_FOMENT_UNREST", sOperationDetails);
+  elseif operation.OperationType == "UNITOPERATION_SPY_FABRICATE_SCANDAL" then
+    outputString = Locale.Lookup("LOC_SPYMISSIONDETAILS_UNITOPERATION_SPY_FABRICATE_SCANDAL", sOperationDetails);
+  elseif operation.OperationType == "UNITOPERATION_SPY_NEUTRALIZE_GOVERNOR" then
+    outputString = Locale.Lookup("LOC_SPYMISSIONDETAILS_UNITOPERATION_SPY_NEUTRALIZE_GOVERNOR", sOperationDetails);
   elseif sOperationDetails ~= "" then
     outputString = sOperationDetails;
   else
@@ -15,6 +21,76 @@ function GetFormattedOperationDetailText(operation:table, spy:table, city:table)
   end
 
   return outputString;
+end
+
+-- ===========================================================================
+function RefreshMissionStats( parentControl:table, operation:table, result:table, spy:table, city:table, targetPlot:table )
+  -- Update turns to completed
+  local eOperation:number = operation.Index;
+  local turnsToComplete:number = UnitManager.GetTimeToComplete(eOperation, spy);
+  parentControl.TurnsToCompleteLabel:SetText(turnsToComplete);
+
+  -- Update mission success chance
+  if operation.Hash ~= UnitOperationTypes.SPY_COUNTERSPY then
+    local resultProbability:table = UnitManager.GetResultProbability(eOperation, spy, targetPlot);
+    if resultProbability["ESPIONAGE_SUCCESS_UNDETECTED"] then
+      local probability:number = resultProbability["ESPIONAGE_SUCCESS_UNDETECTED"];
+
+      -- Add ESPIONAGE_SUCCESS_MUST_ESCAPE
+      if resultProbability["ESPIONAGE_SUCCESS_MUST_ESCAPE"] then
+        probability = probability + resultProbability["ESPIONAGE_SUCCESS_MUST_ESCAPE"];
+      end
+
+      probability = math.floor((probability * 100)+0.5);
+      parentControl.ProbabilityLabel:SetText(probability .. "%");
+
+      -- Set Color
+      if probability > 85 then
+        parentControl.ProbabilityLabel:SetColorByName("OperationChance_Green");
+      elseif probability > 65 then
+        parentControl.ProbabilityLabel:SetColorByName("OperationChance_YellowGreen");
+      elseif probability > 45 then
+        parentControl.ProbabilityLabel:SetColorByName("OperationChance_Yellow");
+      elseif probability > 25 then
+        parentControl.ProbabilityLabel:SetColorByName("OperationChance_Orange");
+      else
+        parentControl.ProbabilityLabel:SetColorByName("OperationChance_Red");
+      end
+    end
+
+    parentControl.ProbabilityGrid:SetHide(false);
+  else
+    parentControl.ProbabilityGrid:SetHide(true);
+  end
+
+  -- result is the data bundle retruned by CanStartOperation container useful information about the operation query
+  -- If the results contain a plot ID then show that as the target district
+  if operation.Hash == UnitOperationTypes.SPY_COUNTERSPY then
+    local kDistrictInfo:table = GameInfo.Districts[targetPlot:GetDistrictType()];
+    parentControl.MissionDistrictName:SetText(Locale.Lookup(kDistrictInfo.Name));
+    local iconString:string = "ICON_" .. kDistrictInfo.DistrictType;
+    if parentControl.MissionDistrictIcon then
+      parentControl.MissionDistrictIcon:SetIcon(iconString);
+    end
+  elseif result and result[UnitOperationResults.PLOTS] then
+    for i,districtPlotID in ipairs(result[UnitOperationResults.PLOTS]) do
+      local districts:table = city:GetDistricts();
+      for i,district in districts:Members() do
+        local districtPlot:table = Map.GetPlot(district:GetX(), district:GetY());
+        if districtPlot:GetIndex() == districtPlotID then
+          local districtInfo:table = GameInfo.Districts[district:GetType()];
+          parentControl.MissionDistrictName:SetText(Locale.Lookup(districtInfo.Name));
+          local iconString:string = "ICON_" .. districtInfo.DistrictType;
+          if parentControl.MissionDistrictIcon then
+            parentControl.MissionDistrictIcon:SetIcon(iconString);
+          end
+        end
+      end
+    end
+  else -- Default to show city center
+    parentControl.MissionDistrictName:SetText(Locale.Lookup("LOC_DISTRICT_CITY_CENTER_NAME"));
+    parentControl.MissionDistrictIcon:SetIcon("ICON_DISTRICT_CITY_CENTER");
+  end
 end
 
 -- ===========================================================================
@@ -46,7 +122,14 @@ end
 -- ===========================================================================
 function GetMissionOutcomeDetails(mission:table)
   local outcomeDetails:table = {};
-  if mission.InitialResult == EspionageResultTypes.SUCCESS_UNDETECTED then
+  local kOpDef:table = GameInfo.UnitOperations[mission.Operation];
+
+  if kOpDef ~= nil and kOpDef.Hash == UnitOperationTypes.SPY_COUNTERSPY then
+    -- Counterspy specific
+    outcomeDetails.Success = true;
+    outcomeDetails.Description = Locale.Lookup("LOC_ESPIONAGEOVERVIEW_MISSIONOUTCOME_SUCCESS_COUNTERSPY", mission.CityName);
+    outcomeDetails.SpyStatus = "";
+  elseif mission.InitialResult == EspionageResultTypes.SUCCESS_UNDETECTED then
     -- Success and undetected
     outcomeDetails.Success = true;
     outcomeDetails.Description = GetMissionDescriptionString(mission, "LOC_ESPIONAGEOVERVIEW_MISSIONOUTCOME_SUCCESS_UNDETECTED", "LOC_ESPIONAGEOVERVIEW_MISSIONOUTCOME_SUCCESS_UNDETECTED_STOLELOOT");
@@ -130,6 +213,18 @@ function GetMissionLootString(mission:table)
   return lootString;
 end
 
+-- ===========================================================================
+function CanMissionBeRenewed(mission:table)
+  local kOperationInfo:table = GameInfo.UnitOperations[mission.Operation];
+  if kOperationInfo.Hash == UnitOperationTypes.SPY_LISTENING_POST or kOperationInfo.Hash == UnitOperationTypes.SPY_COUNTERSPY then
+    return true;
+  end
+
+  return false;
+end
+
+
+-- ===========================================================================
 function hasDistrict(city:table, districtType:string)
   local hasDistrict:boolean = false;
   local cityDistricts:table = city:GetDistricts();
