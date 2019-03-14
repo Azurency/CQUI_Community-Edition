@@ -1,5 +1,5 @@
 -- Copyright 2015-2018, Firaxis Games
--- Root context for ingame (aka: All-the-things)
+-- XP2 root context for ingame (aka: All-the-things)
 -- MODs / Expansions cannot use partial replacement as this context is 
 -- directly added to the UI Control Tree via engine.
 
@@ -308,19 +308,23 @@ function OnRefreshAttemptPopupRelease( delta:number )
 end
 
 -- ===========================================================================
-function OnDiplomacyHideIngameUI()    BulkHide( true, "Diplomacy" );     Input.PushActiveContext(InputContext.Diplomacy);     end
-function OnDiplomacyShowIngameUI()    BulkHide(false, "Diplomacy" );     Input.PopContext();                                  end
-function OnEndGameMenuShown()         BulkHide( true, "EndGame" );       Input.PushActiveContext(InputContext.EndGame);       end
-function OnEndGameMenuClosed()        BulkHide(false, "EndGame" );       Input.PopContext();                                  end
-function OnFullscreenMapShown()       BulkHide( true, "FullscreenMap" ); Input.PushActiveContext(InputContext.FullscreenMap); end
-function OnFullscreenMapClosed()      BulkHide(false, "FullscreenMap" ); Input.PopContext();                                  end
-function OnNaturalWonderPopupShown()  BulkHide( true, "NaturalWonder" );                                                      end
-function OnNaturalWonderPopupClosed() BulkHide(false, "NaturalWonder" );                                                      end
-function OnProjectBuiltShown()        BulkHide( true, "Project" );                                                            end
-function OnProjectBuiltClosed()       BulkHide(false, "Project" );                                                            end
-function OnTutorialEndHide()          BulkHide( true, "TutorialEnd" );                                                        end
-function OnWonderBuiltPopupShown()    BulkHide( true, "Wonder" );                                                             end
-function OnWonderBuiltPopupClosed()   BulkHide(false, "Wonder" );                                                             end
+function OnDiplomacyHideIngameUI()      BulkHide( true, "Diplomacy" );     Input.PushActiveContext(InputContext.Diplomacy);     end
+function OnDiplomacyShowIngameUI()      BulkHide(false, "Diplomacy" );     Input.PopContext();                                  end
+function OnDisasterRevealPopupShown()	  BulkHide( true, "NaturalDisaster" );                                                    end 
+function OnDisasterRevealPopupClosed()  BulkHide(false, "NaturalDisaster" );                                                    end
+function OnEndGameMenuShown()           BulkHide( true, "EndGame" );       Input.PushActiveContext(InputContext.EndGame);       end
+function OnEndGameMenuClosed()          BulkHide(false, "EndGame" );       Input.PopContext();                                  end
+function OnFullscreenMapShown()         BulkHide( true, "FullscreenMap" ); Input.PushActiveContext(InputContext.FullscreenMap); end
+function OnFullscreenMapClosed()        BulkHide(false, "FullscreenMap" ); Input.PopContext();                                  end
+function OnNaturalWonderPopupShown()    BulkHide( true, "NaturalWonder" );                                                      end
+function OnNaturalWonderPopupClosed()   BulkHide(false, "NaturalWonder" );                                                      end
+function OnProjectBuiltShown()          BulkHide( true, "Project" );                                                            end
+function OnProjectBuiltClosed()         BulkHide(false, "Project" );                                                            end  
+function OnRockBandMoviePopupShown()    BulkHide( true, "RockBand" );															                              end	
+function OnRockBandMoviePopupClosed()   BulkHide(false, "RockBand" );	                                                          end
+function OnTutorialEndHide()            BulkHide( true, "TutorialEnd" );                                                        end
+function OnWonderBuiltPopupShown()      BulkHide( true, "Wonder" );                                                             end
+function OnWonderBuiltPopupClosed()     BulkHide(false, "Wonder" );                                                             end
 
 
 -- ===========================================================================
@@ -368,10 +372,14 @@ function Initialize()
   LuaEvents.EndGameMenu_Closed.Add( OnEndGameMenuClosed );
   LuaEvents.FullscreenMap_Shown.Add( OnFullscreenMapShown );
   LuaEvents.FullscreenMap_Closed.Add(	OnFullscreenMapClosed );
+  LuaEvents.ProjectBuiltPopup_Shown.Add( OnProjectBuiltShown );
+	LuaEvents.ProjectBuiltPopup_Closed.Add( OnProjectBuiltClosed );
+	LuaEvents.NaturalDisasterPopup_Shown.Add( OnDisasterRevealPopupShown );
+	LuaEvents.NaturalDisasterPopup_Closed.Add( OnDisasterRevealPopupClosed );
   LuaEvents.NaturalWonderPopup_Shown.Add( OnNaturalWonderPopupShown );
   LuaEvents.NaturalWonderPopup_Closed.Add( OnNaturalWonderPopupClosed );
-  LuaEvents.ProjectBuiltPopup_Shown.Add( OnProjectBuiltShown );
-  LuaEvents.ProjectBuiltPopup_Closed.Add( OnProjectBuiltClosed );
+  LuaEvents.RockBandMoviePopup_Shown.Add( OnRockBandMoviePopupShown );
+	LuaEvents.RockBandMoviePopup_Closed.Add( OnRockBandMoviePopupClosed );
   LuaEvents.Tutorial_ToggleInGameOptionsMenu.Add( OnTutorialToggleInGameOptionsMenu );
   LuaEvents.Tutorial_TutorialEndHideBulkUI.Add( OnTutorialEndHide );
   LuaEvents.WonderBuiltPopup_Shown.Add( OnWonderBuiltPopupShown );

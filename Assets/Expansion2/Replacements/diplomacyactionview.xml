@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd" Style="FontNormal16" FontStyle="Shadow">
+<Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd" Style="FontNormal16" FontStyle="Shadow">
 
   <Include File="CivilizationIcon" />
   <Include File="LeaderIcon"/>
@@ -101,7 +101,7 @@
   <!-- Instance container for an action button. -->
   <Instance	Name="ActionButton">
     <GridButton ID="Button" Size="450, 38" Style="ButtonLightWeightGrid" Anchor="C,T">
-      <Label ID="ButtonText" Anchor="C,C" Style="ButtonFont16" LeadingOffset="-4"/>
+      <Label ID="ButtonText" Anchor="C,C" Style="ButtonFont16" LeadingOffset="-4" Align="c"/>
     </GridButton>
   </Instance>
 
@@ -178,7 +178,7 @@
     <Container ID="Top" Size="parent,38">
       <Image Offset="20,10" Size="22,22" IconSize="22" Icon="ICON_ACCESS_LEVEL"/>
       <Label Offset="60,10" Style="FontNormal16" String="LOC_DIPLOMACY_OVERVIEW_ACCESS_LEVEL"/>
-      <Button ID="AccessLevelIcon" Offset="215,8" Style="DiplomacyVisibilityIconSmall" Disabled="1"/>
+      <Button ID="AccessLevelIcon" Offset="217,8" Style="DiplomacyVisibilityIconSmall" Disabled="1"/>
       <Label ID="AccessLevelText" Offset="250,10" Style="FontNormal16" String="Limited"/>
     </Container>
   </Instance>
@@ -188,7 +188,7 @@
       <Image Offset="20,10" Size="22,22" IconSize="22" Icon="ICON_GOVERNMENT"/>
       <Label Offset="60,10" Style="FontNormal16" String="LOC_DIPLOMACY_OVERVIEW_GOVERNMENT"/>
       <Image Offset="220,10" Size="16,16" IconSize="16" Icon="ICON_STATS_GENERIC_MODIFIER"/>
-      <Label ID="GovernmentText" Offset="250,10" Style="FontNormal16" String="Limited"/>
+      <Label ID="GovernmentText" Offset="250,10" Style="FontNormal16" String="Limited" TruncateWidth="220" TruncatedTooltip="1"/>
     </Container>
   </Instance>
 
@@ -211,7 +211,7 @@
     <Container ID="Top" Size="parent,38">
       <Image Offset="20,10" Size="22,22" IconSize="22" Icon="ICON_AGREEMENT"/>
       <Label Offset="60,10" Style="FontNormal16" String="LOC_DIPLOMACY_OVERVIEW_AGREEMENTS"/>
-      <Stack ID="AgreementStack" Offset="214,8" StackGrowth="Right" StackPadding="6"/>
+      <Stack ID="AgreementStack" Offset="216,8" StackGrowth="Right" StackPadding="6"/>
     </Container>
   </Instance>
 
@@ -387,16 +387,15 @@
   </Instance>
 
   <!-- An instance of the vertical diplomacy ribbon -->
-  <Instance Name="DiplomacyRibbonVert">
-    <Container ID="Root" Size="200,parent">
-      <!-- The ribbon background -->
-      <Image Texture="Diplomacy_Ribbon" Offset="8,0" Size="47,parent-32"/>
-      <Image Texture="Diplomacy_RibbonBottom" Anchor="L,B" Offset="8,0" Size="47,239"/>
-      <ScrollPanel ID="LeaderRibbonScroll" Vertical="1" AutoScrollBar="1" Size="parent,parent">
-        <ScrollBar Size="15,parent" SliceTextureSize="11,11" SliceCorner="5,5" Anchor="L,B" Color="111,101,94,250" AnchorSide="O,I"  Texture="Controls_ScrollBarBacking" StateOffsetIncrement="0,0" Vertical="1" >
-          <Thumb																										Size="13,13"					Texture="Controls_ScrollBarHandleV_Brown" StateOffsetIncrement="0,0" SliceCorner="6,6" SliceTextureSize="13,13"/>
+  <Instance				Name="DiplomacyRibbonVert">
+		<Container			ID="Root" Size="200,parent">
+			<Image				Texture="Diplomacy_Ribbon"				Offset="8,0" Size="47,parent-32"/>
+      <Image				Texture="Diplomacy_RibbonBottom" Anchor="L,B" Offset="8,0" Size="47,239"/>
+      <ScrollPanel	ID="LeaderRibbonScroll" Vertical="1" AutoScrollBar="1" Size="parent,parent">
+        <Stack			ID="Leaders"											Offset="0,10" StackGrowth="Bottom"/>
+        <ScrollBar	Size="15,parent" SliceTextureSize="11,11" SliceCorner="5,5" Anchor="L,B" Color="111,101,94,250" AnchorSide="O,I"  Texture="Controls_ScrollBarBacking" StateOffsetIncrement="0,0" Vertical="1" >
+          <Thumb		Size="13,13"			Texture="Controls_ScrollBarHandleV_Brown" StateOffsetIncrement="0,0" SliceCorner="6,6" SliceTextureSize="13,13"/>
         </ScrollBar>
-        <Stack ID="Leaders" Offset="0,20" StackGrowth="Bottom"/>
       </ScrollPanel>
     </Container>
   </Instance>
@@ -424,17 +423,17 @@
   <!-- Controls for when the local player is overview mode or auction mode. -->
   <Container ID="OverviewContainer" Size="parent,parent" ConsumeAllMouse="0">
     <AlphaAnim ID="AlphaIn" AlphaBegin="0" AlphaEnd="1" Speed="2" Cycle="Once" Function="Root" Pause="0.2">
+      <Container ID="DiplomacyRibbonContainer" Offset="0,45" Size="200,parent-45"/>
       <SlideAnim ID="SlideIn" Begin="-200,0" End="0,0" Speed="2" Cycle="Once" Function="Root" Pause="0.2">
         <!-- The container for the diplo ribbon instance -->
-        <Container ID="DiplomacyRibbonContainer" Size="200,parent"/>
         <!-- The container for the player panel instance -->
         <Container ID="PlayerContainer" Offset="64,0" Size="360,parent"/>
       </SlideAnim>
     </AlphaAnim>
     <AlphaAnim ID="NameFade" AlphaBegin="0" AlphaEnd="1" Speed="3" Cycle="Once" Function="Root"   Pause="0.4" Size="parent,parent">
       <SlideAnim ID="NameSlide" Begin="-20,0" End="0,0" Speed="3" Cycle="Once" Function="Root"    Pause="0.4" Size="parent,parent">
-        <Stack Padding="3" Offset="30,35">
-          <Stack StackGrowth="Down" Padding="3">
+        <Stack Padding="3" Offset="30,65">
+					<Stack StackGrowth="Down" Padding="3" >
             <Label      ID="PlayerNameText" Style="DiplomacyCivHeaderLarge" ColorSet="BodyTextCool"/>
             <Label      ID="CivNameText" Style="DiplomacyCivHeaderLarge" Color0="Dark_Gray"/>
           </Stack>
@@ -442,13 +441,27 @@
             <Label														Anchor="L,T" Offset="10,10"		Style="FontFlair14"		String="{LOC_LOADING_FEATURES_ABILITIES:upper}" SmallCapsType="EveryWord" SmallCaps="20" />
             <Line															Start="0,0"	 End="350,0"			Width="2"							Color="200,200,200,100" />
             <ScrollPanel	ID="LeaderInfoScrollPanel" Anchor="L,B" Size="parent-10,parent-200"	Vertical="1" AutoScrollBar="1">
-              <Stack			ID="FeaturesStack"		     Anchor="L,T" Offset="10,8" StackGrowth="Right" WrapWidth="400" WrapGrowth="Down" Padding="10" WrapPadding="14" />
-              <ScrollBar  Anchor="L,T" AnchorSide="O,I" Size="11,parent" Style="Slider_Blue" Vertical="1" Offset="-2,-2"/>
+                <Stack			ID="FeaturesStack"		Anchor="L,T" Offset="10,8" StackGrowth="Right" WrapWidth="400" WrapGrowth="Down" Padding="10" WrapPadding="14" />
+                <ScrollBar Anchor="L,T" AnchorSide="O,I" Size="11,parent" Style="Slider_Blue" Vertical="1" Offset="-2,-2"/>
             </ScrollPanel>
           </Stack>
         </Stack>
       </SlideAnim>
     </AlphaAnim>
+    <Container ID="TabContainer" Offset="0,-5" Size="auto,auto" ConsumeMouseOver="1">
+      <Grid ID="LaunchBarDropShadow" Offset="0,7" Size="310,60" Texture="Controls_Glow2" SliceCorner="25,25" SliceTextureSize="50,50" Color="0,0,0,200"/>
+      <Image ID="LaunchBackingTile" Offset="5,6" Size="200,41" Texture="LaunchBar_Backing_Tile" StretchMode="Tile"/>
+      <Grid ID="LaunchBacking" Offset="-64,-28" Size="330,77" Texture="LaunchBar_BackingLeft_Backing" SliceCorner="114,32" SliceSize="1,1" SliceTextureSize="226,77"/>
+
+      <Stack ID="TabBar" StackGrowth="Right" Padding="3" Offset="10,5">
+        <Button ID="WCButton" Anchor="L,C" Size="49,49" Texture="LaunchBar_Hook_GovernmentButton" Style="ButtonNormalText" StateOffsetIncrement="0,49" ToolTip="LOC_TOOLTIP_CONGRESS_CONGRESS_BUTTON">
+          <Image Texture="LaunchBar_Hook_WCOn" Size="38,38" Anchor="C,C"/>
+        </Button>
+        <Button ID="DiploButton" Anchor="L,C" Size="49,49" Texture="LaunchBar_Hook_GovernmentButton" Style="ButtonNormalText" StateOffsetIncrement="0,49" Selected="1" ToolTip="LOC_TOOLTIP_DIPLOMACY_CONGRESS_BUTTON">
+          <Image Texture="LaunchBar_Hook_Diplomacy" Size="38,38" Anchor="C,C"/>
+        </Button>
+      </Stack>
+    </Container>
     <!-- Close button -->
     <Button ID="CloseButton" Anchor="R,T" Style="CloseButtonSmall"/>
   </Container>
@@ -492,7 +505,7 @@
   <!--The fade-to-black stuff -->
   <Container ID="BlackFade" Hidden="1">
     <AlphaAnim ID="BlackFadeAnim" Begin="0" End="1" Speed="3" Cycle="Once" Stopped="1" Speed="4">
-      <Box Color="0,0,0,255" Size="parent,parent" ConsumeMouse="0"/>
+      <Box Color="0,0,0,255" Size="parent,parent" />
     </AlphaAnim>
   </Container>
   <AlphaAnim ID="FadeTimerAnim" Begin="0" End="1" Speed="3" Cycle="Once" Stopped="1" Speed="4"/>

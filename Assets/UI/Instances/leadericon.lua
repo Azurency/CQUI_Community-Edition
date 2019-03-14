@@ -56,7 +56,7 @@ function LeaderIcon:UpdateIcon(iconName: string, playerID: number, isUniqueLeade
   local localPlayerID:number = Game.GetLocalPlayer();
 
   -- Display the civ colors/icon for duplicate civs
-  if (isUniqueLeader == false and (playerID == localPlayerID or Players[localPlayerID]:GetDiplomacy():HasMet(playerID)))
+  if (isUniqueLeader == false and (playerID == localPlayerID or Players[localPlayerID]:GetDiplomacy():HasMet(playerID))) then
     local backColor, frontColor  = UI.GetPlayerColors( playerID );
     self.Controls.CivIndicator:SetHide(false);
     self.Controls.CivIndicator:SetColor(backColor);
