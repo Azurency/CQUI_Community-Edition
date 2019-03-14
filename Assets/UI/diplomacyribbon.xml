@@ -9,8 +9,10 @@
     <ScrollPanel ID="LeaderBGClip" Anchor="R,T" Size="auto,80" Disabled="1" Offset="-20,5" FullClip="1">
       <Grid ID="LeaderBG" Anchor="R,T" Size="500,100" Style="DropShadow2" Offset="0,-30" Color="255,255,255,150"/>
     </ScrollPanel>
-    <ScrollPanel ID="LeaderScroll" Anchor="R,T" Size="10,parent">
-      <Stack ID="LeaderStack" Anchor="R,T" StackGrowth="Left" StackPadding="2" Offset="3,4"/>
+    <Container ID="ScrollContainer" Anchor="R,T" Size="10,86">
+      <ScrollPanel ID="LeaderScroll" Size="parent,parent">
+        <Stack ID="LeaderStack" Anchor="R,T" StackGrowth="Left" StackPadding="2" Offset="3,4"/>
+      </ScrollPanel>
       <Image    ID="NextButtonContainer" Texture="ActionPanel_Badge" Offset="-32,-45" Size="40,37" Anchor="R,B" AnchorSide="O,O">
         <Button ID="NextButton" Anchor="R,B" Offset="4,2" Style="ArrowButtonRight"/>
       </Image>
@@ -20,7 +22,7 @@
           <Button ID="PreviousButton" Anchor="L,B" Offset="4,2" Style="ArrowButtonLeft"/>
         </Image>
       </Container>
-    </ScrollPanel>
+    </Container>
 
   <Tutorial   			ID="TutDiploRibbon"	Style="TutorialContainer"	Offset="80,90" Anchor="R,T" TriggerBy="TutorialDiploRibbon">
     <SlideAnim				Anchor="R,T" Start="0,0"	EndOffset="0,-20" Cycle="Bounce" Function="OutQuad" >
@@ -44,28 +46,28 @@
   <!--	Instances															-->
   <!-- ==================================================================	-->
   <Instance Name="LeaderInstance">
-      <SlideAnim ID="LeaderContainer" Size="60,120" Offset="0,0" Begin="0,0" EndOffset="0,20" Cycle="Once" Stopped="1">
-        <Grid Style="EnhancedToolTip" Size="parent,parent" Color="255,200,100,255" InnerPadding="10,5">
-          <Stack ID="CQUI_ScoreDisplayStack" Anchor="C,T" StackGrowth="Bottom" StackPadding="4" >
-            <MakeInstance Name="LeaderIcon45"/>
-            <Label  ID="CQUI_ScoreOverall"                Anchor="L,B" Offset="0,0"     Style="CityPanelNumSmall"   String="-" />
-            <Label  ID="CQUI_ScienceRate"                Anchor="L,B" Offset="0,0"     Style="CityPanelCBScience"   String="Sci" />
-            <Label  ID="CQUI_MilitaryStrength"               Anchor="L,B" Offset="0,0"     Style="CityPanelCBProduction"   String="Mil" />
-          </Stack>
-          <AlphaAnim ID="ChatIndicatorFade" Cycle="Once" AlphaBegin="0.0" AlphaEnd="1.0" Speed="3" Stopped="1">
-            <Image ID="ChatIndicator" Hidden="0" Offset="35,0" Size="22,22" Texture="DiploRibbon_TypingIndicator"/>
-          </AlphaAnim>
-        </Grid>
-      </SlideAnim>
+    <SlideAnim ID="LeaderContainer" Size="60,120" Offset="0,0" Begin="0,0" EndOffset="0,20" Cycle="Once" Stopped="1" ConsumeMouseOver="1">
+      <Grid Style="EnhancedToolTip" Size="parent,parent" Color="255,200,100,255" InnerPadding="10,5">
+        <Stack ID="CQUI_ScoreDisplayStack" Anchor="C,T" StackGrowth="Bottom" StackPadding="4" >
+          <MakeInstance Name="LeaderIcon45"/>
+          <Label  ID="CQUI_ScoreOverall"                Anchor="L,B" Offset="0,0"     Style="CityPanelNumSmall"   String="-" />
+          <Label  ID="CQUI_ScienceRate"                Anchor="L,B" Offset="0,0"     Style="CityPanelCBScience"   String="Sci" />
+          <Label  ID="CQUI_MilitaryStrength"               Anchor="L,B" Offset="0,0"     Style="CityPanelCBProduction"   String="Mil" />
+        </Stack>
+        <AlphaAnim ID="ChatIndicatorFade" Cycle="Once" AlphaBegin="0.0" AlphaEnd="1.0" Speed="3" Stopped="1">
+          <Image ID="ChatIndicator" Hidden="0" Offset="35,0" Size="22,22" Texture="DiploRibbon_TypingIndicator"/>
+        </AlphaAnim>
+      </Grid>
+    </SlideAnim>
   </Instance>
-  
+
   <Instance Name="LeaderInstanceNormal">
-      <SlideAnim ID="LeaderContainer" Size="52,52" Offset="0,0" Begin="0,0" EndOffset="0,20" Cycle="Once" Stopped="1">
-				<MakeInstance Name="LeaderIcon45"/>
-				<AlphaAnim ID="ChatIndicatorFade" Cycle="Once" AlphaBegin="0.0" AlphaEnd="1.0" Speed="3" Stopped="1">
-					<Image ID="ChatIndicator" Hidden="0" Offset="35,0" Size="22,22" Texture="DiploRibbon_TypingIndicator"/>
-				</AlphaAnim>
-      </SlideAnim>
+    <SlideAnim ID="LeaderContainer" Size="52,52" Offset="0,0" Begin="0,0" EndOffset="0,20" Cycle="Once" Stopped="1">
+      <MakeInstance Name="LeaderIcon45"/>
+      <AlphaAnim ID="ChatIndicatorFade" Cycle="Once" AlphaBegin="0.0" AlphaEnd="1.0" Speed="3" Stopped="1">
+        <Image ID="ChatIndicator" Hidden="0" Offset="35,0" Size="22,22" Texture="DiploRibbon_TypingIndicator"/>
+      </AlphaAnim>
+    </SlideAnim>
   </Instance>
 
 </Context>
