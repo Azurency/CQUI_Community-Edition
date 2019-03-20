@@ -75,7 +75,7 @@ function LateInitialize()
 
   -- TESTS
   -----------------------------
-  
+  --[[
   local hookInfo1:table = {
     -- ICON TEXTURE
     IconTexture = {
@@ -101,5 +101,5 @@ function LateInitialize()
   };
 
   LuaEvents.PartialScreenHooks_AddHook(hookInfo1);
-  
+  ]]--
 end
