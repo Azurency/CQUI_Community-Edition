@@ -16,6 +16,8 @@ local KEY_PLOT_PURCHASE     :string = "PLOT_PURCHASE";
 local KEY_CITIZEN_MANAGEMENT  :string = "CITIZEN_MANAGEMENT";
 local KEY_DISTRICT_PLACEMENT  :string = "DISTRICT_PLACEMENT";
 local KEY_SWAP_TILE_OWNER   :string = "SWAP_TILE_OWNER";
+local KEY_PLOT_CITY        :string = "PLOT_CITY";
+local KEY_PLOT_EMPIRE      :string = "PLOT_EMPIRE";
 local YIELD_NUMBER_VARIATION  :string = "Yield_Variation_";
 local YIELD_VARIATION_MANY    :string = "Yield_Variation_Many";
 local YIELD_VARIATION_MAP   :table = {
@@ -27,6 +29,17 @@ local YIELD_VARIATION_MAP   :table = {
   YIELD_FAITH     = "Yield_Faith_",
 };
 local CITY_CENTER_DISTRICT_INDEX = GameInfo.Districts["DISTRICT_CITY_CENTER"].Index;
+
+local CITY_BORDER_OVERLAY_NAME:string = "CityBorders";
+
+local m_CitizenManagement : number = UILens.CreateLensLayerHash("Citizen_Management");
+local m_PurchasePlot : number = UILens.CreateLensLayerHash("Purchase_Plot");
+local m_CityYields : number = UILens.CreateLensLayerHash("City_Yields");
+local m_YieldIcons : number = UILens.CreateLensLayerHash("Yield_Icons");
+local m_MapHexMask : number = UILens.CreateLensLayerHash("Map_Hex_Mask");
+local m_CityDetails : number = UILens.CreateLensLayerHash("City_Details");
+local m_EmpireDetails : number = UILens.CreateLensLayerHash("Empire_Details");
+local m_AdjacencyBonusDistricts : number = UILens.CreateLensLayerHash("Adjacency_Bonus_Districts");
 
 -- ===========================================================================
 --  MEMBERS
@@ -144,6 +157,117 @@ function OnSpinningCoinAnimMouseEnter( pControl:table )
     pControl:SetToBeginning();
   end
   pControl:Play();
+end
+
+-- ===========================================================================
+function OnShowEnemyCityDetails( OwnerID:number, CityID:number )
+  local pPlayer:table = Players[OwnerID];
+  local pCity:table = nil;
+  if pPlayer then
+    pCity = pPlayer:GetCities():FindID( CityID );
+    if pCity == nil then
+      UI.DataError("Unable to find enemy city.");
+      return;
+    end
+  end
+
+  ShowCityDetails( pCity );
+  RealizeShadowMask();
+  RealizeTilt();
+  RefreshCityYieldsPlotList();
+end
+
+-- ===========================================================================
+function ShowCityDetails( pEnemyCity:table )
+
+  local pCity:table = pEnemyCity ~= nil and pEnemyCity or UI.GetHeadSelectedCity();
+
+  if pCity == nil then
+    return;
+  end
+
+  m_kLensMask[KEY_PLOT_CITY] = {};
+
+  -- Show city border overlay
+  local pOverlay:object = UILens.GetOverlay(CITY_BORDER_OVERLAY_NAME);
+  pOverlay:ClearPlotChannel(); -- Calling ClearPlotChannel without a channel clears all channels
+  pOverlay:SetVisible(true);
+
+  local backColor:number, frontColor:number  = UI.GetPlayerColors( pCity:GetOwner() );
+
+  -- Add city plots to hex table and call lens system to darken non-city
+  local kCityPlots :table = Map.GetCityPlots():GetPurchasedPlots( pCity );
+  for _,plotId in pairs(kCityPlots) do
+    table.insert(m_kLensMask[KEY_PLOT_CITY], plotId);
+
+    -- Add this city only to the border overlay
+    pOverlay:SetBorderColors(0, backColor, frontColor);
+    pOverlay:SetPlotChannel(kCityPlots, 0);
+  end
+end
+
+-- ===========================================================================
+function HideCityDetails()
+  m_kLensMask[KEY_PLOT_CITY] = nil;
+
+  -- Hide city border overlay
+  local pOverlay:object = UILens.GetOverlay(CITY_BORDER_OVERLAY_NAME);
+  pOverlay:SetVisible(false);
+end
+
+-- ===========================================================================
+function ShowEmpireDetails()
+  local pLocalPlayer:table = Players[Game.GetLocalPlayer()];
+  if pLocalPlayer == nil then
+    return;
+  end
+
+  local pPlayerCities:table = pLocalPlayer:GetCities();
+  if pPlayerCities == nil then
+    return;
+  end
+
+  m_kLensMask[KEY_PLOT_EMPIRE] = {};
+
+  -- Show city border overlay
+  local pOverlay:object = UILens.GetOverlay(CITY_BORDER_OVERLAY_NAME);
+  pOverlay:ClearPlotChannel(); -- Calling ClearPlotChannel without a channel clears all channels
+  pOverlay:SetVisible(true);
+
+  local backColor:number, frontColor:number  = UI.GetPlayerColors( pLocalPlayer:GetID() );
+  local channel:number = 0;
+
+  -- Add plots for all of the players cities
+  for _, pCity in pPlayerCities:Members() do
+    local kCityPlots:table = Map.GetCityPlots():GetPurchasedPlots( pCity );
+    for _, plotId in pairs( kCityPlots ) do
+      -- Only add one instance of each plot
+      local alreadyContainsPlot:boolean = false;
+      for _, existingPlotId in ipairs(m_kLensMask[KEY_PLOT_EMPIRE]) do
+        if existingPlotId == plotId then
+          alreadyContainsPlot = true;
+        end
+      end
+
+      if alreadyContainsPlot == false then
+        table.insert(m_kLensMask[KEY_PLOT_EMPIRE], plotId);
+      end
+    end
+
+    -- Add each city to it's own overlay channel
+    pOverlay:SetBorderColors(channel, backColor, frontColor);
+    pOverlay:SetPlotChannel(kCityPlots, channel);
+    channel = channel + 1;
+  end
+end
+
+-- ===========================================================================
+function HideEmpireDetails()
+  m_kLensMask[KEY_PLOT_EMPIRE] = nil;
+
+  -- Hide city border overlay
+  local pOverlay:object = UILens.GetOverlay(CITY_BORDER_OVERLAY_NAME);
+  pOverlay:SetVisible(false);
 end
 
 -- ===========================================================================
@@ -433,9 +557,9 @@ function UpdateYieldIcons(yields:table)
       if plots.yieldType == row.YieldType then
         -- When using the WorldBuilder playerID is -1 so pass in 0 as a valid playerID
         if GameConfiguration.IsWorldBuilderEditor() then
-          UILens.SetLayerHexesArea(LensLayers.YIELD_ICONS, 0, plots.data, plots.variations, key);
+          UILens.SetLayerHexesArea(m_YieldIcons, 0, plots.data, plots.variations, key);
         else
-          UILens.SetLayerHexesArea(LensLayers.YIELD_ICONS, Game.GetLocalPlayer(), plots.data, plots.variations, key);
+          UILens.SetLayerHexesArea(m_YieldIcons, Game.GetLocalPlayer(), plots.data, plots.variations, key);
         end
       end
     end
@@ -484,7 +608,7 @@ function OnMapYieldsChanged()
     return;
   end
 
-  local bCityPlotYieldsShown:boolean = UILens.IsLayerOn( LensLayers.CITY_YIELDS );
+  local bCityPlotYieldsShown:boolean = UILens.IsLayerOn( m_CityYields );
   if bCityPlotYieldsShown then
     HideCityYields();
   end
@@ -495,7 +619,7 @@ function OnMapYieldsChanged()
     GetPlotYields(plotId, yields);
   end
 
-  UILens.ClearHexes(LensLayers.YIELD_ICONS, m_PlotYieldsChanged);
+  UILens.ClearHexes(m_YieldIcons, m_PlotYieldsChanged);
   UpdateYieldIcons(yields);
 
   m_PlotYieldsChanged = {};
@@ -565,7 +689,7 @@ function HideCitizens()
   end
   m_uiCitizens = {};
 
-  UILens.ClearLayerHexes( LensLayers.CITIZEN_MANAGEMENT );
+  UILens.ClearLayerHexes( m_CitizenManagement );
   m_kLensMask[KEY_CITIZEN_MANAGEMENT] = nil;
 end
 
@@ -591,25 +715,25 @@ function HidePurchases()
   end
   m_uiPurchase = {};
 
-  UILens.ClearLayerHexes( LensLayers.PURCHASE_PLOT );
+  UILens.ClearLayerHexes( m_PurchasePlot );
   m_kLensMask[KEY_PLOT_PURCHASE] = nil;
 end
 
 -- ===========================================================================
 function ShowYieldIcons()
-  UILens.ToggleLayerOn( LensLayers.YIELD_ICONS );
+  UILens.ToggleLayerOn( m_YieldIcons );
 end
 
 -- ===========================================================================
 function HideYieldIcons()
-  UILens.ToggleLayerOff( LensLayers.YIELD_ICONS );
+  UILens.ToggleLayerOff( m_YieldIcons );
 end
 
 -- ===========================================================================
 function ShowCityYields()
 
   local yields:table = {};
-  local plots:table = AggregateLensHexes({ KEY_PLOT_PURCHASE, KEY_CITIZEN_MANAGEMENT, KEY_DISTRICT_PLACEMENT, KEY_SWAP_TILE_OWNER });
+  local plots:table = AggregateLensHexes({ KEY_PLOT_PURCHASE, KEY_CITIZEN_MANAGEMENT, KEY_DISTRICT_PLACEMENT, KEY_SWAP_TILE_OWNER, KEY_PLOT_CITY, KEY_PLOT_EMPIRE });
 
   for _, plotId in ipairs(plots) do
     local plot:table = Map.GetPlotByIndex(plotId);
@@ -621,18 +745,18 @@ function ShowCityYields()
     end
   end
 
-  UILens.SetLayerHexesArea(LensLayers.CITY_YIELDS, Game.GetLocalPlayer(), yields);
+  UILens.SetLayerHexesArea(m_CityYields, Game.GetLocalPlayer(), yields);
 end
 
 -- ===========================================================================
 function HideCityYields()
-  UILens.ClearLayerHexes( LensLayers.CITY_YIELDS );
+  UILens.ClearLayerHexes( m_CityYields );
 end
 
 -- ===========================================================================
 -- Refresh displayed plots for city yields
 function RefreshCityYieldsPlotList()
-  if UILens.IsLayerOn( LensLayers.CITY_YIELDS ) then
+  if UILens.IsLayerOn( m_CityYields ) then
     HideCityYields();
     ShowCityYields();
   end
@@ -641,7 +765,7 @@ end
 -- ===========================================================================
 -- Refresh displayed purchase plots
 function RefreshPurchasePlots()
-  if UILens.IsLayerOn( LensLayers.PURCHASE_PLOT ) then
+  if UILens.IsLayerOn( m_PurchasePlot ) then
     HidePurchases();    -- Out with the old
     ShowPurchases();    -- In with the new
     RealizeShadowMask();
@@ -651,7 +775,7 @@ end
 -- ===========================================================================
 -- Refresh displayed plot workers
 function RefreshCitizenManagement()
-  if UILens.IsLayerOn( LensLayers.CITIZEN_MANAGEMENT ) then
+  if UILens.IsLayerOn( m_CitizenManagement ) then
     HideCitizens();
     ShowCitizens();
     RealizeShadowMask();
@@ -805,8 +929,9 @@ end
 --  Determine if the camera tilt should be on/off
 -- ===========================================================================
 function RealizeTilt()
-  if  UILens.IsLayerOn(LensLayers.PURCHASE_PLOT) or
-    UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) then
+  if  UILens.IsLayerOn(m_PurchasePlot) or
+    UILens.IsLayerOn(m_CitizenManagement) or
+    UILens.IsLayerOn(m_CityDetails) then
     if not UI.IsFixedTiltModeOn() then
       UI.SetFixedTiltMode( true );
     end
@@ -825,14 +950,14 @@ function RealizeShadowMask()
   -- No IDs, clear
   if table.count(m_kLensMask) < 1 then
     m_kLensMask = {};
-    UILens.ClearLayerHexes( LensLayers.MAP_HEX_MASK );
+    UILens.ClearLayerHexes( m_MapHexMask );
     return;
   end
 
-  local kNotToMask:table = AggregateLensHexes({ KEY_PLOT_PURCHASE, KEY_CITIZEN_MANAGEMENT, KEY_DISTRICT_PLACEMENT, KEY_SWAP_TILE_OWNER });
+  local kNotToMask:table = AggregateLensHexes({ KEY_PLOT_PURCHASE, KEY_CITIZEN_MANAGEMENT, KEY_DISTRICT_PLACEMENT, KEY_SWAP_TILE_OWNER, KEY_PLOT_CITY, KEY_PLOT_EMPIRE });
 
-  UILens.ClearLayerHexes( LensLayers.MAP_HEX_MASK );
-  UILens.SetLayerHexesArea( LensLayers.MAP_HEX_MASK, Game.GetLocalPlayer(), kNotToMask );
+  UILens.ClearLayerHexes( m_MapHexMask );
+  UILens.SetLayerHexesArea( m_MapHexMask, Game.GetLocalPlayer(), kNotToMask );
 end
 
 -- ===========================================================================
@@ -878,6 +1003,67 @@ function OnClearDistrictPlacementShadowHexes()
   m_kLensMask[KEY_DISTRICT_PLACEMENT] = nil;
 end
 
+-- ===========================================================================
+function GetAllAdjacencyBonusesForCity( pCity:table, tCurrentBonuses:table )
+    for kDistrictDef in GameInfo.Districts() do
+        -- For each district determine viable plots
+        local tParameters:table  = {};
+    tParameters[CityOperationTypes.PARAM_DISTRICT_TYPE] = kDistrictDef.Hash;
+    local tResults:table = CityManager.GetOperationTargets( pCity, CityOperationTypes.BUILD, tParameters );
+        if tResults ~= nil and tResults[CityOperationResults.PLOTS] ~= nil and table.count(tResults[CityOperationResults.PLOTS]) ~= 0 then
+      -- For each viable plot determine possible bonuses from surrounding plots
+            local kPlots = tResults[CityOperationResults.PLOTS];
+      for i, plotId in ipairs(kPlots) do
+                local kPlot:table = Map.GetPlotByIndex(plotId);
+
+                local kAdjacentPlotBonuses:table = AddAdjacentPlotBonuses( kPlot, kDistrictDef.DistrictType, pCity, tCurrentBonuses );
+        for plotIndex, districtViewInfo in pairs(kAdjacentPlotBonuses) do
+          tCurrentBonuses[plotIndex] = districtViewInfo;
+        end
+            end
+        end
+    end
+end
+
+-- ===========================================================================
+function ShowAdjacencyBonusesForAllCities()
+    UILens.ClearLayerHexes( m_AdjacencyBonusDistricts );
+
+    local tAdjacencyBonuses:table = {};
+
+    local pLocalPlayer:table = Players[Game.GetLocalPlayer()];
+    if pLocalPlayer ~= nil then
+        local pPlayerCities:table = pLocalPlayer:GetCities();
+        for i, pCity in pPlayerCities:Members() do
+            GetAllAdjacencyBonusesForCity( pCity, tAdjacencyBonuses );
+        end
+    end
+
+  for i,plotInfo in pairs(tAdjacencyBonuses) do
+    UILens.SetAdjacencyBonusDistict( plotInfo.index, plotInfo.hexArtdef, plotInfo.adjacent );
+  end
+end
+
+-- ===========================================================================
+function ShowAdjacencyBonusesForCity( pEnemyCity:table )
+    UILens.ClearLayerHexes( m_AdjacencyBonusDistricts );
+
+    local tAdjacencyBonuses:table = {};
+
+    local pCity:table = pEnemyCity ~= nil and pEnemyCity or UI.GetHeadSelectedCity();
+    if pCity ~= nil then
+        GetAllAdjacencyBonusesForCity( pCity, tAdjacencyBonuses );
+    end
+
+  for i,plotInfo in pairs(tAdjacencyBonuses) do
+    UILens.SetAdjacencyBonusDistict( plotInfo.index, plotInfo.hexArtdef, plotInfo.adjacent );
+  end
+end
+
+-- ===========================================================================
+function HideAdjacencyBonuses()
+    UILens.ClearLayerHexes( m_AdjacencyBonusDistricts );
+end
 
 -- ===========================================================================
 --  Gamecore Event
@@ -885,17 +1071,30 @@ end
 --  or when a player explicitly turns off the layer from the "player" lens.
 -- ===========================================================================
 function OnLensLayerOn( layerNum:number )
-  if layerNum == LensLayers.CITIZEN_MANAGEMENT then
+  if layerNum == m_CitizenManagement then
     ShowCitizens();
     RealizeShadowMask();
     --RealizeTilt();
     RefreshCityYieldsPlotList();
-  elseif layerNum == LensLayers.PURCHASE_PLOT then
+  elseif layerNum == m_PurchasePlot then
     ShowPurchases();
     RealizeShadowMask();
     --RealizeTilt();
     RefreshCityYieldsPlotList();
-  elseif layerNum == LensLayers.CITY_YIELDS then
+  elseif layerNum == m_CityDetails then
+    if UILens.IsLensActive("EnemyCityDetails") then
+      -- Handled by LuaEvents.ShowEnemyCityDetails
+      return;
+    end
+    ShowCityDetails();
+    RealizeShadowMask();
+    --RealizeTilt();
+    RefreshCityYieldsPlotList();
+  elseif layerNum == m_EmpireDetails then
+    ShowEmpireDetails();
+    RealizeShadowMask();
+    RefreshCityYieldsPlotList();
+  elseif layerNum == m_CityYields then
     ShowCityYields();
   end
 end
@@ -906,21 +1105,40 @@ end
 --  or when a player explicitly turns off the layer from the "player" lens.
 -- ===========================================================================
 function OnLensLayerOff( layerNum:number )
-  if  layerNum == LensLayers.CITIZEN_MANAGEMENT then
+  if  layerNum == m_CitizenManagement then
     HideCitizens();
     RealizeShadowMask();
     --RealizeTilt();
     RefreshCityYieldsPlotList();
-  elseif  layerNum == LensLayers.PURCHASE_PLOT then
+  elseif  layerNum == m_PurchasePlot then
     HidePurchases();
     RealizeShadowMask();
     --RealizeTilt();
     RefreshCityYieldsPlotList();
-  elseif layerNum == LensLayers.CITY_YIELDS then
+  elseif layerNum == m_CityDetails then
+    HideCityDetails();
+    RealizeShadowMask();
+    --RealizeTilt();
+    RefreshCityYieldsPlotList();
+  elseif layerNum == m_EmpireDetails then
+    HideEmpireDetails();
+    RealizeShadowMask();
+    RefreshCityYieldsPlotList();
+  elseif layerNum == m_CityYields then
     HideCityYields();
   end
 end
 
+-- ===========================================================================
+function OnInterfaceModeChanged( oldMode:number, newMode:number )
+  if newMode == InterfaceModeTypes.VIEW_MODAL_LENS then
+    if oldMode == InterfaceModeTypes.DISTRICT_PLACEMENT or
+      oldMode == InterfaceModeTypes.BUILDING_PLACEMENT then
+      OnClearDistrictPlacementShadowHexes();
+      RealizeShadowMask();
+    end
+  end
+end
 
 -- ===========================================================================
 --  Gamecore Event
@@ -940,7 +1158,7 @@ end
 
 function KeyHandler( key:number )
   if key == Keys.VK_TAB then
-    UILens.ClearLayerHexes( LensLayers.MAP_HEX_MASK );   -- ??TRON debug clear
+    UILens.ClearLayerHexes( m_MapHexMask );   -- ??TRON debug clear
     return true;
   end
   return false;
@@ -1017,6 +1235,7 @@ function Initialize()
   Events.MapYieldsChanged.Add(        OnMapYieldsChanged );
   Events.DistrictAddedToMap.Add(      OnDistrictAddedToMap );
   Events.DistrictRemovedFromMap.Add(  OnDistrictRemovedFromMap );
+  Events.InterfaceModeChanged.Add(  OnInterfaceModeChanged );
   Events.BuildingAddedToMap.Add(    OnBuildingAddedToMap );
 
   LuaEvents.StrategicView_MapPlacement_AddDistrictPlacementShadowHexes.Add( OnAddDistrictPlacementShadowHexes );
@@ -1025,6 +1244,7 @@ function Initialize()
   LuaEvents.MinimapPanel_HideYieldIcons.Add( HideYieldIcons );
   LuaEvents.Tutorial_ShowYieldIcons.Add( ShowYieldIcons );
   LuaEvents.Tutorial_HideYieldIcons.Add( HideYieldIcons );
+  LuaEvents.ShowEnemyCityDetails.Add( OnShowEnemyCityDetails );
 
   if( UserConfiguration.ShowMapYield() ) then
     ShowYieldIcons();

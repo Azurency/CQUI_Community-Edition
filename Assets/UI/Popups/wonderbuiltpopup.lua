@@ -1,12 +1,13 @@
--- WonderBuiltPopup
--- Triggered from game event Event.WonderCompleted
+-- Copyright 2016-2018, Firaxis Games
 
---  ***************************************************************************
+include("PopupSupport");
+
+
+-- ===========================================================================
 --  MEMBERS
---  ***************************************************************************
-local ms_eventID = 0;
-
-local ms_hidReligionLensLayer = false;
+-- ===========================================================================
+local m_kQueuedPopups    :table = {};
+local m_kCurrentPopup    :table  = nil;
 
 -- Remolten: CQUI Members (access CQUI settings)
 local CQUI_wonderBuiltVisual = true;
@@ -21,25 +22,36 @@ LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
 LuaEvents.CQUI_SettingsInitialized.Add( CQUI_OnSettingsUpdate );
 -- Remolten: End CQUI Members
 
-function OnWonderCompleted(locX, locY, buildingIndex, playerIndex, iPercentComplete)
+-- ===========================================================================
+--  FUNCTIONS
+-- ===========================================================================
+
+
+-- ===========================================================================`
+--  EVENT
+-- ===========================================================================
+function OnWonderCompleted( locX:number, locY:number, buildingIndex:number, playerIndex:number, cityId:number, iPercentComplete:number, pillaged:number)
 
   local localPlayer = Game.GetLocalPlayer();
   if (localPlayer == PlayerTypes.NONE) then
     return;  -- Nobody there to click on it, just exit.
   end
 
-  -- No wonder popup if it is not YOU
+  -- Ignore if wonder isn't for this player.
   if (localPlayer ~= playerIndex ) then
-    return;  
-  end
-
-  -- No wonder popups in multiplayer games.
-  if(GameConfiguration.IsAnyMultiplayer()) then
     return;
   end
 
+  -- TEMP (ZBR): Ignore if pause-menu is up; prevents stuck camera bug.
+  local uiInGameOptionsMenu:table = ContextPtr:LookUpControl("/InGame/TopOptionsMenu");
+  if (uiInGameOptionsMenu and uiInGameOptionsMenu:IsHidden()==false) then
+    return;
+  end
+
+  local kData:table = nil;
+
   if (GameInfo.Buildings[buildingIndex].RequiresPlacement and iPercentComplete == 100) then
-    local currentBuildingType = GameInfo.Buildings[buildingIndex].BuildingType;
+    local currentBuildingType :string = GameInfo.Buildings[buildingIndex].BuildingType;
     if currentBuildingType ~= nil then
 
       -- Remolten: Begin CQUI changes (reordered in front of visual code)
@@ -51,45 +63,69 @@ function OnWonderCompleted(locX, locY, buildingIndex, playerIndex, iPercentCompl
       -- Remolten: Begin CQUI changes (just added this if statement and put visual code inside of it)
       if CQUI_wonderBuiltVisual then
       -- Remolten: End CQUI changes
-        Controls.WonderName:SetText(Locale.ToUpper(Locale.Lookup(GameInfo.Buildings[buildingIndex].Name)));
-        Controls.WonderIcon:SetIcon("ICON_"..currentBuildingType);
-        Controls.WonderIcon:SetToolTipString(Locale.Lookup(GameInfo.Buildings[buildingIndex].Description));
-        if(Locale.Lookup(GameInfo.Buildings[buildingIndex].Quote) ~= nil) then
-          Controls.WonderQuote:SetText(Locale.Lookup(GameInfo.Buildings[buildingIndex].Quote));
+
+        local kData:table =
+        {
+          locX = locX,
+          locY = locY,
+          buildingIndex = buildingIndex,
+          currentBuildingType = currentBuildingType
+        };
+
+        if not IsLocked() then
+          LockPopupSequence( "WonderBuiltPopup", PopupPriority.High );
+          ShowPopup( kData );
+          LuaEvents.WonderBuiltPopup_Shown();  -- Signal other systems (e.g., bulk hide UI)
         else
-          UI.DataError("The field 'Quote' has not been initialized for "..GameInfo.Buildings[buildingIndex].BuildingType);
+          table.insert( m_kQueuedPopups, kData );
         end
-
-        if UI.IsInMarketingMode() then
-          ContextPtr:SetHide( true );
-          Controls.ForceAutoCloseMarketingMode:SetToBeginning();
-          Controls.ForceAutoCloseMarketingMode:Play();
-          Controls.ForceAutoCloseMarketingMode:RegisterEndCallback( OnClose );
-        else
-          ContextPtr:SetHide( false );
-        end
-
-        UI.LookAtPlot(locX, locY);
-
-        LuaEvents.WonderRevealPopup_Shown();  -- Signal other systems (e.g., bulk hide UI)
-
-        ms_eventID = ReferenceCurrentGameCoreEvent();
-        UIManager:QueuePopup( ContextPtr, PopupPriority.Current);
-        Controls.ReplayButton:SetEnabled(UI.GetWorldRenderView() == WorldRenderView.VIEW_3D);
-        Controls.ReplayButton:SetHide(not UI.IsWorldRenderViewAvailable(WorldRenderView.VIEW_3D));
       end
     end
   end
-
-  -- Ensure the religion lens is disabled when we show the wonder popup
-  if UILens.IsLensActive("Religion") then
-    UILens.SetActive("Default");
-    ms_hidReligionLensLayer = true;
-  else
-    ms_hidReligionLensLayer = false;
-  end
 end
 
+-- ===========================================================================
+function ShowPopup( kData:table )
+
+  if(UI.GetInterfaceMode() ~= InterfaceModeTypes.CINEMATIC) then
+    UILens.SaveActiveLens();
+    UILens.SetActive("Cinematic");
+    UI.SetInterfaceMode(InterfaceModeTypes.CINEMATIC);
+  end
+
+  m_kCurrentPopup = kData;
+
+  -- In marketing mode, hide all the UI (temporarly via a timer) but still
+  -- play the animation and camera curve.
+  if UI.IsInMarketingMode() then
+    ContextPtr:SetHide( true );
+    Controls.ForceAutoCloseMarketingMode:SetToBeginning();
+    Controls.ForceAutoCloseMarketingMode:Play();
+    Controls.ForceAutoCloseMarketingMode:RegisterEndCallback( OnClose );
+  end
+
+  local locX          :number = m_kCurrentPopup.locX;
+  local locY          :number = m_kCurrentPopup.locY;
+  local buildingIndex      :number = m_kCurrentPopup.buildingIndex;
+  local currentBuildingType  :string = m_kCurrentPopup.currentBuildingType;
+
+  Controls.WonderName:SetText(Locale.ToUpper(Locale.Lookup(GameInfo.Buildings[buildingIndex].Name)));
+  Controls.WonderIcon:SetIcon("ICON_"..currentBuildingType);
+  Controls.WonderIcon:SetToolTipString(Locale.Lookup(GameInfo.Buildings[buildingIndex].Description));
+  if(Locale.Lookup(GameInfo.Buildings[buildingIndex].Quote) ~= nil) then
+    Controls.WonderQuote:SetText(Locale.Lookup(GameInfo.Buildings[buildingIndex].Quote));
+  else
+    UI.DataError("The field 'Quote' has not been initialized for "..GameInfo.Buildings[buildingIndex].BuildingType);
+  end
+
+  UI.LookAtPlot(locX, locY);
+
+  Controls.ReplayButton:SetEnabled(UI.GetWorldRenderView() == WorldRenderView.VIEW_3D);
+  Controls.ReplayButton:SetHide(not UI.IsWorldRenderViewAvailable(WorldRenderView.VIEW_3D));
+end
+
+
+-- ===========================================================================
 function Resize()
   local screenX, screenY:number = UIManager:GetScreenSizeVal()
 
@@ -102,67 +138,92 @@ function Resize()
   Controls.HeaderGrid:SetSizeX(screenX);
 end
 
+-- ===========================================================================
+--  Closes the immediate popup, will raise more if queued.
+-- ===========================================================================
 function Close()
-  LuaEvents.WonderRevealPopup_Closed();  -- Signal other systems (e.g., bulk show UI)
-  -- Release our hold on the event
-  ReleaseGameCoreEvent( ms_eventID );
-  ms_eventID = 0;
-  UIManager:DequeuePopup( ContextPtr );
-  UI.PlaySound("Stop_Wonder_Tracks");
 
-  if ms_hidReligionLensLayer then
-    UILens.SetActive("Religion");
+  StopSound();
+
+  local isDone:boolean  = true;
+
+  -- Find first entry in table, display that, then remove it from the internal queue
+  for i, entry in ipairs(m_kQueuedPopups) do
+    ShowPopup(entry);
+    table.remove(m_kQueuedPopups, i);
+    isDone = false;
+    break;
+  end
+
+  -- If done, restore engine processing and let the world know.
+  if isDone then
+    m_kCurrentPopup = nil;
+    LuaEvents.WonderBuiltPopup_Closed();  -- Signal other systems (e.g., bulk show UI)
+    UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+    UILens.RestoreActiveLens();
+    UnlockPopupSequence();
   end
 end
 
-function RestartMovie()
-  -- stop the music before beginning another go-round
+-- ===========================================================================
+function StopSound()
   UI.PlaySound("Stop_Wonder_Tracks");
-  Events.RestartWonderMovie();
 end
 
+-- ===========================================================================
 function OnClose()
   Close();
 end
 
-function OnUpdateUI( type:number, tag:string, iData1:number, iData2:number, strData1:string )   
+-- ===========================================================================
+function OnRestartMovie()
+    StopSound()    -- stop the music before beginning another go-round
+  Events.RestartWonderMovie();
+end
+
+-- ===========================================================================
+function OnUpdateUI( type:number, tag:string, iData1:number, iData2:number, strData1:string )
   if type == SystemUpdateUI.ScreenResize then
     Resize();
   end
 end
-
 
 -- ===========================================================================
 --  Input
 --  UI Event Handler
 -- ===========================================================================
 function KeyHandler( key:number )
-  if key == Keys.VK_ESCAPE then
+    if key == Keys.VK_ESCAPE then
     Close();
     return true;
-  end
-  return false;
+    end
+    return false;
 end
 
+-- ===========================================================================
 function OnInputHandler( pInputStruct:table )
   local uiMsg = pInputStruct:GetMessageType();
   if (uiMsg == KeyEvents.KeyUp) then return KeyHandler( pInputStruct:GetKey() ); end;
   return false;
 end
 
+-- ===========================================================================
 function OnWorldRenderViewChanged()
   Controls.ReplayButton:SetEnabled(UI.GetWorldRenderView() == WorldRenderView.VIEW_3D);
 end
 
-function Initialize()  
-  if(not GameConfiguration.IsAnyMultiplayer()) then
-    ContextPtr:SetInputHandler( OnInputHandler, true );
-    Controls.Close:RegisterCallback(Mouse.eLClick, OnClose);
-    Controls.ReplayButton:RegisterCallback(Mouse.eLClick, RestartMovie);
-    Controls.ReplayButton:SetToolTipString(Locale.Lookup("LOC_UI_ENDGAME_REPLAY_MOVIE"));
-    Events.WonderCompleted.Add( OnWonderCompleted );  
-    Events.WorldRenderViewChanged.Add( OnWorldRenderViewChanged );
-    Events.SystemUpdateUI.Add( OnUpdateUI );
-  end
+-- ===========================================================================
+function Initialize()
+  if GameConfiguration.IsAnyMultiplayer() then return; end  -- Do not use if a multiplayer mode.
+
+  ContextPtr:SetInputHandler( OnInputHandler, true );
+
+  Controls.Close:RegisterCallback(Mouse.eLClick, OnClose);
+  Controls.ReplayButton:RegisterCallback(Mouse.eLClick, OnRestartMovie);
+  Controls.ReplayButton:SetToolTipString(Locale.Lookup("LOC_UI_ENDGAME_REPLAY_MOVIE"));
+
+  Events.WonderCompleted.Add( OnWonderCompleted );
+  Events.WorldRenderViewChanged.Add( OnWorldRenderViewChanged );
+  Events.SystemUpdateUI.Add( OnUpdateUI );
 end
 Initialize();

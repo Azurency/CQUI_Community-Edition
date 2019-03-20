@@ -35,7 +35,7 @@
         </Box>
         -->
 
-        <Container        ID="ChatPanel" Size="300,106" Offset="0,0">
+        <Container        ID="ChatPanel" Size="300,99" Offset="0,0">
           <LuaContext     FileName="ChatPanel"/>
         </Container>
 

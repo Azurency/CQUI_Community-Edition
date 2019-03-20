@@ -17,6 +17,18 @@ include("Civ6Common.lua");
 local m_hexesDistrictPlacement			:table	= {};	-- Re-usable collection of hexes; what is sent across the wire.
 local m_cachedSelectedPlacementPlotId	:number = -1;	-- Hex the cursor is currently focused on
 
+local m_AdjacencyBonusDistricts : number = UILens.CreateLensLayerHash("Adjacency_Bonus_Districts");
+local m_Districts : number = UILens.CreateLensLayerHash("Districts");
+
+local bWasCancelled:boolean = true;
+
+-- ===========================================================================
+function SetInsertModeParams( tParameters:table )
+  tParameters[CityOperationTypes.PARAM_INSERT_MODE] = UI.GetInterfaceModeParameter(CityOperationTypes.PARAM_INSERT_MODE);
+  tParameters[CityOperationTypes.PARAM_QUEUE_LOCATION] = UI.GetInterfaceModeParameter(CityOperationTypes.PARAM_QUEUE_LOCATION);
+  tParameters[CityOperationTypes.PARAM_QUEUE_SOURCE_LOCATION] = UI.GetInterfaceModeParameter(CityOperationTypes.PARAM_QUEUE_SOURCE_LOCATION);
+  tParameters[CityOperationTypes.PARAM_QUEUE_DESTINATION_LOCATION] = UI.GetInterfaceModeParameter(CityOperationTypes.PARAM_QUEUE_DESTINATION_LOCATION);
+end
 
 -- ===========================================================================
 -- Code related to the Wonder Placement interface mode
@@ -36,8 +48,8 @@ function ConfirmPlaceWonder( pInputStruct:table )
   tParameters[CityOperationTypes.PARAM_X] = kPlot:GetX();
   tParameters[CityOperationTypes.PARAM_Y] = kPlot:GetY();
   tParameters[CityOperationTypes.PARAM_BUILDING_TYPE] = eBuilding;
-  tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
 
+  SetInsertModeParams(tParameters);
   if (pSelectedCity ~= nil) then
     local pBuildingInfo = GameInfo.Buildings[eBuilding];
     local bCanStart, tResults = CityManager.CanStartOperation( pSelectedCity, CityOperationTypes.BUILD, tParameters, true);
@@ -99,7 +111,7 @@ function RealizePlotArtForWonderPlacement()
       for i, plotId in ipairs(kPlots) do
         if(GameInfo.Districts['DISTRICT_CITY_CENTER'].IsPlotValid(pSelectedCity, plotId)) then
           local kPlot		:table			= Map.GetPlotByIndex(plotId);
-          local plotInfo	:table			= GetViewPlotInfo( kPlot );
+          local plotInfo	:table			= GetViewPlotInfo( kPlot, m_hexesDistrictPlacement );
           plotInfo.hexArtdef				= "Placement_Valid";
           plotInfo.selectable				= true;
           m_hexesDistrictPlacement[plotId]= plotInfo;
@@ -123,7 +135,7 @@ function RealizePlotArtForWonderPlacement()
         local kPlot		:table			= Map.GetPlotByIndex(plotId);
 
         if kPlot:CanHaveWonder(building.Index, pSelectedCity:GetOwner(), pSelectedCity:GetID()) then
-          local plotInfo	:table			= GetViewPlotInfo( kPlot );
+          local plotInfo  :table      = GetViewPlotInfo( kPlot, m_hexesDistrictPlacement );
           plotInfo.hexArtdef				= "Placement_Purchase";
           plotInfo.selectable				= true;
           plotInfo.purchasable			= true;
@@ -133,7 +145,6 @@ function RealizePlotArtForWonderPlacement()
     end
 
     -- Send all the hex information to the engine for visualization.
-    local hexIndexes:table = {};
     for i,plotInfo in pairs(m_hexesDistrictPlacement) do
       UILens.SetAdjacencyBonusDistict( plotInfo.index, plotInfo.hexArtdef, plotInfo.adjacent );
     end
@@ -147,6 +158,7 @@ end
 -- ===========================================================================
 function OnInterfaceModeEnter_BuildingPlacement( eNewMode:number )
   UIManager:SetUICursor(CursorTypes.RANGE_ATTACK); --here?
+  bWasCancelled = true; -- We assume it was cancelled unless explicitly not cancelled
   RealizePlotArtForWonderPlacement();
 end
 
@@ -155,6 +167,11 @@ end
 -- ===========================================================================
 function OnInterfaceModeLeave_BuildingPlacement( eNewMode:number )
   LuaEvents.StrategicView_MapPlacement_ClearDistrictPlacementShadowHexes();
+  local eCurrentMode:number = UI.GetInterfaceMode();
+  if eCurrentMode ~= InterfaceModeTypes.VIEW_MODAL_LENS then
+    -- Don't open the production panel if we're going to a modal lens as it will overwrite the modal lens
+    LuaEvents.StrageticView_MapPlacement_ProductionOpen(bWasCancelled);
+  end
 end
 
 -- ===========================================================================
@@ -163,10 +180,8 @@ end
 --	triggers the exit.
 -- ===========================================================================
 function ExitPlacementMode( isCancelled:boolean )
+  bWasCancelled = isCancelled ~= nil and isCancelled or false;
   -- UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-  -- if isCancelled then
-  -- 	LuaEvents.StrageticView_MapPlacement_ProductionOpen();
-  -- end
 end
 
 -- ===========================================================================
@@ -185,7 +200,7 @@ function ConfirmPlaceDistrict(pInputStruct:table)
   local districtHash:number = UI.GetInterfaceModeParameter(CityOperationTypes.PARAM_DISTRICT_TYPE);
   local purchaseYield = UI.GetInterfaceModeParameter(CityCommandTypes.PARAM_YIELD_TYPE);
   local bIsPurchase:boolean = false;
-  if (purchaseYield ~= nil and purchaseYield == YieldTypes.GOLD) then
+  if (purchaseYield ~= nil and (purchaseYield == YieldTypes.GOLD or purchaseYield == YieldTypes.FAITH)) then
     bIsPurchase = true;
   end
 
@@ -193,7 +208,9 @@ function ConfirmPlaceDistrict(pInputStruct:table)
   tParameters[CityOperationTypes.PARAM_X] = kPlot:GetX();
   tParameters[CityOperationTypes.PARAM_Y] = kPlot:GetY();
   tParameters[CityOperationTypes.PARAM_DISTRICT_TYPE] = districtHash;
-  tParameters[CityOperationTypes.PARAM_INSERT_MODE] = CityOperationTypes.VALUE_EXCLUSIVE;
+  tParameters[CityCommandTypes.PARAM_YIELD_TYPE] = purchaseYield;
+
+  SetInsertModeParams(tParameters);
 
   if (pSelectedCity ~= nil) then
     local pDistrictInfo = GameInfo.Districts[districtHash];
@@ -257,73 +274,8 @@ function ConfirmPlaceDistrict(pInputStruct:table)
 end
 
 -- ===========================================================================
---	Adds a plot and all the adjacencent plots, unless already added.
---	ARGS:		plot,			gamecore plot object
---	RETURNS:	A new/updated plotInfo table
--- ===========================================================================
-function GetViewPlotInfo( kPlot:table )
-  local plotId	:number = kPlot:GetIndex();
-  local plotInfo	:table = m_hexesDistrictPlacement[plotId];
-  if plotInfo == nil then
-    plotInfo = {
-      index	= plotId,
-      x		= kPlot:GetX(),
-      y		= kPlot:GetY(),
-      adjacent= {},				-- adjacent edge bonuses
-      selectable = false,			-- change state with mouse over?
-      purchasable = false
-    };
-  end
-  --print( "   plot: " .. plotInfo.x .. "," .. plotInfo.y..": " .. tostring(plotInfo.iconArtdef) );
-  return plotInfo;
-end
-
-
--- ===========================================================================
---	Obtain a table of adjacency bonuses
--- ===========================================================================
-function AddAdjacentPlotBonuses( kPlot:table, districtType:string, pSelectedCity:table )
-  local x		:number = kPlot:GetX();
-  local y		:number = kPlot:GetY();
-
-  for _,direction in pairs(DirectionTypes) do
-    if direction ~= DirectionTypes.NO_DIRECTION and direction ~= DirectionTypes.NUM_DIRECTION_TYPES then
-      local adjacentPlot	:table= Map.GetAdjacentPlot( x, y, direction);
-      if adjacentPlot ~= nil then
-        local artdefIconName:string = GetAdjacentIconArtdefName( districtType, adjacentPlot, pSelectedCity, direction );
-
-        --print( "Checking from: (" .. tostring(x) .. ", " .. tostring(y) .. ") to (" .. tostring(adjacentPlot:GetX()) .. ", " .. tostring(adjacentPlot:GetY()) .. ")  Artdef:'"..artdefIconName.."'");
-
-        if artdefIconName ~= nil and artdefIconName ~= "" then
-
-
-          local districtViewInfo	:table = GetViewPlotInfo( adjacentPlot );
-          local oppositeDirection :number = -1;
-          if direction == DirectionTypes.DIRECTION_NORTHEAST	then oppositeDirection = DirectionTypes.DIRECTION_SOUTHWEST; end
-          if direction == DirectionTypes.DIRECTION_EAST		then oppositeDirection = DirectionTypes.DIRECTION_WEST; end
-          if direction == DirectionTypes.DIRECTION_SOUTHEAST	then oppositeDirection = DirectionTypes.DIRECTION_NORTHWEST; end
-          if direction == DirectionTypes.DIRECTION_SOUTHWEST	then oppositeDirection = DirectionTypes.DIRECTION_NORTHEAST; end
-          if direction == DirectionTypes.DIRECTION_WEST		then oppositeDirection = DirectionTypes.DIRECTION_EAST; end
-          if direction == DirectionTypes.DIRECTION_NORTHWEST	then oppositeDirection = DirectionTypes.DIRECTION_SOUTHEAST; end
-
-          table.insert( districtViewInfo.adjacent, {
-            direction	= oppositeDirection,
-            iconArtdef	= artdefIconName,
-            inBonus		= false,
-            outBonus	= true
-            }
-          );
-
-          m_hexesDistrictPlacement[adjacentPlot:GetIndex()] = districtViewInfo;
-        end
-      end
-    end
-  end
-end
-
--- ===========================================================================
---	Find the artdef (texture) for the plot itself as well as the icons
---	that are on the borders signifying why a hex receives a certain bonus.
+--  Find the artdef (texture) for the plot itself as well as the icons
+--  that are on the borders signifying why a hex receives a certain bonus.
 -- ===========================================================================
 function RealizePlotArtForDistrictPlacement()
   -- Reset the master table of hexes, tracking what will be sent to the engine.
@@ -350,46 +302,21 @@ function RealizePlotArtForDistrictPlacement()
         if(GameInfo.Districts['DISTRICT_CITY_CENTER'].IsPlotValid(pSelectedCity, plotId)) then
 
           local kPlot		:table			= Map.GetPlotByIndex(plotId);
-          local plotInfo	:table			= GetViewPlotInfo( kPlot );
+          local plotInfo  :table      = GetViewPlotInfo( kPlot, m_hexesDistrictPlacement );
           plotInfo.hexArtdef				= "Placement_Valid";
           plotInfo.selectable				= true;
           m_hexesDistrictPlacement[plotId]= plotInfo;
 
-          AddAdjacentPlotBonuses( kPlot, district.DistrictType, pSelectedCity );
+          local kAdjacentPlotBonuses:table = AddAdjacentPlotBonuses( kPlot, district.DistrictType, pSelectedCity, m_hexesDistrictPlacement );
+          for plotIndex, districtViewInfo in pairs(kAdjacentPlotBonuses) do
+            m_hexesDistrictPlacement[plotIndex] = districtViewInfo;
+          end
+
           table.insert( kNonShadowHexes, plotId );
         end
       end
     end
 
-    --[[
-    -- antonjs: Removing blocked plots from the UI display. Now that district placement can automatically remove features, resources, and improvements,
-    -- as long as the player has the tech, there is not much need to show blocked plots and they end up being confusing.
-    -- Plots that can host a district, after some action(s) are first taken.
-    if (tResults[CityOperationResults.BLOCKED_PLOTS] ~= nil and table.count(tResults[CityOperationResults.BLOCKED_PLOTS]) ~= 0) then
-      local kPlots		= tResults[CityOperationResults.BLOCKED_PLOTS];
-      for i, plotId in ipairs(kPlots) do
-        local kPlot		:table			= Map.GetPlotByIndex(plotId);
-        local plotInfo	:table			= GetViewPlotInfo( kPlot );
-        plotInfo.hexArtdef				= "Placement_Blocked";
-        m_hexesDistrictPlacement[plotId]= plotInfo;
-
-        AddAdjacentPlotBonuses( kPlot, district.DistrictType, pSelectedCity );
-        table.insert( kNonShadowHexes, plotId );
-      end
-    end
-    --]]
-
-
-    -- Plots that a player will NEVER be able to place a district on
-    -- if (tResults[CityOperationResults.MOUNTAIN_PLOTS] ~= nil and table.count(tResults[CityOperationResults.MOUNTAIN_PLOTS]) ~= 0) then
-    -- 	local kPlots		= tResults[CityOperationResults.MOUNTAIN_PLOTS];
-    -- 	for i, plotId in ipairs(kPlots) do
-    -- 		local kPlot		:table			= Map.GetPlotByIndex(plotId);
-    --		local plotInfo	:table			= GetViewPlotInfo( kPlot );
-    --		plotInfo.hexArtdef				= "Placement_Invalid";
-    --		m_hexesDistrictPlacement[plotId]= plotInfo;
-    --	end
-    -- end
 
     -- Plots that arent't owned, but could be (and hence, could be a great spot for that district!)
     tParameters = {};
@@ -403,7 +330,7 @@ function RealizePlotArtForDistrictPlacement()
         local kPlot		:table			= Map.GetPlotByIndex(plotId);
 
         if kPlot:CanHaveDistrict(district.Index, pSelectedCity:GetOwner(), pSelectedCity:GetID()) then
-          local plotInfo	:table			= GetViewPlotInfo( kPlot );
+          local plotInfo  :table      = GetViewPlotInfo( kPlot, m_hexesDistrictPlacement );
           plotInfo.hexArtdef				= "Placement_Purchase";
           plotInfo.selectable				= true;
           plotInfo.purchasable			= true;
@@ -414,7 +341,6 @@ function RealizePlotArtForDistrictPlacement()
 
 
     -- Send all the hex information to the engine for visualization.
-    local hexIndexes:table = {};
     for i,plotInfo in pairs(m_hexesDistrictPlacement) do
       UILens.SetAdjacencyBonusDistict( plotInfo.index, plotInfo.hexArtdef, plotInfo.adjacent );
     end
@@ -428,11 +354,17 @@ end
 -- ===========================================================================
 function OnInterfaceModeEnter_DistrictPlacement( eNewMode:number )
   RealizePlotArtForDistrictPlacement();
+  bWasCancelled = true; -- We assume it was cancelled unless explicitly not cancelled
   UI.SetFixedTiltMode( true );
 end
 
 function OnInterfaceModeLeave_DistrictPlacement( eNewMode:number )
   LuaEvents.StrategicView_MapPlacement_ClearDistrictPlacementShadowHexes();
+  local eCurrentMode:number = UI.GetInterfaceMode();
+  if eCurrentMode ~= InterfaceModeTypes.VIEW_MODAL_LENS then
+    -- Don't open the production panel if we're going to a modal lens as it will overwrite the modal lens
+    LuaEvents.StrageticView_MapPlacement_ProductionOpen(bWasCancelled);
+  end
 end
 
 -- ===========================================================================
@@ -447,13 +379,13 @@ function OnCityMadePurchase_StrategicView_MapPlacement(owner:number, cityID:numb
     -- Make sure city made purchase and it's the right mode.
     if (UI.GetInterfaceMode() == InterfaceModeTypes.DISTRICT_PLACEMENT) then
       -- Clear existing art then re-realize
-      UILens.ClearLayerHexes( LensLayers.ADJACENCY_BONUS_DISTRICTS );
-      UILens.ClearLayerHexes( LensLayers.DISTRICTS );
+      UILens.ClearLayerHexes( m_AdjacencyBonusDistricts );
+      UILens.ClearLayerHexes( m_Districts );
       RealizePlotArtForDistrictPlacement();
     elseif (UI.GetInterfaceMode() == InterfaceModeTypes.BUILDING_PLACEMENT) then
       -- Clear existing art then re-realize
-      UILens.ClearLayerHexes( LensLayers.ADJACENCY_BONUS_DISTRICTS );
-      UILens.ClearLayerHexes( LensLayers.DISTRICTS );
+      UILens.ClearLayerHexes( m_AdjacencyBonusDistricts );
+      UILens.ClearLayerHexes( m_Districts );
       RealizePlotArtForWonderPlacement();
     end
     end
@@ -476,7 +408,7 @@ function RealizeCurrentPlaceDistrictOrWonderPlot()
   if m_cachedSelectedPlacementPlotId ~= nil and m_cachedSelectedPlacementPlotId ~= -1 then
     local hex:table = m_hexesDistrictPlacement[m_cachedSelectedPlacementPlotId];
     if hex ~= nil and hex.hexArtdef ~= nil and hex.selectable then
-      UILens.UnFocusHex( LensLayers.DISTRICTS, hex.index, hex.hexArtdef );
+      UILens.UnFocusHex( m_Districts, hex.index, hex.hexArtdef );
     end
   end
 
@@ -486,7 +418,7 @@ function RealizeCurrentPlaceDistrictOrWonderPlot()
   if m_cachedSelectedPlacementPlotId ~= -1 then
     local hex:table = m_hexesDistrictPlacement[m_cachedSelectedPlacementPlotId];
     if hex ~= nil and hex.hexArtdef ~= nil and hex.selectable then
-      UILens.FocusHex( LensLayers.DISTRICTS, hex.index, hex.hexArtdef );
+      UILens.FocusHex( m_Districts, hex.index, hex.hexArtdef );
     end
   end
 end
