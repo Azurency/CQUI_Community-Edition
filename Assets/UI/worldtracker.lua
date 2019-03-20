@@ -512,7 +512,7 @@ end
 
 -- ===========================================================================
 function Tutorial_ShowFullTracker()
-  Controls.ToggleAllButton:SetHide(true);
+  --Controls.ToggleAllButton:SetHide(true);
   Controls.ToggleDropdownButton:SetHide(true);
   UpdateCivicsPanel(false);
   UpdateResearchPanel(false);
@@ -521,7 +521,7 @@ end
 
 -- ===========================================================================
 function Tutorial_ShowTrackerOptions()
-  Controls.ToggleAllButton:SetHide(false);
+  --Controls.ToggleAllButton:SetHide(false);
   Controls.ToggleDropdownButton:SetHide(false);
 end
 

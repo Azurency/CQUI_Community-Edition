@@ -424,6 +424,7 @@ function StartDragMap()
   m_dragStartWorldX, m_dragStartWorldY      = UI.GetWorldFromNormalizedScreenPos_NoWrap( dragStartX, dragStartY );
   m_dragX = dragStartX;
   m_dragY = dragStartY;
+  LuaEvents.CQUI_StartDragMap();
 end
 
 -- ===========================================================================

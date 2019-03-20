@@ -1,15 +1,16 @@
--- Copyright 2016-2018, Firaxis Games
-
-include("PopupSupport");
-
+-- ===========================================================================
+-- Base File
+-- ===========================================================================
+include("WonderBuiltPopup");
 
 -- ===========================================================================
---  MEMBERS
+-- Cached Base Functions
 -- ===========================================================================
-local m_kQueuedPopups    :table = {};
-local m_kCurrentPopup    :table  = nil;
+BASE_CQUI_OnWonderCompleted = OnWonderCompleted;
 
--- Remolten: CQUI Members (access CQUI settings)
+-- ===========================================================================
+-- CQUI Members
+-- ===========================================================================
 local CQUI_wonderBuiltVisual = true;
 local CQUI_wonderBuiltAudio = true;
 
@@ -18,17 +19,9 @@ function CQUI_OnSettingsUpdate()
   CQUI_wonderBuiltAudio = GameConfiguration.GetValue("CQUI_WonderBuiltPopupAudio");
 end
 
-LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
-LuaEvents.CQUI_SettingsInitialized.Add( CQUI_OnSettingsUpdate );
--- Remolten: End CQUI Members
-
 -- ===========================================================================
---  FUNCTIONS
--- ===========================================================================
-
-
--- ===========================================================================`
---  EVENT
+--  CQUI modified OnWonderCompleted functiton
+--  Setting to disable wonder movie and/or audio
 -- ===========================================================================
 function OnWonderCompleted( locX:number, locY:number, buildingIndex:number, playerIndex:number, cityId:number, iPercentComplete:number, pillaged:number)
 
@@ -85,6 +78,9 @@ function OnWonderCompleted( locX:number, locY:number, buildingIndex:number, play
 end
 
 -- ===========================================================================
+--  CQUI modified OnWonderCompleted functiton
+--  Moved the sound to OnWonderCompleted
+-- ===========================================================================
 function ShowPopup( kData:table )
 
   if(UI.GetInterfaceMode() ~= InterfaceModeTypes.CINEMATIC) then
@@ -124,106 +120,12 @@ function ShowPopup( kData:table )
   Controls.ReplayButton:SetHide(not UI.IsWorldRenderViewAvailable(WorldRenderView.VIEW_3D));
 end
 
-
--- ===========================================================================
-function Resize()
-  local screenX, screenY:number = UIManager:GetScreenSizeVal()
-
-  Controls.GradientL:SetSizeY(screenY);
-  Controls.GradientR:SetSizeY(screenY);
-  Controls.GradientT:SetSizeX(screenX);
-  Controls.GradientB:SetSizeX(screenX);
-  Controls.GradientB2:SetSizeX(screenX);
-  Controls.HeaderDropshadow:SetSizeX(screenX);
-  Controls.HeaderGrid:SetSizeX(screenX);
-end
-
--- ===========================================================================
---  Closes the immediate popup, will raise more if queued.
--- ===========================================================================
-function Close()
-
-  StopSound();
-
-  local isDone:boolean  = true;
-
-  -- Find first entry in table, display that, then remove it from the internal queue
-  for i, entry in ipairs(m_kQueuedPopups) do
-    ShowPopup(entry);
-    table.remove(m_kQueuedPopups, i);
-    isDone = false;
-    break;
-  end
-
-  -- If done, restore engine processing and let the world know.
-  if isDone then
-    m_kCurrentPopup = nil;
-    LuaEvents.WonderBuiltPopup_Closed();  -- Signal other systems (e.g., bulk show UI)
-    UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
-    UILens.RestoreActiveLens();
-    UnlockPopupSequence();
-  end
-end
-
--- ===========================================================================
-function StopSound()
-  UI.PlaySound("Stop_Wonder_Tracks");
-end
-
--- ===========================================================================
-function OnClose()
-  Close();
-end
-
--- ===========================================================================
-function OnRestartMovie()
-    StopSound()    -- stop the music before beginning another go-round
-  Events.RestartWonderMovie();
-end
-
--- ===========================================================================
-function OnUpdateUI( type:number, tag:string, iData1:number, iData2:number, strData1:string )
-  if type == SystemUpdateUI.ScreenResize then
-    Resize();
-  end
-end
-
--- ===========================================================================
---  Input
---  UI Event Handler
--- ===========================================================================
-function KeyHandler( key:number )
-    if key == Keys.VK_ESCAPE then
-    Close();
-    return true;
-    end
-    return false;
-end
-
--- ===========================================================================
-function OnInputHandler( pInputStruct:table )
-  local uiMsg = pInputStruct:GetMessageType();
-  if (uiMsg == KeyEvents.KeyUp) then return KeyHandler( pInputStruct:GetKey() ); end;
-  return false;
-end
-
--- ===========================================================================
-function OnWorldRenderViewChanged()
-  Controls.ReplayButton:SetEnabled(UI.GetWorldRenderView() == WorldRenderView.VIEW_3D);
-end
-
 -- ===========================================================================
 function Initialize()
-  if GameConfiguration.IsAnyMultiplayer() then return; end  -- Do not use if a multiplayer mode.
-
-  ContextPtr:SetInputHandler( OnInputHandler, true );
-
-  Controls.Close:RegisterCallback(Mouse.eLClick, OnClose);
-  Controls.ReplayButton:RegisterCallback(Mouse.eLClick, OnRestartMovie);
-  Controls.ReplayButton:SetToolTipString(Locale.Lookup("LOC_UI_ENDGAME_REPLAY_MOVIE"));
-
+  Events.WonderCompleted.Remove( BASE_CQUI_OnWonderCompleted );
   Events.WonderCompleted.Add( OnWonderCompleted );
-  Events.WorldRenderViewChanged.Add( OnWorldRenderViewChanged );
-  Events.SystemUpdateUI.Add( OnUpdateUI );
+
+  LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
+  LuaEvents.CQUI_SettingsInitialized.Add( CQUI_OnSettingsUpdate );
 end
 Initialize();

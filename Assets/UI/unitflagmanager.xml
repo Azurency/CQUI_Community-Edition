@@ -29,6 +29,7 @@
 
          <!-- Black Border & Actual flag -->
          <Image ID="FlagBase" Size="64,64" Texture="UnitFlagBase_Combo.dds" />
+         <Image ID="FlagBaseDarken"	Size="64,64" TextureOffset="192,128"	Texture="UnitFlagBase.dds" />
 
         <AlphaAnim ID="AnimOnMouseOut" ShowOnMouseOut="1" AlphaStart="1" AlphaEnd="0" Speed="2" Function="Root" Cycle="Once">
           <Image ID="FlagMouseOut" Size="64,64"  TextureOffset="0,64"  Texture="UnitFlagBase_Combo.dds"/>
@@ -50,7 +51,7 @@
          </AlphaAnim>
 
         <!-- Promotion Indicator -->
-        <Image ID="Promotion_Flag" Anchor="R,C" Alpha="1.35" Size="20,25" Offset="-8,0" Texture="UnitFlag_Promo.dds" Hidden="1">
+        <Image ID="Promotion_Flag" Anchor="R,C" Alpha="1.35" Size="20,25" Offset="-4,0" Texture="UnitFlag_Promo.dds" Hidden="1">
           <AlphaAnim ID="UnitXPAnim" Cycle="Bounce" Speed="3" AlphaStart="0.3" AlphaEnd="0" Stopped="0">
             <Image ID="New_Promotion_Flag" Size="20,25" Texture="UnitFlag_Promo.dds" Hidden="1" Color="255,255,0,255" />
           </AlphaAnim>
