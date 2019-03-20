@@ -102,10 +102,21 @@ function LookAtCityState( iPlayerID:number )
     -- Might change in the future; currently city states will just raze
     UI.DataError("The CityState player "..tostring(iPlayerID).." has "..tostring(pPlayerCities:GetCount()).." cities, but should only have 1.");
   end
+
+  -- Determine where camera should point.
+  local screenX, screenY	:number = UIManager:GetScreenSizeVal();
+  local contextX			:number = Controls.CityStateScroll:GetSizeX();		-- Use scroll panel width to determine area consumed
+  local cameraXOffset		:number = ((screenX - contextX) * 0.5) / screenX;	-- Ratio (0 - 1) of available viewing space.
+  if cameraXOffset<0.1 or cameraXOffset>0.9 then
+    UI.DataError("Got a whack offset for camera 'centering' of viewable space for the City States: "..tostring(cameraXOffset));
+    cameraXOffset = 0.33;
+  end
+
   for _, pCity in pPlayerCities:Members() do
     local locX      :number = pCity:GetX();
     local locY      :number = pCity:GetY();
-    UI.LookAtPlotScreenPosition( locX, locY, 0.33, 0.5 );
+    UI.LookAtPlotScreenPosition( locX, locY, cameraXOffset, 0.5 );
+    break;
   end
 end
 
@@ -824,6 +835,8 @@ function OnLevyMilitary( kCityState:table)
     local parameters :table = {};
     parameters[ PlayerOperations.PARAM_PLAYER_ONE ] = iPlayer;
     UI.RequestPlayerOperation(localPlayerID, PlayerOperations.LEVY_MILITARY, parameters);
+    UI.PlaySound("UI_Levy_Military");
+    Controls.LevyMilitaryButton:SetDisabled(true);
   else
     UI.DataError("Could not get local player to levy military from city state '"..kCityState.Name.."'.");
   end
@@ -1179,7 +1192,11 @@ function ViewCityState( iPlayer:number )
       Controls.PeaceWarButton:SetDisabled( not kCityState.CanDeclareWarOn );
       warPeaceTooltip = warPeaceTooltip .. Locale.Lookup("LOC_CITY_STATES_DECLARE_WAR_DETAILS");
       if not kCityState.CanDeclareWarOn then
-        warPeaceTooltip = warPeaceTooltip .. " " .. Locale.Lookup("LOC_CITY_STATES_TURNS_PEACE", m_iTurnsOfPeace + kCityState.iTurnChanged - Game.GetCurrentGameTurn() );
+        if HasTrait("TRAIT_CIVILIZATION_FACES_OF_PEACE",localPlayerID) then
+          warPeaceTooltip = Locale.Lookup("LOC_CIVILIZATION_NOT_ABLE_TO_DECLARE_SURPRISE_WAR");
+        else				
+          warPeaceTooltip = warPeaceTooltip .. " " .. Locale.Lookup("LOC_CITY_STATES_TURNS_PEACE", m_iTurnsOfPeace + kCityState.iTurnChanged - Game.GetCurrentGameTurn() );
+        end
       end
     end
     Controls.PeaceWarButton:SetToolTipString( warPeaceTooltip );
@@ -1827,7 +1844,7 @@ function Initialize()
   if  NUM_ENVOY_TOKENS_FOR_FIRST_BONUS   == NUM_ENVOY_TOKENS_FOR_SECOND_BONUS or
     NUM_ENVOY_TOKENS_FOR_SECOND_BONUS  == NUM_ENVOY_TOKENS_FOR_THIRD_BONUS  or
     NUM_ENVOY_TOKENS_FOR_FIRST_BONUS   == NUM_ENVOY_TOKENS_FOR_THIRD_BONUS then
-    alert("At least 2 city state bonuses have the same value, this will cause issues!");
+    UI.DataError("At least 2 city state bonuses have the same value, this will cause issues!");
   end
 
   m_kScreenSlideAnim = CreateScreenAnimation( Controls.SlideAnim );

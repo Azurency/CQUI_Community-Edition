@@ -5,7 +5,7 @@
 
 include( "InstanceManager" );
 include( "SupportFunctions" );
-
+include( "Colors") ;
 
 -- ===========================================================================
 --  CONSTANTS
@@ -261,43 +261,18 @@ end
 -- Set the flag texture based on the unit's type
 function MapPinFlag.SetFlagUnitEmblem( self : MapPinFlag )
   local pMapPin = self:GetMapPin();
-    if pMapPin ~= nil then
+  if pMapPin ~= nil then
     local iconName = pMapPin:GetIconName();
-    local iconNameShadow = pMapPin:GetIconName();
-    local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(iconName);
-    local textureOffsetShadowX, textureOffsetShadowY, textureSheetShadow = IconManager:FindIconAtlas(iconNameShadow);
 
-    --[[ Unit icon based lookup
-    local iconName = "ICON_" .. unitInfo.UnitType .. "_WHITE";
-    local iconNameShadow = "ICON_" .. unitInfo.UnitType .. "_BLACK";
-    local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(iconName);
-    local textureOffsetShadowX, textureOffsetShadowY, textureSheetShadow = IconManager:FindIconAtlas(iconNameShadow);
-    --]]
-
-    if (textureSheet == nil) then     --Check to see if the unit has an icon atlas index defined
-      print("ERROR : Could not find icon for " .. iconName);
-      textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas("ICON_MAP_PIN_UNKNOWN_WHITE");   --If not, resolve the index to be a generic unknown index
-    end
-    if (textureSheetShadow == nil) then
-      textureOffsetShadowX, textureOffsetShadowY, textureSheetShadow = IconManager:FindIconAtlas("ICON_MAP_PIN_UNKNOWN_BLACK");
+    if(not self.m_Instance.UnitIcon:SetIcon(iconName)) then
+      self.m_Instance.UnitIcon:SetIcon("ICON_MAP_PIN_UNKNOWN_WHITE");
     end
 
-    if (textureSheet ~= nil) then     --Check to make sure that the unknown index is also defined...
-      -- Determine icon size, adjust based on whether it's a default icon or not
-      local isDefaultMapPinIcon = string.find(iconName, "ICON_MAP_PIN") ~= nil;
-      if (isDefaultMapPinIcon == false) then
-        self.m_Instance.UnitIcon:SetSizeX(32);
-        self.m_Instance.UnitIcon:SetSizeY(32);
-      else
-        self.m_Instance.UnitIcon:SetSizeX(24);
-        self.m_Instance.UnitIcon:SetSizeY(24);
-      end
-
-      self.m_Instance.UnitIcon:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
+    local isDefaultMapPinIcon = string.find(iconName, "ICON_MAP_PIN") ~= nil;
+    if (isDefaultMapPinIcon == false) then
+      self.m_Instance.UnitIcon:SetSizeX(32);
+      self.m_Instance.UnitIcon:SetSizeY(32);
     end
-    --if (textureSheetShadow ~= nil) then
-    --  self.m_Instance.UnitIconShadow:SetTexture( textureOffsetShadowX, textureOffsetShadowY, textureSheetShadow );
-    --end
   end
 end
 

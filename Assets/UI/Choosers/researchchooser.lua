@@ -132,6 +132,7 @@ function View( playerID:number, kData:table )
   if m_isTutorial then
     local tutorialIndex:number = -1;
     local tutorialControl:table = nil;
+    local tutorialControlHash:number = -1;
     for i:number = 1, m_researchIM.m_iAllocatedInstances do
       local instance:table = m_researchIM:GetAllocatedInstance(i);
       local tag:number = instance.Top:GetTag();
@@ -139,6 +140,7 @@ function View( playerID:number, kData:table )
         if tag == techHash then
           tutorialIndex = index;
           tutorialControl = instance.TopContainer;
+          tutorialControlHash = techHash;
           break;
         end
       end
@@ -168,11 +170,24 @@ end
 
 
 -- ===========================================================================
+--	No science? No research for you!
+-- ===========================================================================
+function CanPlayerResearchAnything( playerID:number )
+  local pPlayer :table  = Players[playerID];
+  local playerTechnology :table	= pPlayer:GetTechs();
+  local currentScienceYield :number = playerTechnology:GetScienceYield();
+  return currentScienceYield <= 0;
+end
+
+
+-- ===========================================================================
 --
 -- ===========================================================================
 function AddAvailableResearch( playerID:number, kData:table )
-  local numUnlockables	:number;
-  local isDisabled:boolean = (kData.TurnsLeft < 1);	-- No cities, turns will be -1
+
+  if playerID == -1 then return; end	-- Autoplay
+
+  local isDisabled:boolean = CanPlayerResearchAnything( playerID );
 
   -- Create main instance and the Instance Manager for any unlocks.
   local kItemInstance	:table = m_researchIM:GetInstance();
@@ -194,7 +209,7 @@ function AddAvailableResearch( playerID:number, kData:table )
     end;
   end
 
-  numUnlockables = PopulateUnlockablesForTech( playerID, kData.ID, techUnlockIM, callback );
+  local numUnlockables:number = PopulateUnlockablesForTech( playerID, kData.ID, techUnlockIM, callback );
   if numUnlockables ~= nil then
     HandleOverflow(numUnlockables, kItemInstance, 5, 5);
   end
