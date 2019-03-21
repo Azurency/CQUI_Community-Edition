@@ -903,7 +903,7 @@ function CityBanner.UpdateDistrictBanner( self : CityBanner )
             end
             self.m_Instance.UnderConstructionIcon:SetHide(isWonderComplete);
 
-            local tooltip:string = Locale.Lookup(pWonderDef.Name); 
+            local tooltip:string = Locale.Lookup(pWonderDef.Name);
             if not isWonderComplete then
               tooltip = tooltip .. " " .. Locale.Lookup("LOC_TOOLTIP_PLOT_CONSTRUCTION_TEXT");
             end
@@ -1084,9 +1084,6 @@ function CityBanner.SetColor( self : CityBanner )
   elseif (self.m_Type == BANNERTYPE_ENCAMPMENT) then
     if self.m_Instance.Banner_Base ~= nil then
       self.m_Instance.Banner_Base:SetColor( backColor );
-      self.m_Instance.Banner_Darker:SetColor( darkerBackColor );
-      self.m_Instance.Banner_Lighter:SetColor( brighterBackColor );
-      self.m_Instance.Banner_None:SetColor( frontColor );
     end
   elseif (self.m_Type == BANNERTYPE_OTHER_DISTRICT) then
     if self.m_Instance.Banner_Base ~= nil then
@@ -1169,7 +1166,7 @@ function CityBanner.UpdateStats( self : CityBanner)
       if pCityData.TurnsUntilGrowth > -1 then
         local growthModifier =  math.max(1 + (pCityData.HappinessGrowthModifier/100) + pCityData.OtherGrowthModifiers, 0); -- This is unintuitive but it's in parity with the logic in City_Growth.cpp
         iModifiedFood = Round(pCityData.FoodSurplus * growthModifier, 2);
-        total = iModifiedFood * pCityData.HousingMultiplier;		
+        total = iModifiedFood * pCityData.HousingMultiplier;
       else
         total = pCityData.FoodSurplus;
       end
@@ -2133,7 +2130,7 @@ function CityBanner.UpdateProduction( self : CityBanner)
         progress = pBuildQueue:GetUnitProgress(pUnitDef.Index);
 
         if (eMilitaryFormationType == MilitaryFormationTypes.STANDARD_FORMATION) then
-          pct = progress / pBuildQueue:GetUnitCost(pUnitDef.Index);	
+          pct = progress / pBuildQueue:GetUnitCost(pUnitDef.Index);
         elseif (eMilitaryFormationType == MilitaryFormationTypes.CORPS_FORMATION) then
           pct = progress / pBuildQueue:GetUnitCorpsCost(pUnitDef.Index);
           if (pUnitDef.Domain == "DOMAIN_SEA") then
@@ -2190,7 +2187,7 @@ function CityBanner.UpdateProduction( self : CityBanner)
         self.m_Instance.ProductionIndicator:SetHide(false);
         self.m_Instance.CityProductionProgress:SetHide(false);
         self.m_Instance.CityProduction:SetColor(0x00FFFFFF);
-            
+
         if(prodTypeName ~= nil) then
           self.m_Instance.CityProductionIcon:SetHide(false);
           self.m_Instance.CityProductionIcon:SetIcon("ICON_"..prodTypeName);
@@ -2203,7 +2200,7 @@ function CityBanner.UpdateProduction( self : CityBanner)
         self.m_Instance.CityProduction:SetColor(0xFFFFFFFF);
         self.m_Instance.CityProductionProgress:SetHide(true);
         self.m_Instance.CityProdTurnsLeft:SetText("");
-      end	
+      end
     end
   end
 end
@@ -3748,4 +3745,3 @@ function Initialize()
   LuaEvents.CQUI_ClearCitizenManagement.Add( CQUI_ClearCitizenManagementLens );
 end
 Initialize();
-
