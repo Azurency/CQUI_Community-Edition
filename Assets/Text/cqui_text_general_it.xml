@@ -66,5 +66,15 @@
       <Text>In questo turno puoi modificare le tue politiche sociali.</Text>
     </Replace>
 
+    <!-- Diplomacy View -->
+    <Replace Tag="LOC_CQUI_DIPLOMACY_VIEW_TOTAL_SCORE_PER_TURN_TEXT" Language="it_IT">
+      <Text>Totale</Text>
+    </Replace>
+
+    <!-- Smartbanner unlocked citizen -->
+    <Replace Tag="LOC_CQUI_SMARTBANNER_UNLOCKEDCITIZEN_TOOLTIP" Language="it_IT">
+      <Text>Ci sono cittadini sbloccati che vengono assegnati automaticamente dal governatore della città.</Text>
+    </Replace>
+
   </LocalizedText>
 </GameData>
