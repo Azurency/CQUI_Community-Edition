@@ -4243,106 +4243,42 @@ end
 -- ===========================================================================
 -- CQUI calculate real housing from improvements
 function CQUI_RealHousingFromImprovements(pCity, PlayerID, pCityID)
-  -- CQUI: There is a bug that calculates improvements with housing within 3 tiles from the capital if they belong to another player's capital. So this bug transfered to the mod and will be removed after it will be fixed by developers.
-  local iCapital = Players[PlayerID]:GetCities():GetCapitalCity():GetID();    -- CQUI: this line is needed only once - at the turn when the capital is founded. Without this line pCity:IsCapital() returns false.
-  if not pCity:IsCapital() then
-
-  local CQUI_HousingFromImprovements = 0;
-  local kCityPlots :table = Map.GetCityPlots():GetPurchasedPlots(pCity);
-  if kCityPlots ~= nil then
-    for _, plotID in pairs(kCityPlots) do
-      local kPlot	:table = Map.GetPlotByIndex(plotID);
-      if Map.GetPlotDistance( pCity:GetX(), pCity:GetY(), kPlot:GetX(), kPlot:GetY() ) <= 3 then
-        local eImprovementType :number = kPlot:GetImprovementType();
-        if eImprovementType ~= -1 then
-          if not kPlot:IsImprovementPillaged() then
-            local kImprovementData = GameInfo.Improvements[eImprovementType].Housing;
-            if kImprovementData == 1 then    -- farms, pastures etc.
-              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 1;
-            elseif kImprovementData == 2 then    -- stepwells, kampungs, mekewaps, golf courses
-              if GameInfo.Improvements[eImprovementType].ImprovementType == "IMPROVEMENT_STEPWELL" then    -- Stepwells
-                local CQUI_PlayerResearchedSanitation :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(GameInfo.Technologies["TECH_SANITATION"].Index);    -- check if a player researched Sanitation
-                if not CQUI_PlayerResearchedSanitation then
-                  CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
-                else
-                  CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
-                end
-              elseif GameInfo.Improvements[eImprovementType].ImprovementType == "IMPROVEMENT_KAMPUNG" then    -- Kampungs
-                local CQUI_PlayerResearchedMassProduction :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(GameInfo.Technologies["TECH_MASS_PRODUCTION"].Index);    -- check if a player researched Mass Production
-                if not CQUI_PlayerResearchedMassProduction then
-                  CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
-                else
-                  CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
-                end
-              elseif GameInfo.Improvements[eImprovementType].ImprovementType == "IMPROVEMENT_MEKEWAP" then    -- Mekewaps
-                local CQUI_PlayerResearchedCivilService :boolean = Players[Game.GetLocalPlayer()]:GetCulture():HasCivic(GameInfo.Civics["CIVIC_CIVIL_SERVICE"].Index);    -- check if a player researched Civil Service
-                if not CQUI_PlayerResearchedCivilService then
-                  CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
-                else
-                  CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
-                end
-              else    -- Golf Courses
-                local CQUI_PlayerResearchedGlobalization :boolean = Players[Game.GetLocalPlayer()]:GetCulture():HasCivic(GameInfo.Civics["CIVIC_GLOBALIZATION"].Index);    -- check if a player researched Globalization
-                if CQUI_PlayerResearchedGlobalization then
-                  CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
-                end
-              end
-            end
-          end
-        end
-      end
-    end
-    CQUI_HousingFromImprovements = CQUI_HousingFromImprovements * 0.5;
-    if CQUI_HousingFromImprovementsTable[PlayerID] == nil then
-      CQUI_HousingFromImprovementsTable[PlayerID] = {};
-    end
-    if CQUI_HousingUpdated[PlayerID] == nil then
-      CQUI_HousingUpdated[PlayerID] = {};
-    end
-    CQUI_HousingFromImprovementsTable[PlayerID][pCityID] = CQUI_HousingFromImprovements;
-    CQUI_HousingUpdated[PlayerID][pCityID] = true;
-    LuaEvents.CQUI_RealHousingFromImprovementsCalculated(pCityID, CQUI_HousingFromImprovements);
-  end
-
-  else
-
+  -- CQUI: There is a bug that shares housing from improvements for cities with the same IDs. So this bug is also added to the mod and will be removed after it will be fixed by developers.
   local x, y = pCity:GetX(), pCity:GetY();
-  local CQUI_BuggedTable = {};
+  local CQUI_ID_BuggedTable = {};
   for i = -3, 3 do
     if i ~= 0 then
-      table.insert( CQUI_BuggedTable, Map.GetPlot(x + i, y) );
+      table.insert( CQUI_ID_BuggedTable, Map.GetPlot(x + i, y) );
     end
     if i ~= 3 then
-      table.insert( CQUI_BuggedTable, Map.GetPlot(x + y % 2 + i, y + 1) );
-      table.insert( CQUI_BuggedTable, Map.GetPlot(x + y % 2 + i, y - 1) );
+      table.insert( CQUI_ID_BuggedTable, Map.GetPlot(x + y % 2 + i, y + 1) );
+      table.insert( CQUI_ID_BuggedTable, Map.GetPlot(x + y % 2 + i, y - 1) );
     end
     if i ~= -3 and i ~= 3 then
-      table.insert( CQUI_BuggedTable, Map.GetPlot(x + i, y + 2) );
-      table.insert( CQUI_BuggedTable, Map.GetPlot(x + i, y - 2) );
+      table.insert( CQUI_ID_BuggedTable, Map.GetPlot(x + i, y + 2) );
+      table.insert( CQUI_ID_BuggedTable, Map.GetPlot(x + i, y - 2) );
     end
     if i ~= -3 and i <=1 then
-      table.insert( CQUI_BuggedTable, Map.GetPlot(x + y % 2 + i, y + 3) );
-      table.insert( CQUI_BuggedTable, Map.GetPlot(x + y % 2 + i, y - 3) );
+      table.insert( CQUI_ID_BuggedTable, Map.GetPlot(x + y % 2 + i, y + 3) );
+      table.insert( CQUI_ID_BuggedTable, Map.GetPlot(x + y % 2 + i, y - 3) );
     end
   end
 
   local CQUI_HousingFromImprovements = 0;
-  for _, kPlot in pairs(CQUI_BuggedTable) do
-    local kPlotCity :table = Cities.GetPlotPurchaseCity(kPlot);
-    local kPlotCityID :number;
-    local kPlotOwner :number;
+  for _, kPlot in pairs(CQUI_ID_BuggedTable) do
+    local kPlotCity = Cities.GetPlotPurchaseCity(kPlot);
+    local kPlotCityID;
     if kPlotCity ~= nil then
       kPlotCityID = kPlotCity:GetID();
-      kPlotOwner = kPlotCity:GetOwner();
     end
-    if kPlotCityID == pCityID or ( kPlotCityID ~= nil and kPlotCity:IsCapital() ) then
+    if kPlotCityID == pCityID then
       local eImprovementType :number = kPlot:GetImprovementType();
       if eImprovementType ~= -1 then
         if not kPlot:IsImprovementPillaged() then
           local kImprovementData = GameInfo.Improvements[eImprovementType].Housing;
-          if kImprovementData == 1 then    -- farms, pastures etc.
+          if kImprovementData == 1 then    -- Farms, Fishing Boats, Pastures, Plantations, Camps
             CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 1;
-          elseif kImprovementData == 2 then    -- stepwells, kampungs, mekewaps, golf courses
+          elseif kImprovementData == 2 then    -- Stepwells, Kampungs, Mekewaps
             if GameInfo.Improvements[eImprovementType].ImprovementType == "IMPROVEMENT_STEPWELL" then    -- Stepwells
               local CQUI_PlayerResearchedSanitation :boolean = Players[Game.GetLocalPlayer()]:GetTechs():HasTech(GameInfo.Technologies["TECH_SANITATION"].Index);    -- check if a player researched Sanitation
               if not CQUI_PlayerResearchedSanitation then
@@ -4357,18 +4293,18 @@ function CQUI_RealHousingFromImprovements(pCity, PlayerID, pCityID)
               else
                 CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
               end
-            elseif GameInfo.Improvements[eImprovementType].ImprovementType == "IMPROVEMENT_MEKEWAP" then    -- Mekewaps
+            else    -- Mekewaps (elseif GameInfo.Improvements[eImprovementType].ImprovementType == "IMPROVEMENT_MEKEWAP" then)
               local CQUI_PlayerResearchedCivilService :boolean = Players[Game.GetLocalPlayer()]:GetCulture():HasCivic(GameInfo.Civics["CIVIC_CIVIL_SERVICE"].Index);    -- check if a player researched Civil Service
               if not CQUI_PlayerResearchedCivilService then
                 CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
               else
                 CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 4;
               end
-            else    -- Golf Courses
-              local CQUI_PlayerResearchedGlobalization :boolean = Players[Game.GetLocalPlayer()]:GetCulture():HasCivic(GameInfo.Civics["CIVIC_GLOBALIZATION"].Index);    -- check if a player researched Globalization
-              if CQUI_PlayerResearchedGlobalization then
-                CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
-              end
+            end
+          elseif GameInfo.Improvements[eImprovementType].ImprovementType == "IMPROVEMENT_GOLF_COURSE" then    -- Golf Courses (kImprovementData == 0)
+            local CQUI_PlayerResearchedGlobalization :boolean = Players[Game.GetLocalPlayer()]:GetCulture():HasCivic(GameInfo.Civics["CIVIC_GLOBALIZATION"].Index);    -- check if a player researched Globalization
+            if CQUI_PlayerResearchedGlobalization then
+              CQUI_HousingFromImprovements = CQUI_HousingFromImprovements + 2;
             end
           end
         end
@@ -4385,8 +4321,6 @@ function CQUI_RealHousingFromImprovements(pCity, PlayerID, pCityID)
   CQUI_HousingFromImprovementsTable[PlayerID][pCityID] = CQUI_HousingFromImprovements;
   CQUI_HousingUpdated[PlayerID][pCityID] = true;
   LuaEvents.CQUI_RealHousingFromImprovementsCalculated(pCityID, CQUI_HousingFromImprovements);
-
-  end
 end
 
 -- ===========================================================================
