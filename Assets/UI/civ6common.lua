@@ -530,8 +530,8 @@ function DifferentiateCiv(playerID:number, tooltipControl:table, icon:table, ico
     m_primaryColor, m_secondaryColor  = UI.GetPlayerColors( playerID );
     iconBacking:SetColor(m_primaryColor);
     if(iconBackingLighter ~= nil and iconBackingDarker ~= nil) then
-      local darkerBackColor = DarkenLightenColor(m_primaryColor,(-85),100);
-      local brighterBackColor = DarkenLightenColor(m_primaryColor,90,255);
+      local darkerBackColor = UI.DarkenLightenColor(m_primaryColor,(-85),100);
+      local brighterBackColor = UI.DarkenLightenColor(m_primaryColor,90,255);
       iconBackingLighter:SetColor(brighterBackColor);
       iconBackingDarker:SetColor(darkerBackColor);
     end
@@ -872,4 +872,20 @@ function print_debug(str)
   if CQUI_ShowDebugPrint then
     print(str)
   end
+end
+
+-- ===========================================================================
+--	If the official Civ6 Expansion "Rise and Fall" (XP1) is active.
+-- ===========================================================================
+function IsExpansion1Active()
+  local isActive:boolean  = Modding.IsModActive("1B28771A-C749-434B-9053-D1380C553DE9");
+  return isActive;
+end
+
+-- ===========================================================================
+--	If the official Civ6 Expansion "Gathering Storm" (XP2) is active.
+-- ===========================================================================
+function IsExpansion2Active()
+  local isActive:boolean  = Modding.IsModActive("4873eb62-8ccc-4574-b784-dda455e74e68");
+  return isActive;
 end

@@ -373,16 +373,7 @@
   <Instance Name="DiplomacyRibbonLeader">
     <Container ID="Root" Size="parent,64">
       <Grid ID="SelectedBackground" Style="DiplomacySelectedLeaderBackgroundGrid" Offset="-5,-2" Size="75,67" />
-       <Stack StackGrowth="Right">
-          <MakeInstance Name="LeaderIcon55"/>
-          <Stack StackGrowth="Bottom" Anchor="C,B" Hidden="1">
-            <Label ID="Score" Anchor="L,C" Offset="4,0" Style="FontNormal14" Hidden="false" String="0"/>
-            <Label ID="GoldPerTurn" Anchor="L,C" Offset="4,0" Style="FontNormal14" ColorSet="ResGoldLabelCS" Hidden="false" String="+0"/>
-            <Container Size="parent,16">
-              <Stack ID="AvailableResources" StackGrowth="Left" Anchor="C,B"/>
-            </Container>
-          </Stack>
-       </Stack>
+      <MakeInstance Name="LeaderIcon55"/>
     </Container>
   </Instance>
 

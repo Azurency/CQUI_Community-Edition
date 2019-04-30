@@ -247,19 +247,19 @@
   </Instance>
 
   <Instance        Name="BonusCityHeaderInstance">
-    <Container    ID="Top"      Anchor="L,C" Size="parent,16" >
-      <Grid                      Anchor="C,C"              Size="parent,8" Texture="Controls_Div2"  SliceCorner="27,4" SliceTextureSize="54,8" Color="27,40,48,255" />
-      <Image                    Anchor="C,C"              Size="parent,16"      Texture="Controls_Glow"    Color="0,0,0,255" StretchMode="Fill" />
-      <Label      ID="CityName" Anchor="C,C" String="$City$" Style="FontFlair14" SmallCaps="18" SmallCapsType="EveryWord"   Color="255,255,255,120" />
+    <Container    ID="Top"      Anchor="L,C" Size="parent,20" >
+      <Grid                      Anchor="C,C" Offset="0,4"              Size="parent,8" Texture="Controls_Div2"  SliceCorner="27,4" SliceTextureSize="54,8" Color="27,40,48,255" />
+      <Image                    Anchor="C,C" Offset="0,4"              Size="parent,16"      Texture="Controls_Glow"    Color="0,0,0,255" StretchMode="Fill" />
+      <Label      ID="CityName" Anchor="C,C" Offset="0,4" String="$City$" Style="FontFlair14" SmallCaps="18" SmallCapsType="EveryWord"   Color="255,255,255,120" />
     </Container>
   </Instance>
 
   <Instance        Name="BonusItemOnInstance">
-    <Grid          ID="Top"      Anchor="L,T"                  Size="parent,72"        Texture="CityState_BonusFrameOn" SliceCorner="65,29" SliceTextureSize="74,58" >
+    <Grid          ID="Top"      Anchor="L,T"                  Size="parent,auto"			Texture="CityState_BonusFrameOn" SliceCorner="65,29" SliceTextureSize="74,58" Padding="0,5" >
       <Image      ID="Icon"      Anchor="L,T"  Offset="4,5"    Size="50,50"            Texture="EnvoyBonuses50"      />
       <Label      ID="Title"    Anchor="L,T"  Offset="70,6"                            Style="FontNormal14"  String="$BonusTitle$ - GameCore does not expose this yet." />
-      <Container                              Offset="55,0"    Size="parent-55,parent"  >
-        <Label    ID="Details"  Anchor="L,T"  Offset="25,24"  WrapWidth="320"          Style="FontNormal14"  String="$Details$ - GameCore does not expose this yet." ColorSet="CityStateCS" />
+      <Container                              Offset="55,0"    Size="parent-55,auto"  >
+        <Label    ID="Details"  Anchor="L,T"  Offset="25,24"  WrapWidth="315"          Style="FontNormal14"  String="$Details$ - GameCore does not expose this yet." ColorSet="CityStateCS" />
       </Container>
       <Label      ID="Check"    Anchor="R,T"  Offset="8,10" String="[ICON_Checkmark]" Hidden="1" />
     </Grid>

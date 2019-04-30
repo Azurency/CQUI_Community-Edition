@@ -15,10 +15,10 @@ include("TeamSupport");
 -- ===========================================================================
 --  CONSTANTS
 -- ===========================================================================
-local COLOR_ICON_BONUS_OFF        :number = 0xff606060;
-local COLOR_ICON_BONUS_ON        :number = 0xff999900;
-local COLOR_TEXT_BONUS_OFF        :number = 0xff606060;
-local COLOR_TEXT_BONUS_ON        :number = 0xffb0b0b0;
+local COLOR_ICON_BONUS_OFF    :number = UI.GetColorValueFromHexLiteral(0xff606060);
+local COLOR_ICON_BONUS_ON     :number = UI.GetColorValueFromHexLiteral(0xff999900);
+local COLOR_TEXT_BONUS_OFF    :number = UI.GetColorValueFromHexLiteral(0xff606060);
+local COLOR_TEXT_BONUS_ON     :number = UI.GetColorValueFromHexLiteral(0xffb0b0b0);
 local FONT_SIZE_SINGLE_DIGIT_ENVOYS    :number = 40;
 local FONT_SIZE_TWO_DIGIT_ENVOYS    :number = 26;
 local FONT_SIZE_THREE_DIGIT_ENVOYS    :number = 18;
@@ -657,7 +657,6 @@ function RealizeListHeader()
   Controls.EnvoysMeter:SetPercent(meterRatio);
   Controls.Envoys:SetToolTipString(sTooltip);
   Controls.EnvoysStack:CalculateSize();
-  Controls.EnvoysStack:ReprocessAnchoring();
 end
 
 -- ===========================================================================
@@ -1064,8 +1063,6 @@ function ViewList()
           kItem.Title:SetColor( kCityState.ColorSecondary );
           TruncateStringWithTooltip(kItem.Title, MAX_BEFORE_TRUNC_SUZERAIN, Locale.Lookup(kCityState.Bonuses["Suzerain"].Title));
           kItem.Details:SetText( kCityState.Bonuses["Suzerain"].Details );
-          local PADDING:number = 40;
-          kItem.Top:SetSizeY( kItem.Details:GetSizeY() + PADDING );
         end
 
       end
@@ -1073,7 +1070,6 @@ function ViewList()
 
     Controls.BonusStack:CalculateSize();
     Controls.BonusScroll:CalculateSize();
-    Controls.BonusArea:ReprocessAnchoring();
 
     local bonusAreaY:number = Controls.BonusArea:GetSizeY();
     Controls.CityStateScroll:SetSizeY( m_height - (264 + bonusAreaY ) );
@@ -1454,7 +1450,6 @@ function RefreshRelationshipStack( kRelationships:table, StackIM:table )
   end
 
   StackIM.m_ParentControl:CalculateSize();
-  StackIM.m_ParentControl:ReprocessAnchoring();
 end
 
 -- ===========================================================================

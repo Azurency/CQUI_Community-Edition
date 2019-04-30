@@ -342,13 +342,13 @@ end
 function SetMissionHistorySuccess(missionHistoryInstance:table, wasSuccess:boolean)
   if wasSuccess then
     missionHistoryInstance.MissionGradient:SetColorByName("Green");
-    missionHistoryInstance.MissionOutcomeText:SetColor(0xFF329600);
-    missionHistoryInstance.MissionOutcomeSpyStatus:SetColor(0xFF329600);
+    missionHistoryInstance.MissionOutcomeText:SetColor(UI.GetColorValueFromHexLiteral(0xFF329600));
+    missionHistoryInstance.MissionOutcomeSpyStatus:SetColor(UI.GetColorValueFromHexLiteral(0xFF329600));
     missionHistoryInstance.MissionOutcomeFontIcon:SetText("[ICON_CheckSuccess]");
   else
     missionHistoryInstance.MissionGradient:SetColorByName("Red");
-    missionHistoryInstance.MissionOutcomeText:SetColor(0xFF0000C6);
-    missionHistoryInstance.MissionOutcomeSpyStatus:SetColor(0xFF0000C6);
+    missionHistoryInstance.MissionOutcomeText:SetColor(UI.GetColorValueFromHexLiteral(0xFF0000C6));
+    missionHistoryInstance.MissionOutcomeSpyStatus:SetColor(UI.GetColorValueFromHexLiteral(0xFF0000C6));
     missionHistoryInstance.MissionOutcomeFontIcon:SetText("[ICON_CheckFail]");
   end
 end
@@ -561,7 +561,7 @@ function PopulateTabs()
   end
 
   if m_tabs == nil then
-    m_tabs = CreateTabs( Controls.TabContainer, 42, 34, 0xFF331D05 );
+    m_tabs = CreateTabs( Controls.TabContainer, 42, 34, UI.GetColorValueFromHexLiteral(0xFF331D05) );
   end
 
   -- Operatives Tab

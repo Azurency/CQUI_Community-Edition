@@ -112,8 +112,6 @@ LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 --       with everywhere else that uses lenses, border growth, minimap panel, religious units, etc.
 function SetDesiredLens(desiredLens)
   m_desiredLens = desiredLens;
-  -- AZURENCY : don't change interface mode
-  --UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
   if m_isShowingPanel then
     if m_desiredLens == "CityManagement" then
       UILens.SetActive("Default");
@@ -308,7 +306,7 @@ function ViewPanelBreakdown( data:table )
 
       local iconName:string = "";
       local iconSize:number = SIZE_LEADER_ICON;
-      local iconColor = 0xFFFFFFFF;
+      local iconColor = UI.GetColorValue("COLOR_WHITE");
       if pTradePostPlayer:IsMinor() then
         -- If we're a city-state display our city-state icon instead of leader since we don't have one
         local civType:string = pTradePostPlayerConfig:GetCivilizationTypeName();

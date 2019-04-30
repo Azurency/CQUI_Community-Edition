@@ -241,6 +241,8 @@ local function plotCanHaveImprovement(pPlayer:table, pPlot:table)
                         imporvementValid = false
                     end
 
+                    -- astog: Disabled for performance reasons. Some plots will get incorrectly highlited as buildable but the trade-off with speed is significant in bigger maps
+                    --[[
                     -- Adjacent Bonus or luxury (example mekewap)
                     if improvementValid and imprRow.RequiresAdjacentBonusOrLuxury and
                             not plotHasAdjBonusOrLuxury(pPlayer, pPlot) then
@@ -267,6 +269,7 @@ local function plotCanHaveImprovement(pPlayer:table, pPlot:table)
                             end
                         end
                     end
+                    ]]
 
                     -- special handling for city park and fishery
                     -- check if the builder governor has the required promotion

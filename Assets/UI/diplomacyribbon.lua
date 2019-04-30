@@ -43,6 +43,9 @@ function ResetLeaders()
   m_leadersMet = 0;
   m_uiLeadersByID = {};
   m_kLeaderIM:ResetInstances();
+  m_scrollPercent = 0;
+  m_scrollIndex = 0;
+  RealizeScroll();
 end
 
 --ARISTOS: Update Diplo Banner display status
@@ -120,7 +123,7 @@ function OnLeaderMouseOver(playerID : number )
       if relationshipStateID ~= -1 then
         local relationshipState:table = GameInfo.DiplomaticStates[relationshipStateID];
         -- Always show relationship icon for AIs, only show player triggered states for humans
-        if not isHuman or IsValidRelationship(relationshipState.StateType) then
+        if not isHuman or Relationship.IsValidWithAI(relationshipState.StateType) then
           --!! ARISTOS: to extend relationship tooltip to include diplo modifiers!
           local relationshipTooltip:string = Locale.Lookup(relationshipState.Name)
           --!! Extend it only of the selected player is the local player!
@@ -188,7 +191,7 @@ function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean
     if relationshipStateID ~= -1 then
       local relationshipState:table = GameInfo.DiplomaticStates[relationshipStateID];
       -- Always show relationship icon for AIs, only show player triggered states for humans
-      if not isHuman or IsValidRelationship(relationshipState.StateType) then
+      if not isHuman or Relationship.IsValidWithAI(relationshipState.StateType) then
         --!! ARISTOS: to extend relationship tooltip to include diplo modifiers!
         local extendedRelationshipTooltip:string = Locale.Lookup(relationshipState.Name)
         .. "[NEWLINE][NEWLINE]" .. RelationshipGet(playerID);
@@ -293,8 +296,9 @@ function UpdateLeaders()
       local isMet			:boolean = kMetPlayers[playerID];
       local pPlayerConfig	:table = PlayerConfigurations[playerID];
       if (isMet or (GameConfiguration.IsAnyMultiplayer() and pPlayerConfig:IsHuman())) then
-        if isMet then
-          local leaderName:string = pPlayerConfig:GetLeaderTypeName();
+        local leaderName:string = pPlayerConfig:GetLeaderTypeName();
+        -- If in an MP game and a player leaves the name returned will be NIL.
+        if isMet and (leaderName ~= nil) then	
           AddLeader("ICON_"..leaderName, playerID, kUniqueLeaders[leaderName]);
         else
           AddLeader("ICON_LEADER_DEFAULT", playerID);
@@ -305,6 +309,10 @@ function UpdateLeaders()
 
   Controls.LeaderStack:CalculateSize();
   RealizeSize();
+
+  if localPlayer:IsTurnActive() then
+    OnLocalTurnBegin();
+  end
 end
 
 -- ===========================================================================
@@ -442,6 +450,7 @@ function OnUpdateUI(type:number, tag:string, iData1:number, iData2:number, strDa
 end
 
 -- ===========================================================================
+--	EVENT
 --	Diplomacy Callback
 -- ===========================================================================
 function OnDiplomacyMeet(player1ID:number, player2ID:number)
@@ -485,7 +494,6 @@ function OnDiplomacySessionClosed(sessionID:number)
       UpdateLeaders();
     end
   end
-
 end
 
 -- ===========================================================================
@@ -503,26 +511,43 @@ end
 -- ===========================================================================
 --	EVENT
 -- ===========================================================================
-function OnTurnBegin(playerID:number)
-  local leader:table = m_uiLeadersByID[playerID];
-  if(leader ~= nil) then
-    leader.LeaderContainer:SetToBeginning();
-    leader.LeaderContainer:Play();
+function OnTurnBegin( playerID:number )
+  local uiLeader	:table = m_uiLeadersByID[playerID];
+  if(uiLeader ~= nil) then
+    uiLeader.LeaderContainer:SetToBeginning();
+    uiLeader.LeaderContainer:Play();
   end
 end
 
 -- ===========================================================================
 --	EVENT
 -- ===========================================================================
-function OnTurnEnd(playerID:number)
-  if(playerID ~= -1) then
-    local leader = m_uiLeadersByID[playerID];
-    if(leader ~= nil) then
-      leader.LeaderContainer:Reverse();
-    end
-    UpdateLeaders();
+function OnTurnEnd( playerID:number )
+  local uiLeader :table = m_uiLeadersByID[playerID];
+  if(uiLeader ~= nil) then
+    uiLeader.LeaderContainer:Reverse();
   end
+  UpdateLeaders();
 end
+
+-- ===========================================================================
+--	EVENT
+-- ===========================================================================
+function OnLocalTurnBegin()
+  local playerID	:number = Game.GetLocalPlayer();
+  if playerID == -1 then return; end;
+  OnTurnBegin( playerID );
+end
+
+-- ===========================================================================
+--	EVENT
+-- ===========================================================================
+function OnLocalTurnEnd()
+  local playerID	:number = Game.GetLocalPlayer();
+  if playerID == -1 then return; end;
+  OnTurnEnd( playerID );
+end
+
 
 -- ===========================================================================
 --	LUAEvent
@@ -591,6 +616,18 @@ function OnChatPanelShown(fromPlayer:number, stayOnScreen:boolean)
   chatIndicatorFade = {};
 end
 
+-- ===========================================================================
+function OnLoadGameViewStateDone()
+  if(GameConfiguration.IsAnyMultiplayer()) then
+    for leaderID, uiLeader in pairs(m_uiLeadersByID) do
+      if Players[leaderID]:IsTurnActive() then
+        uiLeader.LeaderContainer:SetToBeginning();
+        uiLeader.LeaderContainer:Play();
+      end
+    end
+  end
+end
+
 --ARISTOS: to manage mouse over leader icons to show relations
 function OnInputHandler( pInputStruct:table )
   local uiKey :number = pInputStruct:GetKey();
@@ -645,14 +682,15 @@ function LateInitialize()
   Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );
   Events.RemotePlayerTurnBegin.Add( OnTurnBegin );
   Events.RemotePlayerTurnEnd.Add( OnTurnEnd );
-  Events.LocalPlayerTurnBegin.Add( function() OnTurnBegin(Game.GetLocalPlayer()); end );
-  Events.LocalPlayerTurnEnd.Add( function() OnTurnEnd(Game.GetLocalPlayer()); end );
+  Events.LocalPlayerTurnBegin.Add( OnLocalTurnBegin );
+	Events.LocalPlayerTurnEnd.Add( OnLocalTurnEnd );
   Events.MultiplayerPlayerConnected.Add(UpdateLeaders);
   Events.MultiplayerPostPlayerDisconnected.Add(UpdateLeaders);
   Events.LocalPlayerChanged.Add(UpdateLeaders);
   Events.PlayerInfoChanged.Add(UpdateLeaders);
   Events.PlayerDefeat.Add(UpdateLeaders);
   Events.PlayerRestored.Add(UpdateLeaders);
+  Events.LoadGameViewStateDone.Add( OnLoadGameViewStateDone );
 
   LuaEvents.ChatPanel_OnChatReceived.Add(OnChatReceived);
   LuaEvents.WorldTracker_OnChatShown.Add(OnChatPanelShown);

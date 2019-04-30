@@ -47,8 +47,8 @@ function OnGetColorPlotTable()
 
     -- Next culture expansion plot, show it only if not in city panel
     if UI.GetHeadSelectedCity() == nil then
-      local pCityCulture:table  = pCity:GetCulture();
-      local culturePlotColor:number = UI.GetColorValue("COLOR_CITY_PLOT_CULTURE");
+      local pCityCulture:table  = pCity:GetCulture(); , 
+      local culturePlotColor:number = UI.GetColorValue(0.890, 0.431, 0.862);
       if pCityCulture ~= nil then
         local pNextPlotID:number = pCityCulture:GetNextPlot();
         if pNextPlotID ~= nil and Map.IsPlot(pNextPlotID) then

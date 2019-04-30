@@ -278,7 +278,7 @@ function AddCounterspyOperation(operation:table, districtPlotID:number)
   end
 
   -- Default the selector brace to hidden
-  missionInstance.SelectorBrace:SetColor(0x00FFFFFF);
+  missionInstance.SelectorBrace:SetColor(UI.GetColorValueFromHexLiteral(0x00FFFFFF));
 end
 
 -- ===========================================================================
@@ -300,7 +300,7 @@ function AddOffensiveOperation(operation:table, result:table, targetCityPlot:tab
   missionInstance.MissionStatsStack:CalculateSize();
 
   -- Default the selector brace to hidden
-  missionInstance.SelectorBrace:SetColor(0x00FFFFFF);
+  missionInstance.SelectorBrace:SetColor(UI.GetColorValueFromHexLiteral(0x00FFFFFF));
 
   return missionInstance;
 end
@@ -377,12 +377,12 @@ function OnMissionSelected(operation:table, instance:table)
   for i=1, m_MissionStackIM.m_iCount, 1 do
     local otherInstances:table = m_MissionStackIM:GetAllocatedInstance(i);
     if otherInstances then
-      otherInstances.SelectorBrace:SetColor(0x00000000);
+      otherInstances.SelectorBrace:SetColor(UI.GetColorValue("COLOR_CLEAR"));
     end
   end
 
   -- Show selected border over instance
-  instance.SelectorBrace:SetColor(0xFFFFFFFF);
+  instance.SelectorBrace:SetColor(UI.GetColorValue("COLOR_WHITE"));
 end
 
 -- ===========================================================================
@@ -978,7 +978,7 @@ function OnMissionBriefingClosed()
     for i=1,m_MissionStackIM.m_iCount,1 do
       local instance:table = m_MissionStackIM:GetAllocatedInstance(i);
       if instance then
-        instance.SelectorBrace:SetColor(0x00FFFFFF);
+        instance.SelectorBrace:SetColor(UI.GetColorValue("COLOR_CLEAR"));
       end
     end
   end

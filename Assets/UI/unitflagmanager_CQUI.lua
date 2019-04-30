@@ -89,7 +89,7 @@ function UnitFlag.SetColor( self )
     local CQUI_isBarb = Players[ownerPlayer]:IsBarbarian(); --pUnit:GetBarbarianTribeIndex() ~= -1
 
     if(isAtWar and (not CQUI_isBarb)) then
-      instance.FlagBaseDarken:SetColor( RGBAValuesToABGRHex(255,0,0,255) );
+      instance.FlagBaseDarken:SetColor( UI.GetColorValue(255,0,0,255) );
       instance.FlagBaseDarken:SetHide(false);
     end
   end

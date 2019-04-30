@@ -203,7 +203,7 @@ function GetMissionLootString(mission:table)
     local greatWorkInfo:table = GameInfo.GreatWorks[greatWorkType];
     lootString = greatWorkInfo.Name;
   elseif operationInfo.Hash == UnitOperationTypes.SPY_SIPHON_FUNDS then
-    if mission.LootInfo == 0 then
+    if mission.LootInfo <= 0 then
       lootString = Locale.Lookup("LOC_ESPIONAGEOVERVIEW_MISSIONOUTCOME_NO_GOLD");
     else
       lootString = Locale.Lookup("LOC_ESPIONAGEOVERVIEW_MISSIONOUTCOME_GOLD", mission.LootInfo);

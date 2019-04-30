@@ -146,7 +146,7 @@ function LeaderIcon:UpdateTeamAndRelationship(playerID: number)
   -- Relationship status (Humans don't show anything, unless we are at war)
   local ourRelationship = pPlayer:GetDiplomaticAI():GetDiplomaticStateIndex(localPlayerID);
   local relationshipState:table = GameInfo.DiplomaticStates[ourRelationship];
-  if (not isHuman or IsValidRelationship(relationshipState.StateType)) then
+  if (not isHuman or Relationship.IsValidWithAI(relationshipState.StateType)) then
     local extendedRelationshipTooltip:string = Locale.Lookup(relationshipState.Name)
     .. "[NEWLINE][NEWLINE]" .. RelationshipGet(playerID);
     self.Controls.Relationship:SetHide(false);

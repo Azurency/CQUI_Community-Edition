@@ -49,7 +49,7 @@ local iZoomIncrement            :number = 2;
 local m_isCollapsed             :boolean= false;
 local m_ContinentsCreated       :boolean=false;
 local m_MiniMap_xmloffsety      :number = 0;
-local m_kFlyoutControlIds       :table = { "MapOptions", "Lens", "MapPinList"}; -- Name of controls that are the backing for "flyout" menus.
+local m_kFlyoutControlIds       :table = { "MapOptions", "Lens", "MapPinList", "MapSearch"}; -- Name of controls that are the backing for "flyout" menus.
 
 local m_ToggleReligionLensId    = Input.GetActionId("LensReligion");
 local m_ToggleContinentLensId   = Input.GetActionId("LensContinent");
@@ -257,8 +257,27 @@ function ToggleMapPinMode()
 end
 
 -- ===========================================================================
+function ToggleMapSearchPanel()
+  Controls.MapSearchPanel:SetHide( not Controls.MapSearchPanel:IsHidden() );
+  RealizeFlyouts(Controls.MapSearchPanel);
+  Controls.MapSearchButton:SetSelected( not Controls.MapSearchPanel:IsHidden() );
+end
+
+-- ===========================================================================
+function OnMapSearchPanelVisibilityChanged()
+  if (Controls.MapSearchPanel:IsHidden()) then
+    LuaEvents.MapSearch_PanelClosed();
+  else
+    LuaEvents.MapSearch_PanelOpened();
+  end
+end
+
+-- ===========================================================================
 function ToggleResourceIcons()
-  UserConfiguration.ShowMapResources( not UserConfiguration.ShowMapResources() );
+  local bOldValue :boolean = UserConfiguration.ShowMapResources();
+  UserConfiguration.ShowMapResources( not bOldValue );
+
+  local bOther = UserConfiguration.ShowMapGrid();
 end
 
 -- ===========================================================================
@@ -396,8 +415,10 @@ end
 
 -- ===========================================================================
 function ToggleGrid()
-  UserConfiguration.ShowMapGrid( not UserConfiguration.ShowMapGrid() );
-  UI.ToggleGrid( UserConfiguration.ShowMapGrid() );
+  local bOldState :boolean = UserConfiguration.ShowMapGrid();
+  UserConfiguration.ShowMapGrid( not bOldState  );
+  local bNewState :boolean = UserConfiguration.ShowMapGrid();
+  UI.ToggleGrid( not bOldState );
 end
 
 -- ===========================================================================
@@ -820,7 +841,7 @@ end
 
 -- ===========================================================================
 function SetContinentHexes()
-  local ContinentColor:number = 0x02000000;
+  local ContinentColor:number = UI.GetColorValueFromHexLiteral(0x02000000);
   GetContinentsCache();
   local localPlayerVis:table = PlayersVisibility[Game.GetLocalPlayer()];
   if (localPlayerVis ~= nil) then
@@ -1014,6 +1035,19 @@ function OnInputHandler( pInputStruct:table )
   HandleMouseForModdedLens()
   --------------------------------------------------------------------------------------------------
 
+  -- Catch ctrl+f
+  if pInputStruct:GetKey() == Keys.F and pInputStruct:IsControlDown() then
+    -- Open the search panel if it is not already open
+    if Controls.MapSearchPanel:IsHidden() then
+      Controls.MapSearchPanel:SetHide(false);
+      RealizeFlyouts(Controls.MapSearchPanel);
+    end
+
+    -- Take focus
+    LuaEvents.MapSearch_PanelOpened();
+    return true;
+  end
+  
   -- Skip all handling when dragging is disabled or the minimap is collapsed
   if m_isMouseDragEnabled and not m_isCollapsed then
     -- Enable drag on LMB down
@@ -1314,6 +1348,9 @@ function LateInitialize()
   -- Context / Control callbacks
   ContextPtr:SetShutdown( OnShutdown );
 
+  Controls.MapSearchPanel:RegisterWhenHidden( OnMapSearchPanelVisibilityChanged );
+  Controls.MapSearchPanel:RegisterWhenShown( OnMapSearchPanelVisibilityChanged );
+
   Controls.AppealLensButton:RegisterCallback( Mouse.eLClick, ToggleAppealLens );
   Controls.ContinentLensButton:RegisterCallback( Mouse.eLClick, ToggleContinentLens );
   Controls.CollapseButton:RegisterCallback( Mouse.eLClick, OnCollapseToggle );
@@ -1321,12 +1358,36 @@ function LateInitialize()
   Controls.ExpandButton:RegisterCallback( Mouse.eLClick, OnCollapseToggle );
   Controls.ExpandButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.GovernmentLensButton:RegisterCallback( Mouse.eLClick, ToggleGovernmentLens );
-  Controls.LensButton:RegisterCallback( Mouse.eLClick, OnToggleLensList );
-  Controls.LensButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+  if GameConfiguration.IsWorldBuilderEditor() then
+    Controls.MapPinListButton:SetDisabled(true);
+    Controls.MapPinListButton:SetHide(true);
+    Controls.FullscreenMapButton:SetDisabled(true);
+    Controls.FullscreenMapButton:SetHide(true);
+    Controls.MapSearchButton:SetDisabled(true);
+    Controls.MapSearchButton:SetHide(true);
+    Controls.ToggleResourcesButton:SetHide(true);
+    Controls.ToggleYieldsButton:SetHide(true);
+  else
+    Controls.MapPinListButton:SetDisabled(false);
+    Controls.MapPinListButton:SetHide(false);
+    Controls.FullscreenMapButton:SetDisabled(false);
+    Controls.FullscreenMapButton:SetHide(false);
+    Controls.MapSearchButton:SetDisabled(false);
+    Controls.MapSearchButton:SetHide(false);
+    Controls.MapPinListButton:RegisterCallback( Mouse.eLClick, ToggleMapPinMode );
+    Controls.MapPinListButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+    Controls.FullscreenMapButton:RegisterCallback( Mouse.eLClick, ShowFullscreenMap );
+    Controls.FullscreenMapButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+    Controls.MapSearchButton:RegisterCallback( Mouse.eLClick, ToggleMapSearchPanel );
+    Controls.MapSearchButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+    Controls.ToggleResourcesButton:SetHide(false);
+    Controls.ToggleYieldsButton:SetHide(false);
+  end
   Controls.MapOptionsButton:RegisterCallback( Mouse.eLClick, ToggleMapOptionsList );
   Controls.MapOptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.MapPinListButton:RegisterCallback( Mouse.eLClick, ToggleMapPinMode );
-  Controls.MapPinListButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+  Controls.MapOptionsButton:SetHide(false);
+  Controls.LensButton:RegisterCallback( Mouse.eLClick, OnToggleLensList );
+  Controls.LensButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.OwnerLensButton:RegisterCallback( Mouse.eLClick, ToggleOwnerLens );
   Controls.TourismLensButton:RegisterCallback( Mouse.eLClick, ToggleTourismLens );
   Controls.EmpireLensButton:RegisterCallback( Mouse.eLClick, ToggleEmpireLens );
@@ -1334,8 +1395,6 @@ function LateInitialize()
   Controls.ReligionLensButton:RegisterCallback( Mouse.eLClick, ToggleReligionLens );
   Controls.StrategicSwitcherButton:RegisterCallback( Mouse.eLClick, Toggle2DView );
   Controls.StrategicSwitcherButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.FullscreenMapButton:RegisterCallback( Mouse.eLClick, ShowFullscreenMap );
-  Controls.FullscreenMapButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.ToggleGridButton:RegisterCallback( Mouse.eLClick, ToggleGrid );
   Controls.ToggleResourcesButton:RegisterCallback( Mouse.eLClick, ToggleResourceIcons );
   Controls.ToggleYieldsButton:RegisterCallback( Mouse.eLClick, ToggleYieldIcons );

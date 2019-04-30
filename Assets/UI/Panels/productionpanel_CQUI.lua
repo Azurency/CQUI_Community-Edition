@@ -240,7 +240,7 @@ end
 function PopulateGenericItemData( kInstance:table, kItem:table )
   BASE_PopulateGenericItemData(kInstance, kItem);
 
-  local notEnoughGoldColor = 0xFF222258;
+  local notEnoughGoldColor = UI.GetColorValueFromHexLiteral(0xFF222258);
   local purchaseButtonPadding = 15;
 
   -- CQUI show recommandations check

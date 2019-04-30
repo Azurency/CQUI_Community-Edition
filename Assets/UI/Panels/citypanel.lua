@@ -9,7 +9,7 @@ include( "CitySupport" );
 include( "Civ6Common" );        -- GetYieldString()
 include( "Colors" );
 include( "InstanceManager" );
-include( "SupportFunctions" );      -- Round(), Clamp(), DarkenLightenColor()
+include( "SupportFunctions" );      -- Round(), Clamp()
 include( "PortraitSupport" );
 include( "ToolTipHelper" );
 include( "GameCapabilities" );
@@ -87,8 +87,8 @@ local m_kData           :table  = nil;
 local m_isInitializing        :boolean= false;
 local m_isShowingPanels       :boolean= false;
 local m_pPlayer           :table  = nil;
-local m_primaryColor        :number = 0xcafef00d;
-local m_secondaryColor        :number = 0xf00d1ace;
+local m_primaryColor        :number = UI.GetColorValueFromHexLiteral(0xcafef00d);
+local m_secondaryColor        :number = UI.GetColorValueFromHexLiteral(0xf00d1ace);
 local m_kTutorialDisabledControls :table  = nil;
 local m_CurrentPanelLine				:number = 0;
 
@@ -422,8 +422,8 @@ function ViewMain( data:table )
     UI.DataError("Couldn't find player colors for player - " .. (m_pPlayer and tostring(m_pPlayer:GetID()) or "nil"));
   end
   
-  local darkerBackColor = DarkenLightenColor(m_primaryColor,(-85),100);
-  local brighterBackColor = DarkenLightenColor(m_primaryColor,90,255);
+  local darkerBackColor = UI.DarkenLightenColor(m_primaryColor,-85,100);
+  local brighterBackColor = UI.DarkenLightenColor(m_primaryColor,90,255);
   m_CurrentPanelLine = 0;
 
   -- Name data

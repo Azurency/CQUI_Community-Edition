@@ -314,8 +314,8 @@ function RefreshChooserPanel()
   -- Send Trade Route Paths to Engine
   UILens.ClearLayerHexes( m_TradeRouteLens );
 
-  local DEFAULT_TINT = RGBAValuesToABGRHex(1, 1, 1, 1);
-  local FADED_TINT = RGBAValuesToABGRHex(0.3, 0.3, 0.3, 1);
+  local DEFAULT_TINT = UI.GetColorValue(1, 1, 1, 1);
+  local FADED_TINT = UI.GetColorValue(0.3, 0.3, 0.3, 1);
 
   -- If a city is selected, fade the other routes
   local kUnselectedColor = DEFAULT_TINT;

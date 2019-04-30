@@ -238,8 +238,9 @@ function RealizeTouchGestureZoom()
       m_isTouchZooming = true;
     end
 
-    local fZoomDelta:number = - (fDistance * 0.5);
-    local fZoom:number = m_mapZoomStart + fZoomDelta;   -- Adjust the zoom level.  This speed scalar should be put into the UI configuration.
+    local fSpeed	:number	= 2.4;								-- TODO: This speed scalar should be put into the UI configuration.
+    local fZoomDelta:number = - (fDistance * fSpeed);
+    local fZoom		:number = m_mapZoomStart + fZoomDelta;		-- Adjust the zoom level.
 
     if( fZoomDelta < 0.0 ) then
       --UI.SetMapZoom( fZoom, normalizedX, normalizedY );
@@ -249,7 +250,7 @@ function RealizeTouchGestureZoom()
       UI.SetMapZoom( fZoom, 0.0, 0.0 );
     end
 
-    --LuaEvents.WorldInput_TouchPlotTooltipHide();  -- Once this gestures starts, stop and plot tooltip
+    LuaEvents.WorldInput_TouchPlotTooltipHide();  -- Once this gestures starts, stop and plot tooltip
   else
     m_isTouchZooming = false;
   end
@@ -1432,7 +1433,7 @@ end
 function OnInterfaceModeEnter_CityManagement( eNewMode:number )
   UIManager:SetUICursor(CursorTypes.RANGE_ATTACK);
   -- AZURENCY : fix the Appeal lens not being applied in city view
-	--UILens.SetActive("CityManagement");
+  --UILens.SetActive("CityManagement");
 end
 
 -- ===========================================================================
@@ -1472,10 +1473,6 @@ function OnMouseSelectionMove( pInputStruct:table )
     UpdateDragMap();
     return true;
   else
-    if m_isMouseButtonRDown then
-
-    end
-
     if m_isMouseButtonLDown then
       -- A mouse button is down but isn't currently marked for "dragging",
       -- do some maths to see if this is actually a drag state.

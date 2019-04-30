@@ -13,12 +13,12 @@ include( "CitySupport" );
 -- ===========================================================================
 
 local ANIM_SPEED_RELIGION_CHANGE      :number = 1;
-local COLOR_CITY_GREEN            :number = 0xFF4CE710;
-local COLOR_CITY_RED            :number = 0xFF0101F5;
-local COLOR_CITY_YELLOW           :number = 0xFF2DFFF8;
-local COLOR_HOLY_SITE           :number = 0xFFFFFFFF;
-local COLOR_NO_MAJOR_RELIGION       :number = 0x00000000;
-local COLOR_RELIGION_DEFAULT        :number = 0x02000000;
+local COLOR_CITY_GREEN						:number	= UI.GetColorValueFromHexLiteral(0xFF4CE710);
+local COLOR_CITY_RED						:number	= UI.GetColorValueFromHexLiteral(0xFF0101F5);
+local COLOR_CITY_YELLOW						:number	= UI.GetColorValueFromHexLiteral(0xFF2DFFF8);
+local COLOR_HOLY_SITE						:number = UI.GetColorValueFromHexLiteral(0xFFFFFFFF);
+local COLOR_NO_MAJOR_RELIGION				:number = UI.GetColorValueFromHexLiteral(0x00000000);
+local COLOR_RELIGION_DEFAULT				:number = UI.GetColorValueFromHexLiteral(0x02000000);
 
 local DATA_FIELD_RELIGION_FOLLOWERS_IM :string = "m_FollowersIM";
 local DATA_FIELD_RELIGION_METERS_IM :string = "m_MetersIM";
@@ -177,6 +177,8 @@ local YOFFSET_2DVIEW        :number = 26;
 local ZOFFSET_3DVIEW        :number = 36;
 local SIZEOFPOPANDPROD        :number = 80; --The amount to add to the city banner to account for the size of the production icon and population number
 local SIZEOFPOPANDPRODMETERS    :number = 15; --The amount to add to the city banner backing width to allow for the production and population meters to appear
+
+local m_DelayedUpdate : table = {};
 
 local CQUI_ShowCitizenIconsOnCityHover:boolean = false;
 local CQUI_ShowCityManageAreaOnCityHover:boolean = true;
@@ -1061,7 +1063,7 @@ end
 function CityBanner.SetColor( self : CityBanner )
 
   local backColor, frontColor  = UI.GetPlayerColors( self.m_Player:GetID() );
-  local darkerBackColor = DarkenLightenColor(backColor,(-85),238);
+  local darkerBackColor = UI.DarkenLightenColor(backColor,(-85),238);
 
   if (self.m_Type == BANNERTYPE_CITY_CENTER) then
     self.m_Instance.CityBannerFill:SetColor( backColor );
@@ -2188,7 +2190,7 @@ function CityBanner.UpdateProduction( self : CityBanner)
         self.m_Instance.CityProduction:SetToolTipString(productionTip);
         self.m_Instance.ProductionIndicator:SetHide(false);
         self.m_Instance.CityProductionProgress:SetHide(false);
-        self.m_Instance.CityProduction:SetColor(0x00FFFFFF);
+        self.m_Instance.CityProduction:SetColor(UI.GetColorValue("COLOR_CLEAR"));
             
         if(prodTypeName ~= nil) then
           self.m_Instance.CityProductionIcon:SetHide(false);
@@ -2199,7 +2201,7 @@ function CityBanner.UpdateProduction( self : CityBanner)
       else
         self.m_Instance.CityProduction:SetToolTipString(Locale.Lookup("LOC_CITY_BANNER_NO_PRODUCTION"));
         self.m_Instance.CityProductionIcon:SetHide(true);
-        self.m_Instance.CityProduction:SetColor(0xFFFFFFFF);
+        self.m_Instance.CityProduction:SetColor(UI.GetColorValue("COLOR_WHITE"));
         self.m_Instance.CityProductionProgress:SetHide(true);
         self.m_Instance.CityProdTurnsLeft:SetText("");
       end	
@@ -2300,6 +2302,16 @@ function OnICBMStrikeButtonClick( iPlotID, eWMD )
       tParameters[CityCommandTypes.PARAM_Y0] = pPlot:GetY();
       UI.SetInterfaceMode(InterfaceModeTypes.ICBM_STRIKE, tParameters);
     end
+  end
+end
+
+-- ===========================================================================
+-- Marks the city for a delayed update of its Stats
+function MarkCityForUpdate(playerID, cityID)
+  if m_pDirtyCityComponents ~= nil then 
+    m_pDirtyCityComponents:AddComponent(playerID, cityID, ComponentType.CITY);
+  else
+    UpdateStats( playerID, cityID );
   end
 end
 
@@ -2545,7 +2557,7 @@ end
 
 -- ===========================================================================
 function OnCityPopulationChanged( playerID: number, cityID : number )
-  RefreshBanner( playerID, cityID );
+  MarkCityForUpdate( playerID, cityID );
 end
 
 -- ===========================================================================
@@ -2824,30 +2836,47 @@ end
 --  Game Engine Event
 -- ===========================================================================
 function OnCityFocusChange( playerID:number, cityID:number )
-  UpdateStats( playerID, cityID );
+  MarkCityForUpdate( playerID, cityID );
 end
 
 -- ===========================================================================
 --  Game Engine Event
 -- ===========================================================================
 function OnCityProductionChanged( playerID:number, cityID:number)
-  UpdateStats( playerID, cityID );
+  MarkCityForUpdate( playerID, cityID );
 end
 
 -- ===========================================================================
 --  Game Engine Event
 -- ===========================================================================
 function OnCityProductionUpdate( playerID:number, cityID:number)
-  UpdateStats( playerID, cityID );
+  MarkCityForUpdate( playerID, cityID );
 end
 
 -- ===========================================================================
 --  Game Engine Event
 -- ===========================================================================
 function OnCityProductionCompleted( playerID:number, cityID:number)
-  UpdateStats( playerID, cityID );
+  MarkCityForUpdate( playerID, cityID );
 end
 
+-- ===========================================================================
+--	Refresh a banner at a location if it belongs to the supplied player
+function RefreshPlayerBannerAt( playerID:number, iX : number, iY : number )
+  local pCity = CityManager.GetCityAt(iX, iY);
+  if pCity ~= nil then
+    if pCity:GetOwner() == playerID then
+      RefreshBanner(playerID, pCity:GetID());
+    end
+  else
+    local pDistrict = CityManager.GetDistrictAt(iX, iY);
+    if pDistrict ~= nil then
+      if pDistrict:GetOwner() == playerID then
+        RefreshMiniBanner(playerID, pDistrict:GetID());
+      end
+    end
+  end								
+end
 
 -- ===========================================================================
 --  Update stats and button to attack on banners
@@ -2984,6 +3013,7 @@ function OnUnitMoved( playerID:number, unitID:number )
   end
 end
 
+-- ===========================================================================
 function FlushChanges()
   if m_refreshLocalPlayerRangeStrike then
     RefreshPlayerRangeStrike( Game.GetLocalPlayer() );
@@ -3001,12 +3031,15 @@ function OnUnitAddedOrUpgraded( playerID:number, unitID:number )
   -- This is done because the base city strength is calculated using the max melee strength for the player.
   local localPlayer = Game.GetLocalPlayer();
   if localPlayer == -1 or Players[localPlayer]:IsTurnActive() then -- Don't do this during end turn times
-    local pUnit = Players[ playerID ]:GetUnits():FindID(unitID);
-    if pUnit ~= nil then
-      local pUnitDef = GameInfo.Units[pUnit:GetUnitType()];
-      if pUnitDef ~= nil then
-        if pUnitDef.Combat > 0 then -- Only do this for melee units
-          RefreshPlayerBanners( playerID );
+    local pPlayer = Players[ playerID ];
+    if pPlayer ~= nil then
+      local pUnit = pPlayer:GetUnits():FindID(unitID);
+      if pUnit ~= nil then
+        local pUnitDef = GameInfo.Units[pUnit:GetUnitType()];
+        if pUnitDef ~= nil then
+          if pUnitDef.Combat > 0 then -- Only do this for melee units
+            RefreshPlayerBannerAt( playerID, pUnit:GetX(), pUnit:GetY());
+          end
         end
       end
     end
@@ -3068,33 +3101,6 @@ function OnWMDCountChanged( playerID:number, eWMD:number )
     for id, banner in pairs(playerMiniBannerInstances) do
       if (banner ~= nil) then
         banner:UpdateStats();
-      end
-    end
-  end
-end
-
--- ===========================================================================
---  Game Engine Event
--- ===========================================================================
-function OnTurnActivated( playerID:number )
-  local pPlayer = Players[ playerID ];
-  if (pPlayer ~= nil) then
-
-    local playerBannerInstances = CityBannerInstances[ playerID ];
-    if (playerBannerInstances ~= nil) then
-      for id, banner in pairs(playerBannerInstances) do
-        if (banner ~= nil) then
-          banner:UpdateStats();
-        end
-      end
-    end
-
-    local playerMiniBannerInstances = MiniBannerInstances[ playerID ];
-    if (playerMiniBannerInstances ~= nil) then
-      for id, banner in pairs(playerMiniBannerInstances) do
-        if (banner ~= nil) then
-          banner:UpdateStats();
-        end
       end
     end
   end
@@ -3166,13 +3172,26 @@ end
 
 -- ===========================================================================
 function OnEventPlaybackComplete()
-
-  for playerID, cityID in m_pDirtyCityComponents:Members() do
-    local banner = GetCityBanner(playerID, cityID);
-    if (banner ~= nil) then
-      banner:UpdateStats();
+  if m_DelayedUpdate.UpdateAll == true then
+    for _, playerBannerInstances in pairs(CityBannerInstances) do
+      for id, banner in pairs(playerBannerInstances) do
+        if (banner ~= nil and banner:IsVisible()) then
+          -- Always update the stats
+          banner:UpdateStats();
+        end
+      end
+    end
+  else
+    -- Update just the ones that are marked as dirty
+    for playerID, cityID in m_pDirtyCityComponents:Members() do
+      local banner = GetCityBanner(playerID, cityID);
+      if (banner ~= nil) then
+        banner:UpdateStats();
+      end
     end
   end
+
+  m_DelayedUpdate = {};
 
   m_pDirtyCityComponents:Clear();
 end
@@ -3623,7 +3642,6 @@ function Initialize()
   Events.LensLayerOff.Add(          OnLensLayerOff );
   Events.LensLayerOn.Add(           OnLensLayerOn );
   Events.LocalPlayerChanged.Add(        OnLocalPlayerChanged);
-  Events.PlayerTurnActivated.Add(       OnPlayerTurnActivated);
   Events.ObjectPairing.Add(         OnObjectPairingChanged);
   Events.QuestChanged.Add(          OnQuestChanged );
   Events.UnitAddedToMap.Add(          OnUnitAddedToMap );

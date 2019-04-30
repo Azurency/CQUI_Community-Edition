@@ -312,6 +312,7 @@ end
 --  Immediate close.
 -- ===========================================================================
 function Close()
+  StopSound();
   m_kPopupData = {};            -- Force no data (e.g., immediate end turn)
   m_kCurrentData = nil;
   UIManager:DequeuePopup( ContextPtr );  -- Triggers hide event
@@ -319,11 +320,8 @@ end
 
 -- ===========================================================================
 function StopSound()
-  if m_isCivicData then
-        UI.PlaySound("Stop_Speech_Civics");
-    else
-        UI.PlaySound("Stop_Speech_Tech");
-    end
+  UI.PlaySound("Stop_Speech_Civics");
+  UI.PlaySound("Stop_Speech_Tech");
 end
 
 -- ===========================================================================
@@ -331,7 +329,6 @@ end
 -- ===========================================================================
 function TryClose()
 
-  StopSound();
   if m_kCurrentData==nil then
     UI.DataError("Attempting to TryClosing the techcivic completed popup but it appears to have no data in it.");
     Close();

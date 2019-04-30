@@ -1,8 +1,4 @@
---[[
--- Created by Luigi Mangione on Monday Jun 5 2017
--- Copyright (c) Firaxis Games
---]]
-
+-- Copyright 2017-2019, Firaxis Games
 include("LuaClass");
 include("TeamSupport");
 include("DiplomacyRibbonSupport");
@@ -47,9 +43,10 @@ function LeaderIcon:new(instanceOrControls: table)
   self.Controls = instanceOrControls or Controls;
   return self;
 end
-------------------------------------------------------------------
 
 
+
+-- ===========================================================================
 function LeaderIcon:UpdateIcon(iconName: string, playerID: number, isUniqueLeader: boolean, ttDetails: string)
   local pPlayer:table = Players[playerID];
   local pPlayerConfig:table = PlayerConfigurations[playerID];
@@ -118,45 +115,55 @@ function LeaderIcon:UpdateIconSimple(iconName: string, playerID: number, isUniqu
   self:UpdateTeamAndRelationship(playerID);
 end
 
-function LeaderIcon:UpdateTeamAndRelationship(playerID: number)
-  local pPlayer:table = Players[playerID];
-  local pPlayerConfig:table = PlayerConfigurations[playerID];
-  local localPlayerID:number = Game.GetLocalPlayer();
-  local isHuman:boolean = pPlayerConfig:IsHuman();
+-- ===========================================================================
+--	playerID, Index of the player to compare a relationship.  (May be self.)
+-- ===========================================================================
+function LeaderIcon:UpdateTeamAndRelationship( playerID: number)
+  
+  if playerID < 0 then 
+    UI.DataError("Invalid playerID="..tostring(playerID).." to check against for UpdateTeamAndRelationship().");
+    return; 
+  end	
+  
+  local localPlayerID	:number = Game.GetLocalPlayer();
+  if localPlayerID < 0 then return; end		--  Local player is auto-play.
+
+  local pPlayer		:table = Players[playerID];
+  local pPlayerConfig	:table = PlayerConfigurations[playerID];	
+  local isHuman		:boolean = pPlayerConfig:IsHuman();
+  local isSelf		:boolean = (playerID == localPlayerID);
+  local isMet			:boolean = Players[localPlayerID]:GetDiplomacy():HasMet(playerID);
 
   -- Team Ribbon
-  if(playerID == localPlayerID or Players[localPlayerID]:GetDiplomacy():HasMet(playerID)) then
+  local isTeamRibbonHidden:boolean = true;
+  if(isSelf or isMet) then
     -- Show team ribbon for ourselves and civs we've met
     local teamID:number = pPlayerConfig:GetTeam();
     if #Teams[teamID] > 1 then
       local teamRibbonName:string = self.TEAM_RIBBON_PREFIX .. tostring(teamID);
       self.Controls.TeamRibbon:SetIcon(teamRibbonName);
       self.Controls.TeamRibbon:SetColor(GetTeamColor(teamID));
-      self.Controls.TeamRibbon:SetHide(false);
-    else
-      -- Hide team ribbon if team only contains one player
-      self.Controls.TeamRibbon:SetHide(true);
+      isTeamRibbonHidden = false;
     end
-  else
-    -- Hide team ribbon for civs we haven't met
-    self.Controls.TeamRibbon:SetHide(true);
   end
+  self.Controls.TeamRibbon:SetHide(isTeamRibbonHidden);
 
   -- Relationship status (Humans don't show anything, unless we are at war)
-  local ourRelationship = pPlayer:GetDiplomaticAI():GetDiplomaticStateIndex(localPlayerID);
-  local relationshipState:table = GameInfo.DiplomaticStates[ourRelationship];
-  if (not isHuman or IsValidRelationship(relationshipState.StateType)) then
-    local extendedRelationshipTooltip:string = Locale.Lookup(relationshipState.Name)
-    .. "[NEWLINE][NEWLINE]" .. RelationshipGet(playerID);
-    self.Controls.Relationship:SetHide(false);
-    self.Controls.Relationship:SetVisState(ourRelationship);
+  local eRelationship :number = pPlayer:GetDiplomaticAI():GetDiplomaticStateIndex(localPlayerID);
+  local relationType	:string = GameInfo.DiplomaticStates[eRelationship].StateType;
+  local isValid		:boolean= (isHuman and Relationship.IsValidWithHuman( relationType )) or (not isHuman and Relationship.IsValidWithAI( relationType ));
+  if isValid then		
+    self.Controls.Relationship:SetVisState(eRelationship);
+    
+    -- CQUI Extended relationship tooltip
+    local extendedRelationshipTooltip:string = Locale.Lookup(GameInfo.DiplomaticStates[eRelationship].Name) .. "[NEWLINE][NEWLINE]" .. RelationshipGet(playerID);
     self.Controls.Relationship:SetToolTipString(extendedRelationshipTooltip);
-    -- if (GameInfo.DiplomaticStates[ourRelationship].Hash ~= DiplomaticStates.NEUTRAL) then
-    --   self.Controls.Relationship:SetToolTipString(Locale.Lookup(GameInfo.DiplomaticStates[ourRelationship].Name));
+    
+    -- if (GameInfo.DiplomaticStates[eRelationship].Hash ~= DiplomaticStates.NEUTRAL) then
+    -- 	 self.Controls.Relationship:SetToolTipString(Locale.Lookup(GameInfo.DiplomaticStates[eRelationship].Name));
     -- end
-  else
-    self.Controls.Relationship:SetHide(true);
   end
+  self.Controls.Relationship:SetHide( not isValid );
 end
 
 --Resets instances we retrieve

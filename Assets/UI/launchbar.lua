@@ -1,6 +1,6 @@
 -- ===========================================================================
---	HUD's Launch Bar
---	Copyright (c) 2017-2018 Firaxis Games
+--	HUD's "Launch Bar"
+--	Copyright (c) 2017-2019 Firaxis Games
 --
 --	Controls raising full-screen and "choosers" found in upper-left of HUD.
 -- ===========================================================================
@@ -44,7 +44,7 @@ function OnOpenGovernment()
     return; -- Probably autoplay
   end
 
-  localPlayer = Players[ePlayer];
+  local localPlayer:table = Players[ePlayer];
   if localPlayer == nil then
     return;
   end
@@ -336,6 +336,10 @@ function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
   if eNewMode == InterfaceModeTypes.VIEW_MODAL_LENS then
     ContextPtr:SetHide(true);
   end
+  if eNewMode == InterfaceModeTypes.CINEMATIC then
+    CloseAllPopups();	--	TODO: Remove this and instead change Popup behavior via new parameter. (TTP 43933)
+  end
+  
   if eOldMode == InterfaceModeTypes.VIEW_MODAL_LENS then
     ContextPtr:SetHide(false);
   end
@@ -370,19 +374,10 @@ function RealizeHookVisibility()
   Controls.GovernmentButton:SetShow(m_isGovernmentAvailable);
   Controls.GovernmentBolt:SetShow(m_isGovernmentAvailable);
 
-  RefreshView();
+  RealizeBacking();
 end
 
---  Note on hook show/hide functionality:
---  We do not serialize any of this data, but instead we will check gamestate OnTurnBegin to determine which hooks should be shown.
---  Once the show/hide flags have been set, we return from the function before performing the checks again.
---  For all of the hooks that start in a hidden state, there are two functions needed to correctly capture the event to show/hide the hook:
---  1/2) A function for capturing the event as it happens during a turn of gameplay
---  2/2) A function to check gamestate OnTurnBegin
-
--- *****************************************************************************
---  Religion Hook
---  1/2) OnFaithChanged - triggered off of the FaithChanged game event
+-- ===========================================================================
 function OnFaithChanged()
   if (m_isReligionUnlocked) then
     return;
@@ -391,7 +386,7 @@ function OnFaithChanged()
   RealizeHookVisibility();
 end
 
---  2/2) RefreshReligion - this function checks to see if any faith has been earned
+-- ===========================================================================
 function RefreshReligion()
   local ePlayer:number = Game.GetLocalPlayer();
   if ePlayer == -1 then
@@ -401,8 +396,8 @@ function RefreshReligion()
   if m_isReligionUnlocked then
     return;
   end
-  local localPlayer = Players[ePlayer];
-  local playerReligion:table  = localPlayer:GetReligion();
+  local localPlayer   :table = Players[ePlayer];
+  local playerReligion:table = localPlayer:GetReligion();
 
   local hasFaithYield			:boolean = playerReligion:GetFaithYield() > 0;
   local hasFaithBalance		:boolean = playerReligion:GetFaithBalance() > 0;
@@ -412,11 +407,7 @@ function RefreshReligion()
   RealizeHookVisibility();
 end
 
--- *****************************************************************************
---  Great Works Hook
---  1/2) OnGreatWorkCreated - triggered off of the GreatWorkCreated game event
---  *Note - a great work can be added and then traded away/ moved.  I think we should still allow the hook to stay
---  open in this case.  I think it would be strange behavior to have the hook be made available and then removed.
+-- ===========================================================================
 function OnGreatWorkCreated()
   if (m_isGreatWorksUnlocked) then
     return;
@@ -425,21 +416,22 @@ function OnGreatWorkCreated()
   RealizeHookVisibility();
 end
 
--- also need to capture when a deal has left us with a great work
+-- ===========================================================================
 function OnDiplomacyDealEnacted()
   if (not m_isGreatWorksUnlocked) then
     RefreshGreatWorks();
   end
 end
 
--- turns out, capturing a city can also net us pretty great works
+-- ===========================================================================
+--	Capturing a city can also net us pretty great works
 function OnCityCaptured()
   if (not m_isGreatWorksUnlocked) then
     RefreshGreatWorks();
   end
 end
 
---  2/2) RefreshGreatWorks - go through each building checking for GW slots, then query that slot for a slotted great work
+-- ===========================================================================
 function RefreshGreatWorks()
   local ePlayer:number = Game.GetLocalPlayer();
   if ePlayer == -1 then
@@ -450,10 +442,11 @@ function RefreshGreatWorks()
     return;
   end
 
-  localPlayer = Players[ePlayer];
-  local pCities:table = localPlayer:GetCities();
+  local localPlayer  :table = Players[ePlayer];  
+  local pCities      :table = localPlayer:GetCities();
   for i, pCity in pCities:Members() do
     if pCity ~= nil and pCity:GetOwner() == ePlayer then
+
       local pCityBldgs:table = pCity:GetBuildings();
       for buildingInfo in GameInfo.Buildings() do
         local buildingIndex:number = buildingInfo.Index;
@@ -470,11 +463,17 @@ function RefreshGreatWorks()
           end
         end
       end
+
+      if m_isGreatWorksUnlocked then
+        break;
+      end
+
     end
   end
   RealizeHookVisibility();
 end
 
+-- ===========================================================================
 function RefreshGreatPeople()
   local ePlayer:number = Game.GetLocalPlayer();
   if ePlayer == -1 then
@@ -511,9 +510,9 @@ function OnCivicCompleted(player:number, civic:number, isCanceled:boolean)
     local playerCulture:table = Players[ePlayer]:GetCulture();
     if (playerCulture:GetNumPoliciesUnlocked() > 0) then
       m_isGovernmentUnlocked = true;
-      RealizeHookVisibility();
     end
   end
+  RealizeHookVisibility();
 end
 
 -- ===========================================================================
@@ -524,7 +523,7 @@ function RefreshGovernment()
   local kCulture:table = Players[playerID]:GetCulture();
   if ( kCulture:GetNumPoliciesUnlocked() <= 0 ) then
     Controls.GovernmentButton:SetToolTipString(Locale.Lookup("LOC_GOVERNMENT_DOESNT_UNLOCK"));
-    Controls.GovernmentButton:GetTextControl():SetColor(0xFF666666);
+    Controls.GovernmentButton:GetTextControl():SetColor(UI.GetColorValueFromHexLiteral(0xFF666666));
   else
     m_isGovernmentUnlocked = true;
     Controls.GovernmentButton:SetHide(false);
@@ -547,7 +546,9 @@ function RefreshGovernment()
 end
 
 -- ===========================================================================
-function RefreshView()
+--	Update the background and size of the launchbar itself.
+-- ===========================================================================
+function RealizeBacking()
   -- The Launch Bar width should accomodate how many hooks are currently in the stack.
   Controls.ButtonStack:CalculateSize();
   Controls.LaunchBacking:SetSizeX(Controls.ButtonStack:GetSizeX()+116);
@@ -561,7 +562,7 @@ end
 -- ===========================================================================
 function UpdateTechMeter( localPlayer:table )
   if ( localPlayer ~= nil and Controls.ScienceHookWithMeter:IsVisible() ) then
-    local playerTechs          = localPlayer:GetTechs();
+    local playerTechs:table    = localPlayer:GetTechs();
     local currentTechID:number = playerTechs:GetResearchingTech();
     if(currentTechID >= 0) then
       local progress:number = playerTechs:GetResearchProgress(currentTechID);
@@ -585,17 +586,16 @@ function UpdateTechMeter( localPlayer:table )
     Controls.ResearchIcon:SetTexture(0, 0, "LaunchBar_Hook_TechTree");
   end
 end
-  -- local playerCivics = localPlayer:GetCulture();
-  -- local currentCivicID:number = playerCivics:GetProgressingCivic();
 
+-- ===========================================================================
 function UpdateCivicMeter( localPlayer:table)
   if ( localPlayer ~= nil and Controls.CultureHookWithMeter:IsVisible() ) then
-    local playerCivics				= localPlayer:GetCulture();
-    local currentCivicID    :number = playerCivics:GetProgressingCivic();
+    local pPlayerCulture  :table	= localPlayer:GetCulture();
+    local currentCivicID  :number = pPlayerCulture:GetProgressingCivic();
 
     if(currentCivicID >= 0) then
-      local civicProgress:number = playerCivics:GetCulturalProgress(currentCivicID);
-      local civicCost:number = playerCivics:GetCultureCost(currentCivicID);
+      local civicProgress :number = playerCivics:GetCulturalProgress(currentCivicID);
+      local civicCost     :number = playerCivics:GetCultureCost(currentCivicID);
 
       Controls.CultureMeter:SetPercent(civicProgress/civicCost);
     else
@@ -617,7 +617,9 @@ end
 
 
 -- ===========================================================================
-function OnTurnBegin()
+--	Main Refresh
+-- ===========================================================================
+function RefreshView()
   local localPlayerID :number = Game.GetLocalPlayer();
   if localPlayerID  == -1 then
     return;
@@ -634,6 +636,33 @@ function OnTurnBegin()
   RefreshGreatWorks();
   RefreshGreatPeople();
   RefreshReligion();
+
+  if BASE_RefreshView == nil then		-- No MODs, then wrap this up.
+    RealizeBacking();
+  end
+end
+
+-- ===========================================================================
+--	EVENT
+function OnLocalPlayerTurnBegin()
+  RefreshView();
+end
+
+-- ===========================================================================
+--	EVENT
+function OnVisualStateRestored()
+  RefreshView();
+end
+
+-- ===========================================================================
+--	EVENT
+function OnCivicChanged()
+  RefreshView();
+end
+
+-- ===========================================================================
+--	EVENT
+function OnResearchChanged()
   RefreshView();
 end
 
@@ -735,7 +764,7 @@ end
 
 -- ===========================================================================
 function LateInitialize()
-  OnTurnBegin();
+  RefreshView();
 end
 
 -- ===========================================================================
@@ -771,11 +800,11 @@ function Initialize()
   LuaEvents.LaunchBar_AddIcon.Add( OnAddLaunchbarIcon );
   -- CQUI --
 
-  Events.TurnBegin.Add( OnTurnBegin );
-  Events.VisualStateRestored.Add( OnTurnBegin );
+  Events.LocalPlayerTurnBegin.Add( OnLocalPlayerTurnBegin );
+  Events.VisualStateRestored.Add( OnVisualStateRestored );
   Events.CivicCompleted.Add( OnCivicCompleted );        -- To capture when we complete Code of Laws
-  Events.CivicChanged.Add(OnTurnBegin);
-  Events.ResearchChanged.Add(OnTurnBegin);
+  Events.CivicChanged.Add( OnCivicChanged );
+  Events.ResearchChanged.Add(OnResearchChanged);
   Events.TreasuryChanged.Add( RefreshGovernment );
   Events.GovernmentPolicyChanged.Add( RefreshGovernment );
   Events.GovernmentPolicyObsoleted.Add( RefreshGovernment );

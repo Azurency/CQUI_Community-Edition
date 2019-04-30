@@ -7,6 +7,9 @@ include("WonderBuiltPopup");
 -- Cached Base Functions
 -- ===========================================================================
 BASE_CQUI_OnWonderCompleted = OnWonderCompleted;
+BASE_CQUI_Close = Close;
+
+local m_kPopupMgr :table = ExclusivePopupManager:new("WonderBuiltPopup");
 
 -- ===========================================================================
 -- CQUI Members
@@ -65,8 +68,8 @@ function OnWonderCompleted( locX:number, locY:number, buildingIndex:number, play
           currentBuildingType = currentBuildingType
         };
 
-        if not IsLocked() then
-          LockPopupSequence( "WonderBuiltPopup", PopupPriority.High );
+        if not m_kPopupMgr:IsLocked() then
+          m_kPopupMgr:Lock( ContextPtr, PopupPriority.High );
           ShowPopup( kData );
           LuaEvents.WonderBuiltPopup_Shown();  -- Signal other systems (e.g., bulk hide UI)
         else
@@ -118,6 +121,11 @@ function ShowPopup( kData:table )
 
   Controls.ReplayButton:SetEnabled(UI.GetWorldRenderView() == WorldRenderView.VIEW_3D);
   Controls.ReplayButton:SetHide(not UI.IsWorldRenderViewAvailable(WorldRenderView.VIEW_3D));
+end
+
+function Close()
+  BASE_CQUI_Close()
+  m_kPopupMgr:Unlock();
 end
 
 -- ===========================================================================

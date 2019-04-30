@@ -255,7 +255,7 @@
             </Stack>
           </Grid>
 
-          <Grid           ID="PanelReligion"          Anchor="L,T" Offset="0,0"     Size="parent,0"       Style="CityPanelStatPanelGrid" ConsumeAllMouse="1">
+          <Grid           ID="PanelReligion"          Anchor="L,T" Offset="0,0"     Size="parent,0"       Style="CityPanelStatPanelGrid">
             <Grid                                     Anchor="L,T"                  Size="parent,24"    Style="DivHeader">
               <Container Size="parent,24">
                 <Image Texture="Controls_Gradient_HalfRadial" Size="parent, 120" FlipY="1" Anchor="C,T" Color="72,103,130,255"/>
@@ -288,7 +288,7 @@
             </Stack>
           </Grid>
 
-          <Grid						ID="PanelDynamicTab"					Anchor="L,T" Offset="0,0"			Size="parent,0"			Style="CityPanelStatPanelGrid" ConsumeAllMouse="1"/>
+          <Grid						ID="PanelDynamicTab"					Anchor="L,T" Offset="0,0"			Size="parent,0"			Style="CityPanelStatPanelGrid"/>
 
           <Grid                 ID="PanelQueue"           Anchor="L,T"                  Size="parent,0"       Style="CityPanelStatPanelGrid">
             <Grid                                     Anchor="L,T"                  Size="parent,24"    Style="DivHeader">

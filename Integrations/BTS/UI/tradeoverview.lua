@@ -1,3 +1,5 @@
+-- Copyright 2018-2019, Firaxis Games
+
 -- ===========================================================================
 --  SETTINGS
 -- ===========================================================================
@@ -1034,6 +1036,9 @@ function CreatePlayerHeader( player:table )
       headerInstance.VisibilityBonusIcon:SetVisState(math.min(math.max(visibilityIndex, 0), 3));
       headerInstance.VisibilityBonusGrid:LocalizeAndSetToolTip("LOC_TRADE_OVERVIEW_TOOLTIP_NO_DIPLOMATIC_VIS_BONUS");
     end
+
+    headerInstance.TourismBonusGrid:SetHide(false);
+    headerInstance.VisibilityBonusGrid:SetHide(false);
   else
     if dbug_print then
       -- print("Not displaying vis bonuses")

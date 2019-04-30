@@ -19,8 +19,8 @@ local FLASHING_PRODUCTION     :number = 3;
 local FLASHING_FREE_TECH      :number = 4;
 local FLASHING_NEEDS_ORDERS     :number = 5;
 
-local TURN_TIMER_BAR_ACTIVE_COLOR   :number = 0xffffffff;
-local TURN_TIMER_BAR_INACTIVE_COLOR :number = 0xff0000ff;
+local TURN_TIMER_BAR_ACTIVE_COLOR   :number = UI.GetColorValue("COLOR_WHITE");
+local TURN_TIMER_BAR_INACTIVE_COLOR :number = UI.GetColorValue(1,0,0,1);
 
 local MAX_BLOCKER_BUTTONS     :number = 4;  -- Number of buttons around big action button
 local autoEndTurnOptionHash     :number = DB.MakeHash("AutoEndTurn");
@@ -121,10 +121,9 @@ g_kEras	= {};
 --  MEMBERS
 -- ===========================================================================
 local m_overflowIM      : table = InstanceManager:new( "TurnBlockerInstance",  "TurnBlockerButton", Controls.OverflowStack );
-local m_shiftsHeld      : number  = 0;
 local m_activeBlockerId   : number  = EndTurnBlockingTypes.NO_ENDTURN_BLOCKING; -- Blocking notification receiving attention
 local m_kSoundsPlayed   : table   = {};                   -- Track which notifications have had their associate sound played
-local m_EndTurnId           = Input.GetActionId("EndTurn");       -- Hotkey
+local m_EndTurnId       :number    = Input.GetActionId("EndTurn");       -- Hotkey
 local m_lastTurnTickTime  : number  = 0;                    -- When did we last make a tick sound for the turn timer?
 local m_numberVisibleBlockers :number = 0;
 local m_visibleBlockerTypes : table   = {};
@@ -580,7 +579,7 @@ function CheckAutoEndTurn( eCurrentEndTurnBlockingType:number )
       -- Expansion content is ok with auto ending the turn.
       and AllowAutoEndTurn_Expansion() then
         if not UI.CanEndTurn() then
-          error("CheckAutoEndTurn thinks that we can't end turn, but the notification system disagrees");
+          UI.DataError("CheckAutoEndTurn thinks that we can't end turn, but the notification system disagrees!");
         end
       UI.RequestAction(ActionTypes.ACTION_ENDTURN);
     end
@@ -638,7 +637,7 @@ function DoEndTurn( optionalNewBlocker:number )
           LuaEvents.CQUI_Strike_Enter();
           LuaEvents.CQUI_CityRangeStrike(Game.GetLocalPlayer(), attackCity:GetID());
       else
-        error( "Unable to find selectable attack city while in CheckCityRangeAttackState()" );
+        UI.DataError( "Unable to find selectable attack city while in CheckCityRangeAttackState()" );
       end
     elseif(CQUI_CheckEncampmentRangeAttackState()) then
       local attackEncampment = CQUI_GetFirstRangedAttackEncampment();
@@ -646,7 +645,7 @@ function DoEndTurn( optionalNewBlocker:number )
         UI.LookAtPlot(attackEncampment:GetX(), attackEncampment:GetY());
         LuaEvents.CQUI_DistrictRangeStrike(Game.GetLocalPlayer(), attackEncampment:GetID());
       else
-        error( "Unable to find selectable attack encampment while in CQUI_CheckEncampmentRangeAttackState()" );
+        UI.DataError( "Unable to find selectable attack encampment while in CQUI_CheckEncampmentRangeAttackState()" );
       end
     elseif(CQUI_CheckPolicyCanBeChanged()) then
       LuaEvents.CQUI_ShowPolicyReminderPopup(Game.GetLocalPlayer(), pPlayer:GetCulture():GetCivicCompletedThisTurn(), false)
@@ -669,7 +668,7 @@ function DoEndTurn( optionalNewBlocker:number )
     if pNotification == nil then
       -- Notification is missing.  Use fallback behavior.
       if not UI.CanEndTurn() then
-        print("ERROR: ActionPanel UI thinks that we can't end turn, but the notification system disagrees");
+        UI.DataError("The UI thinks that we can't end turn, but the notification system disagrees.");
         return;
       end
       UI.RequestAction(ActionTypes.ACTION_ENDTURN);
@@ -1186,7 +1185,8 @@ function OnInputHandler( pInputStruct:table )
   if uiMsg == KeyEvents.KeyUp then
     if pInputStruct:GetKey() == Keys.VK_RETURN then
       if pInputStruct:IsShiftDown() and not IsTutorialRunning() then
-        UI.RequestAction(ActionTypes.ACTION_ENDTURN); -- Shift + Enter = Force End Turn
+        -- Forcing a turn via SHIFT + ENTER.  Unsupported.
+        UI.RequestAction(ActionTypes.ACTION_ENDTURN, { REASON = "UserForced" } );
       else
         DoEndTurn();                  -- Enter = Normal End Turn
       end
@@ -1409,8 +1409,8 @@ end
 -- ===========================================================================
 function OnInputActionTriggered( actionId )
   if m_EndTurnId ~= nil and actionId == m_EndTurnId then
-        UI.PlaySound("Play_UI_Click");
-    OnEndTurnClicked();
+    UI.PlaySound("Play_UI_Click");
+    DoEndTurn();
   end
 end
 

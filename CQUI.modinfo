@@ -70,6 +70,7 @@
     <!-- EXP 2 -->
     <File>Assets/Expansion2/Replacements/citypaneloverview_expansion2_CQUI.lua</File>
     <File>Assets/Expansion2/Replacements/citystates.xml</File>
+    <File>Assets/Expansion2/Replacements/citysupport.lua</File>
     <File>Assets/Expansion2/Replacements/civicstree_CQUI_expansion2.lua</File>
     <File>Assets/Expansion2/Replacements/diplomacyactionview_CQUI_expansion2.lua</File>
     <File>Assets/Expansion2/Replacements/diplomacyactionview.xml</File>
@@ -130,7 +131,6 @@
     <File>Assets/UI/launchbar.lua</File>
     <File>Assets/UI/launchbar.xml</File>
     <File>Assets/UI/leadericon.lua</File>
-    <File>Assets/UI/mappinmanager.lua</File>
     <File>Assets/UI/partialscreenhooks_CQUI_basegame.lua</File>
     <File>Assets/UI/partialscreenhooks_CQUI.lua</File>
     <File>Assets/UI/partialscreenhooks.xml</File>
@@ -162,10 +162,6 @@
     <File>Assets/UI/PartialScreens/citystates.xml</File>
     <File>Assets/UI/Popups/greatpeoplepopup.lua</File>
     <File>Assets/UI/Popups/greatpeoplepopup.xml</File>
-    <File>Assets/UI/Popups/mappinlistpanel.lua</File>
-    <File>Assets/UI/Popups/mappinlistpanel.xml</File>
-    <File>Assets/UI/Popups/mappinpopup.lua</File>
-    <File>Assets/UI/Popups/mappinpopup.xml</File>
     <File>Assets/UI/Popups/policyreminderpopup.lua</File>
     <File>Assets/UI/Popups/policyreminderpopup.xml</File>
     <File>Assets/UI/Popups/techciviccompletedpopup.lua</File>
@@ -215,8 +211,6 @@
     <File>Integrations/URS/Text/urs_text_pt.xml</File>
     <File>Integrations/URS/Text/urs_text_ru.xml</File>
     <File>Integrations/URS/Text/urs_text_zh.xml</File>
-    <File>Integrations/IDS/diplomacydealview.lua</File>
-    <File>Integrations/IDS/diplomacydealview.xml</File>
     <File>Integrations/IDS/Text/ids_text.xml</File>
     <File>Integrations/IDS/Text/ids_text_de.xml</File>
     <File>Integrations/IDS/Text/ids_text_es.xml</File>
@@ -303,7 +297,6 @@
         <File>Assets/UI/launchbar.lua</File>
         <File>Assets/UI/launchbar.xml</File>
         <File>Assets/UI/leadericon.lua</File>
-        <File>Assets/UI/mappinmanager.lua</File>
         <File>Assets/UI/partialscreenhooks_CQUI_basegame.lua</File>
         <File>Assets/UI/partialscreenhooks_CQUI.lua</File>
         <File>Assets/UI/partialscreenhooks.xml</File>
@@ -334,10 +327,6 @@
         <File>Assets/UI/PartialScreens/citystates.xml</File>
         <!-- <File>Assets/UI/Popups/greatpeoplepopup.lua</File>
         <File>Assets/UI/Popups/greatpeoplepopup.xml</File> -->
-        <File>Assets/UI/Popups/mappinlistpanel.lua</File>
-        <File>Assets/UI/Popups/mappinlistpanel.xml</File>
-        <File>Assets/UI/Popups/mappinpopup.lua</File>
-        <File>Assets/UI/Popups/mappinpopup.xml</File>
         <File>Assets/UI/Popups/techciviccompletedpopup.lua</File>
         <File>Assets/UI/Popups/wonderbuiltpopup_CQUI.lua</File>
         <File>Assets/UI/Screens/techtree_CQUI_basegame.lua</File>
@@ -402,6 +391,7 @@
       <Items>
         <File>Assets/Expansion2/Replacements/citypaneloverview_expansion2_CQUI.lua</File>
         <File>Assets/Expansion2/Replacements/citystates.xml</File>
+        <File>Assets/Expansion2/Replacements/citysupport.lua</File>
         <File>Assets/Expansion2/Replacements/civicstree_CQUI_expansion2.lua</File>
         <File>Assets/Expansion2/Replacements/diplomacyactionview_CQUI_expansion2.lua</File>
         <File>Assets/Expansion2/Replacements/diplomacyactionview.xml</File>
@@ -816,7 +806,7 @@
         <File>Integrations/IDS/diplomacydealview.lua</File>
         <File>Integrations/IDS/diplomacydealview.xml</File>
       </Items>
-    </ImportFiles>
+    </ImportFiles>-->
     <LocalizedText id="IDS_TEXT">
       <Items>
         <File>Integrations/IDS/Text/ids_text.xml</File>
@@ -831,7 +821,7 @@
         <File>Integrations/IDS/Text/ids_text_ru.xml</File>
         <File>Integrations/IDS/Text/ids_text_zh.xml</File>
       </Items>
-    </LocalizedText> -->
+    </LocalizedText>
 
     <!-- BES -->
     <ImportFiles id="BES_IMPORT_FILES">

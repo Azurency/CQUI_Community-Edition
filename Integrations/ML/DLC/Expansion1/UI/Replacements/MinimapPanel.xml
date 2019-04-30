@@ -47,30 +47,32 @@
           <Button ID="ExpandButton" Anchor="R,T" AnchorSide="I,O" Offset="3,3"  Size="47,16"  Hidden="1" ConsumeAllMouse="1" Texture="Controls_ButtonExtend.dds" ToolTip="LOC_HUD_MINIMAP_EXPAND_TOOLTIP" />
 
           <Grid Texture="MiniMap_Frame" Size="parent+10,parent+12" SliceCorner="18,40" SliceTextureSize="37,149" Offset="-5,-5"/>
-          <Stack ID="OptionsStack" Anchor="L,T" AnchorSide="I,O" Offset="0,-4" StackGrowth="Right" Padding="-2">
+          <Stack ID="OptionsStack" Anchor="L,T" AnchorSide="I,O" Offset="0,-4" StackGrowth="Right" Padding="-6">
             <CheckBox ID="LensButton" Offset="0,1" Anchor="L,C" UseSelectedTextures="1" ButtonSize="44,44"  ButtonTexture="LaunchBar_Hook_ButtonMedium" Style="ButtonNormalText" ToolTip="LOC_HUD_LENSES" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
               <Image Texture="MiniMap_Lenses" Size="36,36" Anchor="C,C" Offset="-4,-1"/>
             </CheckBox>
-            <Image                       Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip" Color="255,255,255,200" Offset="0,-2"/>
-            <CheckBox ID="MapOptionsButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="LOC_HUD_MAP_OPTIONS" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
+            <CheckBox ID="MapOptionsButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonMinimap" Style="ButtonNormalText" ToolTip="LOC_HUD_MAP_OPTIONS" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
               <Image Texture="Minimap_MapOptions" Size="22,22" Anchor="C,C"/>
             </CheckBox>
-            <Image                       Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip" Color="255,255,255,200" Offset="0,-2"/>
-            <CheckBox ID="MapPinListButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="LOC_HUD_MAP_TOGGLE_MAP_PIN_LIST" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
+            <CheckBox ID="MapPinListButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonMinimap" Style="ButtonNormalText" ToolTip="LOC_HUD_MAP_TOGGLE_MAP_PIN_LIST" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
               <Image Texture="MiniMap_MapPins" Size="24,24" Anchor="C,C"/>
               <Container ID="MapPinListPanel" Anchor="L,T" Offset="-9,-35" Size="auto,auto" Hidden="1">
                 <LuaContext FileName="MapPinListPanel"/>
               </Container>
             </CheckBox>
+            <CheckBox ID="MapSearchButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonMinimap" Style="ButtonNormalText" ToolTip="LOC_HUD_MAP_SEARCH" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
+              <Image Texture="MiniMap_Search" Size="24,24" Anchor="C,C" Offset="0,-1"/>
+              <Container ID="MapSearchPanel" Anchor="L,T" Offset="-9,-35" Size="auto,auto" Hidden="1">
+                <LuaContext FileName="MapSearchPanel"/>
+              </Container>
+            </CheckBox>
             <CheckBox ID="CQUI_OptionsButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="LOC_CQUI_NAME" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
-             <Image Texture="Stats30" Icon="ICON_RESOURCE_TOBACCO" Size="35,35" Anchor="C,C"/>
-           </CheckBox>
-            <Image                       Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip" Color="255,255,255,200" Offset="0,-2"/>
-            <Button ID="StrategicSwitcherButton" Anchor="L,C" Size="40,40"  Texture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="LOC_HUD_TOGGLE_STRATEGY_VIEW">
+              <Image Texture="Stats30" Icon="ICON_RESOURCE_TOBACCO" Size="35,35" Anchor="C,C"/>
+            </CheckBox>
+            <Button ID="StrategicSwitcherButton" Anchor="L,C" Size="40,40"  Texture="LaunchBar_Hook_ButtonMinimap" Style="ButtonNormalText" ToolTip="LOC_HUD_TOGGLE_STRATEGY_VIEW">
               <Image ID="SwitcherImage" Texture="MiniMap_StrategicSwitcher" Size="24,24" Anchor="C,C"/>
             </Button>
-            <Image                       Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip" Color="255,255,255,200" Offset="0,-2"/>
-            <Button ID="FullscreenMapButton" Anchor="L,C" Size="40,40"  Texture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="LOC_HUD_FULLSCREEN_MAP">
+            <Button ID="FullscreenMapButton" Anchor="L,C" Size="40,40"  Texture="LaunchBar_Hook_ButtonMinimap" Style="ButtonNormalText" ToolTip="LOC_HUD_FULLSCREEN_MAP">
               <Image Texture="MiniMap_Full" Size="24,24" Anchor="C,C"/>
             </Button>
           </Stack>
