@@ -449,11 +449,11 @@ function CQUI_BuildBubbleInstance(icon, amount, labelLOC, instanceManager)
   local kInstance :table = instanceManager:GetInstance();
   kInstance.BubbleContainer:SetTextureOffsetVal(0, GetOffset(amount));
   kInstance.BubbleIcon:SetIcon( icon );
-  kInstance.BubbleIcon:SetColor(0x3fffffff);
+  kInstance.BubbleIcon:SetColor(UI.GetColorValueFromHexLiteral(0x3fffffff));
   kInstance.BubbleAmount:SetText( Locale.ToNumber(amount) );
   kInstance.BubbleAmount:SetColorByName( GetColor(amount) );
   kInstance.BubbleLabel:SetText( CQUI_SmartWrap(Locale.Lookup(labelLOC), 10) );
-  kInstance.BubbleLabel:SetColor(0xffffffff);
+  kInstance.BubbleLabel:SetColor(UI.GetColorValueFromHexLiteral(0xffffffff));
 end
 function CQUI_BuildAmenityBubbleInstance(icon, amount, labelLOC)
   CQUI_BuildBubbleInstance(icon, amount, labelLOC, g_kAmenitiesIM);

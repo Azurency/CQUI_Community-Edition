@@ -1061,7 +1061,7 @@ function CreateCityStateHeader()
   end
 
   -- Reset Color for city states
-  headerInstance.HeaderGrid:SetColor(0xFF666666);
+  headerInstance.HeaderGrid:SetColor(UI.GetColorValueFromHexLiteral(0xFF666666));
   headerInstance.CityBannerFill:SetHide(true);
 
   headerInstance.HeaderLabel:SetColorByName("Beige");
@@ -1079,7 +1079,7 @@ function CreateUnusedRoutesHeader()
   headerInstance.HeaderLabel:SetText(Locale.ToUpper("LOC_TRADE_OVERVIEW_UNUSED_ROUTES"));
 
   -- Reset Color for city states
-  headerInstance.HeaderGrid:SetColor(0xFF666666);
+  headerInstance.HeaderGrid:SetColor(UI.GetColorValueFromHexLiteral(0xFF666666));
   headerInstance.CityBannerFill:SetHide(true);
 
   headerInstance.HeaderLabel:SetColorByName("Beige");
