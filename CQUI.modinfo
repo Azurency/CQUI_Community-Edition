@@ -3,7 +3,7 @@
 
   <!-- Basic Mod Information -->
   <Properties>
-    <AffectsSavedGames>0</AffectsSavedGames>
+    <AffectsSavedGames>1</AffectsSavedGames>
     <Name>Community Quick User Interface</Name>
     <Teaser>CQUI</Teaser>
     <Description>Community Quick User Interface MOD was Formally CQUI Mod [NEWLINE]and is now being updated and improved by its community</Description>
@@ -57,6 +57,7 @@
     <File>Assets/Expansion1/Replacements/citystates.xml</File>
     <File>Assets/Expansion1/Replacements/citysupport.lua</File>
     <File>Assets/Expansion1/Replacements/diplomacyactionview_CQUI_expansion1.lua</File>
+    <!--<File>Assets/Expansion1/Replacements/diplomacydealview.lua</File>-->
     <File>Assets/Expansion1/Replacements/governmentscreen_CQUI_expansion1.lua</File>
     <File>Assets/Expansion1/Replacements/leadericon.lua</File>
     <File>Assets/Expansion1/Replacements/leadericon.xml</File>
@@ -125,6 +126,7 @@
     <File>Assets/UI/diplomacyactionview_CQUI_basegame.lua</File>
     <File>Assets/UI/diplomacyactionview_CQUI.lua</File>
     <File>Assets/UI/diplomacyactionview.xml</File>
+    <!--<File>Assets/UI/diplomacydealview.xml</File>-->
     <File>Assets/UI/diplomacyribbon.lua</File>
     <File>Assets/UI/diplomacyribbon.xml</File>
     <File>Assets/UI/ingame.lua</File>
@@ -211,6 +213,8 @@
     <File>Integrations/URS/Text/urs_text_pt.xml</File>
     <File>Integrations/URS/Text/urs_text_ru.xml</File>
     <File>Integrations/URS/Text/urs_text_zh.xml</File>
+    <!--<File>Integrations/IDS/diplomacydealview.lua</File>
+    <File>Integrations/IDS/diplomacydealview.xml</File>-->
     <File>Integrations/IDS/Text/ids_text.xml</File>
     <File>Integrations/IDS/Text/ids_text_de.xml</File>
     <File>Integrations/IDS/Text/ids_text_es.xml</File>
@@ -291,6 +295,7 @@
         <File>Assets/UI/diplomacyactionview_CQUI_basegame.lua</File>
         <File>Assets/UI/diplomacyactionview_CQUI.lua</File>
         <File>Assets/UI/diplomacyactionview.xml</File>
+        <!--<File>Assets/UI/diplomacydealview.xml</File>-->
         <File>Assets/UI/diplomacyribbon.lua</File>
         <File>Assets/UI/diplomacyribbon.xml</File>
         <File>Assets/UI/ingame.lua</File>
@@ -376,6 +381,7 @@
       </Properties>
       <Items>
         <File>Assets/Expansion1/Replacements/citypanelculture_CQUI.lua</File>
+        <!--<File>Assets/Expansion1/Replacements/diplomacydealview.lua</File>-->
         <File>Assets/Expansion1/Replacements/leadericon.lua</File>
         <File>Assets/Expansion1/Replacements/leadericon.xml</File>
         <File>Assets/Expansion1/Replacements/worldtracker_expansion1.lua</File>
