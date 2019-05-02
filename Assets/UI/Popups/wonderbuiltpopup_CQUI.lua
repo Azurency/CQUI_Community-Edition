@@ -2,6 +2,7 @@
 -- Base File
 -- ===========================================================================
 include("WonderBuiltPopup");
+include( "ToolTipHelper" );  -- For AddBuildingYieldTooltip()
 
 -- ===========================================================================
 -- Cached Base Functions
@@ -21,6 +22,116 @@ local CQUI_wonderBuiltAudio = true;
 function CQUI_OnSettingsUpdate()
   CQUI_wonderBuiltVisual = GameConfiguration.GetValue("CQUI_WonderBuiltPopupVisual");
   CQUI_wonderBuiltAudio = GameConfiguration.GetValue("CQUI_WonderBuiltPopupAudio");
+end
+
+-- ===========================================================================
+--  CQUI CQUI_GetWonderTooltip functiton
+--  Inspired by ToolTipHelper.GetBuildingToolTip
+-- ===========================================================================
+function CQUI_GetWonderTooltip(buildingHash, playerId, cityId)
+  local building = GameInfo.Buildings[buildingHash];
+  local description = building.Description;
+  local city = Players[playerId]:GetCities():FindID(cityID);
+
+  local buildingType:string = "";
+  if (building ~= nil) then
+    buildingType = building.BuildingType;
+  end
+
+  local district = nil;
+	if city ~= nil then
+		district = city:GetDistricts():GetDistrict(building.PrereqDistrict);
+	end
+  
+  local toolTipLines = {};
+  local stats = {};
+
+  AddBuildingYieldTooltip(buildingHash, city, stats);
+
+  for row in GameInfo.Building_YieldDistrictCopies() do
+    if(row.BuildingType == buildingType) then
+      local from = GameInfo.Yields[row.OldYieldType];
+      local to = GameInfo.Yields[row.NewYieldType];
+
+      table.insert(stats, Locale.Lookup("LOC_TOOLTIP_BUILDING_DISTRICT_COPY", to.IconString, to.Name, from.IconString, from.Name));
+    end
+  end
+
+  local housing = building.Housing or 0;
+  if(housing ~= 0) then
+    table.insert(stats, Locale.Lookup("LOC_TYPE_TRAIT_HOUSING", housing));
+  end
+
+  AddBuildingEntertainmentTooltip(buildingHash, city, district, stats);
+
+  local citizens = building.CitizenSlots or 0;
+  if(citizens ~= 0) then
+    table.insert(stats, Locale.Lookup("LOC_TYPE_TRAIT_CITIZENS", citizens));
+  end
+
+  local defense = building.OuterDefenseHitPoints or 0;
+  if(defense ~= 0) then
+    table.insert(stats, Locale.Lookup("LOC_TYPE_TRAIT_OUTER_DEFENSE", defense));
+  end
+
+  for row in GameInfo.Building_GreatPersonPoints() do
+    if(row.BuildingType == buildingType) then
+      local gpClass = GameInfo.GreatPersonClasses[row.GreatPersonClassType];
+      if(gpClass) then
+        local greatPersonClassName = gpClass.Name;
+        local greatPersonClassIconString = gpClass.IconString;
+        table.insert(stats, Locale.Lookup("LOC_TYPE_TRAIT_GREAT_PERSON_POINTS", row.PointsPerTurn, greatPersonClassIconString, greatPersonClassName));
+      end
+    end
+  end
+  
+  local slotStrings = {
+    ["GREATWORKSLOT_PALACE"] = "LOC_TYPE_TRAIT_GREAT_WORKS_PALACE_SLOTS";
+    ["GREATWORKSLOT_ART"] = "LOC_TYPE_TRAIT_GREAT_WORKS_ART_SLOTS";
+    ["GREATWORKSLOT_WRITING"] = "LOC_TYPE_TRAIT_GREAT_WORKS_WRITING_SLOTS";
+    ["GREATWORKSLOT_MUSIC"] = "LOC_TYPE_TRAIT_GREAT_WORKS_MUSIC_SLOTS";
+    ["GREATWORKSLOT_RELIC"] = "LOC_TYPE_TRAIT_GREAT_WORKS_RELIC_SLOTS";
+    ["GREATWORKSLOT_ARTIFACT"] = "LOC_TYPE_TRAIT_GREAT_WORKS_ARTIFACT_SLOTS";
+    ["GREATWORKSLOT_CATHEDRAL"] = "LOC_TYPE_TRAIT_GREAT_WORKS_CATHEDRAL_SLOTS";
+  };
+
+  for row in GameInfo.Building_GreatWorks() do
+    if(row.BuildingType == buildingType) then
+      local slotType = row.GreatWorkSlotType;
+      local key = slotStrings[slotType];
+      if(key) then
+        table.insert(stats, Locale.Lookup(key, row.NumSlots));
+      end
+    end
+  end
+  
+  if(not Locale.IsNilOrWhitespace(description)) then
+    table.insert(toolTipLines, Locale.Lookup(description));	
+  end
+  
+  if playerId ~= nil and playerId ~= -1 then
+    local kPlayerCulture:table = Players[playerId]:GetCulture();
+    -- Determine the unlocked Policy, if any
+    if building.UnlocksGovernmentPolicy == true then
+      local slottounlock :number = kPlayerCulture:GetPolicyToUnlock(building.Index);
+      if (slottounlock ~= -1) then
+        local newpolicy = GameInfo.Policies[slottounlock];
+        if newpolicy ~= nil then
+          table.insert(toolTipLines, Locale.Lookup("LOC_TOOLTIP_UNLOCKS_POLICY_CARD", newpolicy.Name))
+        end
+      end
+    end
+  end
+
+  for i,v in ipairs(stats) do
+    if(i == 1) then
+      table.insert(toolTipLines, "[NEWLINE]" .. v);
+    else
+      table.insert(toolTipLines, v);
+    end
+  end
+
+  return table.concat(toolTipLines, "[NEWLINE]");
 end
 
 -- ===========================================================================
@@ -66,7 +177,8 @@ function OnWonderCompleted( locX:number, locY:number, buildingIndex:number, play
           locX = locX,
           locY = locY,
           buildingIndex = buildingIndex,
-          currentBuildingType = currentBuildingType
+          currentBuildingType = currentBuildingType,
+          currentCityId = cityId -- CQUI : Added cityId for Tooltip
         };
 
         if not m_kPopupMgr:IsLocked() then
@@ -108,10 +220,12 @@ function ShowPopup( kData:table )
   local locY          :number = m_kCurrentPopup.locY;
   local buildingIndex      :number = m_kCurrentPopup.buildingIndex;
   local currentBuildingType  :string = m_kCurrentPopup.currentBuildingType;
+  local cityId = m_kCurrentPopup.currentCityId;
 
   Controls.WonderName:SetText(Locale.ToUpper(Locale.Lookup(GameInfo.Buildings[buildingIndex].Name)));
   Controls.WonderIcon:SetIcon("ICON_"..currentBuildingType);
-  Controls.WonderIcon:SetToolTipString(Locale.Lookup(GameInfo.Buildings[buildingIndex].Description));
+  --Controls.WonderIcon:SetToolTipString(Locale.Lookup(GameInfo.Buildings[buildingIndex].Description));
+  Controls.WonderIcon:SetToolTipString(CQUI_GetWonderTooltip(GameInfo.Buildings[buildingIndex].Hash, Game.GetLocalPlayer(), cityId));
   if(Locale.Lookup(GameInfo.Buildings[buildingIndex].Quote) ~= nil) then
     Controls.WonderQuote:SetText(Locale.Lookup(GameInfo.Buildings[buildingIndex].Quote));
   else
@@ -129,27 +243,27 @@ end
 --  Copy/Paste from the original version, just now it uses our own m_kQueuedPopups and m_kCurrentPopup
 -- ===========================================================================
 function Close()		    
-	
-	StopSound();
+  
+  StopSound();
 
-	local isDone:boolean  = true;
+  local isDone:boolean  = true;
 
-	-- Find first entry in table, display that, then remove it from the internal queue
-	for i, entry in ipairs(m_kQueuedPopups) do
-		ShowPopup(entry);
-		table.remove(m_kQueuedPopups, i);
-		isDone = false;
-		break;
-	end
+  -- Find first entry in table, display that, then remove it from the internal queue
+  for i, entry in ipairs(m_kQueuedPopups) do
+    ShowPopup(entry);
+    table.remove(m_kQueuedPopups, i);
+    isDone = false;
+    break;
+  end
 
-	-- If done, restore engine processing and let the world know.
-	if isDone then
-		m_kCurrentPopup = nil;		
-		LuaEvents.WonderBuiltPopup_Closed();	-- Signal other systems (e.g., bulk show UI)	
-		UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);		
-		UILens.RestoreActiveLens();
-		m_kPopupMgr:Unlock();
-	end		
+  -- If done, restore engine processing and let the world know.
+  if isDone then
+    m_kCurrentPopup = nil;		
+    LuaEvents.WonderBuiltPopup_Closed();	-- Signal other systems (e.g., bulk show UI)	
+    UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);		
+    UILens.RestoreActiveLens();
+    m_kPopupMgr:Unlock();
+  end		
 end
 
 -- ===========================================================================
