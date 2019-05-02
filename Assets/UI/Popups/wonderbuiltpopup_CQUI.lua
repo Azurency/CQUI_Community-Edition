@@ -7,9 +7,10 @@ include("WonderBuiltPopup");
 -- Cached Base Functions
 -- ===========================================================================
 BASE_CQUI_OnWonderCompleted = OnWonderCompleted;
-BASE_CQUI_Close = Close;
 
 local m_kPopupMgr :table = ExclusivePopupManager:new("WonderBuiltPopup");
+local m_kCurrentPopup	:table	= nil;
+local m_kQueuedPopups	:table = {};
 
 -- ===========================================================================
 -- CQUI Members
@@ -123,9 +124,32 @@ function ShowPopup( kData:table )
   Controls.ReplayButton:SetHide(not UI.IsWorldRenderViewAvailable(WorldRenderView.VIEW_3D));
 end
 
-function Close()
-  BASE_CQUI_Close()
-  m_kPopupMgr:Unlock();
+-- ===========================================================================
+--  CQUI modified Close functiton
+--  Copy/Paste from the original version, just now it uses our own m_kQueuedPopups and m_kCurrentPopup
+-- ===========================================================================
+function Close()		    
+	
+	StopSound();
+
+	local isDone:boolean  = true;
+
+	-- Find first entry in table, display that, then remove it from the internal queue
+	for i, entry in ipairs(m_kQueuedPopups) do
+		ShowPopup(entry);
+		table.remove(m_kQueuedPopups, i);
+		isDone = false;
+		break;
+	end
+
+	-- If done, restore engine processing and let the world know.
+	if isDone then
+		m_kCurrentPopup = nil;		
+		LuaEvents.WonderBuiltPopup_Closed();	-- Signal other systems (e.g., bulk show UI)	
+		UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);		
+		UILens.RestoreActiveLens();
+		m_kPopupMgr:Unlock();
+	end		
 end
 
 -- ===========================================================================
