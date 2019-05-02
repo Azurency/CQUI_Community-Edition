@@ -80,10 +80,8 @@ local m_TouristTokens : number = UILens.CreateLensLayerHash("Tourist_Tokens");
 
 -- ===========================================================================
 function CQUI_ToggleYieldIcons()
-  -- CQUI: Toggle yield icons if option is enabled
-  if(GameConfiguration.GetValue("CQUI_ToggleYieldsOnLoad")) then
-    ToggleYieldIcons();
-  end
+  UserConfiguration.ShowMapYield(GameConfiguration.GetValue("CQUI_ToggleYieldsOnLoad"));
+  RestoreYieldIcons();
 end
 
 -- ===========================================================================
