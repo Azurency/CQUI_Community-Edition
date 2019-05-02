@@ -6,6 +6,7 @@ BASE_CQUI_PopulateNode = PopulateNode;
 BASE_CQUI_OnOpen = OnOpen;
 BASE_CQUI_OnCivicComplete = OnCivicComplete;
 BASE_CQUI_OnLocalPlayerTurnBegin = OnLocalPlayerTurnBegin;
+BASE_CQUI_SetCurrentNode = SetCurrentNode;
 
 -- ===========================================================================
 -- CQUI Members
@@ -128,6 +129,30 @@ function OnOpen()
   BASE_CQUI_OnOpen()
 
   Controls.SearchEditBox:TakeFocus();
+end
+
+-- ===========================================================================
+--  CQUI modified SetCurrentNode functiton
+--  Fix the future civic not being repeatable
+-- ===========================================================================
+function SetCurrentNode( hash )
+  BASE_CQUI_SetCurrentNode(hash);
+  
+	if hash ~= nil then
+		local localPlayerCulture = Players[Game.GetLocalPlayer()]:GetCulture();
+		-- Get the complete path to the tech
+		local pathToCivic = localPlayerCulture:GetCivicPath( hash );
+    local tParameters = {};
+    local civic = GameInfo.Civics[hash];
+
+    if next(pathToCivic) == nil and civic and civic.Repeatable and localPlayerCulture:CanProgress(civic.Index) then
+      tParameters[PlayerOperations.PARAM_CIVIC_TYPE]	= hash;
+      tParameters[PlayerOperations.PARAM_INSERT_MODE] = PlayerOperations.VALUE_EXCLUSIVE;
+
+      UI.RequestPlayerOperation(Game.GetLocalPlayer(), PlayerOperations.PROGRESS_CIVIC, tParameters);
+      UI.PlaySound("Confirm_Civic_CivicsTree");
+    end
+	end
 end
 
 function LateInitialize()

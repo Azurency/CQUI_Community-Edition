@@ -6,6 +6,7 @@ BASE_CQUI_PopulateNode = PopulateNode;
 BASE_CQUI_OnLocalPlayerTurnBegin = OnLocalPlayerTurnBegin;
 BASE_CQUI_OnResearchComplete = OnResearchComplete;
 BASE_CQUI_LateInitialize = LateInitialize;
+BASE_CQUI_SetCurrentNode = SetCurrentNode;
 
 -- ===========================================================================
 -- CQUI Members
@@ -128,6 +129,30 @@ function OnResearchComplete( ePlayer:number, eTech:number)
     end
 
   end
+end
+
+-- ===========================================================================
+--  CQUI modified SetCurrentNode functiton
+--  Fix the future not tech not being repeatable from the tree
+-- ===========================================================================
+function SetCurrentNode( hash:number )
+  BASE_CQUI_SetCurrentNode(hash);
+
+  if hash ~= nil then
+    local localPlayerTechs = Players[Game.GetLocalPlayer()]:GetTechs();
+    local pathToTech = localPlayerTechs:GetResearchPath( hash );
+    local tParameters = {};
+    local tech = GameInfo.Technologies[hash] -- the selected tech
+
+    if next(pathToTech) == nil and tech.Repeatable and localPlayerTechs:CanResearch(tech.Index) then
+      tParameters[PlayerOperations.PARAM_TECH_TYPE] = hash;
+      tParameters[PlayerOperations.PARAM_INSERT_MODE] = PlayerOperations.VALUE_EXCLUSIVE;
+
+      UI.RequestPlayerOperation(Game.GetLocalPlayer(), PlayerOperations.RESEARCH, tParameters);
+      UI.PlaySound("Confirm_Tech_TechTree");
+    end
+	end
+
 end
 
 function LateInitialize()
