@@ -3076,6 +3076,8 @@ function OnDistrictRangeStrikeButtonClick( playerID, districtID )
 
   UI.DeselectAll();
   UI.SelectDistrict(pDistrict);
+  -- CQUI (Azurency) : Look at the district plot
+  UI.LookAtPlot(pDistrict:GetX(), pDistrict:GetY());
   UI.SetInterfaceMode(InterfaceModeTypes.DISTRICT_RANGE_ATTACK);
 end
 

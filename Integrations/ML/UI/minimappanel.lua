@@ -501,7 +501,10 @@ function OnLensLayerOn( layerNum:number )
   -- clear unit non-standard layers
   -- do this if no unit is selected, since these lenses are applied on unit selection, so control should be in SelectedUnit.lua
   if UI.GetHeadSelectedUnit() == nil then
-    UILens.ClearLayerHexes(m_AttackRange);
+    -- CQUI (Azurency) : Fix clearing of m_AttackRange lenses while in this STIKE mode
+    if (UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK and UI.GetInterfaceMode() ~= InterfaceModeTypes.DISTRICT_RANGE_ATTACK) then
+      UILens.ClearLayerHexes(m_AttackRange);
+    end
     UILens.ClearLayerHexes(m_HexColoringGreatPeople);
     UILens.ClearLayerHexes(m_MovementZoneOfControl);
   end
@@ -547,7 +550,10 @@ function OnLensLayerOff( layerNum:number )
   -- clear unit non-standard layers
   -- do this if no unit is selected, since these lenses are applied on unit selection, so control should be in SelectedUnit.lua
   if UI.GetHeadSelectedUnit() == nil then
-    UILens.ClearLayerHexes(m_AttackRange);
+    -- CQUI (Azurency) : Fix clearing of m_AttackRange lenses while in this STIKE mode
+    if (UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK and UI.GetInterfaceMode() ~= InterfaceModeTypes.DISTRICT_RANGE_ATTACK) then
+      UILens.ClearLayerHexes(m_AttackRange);
+    end
     UILens.ClearLayerHexes(m_HexColoringGreatPeople);
     UILens.ClearLayerHexes(m_MovementZoneOfControl);
   end

@@ -734,7 +734,8 @@ end
 function ClearMovementPath()
   UILens.ClearLayerHexes( g_MovementPath );
   UILens.ClearLayerHexes( g_Numbers );
-  if (UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK) then
+  -- CQUI : As we show path on over
+  if (UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK and UI.GetInterfaceMode() ~= InterfaceModeTypes.DISTRICT_RANGE_ATTACK) then
     UILens.ClearLayerHexes( g_AttackRange );
   end
   m_cachedPathUnit = nil;
@@ -755,6 +756,12 @@ end
 function RealizeMovementPath(showQueuedPath:boolean, unitID:number)
 
   if not UI.IsMovementPathOn() or UI.IsGameCoreBusy() then
+    return;
+  end
+
+  -- CQUI (Azurency) : Check if in CITY_MANAGEMENT or STRIKE modes
+  CQUI_im = UI.GetInterfaceMode();
+  if (CQUI_im == InterfaceModeTypes.CITY_MANAGEMENT or CQUI_im == InterfaceModeTypes.CITY_RANGE_ATTACK or CQUI_im == InterfaceModeTypes.DISTRICT_RANGE_ATTACK) then
     return;
   end
 
@@ -1037,6 +1044,12 @@ end
 function OnUnitSelectionChanged( playerID:number, unitID:number, hexI:number, hexJ:number, hexK:number, isSelected:boolean, isEditable:boolean )
   if playerID ~= Game.GetLocalPlayer() then
     return;
+  end
+
+  -- CQUI (Azurency) : Fixes a Vanilla bug from SelectUnit.lua (not taking in account the district range attack)
+  -- CQUI (Azurency) : If a selection is occuring and the district attack interface mode is up, take it down.
+  if UI.GetInterfaceMode() == InterfaceModeTypes.DISTRICT_RANGE_ATTACK then
+    UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
   end
 
   -- Show queued path when unit is selected

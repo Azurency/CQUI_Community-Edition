@@ -473,7 +473,8 @@ function OnExpand(instance:table)
   instance.ListAlpha:SetToBeginning();
   instance.ListSlide:Play();
   instance.ListAlpha:Play();
-  UI.SetInterfaceMode(InterfaceModeTypes.CITY_MANAGEMENT);
+  -- CQUI : Don't touch the interface Mode
+  --UI.SetInterfaceMode(InterfaceModeTypes.CITY_MANAGEMENT);
 end
 
 -- ===========================================================================
