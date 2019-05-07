@@ -57,7 +57,6 @@
     <File>Assets/Expansion1/Replacements/citystates.xml</File>
     <File>Assets/Expansion1/Replacements/citysupport.lua</File>
     <File>Assets/Expansion1/Replacements/diplomacyactionview_CQUI_expansion1.lua</File>
-    <!--<File>Assets/Expansion1/Replacements/diplomacydealview.lua</File>-->
     <File>Assets/Expansion1/Replacements/governmentscreen_CQUI_expansion1.lua</File>
     <File>Assets/Expansion1/Replacements/leadericon.lua</File>
     <File>Assets/Expansion1/Replacements/leadericon.xml</File>
@@ -75,6 +74,7 @@
     <File>Assets/Expansion2/Replacements/civicstree_CQUI_expansion2.lua</File>
     <File>Assets/Expansion2/Replacements/diplomacyactionview_CQUI_expansion2.lua</File>
     <File>Assets/Expansion2/Replacements/diplomacyactionview.xml</File>
+    <File>Assets/Expansion2/Replacements/diplomacydealview_CQUI_expansion2.lua</File>
     <File>Assets/Expansion2/Replacements/diplomacyribbon.xml</File>
     <File>Assets/Expansion2/Replacements/governmentscreen_CQUI_expansion2.lua</File>
     <File>Assets/Expansion2/Replacements/ingame.lua</File>
@@ -126,7 +126,9 @@
     <File>Assets/UI/diplomacyactionview_CQUI_basegame.lua</File>
     <File>Assets/UI/diplomacyactionview_CQUI.lua</File>
     <File>Assets/UI/diplomacyactionview.xml</File>
-    <!--<File>Assets/UI/diplomacydealview.xml</File>-->
+    <File>Assets/UI/diplomacydealview_CQUI_basegame.lua</File>
+    <File>Assets/UI/diplomacydealview_CQUI.lua</File>
+    <File>Assets/UI/diplomacydealview.xml</File>
     <File>Assets/UI/diplomacyribbon.lua</File>
     <File>Assets/UI/diplomacyribbon.xml</File>
     <File>Assets/UI/ingame.lua</File>
@@ -295,7 +297,9 @@
         <File>Assets/UI/diplomacyactionview_CQUI_basegame.lua</File>
         <File>Assets/UI/diplomacyactionview_CQUI.lua</File>
         <File>Assets/UI/diplomacyactionview.xml</File>
-        <!--<File>Assets/UI/diplomacydealview.xml</File>-->
+        <File>Assets/UI/diplomacydealview_CQUI_basegame.lua</File>
+        <File>Assets/UI/diplomacydealview_CQUI.lua</File>
+        <File>Assets/UI/diplomacydealview.xml</File>
         <File>Assets/UI/diplomacyribbon.lua</File>
         <File>Assets/UI/diplomacyribbon.xml</File>
         <File>Assets/UI/ingame.lua</File>
@@ -381,7 +385,6 @@
       </Properties>
       <Items>
         <File>Assets/Expansion1/Replacements/citypanelculture_CQUI.lua</File>
-        <!--<File>Assets/Expansion1/Replacements/diplomacydealview.lua</File>-->
         <File>Assets/Expansion1/Replacements/leadericon.lua</File>
         <File>Assets/Expansion1/Replacements/leadericon.xml</File>
         <File>Assets/Expansion1/Replacements/worldtracker_expansion1.lua</File>
@@ -401,6 +404,7 @@
         <File>Assets/Expansion2/Replacements/civicstree_CQUI_expansion2.lua</File>
         <File>Assets/Expansion2/Replacements/diplomacyactionview_CQUI_expansion2.lua</File>
         <File>Assets/Expansion2/Replacements/diplomacyactionview.xml</File>
+        <File>Assets/Expansion2/Replacements/diplomacydealview_CQUI_expansion2.lua</File>
         <File>Assets/Expansion2/Replacements/diplomacyribbon.xml</File>
         <File>Assets/Expansion2/Replacements/governmentscreen_CQUI_expansion2.lua</File>
         <File>Assets/Expansion2/Replacements/ingame.lua</File>
@@ -735,6 +739,21 @@
         <LoadOrder>100</LoadOrder>
         <LuaContext>CityPanelCulture</LuaContext>
         <LuaReplace>Assets/Expansion1/Replacements/citypanelculture_CQUI.lua</LuaReplace>
+      </Properties>
+    </ReplaceUIScript>
+
+    <ReplaceUIScript id="CQUI_DiplomacyDealView">
+      <Properties>
+        <LuaContext>DiplomacyDealView</LuaContext>
+        <LuaReplace>Assets/UI/diplomacydealview_CQUI_basegame.lua</LuaReplace>
+      </Properties>
+    </ReplaceUIScript>
+
+    <ReplaceUIScript id="CQUI_DiplomacyDealView_EXP2" criteria="Expansion2">
+      <Properties>
+        <LoadOrder>200</LoadOrder>
+        <LuaContext>DiplomacyDealView</LuaContext>
+        <LuaReplace>Assets/Expansion2/Replacements/diplomacydealview_CQUI_expansion2.lua</LuaReplace>
       </Properties>
     </ReplaceUIScript>
 

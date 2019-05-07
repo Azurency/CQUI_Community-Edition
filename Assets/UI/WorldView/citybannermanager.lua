@@ -382,8 +382,6 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
 
     if (tPlots ~= nil and table.count(tPlots) ~= 0) and UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) == false then
 
-      --UILens.ToggleLayerOn( LensLayers.PURCHASE_PLOT );
-
       for i,plotId in pairs(tPlots) do
         local kPlot :table = Map.GetPlotByIndex(plotId);
         local index:number = kPlot:GetIndex();
@@ -392,17 +390,6 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
         if (index == pNextPlotID ) then
           pInstance.CQUI_NextPlotLabel:SetString("[ICON_Turn]" .. Locale.Lookup("LOC_HUD_CITY_IN_TURNS" , TurnsUntilExpansion ) .. "   ");
           pInstance.CQUI_NextPlotButton:SetHide( false );
-
-          -- Eventually also get the colored hex
-  --        local cost:number = pCityCulture:GetNextPlotCultureCost();
-  --        local currentCulture:number = pCityCulture:GetCurrentCulture();
-  --        local currentYield:number = pCityCulture:GetCultureYield();
-  --        local currentGrowth:number = math.max(math.min(currentCulture / cost, 1.0), 0);
-  --        local nextTurnGrowth:number = math.max(math.min((currentCulture + currentYield) / cost, 1.0), 0);
-
-          --UILens.SetLayerGrowthHex(LensLayers.PURCHASE_PLOT, kPlayer, pNextPlotID, 1, "GrowthHexBG");
-          --UILens.SetLayerGrowthHex(LensLayers.PURCHASE_PLOT, kPlayer, pNextPlotID, nextTurnGrowth, "GrowthHexNext");
-          --UILens.SetLayerGrowthHex(LensLayers.PURCHASE_PLOT, kPlayer, pNextPlotID, currentGrowth, "GrowthHexCurrent");
         end
 
         table.insert(yields, plotId);
@@ -2278,8 +2265,6 @@ function OnDistrictRangeStrikeButtonClick( playerID, districtID )
 
   UI.DeselectAll();
   UI.SelectDistrict(pDistrict);
-  -- CQUI (Azurency) : Look at the district plot
-  UI.LookAtPlot(pDistrict:GetX(), pDistrict:GetY());
   UI.SetInterfaceMode(InterfaceModeTypes.DISTRICT_RANGE_ATTACK);
 end
 
@@ -3345,6 +3330,10 @@ function OnShutdown()
   -- Cache value for hotloading...
   LuaEvents.GameDebug_AddValue("CityBannerManager", "m_isReligionLensActive", m_isReligionLensActive);
 
+  -- CQUI values
+  LuaEvents.GameDebug_AddValue("CityBannerManager", "CQUI_HousingFromImprovementsTable", CQUI_HousingFromImprovementsTable);
+  LuaEvents.GameDebug_AddValue("CityBannerManager", "CQUI_HousingUpdated", CQUI_HousingUpdated);
+
   m_CityCenterTeamIM:ResetInstances();
   m_CityCenterOtherIM:ResetInstances();
   DirtyComponentsManager.Destroy( m_pDirtyCityComponents );
@@ -3409,6 +3398,12 @@ end
 -- ===========================================================================
 function OnGameDebugReturn( context:string, contextTable:table )
   if context == "CityBannerManager" then
+    -- CQUI cached values
+    CQUI_HousingFromImprovementsTable = contextTable["CQUI_HousingFromImprovementsTable"];
+    CQUI_HousingUpdated = contextTable["CQUI_HousingUpdated"];
+    -- CQUI settings
+    CQUI_OnSettingsUpdate();
+    
     m_isReligionLensActive = contextTable["m_isReligionLensActive"];
     RealizeReligion();
   end
