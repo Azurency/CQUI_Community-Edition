@@ -90,7 +90,7 @@ function OnNotificationAdded( playerID:number, notificationID:number )
   if (playerID == Game.GetLocalPlayer())  then -- Was it for us?
     local pNotification = NotificationManager.Find( playerID, notificationID );
     -- CQUI: Notification when a City lost tile to a Culture Bomb. We use it to update real housing.
-    if pNotification:GetType() == GameInfo.Notifications["NOTIFICATION_TILE_LOST_CULTURE_BOMB"].Hash then
+    if pNotification ~= nil and pNotification:GetType() == GameInfo.Notifications["NOTIFICATION_TILE_LOST_CULTURE_BOMB"].Hash then
       local x, y = pNotification:GetLocation();
       LuaEvents.CQUI_CityLostTileToCultureBomb(playerID, x, y);
     end
