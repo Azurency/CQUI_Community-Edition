@@ -3648,7 +3648,6 @@ function Initialize()
   Events.UnitVisibilityChanged.Add( OnUnitMoved );
   Events.WorldRenderViewChanged.Add(      OnRefreshBannerPositions);
   Events.WMDCountChanged.Add(         OnWMDCountChanged);
-  Events.PlayerTurnActivated.Add(             OnTurnActivated);
   Events.GovernmentPolicyChanged.Add(         OnPolicyChanged );
   Events.GovernmentPolicyObsoleted.Add(       OnPolicyChanged );
   Events.CitySiegeStatusChanged.Add(      OnSiegeStatusChanged);
