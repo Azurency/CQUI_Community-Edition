@@ -94,6 +94,24 @@ function CQUI_PurchaseBuilding(item, city)
   end
 end
 
+function CQUI_ClearDistrictBuildingLayers()
+  -- Make it's the right mode.
+  if (UI.GetInterfaceMode() == InterfaceModeTypes.DISTRICT_PLACEMENT) then
+    -- Clear existing art then re-realize
+    UILens.ClearLayerHexes( m_AdjacencyBonusDistricts );
+    UILens.ClearLayerHexes( m_Districts );
+    RealizePlotArtForDistrictPlacement();
+  elseif (UI.GetInterfaceMode() == InterfaceModeTypes.BUILDING_PLACEMENT) then
+    -- Clear existing art then re-realize
+    UILens.ClearLayerHexes( m_AdjacencyBonusDistricts );
+    UILens.ClearLayerHexes( m_Districts );
+    RealizePlotArtForWonderPlacement();
+  end
+  LuaEvents.CQUI_RefreshPurchasePlots();
+  LuaEvents.CQUI_DistrictPlotIconManager_ClearEveything();
+  LuaEvents.CQUI_Realize2dArtForDistrictPlacement();
+end
+
 -- ===========================================================================
 --  CQUI modified View functiton
 --  create the list of purchasable items
@@ -437,7 +455,9 @@ function BuildBuilding(city, buildingEntry)
 		CityManager.RequestOperation(city, CityOperationTypes.BUILD, tParameters);
     UI.PlaySound("Confirm_Production");
 		CloseAfterNewProduction();
-	end
+  end
+  
+  CQUI_ClearDistrictBuildingLayers();
 end
 
 -- ===========================================================================
@@ -448,21 +468,7 @@ end
 function ZoneDistrict(city, districtEntry)
   BASE_CQUI_ZoneDistrict(city, districtEntry);
 
-  -- Make it's the right mode.
-  if (UI.GetInterfaceMode() == InterfaceModeTypes.DISTRICT_PLACEMENT) then
-    -- Clear existing art then re-realize
-    UILens.ClearLayerHexes( m_AdjacencyBonusDistricts );
-    UILens.ClearLayerHexes( m_Districts );
-    RealizePlotArtForDistrictPlacement();
-  elseif (UI.GetInterfaceMode() == InterfaceModeTypes.BUILDING_PLACEMENT) then
-    -- Clear existing art then re-realize
-    UILens.ClearLayerHexes( m_AdjacencyBonusDistricts );
-    UILens.ClearLayerHexes( m_Districts );
-    RealizePlotArtForWonderPlacement();
-  end
-  LuaEvents.CQUI_RefreshPurchasePlots();
-  LuaEvents.CQUI_DistrictPlotIconManager_ClearEveything();
-  LuaEvents.CQUI_Realize2dArtForDistrictPlacement();
+  CQUI_ClearDistrictBuildingLayers();
 end
 
 -- ===========================================================================
