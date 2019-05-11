@@ -268,6 +268,8 @@ end
 
 -- ===========================================================================
 function Initialize()
+  if GameConfiguration.IsAnyMultiplayer() then return; end	-- Do not use if a multiplayer mode.
+
   Events.WonderCompleted.Remove( BASE_CQUI_OnWonderCompleted );
   Events.WonderCompleted.Add( OnWonderCompleted );
 
