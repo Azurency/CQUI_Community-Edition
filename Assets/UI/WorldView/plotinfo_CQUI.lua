@@ -11,6 +11,7 @@ BASE_OnClickPurchasePlot = OnClickPurchasePlot;
 BASE_ShowCitizens = ShowCitizens;
 BASE_OnDistrictAddedToMap = OnDistrictAddedToMap;
 BASE_AggregateLensHexes = AggregateLensHexes;
+BASE_RealizeTilt = RealizeTilt;
 
 -- ===========================================================================
 -- CQUI Members
@@ -184,6 +185,17 @@ function AggregateLensHexes(keys:table)
   return CQUI_RemoveDuplicates(BASE_AggregateLensHexes(keys));
 end
 
+-- ===========================================================================
+--  CQUI modified RealizeTilt function 
+--  Don't change the tilt if in building or district placement
+-- ===========================================================================
+function RealizeTilt()
+  if UI.GetInterfaceMode() == InterfaceModeTypes.DISTRICT_PLACEMENT or UI.GetInterfaceMode() == InterfaceModeTypes.BUILDING_PLACEMENT then
+    return;
+  end
+  BASE_RealizeTilt();
+end
+
 function Initialize()
   Events.DistrictAddedToMap.Remove(BASE_OnDistrictAddedToMap);
   Events.DistrictAddedToMap.Add(OnDistrictAddedToMap);
@@ -191,5 +203,6 @@ function Initialize()
   LuaEvents.CQUI_SettingsUpdate.Add(CQUI_OnSettingsUpdate);
   LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
   LuaEvents.CQUI_StartDragMap.Add(CQUI_StartDragMap);
+  LuaEvents.CQUI_RefreshPurchasePlots.Add(RefreshPurchasePlots);
 end
 Initialize();

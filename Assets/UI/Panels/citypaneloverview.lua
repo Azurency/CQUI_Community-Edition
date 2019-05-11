@@ -111,6 +111,10 @@ LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 -- TODO: We need to do figure out why this is happening, having it reactivate the lens every frame does not play well
 --       with everywhere else that uses lenses, border growth, minimap panel, religious units, etc.
 function SetDesiredLens(desiredLens)
+  -- CQUI (Azurency) : Don't reset the lens if in district or building placement mode
+  if UI.GetInterfaceMode() == InterfaceModeTypes.DISTRICT_PLACEMENT or UI.GetInterfaceMode() == InterfaceModeTypes.BUILDING_PLACEMENT then
+    return;
+  end
   m_desiredLens = desiredLens;
   if m_isShowingPanel then
     if m_desiredLens == "CityManagement" then

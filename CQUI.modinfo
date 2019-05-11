@@ -181,6 +181,7 @@
     <File>Assets/UI/Utilities/extendedrelationship.lua</File>
     <File>Assets/UI/WorldView/citybannermanager.lua</File>
     <File>Assets/UI/WorldView/citybannermanager.xml</File>
+    <File>Assets/UI/WorldView/districtploticonmanager_CQUI.lua</File>
     <File>Assets/UI/WorldView/plotinfo_CQUI.lua</File>
     <File>Assets/UI/WorldView/plotinfo.xml</File>
     <File>Integrations/BTS/UI/tradeoverview.xml</File>
@@ -349,6 +350,7 @@
         <File>Assets/UI/Utilities/extendedrelationship.lua</File>
         <File>Assets/UI/WorldView/citybannermanager.lua</File>
         <File>Assets/UI/WorldView/citybannermanager.xml</File>
+        <File>Assets/UI/WorldView/districtploticonmanager_CQUI.lua</File>
         <File>Assets/UI/WorldView/plotinfo_CQUI.lua</File>
         <File>Assets/UI/WorldView/plotinfo.xml</File>
       </Items>
@@ -754,6 +756,13 @@
         <LoadOrder>200</LoadOrder>
         <LuaContext>DiplomacyDealView</LuaContext>
         <LuaReplace>Assets/Expansion2/Replacements/diplomacydealview_CQUI_expansion2.lua</LuaReplace>
+      </Properties>
+    </ReplaceUIScript>
+
+    <ReplaceUIScript id="CQUI_DistrictPlotIconManager">
+      <Properties>
+        <LuaContext>DistrictPlotIconManager</LuaContext>
+        <LuaReplace>Assets/UI/WorldView/districtploticonmanager_CQUI.lua</LuaReplace>
       </Properties>
     </ReplaceUIScript>
 

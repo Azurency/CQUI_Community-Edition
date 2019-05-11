@@ -2,19 +2,21 @@
 -- Base File
 -- ===========================================================================
 include("ProductionPanel");
+include("StrategicView_MapPlacement");	-- RealizePlotArtForDistrictPlacement, RealizePlotArtForWonderPlacement
 
 -- ===========================================================================
 -- Cached Base Functions
 -- ===========================================================================
-BASE_OnInterfaceModeChanged = OnInterfaceModeChanged
-BASE_OnClose = OnClose
-BASE_OnCityBannerManagerProductionToggle = OnCityBannerManagerProductionToggle
-BASE_PopulateGenericItemData = PopulateGenericItemData
-BASE_View = View
-BASE_GetData = GetData
-BASE_Refresh = Refresh
-BASE_OnNotificationPanelChooseProduction = OnNotificationPanelChooseProduction
-BASE_OnCityBannerManagerProductionToggle = OnCityBannerManagerProductionToggle
+BASE_OnInterfaceModeChanged = OnInterfaceModeChanged;
+BASE_OnClose = OnClose;
+BASE_OnCityBannerManagerProductionToggle = OnCityBannerManagerProductionToggle;
+BASE_PopulateGenericItemData = PopulateGenericItemData;
+BASE_View = View;
+BASE_GetData = GetData;
+BASE_Refresh = Refresh;
+BASE_OnNotificationPanelChooseProduction = OnNotificationPanelChooseProduction;
+BASE_OnCityBannerManagerProductionToggle = OnCityBannerManagerProductionToggle;
+BASE_CQUI_ZoneDistrict = ZoneDistrict;
 
 -- ===========================================================================
 -- CQUI Members
@@ -23,6 +25,8 @@ local CQUI_PurchaseTable = {}; -- key = item Hash
 local CQUI_ProductionQueue :boolean = true;
 local CQUI_ShowProductionRecommendations :boolean = false;
 local CQUI_ManagerShowing = false;
+local m_AdjacencyBonusDistricts : number = UILens.CreateLensLayerHash("Adjacency_Bonus_Districts");
+local m_Districts : number = UILens.CreateLensLayerHash("Districts");
 
 function CQUI_OnSettingsUpdate()
   CQUI_ProductionQueue = GameConfiguration.GetValue("CQUI_ProductionQueue");
@@ -434,6 +438,31 @@ function BuildBuilding(city, buildingEntry)
     UI.PlaySound("Confirm_Production");
 		CloseAfterNewProduction();
 	end
+end
+
+-- ===========================================================================
+--  CQUI modified ZoneDistrict function : 
+--  If already in placing district/building mode, reset the lenses for 
+--  the new district/building
+-- ===========================================================================
+function ZoneDistrict(city, districtEntry)
+  BASE_CQUI_ZoneDistrict(city, districtEntry);
+
+  -- Make it's the right mode.
+  if (UI.GetInterfaceMode() == InterfaceModeTypes.DISTRICT_PLACEMENT) then
+    -- Clear existing art then re-realize
+    UILens.ClearLayerHexes( m_AdjacencyBonusDistricts );
+    UILens.ClearLayerHexes( m_Districts );
+    RealizePlotArtForDistrictPlacement();
+  elseif (UI.GetInterfaceMode() == InterfaceModeTypes.BUILDING_PLACEMENT) then
+    -- Clear existing art then re-realize
+    UILens.ClearLayerHexes( m_AdjacencyBonusDistricts );
+    UILens.ClearLayerHexes( m_Districts );
+    RealizePlotArtForWonderPlacement();
+  end
+  LuaEvents.CQUI_RefreshPurchasePlots();
+  LuaEvents.CQUI_DistrictPlotIconManager_ClearEveything();
+  LuaEvents.CQUI_Realize2dArtForDistrictPlacement();
 end
 
 -- ===========================================================================
