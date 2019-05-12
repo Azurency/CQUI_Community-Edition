@@ -145,6 +145,8 @@ local CQUI_SmartWorkIconSize: number = 64;
 local CQUI_SmartWorkIconAlpha = .45;
 local g_smartbanner = true;
 
+local CQUI_CityYields : number = UILens.CreateLensLayerHash("City_Yields");
+
 function CQUI_OnSettingsInitialized()
   CQUI_ShowYieldsOnCityHover = GameConfiguration.GetValue("CQUI_ShowYieldsOnCityHover");
   g_smartbanner = GameConfiguration.GetValue("CQUI_Smartbanner");
@@ -382,8 +384,8 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
       local plotCount = Map.GetPlotCount();
 
       if (CQUI_yieldsOn == false and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)) then
-        UILens.SetLayerHexesArea(LensLayers.CITY_YIELDS, Game.GetLocalPlayer(), yields);
-        UILens.ToggleLayerOn( LensLayers.CITY_YIELDS );
+        UILens.SetLayerHexesArea(CQUI_CityYields, Game.GetLocalPlayer(), yields);
+        UILens.ToggleLayerOn( CQUI_CityYields );
       end
     elseif UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) == false then
       local pInstance :table = CQUI_GetInstanceAt(pNextPlotID);
@@ -405,7 +407,7 @@ function CQUI_OnBannerMouseExit(playerID: number, cityID: number)
   CQUI_yieldsOn = UserConfiguration.ShowMapYield();
 
   if (CQUI_yieldsOn == false and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)) then
-    UILens.ClearLayerHexes( LensLayers.CITY_YIELDS );
+    UILens.ClearLayerHexes( CQUI_CityYields );
   end
 
   local kPlayer = Players[playerID];
