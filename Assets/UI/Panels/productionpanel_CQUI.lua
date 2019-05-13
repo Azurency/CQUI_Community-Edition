@@ -145,12 +145,12 @@ function View(data)
         if(item.Corps) then
           CQUI_PurchaseTable[item.Hash]["corpsFaith"] = item.CorpsCost;
           CQUI_PurchaseTable[item.Hash]["corpsFaithDisabled"] = item.ArmyDisabled;
-          CQUI_PurchaseTable[item.Hash]["corpsFaithCallback"] = CQUI_PurchaseUnit(item, data.City);
+          CQUI_PurchaseTable[item.Hash]["corpsFaithCallback"] = CQUI_PurchaseUnitCorps(item, data.City);
         end
         if(item.Army) then
           CQUI_PurchaseTable[item.Hash]["armyFaith"] = item.ArmyCost;
           CQUI_PurchaseTable[item.Hash]["armyFaithDisabled"] = item.ArmyDisabled;
-          CQUI_PurchaseTable[item.Hash]["armyFaithCallback"] = CQUI_PurchaseUnit(item, data.City);
+          CQUI_PurchaseTable[item.Hash]["armyFaithCallback"] = CQUI_PurchaseUnitArmy(item, data.City);
         end
       end
     end
