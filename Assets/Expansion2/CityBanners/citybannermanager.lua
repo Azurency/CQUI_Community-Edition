@@ -146,6 +146,7 @@ local CQUI_SmartWorkIconAlpha = .45;
 local g_smartbanner = true;
 
 local CQUI_CityYields : number = UILens.CreateLensLayerHash("City_Yields");
+local CQUI_CitizenManagement : number = UILens.CreateLensLayerHash("Citizen_Management");
 
 function CQUI_OnSettingsInitialized()
   CQUI_ShowYieldsOnCityHover = GameConfiguration.GetValue("CQUI_ShowYieldsOnCityHover");
@@ -278,7 +279,7 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
     -- Astog: Fix for lens being shown when other lenses are on.
     -- Astog: Don't show this lens if any unit is selected.
     -- This prevents the need to check if every lens is on or not, like builder, religious lens.
-    if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)
+    if CQUI_ShowCityManageAreaOnCityHover and not UILens.IsLayerOn(CQUI_CitizenManagement)
         and UI.GetInterfaceMode() == InterfaceModeTypes.SELECTION
         and UI.GetHeadSelectedUnit() == nil then
       LuaEvents.CQUI_ShowCitizenManagement(cityID);
@@ -312,7 +313,7 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
     local yields :table = {};
     local yieldsIndex :table = {};
 
-    if (tPlots ~= nil and table.count(tPlots) ~= 0) and UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) == false then
+    if (tPlots ~= nil and table.count(tPlots) ~= 0) and UILens.IsLayerOn(CQUI_CitizenManagement) == false then
 
       CQUI_yieldsOn = UserConfiguration.ShowMapYield();
 
@@ -364,7 +365,7 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
 
     tPlots    = tResults[CityCommandResults.PLOTS];
 
-    if (tPlots ~= nil and table.count(tPlots) ~= 0) and UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) == false then
+    if (tPlots ~= nil and table.count(tPlots) ~= 0) and UILens.IsLayerOn(CQUI_CitizenManagement) == false then
 
       for i,plotId in pairs(tPlots) do
         local kPlot :table = Map.GetPlotByIndex(plotId);
@@ -383,11 +384,11 @@ function CQUI_OnBannerMouseOver(playerID: number, cityID: number)
 
       local plotCount = Map.GetPlotCount();
 
-      if (CQUI_yieldsOn == false and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)) then
+      if (CQUI_yieldsOn == false and not UILens.IsLayerOn(CQUI_CitizenManagement)) then
         UILens.SetLayerHexesArea(CQUI_CityYields, Game.GetLocalPlayer(), yields);
         UILens.ToggleLayerOn( CQUI_CityYields );
       end
-    elseif UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT) == false then
+    elseif UILens.IsLayerOn(CQUI_CitizenManagement) == false then
       local pInstance :table = CQUI_GetInstanceAt(pNextPlotID);
       if (pInstance ~= nil) then
         pInstance.CQUI_NextPlotLabel:SetString("[ICON_Turn]" .. Locale.Lookup("LOC_HUD_CITY_IN_TURNS" , TurnsUntilExpansion ) .. "   ");
@@ -406,7 +407,7 @@ function CQUI_OnBannerMouseExit(playerID: number, cityID: number)
 
   CQUI_yieldsOn = UserConfiguration.ShowMapYield();
 
-  if (CQUI_yieldsOn == false and not UILens.IsLayerOn(LensLayers.CITIZEN_MANAGEMENT)) then
+  if (CQUI_yieldsOn == false and not UILens.IsLayerOn(CQUI_CitizenManagement)) then
     UILens.ClearLayerHexes( CQUI_CityYields );
   end
 
