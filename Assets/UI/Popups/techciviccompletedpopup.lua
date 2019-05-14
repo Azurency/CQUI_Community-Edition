@@ -301,7 +301,9 @@ function RealizeNextPopup()
   end
 
   if not CQUI_TechPopupVisual then
-    Close();
+    m_kPopupData = {};
+    m_kCurrentData = nil;
+    UIManager:DequeuePopup(ContextPtr);
   end
 
   RefreshSize();

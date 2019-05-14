@@ -425,7 +425,6 @@ function StartDragMap()
   m_dragStartWorldX, m_dragStartWorldY      = UI.GetWorldFromNormalizedScreenPos_NoWrap( dragStartX, dragStartY );
   m_dragX = dragStartX;
   m_dragY = dragStartY;
-  LuaEvents.CQUI_StartDragMap();
 end
 
 -- ===========================================================================
@@ -447,6 +446,8 @@ function UpdateDragMap()
   if m_isMapDragDisabled then
     return;
   end
+
+  LuaEvents.CQUI_StartDragMap();
 
   if m_isALTDown then
     UI.SpinMap( m_dragStartX - x, m_dragStartY - y  );
