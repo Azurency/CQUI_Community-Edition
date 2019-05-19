@@ -33,6 +33,14 @@ local m_displayPlayerID		:number = -1; -- What player are we displaying.  Used f
 local m_screenWidth			:number = -1;
 
 -- ===========================================================================
+--  CQUI
+-- ===========================================================================
+local _, CQUI_screenHeight = UIManager:GetScreenSizeVal();
+local CQUI_MARGIN = 180;
+local CQUI_ModalFrameBaseSize = Controls.ModalFrame:GetSizeY();
+local CQUI_PopupContainerBaseSize = Controls.PopupContainer:GetSizeY();
+
+-- ===========================================================================
 function ChangeDisplayPlayerID(bBackward)
   
   if (bBackward == nil) then
@@ -154,6 +162,9 @@ function ViewCurrent( data:table )
   Controls.RecruitedArea:SetHide(true);		
 
   local kInstanceToShow:table = nil;
+
+  local CQUI_preferedRecruitScrollSize = 0;
+  local CQUI_isPreferedRecruitScrollSizeComputed:boolean = false;
 
   for i, kPerson:table in ipairs(data.Timeline) do	
     
@@ -318,11 +329,16 @@ function ViewCurrent( data:table )
         else
           local recruitInst:table = instance["m_RecruitIM"]:GetInstance();
           FillRecruitInstance(recruitInst, kPlayerPoints, kPerson, classData);
+          if not CQUI_isPreferedRecruitScrollSizeComputed then
+            CQUI_preferedRecruitScrollSize = CQUI_preferedRecruitScrollSize + recruitInst.Top:GetSizeY() + 5; -- AZURENCY : 5 is the padding
+          end
         end
 
         local recruitExtendedInst:table = instance["m_RecruitExtendedIM"]:GetInstance();
         FillRecruitInstance(recruitExtendedInst, kPlayerPoints, kPerson, classData);
+
       end
+      if not CQUI_isPreferedRecruitScrollSizeComputed then CQUI_isPreferedRecruitScrollSizeComputed = true; end
 
       if (kPerson.EarnConditions ~= nil and kPerson.EarnConditions ~= "") then
         instance.RecruitInfo:SetText("[COLOR_Civ6Red]" .. Locale.Lookup("LOC_GREAT_PEOPLE_CANNOT_EARN_PERSON") .. "[ENDCOLOR]");
@@ -367,13 +383,33 @@ function ViewCurrent( data:table )
     
     instance.EffectStack:CalculateSize();
     instance.EffectStackScroller:CalculateSize();
+
+    --CQUI_preferedRecruitScrollSize = 1000;
+    if (CQUI_preferedRecruitScrollSize > (CQUI_screenHeight/4)) then
+      CQUI_preferedRecruitScrollSize = (CQUI_screenHeight/4);
+    end
+
+    -- CQUI : change size
+    -- CQUI DEBUG TEST : 
+    --CQUI_preferedRecruitScrollSize = 300;
+    instance.RecruitScroll:SetSizeY(CQUI_preferedRecruitScrollSize);
+    -- CQUI : change size
+    instance.Content:SetSizeY( 670 - 86 + CQUI_preferedRecruitScrollSize); -- CQUI : 86 scroll default
   end
+
+  -- CQUI : change size
+  --CQUI_preferedRecruitScrollSize = CQUI_preferedRecruitScrollSize + 32 + 28 + 48 + 28 ; -- CQUI : 22 our LocalPlayerRecruitInstance, 28 Recruit progress title, 48 buttons, 28 arbitrary padding set to Content
+  Controls.CQUI_RecruitWoodPaneling:SetSizeY(CQUI_preferedRecruitScrollSize + 32 + 28 + 48 + 28 + 46); 
 
   Controls.PeopleStack:CalculateSize();
   Controls.PeopleScroller:CalculateSize();
   
   m_screenWidth = math.max(Controls.PeopleStack:GetSizeX(), 1024);
   Controls.WoodPaneling:SetSizeX( m_screenWidth );
+  -- CQUI : change size
+  Controls.CQUI_ContentWoodPaneling:SetSizeX( m_screenWidth );
+  Controls.CQUI_RecruitWoodPaneling:SetSizeX( m_screenWidth );
+  Controls.CQUI_BottomWoodPaneling:SetSizeX( m_screenWidth );
 
   -- Clamp overall popup size to not be larger than contents (overspills in 4k and eyefinitiy rigs.)
   local screenX,_			:number = UIManager:GetScreenSizeVal();
@@ -382,7 +418,10 @@ function ViewCurrent( data:table )
   end	
   
   Controls.PopupContainer:SetSizeX( m_screenWidth );
-  Controls.ModalFrame:SetSizeX( m_screenWidth );	
+  Controls.ModalFrame:SetSizeX( m_screenWidth );
+  -- CQUI : change size
+  Controls.ModalFrame:SetSizeY( CQUI_ModalFrameBaseSize + CQUI_preferedRecruitScrollSize - 20);	-- CQUI
+  Controls.PopupContainer:SetSizeY( CQUI_PopupContainerBaseSize + CQUI_preferedRecruitScrollSize - 20); -- CQUI
 
   -- Has an instance been set to auto scroll to?
   Controls.PeopleScroller:SetScrollValue( 0 );		-- Either way reset scroll first (mostly for hot seat)
@@ -400,7 +439,14 @@ end
 function FillRecruitInstance(instance:table, playerPoints:table, personData:table, classData:table)
   instance.Country:SetText( playerPoints.PlayerName );
   
-  instance.Amount:SetText( tostring(Round(playerPoints.PointsTotal,1)) .. "/" .. tostring(personData.RecruitCost) );
+  -- instance.Amount:SetText( tostring(Round(playerPoints.PointsTotal,1)) .. "/" .. tostring(personData.RecruitCost) );
+  -- CQUI Points Per Turn and Turns Left -- Add the turn icon into the text
+  -- recruitTurnsLeft gets +0.5 so that's rounded up
+  local recruitTurnsLeft = Round((personData.RecruitCost-playerPoints.PointsTotal)/playerPoints.PointsPerTurn + 0.5,0);
+  if(recruitTurnsLeft == math.huge) then recruitTurnsLeft = "∞"; end
+  instance.Amount:SetText( "(+" .. tostring(Round(playerPoints.PointsPerTurn,1)) .. ") " .. tostring(recruitTurnsLeft) .. "[ICON_Turn]");
+
+
   local progressPercent :number = Clamp( playerPoints.PointsTotal / personData.RecruitCost, 0, 1 );
   instance.ProgressBar:SetPercent( progressPercent );
   
@@ -415,7 +461,9 @@ function FillRecruitInstance(instance:table, playerPoints:table, personData:tabl
 
   DifferentiateCiv(playerPoints.PlayerID,instance.CivIcon,instance.CivIcon,instance.CivBacking, nil, nil, Game.GetLocalPlayer());
 
-  local recruitDetails:string = Locale.Lookup("LOC_GREAT_PEOPLE_POINT_DETAILS", Round(playerPoints.PointsPerTurn, 1), classData.IconString, classData.Name);
+  -- CQUI : Added total points in the tooltip
+  local recruitDetails:string = tostring(Round(playerPoints.PointsTotal,1)) .. "/" .. tostring(personData.RecruitCost) .. ".";
+  recruitDetails = recruitDetails .. "[NEWLINE][NEWLINE]" .. Locale.Lookup("LOC_GREAT_PEOPLE_POINT_DETAILS", Round(playerPoints.PointsPerTurn, 1), classData.IconString, classData.Name);
   instance.Top:SetToolTipString(recruitDetails);
 end
 

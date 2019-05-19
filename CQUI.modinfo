@@ -120,6 +120,10 @@
     <File>Assets/Text/cqui_text_settings_pt.xml</File>
     <File>Assets/Text/cqui_text_settings_ru.xml</File>
     <File>Assets/Text/cqui_text_settings_zh.xml</File>
+    <File>Assets/Texture/CQUI_GreatPeople_Background_Bottom.dds</File>
+    <File>Assets/Texture/CQUI_GreatPeople_Background_Repeat_Bottom.dds</File>
+    <File>Assets/Texture/CQUI_GreatPeople_Background_Repeat_Top.dds</File>
+    <File>Assets/Texture/CQUI_GreatPeople_Background_Top.dds</File>
     <File>Assets/UI/actionpanel.lua</File>
     <File>Assets/UI/citysupport.lua</File>
     <File>Assets/UI/civ6common.lua</File>
@@ -292,6 +296,10 @@
   <Components>
     <ImportFiles id="CQUI_IMPORT_FILES">
       <Items>
+        <File>Assets/Texture/CQUI_GreatPeople_Background_Bottom.dds</File>
+        <File>Assets/Texture/CQUI_GreatPeople_Background_Repeat_Bottom.dds</File>
+        <File>Assets/Texture/CQUI_GreatPeople_Background_Repeat_Top.dds</File>
+        <File>Assets/Texture/CQUI_GreatPeople_Background_Top.dds</File>
         <File>Assets/UI/actionpanel.lua</File>
         <File>Assets/UI/citysupport.lua</File>
         <File>Assets/UI/civ6common.lua</File>
@@ -335,8 +343,8 @@
         <File>Assets/UI/Panels/unitpanel_CQUI.lua</File>
         <File>Assets/UI/PartialScreens/citystates.lua</File>
         <File>Assets/UI/PartialScreens/citystates.xml</File>
-        <!-- <File>Assets/UI/Popups/greatpeoplepopup.lua</File>
-        <File>Assets/UI/Popups/greatpeoplepopup.xml</File> -->
+        <File>Assets/UI/Popups/greatpeoplepopup.lua</File>
+        <File>Assets/UI/Popups/greatpeoplepopup.xml</File>
         <File>Assets/UI/Popups/techciviccompletedpopup.lua</File>
         <File>Assets/UI/Popups/wonderbuiltpopup_CQUI.lua</File>
         <File>Assets/UI/Screens/techtree_CQUI_basegame.lua</File>

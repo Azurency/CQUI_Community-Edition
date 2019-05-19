@@ -5,7 +5,16 @@
 
   <Container							ID="PopupContainer"						Anchor="C,C"									Size="parent,768">
     <ScrollPanel					ID="PeopleScroller"													Offset="0,0"		Size="parent,parent"	Vertical="0" AutoScrollBar="1">
-      <Image							ID="WoodPaneling"																						Size="214,768"    		Texture="GreatPeople_Background" StretchMode="Tile"/>
+      
+      <!-- CQUI : new textures that adapt the height -->
+      <Image ID="CQUI_ContentWoodPaneling" Size="214,parent" Texture="CQUI_GreatPeople_Background_Repeat_Top.dds" StretchMode="Tile"/>
+      <Image ID="WoodPaneling"  Size="214,547" Texture="CQUI_GreatPeople_Background_Top.dds" StretchMode="TileX"/>
+      <!-- CQUI : Size should be se programmaticly (Offet : 78 peoplestack + 42 buttons) -->
+      <Image ID="CQUI_RecruitWoodPaneling" Anchor="L,B" Offset="0,0" Size="214,parent" Texture="CQUI_GreatPeople_Background_Repeat_Bottom.dds" StretchMode="Tile"/>
+      <Image ID="CQUI_BottomWoodPaneling" Size="214,80" Texture="CQUI_GreatPeople_Background_Bottom.dds" StretchMode="TileX" Anchor="L,B" />
+
+
+
       <Stack							ID="PeopleStack"														Offset="0,78"		StackGrowth="Right"		StackPadding="0" />
       <ScrollBar																				Anchor="L,B"	Offset="0,10"		Size="parent-10,8"		Style="ScrollHorizontalBackingAlt">
         <Thumb																																															Style="ScrollThumbHAlt" />
@@ -69,7 +78,8 @@
     <Container				ID="Content"																					Size="214,670">
       <Grid						ID="FadedBackground"	Anchor="C,T"	Offset="-1,0"	Size="parent-10,parent-46" Texture="GreatPeople_Overlay" SliceCorner="13,13" SliceSize="1,1" SliceTextureSize="25,25" Hidden="1" />
       <Label					ID="ClassName"					Anchor="C,T"	Offset="0,6"		Color="60,60,30,255" GradientColor="230,230,150,255"	Style="FontFlair18" SmallCaps="24" SmallCapsType="EveryWord" String="$ClassName$"/>
-      <Label					ID="IndividualName"			Anchor="C,C"	Offset="0,-295"	Align="C,C" WrapWidth="210"	Style="GreatPeopleLargeText"	String="$IndividualName$"/>
+      <!-- CQUI : changed the Anchor and Offset -->
+      <Label					ID="IndividualName"			Anchor="C,T"	Offset="0,32"	Align="C,C" WrapWidth="210"	Style="GreatPeopleLargeText"	String="$IndividualName$"/>
       <Line						ID="TitleLine"					Start="10,56"						End="204,56"	Width="2"				Color="199,187,157,90"  />
       <Label					ID="EraName"						Anchor="C,T"	Offset="0,66"		Style="GreatPeopleLargeText"	String="$EraName$"/>
       <Image				ID="CircleFlare"				Anchor="C,T"	Offset="0,30"		Texture="GreatPeople_SlotOn">
@@ -78,13 +88,16 @@
       </Image>
       <Box				  Anchor="C,T" Offset="0,214" Size="parent-18,2" Color="199,187,157,90" />
       
-      <Container			ID="MainInfo"					  Anchor="C,T"									Size="parent,654">
+      <!-- CQUI : changex SizeY : 654 to parent -->
+      <Container			ID="MainInfo"					  Anchor="C,T"									Size="parent,parent">
         <ScrollPanel	ID="EffectStackScroller" Offset="0,224" Size="parent-15,240" Vertical="1" AutoScrollBar="1">
           <Stack			ID="EffectStack"											Offset="0,0" StackPadding="10"/>
           <ScrollBar													Anchor="R,T" AnchorSide="O,I"  Offset="1,0"	Style="ScrollVerticalBarAlt" Size="8,parent-10"/>
         </ScrollPanel>
 
-        <Container			ID="RecruitProgressBox"	Anchor="C,B"	Offset="-1,30"	Size="parent,152">
+        <!-- CQUI : changed sizeY to auto -->
+        <Container			ID="RecruitProgressBox"	Anchor="C,B"	Offset="-1,30"	Size="parent,auto">
+          
           <Stack Anchor="C,T" StackGrowth="Down" StackPadding="3">
             <Box																				Anchor="C,T" Size="parent-8,2" Color="199,187,157,90" />
             <Stack																			Anchor="C,T" StackGrowth="Right" StackPadding="2" Offset="0,4">
@@ -94,7 +107,8 @@
             <MakeInstance		ID="LocalPlayerRecruitInstance" Name="RecruitInstance" Offset="0,4" />
             <Box				  Anchor="C,T" Size="parent-8,2" Color="199,187,157,90" />
             <Stack					ID="RecruitMinimizedStack" StackGrowth="Down" StackPadding="3">
-              <ScrollPanel	ID="RecruitScroll"									Anchor="C,T" Size="182,48" Vertical="1" >
+              <!-- CQUI : size should be defined programaticly -->
+              <ScrollPanel	ID="RecruitScroll"									Anchor="C,T" Size="182,1000" Vertical="1" >
                 <Stack			ID="RecruitStack"										Anchor="C,T" StackPadding="2" />
                 <ScrollBar												Anchor="R,C"	Offset="0,0"		AnchorSide="O,I"						Style="ScrollVerticalBarAlt" />
               </ScrollPanel>
@@ -102,7 +116,8 @@
             </Stack>
           </Stack>
           
-          <Label			ID="RecruitInfo"					Anchor="C,B"	Offset="0,10"		Style="GreatPeopleText" String="LOC_GREAT_PEOPLE_OR_RECRUIT_WITH_PATRONAGE" />
+          <!-- CQUI :changes the Offset -->
+          <Label			ID="RecruitInfo"					Anchor="C,B"	Offset="0,-30"		Style="GreatPeopleText" String="LOC_GREAT_PEOPLE_OR_RECRUIT_WITH_PATRONAGE" />
 
           <Stack ID="RecruitButtonStack"				Anchor="C,B" Offset="0,6" StackGrowth="Down" >
             <GridButton ID="RecruitButton"			Anchor="C,B" Size="190,41" Style="ButtonConfirm"	Hidden="1" String="LOC_GREAT_PEOPLE_RECRUIT" />
@@ -118,7 +133,8 @@
 
       <Label			ID="ClaimedLabel"					Anchor="C,C"	Offset="0,0" Align="Center" WrapWidth="200" Style="FontFlair16" FontStyle="Shadow" ColorSet="GreatPeopleCS" String="LOC_GREAT_PEOPLE_ALL_POSSIBLE_CHOSEN" />
 
-      <Container		ID="BiographyArea"						Anchor="C,B" Offset="0,58"	Size="180,391">
+      <!-- CQUI : Changed sizeY -->
+      <Container		ID="BiographyArea"						Anchor="C,B" Offset="0,58"	Size="180,parent-280">
         <ScrollPanel		ID="BiographyScroll"							Anchor="C,T" Offset="0,0"		Size="parent,parent"			Vertical="1">
           <Label ID="BiographyText" Offset="0,0" WrapWidth="parent" Style="GreatPeopleText" FontStyle="Shadow" ColorSet="GreatPeopleCS" String="$Text$" />
           <ScrollBar          Anchor="R,C"	Offset="1,0"		AnchorSide="O,I"					Style="ScrollVerticalBarAlt" />
@@ -126,7 +142,8 @@
         <GridButton			ID="BiographyBackButton"	Anchor="C,B"	AnchorSide="I,O" Offset="0,20" Size="parent-40,28" SliceCorner="12,12" SliceSize="1,1" SliceTextureSize="24,24" Texture="Controls_ButtonControl_Tan" TextColor="20,20,20" Style="FontNormal16" String="LOC_GREAT_PEOPLE_BACK" StateOffsetIncrement="0,24" />
       </Container>
 
-      <Container		ID="RecruitInfoArea" Anchor="L,B" Offset="13,54" Size="180,391" Hidden="1" >
+      <!-- CQUI : Changed sizeY -->
+      <Container		ID="RecruitInfoArea" Anchor="L,B" Offset="13,54" Size="180,parent-280" Hidden="1" >
         <ScrollPanel		ID="RecruitInfoScroll"							Anchor="C,B" Offset="0,0"		Size="parent,parent"			Vertical="1">
           <Stack ID="RecruitInfoStack" StackGrowth="Down" StackPadding="4"/>
           <ScrollBar          Anchor="R,C"	Offset="1,0"		AnchorSide="O,I"					Style="ScrollVerticalBarAlt" />
