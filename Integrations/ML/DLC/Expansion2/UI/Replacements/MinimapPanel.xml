@@ -67,6 +67,9 @@
                 <LuaContext FileName="MapSearchPanel"/>
               </Container>
             </CheckBox>
+            <CheckBox ID="CQUI_OptionsButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="LOC_CQUI_NAME" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
+              <Image Texture="Stats30" Icon="ICON_RESOURCE_TOBACCO" Size="35,35" Anchor="C,C"/>
+            </CheckBox>
             <Button ID="StrategicSwitcherButton" Anchor="L,C" Size="40,40"  Texture="LaunchBar_Hook_ButtonMinimap" Style="ButtonNormalText" ToolTip="LOC_HUD_TOGGLE_STRATEGY_VIEW">
               <Image ID="SwitcherImage" Texture="MiniMap_StrategicSwitcher" Size="24,24" Anchor="C,C"/>
             </Button>
