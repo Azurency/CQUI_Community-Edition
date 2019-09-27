@@ -8,6 +8,7 @@ include( "InstanceManager" );
 include( "SupportFunctions" );
 include("Civ6Common"); -- IsTutorialRunning()
 include("PopupDialog");
+include( "GameCapabilities" );
 
 -- ===========================================================================
 --  CONSTANTS
@@ -364,6 +365,12 @@ end
 -- Set the era rotation and tooltip.
 -- ===========================================================================
 function RealizeEraIndicator()
+
+  if HasCapability("CAPABILITY_ERAS")==false then
+    Controls.EraIndicator:SetHide( true );
+    return;
+  end
+
   local displayEra :number = 1;
   local pPlayer = Players[Game.GetLocalPlayer()];
   if pPlayer ~= nil then
