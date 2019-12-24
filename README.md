@@ -161,8 +161,8 @@ Mod by [Divine Yuri](https://forums.civfanatics.com/members/divine-yuri.263736/)
 
 ![Amenities tooltip](http://i.imgur.com/qHjdmUG.png)
 
-- Hover over the new "Districts" bar show the built districts in the city, and the buildings in each district. As well as telling you when a building or district is pillaged _- [image](http://i.imgur.com/DqwAySq.png)_
-- The tool tip for the religions bar shows how many citizens follow each religion, your pantheon belief, and benefits of the dominant religion in the city _- [image](http://i.imgur.com/Vo8ZVGr.png)_
+- Hover over the new "Districts" bar show the built districts in the city, and the buildings in each district. As well as telling you when a building or district is pillaged _- [image](http://i.imgur.com/Vo8ZVGr.png)_
+- The tool tip for the religions bar shows how many citizens follow each religion, your pantheon belief, and benefits of the dominant religion in the city _- [image](http://i.imgur.com/DqwAySq.png)_
 - The tool tip for the Amenities bar shows the current mood of the city the benefit/hindrance of that mood, and the breakdown of what's causing the lost/gains of Amenities
 - Hovering over Housing will give the current food modifier from housing _- [image](http://i.imgur.com/h5R3Dhh.png)_
 - Added food lost from population, and modifiers to the food tool tip _- [image](http://i.imgur.com/ZGwznFv.png)_
