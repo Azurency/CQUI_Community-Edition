@@ -4509,7 +4509,7 @@ end
 -- ===========================================================================
 function Initialize()
 
-  print("Initialize CQUI CityBanner Expansion 1")
+  print("Initialize CQUI CityBanner Expansion 2")
 
   RegisterDirtyEvents();
 
