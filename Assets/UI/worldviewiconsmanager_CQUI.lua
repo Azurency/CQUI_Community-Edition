@@ -15,6 +15,10 @@ local CQUI_ResourceIconStyle = 1;
 
 function CQUI_GetSettingsValues()
   CQUI_ResourceIconStyle = GameConfiguration.GetValue("CQUI_ResourceDimmingStyle");
+  if CQUI_ResourceIconStyle == nil then
+    print("CQUI_ResourceIconStyle is nil!  Using default value.");
+    CQUI_ResourceIconStyle = 1;
+  end
 end
 
 function CQUI_OnIconStyleSettingsUpdate()
@@ -41,6 +45,7 @@ function CQUI_IsResourceOptimalImproved(resourceInfo, pPlot)
       end
     end
   end
+
   return false;
 end
 
@@ -54,26 +59,24 @@ function SetResourceIcon( pInstance:table, pPlot, type, state)
   if (pPlot and resourceInfo ~= nil) then
     local resourceType:string = resourceInfo.ResourceType;
     local iconName = "ICON_" .. resourceType;
-		if (state == RevealedState.REVEALED) then
-			iconName = iconName .. "_FOW";
-		end
+    if (state == RevealedState.REVEALED) then
+      iconName = iconName .. "_FOW";
+    end
+
     local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(iconName, 256);
     if (textureSheet ~= nil) then
-      if(pPlot:GetOwner() == Game.GetLocalPlayer()) then --Only affects plots we own
-        local CQUI_ICON_LOW_OPACITY :number = 0x77ffffff;
-        if CQUI_ResourceIconStyle == 0 then
-          local white :number = 0xffffffff;
-          pInstance.ResourceIcon:SetColor(white);
-        elseif CQUI_ResourceIconStyle == 1 then
-          if CQUI_IsResourceOptimalImproved(resourceInfo, pPlot) then
-            pInstance.ResourceIcon:SetColor(CQUI_ICON_LOW_OPACITY);
-          else
-            pInstance.ResourceIcon:SetColor(nil);
-          end
-        elseif CQUI_ResourceIconStyle == 2 then
-          if CQUI_IsResourceOptimalImproved(resourceInfo, pPlot) then
-            local no_color :number = 0x00ffffff;
-            pInstance.ResourceIcon:SetColor(no_color);
+      if (pPlot:GetOwner() == Game.GetLocalPlayer()) then --Only affects plots we own
+        if (CQUI_ResourceIconStyle == 0) then
+          pInstance.ResourceIcon:SetColor(1,1,1,1);
+        elseif (CQUI_ResourceIconStyle == 1) then
+          if (CQUI_IsResourceOptimalImproved(resourceInfo, pPlot)) then
+              pInstance.ResourceIcon:SetColor(1,1,1,0.5);
+            else
+              pInstance.ResourceIcon:SetColor(nil);
+            end
+        elseif (CQUI_ResourceIconStyle == 2) then
+          if (CQUI_IsResourceOptimalImproved(resourceInfo, pPlot)) then
+            pInstance.ResourceIcon:SetColor(1,1,1,0);
           else
             pInstance.ResourceIcon:SetColor(nil);
           end

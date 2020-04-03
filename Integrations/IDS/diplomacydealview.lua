@@ -232,9 +232,9 @@ function PopulateSignatureArea(player:table)
   -- Set colors for the Civ icon
   if (player ~= nil) then
     m_primaryColor, m_secondaryColor  = UI.GetPlayerColors( player:GetID() );
-    local darkerBackColor = DarkenLightenColor(m_primaryColor,(-85),100);
-    local brighterBackColor = DarkenLightenColor(m_primaryColor,90,255);
-    local panelBannerBackColor = DarkenLightenColor(m_primaryColor,0,245);
+    local darkerBackColor = UI.DarkenLightenColor(m_primaryColor,(-85),100);
+    local brighterBackColor = UI.DarkenLightenColor(m_primaryColor,90,255);
+    local panelBannerBackColor = UI.DarkenLightenColor(m_primaryColor,0,245);
 
     if(player == ms_LocalPlayer) then
       Controls.PlayerCivBacking_Base:SetColor(m_primaryColor);
@@ -2340,7 +2340,6 @@ function PopulatePlayerAvailablePanel(rootControl : table, player : table)
       end
     else
       ms_AvailableGroups[AvailableDealItemGroupTypes.GOLD][playerType].GetTopControl():SetHide(false);
-
       iAvailableItemCount = iAvailableItemCount + PopulateAvailableGold(player, ms_AvailableGroups[AvailableDealItemGroupTypes.GOLD][playerType]);
       iAvailableItemCount = iAvailableItemCount + PopulateAvailableLuxuryResources(player, ms_AvailableGroups[AvailableDealItemGroupTypes.LUXURY_RESOURCES][playerType]);
       iAvailableItemCount = iAvailableItemCount + PopulateAvailableStrategicResources(player, ms_AvailableGroups[AvailableDealItemGroupTypes.STRATEGIC_RESOURCES][playerType]);
@@ -2361,12 +2360,10 @@ function PopulatePlayerAvailablePanel(rootControl : table, player : table)
 
       iAvailableItemCount = iAvailableItemCount + PopulateAvailableGreatWorks(player, ms_AvailableGroups[AvailableDealItemGroupTypes.GREAT_WORKS][playerType]);
       iAvailableItemCount = iAvailableItemCount + PopulateAvailableCaptives(player, ms_AvailableGroups[AvailableDealItemGroupTypes.CAPTIVES][playerType]);
-
     end
 
     rootControl:CalculateSize();
     rootControl:ReprocessAnchoring();
-
   end
 
   return iAvailableItemCount;
@@ -2718,7 +2715,6 @@ end
 
 -- ===========================================================================
 function PopulatePlayerDealPanel(rootControl : table, player : table)
-
   if (player ~= nil) then
     local playerType = GetPlayerType(player);
     PopulateDealGold(player, ms_DealGroups[DealItemGroupTypes.GOLD][playerType]);

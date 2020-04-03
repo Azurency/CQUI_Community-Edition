@@ -84,8 +84,8 @@ function RefreshHeader()
 
     -- Update City Banner
     local backColor:number, frontColor:number  = UI.GetPlayerColors( m_newOriginCity:GetOwner() );
-    local darkerBackColor:number = DarkenLightenColor(backColor,(-85),238);
-    local brighterBackColor:number = DarkenLightenColor(backColor,90,255);
+    local darkerBackColor:number = UI.DarkenLightenColor(backColor,(-85),238);
+    local brighterBackColor:number = UI.DarkenLightenColor(backColor,90,255);
 
     Controls.BannerBase:SetColor( backColor );
     Controls.BannerDarker:SetColor( darkerBackColor );
@@ -97,7 +97,7 @@ function RefreshHeader()
     local originPlayerIconString:string = "ICON_" .. originPlayerConfig:GetCivilizationTypeName();
     local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(originPlayerIconString, 22);
     local secondaryColor, primaryColor = UI.GetPlayerColors( m_newOriginCity:GetOwner() );
-    local brighterIconColor:number = DarkenLightenColor(primaryColor,90,255);
+    local brighterIconColor:number = UI.DarkenLightenColor(primaryColor,90,255);
 
     Controls.OriginCivIcon:SetTexture(textureOffsetX, textureOffsetY, textureSheet);
     Controls.OriginCivIcon:LocalizeAndSetToolTip( originPlayerConfig:GetCivilizationDescription() );
