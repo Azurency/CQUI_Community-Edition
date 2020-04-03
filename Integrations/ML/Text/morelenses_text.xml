@@ -3,6 +3,14 @@
   <BaseGameText>
     <!-- ENGLISH -->
 
+    <!-- Missing Citizen management Lens -->
+    <Row Tag="LOC_HUD_CITIZEN_MANAGEMENT_LENS">
+      <Text>Builder</Text>
+    </Row>
+    <Row Tag="LOC_HUD_CITIZEN_MANAGEMENT_LENS_TOOLTIP">
+      <Text>Highlights what hexes the builder can work on</Text>
+    </Row>
+
     <!-- Builder Lens -->
     <Row Tag="LOC_HUD_BUILDER_LENS">
       <Text>Builder</Text>

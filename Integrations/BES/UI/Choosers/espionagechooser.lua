@@ -1055,7 +1055,7 @@ function Initialize()
   Controls.CloseButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 
   -- Filter Pulldown
-  Controls.FilterButton:RegisterCallback( eLClick, UpdateFilterArrow );
+  Controls.FilterButton:RegisterCallback( Mouse.eLClick, UpdateFilterArrow );
   Controls.DestinationFilterPulldown:RegisterSelectionCallback( OnFilterSelected );
 
   -- District Filter Panel

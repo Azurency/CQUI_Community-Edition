@@ -2303,11 +2303,11 @@ function Initialize()
   InitButton(Controls.TurnsToCompleteSortButton, OnSortByTurnsToComplete, OnNotSortByTurnsToComplete)
 
   --Filter Pulldown
-  Controls.OverviewFilterButton:RegisterCallback( eLClick, UpdateFilterArrow );
+  Controls.OverviewFilterButton:RegisterCallback( Mouse.eLClick, UpdateFilterArrow );
   Controls.OverviewDestinationFilterPulldown:RegisterSelectionCallback( OnFilterSelected );
 
   -- Group By Pulldown
-  Controls.OverviewGroupByButton:RegisterCallback( eLClick, UpdateGroupByArrow );
+  Controls.OverviewGroupByButton:RegisterCallback( Mouse.eLClick, UpdateGroupByArrow );
   Controls.OverviewGroupByPulldown:RegisterSelectionCallback( OnGroupBySelected );
 
   InitButton(Controls.GroupExpandAllCheckBox, OnGroupExpandAll)
