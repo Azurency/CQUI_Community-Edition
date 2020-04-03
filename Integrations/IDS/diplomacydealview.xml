@@ -331,11 +331,11 @@
   <Container ID="ValueAmountEditOverlayContainer" Hidden="1">
     <BoxButton ID="ConfirmValueEdit" Color="0,0,0,0" Size="parent,parent"/>
     <Container ID="ValueAmountEditOverlay" Hidden="1">
-      <Container Size="104,34" Offset="0,-30" Anchor="C,B">
+      <Container Size="155,34" Offset="0,-30" Anchor="C,B">
         <Grid Style="DropShadow3" Size="parent,50"/>
         <Grid Anchor="C,C" Texture="Controls_WindowLight" SliceTextureSize="34,34" SliceCorner="17,17" Size="parent-30,34">
           <Grid Anchor="C,C" Texture="Controls_TextArea" SliceTextureSize="22,22" SliceCorner="11,20" Size="parent-20,24">
-            <EditBox ID="ValueAmountEdit" Style="FontNormalBold16" FontStyle="Stroke" NumberInput="1" EditMode="1" Size="parent-5,parent" Anchor="C,C" MaxLength="5" ConsumeMouse="1" HighlightColor="25,120,154,200"/>
+            <EditBox ID="ValueAmountEdit" Style="FontNormalBold16" FontStyle="Stroke" NumberInput="1" EditMode="1" Size="parent-5,parent" Anchor="C,C" MaxLength="11" ConsumeMouse="1" HighlightColor="25,120,154,200"/>
             <Button ID="ValueAmountEditLeft" Style="ArrowButtonLeft" Anchor="L,C" AnchorSide="O,I"/>
             <Button ID="ValueAmountEditRight" Style="ArrowButtonRight" Anchor="R,C" AnchorSide="O,I"/>
           </Grid>

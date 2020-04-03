@@ -7,5 +7,8 @@
     <Row Tag="LOC_ESPIONAGECHOOSER_FILTER_SHOW_CITIES">
       <Text>Show Cities</Text>
     </Row>
+    <Row Tag="LOC_ESPIONAGECHOOSER_FILTER_INTERNATIONAL">
+      <Text>International</Text>
+    </Row>
   </BaseGameText>
 </GameData>

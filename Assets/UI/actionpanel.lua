@@ -7,6 +7,7 @@
 include( "InstanceManager" );
 include( "SupportFunctions" );
 include("Civ6Common"); -- IsTutorialRunning()
+include("PopupDialog");
 
 -- ===========================================================================
 --  CONSTANTS
@@ -18,8 +19,8 @@ local FLASHING_PRODUCTION     :number = 3;
 local FLASHING_FREE_TECH      :number = 4;
 local FLASHING_NEEDS_ORDERS     :number = 5;
 
-local TURN_TIMER_BAR_ACTIVE_COLOR   :number = 0xffffffff;
-local TURN_TIMER_BAR_INACTIVE_COLOR :number = 0xff0000ff;
+local TURN_TIMER_BAR_ACTIVE_COLOR   :number = UI.GetColorValue("COLOR_WHITE");
+local TURN_TIMER_BAR_INACTIVE_COLOR :number = UI.GetColorValue(1,0,0,1);
 
 local MAX_BLOCKER_BUTTONS     :number = 4;  -- Number of buttons around big action button
 local autoEndTurnOptionHash     :number = DB.MakeHash("AutoEndTurn");
@@ -28,6 +29,14 @@ local cityRangeAttackTurnOptionHash	:number = DB.MakeHash("CityRangeAttackTurnBl
 local MAX_BEFORE_TRUNC_TURN_STRING  :number = 150;
 
 local START_TURN_TIMER_TICK_SOUND :number = 7;  -- Start making turn timer ticking sounds when the turn timer is lower than this seconds.
+
+local NO_PLAYER                   :number = -1;
+
+local CloudTurnStates = {
+  CLOUDTURN_NONE      = 0,
+  CLOUDTURN_UPLOADING = 1,
+  CLOUDTURN_UPLOADED  = 2,
+};
 
 -- End Turn Button Strings
 local pleaseWaitString        :string = Locale.Lookup("LOC_ACTION_PANEL_PLEASE_WAIT");
@@ -75,6 +84,10 @@ local needArtifactPlayerString    :string = Locale.Lookup("LOC_ACTION_PANEL_CHOO
 local needArtifactPlayerTip     :string = Locale.Lookup("LOC_ACTION_PANEL_CHOOSE_ARTIFACT_PLAYER_TOOLTIP");
 local cityRangedAttackString    :string = Locale.Lookup("LOC_ACTION_PANEL_CITY_RANGED_ATTACK");
 local cityRangedAttackTip     :string = Locale.Lookup("LOC_ACTION_PANEL_CITY_RANGED_ATTACK_TOOLTIP");
+local cloudTurnUploadingString  :string = Locale.Lookup("LOC_ACTION_PANEL_CLOUD_TURN_UPLOADING");
+local cloudTurnUploadingTip     :string = Locale.Lookup("LOC_ACTION_PANEL_CLOUD_TURN_UPLOADING_TOOLTIP");
+local cloudTurnUploadedString   :string = Locale.Lookup("LOC_ACTION_PANEL_CLOUD_TURN_UPLOADED");
+local cloudTurnUploadedTip      :string = Locale.Lookup("LOC_ACTION_PANEL_CLOUD_TURN_UPLOADED_TOOLTIP");
 local encampmentRangedAttackString    :string = Locale.Lookup("LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK");
 local encampmentRangedAttackTip     :string = Locale.Lookup("LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK_TOOLTIP");
 local yourTurnToolStr       :string = Locale.Lookup("LOC_KEY_YOUR_TURN_TIME_TOOLTIP");
@@ -104,21 +117,22 @@ g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_ARTIFACT]                  
 
 g_kEras	= {};
 
-ERA_DEGREES	= { 209,190,171,153,137,122,106,106 };	-- Degrees to place the era indicator
-
 -- ===========================================================================
 --  MEMBERS
 -- ===========================================================================
 local m_overflowIM      : table = InstanceManager:new( "TurnBlockerInstance",  "TurnBlockerButton", Controls.OverflowStack );
-local m_shiftsHeld      : number  = 0;
 local m_activeBlockerId   : number  = EndTurnBlockingTypes.NO_ENDTURN_BLOCKING; -- Blocking notification receiving attention
 local m_kSoundsPlayed   : table   = {};                   -- Track which notifications have had their associate sound played
-local m_EndTurnId           = Input.GetActionId("EndTurn");       -- Hotkey
+local m_EndTurnId       :number    = Input.GetActionId("EndTurn");       -- Hotkey
 local m_lastTurnTickTime  : number  = 0;                    -- When did we last make a tick sound for the turn timer?
 local m_numberVisibleBlockers :number = 0;
 local m_visibleBlockerTypes : table   = {};
 local m_isSlowTurnEnable  : boolean = false;                  -- Tutorial: when active slow to allow clicks when turn raises.
-local m_unreadiedTurn		: boolean   = false;									-- Did the local player unready their turn during the current game turn?
+local m_unreadiedTurn       : boolean = false;									-- Did the local player unready their turn during the current game turn?
+local m_cloudTurnState      : number  = CloudTurnStates.CLOUDTURN_NONE; -- State of PlayByCloud turn upload process.
+local m_kPopupDialog        : table   = {};
+local m_rememberCloudChoice : boolean = false;
+local m_isProdQueueOpen     : boolean = false;
 
 -- CQUI Members
 local CQUI_PolicyReminderClosed = false;
@@ -152,8 +166,8 @@ function OnRefresh()
   end
 
   Controls.EndTurnButton:SetDisabled( false );
-  Controls.EndTurnButtonLabel:SetDisabled( false );	
-  
+  Controls.EndTurnButtonLabel:SetDisabled( false );
+
   local message       :string;
   local icon          :string;
   local toolTipString     :string;
@@ -246,21 +260,25 @@ function OnRefresh()
         kAlphaControl:Play();
         kSlideControl:Play();
       end
-      local tooltip:string = g_kMessageInfo[endTurnBlockingId].ToolTip;
-      local icon:string = g_kMessageInfo[endTurnBlockingId].Icon;
-      if(icon ~= nil) then
-        local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(icon,40);
-        kButtonControl:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
-      end
-      kButtonControl:SetToolTipString( tooltip );
-      kButtonControl:RegisterCallback( Mouse.eLClick,
-        function()
-          DoEndTurn( endTurnBlockingId );
+      if g_kMessageInfo[endTurnBlockingId] then
+        local tooltip:string = g_kMessageInfo[endTurnBlockingId].ToolTip;
+        local icon:string	= g_kMessageInfo[endTurnBlockingId].Icon;
+        if(icon ~= nil) then
+          local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(icon,40);
+          kButtonControl:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
         end
-      );
-      iControlNum = iControlNum + 1;
-      m_numberVisibleBlockers = m_numberVisibleBlockers + 1;
-      table.insert(m_visibleBlockerTypes, endTurnBlockingId);
+        kButtonControl:SetToolTipString( tooltip );
+        kButtonControl:RegisterCallback( Mouse.eLClick,
+          function()
+            DoEndTurn( endTurnBlockingId );
+          end
+        );
+        iControlNum = iControlNum + 1;
+        m_numberVisibleBlockers = m_numberVisibleBlockers + 1;
+        table.insert(m_visibleBlockerTypes, endTurnBlockingId);
+      else
+        UI.DataError("Attempted to show turn blocking icon in ActionPanel but NIL in message info. id: "..tostring(endTurnBlockingId));
+      end
     end
   end
 
@@ -338,14 +356,25 @@ function OnRefresh()
 
   SetEndTurnFlashing(iFlashingState);
 
-  -- Set the era rotation and tooltip.
-  local displayEra = GetDisplayEra();
-  Controls.EraIndicator:Rotate( ERA_DEGREES[displayEra] );
-  for _,era in pairs(g_kEras) do
-    if era.Index == displayEra then
-      local description:string = Locale.Lookup("LOC_GAME_ERA_DESC", era.Description );
+  RealizeEraIndicator();
+end
+
+
+-- ===========================================================================
+-- Set the era rotation and tooltip.
+-- ===========================================================================
+function RealizeEraIndicator()
+  local displayEra :number = 1;
+  local pPlayer = Players[Game.GetLocalPlayer()];
+  if pPlayer ~= nil then
+    displayEra = pPlayer:GetEra() + 1; -- Engine is 0 Based
+  end
+  for _,kEra in pairs(g_kEras) do
+    if kEra.Index == displayEra then
+      local description:string = Locale.Lookup("LOC_GAME_ERA_DESC", kEra.Description );
       Controls.EraToolTipArea1:SetToolTipString( description );
       Controls.EraToolTipArea2:SetToolTipString( description );
+      Controls.EraIndicator:Rotate( kEra.Degree + 90 ); -- 0 degree in art points "left"
       break;
     end
   end
@@ -476,7 +505,7 @@ function CQUI_CheckPolicyCanBeChanged()
   if CQUI_PolicyReminderClosed or not CQUI_ShowPolicyReminder then
     return false
   end
-  
+
   -- AURENCY : get the Index of the future tech
   local futureCivicIndex = GameInfo["Civics"]["CIVIC_FUTURE_CIVIC"].Index
 
@@ -544,13 +573,23 @@ function CheckAutoEndTurn( eCurrentEndTurnBlockingType:number )
       and eCurrentEndTurnBlockingType == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING
       and (UserConfiguration.IsAutoEndTurn() and not UI.SkipNextAutoEndTurn())
       -- In tactical phases, all units must have orders or used up their movement points.
-      and (not CheckUnitsHaveMovesState() and not CheckCityRangeAttackState() and not CQUI_CheckEncampmentRangeAttackState()) then 
+      and (not CheckUnitsHaveMovesState() and not CheckCityRangeAttackState() and not CQUI_CheckEncampmentRangeAttackState())
+      -- Not already send turn complete for this turn.
+      and not UI.HasSentTurnComplete()
+      -- Expansion content is ok with auto ending the turn.
+      and AllowAutoEndTurn_Expansion() then
         if not UI.CanEndTurn() then
-          error("CheckAutoEndTurn thinks that we can't end turn, but the notification system disagrees");
+          UI.DataError("CheckAutoEndTurn thinks that we can't end turn, but the notification system disagrees!");
         end
       UI.RequestAction(ActionTypes.ACTION_ENDTURN);
     end
   end
+end
+
+-- Overridable function for additional AutoEndTurn checks for expansion content.
+-- Return true when the user should be able to auto end their turn based on additional expansion conditions.
+function AllowAutoEndTurn_Expansion()
+  return true;
 end
 
 -- ===========================================================================
@@ -588,7 +627,7 @@ function DoEndTurn( optionalNewBlocker:number )
   if UI.GetInterfaceMode() ~= InterfaceModeTypes.SELECTION and UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK and not (UI.GetInterfaceMode() == InterfaceModeTypes.CITY_MANAGEMENT and m_activeBlockerId == EndTurnBlockingTypes.ENDTURN_BLOCKING_PRODUCTION) then
     UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
   end
-  
+
   if m_activeBlockerId == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING then
     if (CheckUnitsHaveMovesState()) then
       UI.SelectNextReadyUnit();
@@ -598,7 +637,7 @@ function DoEndTurn( optionalNewBlocker:number )
           LuaEvents.CQUI_Strike_Enter();
           LuaEvents.CQUI_CityRangeStrike(Game.GetLocalPlayer(), attackCity:GetID());
       else
-        error( "Unable to find selectable attack city while in CheckCityRangeAttackState()" );
+        UI.DataError( "Unable to find selectable attack city while in CheckCityRangeAttackState()" );
       end
     elseif(CQUI_CheckEncampmentRangeAttackState()) then
       local attackEncampment = CQUI_GetFirstRangedAttackEncampment();
@@ -606,7 +645,7 @@ function DoEndTurn( optionalNewBlocker:number )
         UI.LookAtPlot(attackEncampment:GetX(), attackEncampment:GetY());
         LuaEvents.CQUI_DistrictRangeStrike(Game.GetLocalPlayer(), attackEncampment:GetID());
       else
-        error( "Unable to find selectable attack encampment while in CQUI_CheckEncampmentRangeAttackState()" );
+        UI.DataError( "Unable to find selectable attack encampment while in CQUI_CheckEncampmentRangeAttackState()" );
       end
     elseif(CQUI_CheckPolicyCanBeChanged()) then
       LuaEvents.CQUI_ShowPolicyReminderPopup(Game.GetLocalPlayer(), pPlayer:GetCulture():GetCivicCompletedThisTurn(), false)
@@ -629,7 +668,7 @@ function DoEndTurn( optionalNewBlocker:number )
     if pNotification == nil then
       -- Notification is missing.  Use fallback behavior.
       if not UI.CanEndTurn() then
-        print("ERROR: ActionPanel UI thinks that we can't end turn, but the notification system disagrees");
+        UI.DataError("The UI thinks that we can't end turn, but the notification system disagrees.");
         return;
       end
       UI.RequestAction(ActionTypes.ACTION_ENDTURN);
@@ -655,45 +694,70 @@ end
 function OnEndTurnBlockingChanged( ePrevEndTurnBlockingType:number, eNewEndTurnBlockingType:number )
 
   local pPlayer :table = Players[Game.GetLocalPlayer()];
-  if pPlayer ~= nil then
-    if pPlayer:IsTurnActive() then
+  if pPlayer == nil then
+    return;
+  end
 
-      local blockingType:number  = NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
-      if (eNewEndTurnBlockingType ~= blockingType) then
-        print("ERROR: ActionPanel received mismatched blocking types.  Event vs engine call: ",eNewEndTurnBlockingType, blockingType);
-        return;
-      end
+  if pPlayer:IsTurnActive()==false then
+    return;
+  end
 
-      CheckAutoEndTurn( blockingType );
+  local blockingType:number  = NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
+  if (eNewEndTurnBlockingType ~= blockingType) then
+    UI.DataError("ActionPanel received mismatched blocking types.  EventType: "..tostring(eNewEndTurnBlockingType)..", EngineType: "..tostring(blockingType));
+    return;
+  end
 
-      -- If they have auto-unit-cycling off, then don't change the selection.
-      if (not UserConfiguration.IsAutoUnitCycle() or UI.GetHeadSelectedCity() ~= nil) then
-        return;
-      end
+  -- If our production queue is open don't auto-cycle to the next turn blocking unit
+  if m_isProdQueueOpen == true then
+    return;
+  end
 
-      local pSelectedUnit = UI.GetHeadSelectedUnit();
-      if (pSelectedUnit ~= nil) then
-        -- Just exit, the app side UI manager will cycle to the next unit if it is ready to do so.
-        return;
-      end
+  -- If in the midst of managing a city (plot purchase, citizen management, etc...) don't auto-cycle.
+  local mode:number = UI.GetInterfaceMode();
+  if (mode == InterfaceModeTypes.CITY_MANAGEMENT) then
+    return;
+  end
 
-      -- Obtain first unit with moves remaining (that isn't automated or about to die).
-      local pUnit:table = pPlayer:GetUnits():GetFirstReadyUnit();
-      if pUnit ~= nil then
-        SelectUnit(pUnit);
-      end
+  CheckAutoEndTurn( blockingType );
+
+  if ShouldUnitAutoSelect() then
+    -- Obtain first unit with moves remaining (that isn't automated or about to die).
+    local pUnit:table = pPlayer:GetUnits():GetFirstReadyUnit();
+    if pUnit ~= nil then
+      UI.DeselectAllUnits();
+      UI.DeselectAllCities();
+      UI.SelectClosestReadyUnit();	-- This will select the closest ready unit to the last selected unit, or, if none, the first ready unit
+
+      -- Azurency : also look at the unit when selecting it.
+      UI.LookAtPlot(unit:GetX(), unit:GetY());
     end
   end
 end
 
 
 -- ===========================================================================
-function SelectUnit(unit)
-  UI.DeselectAllUnits();
-  UI.DeselectAllCities();
-  UI.SelectUnit( unit );
-  -- Azurency : also look at the unit when selecting it.
-  UI.LookAtPlot(unit:GetX(), unit:GetY());
+function ShouldUnitAutoSelect()
+  -- If they have auto-unit-cycling off, then don't change the selection.
+  if (not UserConfiguration.IsAutoUnitCycle()) then
+    return false;
+  end
+
+  -- Just exit, the app side UI manager will cycle to the next unit if it is ready to do so.
+  local pSelectedUnit:table = UI.GetHeadSelectedUnit();
+  if (pSelectedUnit ~= nil) then
+    return false;
+  end
+
+  -- If this was signaled from a plot purchase, due to a (building or
+  -- district) placement, do not select a unit, stick to the city.
+  local pSelectedCity:table = UI.GetHeadSelectedCity();
+  if (pSelectedCity ~= nil) then
+    local eMode:number = UI.GetInterfaceMode();
+    if eMode == InterfaceModeTypes.BUILDING_PLACEMENT then return false; end
+    if eMode == InterfaceModeTypes.DISTRICT_PLACEMENT then return false; end
+  end
+  return true;
 end
 
 
@@ -770,6 +834,28 @@ function SetEndTurnWaiting()
   local turnActiveHumanName : string = nil; -- player name of a human player who is turn active.
   local playersWaiting : number = 0;
   local iActivePlayer = Game.GetLocalPlayer();
+
+  if(m_cloudTurnState == CloudTurnStates.CLOUDTURN_UPLOADING) then
+    Controls.EndTurnText:SetText( cloudTurnUploadingString );
+    Controls.EndTurnButton:SetToolTipString( cloudTurnUploadingTip );
+    SetEndTurnFlashing(NO_FLASHING);
+    return;
+  -- Show "EXITING" when the cloud turn has been updated if we are going to exit to the main menu.
+  elseif(m_cloudTurnState == CloudTurnStates.CLOUDTURN_UPLOADED
+    and UserConfiguration.GetPlayByCloudEndTurnBehavior() == PlayByCloudEndTurnBehaviorType.PBC_ENDTURN_EXIT_MAINMENU) then
+
+    -- [TTP 42975] Only show if there is another alive human in the match.
+    local players = Game.GetPlayers{Human = true, Major = true};
+    for _, player in ipairs(players) do
+      local iPlayer = player:GetID();
+      if(iPlayer ~= iActivePlayer and player:IsAlive()) then
+        Controls.EndTurnText:SetText( cloudTurnUploadedString );
+        Controls.EndTurnButton:SetToolTipString( cloudTurnUploadedTip );
+        SetEndTurnFlashing(NO_FLASHING);
+        return;
+      end
+    end
+  end
 
   local players = Game.GetPlayers{Human = true, Major = true};
   for _, player in ipairs(players) do
@@ -874,6 +960,72 @@ function OnUserOptionChanged(eOptionSet, hOptionKey, iNewOptionValue)
 end
 
 -- ===========================================================================
+function OnUploadCloudEndTurnStart()
+  if(m_cloudTurnState ~= CloudTurnStates.CLOUDTURN_UPLOADING) then
+    m_cloudTurnState = CloudTurnStates.CLOUDTURN_UPLOADING;
+    if(not ContextPtr:IsHidden()) then
+      ContextPtr:RequestRefresh();
+    end
+  end
+end
+
+-- ===========================================================================
+function OnUploadCloudEndTurnComplete()
+  if(m_cloudTurnState ~= CloudTurnStates.CLOUDTURN_UPLOADED) then
+    m_cloudTurnState = CloudTurnStates.CLOUDTURN_UPLOADED;
+    if(not ContextPtr:IsHidden()) then
+      ContextPtr:RequestRefresh();
+      if(UserConfiguration.GetPlayByCloudEndTurnBehavior() == PlayByCloudEndTurnBehaviorType.PBC_ENDTURN_ASK_ME) then
+        if(Game.GetLocalPlayer() == NO_PLAYER) then
+          -- No local player.
+          return;
+        end
+
+        local pLocalPlayer		:table = Players[Game.GetLocalPlayer()];
+        if(pLocalPlayer == nil) then
+          return;
+        end
+
+        if(pLocalPlayer:IsTurnActive()) then
+          -- Local player is already turn active again.  This happens if the local player is the solo remaining human player.
+          -- We should simply not show the Ask Me popup in this case.
+          return;
+        end
+
+        m_rememberCloudChoice = false;
+        m_kPopupDialog:Close();
+        m_kPopupDialog:AddTitle( Locale.Lookup("LOC_ACTION_PANEL_END_TURN_ASK_ME_TITLE") );
+        m_kPopupDialog:AddText( Locale.Lookup("LOC_ACTION_PANEL_END_TURN_ASK_ME_TEXT"))
+        m_kPopupDialog:AddCheckBox(Locale.Lookup("LOC_REMEMBER_MY_CHOICE"), false, OnRememberChoice);
+        m_kPopupDialog:AddButton( Locale.Lookup("LOC_OPTIONS_PLAYBYCLOUD_END_TURN_BEHAVIOR_DO_NOTHING"), OnChoiceDoNothing );
+        m_kPopupDialog:AddButton( Locale.Lookup("LOC_OPTIONS_PLAYBYCLOUD_END_TURN_BEHAVIOR_EXIT_TO_MAINMENU"), OnChoiceExitToMainMenu );
+        m_kPopupDialog:Open();
+      end
+    end
+  end
+end
+
+function OnRememberChoice(checked : boolean)
+  m_rememberCloudChoice = checked;
+end
+
+function OnChoiceDoNothing()
+  if(m_rememberCloudChoice == true) then
+    Options.SetUserOption("Interface", "PlayByCloudEndTurnBehavior", PlayByCloudEndTurnBehaviorType.PBC_ENDTURN_DO_NOTHING);
+    Options.SaveOptions();
+  end
+end
+
+function OnChoiceExitToMainMenu()
+  if(m_rememberCloudChoice == true) then
+    Options.SetUserOption("Interface", "PlayByCloudEndTurnBehavior", PlayByCloudEndTurnBehaviorType.PBC_ENDTURN_EXIT_MAINMENU);
+    Options.SaveOptions();
+  end
+
+  Events.ExitToMainMenu();
+end
+
+-- ===========================================================================
 function OnLocalPlayerTurnBegin()
   -- Standard disable is set to false in the refresh.
   -- This extra level of input catching is done when tutorial has raised
@@ -964,7 +1116,7 @@ end
 function OnNotificationDismissed( playerID:number, notificationID:number )
   if playerID == Game.GetLocalPlayer() then
     ContextPtr:RequestRefresh();
-    
+
     -- Need to check auto end turn if this was a NotificationTypes.CITY_RANGE_ATTACK
     local wasCityRangeNotification = false;
     local pNotification:table = NotificationManager.Find( playerID, notificationID );
@@ -980,7 +1132,7 @@ function OnNotificationDismissed( playerID:number, notificationID:number )
       local pPlayer		:table = Players[Game.GetLocalPlayer()];
       local blockingType	:number= NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
       CheckAutoEndTurn( blockingType );
-    end		
+    end
   end
 end
 
@@ -1018,6 +1170,7 @@ end
 --  UI Event
 -- ===========================================================================
 function OnInit( isReload:boolean )
+  LateInitialize();
   if isReload then
     NotificationManager.RestoreVisualState(Game.GetLocalPlayer());  -- Restore the notifications
   end
@@ -1032,7 +1185,8 @@ function OnInputHandler( pInputStruct:table )
   if uiMsg == KeyEvents.KeyUp then
     if pInputStruct:GetKey() == Keys.VK_RETURN then
       if pInputStruct:IsShiftDown() and not IsTutorialRunning() then
-        UI.RequestAction(ActionTypes.ACTION_ENDTURN); -- Shift + Enter = Force End Turn
+        -- Forcing a turn via SHIFT + ENTER.  Unsupported.
+        UI.RequestAction(ActionTypes.ACTION_ENDTURN, { REASON = "UserForced" } );
       else
         DoEndTurn();                  -- Enter = Normal End Turn
       end
@@ -1102,28 +1256,44 @@ function PopulateEraData()
       Index   = row.ChronologyIndex,
     }
   end
-end
 
-function GetDisplayEra()
-  local pPlayer = Players[Game.GetLocalPlayer()];
-  if (pPlayer == nil) then
-    return 1;
+  local degreeStart	:number = 14;
+  local degreeEnd		:number = 115;
+
+  -- Draw PIPs for the number of eras.
+  local max	:number = table.count(g_kEras);
+
+  for _,kEra in pairs(g_kEras) do
+    local uiControl :table = {};
+    ContextPtr:BuildInstanceForControl( "EraPipInstance", uiControl, Controls.EraContainer );
+    if kEra.Index == 1 then
+      uiControl.PipImage:SetTexture("ActionPanel_EraPipStart");
+    elseif kEra.Index == max then
+      uiControl.PipImage:SetTexture("ActionPanel_EraPipEnd");
+    end
+    local halfWidth	:number = uiControl.PipImage:GetSizeX()/2;
+    local halfHeight:number = uiControl.PipImage:GetSizeY()/2;
+    local degree	:number = degreeStart + ((kEra.Index/max)*(degreeEnd-degreeStart));
+    degree = degree - 90;
+
+    local x,y = PolarToCartesian(79, degree);
+    x = (x + 80) - halfWidth;
+    y = (y + 80) - halfHeight;
+
+    uiControl.PipImage:SetOffsetVal(x,y);
+
+    -- Cache the degree associated with the era for the indicator.
+    -- Slightly less than 90 to account for art offset.
+    kEra["Degree"] = degree+88;
   end
-  return pPlayer:GetEra() + 1;			-- Engine is 0 Based
-end
 
+  -- Reparent to ensure draw is on top of pips.
+  Controls.EraIndicator:ChangeParent(Controls.EraContainer);
+end
 
 -- ===========================================================================
 --  Update turn timer meter
 -- ===========================================================================
-function SoftRound(x)
-  if(x >= 0) then
-    return math.floor(x+0.5);
-  else
-    return math.ceil(x-0.5);
-  end
-end
-
 function OnTurnTimerUpdated(elapsedTime :number, maxTurnTime :number)
   if(maxTurnTime <= 0) then
     -- We're in a state where there isn't a turn time, hide all the turn timer elements.
@@ -1230,21 +1400,22 @@ function OnTurnTimerUpdated(elapsedTime :number, maxTurnTime :number)
 end
 
 -- ===========================================================================
+function OnIsProdQueueOpen( isQueueOpen:boolean )
+  m_isProdQueueOpen = isQueueOpen;
+end
+
+-- ===========================================================================
 --  Input Hotkey Event
 -- ===========================================================================
 function OnInputActionTriggered( actionId )
   if m_EndTurnId ~= nil and actionId == m_EndTurnId then
-        UI.PlaySound("Play_UI_Click");
-    OnEndTurnClicked();
+    UI.PlaySound("Play_UI_Click");
+    DoEndTurn();
   end
 end
 
-
 -- ===========================================================================
---  Initialize
--- ===========================================================================
-function Initialize()
-
+function LateInitialize()
   AllocateUI();
   PopulateEraData();
 
@@ -1254,9 +1425,6 @@ function Initialize()
   end
 
   -- UI Events
-  ContextPtr:SetInitHandler( OnInit );
-  ContextPtr:SetInputHandler( OnInputHandler, true );
-  ContextPtr:SetRefreshHandler( OnRefresh );
   Controls.EndTurnButton:RegisterCallback(    Mouse.eLClick, OnEndTurnClicked );
   Controls.EndTurnButton:RegisterCallback(    Mouse.eRClick, OnEndTurnRightClicked );
   Controls.EndTurnButtonLabel:RegisterCallback( Mouse.eLClick, OnEndTurnClicked );
@@ -1283,14 +1451,27 @@ function Initialize()
   Events.UnitOperationSegmentComplete.Add(OnUnitOperationSegmentComplete);
   Events.UnitOperationsCleared.Add(   OnUnitOperationsCleared);
   Events.UserOptionChanged.Add(     OnUserOptionChanged);
-
+  Events.UploadCloudEndTurnStart.Add(		OnUploadCloudEndTurnStart);
+  Events.UploadCloudEndTurnComplete.Add(		OnUploadCloudEndTurnComplete);
 
   -- LUA Events
   LuaEvents.AutoPlayStart.Add(        OnAutoPlayStart );    -- Raised by engine AutoPlay_Manager!
   LuaEvents.AutoPlayEnd.Add(          OnAutoPlayEnd );    -- Raised by engine AutoPlay_Manager!
   LuaEvents.Tutorial_SlowNextTurnEnable.Add(  OnTutorialSlowTurnEnable );
+  LuaEvents.ProductionPanel_IsQueueOpen.Add(	OnIsProdQueueOpen );
 
   LuaEvents.OnCQUIPolicyReminderClose.Add(function() CQUI_PolicyReminderClosed = true; ContextPtr:RequestRefresh(); end)
   LuaEvents.OnCQUIPolicyReminderOpenedChangePolicy.Add(function() CQUI_PolicyReminderClosed = true; ContextPtr:RequestRefresh(); end)
+
+  m_kPopupDialog = PopupDialog:new( "ActionPanelPopupDialog" );
+end
+
+-- ===========================================================================
+--	Initialize
+-- ===========================================================================
+function Initialize()
+  ContextPtr:SetInitHandler( OnInit );
+  ContextPtr:SetInputHandler( OnInputHandler, true );
+  ContextPtr:SetRefreshHandler( OnRefresh );
 end
 Initialize();

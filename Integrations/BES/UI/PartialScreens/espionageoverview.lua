@@ -6,21 +6,26 @@ include( "AnimSidePanelSupport" );
 include( "SupportFunctions" );
 include( "EspionageSupport" );
 include( "TabSupport" );
+include( "Colors" );
 
 -- ===========================================================================
 -- CONSTANTS
 -- ===========================================================================
 
 local RELOAD_CACHE_ID:string = "EspionageOverview"; -- Must be unique (usually the same as the file name)
-local MAX_BEFORE_TRUNC_MISSION_NAME   :number = 170;
-local MAX_BEFORE_TRUNC_ASK_FOR_TRADE  :number = 135;
-local TRAVEL_DEST_TRUNCATE_WIDTH      :number = 170;
+local MAX_BEFORE_TRUNC_MISSION_NAME     :number = 170;
+local MAX_BEFORE_TRUNC_ASK_FOR_TRADE    :number = 135;
+
+local TRAVEL_DEST_TRUNCATE_WIDTH        :number = 170;
 
 local EspionageTabs:table = {
   OPERATIVES      = 0;
   CITY_ACTIVITY   = 1;
   MISSION_HISTORY = 2;
 };
+
+-- The maximum number of districts we can show before we have to make them scroll
+local NUM_DISTRICTS_WITHOUT_SCROLL      :number = 7;
 
 -- ===========================================================================
 --  MEMBERS
@@ -30,17 +35,21 @@ local m_AnimSupport:table; -- AnimSidePanelSupport
 
 local m_OperativeIM:table       = InstanceManager:new("OperativeInstance", "Top", Controls.OperativeStack);
 local m_CityIM:table            = InstanceManager:new("CityInstance", "CityGrid", Controls.CityActivityStack);
+local m_CityDistrictIM:table    = InstanceManager:new("CityDistrictInstance", "DistrictIcon");
 local m_EnemyOperativeIM:table  = InstanceManager:new("EnemyOperativeInstance", "GridButton", Controls.CapturedEnemyOperativeStack);
 local m_MissionHistoryIM:table  = InstanceManager:new("MissionHistoryInstance", "Top", Controls.MissionHistoryStack);
+
+-- A table of tabs indexed by EspionageTabs enum
+local m_tabs:table = nil;
+local m_selectedTab:number = -1;
 
 -- Stores filter list and tracks the currently selected list
 local m_filterList:table = {};
 local m_filterCount:number = 0;
 local m_filterSelected:number = 1;
 
--- A table of tabs indexed by EspionageTabs enum
-local m_tabs:table = nil;
-local m_selectedTab:number = -1;
+local m_DistrictFilterChoiceIM:table = InstanceManager:new("DistrictsFilterInstance", "DistrictsFilterButton", Controls.DistrictsFilterStack);
+local m_DistrictFilterSelection:table = {}
 
 -- ===========================================================================
 function Refresh()
@@ -58,6 +67,7 @@ function Refresh()
     Controls.CityActivityTabContainer:SetHide(false);
     Controls.MissionHistoryTabContainer:SetHide(true);
 
+    RefreshFilters();
     RefreshCityActivity();
   elseif m_selectedTab == EspionageTabs.MISSION_HISTORY then
     Controls.OperativeTabContainer:SetHide(true);
@@ -118,7 +128,7 @@ function RefreshOperatives()
     for i=0,numCapturedSpies-1,1 do
       local spyInfo:table = playerDiplomacy:GetNthCapturedSpy(player:GetID(), i);
       if spyInfo and spyInfo.OwningPlayer == Game.GetLocalPlayer() then
-        AddCapturedOperative(spyInfo, i, player:GetID());
+        AddCapturedOperative(spyInfo, player:GetID());
         numberOfSpies = numberOfSpies + 1;
       end
     end
@@ -137,12 +147,14 @@ function RefreshOperatives()
     end
   end
 
+  -- Display a messsage if we have no spies
+  Controls.NoOperativesLabel:SetHide(numberOfSpies ~= 0);
+
   -- Update spy count and capcity
   local playerDiplomacy:table = Players[Game.GetLocalPlayer()]:GetDiplomacy();
   Controls.OperativeHeader:SetText(Locale.Lookup("LOC_ESPIONAGEOVERVIEW_OPERATIVES_SUBHEADER", numberOfSpies, playerDiplomacy:GetSpyCapacity()));
 
   Controls.OperativeStack:CalculateSize();
-  Controls.OperativeStack:ReprocessAnchoring();
   Controls.OperativeScrollPanel:CalculateSize();
 end
 
@@ -155,19 +167,27 @@ function RefreshCityActivity()
     return;
   end
 
-  RefreshFilters();
+  -- Reset all the district icon instances shared between city instances
+  m_CityDistrictIM:ResetInstances();
+
+  -- Add player owned cities
+  AddPlayerCities(localPlayer);
 
   -- Add cities for other players
   local players:table = Game.GetPlayers();
   for i, player in ipairs(players) do
-    local playerInfluence:table = player:GetInfluence();
-    if m_filterList[m_filterSelected].FilterFunction(player) and ShouldAddPlayer(player) then
-      AddPlayerCities(player)
+    -- Ignore the local player since those cities were already added
+    if player:GetID() ~= localPlayer:GetID() then
+      -- Only show full civs
+      if player:IsMajor() then
+        AddPlayerCities(player);
+      end
     end
   end
 
-  -- Controls.CityActivityStack:ReprocessAnchoring();
-  Controls.CityActivityStack:CalculateSize();
+  -- Show a message if we have no cities to display
+  Controls.NoCitiesLabel:SetHide(m_CityIM.m_iAllocatedInstances ~= 0);
+
   Controls.CityActivityScrollPanel:CalculateSize();
 end
 
@@ -180,9 +200,6 @@ function RefreshMissionHistory()
     return;
   end
 
-  -- Track size of elements in mission history panel to determine size of the mission history scroll panel
-  local desiredScrollPanelSizeY:number = Controls.MissionHistoryTabContainer:GetSizeY();
-
   -- Update captured enemy operative info
   local haveCapturedEnemyOperative:boolean = false;
   local localPlayer:table = Players[localPlayerID];
@@ -192,14 +209,13 @@ function RefreshMissionHistory()
     local spyInfo:table = playerDiplomacy:GetNthCapturedSpy(localPlayer:GetID(), i);
     if spyInfo then
       haveCapturedEnemyOperative = true;
-      AddCapturedEnemyOperative(spyInfo, i);
+      AddCapturedEnemyOperative(spyInfo);
     end
   end
 
   -- Hide captured enemy operative info if we have no captured enemy operatives
   if haveCapturedEnemyOperative then
     Controls.CapturedEnemyOperativeContainer:SetHide(false);
-    desiredScrollPanelSizeY = desiredScrollPanelSizeY - Controls.CapturedEnemyOperativeContainer:GetSizeY();
   else
     Controls.CapturedEnemyOperativeContainer:SetHide(true);
   end
@@ -215,7 +231,7 @@ function RefreshMissionHistory()
       Controls.NoRecentMissonsLabel:SetHide(true);
 
       for i,mission in pairs(recentMissions) do
-        AddMisisonHistoryInstance(mission);
+        AddMissionHistoryInstance(mission);
       end
     else
       -- Show no missions label
@@ -223,16 +239,36 @@ function RefreshMissionHistory()
     end
   end
 
-  -- Adjust the mission history scroll panel to fill bottom of panel
-  desiredScrollPanelSizeY = desiredScrollPanelSizeY - Controls.MissionHistoryScrollPanel:GetOffsetY();
-  Controls.MissionHistoryScrollPanel:SetSizeY(desiredScrollPanelSizeY);
+  -- Show a message if we have no history or enemy operatives to display
+  Controls.NoHistoryLabel:SetHide(m_EnemyOperativeIM.m_iAllocatedInstances ~= 0 or m_MissionHistoryIM.m_iAllocatedInstances ~= 0);
+
+  ResizeMissionHistoryScrollPanel();
 
   Controls.MissionHistoryScrollPanel:CalculateSize();
-  Controls.MissionHistoryTabContainer:ReprocessAnchoring();
 end
 
 -- ===========================================================================
-function AddMisisonHistoryInstance(mission:table)
+function ResizeMissionHistoryScrollPanel()
+  -- Track size of elements in mission history panel to determine size of the mission history scroll panel
+  local desiredScrollPanelSizeY:number = Controls.MissionHistoryTabContainer:GetSizeY();
+
+  if not Controls.CapturedEnemyOperativeContainer:IsHidden() then
+    desiredScrollPanelSizeY = desiredScrollPanelSizeY - Controls.CapturedEnemyOperativeContainer:GetSizeY();
+  end
+
+  -- Adjust the mission history scroll panel to fill bottom of panel
+  desiredScrollPanelSizeY = desiredScrollPanelSizeY - Controls.MissionHistoryScrollPanel:GetOffsetY();
+
+  Controls.MissionHistoryScrollPanel:SetSizeY(desiredScrollPanelSizeY);
+end
+
+-- ===========================================================================
+function OnCapturedEnemyOperativeContainerSizeChanged()
+  ResizeMissionHistoryScrollPanel();
+end
+
+-- ===========================================================================
+function AddMissionHistoryInstance(mission:table)
   -- Don't show missions where the spy must escape but the player has yet to choose an escape route
   if mission.InitialResult == EspionageResultTypes.SUCCESS_MUST_ESCAPE or mission.InitialResult == EspionageResultTypes.FAIL_MUST_ESCAPE then
     if mission.EscapeResult == EspionageResultTypes.NO_RESULT then
@@ -282,16 +318,19 @@ function AddMisisonHistoryInstance(mission:table)
     missionHistoryInstance.OperationIcon:SetHide(true);
   end
 
-  if operationInfo.TargetDistrict ~= nil then
-    local iconString:string = "ICON_" .. operationInfo.TargetDistrict;
-    textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(iconString,32);
-    if textureSheet then
-      missionHistoryInstance.OperationDistrictIcon:SetTexture(textureOffsetX, textureOffsetY, textureSheet);
-    else
-      UI.DataError("Unable to find icon for district: " .. iconString);
-    end
+  local iconString:string = "ICON_DISTRICT_CITY_CENTER";
+  if operationInfo.TargetDistrict then
+    iconString = "ICON_" .. operationInfo.TargetDistrict;
+  elseif operationInfo.Hash == UnitOperationTypes.SPY_COUNTERSPY then
+    local pTargetPlot:table = Map.GetPlotByIndex(mission.PlotIndex);
+    local kDistrictInfo:table = GameInfo.Districts[pTargetPlot:GetDistrictType()];
+    iconString = "ICON_" .. kDistrictInfo.DistrictType;
+  end
+  textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(iconString,32);
+  if textureSheet then
+    missionHistoryInstance.OperationDistrictIcon:SetTexture(textureOffsetX, textureOffsetY, textureSheet);
   else
-    UI.DataError("Unable to find target district");
+    UI.DataError("Unable to find icon for district: " .. iconString);
   end
 
   -- Scale the operation and district icons to match the operation description
@@ -303,81 +342,31 @@ end
 function SetMissionHistorySuccess(missionHistoryInstance:table, wasSuccess:boolean)
   if wasSuccess then
     missionHistoryInstance.MissionGradient:SetColorByName("Green");
-    missionHistoryInstance.MissionOutcomeText:SetColor(0xFF329600);
-    missionHistoryInstance.MissionOutcomeSpyStatus:SetColor(0xFF329600);
+    missionHistoryInstance.MissionOutcomeText:SetColor(UI.GetColorValueFromHexLiteral(0xFF329600));
+    missionHistoryInstance.MissionOutcomeSpyStatus:SetColor(UI.GetColorValueFromHexLiteral(0xFF329600));
     missionHistoryInstance.MissionOutcomeFontIcon:SetText("[ICON_CheckSuccess]");
   else
     missionHistoryInstance.MissionGradient:SetColorByName("Red");
-    missionHistoryInstance.MissionOutcomeText:SetColor(0xFF0000C6);
-    missionHistoryInstance.MissionOutcomeSpyStatus:SetColor(0xFF0000C6);
+    missionHistoryInstance.MissionOutcomeText:SetColor(UI.GetColorValueFromHexLiteral(0xFF0000C6));
+    missionHistoryInstance.MissionOutcomeSpyStatus:SetColor(UI.GetColorValueFromHexLiteral(0xFF0000C6));
     missionHistoryInstance.MissionOutcomeFontIcon:SetText("[ICON_CheckFail]");
   end
 end
 
 -- ===========================================================================
 function AddPlayerCities(player:table)
-  local playerCities:table = player:GetCities();
-  for j, city in playerCities:Members() do
-    -- Check if the city is revealed
-    local localPlayerVis:table = PlayersVisibility[Game.GetLocalPlayer()];
-    if localPlayerVis:IsRevealed(city:GetX(), city:GetY()) and shouldDisplayCity(city)then
-      AddCity(city);
+  if m_filterList[m_filterSelected].FilterFunction(player) then
+    local playerCities:table = player:GetCities();
+    for j, city in playerCities:Members() do
+      if CheckDistrictFilters(city) then
+        -- Check if the city is revealed
+        local localPlayerVis:table = PlayersVisibility[Game.GetLocalPlayer()];
+        if localPlayerVis:IsRevealed(city:GetX(), city:GetY()) then
+          AddCity(city);
+        end
+      end
     end
   end
-end
-
--- ===========================================================================
-function ShouldAddPlayer(player:table)
-  local localPlayer = Players[Game.GetLocalPlayer()];
-  -- Only show full civs
-  if player:IsMajor() then
-    if (player:GetID() == localPlayer:GetID() or player:GetTeam() == -1 or localPlayer:GetTeam() == -1 or player:GetTeam() ~= localPlayer:GetTeam()) then
-      return true
-    end
-  end
-  return false
-end
-
--- ===========================================================================
-function ShouldAddToFilter(player:table)
-  if player:IsMajor() and HasMetAndAlive(player) and (not player:IsBarbarian()) then
-    return true
-  end
-  return false
-end
-
--- ===========================================================================
-function shouldDisplayCity(city:table)
-  if Controls.FilterCityCenterCheckbox:IsChecked() and not
-      hasDistrict(city, "DISTRICT_CITY_CENTER") then
-    return false
-  end
-  if Controls.FilterCommericalHubCheckbox:IsChecked() and not
-      hasDistrict(city, "DISTRICT_COMMERCIAL_HUB") then
-    return false
-  end
-  if Controls.FilterTheaterCheckbox:IsChecked() and not
-      hasDistrict(city, "DISTRICT_THEATER") then
-    return false
-  end
-  if Controls.FilterCampusCheckbox:IsChecked() and not
-      hasDistrict(city, "DISTRICT_CAMPUS") then
-    return false
-  end
-  if Controls.FilterIndustrialCheckbox:IsChecked() and not
-      hasDistrict(city, "DISTRICT_INDUSTRIAL_ZONE") then
-    return false
-  end
-  if Controls.FilterNeighborhoodCheckbox:IsChecked() and not
-      hasDistrict(city, "DISTRICT_NEIGHBORHOOD") then
-    return false
-  end
-  if Controls.FilterSpaceportCheckbox:IsChecked() and not
-      hasDistrict(city, "DISTRICT_SPACEPORT") then
-    return false
-  end
-
-  return true
 end
 
 -- ===========================================================================
@@ -386,33 +375,53 @@ function AddCity(city:table)
 
   -- Update city banner
   local backColor:number, frontColor:number  = UI.GetPlayerColors( city:GetOwner() );
-  local darkerBackColor:number = DarkenLightenColor(backColor,(-85),238);
-  local brighterBackColor:number = DarkenLightenColor(backColor,90,255);
 
   cityInstance.BannerBase:SetColor( backColor );
-  cityInstance.BannerDarker:SetColor( darkerBackColor );
-  cityInstance.BannerLighter:SetColor( brighterBackColor );
   cityInstance.CityName:SetColor( frontColor );
   cityInstance.BannerBase:LocalizeAndSetToolTip("LOC_ESPIONAGEOVERVIEW_VIEW_CITY");
   cityInstance.BannerBase:RegisterCallback( Mouse.eLClick, function() LookAtCity(city:GetOwner(), city:GetID()); end );
   cityInstance.BannerBase:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 
-  -- Update capital indicator
-  if city:IsCapital() then
-    cityInstance.CityName:SetText("[ICON_Capital]" .. " " .. Locale.ToUpper(city:GetName()));
+  -- Update capital indicator but never show it for city-states
+  local cityName:string = "";
+  if city:IsCapital() and Players[city:GetOwner()]:IsMajor() then
+    cityName = "[ICON_Capital]" .. " " .. Locale.ToUpper(city:GetName());
   else
-    cityInstance.CityName:SetText(Locale.ToUpper(city:GetName()));
+    cityName = Locale.ToUpper(city:GetName());
   end
+  TruncateString(cityInstance.CityName, 220, cityName);
 
   -- Update district icons
-  cityInstance.CityDistrictStack:DestroyAllChildren();
-  AddDistrictIcon(cityInstance.CityDistrictStack, city, "DISTRICT_CITY_CENTER");
-  AddDistrictIcon(cityInstance.CityDistrictStack, city, "DISTRICT_COMMERCIAL_HUB");
-  AddDistrictIcon(cityInstance.CityDistrictStack, city, "DISTRICT_THEATER");
-  AddDistrictIcon(cityInstance.CityDistrictStack, city, "DISTRICT_CAMPUS");
-  AddDistrictIcon(cityInstance.CityDistrictStack, city, "DISTRICT_INDUSTRIAL_ZONE");
-  AddDistrictIcon(cityInstance.CityDistrictStack, city, "DISTRICT_NEIGHBORHOOD");
-  AddDistrictIcon(cityInstance.CityDistrictStack, city, "DISTRICT_SPACEPORT");
+  local pCityDistricts:table = city:GetDistricts();
+  if pCityDistricts ~= nil then
+    -- Show or hide scroll arrows based on number of districts
+    local bNeedsToScroll:boolean = pCityDistricts:GetNumDistricts() > NUM_DISTRICTS_WITHOUT_SCROLL;
+    if bNeedsToScroll then
+      cityInstance.CurrentScrollPos = 1;
+      cityInstance.DistrictsScrollLeftButton:SetHide(false);
+      cityInstance.DistrictsScrollLeftButton:SetDisabled(true);
+      cityInstance.DistrictsScrollRightButton:SetHide(false);
+
+      cityInstance.DistrictsScrollLeftButton:RegisterCallback( Mouse.eLClick, function() OnDistrictsLeftButton(cityInstance); end );
+      cityInstance.DistrictsScrollRightButton:RegisterCallback( Mouse.eLClick, function() OnDistrictsRightButton(cityInstance); end );
+    else
+      cityInstance.DistrictsScrollLeftButton:SetHide(true);
+      cityInstance.DistrictsScrollRightButton:SetHide(true);
+    end
+
+    -- Populate districts
+    local iNumDistrictsThisCity:number = 0;
+    for _, pDistrict in pCityDistricts:Members() do
+      local kDistrictIconInst:table = AddDistrictIcon(cityInstance.CityDistrictStack, city, pDistrict);
+      if kDistrictIconInst ~= nil then
+        iNumDistrictsThisCity = iNumDistrictsThisCity + 1;
+
+        if bNeedsToScroll and iNumDistrictsThisCity > (NUM_DISTRICTS_WITHOUT_SCROLL - 1) then
+          kDistrictIconInst.DistrictIcon:SetHide(true);
+        end
+      end
+    end
+  end
 
   -- Update gain sources boost icon
   local player = Players[Game.GetLocalPlayer()];
@@ -436,204 +445,104 @@ function AddCity(city:table)
 end
 
 -- ===========================================================================
-function AddDistrictIcon(stackControl:table, city:table, districtType:string)
-  local districtInstance:table = {};
-  ContextPtr:BuildInstanceForControl( "CityDistrictInstance", districtInstance, stackControl );
+function OnDistrictsLeftButton( kCityInstance:table )
+  kCityInstance.CurrentScrollPos = kCityInstance.CurrentScrollPos - 1;
+  local kChildren:table = kCityInstance.CityDistrictStack:GetChildren();
 
-  local toolTipString:string = "";
+  -- Always enable right button if we scroll left
+  kCityInstance.DistrictsScrollRightButton:SetDisabled(false);
 
-  -- We're manipulating the alpha to hide each element so they maintain their stack positions
-  if hasDistrict(city, districtType) then --ARISTOS: make use of the espionagesupport.lua funtion, more efficient and has been fixed to only show valid targets
-    toolTipString = Locale.Lookup(GameInfo.Districts[districtType].Name);
-    districtInstance.DistrictIcon:SetAlpha(1.0);
-  else
-    districtInstance.DistrictIcon:SetAlpha(0.0);
-    return;
+  -- Disable left button if we reach the beginning of the list
+  if kCityInstance.CurrentScrollPos == 1 then
+    kCityInstance.DistrictsScrollLeftButton:SetDisabled(true);
   end
 
-  -- Update district icon
-  districtInstance.DistrictIcon:SetIcon("ICON_" .. districtType);
+  -- Show/hide children based on the current scroll pos
+  -- (NUM_DISTRICTS_WITHOUT_SCROLL - 2) makes room for the 2 scroll buttons
+  for i, kChild in ipairs(kChildren) do
+    if i < kCityInstance.CurrentScrollPos or i > (kCityInstance.CurrentScrollPos + NUM_DISTRICTS_WITHOUT_SCROLL - 2) then
+      kChild:SetHide(true);
+    else
+      kChild:SetHide(false);
+    end
+  end
+end
+
+-- ===========================================================================
+function OnDistrictsRightButton( kCityInstance:table )
+  kCityInstance.CurrentScrollPos = kCityInstance.CurrentScrollPos + 1;
+  local kChildren:table = kCityInstance.CityDistrictStack:GetChildren();
+
+  -- Always enable left button if we scroll right
+  kCityInstance.DistrictsScrollLeftButton:SetDisabled(false);
+
+  -- Disable right button if we're at the end of the list
+  if (kCityInstance.CurrentScrollPos + NUM_DISTRICTS_WITHOUT_SCROLL - 2) >= #kChildren then
+    kCityInstance.DistrictsScrollRightButton:SetDisabled(true);
+  end
+
+  -- Show/hide children based on the current scroll pos
+  -- (NUM_DISTRICTS_WITHOUT_SCROLL - 2) makes room for the 2 scroll buttons
+  for i, kChild in ipairs(kChildren) do
+    if i < kCityInstance.CurrentScrollPos or i > (kCityInstance.CurrentScrollPos + NUM_DISTRICTS_WITHOUT_SCROLL - 2) then
+      kChild:SetHide(true);
+    else
+      kChild:SetHide(false);
+    end
+  end
+end
+
+-- ===========================================================================
+function AddDistrictIcon(kStackControl:table, pCity:table, pDistrict:table)
+  if not pDistrict:IsComplete() then
+    return nil;
+  end
+
+  local kDistrictDef:table = GameInfo.Districts[pDistrict:GetType()];
+  if kDistrictDef == nil or kDistrictDef.DistrictType == "DISTRICT_WONDER" then
+    return nil;
+  end
+
+  local kInstance:table = m_CityDistrictIM:GetInstance( kStackControl );
+
+  kInstance.DistrictIcon:SetIcon("ICON_" .. kDistrictDef.DistrictType);
+  local sToolTip:string = Locale.Lookup(kDistrictDef.Name);
 
   -- Check if one of our spies is active in this district
-  local shouldShowActiveSpy:boolean = false;
-  local playerUnits:table = Players[Game.GetLocalPlayer()]:GetUnits();
-  for i,unit in playerUnits:Members() do
-    local unitInfo:table = GameInfo.Units[unit:GetUnitType()];
-    if unitInfo.Spy then
-      local operationType:number = unit:GetSpyOperation();
-      local operationInfo:table = GameInfo.UnitOperations[operationType];
-      if operationInfo then
-        local spyPlot:table = Map.GetPlot(unit:GetX(), unit:GetY());
-        local targetCity:table = Cities.GetPlotPurchaseCity(spyPlot);
-        if targetCity:GetOwner() == city:GetOwner() and targetCity:GetID() == city:GetID() then
-          local activeDistrictType:number = spyPlot:GetDistrictType();
-          local districtInfo = GameInfo.Districts[activeDistrictType];
-          if districtInfo.DistrictType == districtType then
-            -- Turns Remaining
-            local turnsRemaining:number = unit:GetSpyOperationEndTurn() - Game.GetCurrentGameTurn();
-            if turnsRemaining <= 0 then
-              turnsRemaining = 0;
-            end
-
-            shouldShowActiveSpy = true;
-            toolTipString = toolTipString .. "[NEWLINE]" ..
-              Locale.Lookup(unit:GetName()) .. ": " ..
-              Locale.Lookup(operationInfo.Description) .. " -- " ..
-              Locale.Lookup("LOC_ESPIONAGEOVERVIEW_MORE_TURNS", turnsRemaining);
+  local bShouldShowActiveSpy:boolean = false;
+  local pPlayerUnits:table = Players[Game.GetLocalPlayer()]:GetUnits();
+  for i, pUnit in pPlayerUnits:Members() do
+    local kUnitDef:table = GameInfo.Units[pUnit:GetUnitType()];
+    if not bShouldShowActiveSpy and kUnitDef.Spy then
+      local eOperationType:number = pUnit:GetSpyOperation();
+      local kOperationDef:table = GameInfo.UnitOperations[eOperationType];
+      if kOperationDef then
+        local pSpyPlot:table = Map.GetPlot(pUnit:GetX(), pUnit:GetY());
+        local pTargetCity:table = Cities.GetPlotPurchaseCity(pSpyPlot);
+        if pTargetCity:GetOwner() == pCity:GetOwner() and pTargetCity:GetID() == pCity:GetID() then
+          local iSpyDistrictID:number = pSpyPlot:GetDistrictID();
+          if pDistrict:GetID() == iSpyDistrictID then
+            bShouldShowActiveSpy = true;
+            sToolTip = sToolTip .. "[NEWLINE]" .. Locale.Lookup(pUnit:GetName()) .. "[NEWLINE]" .. Locale.Lookup(kOperationDef.Description);
           end
         end
       end
     end
   end
 
-  districtInstance.DistrictIcon:SetToolTipString( toolTipString );
+  kInstance.DistrictIcon:SetToolTipString( sToolTip );
 
-  if shouldShowActiveSpy then
+  if bShouldShowActiveSpy then
     local backColor:number, frontColor:number  = UI.GetPlayerColors( Game.GetLocalPlayer() );
-    districtInstance.SpyIconBack:SetColor( backColor );
-    districtInstance.SpyIconFront:SetColor( frontColor );
-    districtInstance.SpyIconBack:SetHide(false);
+    kInstance.SpyIconBack:SetColor( backColor );
+    kInstance.SpyIconFront:SetColor( frontColor );
+    kInstance.SpyIconBack:SetHide(false);
   else
-    districtInstance.SpyIconBack:SetHide(true);
-  end
-end
-
--- ===========================================================================
-function OnDistrickFilterCheckbox(pControl)
-  if m_ctrlDown then
-    -- Save original value
-    local originalBool = pControl:IsChecked()
-
-    Controls.FilterCityCenterCheckbox:SetCheck(false);
-    Controls.FilterCommericalHubCheckbox:SetCheck(false);
-    Controls.FilterTheaterCheckbox:SetCheck(false);
-    Controls.FilterCampusCheckbox:SetCheck(false);
-    Controls.FilterIndustrialCheckbox:SetCheck(false);
-    Controls.FilterNeighborhoodCheckbox:SetCheck(false);
-    Controls.FilterSpaceportCheckbox:SetCheck(false);
-
-    -- Restore the previous value
-    pControl:SetCheck(originalBool)
+    kInstance.SpyIconBack:SetHide(true);
   end
 
-  Refresh()
+  return kInstance;
 end
-
--- ===========================================================================
-function HasMetAndAlive(player:table)
-  local localPlayerID = Game.GetLocalPlayer()
-  if localPlayerID == player:GetID() then
-    return true
-  end
-
-  local localPlayer = Players[localPlayerID];
-  local localPlayerDiplomacy = localPlayer:GetDiplomacy();
-
-  if player:IsAlive() and localPlayerDiplomacy:HasMet(player:GetID()) then
-    return true;
-  end
-
-  return false;
-end
-
-function IsCityState(player:table)
-  local playerInfluence:table = player:GetInfluence();
-  if  playerInfluence:CanReceiveInfluence() then
-    return true
-  end
-  return false
-end
-
--- ---------------------------------------------------------------------------
--- Filter pulldown functions
--- ---------------------------------------------------------------------------
-function RefreshFilters()
-  -- Clear current filters
-  Controls.DestinationFilterPulldown:ClearEntries();
-  m_filterList = {};
-  m_filterCount = 0;
-
-  -- Add "All" Filter
-  AddFilter(Locale.Lookup("LOC_ESPIONAGECHOOSER_FILTER_ALL"), function(a) return true; end);
-
-  -- Add Players Filter
-  local players:table = Game.GetPlayers();
-  local addedCityStateFilter:boolean = false
-  for i, pPlayer in ipairs(players) do
-    if ShouldAddToFilter(pPlayer) then
-      if pPlayer:IsMajor() then
-        local playerConfig:table = PlayerConfigurations[pPlayer:GetID()];
-        local name = Locale.Lookup(GameInfo.Civilizations[playerConfig:GetCivilizationTypeID()].Name);
-        AddFilter(name, function(a) return a:GetID() == pPlayer:GetID() end);
-      elseif not addedCityStateFilter then
-        -- Add "City States" Filter
-        AddFilter(Locale.Lookup("LOC_HUD_REPORTS_CITY_STATE"), IsCityState);
-        addedCityStateFilter = true
-      end
-    end
-  end
-
-  -- Add filters to pulldown
-  for index, filter in ipairs(m_filterList) do
-    AddFilterEntry(index);
-  end
-
-  -- Select first filter
-  Controls.FilterButton:SetText(m_filterList[m_filterSelected].FilterText);
-
-  -- Calculate Internals
-  Controls.DestinationFilterPulldown:CalculateInternals();
-
-  UpdateFilterArrow();
-end
-
-function AddFilter( filterName:string, filterFunction )
-  -- Make sure we don't add duplicate filters
-  for index, filter in ipairs(m_filterList) do
-    if filter.FilterText == filterName then
-      return;
-    end
-  end
-
-  m_filterCount = m_filterCount + 1;
-  m_filterList[m_filterCount] = {FilterText=filterName, FilterFunction=filterFunction};
-end
-
-function AddFilterEntry( filterIndex:number )
-  local filterEntry:table = {};
-  Controls.DestinationFilterPulldown:BuildEntry( "FilterEntry", filterEntry );
-  filterEntry.Button:SetText(m_filterList[filterIndex].FilterText);
-  filterEntry.Button:SetVoids(i, filterIndex);
-end
-
-function UpdateFilterArrow()
-  if Controls.DestinationFilterPulldown:IsOpen() then
-    Controls.PulldownOpenedArrow:SetHide(true);
-    Controls.PulldownClosedArrow:SetHide(false);
-  else
-    Controls.PulldownOpenedArrow:SetHide(false);
-    Controls.PulldownClosedArrow:SetHide(true);
-  end
-end
-
-function OnFilterSelected( index:number, filterIndex:number )
-  m_filterSelected = filterIndex;
-  Controls.FilterButton:SetText(m_filterList[m_filterSelected].FilterText);
-
-  Refresh();
-end
-
--- ===========================================================================
-function AddTopDistrictToolTips()
-  Controls.FilterCityCenterCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_CITY_CENTER_NAME"));
-  Controls.FilterCommericalHubCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_COMMERCIAL_HUB_NAME"));
-  Controls.FilterTheaterCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_THEATER_NAME"));
-  Controls.FilterCampusCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_CAMPUS_NAME"));
-  Controls.FilterIndustrialCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_INDUSTRIAL_ZONE_NAME"));
-  Controls.FilterNeighborhoodCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_NEIGHBORHOOD_NAME"));
-  Controls.FilterSpaceportCheckbox:SetToolTipString(Locale.Lookup("LOC_DISTRICT_SPACEPORT_NAME"));
-end
-
 
 -- ===========================================================================
 --  Called once during Init
@@ -652,7 +561,7 @@ function PopulateTabs()
   end
 
   if m_tabs == nil then
-    m_tabs = CreateTabs( Controls.TabContainer, 42, 34, 0xFF331D05 );
+    m_tabs = CreateTabs( Controls.TabContainer, 42, 34, UI.GetColorValueFromHexLiteral(0xFF331D05) );
   end
 
   -- Operatives Tab
@@ -755,8 +664,10 @@ function AddOperative(spy:table)
     operativeInstance.CityBanner:LocalizeAndSetToolTip("LOC_ESPIONAGEOVERVIEW_VIEW_CITY");
     operativeInstance.CityBanner:RegisterCallback( Mouse.eLClick, function() LookAtCity(ownerCity:GetOwner(), ownerCity:GetID()); end );
     operativeInstance.CityBanner:RegisterCallback(Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+    operativeInstance.CityBanner:SetHide(false);
+  else
+    operativeInstance.CityBanner:SetHide(true);
   end
-  operativeInstance.CityBanner:SetHide(false);
 
   local operationType:number = spy:GetSpyOperation();
   if operationType == -1 then
@@ -867,7 +778,7 @@ function AddOffMapOperative(spy:table)
 end
 
 ------------------------------------------------------------------------------------------------
-function AddCapturedOperative(spy:table, spyID:number, playerCapturedBy:number)
+function AddCapturedOperative(spy:table, playerCapturedBy:number)
   local operativeInstance:table = m_OperativeIM:GetInstance();
 
   -- Adjust texture offset
@@ -891,13 +802,18 @@ function AddCapturedOperative(spy:table, spyID:number, playerCapturedBy:number)
     TruncateStringWithTooltip(operativeInstance.AskForTradeButton, MAX_BEFORE_TRUNC_ASK_FOR_TRADE, Locale.Lookup("LOC_ESPIONAGEOVERVIEW_ASK_FOR_TRADE"));
 
     -- Show the ask trade button, if there is no pending deal.
-    if (not DealManager.HasPendingDeal(Game.GetLocalPlayer(), capturingPlayerID)) then
-      operativeInstance.AskForTradeButton:SetDisabled(false);
-      operativeInstance.AskForTradeButton:RegisterCallback( Mouse.eLClick, function() OnAskForOperativeTradeClicked(playerCapturedBy, spyID); end );
-      operativeInstance.AskForTradeButton:SetToolTipString("");
-    else
+    local localPlayerID:number = Game.GetLocalPlayer();
+    local atWarWith:boolean = Players[localPlayerID]:GetDiplomacy():IsAtWarWith(playerCapturedBy);
+    if atWarWith then
+      operativeInstance.AskForTradeButton:SetDisabled(true);
+      operativeInstance.AskForTradeButton:SetToolTipString(Locale.Lookup("LOC_DIPLOPANEL_AT_WAR"));
+    elseif DealManager.HasPendingDeal(localPlayerID, playerCapturedBy) then
       operativeInstance.AskForTradeButton:SetDisabled(true);
       operativeInstance.AskForTradeButton:SetToolTipString(Locale.Lookup("LOC_DIPLOMACY_ANOTHER_DEAL_WITH_PLAYER_PENDING"));
+    else
+      operativeInstance.AskForTradeButton:SetDisabled(false);
+      operativeInstance.AskForTradeButton:RegisterCallback( Mouse.eLClick, function() OnAskForOperativeTradeClicked(playerCapturedBy, spy.NameIndex); end );
+      operativeInstance.AskForTradeButton:SetToolTipString("");
     end
   else
     UI.DataError("Could not find player configuration for player ID: " .. tostring(playerCapturedBy));
@@ -943,11 +859,12 @@ function OnAskForOperativeTradeClicked(capturingPlayerID:number, capturedSpyID:n
 end
 
 ------------------------------------------------------------------------------------------------
-function AddCapturedEnemyOperative(spyInfo:table, spyID:number)
+function AddCapturedEnemyOperative(spyInfo:table)
   local enemyOperativeInstance:table = m_EnemyOperativeIM:GetInstance();
 
   -- Update spy name
-  enemyOperativeInstance.SpyName:SetText(Locale.ToUpper(spyInfo.Name));
+  local spyName:string = Locale.ToUpper(spyInfo.Name);
+  enemyOperativeInstance.SpyName:SetText(spyName);
 
   -- Update owning civ spy icon
   local backColor:number, frontColor:number  = UI.GetPlayerColors( spyInfo.OwningPlayer );
@@ -956,10 +873,23 @@ function AddCapturedEnemyOperative(spyInfo:table, spyID:number)
 
   -- Update owning civ name
   local owningPlayerConfig:table = PlayerConfigurations[spyInfo.OwningPlayer];
-  enemyOperativeInstance.CivName:SetText(Locale.Lookup(owningPlayerConfig:GetPlayerName()));
+  enemyOperativeInstance.CivName:SetText(Locale.Lookup(owningPlayerConfig:GetCivilizationDescription()));
 
-  -- Set button callback
-  enemyOperativeInstance.GridButton:RegisterCallback( Mouse.eLClick, function() OnAskForEnemyOperativeTradeClicked(spyInfo.OwningPlayer, spyID); end );
+  local pLocalPlayerDiplo:table = Players[Game.GetLocalPlayer()]:GetDiplomacy();
+  if pLocalPlayerDiplo and not pLocalPlayerDiplo:IsAtWarWith(spyInfo.OwningPlayer) then
+    -- If we're not at war with the spies owner allow trading for that spy
+    enemyOperativeInstance.OfferTradeText:SetHide(false);
+    enemyOperativeInstance.GridButton:SetDisabled(false);
+    enemyOperativeInstance.GridButton:RegisterCallback( Mouse.eLClick, function() OnAskForEnemyOperativeTradeClicked(spyInfo.OwningPlayer, spyInfo.NameIndex); end );
+    enemyOperativeInstance.GridButton:SetToolTipString("");
+  else
+    enemyOperativeInstance.OfferTradeText:SetHide(true);
+    enemyOperativeInstance.GridButton:SetDisabled(true);
+    enemyOperativeInstance.GridButton:ClearCallback( Mouse.eLClick );
+    enemyOperativeInstance.GridButton:SetToolTipString(Locale.Lookup("LOC_ESPIONAGE_SPY_TRADE_DISABLED_AT_WAR", spyName, Locale.Lookup(owningPlayerConfig:GetCivilizationShortDescription())));
+  end
+
+  Controls.CapturedEnemyOperativeStack:CalculateSize();
 end
 
 ------------------------------------------------------------------------------------------------
@@ -1015,6 +945,195 @@ function OnLocalPlayerTurnEnd()
   end
 end
 
+-- ---------------------------------------------------------------------------
+-- Filter helper functions
+-- ---------------------------------------------------------------------------
+
+function HasMetAndAlive(player:table)
+  local localPlayerID = Game.GetLocalPlayer()
+  if localPlayerID == player:GetID() then
+    return true
+  end
+
+  local localPlayer = Players[localPlayerID];
+  local localPlayerDiplomacy = localPlayer:GetDiplomacy();
+
+  if player:IsAlive() and localPlayerDiplomacy:HasMet(player:GetID()) then
+    return true;
+  end
+
+  return false;
+end
+
+function ShouldAddToFilter(player:table)
+  if HasMetAndAlive(player) and (not player:IsBarbarian()) then
+    return true
+  end
+  return false
+end
+
+-- ---------------------------------------------------------------------------
+-- Filter pulldown functions
+-- ---------------------------------------------------------------------------
+function RefreshFilters()
+  -- Clear current filters
+  Controls.DestinationFilterPulldown:ClearEntries();
+  m_filterList = {};
+  m_filterCount = 0;
+
+  -- Add "All" Filter
+  AddFilter(Locale.Lookup("LOC_ESPIONAGECHOOSER_FILTER_ALL"), function(a) return true; end);
+
+  -- Add Players Filter
+  local players:table = Game.GetPlayers();
+  for i, pPlayer in ipairs(players) do
+    if ShouldAddToFilter(pPlayer) then
+      if pPlayer:IsMajor() then
+        local playerConfig:table = PlayerConfigurations[pPlayer:GetID()];
+        local name = Locale.Lookup(GameInfo.Civilizations[playerConfig:GetCivilizationTypeID()].Name);
+        AddFilter(name, function(a) return a:GetID() == pPlayer:GetID() end);
+      end
+    end
+  end
+
+  -- Add "City States" Filter
+  AddFilter(Locale.Lookup("LOC_HUD_REPORTS_CITY_STATE"), function(a) return a:IsMinor() end);
+
+  -- Add International Filter
+  AddFilter(Locale.Lookup("LOC_ESPIONAGECHOOSER_FILTER_INTERNATIONAL"), function(a) return a:GetID() ~= Game.GetLocalPlayer() end);
+
+  -- Add filters to pulldown
+  for index, filter in ipairs(m_filterList) do
+    AddFilterEntry(index);
+  end
+
+  -- Select first filter
+  Controls.FilterButton:SetText(m_filterList[m_filterSelected].FilterText);
+
+  -- Calculate Internals
+  Controls.DestinationFilterPulldown:CalculateInternals();
+
+  UpdateFilterArrow();
+end
+
+function AddFilter( filterName:string, filterFunction )
+  -- Make sure we don't add duplicate filters
+  for index, filter in ipairs(m_filterList) do
+    if filter.FilterText == filterName then
+      return;
+    end
+  end
+
+  m_filterCount = m_filterCount + 1;
+  m_filterList[m_filterCount] = {FilterText=filterName, FilterFunction=filterFunction};
+end
+
+function AddFilterEntry( filterIndex:number )
+  local filterEntry:table = {};
+  Controls.DestinationFilterPulldown:BuildEntry( "FilterEntry", filterEntry );
+  filterEntry.Button:SetText(m_filterList[filterIndex].FilterText);
+  filterEntry.Button:SetVoids(i, filterIndex);
+end
+
+function UpdateFilterArrow()
+  if Controls.DestinationFilterPulldown:IsOpen() then
+    Controls.PulldownOpenedArrow:SetHide(true);
+    Controls.PulldownClosedArrow:SetHide(false);
+  else
+    Controls.PulldownOpenedArrow:SetHide(false);
+    Controls.PulldownClosedArrow:SetHide(true);
+  end
+end
+
+function OnFilterSelected( index:number, filterIndex:number )
+  m_filterSelected = filterIndex;
+  Controls.FilterButton:SetText(m_filterList[m_filterSelected].FilterText);
+
+  print("selected filter " .. m_filterSelected)
+  Refresh();
+end
+
+-- ---------------------------------------------------------------------------
+-- Disctrict Filter Panel
+-- ---------------------------------------------------------------------------
+function CheckDistrictFilters(pCity:table)
+  if table.count(m_DistrictFilterSelection) > 0 then
+    for district, isChecked in pairs(m_DistrictFilterSelection) do
+      if isChecked and not hasDistrict(pCity, district) then
+        return false
+      end
+    end
+  end
+  return true
+end
+
+
+function BuildDistrictFilterPanel()
+  m_DistrictFilterChoiceIM:ResetInstances()
+
+  for row in GameInfo.Districts() do
+    -- Skip the following districts
+    -- 1. City Center
+    -- 2. Wonder
+    if row.DistrictType ~= "DISTRICT_CITY_CENTER" and row.DistrictType ~= "DISTRICT_WONDER" then
+      -- Ensure that this is not a district that replaces another district
+      local validRow:boolean = true
+      for replcRow in GameInfo.DistrictReplaces() do
+        if replcRow.CivUniqueDistrictType == row.DistrictType then
+          validRow = false
+          break
+        end
+      end
+
+      if validRow then
+        local kInstance:table = m_DistrictFilterChoiceIM:GetInstance()
+        kInstance.DistrictIcon:SetIcon("ICON_" .. row.DistrictType);
+        local sLabel:string = Locale.Lookup(row.Name);
+        kInstance.DistrictLabel:SetText(sLabel);
+        kInstance.DistrictsFilterButton:RegisterCallback(Mouse.eLClick, 
+        function()
+        print(row.DistrictType)
+        if not m_DistrictFilterSelection[row.DistrictType] then
+          kInstance.DistrictsFilterButton:SetTextureOffsetVal(0, 24)
+          m_DistrictFilterSelection[row.DistrictType] = true
+        else
+          kInstance.DistrictsFilterButton:SetTextureOffsetVal(0, 0)
+          m_DistrictFilterSelection[row.DistrictType] = false
+        end
+
+        Refresh();
+        end)
+
+        -- If the entry already exits, use the state from history
+        if m_DistrictFilterSelection[row.DistrictType] ~= nil then
+          if m_DistrictFilterSelection[row.DistrictType] then
+            kInstance.DistrictsFilterButton:SetTextureOffsetVal(0, 24)
+          else
+            kInstance.DistrictsFilterButton:SetTextureOffsetVal(0, 0)
+          end
+        else
+          kInstance.DistrictsFilterButton:SetTextureOffsetVal(0, 0)
+          m_DistrictFilterSelection[row.DistrictType] = false
+        end
+      end
+    end
+  end
+
+  Controls.DistrictsFilterStack:CalculateSize()
+  Controls.DistrictsFilterGrid:DoAutoSize()
+end
+
+function OnDistrictFilterPanelOpen()
+  Controls.DistrictsFilterGrid:SetHide(false)
+  Controls.DistrictsFilterShownButton:SetTextureOffsetVal(0, 40)
+  BuildDistrictFilterPanel()
+end
+
+function OnDistrictFilterPanelClose()
+  Controls.DistrictsFilterGrid:SetHide(true)
+  Controls.DistrictsFilterShownButton:SetTextureOffsetVal(0, 0)
+end
+
 -- ===========================================================================
 --  Game Event
 -- ===========================================================================
@@ -1042,6 +1161,14 @@ function OnSpyAdded(spyOwner, spyUnitID)
       if (m_selectedTab == EspionageTabs.OPERATIVES) then
         RefreshOperatives();
       end
+    end
+  end
+end
+
+function OnDiplomacyDealEnacted()
+  if (not ContextPtr:IsHidden()) then
+    if (m_selectedTab == EspionageTabs.MISSION_HISTORY) then
+      RefreshMissionHistory();
     end
   end
 end
@@ -1105,52 +1232,55 @@ end
 
 -- ===========================================================================
 function Initialize()
-  print("Initializing BES Overview")
-
   Controls.Title:SetText(Locale.Lookup("LOC_ESPIONAGE_TITLE"));
 
   -- Control Events
   Controls.CloseButton:RegisterCallback(Mouse.eLClick, OnClose);
   Controls.CloseButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  -- Filter Checkboxes
-  Controls.FilterCityCenterCheckbox:RegisterCallback( Mouse.eLClick, function() OnDistrickFilterCheckbox(Controls.FilterCityCenterCheckbox) end );
-  Controls.FilterCommericalHubCheckbox:RegisterCallback( Mouse.eLClick, function() OnDistrickFilterCheckbox(Controls.FilterCommericalHubCheckbox) end );
-  Controls.FilterTheaterCheckbox:RegisterCallback( Mouse.eLClick, function() OnDistrickFilterCheckbox(Controls.FilterTheaterCheckbox) end );
-  Controls.FilterCampusCheckbox:RegisterCallback( Mouse.eLClick, function() OnDistrickFilterCheckbox(Controls.FilterCampusCheckbox) end );
-  Controls.FilterIndustrialCheckbox:RegisterCallback( Mouse.eLClick, function() OnDistrickFilterCheckbox(Controls.FilterIndustrialCheckbox) end );
-  Controls.FilterNeighborhoodCheckbox:RegisterCallback( Mouse.eLClick, function() OnDistrickFilterCheckbox(Controls.FilterNeighborhoodCheckbox) end );
-  Controls.FilterSpaceportCheckbox:RegisterCallback( Mouse.eLClick, function() OnDistrickFilterCheckbox(Controls.FilterSpaceportCheckbox) end );
+  Controls.CapturedEnemyOperativeContainer:RegisterSizeChanged( OnCapturedEnemyOperativeContainerSizeChanged );
+
   -- Filter Pulldown
   Controls.FilterButton:RegisterCallback( eLClick, UpdateFilterArrow );
   Controls.DestinationFilterPulldown:RegisterSelectionCallback( OnFilterSelected );
 
-  -- Lua Events
-  LuaEvents.PartialScreenHooks_OpenEspionage.Add( OnOpen );
-  LuaEvents.PartialScreenHooks_CloseEspionage.Add( OnClose );
-  LuaEvents.PartialScreenHooks_CloseAllExcept.Add( OnCloseAllExcept );
+  -- District Filter Panel
+  Controls.DistrictsFilterShownButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+  Controls.DistrictsFilterShownButton:RegisterCallback( Mouse.eLClick,
+  function()
+    if Controls.DistrictsFilterGrid:IsHidden() then
+      OnDistrictFilterPanelOpen()
+    else
+      OnDistrictFilterPanelClose()
+    end
+    end);
 
-  -- Animation Controller
-  m_AnimSupport = CreateScreenAnimation(Controls.SlideAnim);
+    -- Lua Events
+    LuaEvents.PartialScreenHooks_OpenEspionage.Add( OnOpen );
+    LuaEvents.PartialScreenHooks_CloseEspionage.Add( OnClose );
+    LuaEvents.PartialScreenHooks_CloseAllExcept.Add( OnCloseAllExcept );
 
-  -- Rundown / Screen Events
-  Events.SystemUpdateUI.Add(m_AnimSupport.OnUpdateUI);
-  ContextPtr:SetInputHandler(m_AnimSupport.OnInputHandler, true);
+    -- Animation Controller
+    m_AnimSupport = CreateScreenAnimation(Controls.SlideAnim);
 
-  -- Game Engine Events
-  Events.UnitOperationStarted.Add( OnUnitOperationStarted );
-  Events.LocalPlayerTurnEnd.Add( OnLocalPlayerTurnEnd );
+    -- Rundown / Screen Events
+    Events.SystemUpdateUI.Add(m_AnimSupport.OnUpdateUI);
+    ContextPtr:SetInputHandler(m_AnimSupport.OnInputHandler, true);
 
-  Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );
+    -- Game Engine Events
+    Events.UnitOperationStarted.Add( OnUnitOperationStarted );
+    Events.LocalPlayerTurnEnd.Add( OnLocalPlayerTurnEnd );
 
-  Events.SpyAdded.Add( OnSpyAdded );
-  Events.SpyRemoved.Add( OnSpyRemoved );
+    Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );
 
-  -- Hot-Reload Events
-  ContextPtr:SetInitHandler(OnInit);
-  ContextPtr:SetShutdown(OnShutdown);
-  LuaEvents.GameDebug_Return.Add(OnGameDebugReturn);
+    Events.SpyAdded.Add( OnSpyAdded );
+    Events.SpyRemoved.Add( OnSpyRemoved );
+    Events.DiplomacyDealEnacted.Add( OnDiplomacyDealEnacted ); -- Folks may be trading captured spies, if they do we must update the panel
 
-  PopulateTabs();
-  AddTopDistrictToolTips();
-end
-Initialize();
+    -- Hot-Reload Events
+    ContextPtr:SetInitHandler(OnInit);
+    ContextPtr:SetShutdown(OnShutdown);
+    LuaEvents.GameDebug_Return.Add(OnGameDebugReturn);
+
+    PopulateTabs();
+  end
+  Initialize();

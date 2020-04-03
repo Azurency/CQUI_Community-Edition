@@ -7,8 +7,10 @@
     <Container ID="OperativeTabContainer" Size="parent,parent">
       <!-- Operative Header -->
       <Grid Size="parent,70" Offset="0,46" Texture="Controls_TitleBarDark" SliceCorner="10,4" SliceSize="22,24" SliceTextureSize="42,34">
-        <Label ID="OperativeHeader" Offset="25,38" Style="FontFlair24" SmallCaps="30" SmallCapsType="FirstOnly"/>
+        <Label ID="OperativeHeader" Offset="10,38" Style="FontFlair24" SmallCaps="30" SmallCapsType="FirstOnly"/>
       </Grid>
+
+      <Label ID="NoOperativesLabel" Anchor="C,T" Align="Center" Offset="0,150" Style="FontNormal16" WrapWidth="parent-60" String="LOC_ESPIONAGE_NO_OPERATIVES"/>
 
       <!-- Operative Stack  -->
       <ScrollPanel ID="OperativeScrollPanel" Anchor="R,B" Size="parent-22,parent-124" Offset="12,6" Vertical="1">
@@ -23,12 +25,24 @@
     <!-- ================================================================== -->
     <Container ID="CityActivityTabContainer" Size="parent,parent">
       <!-- City Activity Header -->
-      <Grid Size="parent,100" Offset="0,46" Texture="Controls_TitleBarDark" SliceCorner="10,4" SliceSize="22,24" SliceTextureSize="42,34">
-        <Label Offset="25,38" Style="FontFlair24" SmallCaps="30" SmallCapsType="EveryWord" String="LOC_ESPIONAGEOVERVIEW_CITY_ACTIVITY_SUBHEADER"/>
+      <Grid Size="parent,110" Offset="0,46" Texture="Controls_TitleBarDark" SliceCorner="10,4" SliceSize="22,24" SliceTextureSize="42,34">
+        <Label Offset="10,38" Style="FontFlair24" SmallCaps="30" SmallCapsType="EveryWord" String="LOC_ESPIONAGEOVERVIEW_CITY_ACTIVITY_SUBHEADER"/>
 
-        <PullDown ID="DestinationFilterPulldown" ConsumeMouse="0" Offset="13,-17" Anchor="L,B" Size="230,25" AutoSizePopUp="1" AutoFlip="1" ScrollThreshold="400">
+        <!--
+        <Grid Anchor="L,B" Size="240,28" Offset="16,7" Style="ColumnHeader">
+          <Label Anchor="C,C" Style="FontNormal18" String="LOC_ESPIONAGEOVERVIEW_CITY"/>
+        </Grid>
+        -->
+
+        <Grid Anchor="R,B" Size="240,28" Offset="16,12" Style="ColumnHeader">
+          <Label Anchor="C,C" Style="FontNormal18" String="LOC_HUD_DISTRICTS"/>
+        </Grid>
+
+
+        <!-- Destination Filter Pulldown -->
+        <PullDown ID="DestinationFilterPulldown" ConsumeMouse="0" Offset="53,-16" Anchor="L,B" Size="200,32" AutoSizePopUp="1" AutoFlip="1" ScrollThreshold="400">
           <ButtonData>
-            <GridButton   ID="FilterButton" TextAnchor="R,C" TextOffset="15,0" Style="FontNormal14" FontStyle="Shadow" EffectColor="0,0,0,255" Offset="0,-25" Size="50,-20" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" />
+            <GridButton   ID="FilterButton" TextAnchor="C,C" TextOffset="0,0" Style="FontNormal14" FontStyle="Shadow" EffectColor="0,0,0,255" Offset="0,-25" Size="50,-20" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" />
           </ButtonData>
 
           <GridData InnerPadding="15,15" Offset="0,0" Anchor="L,T" Style="Drawer"/>
@@ -42,75 +56,45 @@
           <StackData StackGrowth="Bottom" Offset="0,0" Size="200,400" Anchor="L,T" />
 
           <InstanceData Name="FilterEntry">
-            <GridButton Anchor="L,T" ID="Button" Size="265,26" Offset="1,0" Style="FontNormal14" FontStyle="Shadow" EffectColor="0,0,0,255" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" StateOffsetIncrement="0,24"/>
+            <GridButton Anchor="L,T" ID="Button" Size="0,26" Offset="1,0" Style="FontNormal14" FontStyle="Shadow" EffectColor="0,0,0,255" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" StateOffsetIncrement="0,24"/>
           </InstanceData>
 
           <!-- Show Route Text -->
-          <Label String="LOC_ESPIONAGECHOOSER_FILTER_SHOW_CITIES" Anchor="L,T" Offset="30,-19" Style="FontNormal14" FontStyle="Shadow" EffectColor="0,0,0,255"/>
-          <Image ID="PulldownOpenedArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,T" Offset="7,-21"/>
-          <Image ID="PulldownClosedArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,T" Offset="7,-25"/>
+          <!-- <Label String="LOC_ESPIONAGECHOOSER_FILTER_SHOW_CITIES" Anchor="L,T" Offset="30,-16" Style="FontNormal14" FontStyle="Shadow" EffectColor="0,0,0,255"/> -->
+          <Image ID="PulldownOpenedArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,0" Size="20,16" Anchor="L,T" Offset="7,-17"/>
+          <Image ID="PulldownClosedArrow" Texture="Controls_ButtonExtendSmall2" TextureOffset="0,60" Size="20,16" Anchor="L,T" Offset="7,-22"/>
         </PullDown>
 
-        <Grid Anchor="R,B" Size="240,28" Offset="22,7" Style="ColumnHeader">
-          <!-- District Icons -->
-          <Stack ID="DistrictFilterStack" StackGrowth="Right" StackPadding="-15" Offset="15,-27" Anchor="L,T">
-            <Stack StackGrowth="Down" StackPadding="8">
-              <CheckBox ID="FilterCityCenterCheckbox" IsChecked="1" Offset="0,4" BoxOnLeft="1" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
-              <Image Size="32,32" Texture="Districts32" Anchor="C,B" Offset="-15,-5" Color="255,255,255,255" TextureOffset="0,0"/>
-            </Stack>
+        <Button ID="DistrictsFilterShownButton" Size="40,40"  Anchor="L,B" Offset="10,3" Texture="LaunchBar_Hook_ButtonSmall" Style="ButtonDisabledText">
+          <Image Anchor="C,C" Offset="0,-1" Size="26,26" IconSize="26" Icon="ICON_STAT_DISTRICTS"/>
+        </Button>
 
-            <Stack StackGrowth="Down" StackPadding="8">
-              <CheckBox  ID="FilterCommericalHubCheckbox" IsChecked="0" Offset="0,4" BoxOnLeft="1" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
-              <Image Size="32,32" Texture="Districts32" Anchor="C,B" Offset="-15,-5" Color="255,255,255,255" TextureOffset="192,0"/>
-            </Stack>
-
-            <Stack StackGrowth="Down" StackPadding="8">
-              <CheckBox ID="FilterTheaterCheckbox" IsChecked="0" Offset="0,4" BoxOnLeft="1" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
-              <Image Size="32,32" Texture="Districts32" Anchor="C,B" Offset="-15,-5" Color="255,255,255,255" TextureOffset="0,32"/>
-            </Stack>
-
-            <Stack StackGrowth="Down" StackPadding="8">
-              <CheckBox ID="FilterCampusCheckbox" IsChecked="0" Offset="0,4" BoxOnLeft="1" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
-              <Image Size="32,32" Texture="Districts32" Anchor="C,B" Offset="-15,-5" Color="255,255,255,255" TextureOffset="64,0"/>
-            </Stack>
-
-            <Stack StackGrowth="Down" StackPadding="8">
-              <CheckBox ID="FilterIndustrialCheckbox" IsChecked="0" Offset="0,4" BoxOnLeft="1" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
-              <Image Size="32,32" Texture="Districts32" Anchor="C,B" Offset="-15,-5" Color="255,255,255,255" TextureOffset="32,32"/>
-            </Stack>
-
-            <Stack StackGrowth="Down" StackPadding="8">
-              <CheckBox ID="FilterNeighborhoodCheckbox" IsChecked="0" Offset="0,4" BoxOnLeft="1" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
-              <Image Size="32,32" Texture="Districts32" Anchor="C,B" Offset="-15,-5" Color="255,255,255,255" TextureOffset="64,32"/>
-            </Stack>
-
-            <Stack StackGrowth="Down" StackPadding="8">
-              <CheckBox ID="FilterSpaceportCheckbox" IsChecked="0" Offset="0,4" BoxOnLeft="1" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
-              <Image Size="32,32" Texture="Districts32" Anchor="C,B" Offset="-15,-5" Color="255,255,255,255" TextureOffset="128,32"/>
-            </Stack>
-          </Stack>
+        <Grid ID="DistrictsFilterGrid" Size="216,0" Anchor="L,T" Offset="-216,83" Texture="Controls_ContainerBlue" SliceStart="0,0" SliceCorner="3,3" SliceSize="9,9" SliceTextureSize="16,16" ConsumeMouse="1" AutoSize="V" AutoSizePadding="0,3" Hidden="1">
+          <Stack ID="DistrictsFilterStack" StackGrowth="Bottom" StackPadding="5" Anchor="L,T" Offset="8,5" WrapWidth="parent-166" WrapGrowth="Right" WrapPadding="10,0"/>
         </Grid>
       </Grid>
 
-      <!-- City Activity Stack  -->
-      <Container Anchor="L,C" Offset="12,70" Size="parent-22,parent-156">
-        <ScrollPanel ID="CityActivityScrollPanel" Anchor="L,C" Size="parent,parent" Vertical="1">
-          <ScrollBar Anchor="R,C" AnchorSide="O,I"  Offset="-12,0" Style="ScrollVerticalBar"/>
+      <Label ID="NoCitiesLabel" Anchor="C,T" Align="Center" Offset="0,190" Style="FontNormal16" WrapWidth="parent-60" String="LOC_ESPIONAGE_NO_CITIES"/>
 
-          <Stack ID="CityActivityStack" Anchor="L,T" Offset="-4,0" StackGrowth="Down" StackPadding="4"/>
-        </ScrollPanel>
-      </Container>
+      <!-- City Activity Stack  -->
+      <ScrollPanel ID="CityActivityScrollPanel" Anchor="R,B" Size="parent-22,parent-166" Offset="12,6" Vertical="1">
+        <ScrollBar Anchor="R,C" AnchorSide="O,I"  Offset="-2,0" Style="ScrollVerticalBar"/>
+
+        <Stack ID="CityActivityStack" Anchor="C,T" Offset="2,0" StackGrowth="Down" StackPadding="4"/>
+      </ScrollPanel>
     </Container>
 
     <!-- ================================================================== -->
     <!--  Mission History Tab                                                     -->
     <!-- ================================================================== -->
     <Container ID="MissionHistoryTabContainer" Anchor="C,B" Size="parent-2,parent-88" Offset="0,8">
+      <Label ID="NoHistoryLabel" Anchor="C,T" Align="Center" Offset="0,80" Style="FontNormal16" WrapWidth="parent-60" String="LOC_ESPIONAGE_NO_HISTORY"/>
+
       <Stack ID="MissionHistoryTabStack" StackGrowth="Down">
-        <Container ID="CapturedEnemyOperativeContainer" Size="parent,auto" AutoSizePadding="0,4">
-          <Label Offset="12,2" Style="FontFlair22" SmallCaps="28" SmallCapsType="EveryWord" String="LOC_ESPIONAGEOVERVIEW_CAPTURED_SPIES"/>
-          <Stack ID="CapturedEnemyOperativeStack" Anchor="C,T" Offset="0,30" StackGrowth="Down" StackPadding="4"/>
-        </Container>
+        <Stack ID="CapturedEnemyOperativeContainer" Anchor="C,T" StackPadding="4" AutoSizePadding="0,4">
+          <Label Offset="12,0" Style="FontFlair22" SmallCaps="28" SmallCapsType="EveryWord" String="LOC_ESPIONAGEOVERVIEW_CAPTURED_SPIES"/>
+          <Stack ID="CapturedEnemyOperativeStack" Anchor="C,T" StackGrowth="Down" StackPadding="2"/>
+        </Stack>
         <Container ID="MissionHistoryContainer" Size="parent,auto" AutoSizePadding="0,4">
           <Grid Anchor="C,T" Size="Parent-2,40" Texture="Controls_TitleBarDark" SliceCorner="14,11" SliceSize="14, 12" SliceTextureSize="42,34">
             <Label Anchor="C,C" Offset="0,2" Style="FontFlair22" SmallCaps="28" SmallCapsType="EveryWord" String="LOC_ESPIONAGEOVERVIEW_MISSION_HISTORY_SUBHEADER"/>
@@ -131,7 +115,7 @@
     <!-- ================================================================== -->
     <!--  Tabs                                                      -->
     <!-- ================================================================== -->
-    <Container ID="TabContainer" Anchor="C,T" Offset="0,44" Size="514,35">
+    <Container ID="TabContainer" Anchor="C,T" Offset="0,44" Size="514,31">
       <Grid Size="parent,parent" Texture="Controls_TabLedgeCaps"  SliceCorner="20,3" SliceSize="203,24" SliceTextureSize="243,31">
         <Image Texture="Controls_TabLedgeFill" Size="parent-200,23" StretchMode="Tile" Anchor="C,C"/>
         <GridButton ID="OperativesTabButton" Size="130,34" Style="TabButton" FontSize="14" TextOffset="0,2" String="LOC_ESPIONAGEOVERVIEW_OPERATIVES_HEADER">
@@ -211,7 +195,7 @@
             <Label Anchor="L,C" Offset="8,1" ID="TravelMethodName" Style="FontNormal18" String="LOC_ESPIONAGEOVERVIEW_TRAVELING"/>
             <Label Anchor="R,C" Offset="8,0" ID="TravelTurnsRemaining" Style="FontNormal16" Color="EspionageOverview_EffectBlue"/>
           </Image>
-          <Label ID="TravelDestinationName" Anchor="R,C" Offset="6,0" Style="FontNormal14" />
+          <Label ID="TravelDestinationName" Anchor="R,C" Offset="6,0" Style="FontNormal14"/>
         </Grid>
       </Container>
 
@@ -233,7 +217,7 @@
       </Container>
 
       <!-- City Banner -->
-      <GridButton ID="CityBanner" Anchor="R,T" Offset="6,38" Size="auto,28" AutoSizePadding="14,0">
+      <GridButton ID="CityBanner" Anchor="R,T" Offset="6,38" Size="auto,28" AutoSizePadding="14,0" >
         <GridData Texture="Controls_CityBannerSmall" SliceCorner="14,9" SliceSize="5,4" SliceTextureSize="33,28" Color="150,170,100,255"/>
         <Stack ID="CityBannerStack" Anchor="C,C" StackGrowth="Right" StackPadding="4">
           <Label ID="CityName" Offset="0,3" Style="FontFlair12" FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="EveryWord" />
@@ -255,7 +239,7 @@
       <Label ID="SpyName" Offset="46,10" Style="FontFlair18" SmallCaps="24" SmallCapsType="EveryWord"/>
       <Label ID="CivName" Offset="46,28" Style="FontNormal16"/>
 
-      <Label Anchor="R,C" Offset="10,0" Style="FontNormal18" String="LOC_ESPIONAGEOVERVIEW_OFFER_TRADE"/>
+      <Label ID="OfferTradeText" Anchor="R,C" Offset="10,0" Style="FontNormal18" String="LOC_ESPIONAGEOVERVIEW_OFFER_TRADE"/>
     </GridButton>
   </Instance>
 
@@ -313,7 +297,7 @@
       <GridButton ID="BannerBase" Anchor="L,C" Offset="4,4" Size="240,33">
         <GridData Texture="CityPanel_BannerBase" SliceCorner="20,10" SliceSize="160,1" SliceTextureSize="199,33" Color="150,170,100,255"/>
         <Grid             ID="BannerDarker"         Anchor="L,T" Offset="4,2"     Size="parent-8,parent-10"   Texture="CityPanel_BannerDarker"      SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="0,0,0,100" />
-        <Grid             ID="BannerLighter"        Anchor="L,T" Offset="4,2"     Size="parent-8,parent-10"   Texture="CityPanel_BannerLighter"     SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="255,255,255,255" />
+        <Grid             ID="BannerLighter"        Anchor="L,T" Offset="4,2"     Size="parent-8,parent-10"   Texture="CityPanel_BannerLighter"     SliceCorner="95,10" SliceSize="1,1" SliceTextureSize="191,23" Color="255,255,255,150" />
         <Grid                                       Anchor="L,T" Offset="6,2"     Size="parent-10,parent-8"   Texture="CityPanel_BannerNone"        SliceCorner="70,10" SliceSize="1,1" SliceTextureSize="179,20" Color="255,0,0,255" />
         <Label            ID="CityName"             Anchor="C,C" Offset="0,-3"    Style="FontFlair16"         FontStyle="Stroke" EffectColor="0,0,0,25" String="$CityName$" SmallCaps="20" SmallCapsType="EveryWord"/>
 
@@ -325,17 +309,27 @@
       </GridButton>
 
       <!-- District Icons -->
-      <Stack ID="CityDistrictStack" Anchor="L,C" Offset="252,0" StackGrowth="Right">
+      <Stack StackGrowth="Right" Anchor="L,C" Offset="248,0">
+        <Button ID="DistrictsScrollLeftButton" Anchor="L,C" Style="ArrowButtonLeft"/>
+        <Stack ID="CityDistrictStack" StackGrowth="Right"/>
+        <Button ID="DistrictsScrollRightButton" Anchor="L,C" Style="ArrowButtonRight"/>
       </Stack>
     </Grid>
   </Instance>
 
   <!-- District Instance -->
   <Instance Name="CityDistrictInstance">
-    <Image ID="DistrictIcon" Size="32,32" Texture="Districts32" Color="255,255,255,255">
-      <Image ID="SpyIconBack" Anchor="C,C" Size="34,31" Offset="0,0" Texture="Espionage_SpyIconBack">
+    <Image ID="DistrictIcon" Size="32,32" Texture="Districts32" Color="255,255,255,128">
+      <Image ID="SpyIconBack" Anchor="C,C" Size="34,31" Offset="0,0" Texture="Espionage_SpyIconBack" Hidden="1">
         <Image ID="SpyIconFront" Anchor="C,C" Size="30,27" Offset="0,0" Texture="Espionage_SpyIconFront"/>
       </Image>
     </Image>
+  </Instance>
+
+  <Instance Name="DistrictsFilterInstance">
+    <GridButton ID="DistrictsFilterButton" Style="ButtonControl" Size="parent-20,30" Anchor="C,T" Offset="3,0">
+      <Image ID="DistrictIcon" Size="32,32" Texture="Districts32" Offset="-10,0"/>
+      <Label ID="DistrictLabel" Style="FontNormal14" Anchor="L,C" Offset="30,0"/>
+    </GridButton>
   </Instance>
 </Context>

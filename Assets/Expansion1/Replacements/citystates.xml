@@ -3,9 +3,9 @@
 
   <SlideAnim            ID="SlideAnim"          Anchor="R,T"                  Size="514,parent"        Start="-514,27" End="-1,27" Cycle="Once"  Speed="3.4" Function="OutSine" Stopped="1" >
 
-    <Grid                                        Anchor="R,T"                  Size="parent,parent+5"  Texture="Controls_BannerWide" SliceTextureSize="514,Sli" StretchMode="Tile" ConsumeMouse="1" >
+    <Image																				Anchor="R,T"									Size="parent,parent+5"	Texture="Controls_BannerWide" StretchMode="Tile" ConsumeMouse="1" >
       <Image Texture="Controls_GradientSmall" Size="22,parent" AnchorSide="O,I" Anchor="L,T" Color="0,0,0,255" Rotate="90" Offset="-2,0"/>
-    </Grid>
+    </Image>
 
     <!-- List view of CityStates -->
     <Container          ID="ListOfCityStates"                                  Size="parent,parent">
@@ -193,7 +193,7 @@
       <BoxButton  ID="Button"                Anchor="L,C"  Offset="8,0"    Size="40,40"          Color="0,0,0,0">
         <Image    ID="Icon"                  Anchor="L,C"                  Size="36,36"          Texture="CivSymbols36" />
         <Image    ID="DiplomacyPip"          Anchor="L,B"  Offset="-10,-6"  Size="23,23"                Texture="Diplomacy_RelationshipPips" />
-        <Label    ID="QuestIcon"            Anchor="L,T"  Offset="-9,0"  String="[ICON_CityStateQuest]" />
+        <Label    ID="QuestIcon"            Anchor="L,T"  Offset="-9,0"  String="[ICON_CityStateQuest]" Size="28,28"/>
       </BoxButton>
 
       <GridButton ID="NameButton"                          Offset="42,9"    Size="126,33" Texture="Controls_CityBannerSmall" SliceCorner="14,9" SliceSize="5,4" SliceTextureSize="33,28" Color="50,50,50,255">
@@ -248,19 +248,19 @@
   </Instance>
 
   <Instance        Name="BonusCityHeaderInstance">
-    <Container    ID="Top"      Anchor="L,C" Size="parent,16" >
-      <Grid                      Anchor="C,C"              Size="parent,8" Texture="Controls_Div2"  SliceCorner="27,4" SliceTextureSize="54,8" Color="27,40,48,255" />
-      <Image                    Anchor="C,C"              Size="parent,16"      Texture="Controls_Glow"    Color="0,0,0,255" StretchMode="Fill" />
-      <Label      ID="CityName" Anchor="C,C" String="$City$" Style="FontFlair14" SmallCaps="18" SmallCapsType="EveryWord"   Color="255,255,255,120" />
+    <Container    ID="Top"      Anchor="L,C" Size="parent,20" >
+      <Grid                      Anchor="C,C" Offset="0,4"              Size="parent,8" Texture="Controls_Div2"  SliceCorner="27,4" SliceTextureSize="54,8" Color="27,40,48,255" />
+      <Image                    Anchor="C,C" Offset="0,4"              Size="parent,16"      Texture="Controls_Glow"    Color="0,0,0,255" StretchMode="Fill" />
+      <Label      ID="CityName" Anchor="C,C" Offset="0,4" String="$City$" Style="FontFlair14" SmallCaps="18" SmallCapsType="EveryWord"   Color="255,255,255,120" />
     </Container>
   </Instance>
 
   <Instance        Name="BonusItemOnInstance">
-    <Grid          ID="Top"      Anchor="L,T"                  Size="parent,72"        Texture="CityState_BonusFrameOn" SliceCorner="65,29" SliceTextureSize="74,58" >
+    <Grid          ID="Top"      Anchor="L,T"                  Size="parent,auto"			Texture="CityState_BonusFrameOn" SliceCorner="65,29" SliceTextureSize="74,58" Padding="0,5" >
       <Image      ID="Icon"      Anchor="L,T"  Offset="4,5"    Size="50,50"            Texture="EnvoyBonuses50"      />
       <Label      ID="Title"    Anchor="L,T"  Offset="70,6"                            Style="FontNormal14"  String="$BonusTitle$ - GameCore does not expose this yet." />
-      <Container                              Offset="55,0"    Size="parent-55,parent"  >
-        <Label    ID="Details"  Anchor="L,T"  Offset="25,24"  WrapWidth="320"          Style="FontNormal14"  String="$Details$ - GameCore does not expose this yet." ColorSet="CityStateCS" />
+      <Container                              Offset="55,0"    Size="parent-55,auto"  >
+        <Label    ID="Details"  Anchor="L,T"  Offset="25,24"  WrapWidth="315"          Style="FontNormal14"  String="$Details$ - GameCore does not expose this yet." ColorSet="CityStateCS" />
       </Container>
       <Label      ID="Check"    Anchor="R,T"  Offset="8,10" String="[ICON_Checkmark]" Hidden="1" />
     </Grid>
@@ -269,6 +269,8 @@
   <Instance        Name="CityStateIconInstance">
     <Container    ID="Top"          Anchor="L,C"                  Size="40,40" >
       <Button      ID="IconButton"    Anchor="C,C"                  Size="44,44"                Texture="CircleBacking44" NoStateChange="1">
+        <Image											Anchor="C,C"									Size="44,44"								Texture="Circle44_Darker"  Color="0,0,0,50" />
+				<Image											Anchor="C,C"									Size="44,44"								Texture="Circle44_Lighter" Color="255,255,255,100" />
         <Image    ID="Icon"          Anchor="C,C"                  Size="44,44"  />
         <Image    ID="DiplomacyPip"  Anchor="L,B"  Offset="-8,-8"  Size="23,23"                Texture="Diplomacy_RelationshipPips" />
       </Button>
@@ -294,7 +296,7 @@
         <Label    ID="Callout"          Anchor="C,T"  Offset="0,3" String="[ICON_Government]" Style="FontNormal16" Color="10,20,30,200" />
       </Image>
       <Stack      StackGrowth="Bottom" StackPadding="2">
-        <Label    ID="Title"                          Offset="45,0"                        Style="FontFlair16"      String="$Title$"        ColorSet="CityStateCS" />
+        <Label		ID="Title"													Offset="45,0"												Style="FontFlair16"			String="$Title$"				ColorSet="CityStateCS" TruncateWidth="380" TruncatedTooltip="1"/>
         <Label    ID="Description"                    Offset="45,0"  WrapWidth="parent-35"  Style="FontNormal14"    String="$Description$"  Color="255,255,255,255"/>
         <Grid                                          Offset="0,5"  Size="parent,20"      Style="SubContainer4"    Color="25,33,38,255">
           <Label                        Anchor="L,C"  Offset="18,0"                        Style="FontNormal14"    String="LOC_CITY_STATES_REWARD" ColorSet="CityStateCS" />

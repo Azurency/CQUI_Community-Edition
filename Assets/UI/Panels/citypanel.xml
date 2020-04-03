@@ -2,19 +2,19 @@
 <Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd">
   
   <WorldAnchor ID="GrowthHexAnchor" Hidden="1">
-		<AlphaAnim ID="GrowthHexAlpha" AlphaBegin="1" AlphaEnd="0" Stopped="1" Function="OutQuad">
-			<Stack	 ID="GrowthHexStack" Anchor="C,T" StackGrowth="Right" Padding="5">
-				<Label ID="TurnsLeftLabel" Anchor="L,C" Style="FontFlair26" Color0="255,113,246,255" Color1="52,33,90,128" Color2="248,188,238,255" FontStyle="Stroke"/>
-				<Label ID="TurnsLeftDescription" Anchor="L,C" Style="FontNormal14" Color0="252,201,247,255" Color1="0,0,0,100" FontStyle="Stroke" WrapWidth="130" />
-			</Stack>
-		</AlphaAnim>
-	</WorldAnchor>
+    <AlphaAnim ID="GrowthHexAlpha" AlphaBegin="1" AlphaEnd="0" Stopped="1" Function="OutQuad">
+      <Stack	 ID="GrowthHexStack" Anchor="C,T" StackGrowth="Right" Padding="5">
+        <Label ID="TurnsLeftLabel" Anchor="L,C" Style="FontFlair26" Color0="255,113,246,255" Color1="52,33,90,128" Color2="248,188,238,255" FontStyle="Stroke"/>
+        <Label ID="TurnsLeftDescription" Anchor="L,C" Style="FontNormal14" Color0="252,201,247,255" Color1="0,0,0,100" FontStyle="Stroke" WrapWidth="130" />
+      </Stack>
+    </AlphaAnim>
+  </WorldAnchor>
   
-  <AlphaAnim                ID="CityPanelAlpha"       AlphaBegin="0" AlphaEnd="1" Speed="3"   Function="OutSine" Cycle="Once" Size="parent,parent">
-    <SlideAnim              ID="CityPanelSlide"       Start="200,0" End="-175,0"     Speed="3.5" Function="OutSine" Cycle="Once" Size="parent,parent">
-      <GridButton           ID="WoodBacking"          Anchor="R,B" Offset="175,-5"  Size="500,162"          Texture="SelectionPanel_WoodBacking"  SliceCorner="51,50"  SliceSize="1,1" SliceTextureSize="148,156" ConsumeMouse="1">
+  <AlphaAnim			          ID="CityPanelAlpha"       Anchor="R,B"									Size="300,200"	Speed="4.0"	Function="OutSine" Cycle="Once" AlphaBegin="0" AlphaEnd="1" >
+    <SlideAnim						  ID="CityPanelSlide"       Start="0,0"	 End="-73,0"			Size="200,200"	Speed="3.4"	Function="OutSine" Cycle="Once"  >
+      <GridButton						ID="MainPanel"						Anchor="R,B" Offset="0,-5"		Size="500,162"							Texture="SelectionPanel_WoodBacking"	SliceCorner="51,50"  SliceSize="1,1" SliceTextureSize="148,156" ConsumeMouse="1" NoStateChange="1" >
         <Grid               ID="PanelStackShadow"     Anchor="L,T" Offset="100,-100" Size="250,200" Style="DropShadow" />
-        <Grid               ID="MainPanel"            Anchor="R,B" Offset="46,0"    Size="parent-78,parent-2" Texture="SelectionPanel_MainPanel"    SliceCorner="60,60" SliceTextureSize="263,160" />
+        <Grid																					Anchor="R,B" Offset="46,0"		Size="parent-78,parent-2"		Texture="SelectionPanel_MainPanel"		SliceCorner="60,60" SliceTextureSize="263,160" />
 
         <Image              ID="PortraitFrame"        Anchor="L,B" Offset="-14,36"                              Texture="SelectionPanel_PortraitFrame" >
           <Container        ID="LabelButtonRows"      Anchor="L,T"                  Size="270,138">
@@ -32,7 +32,7 @@
               <Label        ID="AmenitiesLabel"       Anchor="R,C" Offset="4,1"     Style="CityPanelHeader"     String="{LOC_HUD_CITY_AMENITIES}" />
             </Grid>
             <Grid           ID="HousingGrid"          Anchor="R,T" Offset="4,94"    Size="parent-100,20"        Style="CityPanelSlotGrid">
-              <Stack                                               Offset="13,-1"    StackGrowth="Right" >
+              <Stack				ID="HousingLabels"																			 Offset="13,-1"		StackGrowth="Right"	>
                 <Label      ID="HousingNum"           Anchor="L,C" Offset="0,0"     Style="CityPanelNumLarge"   String="-" />
                 <Label                                Anchor="L,C" Offset="1,0"     Style="CityPanelNumSmall"   String="/" />
                 <Label      ID="HousingMax"           Anchor="L,C" Offset="0,0"     Style="CityPanelNumSmall"   String="-" />
@@ -61,6 +61,7 @@
                 <Meter      ID="WallHealthMeter"      Anchor="L,C"                  Size="110,110"  Texture="SelectionPanel_Shields"  Color="120,198,247,255" />
               </Image>
               <Meter        ID="CityHealthMeter"      Anchor="L,C"  Offset="7,-2"   Size="95,95"    Texture="SelectionPanel_Health"   Percent=".6"/>
+              <Container    Size="32,55" Anchor="R,C" ConsumeMouse="1"/>
             </Image>
             <!-- CQUI add a round button to recenter camera on city -->
             <Button          ID="CircleBacking"  Texture="Circle80_Base"     Size="80,80" Anchor="C,C" Offset="0,-2" ConsumeMouse="1" NoStateChange="1">

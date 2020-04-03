@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Context >
 
@@ -9,137 +9,121 @@
   <Container ID="NavalFlags"/>
 
   <Instance Name="UnitFlag">
-    <WorldAnchor ID="Anchor">
+    <!-- TODO clamp zoom level from 0.6 to 1 -->
+    <ZoomAnchor ID="Anchor" ZoomOffsetNear="0,0,0" ZoomOffsetFar="0,0,0">
       <!-- FormationIndicators -->
       <Grid  ID="Formation3" Anchor="C,C" Size="200,68" Offset="0,0" Texture="UnitFormationTrio.dds" SliceCorner="1,1" SliceSize="98,66" SliceTextureSize="100,68" Hidden="1" />
       <Grid  ID="Formation2" Anchor="C,C" Size="100,36" Offset="0,0" Texture="UnitFormationDuo.dds" SliceCorner="20,17" SliceSize="60,1" SliceTextureSize="100,36" Hidden="1" />
 
-      <AlphaAnim ID="FlagRoot" Anchor="C,C"	Size="48,48" Cycle="Once" Speed="1.5">
+      <AlphaAnim ID="FlagRoot" Anchor="C,C"  Size="64,64" Cycle="Once" Speed="1.5">
         <!-- Religious Unit Indicator -->
-        <Image ID="ReligionIconBacking" Anchor="C,T" Size="25,35" Offset="0,40" Texture="UnitFlagReligionTag" Hidden="1">
+        <Image ID="ReligionIconBacking" Anchor="C,T" Size="25,35" Offset="0,45" Texture="UnitFlagReligionTag" Hidden="1">
           <Image ID="ReligionIcon" Anchor="C,B" Size="22,22" Offset="0,5" IconSize="22" Icon="ICON_RELIGION_ISLAM"/>
         </Image>
 
-          <!-- Flag Shadow -->
-          <Image ID="FlagShadow" Anchor="C,C" Size="64,64" TextureOffset="192,64" Texture="UnitFlagBase.dds">
-            <Container ID="AirAnchor" Anchor="c,c" Size="64,64"/>
+         <!-- Health Bar and backing -->
+         <Image ID="HealthBarBG" Size="64,64"  Hidden="1" TextureOffset="64,0"  Texture="UnitFlagBase_Combo.dds" >
+           <Image ID="HealthBarBacking" Size="11,32" Anchor="C,C"  Offset="-25,0" Direction="Up" Speed="1" Texture="UnitFlag_MeterBG.dds" ConsumeMouse="1" />
+           <TextureBar ID="HealthBar" Size="11,32" Anchor="C,C"  Offset="-25,0" Direction="Up" Speed="1" Texture="UnitFlag_MeterFill.dds" />
+         </Image>
 
-            <!-- Health Bar and backing -->
-            <Image ID="HealthBarBG" Size="64,64"	Hidden="1" TextureOffset="64,0"	Texture="UnitFlagBase.dds" >
-              <Image ID="HealthBarBacking" Size="11,32" Anchor="C,C"  Offset="-25,0" Direction="Up" Speed="1" Texture="UnitFlag_MeterBG.dds" ConsumeMouse="1" />
-              <TextureBar ID="HealthBar" Size="11,32" Anchor="C,C"  Offset="-25,0" Direction="Up" Speed="1" Texture="UnitFlag_MeterFill.dds" />
-            </Image>
+         <!-- Black Border & Actual flag -->
+         <Image ID="FlagBase" Size="64,64" Texture="UnitFlagBase_Combo.dds" />
+         <Image ID="FlagBaseDarken"	Size="64,64" TextureOffset="192,128"	Texture="UnitFlagBase.dds" />
 
-            <!-- Black Border & Actual flag -->
-            <Image ID="FlagBaseOutline" Size="64,64" TextureOffset="0,0"			Texture="UnitFlagBase.dds"/>
-            <Image ID="FlagBase"				Size="64,64" TextureOffset="192,0"		Texture="UnitFlagBase.dds" />
-            <Image ID="FlagBaseLighten" Size="64,64" TextureOffset="192,64"		Texture="UnitFlagBase.dds" />
-            <Image ID="FlagBaseDarken"	Size="64,64" TextureOffset="192,128"	Texture="UnitFlagBase.dds" />
+        <AlphaAnim ID="AnimOnMouseOut" ShowOnMouseOut="1" AlphaStart="1" AlphaEnd="0" Speed="2" Function="Root" Cycle="Once">
+          <Image ID="FlagMouseOut" Size="64,64"  TextureOffset="0,64"  Texture="UnitFlagBase_Combo.dds"/>
+        </AlphaAnim>
+        <AlphaAnim ID="AnimOnMouseOver" ShowOnMouseOver="1" AlphaStart="0" AlphaEnd="1" Speed="2" Function="Root" Cycle="Once">
+          <Image ID="FlagMouseOver" Size="64,64"  TextureOffset="0,64"  Texture="UnitFlagBase_Combo.dds"/>
+        </AlphaAnim>
 
-            <!--Image ID="NormalSelectBG" Size="64,64"	Hidden="1" TextureOffset="0,192"	Texture="UnitFlagBase.dds" /-->
-            <Image ID="NormalSelect" Size="64,64"	Hidden="1" TextureOffset="0,128"	Texture="UnitFlagBase.dds">
-              <AlphaAnim AlphaStart="0" AlphaEnd="1" Cycle="Bounce" Pause="0" Speed="1">
-                <Image ID="NormalSelectPulse" Size="64,64" TextureOffset="0,64" Texture="UnitFlagBase.dds"/>
-              </AlphaAnim>
-            </Image>
+         <Button ID="NormalButton" Size="52,52" NoDefaultSound="1"/>
 
-            <Image ID="HealthBarSelect" Size="64,64"	Hidden="1" TextureOffset="64,128"	Texture="UnitFlagBase.dds"/>
-            <Button ID="NormalButton"	Size="52,52" NoDefaultSound="1">
-              <ScrollAnim ID="NormalScrollAnim"  Size="64,64" Pause=".05" Speed="3" Texture="UnitFlagShine.dds" MaskTexture="UnitFlagBaseMask.dds" Cycle="Once" ShowOnMouseOver="1"/>
+         <!-- Offsets may look weird but it's so the hit-area is aligned with the art, otherwise it will
+              be possible to hover over a part of the flag, have it's animation play but have an adjacent
+              hex be the target. -->
+         <Button ID="HealthBarButton" Size="42,42" NoDefaultSound="1" Offset="10,10"/>
 
-              <Image ID="FlagOver" Size="64,64" TextureOffset="0,64" Texture="UnitFlagBase.dds"/>
-            </Button>
+         <!-- Unit Icon -->
+         <AlphaAnim ID="UnitIconAnim" Anchor="C,C" Size="32,32" Pause="0" Cycle="Bounce" Speed="1" AlphaStart="0.95" AlphaEnd="0.25" Stopped="1">
+           <Image ID="UnitIcon" Anchor="C,C" Size="32,32" />
+         </AlphaAnim>
 
-            <!-- Offsets may look weird but it's so the hit-area is aligned with the art, otherwise it will
-                be possible to hover over a part of the flag, have it's animation play but have an adjacent
-                hex be the target. -->
-            <Button ID="HealthBarButton" Size="42,42" NoDefaultSound="1" Offset="10,10">
-              <AlphaAnim AlphaStart="0" AlphaEnd="1" Cycle="Bounce" Pause="0" ShowOnMouseOver="1">
-                <Image ID="FlagOverHealthBar" Size="64,64" TextureOffset="0,64" Offset="-10,-10" Texture="UnitFlagBase.dds"/>
-              </AlphaAnim>
-            </Button>
-
-            <!-- Lighting Effect -->
-            <Image ID="LightEffect" TextureOffset="128,0" Texture="UnitFlagBase.dds" Size="64,64" />
-            <!-- Unit Icon -->
-            <AlphaAnim ID="UnitIconAnim" Anchor="C,C" Size="32,32" Pause="0" Cycle="Bounce" Speed="1" AlphaStart="0.95" AlphaEnd="0.25" Stopped="1">
-              <Image ID="UnitIcon" Anchor="C,C" Size="32,32" Offset="0,0" Texture="UnitFlagAtlasWhite.dds"/>
-            </AlphaAnim>
-
-          </Image>
-          <!-- Promotion Indicator -->
-          <Image ID="Promotion_Flag" Anchor="R,C" Alpha="1.35" Size="20,25" Offset="-8,0" Texture="UnitFlag_Promo.dds" Hidden="1">
-            <AlphaAnim ID="UnitXPAnim" Cycle="Bounce" Speed="3" AlphaStart="0.3" AlphaEnd="0" Stopped="0">
-              <Image ID="New_Promotion_Flag" Size="20,25" Texture="UnitFlag_Promo.dds" Hidden="1" Color="255,255,0,255" />
-            </AlphaAnim>
-            <Label ID="UnitNumPromotions" Anchor="C,C" Offset="-1,1" Style="FontFlair20" Color="0,0,0,255"/>
-          </Image>
-          <!-- Corps and Army Indicators -->
-          <Container ID="CorpsMarker" Size="10,10" Anchor="C,T" Hidden="1" Offset="1,4">
-            <Label Anchor="C,C" Offset="-1,0" String="[ICON_Corps]"/>
-          </Container>
-          <Container ID="ArmyMarker" Size="10,10" Anchor="C,T" Hidden="1" Offset="1,2">
-            <Label Anchor="C,C" Offset="-1,0" String="[ICON_Army]"/>
-          </Container>
-
-        <Container ID="AirUnitContainer" Anchor="C,T" Offset="0,-16" Hidden="1">
-          <Grid Anchor="C,C" Size="54,24" Texture="Banner_UnitBacking" SliceCorner="13,1" SliceSize="4,22">
-            <!-- Current and max air unit capacity -->
-            <Stack Anchor="R,C" Offset="6,0" StackGrowth="Right">
-              <Label ID="CurrentAirUnitCount" Style="FontNormal14" String="1"/>
-              <Label Style="FontNormal14" String="/"/>
-              <Label ID="MaxAirUnitCount" Style="FontNormal14" String="4"/>
-            </Stack>
-          </Grid>
-
-          <PullDown ID="UnitListPopup" ConsumeMouse="0" Offset="0,0" Anchor="C,C" Size="200,20" AutoSizePopUp="0" AutoFlip="1" ScrollThreshold="96">
-            <ButtonData>
-              <Button	ID="AirUnitListButton" Anchor="C,C" Size="28,28" Offset="-14,0" NoStateChange="1">
-                <!-- Aerodrome button textures -->
-                <Image ID="AirUnitListButton_Base"     Anchor="C,C" Size="28,28" Texture="Banner_UnitButton_Base"/>
-                <Image ID="AirUnitListButton_Darker"   Anchor="C,C" Size="28,28" Texture="Banner_UnitButton_Darker"/>
-                <Image ID="AirUnitListButton_Lighter"  Anchor="C,C" Size="28,28" Texture="Banner_UnitButton_Lighter"/>
-                <Image ID="AirUnitListButton_None"     Anchor="C,C" Size="28,28" Texture="Banner_UnitButton_None"/>
-                <!-- Aerodrome button icon -->
-                <Image ID="AirUnitListButtonIcon" Anchor="C,C" Size="22,22" Texture="Banner_Planes"/>
-                <!-- Hover over animations -->
-                <AlphaAnim Anchor="C,C" Size="28,28" ShowOnMouseOver="1" AlphaStart="0" AlphaEnd="1" Speed="2" Function="Root" Cycle="Once">
-                  <Image Size="28,28" Texture="Banner_UnitButton_Secondary"/>
-                </AlphaAnim>
-                <AlphaAnim Anchor="C,C" Size="28,28" ShowOnMouseOut="1" AlphaStart="1" AlphaEnd="0" Speed="2" Function="Root" Cycle="Once">
-                  <Image Size="28,28" Texture="Banner_UnitButton_Secondary"/>
-                </AlphaAnim>
-              </Button>
-            </ButtonData>
-
-            <GridData Size="auto,auto" AutoSizePadding="6,5" Anchor="C,B" Offset="0,6" AnchorSide="I,O" Texture="Controls_DropdownPanel" SliceCorner="9,9" SliceSize="4,4" SliceTextureSize="22,22"/>
-
-            <ScrollPanelData Anchor="L,T" Vertical="1" Offset="0,0" AutoScrollBar="1">
-              <ScrollBar Style="ScrollVerticalBacking" Anchor="L,T" AnchorSide="O,I" Color="28,60,90,255" Offset="1,0">
-                <Thumb Style="ScrollThumbAlt" Color="28,60,90,255" />
-              </ScrollBar>
-            </ScrollPanelData>
-
-            <StackData StackGrowth="Down" Offset="0,0" Size="240,400" Anchor="L,T"/>
-
-            <InstanceData Name="UnitListEntry">
-              <GridButton  ID="Button" Style="UnitPanelHeader" Size="200,24" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" StateOffsetIncrement="0,24" TruncateWidth="180">
-                <Label ID="UnitName" Anchor="C,C" Offset="0,1" Style="UnitPanelHeader"/>
-                <Image ID="UnitTypeIcon" Anchor="L,C" Size="22,22" Offset="2,0" Texture="UnitFlagAtlas22"/>
-              </GridButton>
-            </InstanceData>
-          </PullDown>
+        <!-- Promotion Indicator -->
+        <Image ID="Promotion_Flag" Anchor="R,C" Alpha="1.35" Size="20,25" Offset="-4,0" Texture="UnitFlag_Promo.dds" Hidden="1">
+          <AlphaAnim ID="UnitXPAnim" Cycle="Bounce" Speed="3" AlphaStart="0.3" AlphaEnd="0" Stopped="0">
+            <Image ID="New_Promotion_Flag" Size="20,25" Texture="UnitFlag_Promo.dds" Hidden="1" Color="255,255,0,255" />
+          </AlphaAnim>
+          <Label ID="UnitNumPromotions" Anchor="C,C" Offset="-1,1" Style="FontFlair20" Color="0,0,0,255"/>
+        </Image>
+        <!-- Corps and Army Indicators -->
+        <Container ID="CorpsMarker" Size="10,10" Anchor="C,T" Hidden="1" Offset="1,4">
+          <Label Anchor="C,C" Offset="-1,0" String="[ICON_Corps]"/>
+        </Container>
+        <Container ID="ArmyMarker" Size="10,10" Anchor="C,T" Hidden="1" Offset="1,2">
+          <Label Anchor="C,C" Offset="-1,0" String="[ICON_Army]"/>
         </Container>
 
       </AlphaAnim>
 
-    </WorldAnchor>
+    </ZoomAnchor>
   </Instance>
 
-  <Instance			Name="AttentionMarkerInstance">
-    <AlphaAnim	ID="Top"	Size="48,48" AlphaStart="1" AlphaEnd="0.5" >
-      <Label		ID="Text"	Anchor="C,T" Offset="0,-30" Style="FontFlair40" FontStyle="Glow" Color0="255,0,0,255" Color1="0,0,0,200" String="!" ToolTip="LOC_HUD_BARBARIAN_SPOTTED_YOUR_CITY"/>
+  <Instance      Name="AttentionMarkerInstance">
+    <AlphaAnim  ID="Root"  Size="48,48" AlphaStart="1" AlphaEnd="0.5" >
+      <Label    ID="Text"  Anchor="C,T" Offset="0,-30" Style="FontFlair40" FontStyle="Glow" Color0="255,0,0,255" Color1="0,0,0,200" String="!" ToolTip="LOC_HUD_BARBARIAN_SPOTTED_YOUR_CITY"/>
     </AlphaAnim>
+  </Instance>
+
+  <Instance      Name="AirUnitInstance">
+    <Container  ID="Root" Anchor="C,T" Offset="0,-16">
+      <Grid ID="AirUnitCountContainer" Anchor="L,C" Size="auto,24" Offset="-25,0" Texture="Banner_UnitBacking" SliceCorner="13,1" SliceSize="4,22">
+        <!-- Current and max air unit capacity -->
+        <Stack Anchor="R,C" Offset="6,0" StackGrowth="Right">
+          <Container Size="25,1"/>
+          <Label ID="CurrentUnitCount" Style="FontNormal14" String="1"/>
+          <Label Style="FontNormal14" String="/"/>
+          <Label ID="MaxUnitCount" Style="FontNormal14" String="4"/>
+        </Stack>
+      </Grid>
+
+      <PullDown ID="UnitListPopup" ConsumeMouse="0" Offset="0,0" Anchor="C,C" Size="200,20" AutoSizePopUp="0" AutoFlip="1" ScrollThreshold="96">
+        <ButtonData>
+          <Button  ID="AirUnitListButton" Anchor="C,C" Size="28,28" Offset="-14,0" NoStateChange="1">
+            <!-- Aerodrome button textures -->
+            <Image ID="AirUnitListButton_Base"     Anchor="C,C" Size="28,28" Texture="Banner_UnitButton_Combo"/>
+            <!-- Aerodrome button icon -->
+            <Image ID="AirUnitListButtonIcon" Anchor="C,C" Size="22,22" Texture="Banner_Planes"/>
+            <!-- Hover over animations -->
+            <AlphaAnim Anchor="C,C" Size="28,28" ShowOnMouseOver="1" AlphaStart="0" AlphaEnd="1" Speed="2" Function="Root" Cycle="Once">
+              <Image Size="28,28" Texture="Banner_UnitButton_Secondary"/>
+            </AlphaAnim>
+            <AlphaAnim Anchor="C,C" Size="28,28" ShowOnMouseOut="1" AlphaStart="1" AlphaEnd="0" Speed="2" Function="Root" Cycle="Once">
+              <Image Size="28,28" Texture="Banner_UnitButton_Secondary"/>
+            </AlphaAnim>
+          </Button>
+        </ButtonData>
+
+        <GridData  Size="auto,auto" AutoSizePadding="6,5" Anchor="C,B" Offset="0,6" AnchorSide="I,O" Texture="Controls_DropdownPanel" SliceCorner="9,9" SliceSize="4,4" SliceTextureSize="22,22"/>
+
+        <ScrollPanelData Anchor="L,T" Vertical="1" Offset="0,0" AutoScrollBar="1">
+          <ScrollBar Style="ScrollVerticalBacking" Anchor="L,T" AnchorSide="O,I" Color="28,60,90,255" Offset="1,0">
+            <Thumb Style="ScrollThumbAlt" Color="28,60,90,255" />
+          </ScrollBar>
+        </ScrollPanelData>
+
+        <StackData StackGrowth="Down" Offset="0,0" Size="240,400" Anchor="L,T"/>
+
+        <InstanceData Name="UnitListEntry">
+          <GridButton  ID="Button" Style="UnitPanelHeader" Size="200,24" Texture="Controls_ButtonControl.dds" SliceCorner="10,10" SliceSize="1,1" SliceTextureSize="24,24" StateOffsetIncrement="0,24" TruncateWidth="180">
+            <Label ID="UnitName" Anchor="C,C" Offset="0,1" Style="UnitPanelHeader"/>
+            <Image ID="UnitTypeIcon" Anchor="L,C" Size="22,22" Offset="2,0" />
+          </GridButton>
+        </InstanceData>
+      </PullDown>
+    </Container>
+
   </Instance>
 
 </Context>

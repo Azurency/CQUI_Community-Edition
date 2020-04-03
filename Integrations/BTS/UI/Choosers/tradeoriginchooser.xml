@@ -30,13 +30,13 @@
         </GridButton>
       </Container>
 
-      <!-- Body Container -->
-      <Container ID="RouteOriginChooserBody" Anchor="C,T" Offset="0,0" Size="parent,parent">
-        <ScrollPanel    ID="CityScrollPanel"  Offset="18,10" Size="parent-22,parent-35" Vertical="1" AutoScrollBar="0">
-          <ScrollBar    Anchor="L,T" Size="11,parent-125" AnchorSide="O,I" Offset="4,0" Style="ScrollVerticalBar" />
-          <Stack ID="CityStack" StackGrowth="Bottom" StackPadding="2" />
+      <Container ID="RouteOriginChooserBody" Anchor="L,T" Offset="20,5" Size="parent-40,parent-160">
+        <ScrollPanel ID="CityScrollPanel" Anchor="L,T" Offset="0,0" Size="parent+10,parent" Vertical="1" AutoScrollBar="0" AutoSizeScrollBar="1">
+          <ScrollBar    Anchor="L,T" Size="11,parent" AnchorSide="O,I" Offset="4,0" Style="ScrollVerticalBar" />
+          <Stack ID="CityStack" Anchor="L,T" Offset="5,0" StackGrowth="Down"/>
         </ScrollPanel>
       </Container>
+
     </Stack>
   </SlideAnim>
 

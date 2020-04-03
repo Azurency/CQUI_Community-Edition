@@ -4,7 +4,8 @@
 include( "InstanceManager" );
 include( "CitySupport" );
 include( "Civ6Common" ); -- AutoSizeGridButton
-include( "SupportFunctions" ); -- DarkenLightenColor
+include( "Colors" );
+include( "SupportFunctions" );
 include( "PopupDialog" );
 include( "ToolTipHelper_PlayerYields" );
 include( "GreatWorksSupport" );
@@ -42,7 +43,7 @@ local ms_OtherPlayerIsHuman = false;
 
 local ms_InitiatedByPlayerID = -1;
 
-local ms_bIsDemand = false;
+ms_bIsDemand = false;
 local ms_bExiting = false;
 
 local ms_LastIncomingDealProposalAction = DealProposalAction.PENDING;
@@ -87,6 +88,8 @@ local ms_DefaultMultiTurnGoldAmount = 10;
 local ms_DefaultMultiTurnGoldDuration = 30;
 
 local ms_bForceUpdateOnCommit = false;
+
+local ms_bDontUpdateOnBack = false;
 
 --CQUI Addition
 -- local YIELD_FONT_ICONS:table = {
@@ -1534,12 +1537,23 @@ function OnClickAvailableAgreement(player, agreementType, agreementTurns)
 
     -- Already there?
     local pDealItem = pDeal:FindItemByType(DealItemTypes.AGREEMENTS, agreementType, player:GetID());
+    if (pDealItem ~= nil) then
+      -- deal manager doesn't update properly unless we delete the deal item
+      -- and add a new one.
+			if (not pDealItem:IsLocked()) then
+        local itemID = pDealItem:GetID();
+        DetachValueEdit(itemID);
+        pDeal:RemoveItemByID(itemID);
+        pDealItem = nil; -- CQUI (Azurency) : set back to nil to go in the next if
+      end
+    end
+
     if (pDealItem == nil) then
       -- No
       -- AZURENCY : Joint War and Research Agreements need special treatment (can be only modified on the player side)
       if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.RESEARCH_AGREEMENT) then
         pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, ms_LocalPlayer:GetID());
-        
+
         -- AZURENCY : Fix, select the first possibily by default
         local toPlayerId = ms_LocalPlayer:GetID();
         if (toPlayerId == player:GetID() ) then
@@ -2548,9 +2562,25 @@ function PopulateDealAgreements(player : table, iconList : table)
           end
 
           icon.AmountText:SetHide(true);
-          local subTypeDisplayName = pDealItem:GetSubTypeNameID();
-          if (subTypeDisplayName ~= nil) then
-            icon.IconText:LocalizeAndSetText(subTypeDisplayName);
+          local pWarItem = pDeal:FindItemByType(DealItemTypes.AGREEMENTS, DealAgreementTypes.JOINT_WAR);
+
+					if pWarItem == nil then
+						pWarItem = pDeal:FindItemByType(DealItemTypes.AGREEMENTS, DealAgreementTypes.THIRD_PARTY_WAR);
+					end
+
+					local iWarType = nil;
+					if pWarItem ~= nil then
+						iWarType = pDealItem:GetParameterValue("WarType");
+					end
+
+					if iWarType ~= nil then
+						local warDef = GameInfo.Wars[iWarType]
+						icon.IconText:LocalizeAndSetText(warDef.Name);
+					else
+            local subTypeDisplayName = pDealItem:GetSubTypeNameID();
+            if (subTypeDisplayName ~= nil) then
+              icon.IconText:LocalizeAndSetText(subTypeDisplayName);
+            end
           end
           icon.SelectButton:SetToolTipString(nil);		-- We recycle the entries, so make sure this is clear.
 
