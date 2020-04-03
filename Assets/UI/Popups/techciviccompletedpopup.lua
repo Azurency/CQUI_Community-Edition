@@ -110,13 +110,13 @@ function ShowCivicCompletedPopup( player:number, civic:number, quote:string, aud
   -- Update Government Button depending on if we unlocked a new government type
   if isCivicUnlockGovernmentType then
     Controls.ChangeGovernmentButton:SetText(Locale.Lookup("LOC_GOVT_GOVERNMENT_UNLOCKED"));
-    Controls.ChangeGovernmentButton:ClearCallback( eLClick );
-    Controls.ChangeGovernmentButton:RegisterCallback( eLClick, OnChangeGovernment );
+    Controls.ChangeGovernmentButton:ClearCallback( Mouse.eLClick );
+    Controls.ChangeGovernmentButton:RegisterCallback( Mouse.eLClick, OnChangeGovernment );
     Controls.ChangeGovernmentButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   else
     Controls.ChangeGovernmentButton:SetText(Locale.Lookup("LOC_GOVT_CHANGE_POLICIES"));
-    Controls.ChangeGovernmentButton:ClearCallback( eLClick );
-    Controls.ChangeGovernmentButton:RegisterCallback( eLClick, OnChangePolicy );
+    Controls.ChangeGovernmentButton:ClearCallback( Mouse.eLClick );
+    Controls.ChangeGovernmentButton:RegisterCallback( Mouse.eLClick, OnChangePolicy );
     Controls.ChangeGovernmentButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   end
 
@@ -463,7 +463,7 @@ function Initialize()
   ContextPtr:SetShutdown( OnShutdown );
     ContextPtr:SetShowHandler( OnShow );
 
-  Controls.CloseButton:RegisterCallback( eLClick, OnClose );
+  Controls.CloseButton:RegisterCallback( Mouse.eLClick, OnClose );
   Controls.CloseButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 
   -- LUA Events

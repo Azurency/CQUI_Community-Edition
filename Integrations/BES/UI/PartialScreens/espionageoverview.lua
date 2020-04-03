@@ -1240,7 +1240,7 @@ function Initialize()
   Controls.CapturedEnemyOperativeContainer:RegisterSizeChanged( OnCapturedEnemyOperativeContainerSizeChanged );
 
   -- Filter Pulldown
-  Controls.FilterButton:RegisterCallback( eLClick, UpdateFilterArrow );
+  Controls.FilterButton:RegisterCallback( Mouse.eLClick, UpdateFilterArrow );
   Controls.DestinationFilterPulldown:RegisterSelectionCallback( OnFilterSelected );
 
   -- District Filter Panel

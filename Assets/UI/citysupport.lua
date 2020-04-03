@@ -342,7 +342,6 @@ end
 -- RETURNS: table of data
 -- ===========================================================================
 function GetCityData( pCity:table )
-
   local owner :number = pCity:GetOwner();
   local pPlayer :table = Players[owner];
   local pCityDistricts :table = pCity:GetDistricts();

@@ -16,7 +16,7 @@
 	<!-- An instance of an Icon, with optional Amount Text that overlaps the icon -->
 	<Instance	Name="IconOnly">
 		<GridButton ID="SelectButton" Style="ButtonDraggableGrid" Size="56,56" Offset="0,0" Anchor="L,T">
-		  <Image ID="Icon" StretchMode="None" Size="64,64" Anchor="C,C"/>
+		  <Image ID="Icon" StretchMode="None" Size="64,64 " Anchor="C,C"/>
 		  <Label ID="AmountText" Style="FontNormalBold16" Anchor="R,B" Offset="-5,-9" FontStyle="Stroke" />
 
       <!-- CQUI : Added Important -->
@@ -30,7 +30,7 @@
     <GridButton ID="SelectButton" Style="ButtonDraggableGrid" Size="parent,58" Anchor="L,T">
       <Stack Size="parent,0" StackGrowth="Right">
         <Container Size="44, parent">
-          <Image ID="Icon" StretchMode="None" Size="44,44" Anchor="C,C"/>
+          <Image ID="Icon" StretchMode="None" Size="44,44" Anchor="C,C"/> 
           <Label ID="PopulationLabel" Style="FlairShadow28" FontStyle="Stroke" Anchor="C,C" Offset="0,2"/>
         </Container>
         <Container Size="parent-44, parent">
@@ -185,7 +185,7 @@
                   <Image Texture="Controls_Gradient" Size="parent, 150"  Offset="0,0" Anchor="L,B" Color="24,47,70,230"/>
 
                   <!-- CQUI : Added a vertical stack for the inventory -->
-                  <Stack ID="PlayerStack" StackGrowth="Down">
+                  <Stack ID="PlayerStack" StackGrowth="Down"> 
 
                   <!-- CQUI : Signature area -->
               <Stack ID="PlayerSignatureStack" StackGrowth="Right" Offset="5, 15">

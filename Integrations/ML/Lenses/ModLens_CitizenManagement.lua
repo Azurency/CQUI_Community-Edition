@@ -91,6 +91,8 @@ local function OnInitialize()
 end
 
 local CitizenManagementEntry = {
+  LensButtonText = "LOC_HUD_CITIZEN_MANAGEMENT_LENS",
+  LensButtonTooltip = "LOC_HUD_CITIZEN_MANAGEMENT_LENS_TOOLTIP",
   Initialize = OnInitialize,
   GetColorPlotTable = OnGetColorPlotTable
 }

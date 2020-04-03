@@ -547,7 +547,7 @@ end
 function Initialize()
 	ContextPtr:SetInputHandler( OnInputHandler, true );
   -- Controls Events
-  Controls.CloseButton:RegisterCallback( eLClick, OnClose );
+  Controls.CloseButton:RegisterCallback( Mouse.eLClick, OnClose );
   ContextPtr:SetInitHandler( OnInit );
 
 	Events.CitySelectionChanged.Add( OnCitySelectionChanged );

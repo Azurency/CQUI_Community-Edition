@@ -22,9 +22,9 @@ LuaEvents.DiploPopup_ShowMakeDeal.Remove(OnShowMakeDeal);
 --	CQUI OnShowMakeDemand to set the g_LocalPlayer and g_OtherPlayer
 -- ===========================================================================
 function CQUI_OnShowMakeDemand(otherPlayerID)
-	g_LocalPlayer = Players[Game.GetLocalPlayer()];
-	g_OtherPlayer = Players[otherPlayerID];
-	OnShowMakeDemand(otherPlayerID);
+    g_LocalPlayer = Players[Game.GetLocalPlayer()];
+    g_OtherPlayer = Players[otherPlayerID];
+    OnShowMakeDemand(otherPlayerID);
 end
 LuaEvents.DiploPopup_ShowMakeDemand.Add(CQUI_OnShowMakeDemand);
 LuaEvents.DiploPopup_ShowMakeDemand.Remove(OnShowMakeDemand);

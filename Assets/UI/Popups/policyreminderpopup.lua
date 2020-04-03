@@ -61,8 +61,8 @@ function ShowPolicyReminderPopup(player:number, civic:number)
     Controls.UnlockStack:ReprocessAnchoring();
 
     Controls.ChangeGovernmentButton:SetText(Locale.Lookup("LOC_GOVT_CHANGE_POLICIES"));
-    Controls.ChangeGovernmentButton:ClearCallback( eLClick );
-    Controls.ChangeGovernmentButton:RegisterCallback( eLClick, OnChangePolicy );
+    Controls.ChangeGovernmentButton:ClearCallback( Mouse.eLClick );
+    Controls.ChangeGovernmentButton:RegisterCallback( Mouse.eLClick, OnChangePolicy );
     Controls.ChangeGovernmentButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 
     -- Show Change Government Button
@@ -117,7 +117,7 @@ end
 function Initialize()
   ContextPtr:SetHide(true)
   -- Controls Events
-  Controls.CloseButton:RegisterCallback( eLClick, OnClose );
+  Controls.CloseButton:RegisterCallback( Mouse.eLClick, OnClose );
   Controls.CloseButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   ContextPtr:SetInputHandler( OnInputHandler, true );
   -- CQUI Events

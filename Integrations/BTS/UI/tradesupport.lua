@@ -1205,8 +1205,8 @@ function GetPlayerColorInfo(playerID, checkCache)
     end
   else
     local backColor, frontColor = UI.GetPlayerColors(playerID)
-    local darkerBackColor = DarkenLightenColor(backColor, BACKDROP_DARKER_OFFSET, BACKDROP_DARKER_OPACITY);
-    local brighterBackColor = DarkenLightenColor(backColor, BACKDROP_BRIGHTER_OFFSET, BACKDROP_BRIGHTER_OPACITY);
+    local darkerBackColor = UI.DarkenLightenColor(backColor, BACKDROP_DARKER_OFFSET, BACKDROP_DARKER_OPACITY);
+    local brighterBackColor = UI.DarkenLightenColor(backColor, BACKDROP_BRIGHTER_OFFSET, BACKDROP_BRIGHTER_OPACITY);
 
     return backColor, frontColor, darkerBackColor, brighterBackColor
   end
