@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd">
+
+  <SlideAnim            ID="SlideAnim"          Anchor="R,T"                  Size="514,parent"        Start="-514,27" End="-1,27" Cycle="Once"  Speed="3.4" Function="OutSine" Stopped="1" >
+
+    <Grid                                        Anchor="R,T"                  Size="parent,parent+5"  Texture="Controls_BannerWide" SliceTextureSize="514,Sli" StretchMode="Tile" ConsumeMouse="1" >
+      <Image Texture="Controls_GradientSmall" Size="22,parent" AnchorSide="O,I" Anchor="L,T" Color="0,0,0,255" Rotate="90" Offset="-2,0"/>
+    </Grid>
+
+    <!-- List view of CityStates -->
+    <Container          ID="ListOfCityStates"                                  Size="parent,parent">
+      <Grid              ID="HeaderBG"                                          Size="parent,165"      Texture="Controls_TitleBarDark" SliceCorner="21,17" SliceTextureSize="42,34">
+        <Image                                                                Size="parent,parent"  Texture="Controls_Gradient_HalfRadial" Color="170,176,180,90" FlipY="1" />
+        <Grid                                    Anchor="C,T"  Offset="22,60"  Size="396,58"          Texture="Controls_DecoFrame" SliceCorner="20,19" SliceTextureSize="40,38" Color="30,43,52,255">
+          <Label        ID="Header"              Anchor="C,C"  Offset="0,-7"                          Style="CityStateHeaderText"    String="{LOC_CITY_STATES_OVERVIEW:upper}" />
+          <Label        ID="EnvoyDetails"        Anchor="C,C"  Offset="0,14"                          Style="CityStateColumnHeaderText" String=""/>
+          <Container    ID="Envoys"              Anchor="R,C"  Size="auto,24"          ToolTip="LOC_TOP_PANEL_INFLUENCE" Offset="5,2">
+            <Stack      ID="EnvoysStack"        Anchor="L,C"  Offset="0,-2"    StackGrowth="Right" >
+              <Image    ID="EnvoysBacking"                                    Size="24,24"          Texture="Controls_MeterTinyBacking">
+                <Label                          Anchor="L,C"  Offset="1,1"    Style="FontNormal14"  ColorSet="TopBarValueCS" String="[ICON_Envoy]" />
+                <Meter  ID="EnvoysMeter"        Speed="1" Follow="1"          Size="24,24"          Texture="Controls_MeterTinyFill" />
+              </Image>
+            </Stack>
+          </Container>
+        </Grid>
+        <Image                                                Offset="4,50"    Size="76,76"          Texture="CityStateOverview"/>
+        <Grid            ID="TitleBG"            Anchor="R,T"  Offset="-50,-2"  Size="600,74"          Texture="Controls_BannerHeaderRed" SliceCorner="371,0" SliceSize="1,74" SliceTextureSize="426,74">
+          <Label        ID="Title"              Anchor="L,T"  Offset="42,15"  Style="WorldRankingsTitle" />
+        </Grid>
+        <Container      ID="AllCityStates"                                    Size="parent,parent" >
+          <Button        ID="CloseListButton"    Anchor="R,T"  Offset="0,56"    Style="CloseButtonSmall" />
+        </Container>
+        <Grid                                    Anchor="L,B"  Offset="14,6"    Size="160,28"          Style="CityStateColumnHeaderGrid">
+          <Label                                Anchor="L,C"  Offset="10,0"                          Style="CityStateColumnHeaderText" String="LOC_CITY_STATES_CITY_STATE" />
+        </Grid>
+        <Grid                                    Anchor="L,B"  Offset="176,6"  Size="90,28"          Style="CityStateColumnHeaderGrid">
+          <Label                                Anchor="C,C"                                        Style="CityStateColumnHeaderText" String="LOC_CITY_STATES_ENVOYS" />
+        </Grid>
+        <Grid                                    Anchor="L,B"  Offset="268,6"  Size="198,28"          Style="CityStateColumnHeaderGrid">
+          <Label                                Anchor="L,C"  Offset="10,0"                          Style="CityStateColumnHeaderText" String="LOC_CITY_STATES_BONUSES_EARNED" />
+        </Grid>
+      </Grid>
+
+      <ScrollPanel      ID="CityStateScroll"                  Offset="12,164" Size="490,parent-174"        Vertical="1" AutoScrollBar="1">
+        <Stack          ID="CityStateStack"      Anchor="L,T"  Offset="0,1"    StackPadding="4" />
+        <ScrollBar                              Anchor="R,C"  Offset="-1,0"    AnchorSide="O,I"            Style="ScrollVerticalBarAlt" />
+      </ScrollPanel>
+
+      <Label            ID="NoneMet"            Anchor="C,C"  Offset="0,50"    Align="Center" Style="FontFlair20" String="LOC_CITY_STATES_NONE_MET" Hidden="1"/>
+
+      <Grid              ID="BonusArea"          Anchor="L,B"  Offset="0,70"    Size="parent,parent-570"    Texture="Controls_Glow"          SliceCorner="90,90" SliceTextureSize="179,178"  Color="0,0,0,255" Hidden="1" >
+        <Grid            ID="BonusDecoLeft"                    Offset="20,45"  Size="18,parent-50"          Texture="Controls_Deco"          SliceCorner="9,24"  SliceTextureSize="18,49"    Color="30,36,40,255"   />
+        <Grid            ID="BonusDecoRight"      Anchor="R,T"  Offset="20,45"  Size="18,parent-50"          Texture="Controls_Deco"          SliceCorner="9,24"  SliceTextureSize="18,49"    Color="30,36,40,255" SliceStart="20,0" />
+
+        <Grid            ID="BonusHeader"                      Offset="0,0"    Size="parent,40"            Texture="Controls_TitleBarDark"  SliceCorner="21,17"  SliceTextureSize="42,34" >
+          <Image                                                              Size="parent,parent"        Texture="Controls_Gradient_HalfRadial"                                          Color="170,176,180,35" />
+          <Label        ID="SubHeader"          Anchor="C,C"  Offset="0,3"                                Style="FontFlair24"    Color0="170,176,180" String="{LOC_CITY_STATES_BONUSES_EARNED:upper}" SmallCaps="30" SmallCapsType="EveryWord" />
+        </Grid>
+        <ScrollPanel    ID="BonusScroll"                      Offset="50,39"  Size="400,parent-39"        Vertical="1" >
+          <Stack        ID="BonusStack"          Anchor="L,T"  Offset="0,1"    StackPadding="4" />
+          <ScrollBar                            Anchor="R,C"  Offset="10,0"    AnchorSide="O,I"            Style="ScrollVerticalBarAlt" />
+        </ScrollPanel>
+      </Grid>
+
+      <Grid                                      Anchor="C,B"  Offset="1,-4"    Size="parent+5,32"          Texture="Controls_BannerBottom" SliceCorner="18,2" SliceTextureSize="37,32" />
+
+      <Grid              ID="ConfirmFrame"        Anchor="C,B"  Offset="0,10"    Size="parent-30,60"          Texture="Controls_ConfirmFrame" SliceCorner="38,30" SliceTextureSize="76,60" Hidden="1" >
+        <GridButton      ID="ConfirmButton"      Anchor="C,C"  Offset="0,-1"    Size="parent-70,41"          Texture="Controls_Confirm"      SliceCorner="40,20" SliceTextureSize="80,41" StateOffsetIncrement="0,41" String="LOC_CITY_STATES_CONFIRM_PLACEMENT"  Style="FontNormal16" />
+      </Grid>
+    </Container>
+
+    <!-- Individual CityState View -->
+    <Container            ID="SingleCityState"                                  Size="parent,parent">
+      <Image                                      Anchor="R,B"  Offset="3,0"    Size="47,239"                Texture="Diplomacy_RibbonBottom.dds" />
+      <Image                                      Anchor="R,T"  Offset="3,0"    Size="47,parent-32"          Texture="Diplomacy_Ribbon.dds">
+        <Stack            ID="CityStateIconStack"                Offset="4,70"    StackGrowth="Bottom"        Padding="8" />
+      </Image>
+      <Grid                                                      Offset="3,70"    Size="parent-55,parent-70"  Style="DiplomacyInfoWindowGrid">
+        <Grid                                                                    Size="parent,165"            Style="DiplomacyInfoHeaderGrid" />
+        <Button            ID="CloseBackButton"    Anchor="R,T"                  Style="BackButtonSmall" />
+        <Image                                    Anchor="C,T"  Offset="0,-21"                              Texture="Diplomacy_PortraitBacking" />
+        <Image                                    Anchor="C,T"  Offset="0,-56"                              Texture="CityState_HeaderCircle" />
+        <Image            ID="CityStateTypeIcon"  Anchor="C,T"  Offset="-1,-58"  Size="64,64"                Texture="CivSymbols64" />
+        <Image                                    Anchor="C,T"  Offset="0,-64"                              Texture="Diplomacy_YouIndicatorLarge" >
+          <Image          ID="DiplomacyPip"        Anchor="L,B"                  Size="23,23"                Texture="Diplomacy_RelationshipPips" />
+        </Image>
+        <Label                                    Anchor="C,T"  Offset="0,25"    Style="FontFlair16"          SmallCaps="26" SmallCapsType="EveryWord" String="{LOC_CITY_STATES_CITY_STATE:upper}" />
+        <Label            ID="CityStateName"      Anchor="C,T"  Offset="0,47"    Style="FontFlair24"          SmallCaps="30" SmallCapsType="EveryWord" String="$CityStateName$" />
+
+        <Stack            ID="SingleViewStack"                  Offset="1,80"    StackGrowth="Bottom">
+          <Stack          ID="SubMenu"                          Offset="1,0"    StackGrowth="Bottom"        StackPadding="-8">
+            <!-- TODO: REmove, using Back button
+            <GridButton    ID="SendAnEnvoyButton"                                Size="parent-4,41"          Style="CityStateSubMenuButton" String="LOC_CITY_STATES_SEND_AN_ENVOY"/>
+            -->
+            <GridButton    ID="PeaceWarButton"                                    Size="parent-4,41"          Style="CityStateSubMenuButton" String="LOC_CITY_STATES_MAKE_PEACE"/>
+            <GridButton    ID="LevyMilitaryButton"                                Size="parent-4,41"          Style="CityStateSubMenuButton" String="LOC_CITY_STATES_LEVY_MILITARY_BUTTON"/>
+          </Stack>
+          <Grid                                    Anchor="C,T"  Offset="0,0"    Size="parent-10,40"          Texture="Controls_TitleBarDark"  SliceCorner="21,17"  SliceTextureSize="42,34">
+            <Image                                                              Size="parent,parent"        Texture="Controls_Gradient_HalfRadial"                                          Color="170,176,180,35" />
+            <Label                                Anchor="C,C"  Offset="0,3"                                Style="FontFlair24"    Color0="170,176,180" String="{LOC_CITY_STATES_REPORT:upper}" SmallCaps="30" SmallCapsType="EveryWord" />
+          </Grid>
+          <Box						ID="ReportArea"					Anchor="C,T"	Offset="0,0"	Size="parent-10,auto"			Color="3,4,5,255">
+            <Image																Anchor="L,T"	Offset="1,1"	Size="parent-2,auto"		Texture="Controls_Gradient"																				Color="30,40,50,255" AutoSize="V" AutoSizePadding="0,3">
+              <Box                                Anchor="C,B"  Offset="0,0"    Size="parent,1" Color="40,50,60,255"/>
+              <Grid				ID="ReportDeco"		      Anchor="C,T"	Offset="0,2"                   Size="parent-10,auto"		Texture="Controls_Deco"					Style="DecoGrid"		Color="50,56,70,255">
+
+              <Label                              Anchor="R,T"  Offset="230,10"                              Style="CityStateTextLabel"  String="LOC_CITY_STATES_TYPE" />
+              <Label      ID="TypeValue"          Anchor="L,T"  Offset="230,10"                              Style="CityStateTextValue"  String="$TypeValue$" />
+              <Label                              Anchor="R,T"  Offset="230,31"                              Style="CityStateTextLabel"  String="LOC_CITY_STATES_SUZERAIN_LIST" />
+              <Label      ID="PatronValue"        Anchor="L,T"  Offset="230,31"                              Style="CityStateTextValue"  String="$PatronValue$" />
+
+              <GridButton  ID="EnvoysSentButton"    Anchor="R,T"  Offset="224,50"  Size="170,21"                Style="CityStateTinyButton" String="LOC_CITY_STATES_ENVOYS_SENT" />
+              <Label      ID="EnvoysSentValue"    Anchor="L,T"  Offset="230,52"                              Style="CityStateTextValue"  String="$EnvoysSentValue$" />
+              <GridButton  ID="InfluencedByButton"  Anchor="R,T"  Offset="224,71"  Size="170,21"                Style="CityStateTinyButton" String="LOC_CITY_STATES_INFLUENCED_BY" />
+              <Label      ID="InfluencedByValue"  Anchor="L,T"  Offset="230,73"                              Style="CityStateTextValue"  String="$InfluencedByValue$" />
+              <GridButton  ID="QuestsButton"        Anchor="R,T"  Offset="224,92"  Size="170,21"                Style="CityStateTinyButton" String="LOC_CITY_STATES_QUESTS" />
+              <Label      ID="QuestsValue"        Anchor="L,T"  Offset="230,94"                              Style="CityStateTextValue"  String="$QuestsValue$" />
+                <GridButton	ID="RelationshipsButton"	      Anchor="R,T"	Offset="224,113"	Size="170,21"								Style="CityStateTinyButton" String="LOC_CITY_STATES_RELATIONSHIPS" />
+                <Stack      ID="RelationshipsButtonStack"   Anchor="L,T"	Offset="226,110" StackGrowth="Right" WrapWidth="200"/>
+              </Grid>
+            </Image>
+          </Box>
+        </Stack>
+        <!-- Tab Area -->
+        <Container        ID="ReportTabContainer" Anchor="C,B"  Offset="0,24"                Size="parent,400">
+          <Container			ID="EnvoysSentArea"																		Size="parent,parent">
+            <Grid                                                Offset="10,10"  Size="parent-20,40"          Style="CityStateStatHeader" >
+              <Label                              Anchor="C,C"                                              Style="FontFlair28"          String="LOC_CITY_STATES_ENVOYS_SENT" Color="170,176,180" />
+              <Container                          Anchor="R,C"  Offset="17,1"    Size="1,1">
+                <Label    ID="EnvoysSentValue2"    Anchor="C,C"                                              Style="FontFlair28"          String="0" Color="170,176,180" />
+              </Container>
+            </Grid>
+            <ScrollPanel	ID="EnvoysBonusScroll"								Offset="7,60"		Size="parent-25,parent-60"				Vertical="1">
+              <Stack      ID="EnvoysBonusStack"    Anchor="L,T"  Offset="0,1"    StackPadding="4" />
+              <ScrollBar                          Anchor="R,C"  Offset="0,0"    AnchorSide="O,I"            Style="ScrollVerticalBarAlt" />
+            </ScrollPanel>
+          </Container>
+          <Container			ID="InfluenceArea"																		Size="parent,parent" Hidden="1">
+            <Grid                                                Offset="10,10"  Size="parent-20,40"          Style="CityStateHeader" >
+              <Label                              Anchor="C,C"                                              Style="CityStateHeaderText"          String="{LOC_CITY_STATES_ENVOYS_INFLUENCE_BY_CIVILIZATION:upper}" />
+            </Grid>
+            <ScrollPanel	ID="InfluenceScroll"									Offset="7,60"		Size="parent-15,parent-60"				Vertical="1">
+              <Stack      ID="InfluenceStack"      Anchor="L,T"  Offset="0,1"    StackPadding="4" />
+              <ScrollBar                          Anchor="R,C"  Offset="4,0"    AnchorSide="O,I"            Style="ScrollVerticalBarAlt" />
+            </ScrollPanel>
+          </Container>
+          <Container			ID="QuestsArea"																				Size="parent,parent"	Hidden="1" >
+            <Grid                                                Offset="10,10"  Size="parent-20,40"          Style="CityStateHeader" >
+              <Label                              Anchor="C,C"                                              Style="CityStateHeaderText"          String="{LOC_CITY_STATES_AVAILABLE_QUESTS:upper}" />
+            </Grid>
+            <ScrollPanel	ID="QuestsScroll"											Offset="7,60"		Size="parent-15,parent-60"				Vertical="1" >
+              <Stack      ID="QuestsStack"        Anchor="L,T"  Offset="0,1"    StackPadding="20" />
+              <ScrollBar                          Anchor="R,C"  Offset="-12,0"  AnchorSide="O,I"            Style="ScrollVerticalBarAlt" />
+            </ScrollPanel>
+          </Container>
+          <Container			ID="RelationshipsArea"																				Size="parent,parent"	Hidden="1" >
+            <Grid																								Offset="10,10"	Size="parent-20,40"					Style="CityStateHeader" >
+              <Label															Anchor="C,C"																							Style="CityStateHeaderText"					String="{LOC_CITY_STATES_RELATIONSHIPS:upper}" />
+            </Grid>
+            <ScrollPanel	ID="RelationshipsScroll"											Offset="7,60"		Size="parent-15,parent-60"				Vertical="1" >
+              <Stack Anchor="C,T" StackGrowth="Down" StackPadding="4">
+                <Container Size="parent,auto">
+                  <Grid Style="DividerGrid" Size="parent-8,8" Anchor="C,C" Color="34,48,59,255"/>
+                  <Grid Style="DropShadow4" Size="auto,auto" Anchor="C,C">
+                    <Label String="{LOC_CITY_STATES_CIVILIZATION_HEADER:upper}" Anchor="C,C"  Style="DiplomacyGossipHeader"/>
+                  </Grid>
+                </Container>
+                <Stack ID="RelationshipsCivsStack" Anchor="C,T" StackGrowth="Right" WrapWidth="400"/>
+                <Container Size="parent,auto">
+                  <Grid Style="DividerGrid" Size="parent-8,8" Anchor="C,C" Color="34,48,59,255"/>
+                  <Grid Style="DropShadow4" Size="auto,auto" Anchor="C,C">
+                    <Label String="{LOC_CITY_STATES_CITY_STATES:upper}" Anchor="C,C"  Style="DiplomacyGossipHeader"/>
+                  </Grid>
+                </Container>
+                <Stack ID="RelationshipsCityStatesStack" Anchor="C,T" StackGrowth="Right" WrapWidth="400"/>
+        </Stack>
+              <ScrollBar													Anchor="R,C"	Offset="-12,0"	AnchorSide="O,I"						Style="ScrollVerticalBarAlt" />
+            </ScrollPanel>
+          </Container>
+        </Container>
+      </Grid>
+    </Container>
+
+  </SlideAnim>
+
+
+  <!-- ==================================================================  -->
+  <!--  Instances                                                          -->
+  <!-- ==================================================================  -->
+
+  <Instance        Name="CityStateRowInstance">
+    <GridButton    ID="CityStateBase"                                      Size="parent,48"      Style="SubContainer4" Color="59,62,63,255" >
+      <BoxButton  ID="Button"                Anchor="L,C"  Offset="8,0"    Size="40,40"          Color="0,0,0,0">
+        <Image    ID="Icon"                  Anchor="L,C"                  Size="36,36"          Texture="CivSymbols36" />
+        <Image    ID="DiplomacyPip"          Anchor="L,B"  Offset="-10,-6"  Size="23,23"                Texture="Diplomacy_RelationshipPips" />
+        <Label    ID="QuestIcon"            Anchor="L,T"  Offset="-9,0"  String="[ICON_CityStateQuest]" />
+      </BoxButton>
+
+      <GridButton ID="NameButton"                          Offset="42,9"    Size="126,33" Texture="Controls_CityBannerSmall" SliceCorner="14,9" SliceSize="5,4" SliceTextureSize="33,28" Color="50,50,50,255">
+        <Label    ID="NameLabel"            Anchor="C,C"  Offset="0,-2"    Style="FontFlair11"    SmallCaps="16" SmallCapsStyle="EveryWord"          String="Name"/>
+      </GridButton>
+
+      <Image      ID="Envoy"                Anchor="L,C"  Offset="190,0"  Size="40,40"          Texture="Controls_CircleRim40">
+        <Button    ID="EnvoyLessButton"      Anchor="L,C"  Offset="-6,0"    Size="34,34"          Texture="Controls_Stepper" AnchorSide="O,I" FlipX="1" />
+        <Button    ID="EnvoyMoreButton"      Anchor="R,C"  Offset="-6,0"    Size="34,34"          Texture="Controls_Stepper" AnchorSide="O,I" />
+        <Label    ID="EnvoyCount"            Anchor="C,C"  Offset="-1,1"    String="0"            Style="FontFlairLua"        Color="160,160,160,240" />
+      </Image>
+
+      <Image      ID="BonusImage1"          Anchor="L,C"  Offset="256,0"  Size="29,42"          Texture="CityState_BonusSlotOff" >
+        <Label    ID="BonusText1"            Anchor="R,T"  Offset="3,2"                          Style="FontNormal12"              String="1" />
+        <Image    ID="BonusIcon1"            Anchor="C,B"                  Size="26,26"          Texture="EnvoyBonuses26"          TextureOffset="104,0"  />
+      </Image>
+      <Image      ID="BonusImage3"          Anchor="L,C"  Offset="286,0"  Size="29,42"          Texture="CityState_BonusSlotOn">
+        <Label    ID="BonusText3"            Anchor="R,T"  Offset="3,2"                          Style="FontNormal12"              String="3" />
+        <Image    ID="BonusIcon3"            Anchor="C,B"                  Size="26,26"          Texture="EnvoyBonuses26"          TextureOffset="104,0"  />
+      </Image>
+      <Image      ID="BonusImage6"          Anchor="L,C"  Offset="316,0"  Size="29,42"          Texture="CityState_BonusSlotOn">
+        <Label    ID="BonusText6"            Anchor="R,T"  Offset="3,2"                          Style="FontNormal12"              String="6" />
+        <Image    ID="BonusIcon6"            Anchor="C,B"                  Size="26,26"          Texture="EnvoyBonuses26"          TextureOffset="104,0"  />
+      </Image>
+      <!-- CQUI Note: The size of the container below was changed from 108 to 110 in order to fix a spacing issue. -->
+      <Container                             Anchor="L,C"  Offset="346,0"  Size="110,42">
+        <Grid     ID="BonusImageSuzerainOff"                               Size="parent,parent"  Texture="CityState_BonusSlotBigOff" SliceCorner="31,21" SliceTextureSize="34,42"  />
+        <Grid     ID="BonusImageSuzerainOn"                                Size="parent,parent"  Texture="CityState_BonusSlotBigOn"  SliceCorner="31,21" SliceTextureSize="34,42"    />
+        <Label    ID="BonusTextSuzerain"     Anchor="R,B"  Offset="4,2"                          Style="FontNormal12"                String="4" />
+        <Image    ID="BonusIconSuzerain"     Anchor="L,B"  Offset="2,0"    Size="26,26"          Texture="EnvoyBonuses26"            TextureOffset="156,0"  />
+        <Label    ID="SecondHighestLabel"    Anchor="L,T"  Offset="3,0"                          Style="FontNormal12" />
+        <Label    ID="SuzerainLabel"         Anchor="L,B"  Offset="32,14"                        Style="FontNormal12"                String="LOC_CITY_STATES_SUZERAIN" />
+        <Label    ID="Suzerain"              Anchor="L,B"  Offset="32,2"                          Style="FontNormal12"                String="LOC_CITY_STATES_NONE" />
+        <Label    ID="SecondHighestName"     Anchor="L,T"  Offset="32,0"                         Style="FontNormal12" />
+        <Label    ID="SecondHighestEnvoys"   Anchor="R,T"  Offset="4,0"                          Style="FontNormal12" />
+      </Container>
+
+      <Button Hidden="1" ID="LookAtButton"          Anchor="R,C"  Offset="3,-7"    Size="23,31"          Texture="Controls_ShowMe"          StateOffsetIncrement="0,0"  ToolTip="LOC_CITY_STATES_LOOK_AT" />
+      <Button      ID="AmbassadorButton"      Anchor="R,C"  Offset="4,0"     Size="32,32"          Texture="XP1_GovernorsCityBannerFill32" TextureOffset="96,0" StateOffsetIncrement="0,0" ToolTip="LOC_CITY_STATE_PANEL_HAS_AMBASSADOR_TOOLTIP"/>
+
+      <Label      ID="TypeLabel"            Anchor="L,C"  Offset="125,0"                        Style="FontNormal16"  Hidden="1"  String="[ICON_Faith]Religious" Note="DEPRECATED" />
+      <Label      ID="QuestsLabel"          Anchor="L,C"  Offset="250,0"                        Style="FontNormal16"  Hidden="1"  String="[COLOR_GREEN]![ENDCOLOR]"/>
+      <GridButton ID="GiveTokenButton"      Anchor="L,C"  Offset="270,0"  Size="140,32"          Style="MainButton"    Hidden="1"  String="Send Envoy"/>
+      <Label      ID="CurrentTokensLabel"    Anchor="L,C"  Offset="415,0"                        Style="FontNormal16"  Hidden="1"  String="Current Tokens"/>
+      <Label      ID="TypeBonusLabel"        Anchor="L,C"  Offset="510,0"                        Style="FontNormal16"  Hidden="1"  String="Next Bonus"/>
+      <Label      ID="UniqueBonusLabel"      Anchor="L,C"  Offset="620,0"                        Style="FontNormal16"  Hidden="1"  String="Most Tokens Y/N?"/>
+      <!--
+      <GridButton ID="LevyMilitaryButton"    Anchor="R,C"  Offset="150,0"  Size="140,32"          Style="MainButton"    Hidden="1"  String="Levy Military"/>
+      <GridButton ID="ChangeWarStateButton" Anchor="R,C"  Offset="0,0"    Size="140,32"          Style="MainButton"    Hidden="1"  String="Declare War!"/>
+      -->
+    </GridButton>
+  </Instance>
+
+  <Instance        Name="BonusCityHeaderInstance">
+    <Container    ID="Top"      Anchor="L,C" Size="parent,16" >
+      <Grid                      Anchor="C,C"              Size="parent,8" Texture="Controls_Div2"  SliceCorner="27,4" SliceTextureSize="54,8" Color="27,40,48,255" />
+      <Image                    Anchor="C,C"              Size="parent,16"      Texture="Controls_Glow"    Color="0,0,0,255" StretchMode="Fill" />
+      <Label      ID="CityName" Anchor="C,C" String="$City$" Style="FontFlair14" SmallCaps="18" SmallCapsType="EveryWord"   Color="255,255,255,120" />
+    </Container>
+  </Instance>
+
+  <Instance        Name="BonusItemOnInstance">
+    <Grid          ID="Top"      Anchor="L,T"                  Size="parent,72"        Texture="CityState_BonusFrameOn" SliceCorner="65,29" SliceTextureSize="74,58" >
+      <Image      ID="Icon"      Anchor="L,T"  Offset="4,5"    Size="50,50"            Texture="EnvoyBonuses50"      />
+      <Label      ID="Title"    Anchor="L,T"  Offset="70,6"                            Style="FontNormal14"  String="$BonusTitle$ - GameCore does not expose this yet." />
+      <Container                              Offset="55,0"    Size="parent-55,parent"  >
+        <Label    ID="Details"  Anchor="L,T"  Offset="25,24"  WrapWidth="320"          Style="FontNormal14"  String="$Details$ - GameCore does not expose this yet." ColorSet="CityStateCS" />
+      </Container>
+      <Label      ID="Check"    Anchor="R,T"  Offset="8,10" String="[ICON_Checkmark]" Hidden="1" />
+    </Grid>
+  </Instance>
+
+  <Instance        Name="CityStateIconInstance">
+    <Container    ID="Top"          Anchor="L,C"                  Size="40,40" >
+      <Button      ID="IconButton"    Anchor="C,C"                  Size="44,44"                Texture="CircleBacking44" NoStateChange="1">
+        <Image    ID="Icon"          Anchor="C,C"                  Size="44,44"  />
+        <Image    ID="DiplomacyPip"  Anchor="L,B"  Offset="-8,-8"  Size="23,23"                Texture="Diplomacy_RelationshipPips" />
+      </Button>
+    </Container>
+  </Instance>
+
+  <Instance        Name="InfluenceRowInstance">
+    <Container    ID="Top"          Anchor="L,C" Offset="10,0" Size="parent-24,30" >
+      <Label      ID="CityName"      Anchor="L,T" String="$City$" Style="FontFlair14" SmallCaps="18" SmallCapsType="EveryWord"   ColorSet="CityStateCS" />
+      <Bar        ID="AmountBar"    Anchor="L,B"                  Size="parent-78,16" Direction="Right" FGColor="200,190,169" Percent="1.0" />
+      <Stack                        Anchor="R,B" Offset="38,-4" StackGrowth="Left">
+        <!-- TODO: non-font icon version<Image Icon="" /> -->
+        <Label    ID="Amount"        Style="FontFlair24" String="0" Color="200,190,169,255" />
+        <Label                      Style="FontFlair24" String="[Icon_Envoy]" Color="200,190,169,255" />
+      </Stack>
+      <Image ID="AmbassadorIcon" Anchor="R,B" Offset="0,-5" Size="32,32" IconSize="32" Icon="ICON_GOVERNOR_THE_AMBASSADOR_FILL"/>
+    </Container>
+  </Instance>
+
+  <Instance        Name="QuestInstance">
+    <Container    ID="Top"              Anchor="L,C"	Size="parent-15,auto" >
+      <Image                                                        Size="42,33" Texture="CityStateQuest42">
+        <Label    ID="Callout"          Anchor="C,T"  Offset="0,3" String="[ICON_Government]" Style="FontNormal16" Color="10,20,30,200" />
+      </Image>
+      <Stack      StackGrowth="Bottom" StackPadding="2">
+        <Label    ID="Title"                          Offset="45,0"                        Style="FontFlair16"      String="$Title$"        ColorSet="CityStateCS" />
+        <Label    ID="Description"                    Offset="45,0"  WrapWidth="parent-35"  Style="FontNormal14"    String="$Description$"  Color="255,255,255,255"/>
+        <Grid                                          Offset="0,5"  Size="parent,20"      Style="SubContainer4"    Color="25,33,38,255">
+          <Label                        Anchor="L,C"  Offset="18,0"                        Style="FontNormal14"    String="LOC_CITY_STATES_REWARD" ColorSet="CityStateCS" />
+          <Label  ID="Reward"            Anchor="R,C"  Offset="8,0"                        Style="FontNormal14"    String="$Reward$"                ColorSet="CityStateCS" />
+        </Grid>
+      </Stack>
+    </Container>
+  </Instance>
+
+  <!-- An instance of an Icon, with optional Amount Text that overlaps the icon -->
+  <Instance	Name="RelationshipIcon">
+    <Container ID="Background" Size="40,40">
+      <Image ID="Icon" StretchMode="None" Size="32,32" Anchor="R,T">
+        <Image ID="TeamRibbon" Anchor="C,B" Offset="0,-7" Size="30,30" Texture="TeamRibbon32"/>
+      </Image>
+      <Image ID="DiplomacyPip" Anchor="L,B" Size="23,23"	Texture="Diplomacy_RelationshipPips"/>
+    </Container>
+  </Instance>
+
+</Context>

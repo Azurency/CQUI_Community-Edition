@@ -516,8 +516,7 @@ function OnDistrictAddedToMap( playerID: number, districtID : number, cityID :nu
     -- CQUI update citizens, data and real housing for close cities within 4 tiles when city founded
     -- we use it only to update real housing for a city that loses a 3rd radius tile to a city that is founded within 4 tiles
   elseif playerID == Game.GetLocalPlayer() then
-    local kCity = CityManager.GetCity(playerID, cityID);
-    CQUI_UpdateCloseCitiesCitizensWhenCityFounded(kCity);
+    CQUI_UpdateCloseCitiesCitizensWhenCityFounded(playerID, cityID);
   end
 end
 
@@ -973,25 +972,25 @@ end
 -- ===========================================================================
 -- CQUI update citizens, data and real housing for both cities when swap tiles
 function CQUI_UpdateCitiesCitizensWhenSwapTiles(pCity)
-
   CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, nil);
 
+  local PlayerID = Game.GetLocalPlayer();
   local pCityID = pCity:GetID();
-  LuaEvents.CQUI_CityInfoUpdated(pCityID);
+  LuaEvents.CQUI_CityInfoUpdated(PlayerID, pCityID);
 end
 
 -- ===========================================================================
 -- CQUI update citizens, data and real housing for close cities within 4 tiles when city founded
 -- we use it only to update real housing for a city that loses a 3rd radius tile to a city that is founded within 4 tiles
-function CQUI_UpdateCloseCitiesCitizensWhenCityFounded(kCity)
-
-  local m_pCity:table = Players[Game.GetLocalPlayer()]:GetCities();
+function CQUI_UpdateCloseCitiesCitizensWhenCityFounded(playerID, cityID)
+  local kCity = CityManager.GetCity(playerID, cityID);
+  local m_pCity:table = Players[playerID]:GetCities();
   for i, pCity in m_pCity:Members() do
-    if Map.GetPlotDistance(kCity:GetX(), kCity:GetY(), pCity:GetX(), pCity:GetY()) == 4 then
+    if Map.GetPlotDistance( kCity:GetX(), kCity:GetY(), pCity:GetX(), pCity:GetY() ) == 4 then
       CityManager.RequestCommand(pCity, CityCommandTypes.SET_FOCUS, nil);
 
       local pCityID = pCity:GetID();
-      LuaEvents.CQUI_CityInfoUpdated(pCityID);
+      LuaEvents.CQUI_CityInfoUpdated(playerID, pCityID);
     end
   end
 end

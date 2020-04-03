@@ -170,7 +170,6 @@ function AddScreenHook(texture:string, tooltip:string, callback:ifunction)
   screenHookInst.ScreenHookButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 end
 
-
 -- ===========================================================================
 --  Refresh Data and View
 -- ===========================================================================
@@ -182,7 +181,7 @@ function OnDiplomacyMeet(player1ID:number, player2ID:number)
     if(localPlayerID ~= -1) then
       -- Was the local player involved, and was it a minor civ that was met?
       local metPlayer = Players[player2ID];
-      if (player1ID == localPlayerID and not metPlayer:IsMajor() and not metPlayer:IsBarbarian()) then
+      if (player1ID == localPlayerID and metPlayer:IsMinor()) then
         m_isCityStatesUnlocked = true;
         Resize();
       end
@@ -213,12 +212,26 @@ end
 -- Capture spies or traders becoming unlocked
 function OnCivicCompleted( player:number, civic:number, isCanceled:boolean)
   if player == Game.GetLocalPlayer() and (not m_isEspionageUnlocked or not m_isTradeRoutesUnlocked) then
-    local localPlayer = Players[Game.GetLocalPlayer()];
+    local localPlayer = Players[player];
     if (localPlayer == nil) then
       return;
     end
     CheckTradeCapacity(localPlayer);
     CheckSpyCapacity(localPlayer);
+	
+    Resize();
+  end
+end
+
+-- ===========================================================================
+function OnResearchCompleted( player:number, tech:number )
+  if player == Game.GetLocalPlayer() and not m_isTradeRoutesUnlocked then
+    local localPlayer = Players[player];
+    if localPlayer then
+      return;
+    end
+    CheckTradeCapacity(localPlayer);
+
     Resize();
   end
 end
@@ -241,13 +254,11 @@ end
 -- ===========================================================================
 function CheckCityStatesUnlocked(localPlayer:table)
   --  Check to see if the player has met any city-states
-  --  Note: I'm using not IsMajor and not IsBarbarian to determine the city-state check at this point - though elsewhere we have used CanReceiveInfluencePoints.
-  --  For future expansions we should probably create an IsMinor check for the Player object.
   if (not m_isCityStatesUnlocked) then
     local localDiplomacy:table = localPlayer:GetDiplomacy();
     local aPlayers = PlayerManager.GetAliveMinors();
     for _, pPlayer in ipairs(aPlayers) do
-      if (not pPlayer:IsMajor() and not pPlayer:IsBarbarian() and localDiplomacy:HasMet(pPlayer:GetID())) then
+      if (pPlayer:IsMinor() and localDiplomacy:HasMet(pPlayer:GetID())) then
         m_isCityStatesUnlocked = true;
       end
     end
@@ -383,6 +394,7 @@ function Initialize()
   Controls.WorldRankingsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   
   Events.CivicCompleted.Add(OnCivicCompleted);
+  Events.ResearchCompleted.Add(OnResearchCompleted);
   Events.DiplomacyMeet.Add( function() OnDiplomacyMeet(); end);
   Events.InputActionTriggered.Add( OnInputActionTriggered );
   Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );

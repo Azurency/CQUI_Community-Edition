@@ -63,6 +63,7 @@ local m_kTutorialDisabledControls :table  = nil;
 local m_GrowthPlot          :number = -1;
 
 local CQUI_HousingFromImprovementsTable :table = {};    -- CQUI real housing from improvements table
+local CQUI_ImprovementRemoved :table = {};    -- CQUI: a table we use to update real housing when improvement removed
 
 -- ====================CQUI Cityview==========================================
 
@@ -950,9 +951,18 @@ function OnTileImproved(x, y)
       LuaEvents.CityPanel_LiveCityDataChanged( m_kData, true );
       --LuaEvents.UpdateBanner(Game.GetLocalPlayer(), m_pCity:GetID());
 
-      -- CQUI update city's real housing
-      local pCityID = m_pCity:GetID();
-      LuaEvents.CQUI_CityInfoUpdated(pCityID);
+      -- CQUI update city's real housing only if improvement adds housing or if it's removed
+      local plotID = plot:GetIndex();
+      if Map.GetPlotDistance(m_pCity:GetX(), m_pCity:GetY(), x, y) <= 3 then
+        local eImprovementType :number = plot:GetImprovementType();
+        if ( eImprovementType ~= -1 and GameInfo.Improvements[eImprovementType].Housing > 0 ) or CQUI_ImprovementRemoved[plotID] == true then
+          local pCityID = m_pCity:GetID();
+          LuaEvents.CQUI_CityInfoUpdated(PlayerID, pCityID);
+        end
+      end
+      if CQUI_ImprovementRemoved[plotID] == true then
+        CQUI_ImprovementRemoved[plotID] = nil;
+      end
     end
   end
 end
@@ -1403,6 +1413,29 @@ function OnTutorial_ContextDisableItems( contextName:string, kIdsToDisable:table
 end
 
 -- ===========================================================================
+-- CQUI update all cities data including real housing when tech/civic that adds housing is boosted and research is completed
+function CQUI_UpdateAllCitiesData(PlayerID)
+  local m_kCity :table = Players[PlayerID]:GetCities();
+  for i, kCity in m_kCity:Members() do
+    CityManager.RequestCommand(kCity, CityCommandTypes.SET_FOCUS, nil);
+  end
+end
+
+-- ===========================================================================
+-- CQUI add plot ID to a table when improvement removed. We use it to update real housing
+function CQUI_OnImprovementRemoved(x, y)
+  local plot :table = Map.GetPlot(x, y);
+  local PlayerID = Game.GetLocalPlayer();
+  m_pCity = Cities.GetPlotPurchaseCity(plot);
+  if m_pCity ~= nil then
+    if PlayerID == m_pCity:GetOwner() then
+      local plotID = plot:GetIndex();
+      CQUI_ImprovementRemoved[plotID] = true;
+    end
+  end
+end
+
+-- ===========================================================================
 -- CQUI get real housing from improvements
 function CQUI_HousingFromImprovementsTableInsert (pCityID, CQUI_HousingFromImprovements)
   CQUI_HousingFromImprovementsTable[pCityID] = CQUI_HousingFromImprovements;
@@ -1503,9 +1536,8 @@ function Initialize()
   LuaEvents.CQUI_SettingsUpdate.Add( CQUI_SettingsUpdate );
   LuaEvents.RefreshCityPanel.Add(Refresh);
   LuaEvents.CQUI_RealHousingFromImprovementsCalculated.Add(CQUI_HousingFromImprovementsTableInsert);    -- CQUI get real housing from improvements values
-  LuaEvents.CQUI_CityLostTileToCultureBomb.Add( Refresh );    -- CQUI update real housing from improvements when a city lost tile to a Culture Bomb
-  LuaEvents.CQUI_IndiaPlayerResearchedSanitation.Add( Refresh );    -- CQUI update real housing from improvements when play as India and researched Sanitation
-  LuaEvents.CQUI_IndonesiaPlayerResearchedMassProduction.Add( Refresh );    -- CQUI update real housing from improvements when play as Indonesia and researched Mass Production
+  LuaEvents.CQUI_AllCitiesInfoUpdatedOnTechCivicBoost.Add( CQUI_UpdateAllCitiesData );    -- CQUI update all cities data including real housing when tech/civic that adds housing is boosted and research is completed
+  Events.ImprovementRemovedFromMap.Add( CQUI_OnImprovementRemoved );    -- CQUI add plot ID to a table when improvement removed. We use it to update real housing
 
   -- Truncate possible static text overflows
   TruncateStringWithTooltip(Controls.BreakdownLabel,  MAX_BEFORE_TRUNC_STATIC_LABELS, Controls.BreakdownLabel:GetText());
