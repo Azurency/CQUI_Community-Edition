@@ -189,6 +189,18 @@
     <Row Tag="LOC_CQUI_POPUPS_TECHAUDIO_TOOLTIP" Language="it_IT">
       <Text>Attiva/disattiva l'audio dei popup di completamento di una tecnologica o un progresso civico. Impostazione indipindente dall'opzione di visualizzazione dei popup, l'audio suona anche in caso di popup non visibili.</Text>
     </Row>
+    <Row Tag="LOC_CQUI_POPUPS_WONDERBUILTVISUAL" Language="it_IT">
+      <Text>Video meraviglie</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_WONDERBUILTVISUAL_TOOLTIP" Language="it_IT">
+      <Text>Attiva/disattiva il video che appare al completamento di una meraviglia.</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_WONDERBUILTAUDIO" Language="it_IT">
+      <Text>Audio meraviglie</Text>
+    </Row>
+    <Row Tag="LOC_CQUI_POPUPS_WONDERBUILTAUDIO_TOOLTIP" Language="it_IT">
+      <Text>Attiva o disattiva l'audio che viene riprodotto al completamento di una meraviglia. È indipendente dalla componente visiva e può essere riprodotto anche quando il video non è visibile.</Text>
+    </Row>
     <Row Tag="LOC_CQUI_SETTINGS_REMINDER" Language="it_IT">
       <Text>Ricorda: le impostazioni CQUI sono legate ai singoli salvataggi![NEWLINE]Se si vuole modificare uno dei parametri di default, si prega di leggere le informazioni all'interno del file cqui_settings.sql nella cartella [MOD INSTALL DIRECTORY]/CQUI/Assets</Text>
     </Row>

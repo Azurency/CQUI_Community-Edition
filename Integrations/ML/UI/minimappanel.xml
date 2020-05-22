@@ -1,88 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Context>
 
-  <SlideAnim  Size="parent,parent"    ID="Pause" Begin="0,0" End="0,160" Function="Root" Speed="4"        Cycle="Once"    Stopped="1"/>
+  <SlideAnim  Size="parent,parent"  ID="Pause" Begin="0,0" End="0,160" Function="Root" Speed="4"    Cycle="Once"  Stopped="1"/>
 
-  <Grid                           ID="LensPanel"                      Anchor="L,T" AnchorSide="I,O"                               Offset="-10,-5" Size="230,386"  Texture="Tracker_OptionsBacking.dds" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" Hidden="1">
-    <Label                                                                      Anchor="C,T" String="{LOC_HUD_LENSES:upper}"    Offset="-6,10"  Style="FontFlair16" Color0="106,93,69,255" Color1="0,0,0,150" Color2="146,133,109,255" FontStyle="Glow" SmallCaps="20" SmallCapsLeading="0" SmallCapsType="EveryWord" KerningAdjustment="0"/>
-    <ScrollPanel        ID="LensChooserList"                                                                                    Offset="36,35"  Size="parent,parent-65" Style="ScrollPanelWithLeftBar">
-      <Stack          ID="LensToggleStack"            Anchor="L,T"                            StackGrowth="Down"  Offset="-5,0" StackPadding="-3" >
-        <RadioButton    ID="ReligionLensButton"   RadioGroup="ActiveLens" TextOffset="-5,0" String="LOC_HUD_RELIGION_LENS"    AllowClickOff="1" ToolTip="LOC_HUD_RELIGION_LENS_TOOLTIP"   Style="WhiteSemiBold14" Offset="10,0" ButtonTexture="Controls_RadioButtonLarge.dds"   ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,35"  Anchor="L,T" BoxOnLeft="1"/>
-        <RadioButton    ID="ContinentLensButton"  RadioGroup="ActiveLens" TextOffset="-5,0" String="LOC_HUD_CONTINENT_LENS"   AllowClickOff="1" ToolTip="LOC_HUD_CONTINENT_LENS_TOOLTIP"  Style="WhiteSemiBold14" Offset="10,0" ButtonTexture="Controls_RadioButtonLarge.dds"   ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,35"  Anchor="L,T" BoxOnLeft="1"/>
-        <RadioButton    ID="AppealLensButton"     RadioGroup="ActiveLens" TextOffset="-5,0" String="LOC_HUD_APPEAL_LENS"      AllowClickOff="1" ToolTip="LOC_HUD_APPEAL_LENS_TOOLTIP"     Style="WhiteSemiBold14" Offset="10,0" ButtonTexture="Controls_RadioButtonLarge.dds"   ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,35"  Anchor="L,T" BoxOnLeft="1"/>
-        <RadioButton    ID="WaterLensButton"      RadioGroup="ActiveLens" TextOffset="-5,0" String="LOC_HUD_WATER_LENS"       AllowClickOff="1" ToolTip="LOC_HUD_WATER_LENS_TOOLTIP"      Style="WhiteSemiBold14" Offset="10,0" ButtonTexture="Controls_RadioButtonLarge.dds"   ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,35"  Anchor="L,T" BoxOnLeft="1"/>
-        <RadioButton    ID="GovernmentLensButton" RadioGroup="ActiveLens" TextOffset="-5,0" String="LOC_HUD_GOVERNMENT_LENS"  AllowClickOff="1" ToolTip="LOC_HUD_GOVERNMENT_LENS_TOOLTIP" Style="WhiteSemiBold14" Offset="10,0" ButtonTexture="Controls_RadioButtonLarge.dds"   ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,35"  Anchor="L,T" BoxOnLeft="1"/>
-        <RadioButton    ID="OwnerLensButton"      RadioGroup="ActiveLens" TextOffset="-5,0" String="LOC_HUD_OWNER_LENS"       AllowClickOff="1" ToolTip="LOC_HUD_OWNER_LENS_TOOLTIP"      Style="WhiteSemiBold14" Offset="10,0" ButtonTexture="Controls_RadioButtonLarge.dds"   ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,35"  Anchor="L,T" BoxOnLeft="1"/>
-        <RadioButton    ID="TourismLensButton"    RadioGroup="ActiveLens" TextOffset="-5,0" String="LOC_HUD_TOURISM_LENS"     AllowClickOff="1" ToolTip="LOC_HUD_TOURISM_LENS_TOOLTIP"    Style="WhiteSemiBold14" Offset="10,0" ButtonTexture="Controls_RadioButtonLarge.dds"   ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,35"  Anchor="L,T" BoxOnLeft="1"/>
+  <Grid             ID="LensPanel"            Anchor="L,T" AnchorSide="I,O"                 Offset="-10,-5" Size="230,326"  Texture="Tracker_OptionsBacking.dds" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" Hidden="1">
+    <Label                                    Anchor="C,T" String="{LOC_HUD_LENSES:upper}"  Offset="-6,10"  Style="FontFlair16" Color0="106,93,69,255" Color1="0,0,0,150" Color2="146,133,109,255" FontStyle="Glow" SmallCaps="20" SmallCapsLeading="0" SmallCapsType="EveryWord" KerningAdjustment="0"/>
+    <ScrollPanel    ID="LensChooserList"                                                    Offset="36,35"  Size="parent,parent-65" Style="ScrollPanelWithLeftBar">
+      <Stack      ID="LensToggleStack"      Anchor="L,T"              StackGrowth="Bottom"  Offset="-5,0" StackPadding="-3" >
+        <RadioButton  ID="ReligionLensButton"   RadioGroup="ActiveLens" TextOffset="-5,0" String="LOC_HUD_RELIGION_LENS"    AllowClickOff="1" ToolTip="LOC_HUD_RELIGION_LENS_TOOLTIP"   Style="WhiteSemiBold14" Offset="10,4" ButtonTexture="Controls_RadioButtonLarge.dds" ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,140"  Anchor="L,T" BoxOnLeft="1"/>
+        <RadioButton  ID="ContinentLensButton"  RadioGroup="ActiveLens" TextOffset="-5,0" String="LOC_HUD_CONTINENT_LENS"   AllowClickOff="1" ToolTip="LOC_HUD_CONTINENT_LENS_TOOLTIP"  Style="WhiteSemiBold14" Offset="10,4" ButtonTexture="Controls_RadioButtonLarge.dds" ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,140"  Anchor="L,T" BoxOnLeft="1"/>
+        <RadioButton  ID="AppealLensButton"     RadioGroup="ActiveLens" TextOffset="-5,0" String="LOC_HUD_APPEAL_LENS"      AllowClickOff="1" ToolTip="LOC_HUD_APPEAL_LENS_TOOLTIP"     Style="WhiteSemiBold14" Offset="10,4" ButtonTexture="Controls_RadioButtonLarge.dds" ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,140"  Anchor="L,T" BoxOnLeft="1"/>
+        <RadioButton  ID="WaterLensButton"      RadioGroup="ActiveLens" TextOffset="-5,0" String="LOC_HUD_WATER_LENS"       AllowClickOff="1" ToolTip="LOC_HUD_WATER_LENS_TOOLTIP"      Style="WhiteSemiBold14" Offset="10,4" ButtonTexture="Controls_RadioButtonLarge.dds" ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,140"  Anchor="L,T" BoxOnLeft="1"/>
+        <RadioButton  ID="GovernmentLensButton" RadioGroup="ActiveLens" TextOffset="-5,0" String="LOC_HUD_GOVERNMENT_LENS"  AllowClickOff="1" ToolTip="LOC_HUD_GOVERNMENT_LENS_TOOLTIP" Style="WhiteSemiBold14" Offset="10,4" ButtonTexture="Controls_RadioButtonLarge.dds" ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,140"  Anchor="L,T" BoxOnLeft="1"/>
+        <RadioButton  ID="OwnerLensButton"      RadioGroup="ActiveLens" TextOffset="-5,0" String="LOC_HUD_OWNER_LENS"       AllowClickOff="1" ToolTip="LOC_HUD_OWNER_LENS_TOOLTIP"      Style="WhiteSemiBold14" Offset="10,4" ButtonTexture="Controls_RadioButtonLarge.dds" ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,140"  Anchor="L,T" BoxOnLeft="1"/>
+        <RadioButton  ID="TourismLensButton"    RadioGroup="ActiveLens" TextOffset="-5,0" String="LOC_HUD_TOURISM_LENS"     AllowClickOff="1" ToolTip="LOC_HUD_TOURISM_LENS_TOOLTIP"    Style="WhiteSemiBold14" Offset="10,4" ButtonTexture="Controls_RadioButtonLarge.dds" ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,140"  Anchor="L,T" BoxOnLeft="1"/>
+        <RadioButton  ID="EmpireLensButton"     RadioGroup="ActiveLens" TextOffset="-5,0" String="LOC_HUD_EMPIRE_LENS"      AllowClickOff="1" ToolTip="LOC_HUD_EMPIRE_LENS_TOOLTIP"     Style="WhiteSemiBold14" Offset="10,4" ButtonTexture="Controls_RadioButtonLarge.dds" ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,140"  Anchor="L,T" BoxOnLeft="1"/>
       </Stack>
     </ScrollPanel>
     <Image Texture="Controls_ButtonExtendSmall" TextureOffset="0,60" Size="20,20" Anchor="L,B" Offset="22,10"/>
-
-    <!-- Resource Lens Options -->
-    <Grid ID="ResourceLensOptionsPanel" Anchor="R,B" Offset="-210,0" Size="230,350"  Texture="Tracker_OptionsBacking.dds" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" Hidden="1">
-      <Label Anchor="C,T" String="{LOC_HUD_RESOURCE_LENS:upper}" Offset="-6,10"  Style="FontFlair16" Color0="106,93,69,255" Color1="0,0,0,150" Color2="146,133,109,255" FontStyle="Glow" SmallCaps="20" SmallCapsLeading="0" SmallCapsType="EveryWord" KerningAdjustment="0" AutoScrollBar="1" AutoSizeScrollBar="1"/>
-      <ScrollPanel ID="ResourcePickList" Anchor="L,T" Offset="35,35" Size="parent,parent-65" Style="ScrollPanelWithLeftBar">
-        <Stack ID="ResourcePickStack" Anchor="L,T" StackGrowth="Down" Offset="-10,0" StackPadding="5">
-
-          <!-- BONUS -->
-          <CheckBox   ID="ShowBonusResource"               IsChecked="1"   Offset="15,4"   BoxOnLeft="1" TextOffset="-5,0" String="LOC_TOOLTIP_RESOURCE_LENS_BONUS" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds"    ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17"  Anchor="L,T"/>
-            <Stack ID="BonusResourcePickStack" Anchor="L,T" StackGrowth="Down" Offset="40,-3" StackPadding="0">
-            </Stack>
-
-          <!-- LUXURY -->
-          <CheckBox   ID="ShowLuxuryResource"               IsChecked="1"   Offset="15,4"   BoxOnLeft="1" TextOffset="-5,0" String="LOC_TOOLTIP_RESOURCE_LENS_LUXURY" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds"    ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17"  Anchor="L,T"/>
-            <Stack ID="LuxuryResourcePickStack" Anchor="L,T" StackGrowth="Down" Offset="40,-3" StackPadding="0">
-            </Stack>
-
-          <!-- STRATEGIC -->
-          <CheckBox   ID="ShowStrategicResource"               IsChecked="1"   Offset="15,4"   BoxOnLeft="1" TextOffset="-5,0" String="LOC_TOOLTIP_RESOURCE_LENS_STRATEGIC" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds"    ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17"  Anchor="L,T"/>
-            <Stack ID="StrategicResourcePickStack" Anchor="L,T" StackGrowth="Down" Offset="40,-3" StackPadding="0">
-            </Stack>
-
-        </Stack>
-      </ScrollPanel>
-    </Grid>
-
-    <!-- City Overlap Lens Options -->
-    <Grid ID="OverlapLensOptionsPanel" Anchor="R,B" Offset="-210,0" Size="230,350"  Texture="Tracker_OptionsBacking.dds" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" Hidden="1">
-      <Label Anchor="C,T" String="{LOC_HUD_CITYOVERLAP_LENS:upper}" Offset="-6,10"  Style="FontFlair16" Color0="106,93,69,255" Color1="0,0,0,150" Color2="146,133,109,255" FontStyle="Glow" SmallCaps="20" SmallCapsLeading="0" SmallCapsType="EveryWord" KerningAdjustment="0" AutoScrollBar="1" AutoSizeScrollBar="1"/>
-
-      <Stack StackGrowth="Down" Padding="10">
-        <CheckBox ID="ShowLensOutsideBorder" WrapWidth="120" IsChecked="1" Offset="25,50" BoxOnLeft="1" TextOffset="-9,0" String="LOC_PANEL_CITYOVERLAP_OPTION1" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
-
-        <RadioButton ID="OverlapLensMouseNone" IsChecked="1" RadioGroup="OverlapMouse" TextOffset="-1,-1" String="LOC_PANEL_CITYOVERLAP_NMOUSE" Style="WhiteSemiBold14" Offset="17,4" ButtonTexture="Controls_RadioButtonLarge.dds" ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,35" Anchor="L,T" BoxOnLeft="1"/>
-
-        <RadioButton ID="OverlapLensMouseRange" RadioGroup="OverlapMouse" TextOffset="-1,-1" String="LOC_PANEL_CITYOVERLAP_RANGE" ToolTip="LOC_TOOLTIP_CITYOVERLAP_RANGE" Style="WhiteSemiBold14" Offset="17,0" ButtonTexture="Controls_RadioButtonLarge.dds" ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,35" Anchor="L,T" BoxOnLeft="1"/>
-      </Stack>
-
-      <Container Anchor="C,B" Offset="-5,50" Size="parent-45,70">
-        <Grid Texture="Controls_SeparatorAngled" TextureSize="14,6" Anchor="C,T" Size="parent,6" SliceCorner="6,4" Offset="0,0"/>
-
-        <Label Anchor="C,T" Offset="0,15" String="RANGE" WrapWidth="Parent-40" Align="Center" Style="FontFlair16" Color2="143,122,82,255" Color0="106,93,69,230" SmallCaps="20" SmallCapsLeading="0" SmallCapsType="EveryWord" KerningAdjustment="0" />
-
-        <Button ID="OverlapRangeDown" Style="ArrowButtonLeft" Offset="20,24" Anchor="L,C"/>
-        <Button ID="OverlapRangeUp" Style="ArrowButtonRight" Offset="20,24" Anchor="R,C"/>
-        <Label ID="OverlapRangeLabel"  String="6" Offset="0,24" Anchor="C,C" Align="Center" Style="EventPopupTitle" />
-      </Container>
-    </Grid>
   </Grid>
 
   <Grid           ID="MapOptionsPanel"  Anchor="L,T" AnchorSide="I,O"     Size="220,119"  Offset="-10,-5" Texture="Tracker_OptionsBacking.dds" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" Hidden="1">
-    <Label                              Anchor="C,T" String="{LOC_HUD_MAP_OPTIONS:upper}" Offset="-6,10" Style="FontFlair16" Color0="106,93,69,255" Color1="0,0,0,150" Color2="146,133,109,255" FontStyle="Glow" SmallCaps="20" SmallCapsLeading="0" SmallCapsType="EveryWord" KerningAdjustment="0"/>
-    <ScrollPanel  ID="MapOptionsList"                Offset="10,30" Size="parent,parent" Style="ScrollPanelWithLeftBar"         HideScrollBar="1" >
-      <Stack      ID="MapOptionsStack"  Anchor="R,C"                       StackGrowth="Bottom" Offset="25,-30" StackPadding="1" >
+    <Label        ID="MapOptionsLabel" Anchor="C,T" String="{LOC_HUD_MAP_OPTIONS:upper}" Offset="-6,10" Style="FontFlair16" Color0="106,93,69,255" Color1="0,0,0,150" Color2="146,133,109,255" FontStyle="Glow" SmallCaps="20" SmallCapsLeading="0" SmallCapsType="EveryWord" KerningAdjustment="0"/>
+    <ScrollPanel  ID="MapOptionsList"   Anchor="C,B" Offset="10,30" Size="parent,parent-60" AutoScrollBar="1" Vertical="1">
+      <Stack      ID="MapOptionsStack"  Anchor="R,C" StackGrowth="Bottom" Offset="25,0" StackPadding="1" >
         <CheckBox ID="ToggleGridButton"       IsChecked="1"   Offset="10,4" TextOffset="-5,0" String="LOC_HUD_MAP_SHOW_GRID" ToolTip="LOC_HUD_MAP_TOGGLE_GRID" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds"  ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17"  Anchor="R,T"/>
         <CheckBox ID="ToggleResourcesButton"  IsChecked="1"   Offset="10,4" TextOffset="-5,0" String="LOC_HUD_MAP_SHOW_RESOURCES" ToolTip="LOC_HUD_TOGGLE_RESOURCE_ICONS" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17"  Anchor="R,T"/>
         <CheckBox ID="ToggleYieldsButton"     IsChecked="0"   Offset="10,4" TextOffset="-5,0" String="LOC_HUD_MAP_SHOW_YIELDS" ToolTip="LOC_HUD_TOGGLE_YIELD_ICONS" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17"  Anchor="R,T"/>
       </Stack>
+      <ScrollBar Style="ScrollVerticalBarHighContrast" Anchor="L,C" Offset="0,0" AnchorSide="I,I" Size="4,90"/>
     </ScrollPanel>
     <Image Texture="Controls_ButtonExtendSmall" TextureOffset="0,60" Size="20,20" Anchor="L,B" Offset="20,10"/>
   </Grid>
 
-  <Container  Size="300,200"    ID="MiniMap" Anchor="L,B" Offset="-4,0" ConsumeMouse="0">
+  <Container  Size="300,200"    ID="MiniMap" Anchor="L,B" Offset="-3,0" >
     <SlideAnim  Size="parent,parent"  ID="CollapseAnim" Begin="0,0" End="0,195" Function="OutQuint" FunctionPower="1" Speed="2"   Cycle="Once"  Stopped="1">
       <SlideAnim  Size="parent,parent" ID="ExpandAnim" Begin="0,0" End="0,-195" Function="OutQuint" FunctionPower="3" Speed="2"   Cycle="Once"  Stopped="1">
-        <Grid   ID="MinimapBacking" Texture="MiniMap_WoodBacking" Anchor ="L,B" Offset="-5,0" Size="282,201" SliceCorner="18,94" SliceSize="246,4">
+        <Grid   ID="MinimapBacking" Texture="MiniMap_WoodBacking" Anchor ="L,B" Offset="-5,2" Size="282,201" SliceCorner="18,94" SliceSize="246,4">
           <Image Texture="MiniMap_WoodBackingTile" Anchor="C,C" Size="Parent-25,Parent-100" StretchMode="Tile"/>
         </Grid>
         <Image   ID="MinimapContainer" Anchor ="L,B" Texture="Parchment_Pattern" ToolTip="LOC_HUD_MINIMAP_TOOLTIP" Size="256,256" StretchMode="Tile" Offset="18,21">
@@ -92,30 +46,34 @@
           <Button ID="ExpandButton" Anchor="R,T" AnchorSide="I,O" Offset="3,3"  Size="47,16"  Hidden="1" ConsumeAllMouse="1" Texture="Controls_ButtonExtend.dds" ToolTip="LOC_HUD_MINIMAP_EXPAND_TOOLTIP" />
 
           <Grid Texture="MiniMap_Frame" Size="parent+10,parent+12" SliceCorner="18,40" SliceTextureSize="37,149" Offset="-5,-5"/>
-          <Stack ID="OptionsStack" Anchor="L,T" AnchorSide="I,O" Offset="0,-6" StackGrowth="Right" Padding="-2">
+          <Stack ID="OptionsStack" Anchor="L,T" AnchorSide="I,O" Offset="0,-4" StackGrowth="Right" Padding="-6">
             <CheckBox ID="LensButton" Offset="0,1" Anchor="L,C" UseSelectedTextures="1" ButtonSize="44,44"  ButtonTexture="LaunchBar_Hook_ButtonMedium" Style="ButtonNormalText" ToolTip="LOC_HUD_LENSES" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
               <Image Texture="MiniMap_Lenses" Size="36,36" Anchor="C,C" Offset="-4,-1"/>
             </CheckBox>
-            <Image                       Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip" Color="255,255,255,200" Offset="0,-2"/>
-            <CheckBox ID="MapOptionsButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="LOC_HUD_MAP_OPTIONS" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
+            <CheckBox ID="MapOptionsButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonMinimap" Style="ButtonNormalText" ToolTip="LOC_HUD_MAP_OPTIONS" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
               <Image Texture="Minimap_MapOptions" Size="22,22" Anchor="C,C"/>
             </CheckBox>
-            <Image                       Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip" Color="255,255,255,200" Offset="0,-2"/>
-           <CheckBox ID="CQUI_OptionsButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="LOC_CQUI_NAME" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
-             <Image Texture="Stats30" Icon="ICON_RESOURCE_TOBACCO" Size="35,35" Anchor="C,C"/>
-           </CheckBox>
-            <Image                       Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip" Color="255,255,255,200" Offset="0,-2"/>
-            <CheckBox ID="MapPinListButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="LOC_HUD_MAP_TOGGLE_MAP_PIN_LIST" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
+            <CheckBox ID="MapPinListButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonMinimap" Style="ButtonNormalText" ToolTip="LOC_HUD_MAP_TOGGLE_MAP_PIN_LIST" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
               <Image Texture="MiniMap_MapPins" Size="24,24" Anchor="C,C"/>
               <Container ID="MapPinListPanel" Anchor="L,T" Offset="-9,-35" Size="auto,auto" Hidden="1">
                 <LuaContext FileName="MapPinListPanel"/>
               </Container>
             </CheckBox>
-            <Image                       Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip" Color="255,255,255,200" Offset="0,-2"/>
-            <Button ID="StrategicSwitcherButton" Anchor="L,C" Size="40,40"  Texture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="LOC_HUD_TOGGLE_STRATEGY_VIEW">
+            <CheckBox ID="MapSearchButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonMinimap" Style="ButtonNormalText" ToolTip="LOC_HUD_MAP_SEARCH" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
+              <Image Texture="MiniMap_Search" Size="24,24" Anchor="C,C" Offset="0,-1"/>
+              <Container ID="MapSearchPanel" Anchor="L,T" Offset="-9,-35" Size="auto,auto" Hidden="1">
+                <LuaContext FileName="MapSearchPanel"/>
+              </Container>
+            </CheckBox>
+            <CheckBox ID="CQUI_OptionsButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="LOC_CQUI_NAME" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
+              <Image Texture="Stats30" Icon="ICON_RESOURCE_TOBACCO" Size="35,35" Anchor="C,C"/>
+            </CheckBox>
+            <Button ID="StrategicSwitcherButton" Anchor="L,C" Size="40,40"  Texture="LaunchBar_Hook_ButtonMinimap" Style="ButtonNormalText" ToolTip="LOC_HUD_TOGGLE_STRATEGY_VIEW">
               <Image ID="SwitcherImage" Texture="MiniMap_StrategicSwitcher" Size="24,24" Anchor="C,C"/>
             </Button>
-            <Image                       Anchor="L,C" Size="7,7"    Texture="LaunchBar_TrackPip" Color="255,255,255,200" Offset="0,-2"/>
+            <Button ID="FullscreenMapButton" Anchor="L,C" Size="40,40"  Texture="LaunchBar_Hook_ButtonMinimap" Style="ButtonNormalText" ToolTip="LOC_HUD_FULLSCREEN_MAP">
+              <Image Texture="MiniMap_Full" Size="24,24" Anchor="C,C"/>
+            </Button>
           </Stack>
         </Image>
         <Container Anchor="L,B" Offset="7,8">
@@ -127,14 +85,11 @@
   </Container>
 
   <Instance Name="LensButtonInstance">
-    <RadioButton ID="LensButton" RadioGroup="ActiveLens" TextOffset="-5,0" String="$LensName$" AllowClickOff="1" Style="WhiteSemiBold14" Offset="10,4"  ButtonTexture="Controls_RadioButtonLarge.dds" ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,35" Anchor="L,T" BoxOnLeft="1"/>
+    <RadioButton ID="LensButton" RadioGroup="ActiveLens" TextOffset="-5,0" String="$LensName$" AllowClickOff="1" Style="WhiteSemiBold14" Offset="10,4"  ButtonTexture="Controls_RadioButtonLarge.dds" ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,140" Anchor="L,T" BoxOnLeft="1"/>
   </Instance>
 
-  <Instance Name="ResourcePickEntry">
-    <Container Size="130,20">
-      <CheckBox ID="ResourceCheckbox" IsChecked="1" Anchor="L,C" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="L,T"/>
-      <Label ID="ResourceLabel" String="$Resource$" Anchor="L,C" Offset="17,1" Style="WhiteSemiBold14"/>
-    </Container>
+  <Instance Name="MapOptionInstance">
+    <CheckBox ID="ToggleButton" Offset="10,4" TextOffset="-5,0" String="$OptionName$" Style="WhiteSemiBold14" ButtonTexture="Controls_Checkbox.dds" ButtonSize="17,17" CheckTexture="Controls_Checkbox.dds" CheckSize="17,17" CheckTextureOffset="0,17" Anchor="R,T"/>
   </Instance>
 
 </Context>

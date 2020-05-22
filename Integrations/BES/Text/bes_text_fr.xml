@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameData>
+  <BaseGameText>
+    <Row Tag="LOC_ESPIONAGECHOOSER_FILTER_ALL" Language="fr_FR">
+      <Text>Toutes</Text>
+    </Row>
+    <Row Tag="LOC_ESPIONAGECHOOSER_FILTER_SHOW_CITIES" Language="fr_FR">
+      <Text>Cités-états</Text>
+    </Row>
+    <Row Tag="LOC_ESPIONAGECHOOSER_FILTER_INTERNATIONAL" Language="fr_FR"
+      <Text>International</Text>
+    </Row>
+  </BaseGameText>
+</GameData>

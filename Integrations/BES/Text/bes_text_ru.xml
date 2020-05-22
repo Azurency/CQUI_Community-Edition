@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GameData>
   <BaseGameText>
-    <Row Tag="LOC_ESPIONAGECHOOSER_FILTER_ALL">
+    <Row Tag="LOC_ESPIONAGECHOOSER_FILTER_ALL" Language="ru_RU">
       <Text>Все</Text>
     </Row>
-    <Row Tag="LOC_ESPIONAGECHOOSER_FILTER_SHOW_CITIES">
+    <Row Tag="LOC_ESPIONAGECHOOSER_FILTER_SHOW_CITIES" Language="ru_RU">
       <Text>Все города</Text>
     </Row>
   </BaseGameText>

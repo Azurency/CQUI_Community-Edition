@@ -1,11 +1,18 @@
--- ===========================================================================
---	Civ6
---	Root context for ingame (aka: All-the-things)
--- ===========================================================================
+-- Copyright 2015-2018, Firaxis Games
+-- Root context for ingame (aka: All-the-things)
+-- MODs / Expansions cannot use partial replacement as this context is 
+-- directly added to the UI Control Tree via engine.
 
 include( "LocalPlayerActionSupport" );
 include( "InputSupport" );
 include( "civ6common" )
+
+
+-- ===========================================================================
+--	CONSTANTS
+-- ===========================================================================
+local TIME_UNTIL_UPDATE:number = 0.1;	-- time to wait before attempting to release delayshow popups.
+
 
 -- ===========================================================================
 --	VARIABLES
@@ -17,7 +24,15 @@ local m_lastBulkHider:string = "first call";
 g_uiAddins = {};
 
 local m_PauseId;
+local m_PauseId		:number = Input.GetActionId("PauseMenu");
 local m_QuicksaveId;
+local m_QuicksaveId :number = Input.GetActionId("QuickSave");
+
+local m_HexColoringReligion : number = UILens.CreateLensLayerHash("Hex_Coloring_Religion");
+local m_CulturalIdentityLens: number = UILens.CreateLensLayerHash("Cultural_Identity_Lens");
+local m_TouristTokens		: number = UILens.CreateLensLayerHash("Tourist_Tokens");
+local m_activeLocalPlayer	: number = -1;
+local m_timeUntilPopupCheck	: number = 0;
 
 -- ===========================================================================
 --	FUNCTIONS
@@ -116,14 +131,16 @@ function OnShow()
   if (pFriends ~= nil) then
     if (GameConfiguration.IsAnyMultiplayer()) then
       if GameConfiguration.IsHotseat() then
-        pFriends:SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_HOTSEAT"); 
+        pFriends:SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_HOTSEAT");
       elseif GameConfiguration.IsLANMultiplayer() then
-        pFriends:SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_LAN"); 
+        pFriends:SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_LAN");
+      elseif GameConfiguration.IsPlayByCloud() then
+        pFriends:SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_PLAYBYCLOUD");
       else
-        pFriends:SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_ONLINE"); 
+        pFriends:SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_ONLINE");
       end
     else
-      pFriends:SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_SP"); 
+      pFriends:SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_SP");
     end
   end
 end
@@ -155,6 +172,7 @@ function BulkHide( isHide:boolean, debugWho:string )
         pContext:SetHide(true);
       elseif m_bulkHideTracker == 0 and isHide==false then
         pContext:SetHide(false);
+        RestartRefreshRequest();
       else
         -- Do nothing
       end
@@ -167,73 +185,199 @@ end
 --	Hotkey Event
 -- ===========================================================================
 function OnInputActionTriggered( actionId )
-    if actionId == m_PauseId then
-        if( Controls.TopOptionsMenu:IsHidden() ) then
-            OpenInGameOptionsMenu();
-            return true;
-        end
-    elseif actionId == m_QuicksaveId then
-        -- Quick save
-        if CanLocalPlayerSaveGame() then
-            local gameFile = {};
-            gameFile.Name = "quicksave";
-            gameFile.Location = SaveLocations.LOCAL_STORAGE;
-            gameFile.Type= Network.GetGameConfigurationSaveType();
-            gameFile.IsAutosave = false;
-            gameFile.IsQuicksave = true;
-
-            Network.SaveGame(gameFile);
-            UI.PlaySound("Confirm_Bed_Positive");
-        end
+  if actionId == m_PauseId then
+    if(Controls.TopOptionsMenu:IsHidden()) then
+      OpenInGameOptionsMenu();
+      return true;
     end
+  elseif actionId == m_QuicksaveId then
+    -- Quick save
+    if CanLocalPlayerSaveGame() then
+      local gameFile = {};
+      gameFile.Name = "quicksave";
+      gameFile.Location = SaveLocations.LOCAL_STORAGE;
+      gameFile.Type= Network.GetGameConfigurationSaveType();
+      gameFile.IsAutosave = false;
+      gameFile.IsQuicksave = true;
+
+      Network.SaveGame(gameFile);
+      UI.PlaySound("Confirm_Bed_Positive");
+    end
+  end
 end
 
 -- ===========================================================================
-function OnWonderRevealPopupShown()		BulkHide( true, "Wonder" );																end		--	Game Engine Event
-function OnWonderRevealPopupClosed()	BulkHide(false, "Wonder" );																end		--	Game Engine Event
-function OnNaturalWonderPopupShown()	BulkHide( true, "NaturalWonder" );														end		--	LUA Event
-function OnNaturalWonderPopupClosed()	BulkHide(false, "NaturalWonder" );														end		--	LUA Event
-function OnEndGameMenuShown()			BulkHide( true, "EndGame" ); 		Input.PushActiveContext(InputContext.EndGame);		end		--	LUA Event
-function OnEndGameMenuClosed()			BulkHide(false, "EndGame" );		Input.PopContext();									end		--	LUA Event
-function OnDiplomacyHideIngameUI()		BulkHide( true, "Diplomacy" );		Input.PushActiveContext(InputContext.Diplomacy);	end		--	LUA Event
-function OnDiplomacyShowIngameUI()		BulkHide(false, "Diplomacy" );		Input.PopContext();									end		--	LUA Event
-function OnTutorialEndHide()			BulkHide( true, "TutorialEnd" );														end		--	LUA Event
+--	Gamecore Event
+--	Called once per layer that is turned on when a new lens is activated,
+--	or when a player explicitly turns off the layer from the "player" lens.
+-- ===========================================================================
+function OnLensLayerOn( layerHash:number )
+  if layerHash == m_HexColoringReligion or layerHash == m_CulturalIdentityLens or
+    layerHash == m_TouristTokens then
+    Controls.CityBannerManager:ChangeParent(Controls.BannerAndFlags);
+  end
+end
 
 -- ===========================================================================
+--	Gamecore Event
+--	Called once per layer that is turned on when a new lens is deactivated,
+--	or when a player explicitly turns off the layer from the "player" lens.
+-- ===========================================================================
+function OnLensLayerOff( layerHash:number )
+  if layerHash == m_HexColoringReligion or layerHash == m_CulturalIdentityLens or
+      layerHash == m_TouristTokens then
+    Controls.UnitFlagManager:ChangeParent(Controls.BannerAndFlags);
+  end
+end
+
+-- ===========================================================================
+--	EVENT
+-- ===========================================================================
+function OnTurnBegin()
+  m_activeLocalPlayer = Game.GetLocalPlayer();
+end
+
+-- ===========================================================================
+--	EVENT
+-- ===========================================================================
+function OnTurnEnd()
+  m_activeLocalPlayer = -1;
+end
+
+-- ===========================================================================
+function RestartRefreshRequest()
+  -- Increasing this adds a delay, but will make it less likely that lower
+  -- priority popups will be shown before all the popups are in added in
+  -- the queue.
+  m_timeUntilPopupCheck = TIME_UNTIL_UPDATE;
+  ContextPtr:SetRefreshHandler( OnRefreshAttemptPopupRelease );
+  ContextPtr:RequestRefresh();
+end
+
+-- ===========================================================================
+--	EVENT
+--	Gamecore is done processing events; this may fire multiple times as a
+--	turn begins, as well as after player actions.
+-- ===========================================================================
+function OnGameCoreEventPlaybackComplete()
+  -- Gate using this based on whether or not it's firing for a local player
+  if m_activeLocalPlayer == -1 then return; end;
+  RestartRefreshRequest();
+end
+
+-- ===========================================================================
+--	UI Manager Callback
+-- ===========================================================================
+function OnPopupQueueChange( isQueuing:boolean )
+  if m_timeUntilPopupCheck <= 0 then
+    RestartRefreshRequest();
+  end
+end
+
+-- ===========================================================================
+--	Event
+-- ===========================================================================
+function OnUIIdle()
+  -- If a countdown to check hasn't started, kick one off.
+  if m_timeUntilPopupCheck <= 0 then
+    RestartRefreshRequest();
+  end
+end
+
+-- ===========================================================================
+function IsAbleToShowDelayedPopups()
+  local isBulkHideOkay :boolean = (m_bulkHideTracker == 0);
+  local isQueueEnabled :boolean = (UIManager:IsPopupQueueDisabled() == false);
+  return isBulkHideOkay and isQueueEnabled;
+end
+
+-- ===========================================================================
+--	UI Callback
+-- ===========================================================================
+function OnRefreshAttemptPopupRelease( delta:number )
+  m_timeUntilPopupCheck = m_timeUntilPopupCheck - delta;
+  if m_timeUntilPopupCheck <= 0 then
+    -- Only release delayed popups if a bulk hide operation isn't currently happening.
+    if IsAbleToShowDelayedPopups() then
+      UIManager:ShowDelayedPopups();		-- Show any popups that had been added to Forge waiting to be shown
+    end
+    ContextPtr:ClearRefreshHandler();
+  else
+    ContextPtr:RequestRefresh();
+  end
+end
+
+-- ===========================================================================
+function OnDiplomacyHideIngameUI()    BulkHide( true, "Diplomacy" );     Input.PushActiveContext(InputContext.Diplomacy);     end
+function OnDiplomacyShowIngameUI()    BulkHide(false, "Diplomacy" );     Input.PopContext();                                  end
+function OnEndGameMenuShown()         BulkHide( true, "EndGame" );       Input.PushActiveContext(InputContext.EndGame);       end
+function OnEndGameMenuClosed()        BulkHide(false, "EndGame" );       Input.PopContext();                                  end
+function OnFullscreenMapShown()       BulkHide( true, "FullscreenMap" ); Input.PushActiveContext(InputContext.FullscreenMap); end
+function OnFullscreenMapClosed()      BulkHide(false, "FullscreenMap" ); Input.PopContext();                                  end
+function OnNaturalWonderPopupShown()  BulkHide( true, "NaturalWonder" );                                                      end
+function OnNaturalWonderPopupClosed() BulkHide(false, "NaturalWonder" );                                                      end
+function OnProjectBuiltShown()        BulkHide( true, "Project" );                                                            end
+function OnProjectBuiltClosed()       BulkHide(false, "Project" );                                                            end
+function OnTutorialEndHide()          BulkHide( true, "TutorialEnd" );                                                        end
+function OnWonderBuiltPopupShown()    BulkHide( true, "Wonder" );                                                             end
+function OnWonderBuiltPopupClosed()   BulkHide(false, "Wonder" );                                                             end
+
+
+-- ===========================================================================
+function OnShutdown()
+  UIManager:ClearPopupChangeHandler();
+end
+
+-- ===========================================================================
+--	Cannot use LateInitialize patterns as this context is attached via C++
+-- ===========================================================================
 function Initialize()
+
+  m_activeLocalPlayer = Game.GetLocalPlayer();
 
   -- Support for Modded Add-in UI's
   for i, addin in ipairs(Modding.GetUserInterfaces("InGame")) do
     print_debug("Loading InGame UI - " .. addin.ContextPath);
-    local newContext:table = ContextPtr:LoadNewContext(addin.ContextPath);
-    newContext:ChangeParent(Controls.AdditionalUserInterfaces);
+    local id        :string = addin.ContextPath:sub(-(string.find(string.reverse(addin.ContextPath), '/') - 1));         -- grab id from end of path
+    local isHidden  :boolean = true;
+    local newContext:table = ContextPtr:LoadNewContext(addin.ContextPath, Controls.AdditionalUserInterfaces, id, isHidden); -- Content, ID, hidden
     table.insert(g_uiAddins, newContext);
   end
 
   ContextPtr:SetInputHandler( OnInputHandler, true );
   ContextPtr:SetShowHandler( OnShow );
+  ContextPtr:SetRefreshHandler(OnRefreshAttemptPopupRelease);
+  ContextPtr:SetShutdown(OnShutdown);
+  UIManager:SetPopupChangeHandler(OnPopupQueueChange);
 
-  Events.LoadGameViewStateDone.Add(	OnLoadGameViewStateDone );
-
-    m_PauseId = Input.GetActionId("PauseMenu");
-    m_QuicksaveId = Input.GetActionId("QuickSave");
-    Events.InputActionTriggered.Add( OnInputActionTriggered );
+  Events.GameCoreEventPlaybackComplete.Add(OnGameCoreEventPlaybackComplete);
+  Events.InputActionTriggered.Add(OnInputActionTriggered);
+  Events.LensLayerOff.Add(OnLensLayerOff);
+  Events.LensLayerOn.Add(OnLensLayerOn);
+  Events.LoadGameViewStateDone.Add(OnLoadGameViewStateDone);
+  Events.LocalPlayerTurnBegin.Add(OnTurnBegin);
+  Events.LocalPlayerTurnEnd.Add(OnTurnEnd);
+  Events.UIIdle.Add(OnUIIdle);
 
   -- NOTE: Using UI open/closed pairs in the case of end game; where
   --		 the same player receives both a victory and defeat messages
   --		 across the wire.
-  LuaEvents.EndGameMenu_Shown.Add( OnEndGameMenuShown );
-  LuaEvents.EndGameMenu_Closed.Add( OnEndGameMenuClosed );
   LuaEvents.DiplomacyActionView_HideIngameUI.Add( OnDiplomacyHideIngameUI );
   LuaEvents.DiplomacyActionView_ShowIngameUI.Add( OnDiplomacyShowIngameUI );
-  LuaEvents.WonderRevealPopup_Shown.Add( OnWonderRevealPopupShown );
-  LuaEvents.WonderRevealPopup_Closed.Add(	OnWonderRevealPopupClosed );
+  LuaEvents.EndGameMenu_Shown.Add( OnEndGameMenuShown );
+  LuaEvents.EndGameMenu_Closed.Add( OnEndGameMenuClosed );
+  LuaEvents.FullscreenMap_Shown.Add( OnFullscreenMapShown );
+  LuaEvents.FullscreenMap_Closed.Add(	OnFullscreenMapClosed );
   LuaEvents.NaturalWonderPopup_Shown.Add( OnNaturalWonderPopupShown );
   LuaEvents.NaturalWonderPopup_Closed.Add( OnNaturalWonderPopupClosed );
+  LuaEvents.ProjectBuiltPopup_Shown.Add( OnProjectBuiltShown );
+  LuaEvents.ProjectBuiltPopup_Closed.Add( OnProjectBuiltClosed );
   LuaEvents.Tutorial_ToggleInGameOptionsMenu.Add( OnTutorialToggleInGameOptionsMenu );
   LuaEvents.Tutorial_TutorialEndHideBulkUI.Add( OnTutorialEndHide );
+  LuaEvents.WonderBuiltPopup_Shown.Add( OnWonderBuiltPopupShown );
+  LuaEvents.WonderBuiltPopup_Closed.Add(	OnWonderBuiltPopupClosed );
+
   --CQUI event handling
   LuaEvents.CQUI_RequestUIAddin.Add(function(request: string, requester: string) LuaEvents.CQUI_PushUIAddIn(CQUI_RequestUIAddin(request), recipient); end); --Responds to an addin request with a PushUIAddIn event containing the requested context. Can return nil
-
 end
 Initialize();

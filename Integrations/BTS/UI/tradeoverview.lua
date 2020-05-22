@@ -1,7 +1,11 @@
+-- Copyright 2018-2019, Firaxis Games
+
 -- ===========================================================================
 --  SETTINGS
 -- ===========================================================================
 
+local alignTradeYields = true
+local showNoBenefitsString = false
 local showSortOrdersPermanently = false
 local addDividerBetweenGroups = true
 local hideTradingPostIcon = false
@@ -20,8 +24,12 @@ local tintRouteEntry = false
 local tintColorOffset = 80
 local tintColorOpacity = 205
 
+-- Set to false to hide all debug prints from this file.
+local dbug_print = true
+local opt_print = false
+
 -- ===========================================================================
---  INCLUDES and Local Optimizations
+--  INCLUDES
 -- ===========================================================================
 
 include("AnimSidePanelSupport");
@@ -30,24 +38,6 @@ include("InstanceManager");
 include("SupportFunctions");
 include("TradeSupport");
 include("civ6common");
-
-local Game = Game
-local Players = Players
-local ContextPtr = ContextPtr
-local Events = Events
-
-local ipairs = ipairs
-local pairs = pairs
-local tinsert = table.insert
-local tcount = table.count
-local tremove = table.remove
-
-local L_Lookup = Locale.Lookup
-local L_Upper = Locale.ToUpper
-
-local M_LCick = Mouse.eLClick
-local M_Enter = Mouse.eMouseEnter
-local M_RClick = Mouse.eRClick
 
 -- ===========================================================================
 --  CONSTANTS
@@ -129,20 +119,6 @@ local m_FilterSettingsChanged:boolean = true;
 local m_InGroupSortBySettings = {}; -- Stores the setting each group will have within it. Applicable when routes are grouped
 local m_GroupSortBySettings = {}; -- Stores the overall group sort setting. This is used, when routes are NOT grouped
 
--- Default sort setting = Smart descending gold, ie second level is lowest turns consumed
-m_GroupSortBySettings[1] = {
-  SortByID = SORT_BY_ID.GOLD,
-  SortOrder = SORT_DESCENDING
-}
-m_InGroupSortBySettings[1] = {
-  SortByID = SORT_BY_ID.GOLD,
-  SortOrder = SORT_DESCENDING
-}
-m_InGroupSortBySettings[2] = {
-  SortByID = SORT_BY_ID.TURNS_TO_COMPLETE,
-  SortOrder = SORT_ASCENDING
-}
-
 local m_dividerCount = 0
 
 -- ===========================================================================
@@ -162,7 +138,9 @@ end
 
 -- Finds and adds all possible trade routes
 function RebuildAvailableTradeRoutesTable()
-  print_debug ("Rebuilding Trade Routes table");
+  if dbug_print then
+    print("Rebuilding Trade Routes table");
+  end
   m_AvailableTradeRoutes = {};
 
   local sourcePlayerID = Game.GetLocalPlayer();
@@ -188,21 +166,25 @@ function RebuildAvailableTradeRoutesTable()
               DestinationCityID       = destinationCityID
             };
 
-            tinsert(m_AvailableTradeRoutes, tradeRoute);
+            table.insert(m_AvailableTradeRoutes, tradeRoute);
           end
         end
       end
     end
   end
 
-  print_debug("Total routes = " .. tcount(m_AvailableTradeRoutes))
+  if dbug_print then
+    print("Total routes = " .. table.count(m_AvailableTradeRoutes))
+  end
 
   m_HasBuiltTradeRouteTable = true;
   m_LastTurnBuiltTradeRouteTable = Game.GetCurrentGameTurn();
 end
 
 function RebuildAvailableTraders()
-  print_debug("Building available traders")
+  if dbug_print then
+    print("Building available traders")
+  end
   local playerID = Game.GetLocalPlayer()
   local pPlayer = Players[playerID]
   local pPlayerUnits = pPlayer:GetUnits()
@@ -222,7 +204,7 @@ function RebuildAvailableTraders()
         end
 
         -- Append unit into the entry
-        tinsert(m_AvailableTraders[cityID], unitID)
+        table.insert(m_AvailableTraders[cityID], unitID)
       end
     end
   end
@@ -232,7 +214,9 @@ end
 
 function Refresh()
   local time1 = Automation.GetTime();
-  print_debug("Refresh start")
+  if dbug_print then
+    print("Refresh start")
+  end
   PreRefresh();
 
   RefreshGroupByPulldown();
@@ -255,7 +239,9 @@ function Refresh()
 
   PostRefresh();
   local time2 = Automation.GetTime()
-  print_debug(string.format("Time taken to refresh: %.4f sec(s)", time2-time1))
+  if dbug_print then
+    print(string.format("Time taken to refresh: %.4f sec(s)", time2-time1))
+  end
 end
 
 function PreRefresh()
@@ -276,7 +262,9 @@ function PostRefresh()
   Controls.BodyScrollPanel:ReprocessAnchoring();
   Controls.BodyScrollPanel:CalculateInternalSize();
   local time2 = Automation.GetTime()
-  print_debug(string.format("Time to calculate stack sizes: %.4f sec(s)", time2-time1))
+  if dbug_print then
+    print(string.format("Time to calculate stack sizes: %.4f sec(s)", time2-time1))
+  end
 end
 
 -- ===========================================================================
@@ -300,7 +288,7 @@ function ViewMyRoutes()
   local playerTrade   :table  = Players[localPlayerID]:GetTrade();
   local routesActive  :number = playerTrade:GetNumOutgoingRoutes();
   local routesCapacity:number = playerTrade:GetOutgoingRouteCapacity();
-  Controls.HeaderLabel:SetText(L_Upper("LOC_TRADE_OVERVIEW_MY_ROUTES"));
+  Controls.HeaderLabel:SetText(Locale.ToUpper("LOC_TRADE_OVERVIEW_MY_ROUTES"));
   Controls.ActiveRoutesLabel:SetHide(false);
 
   -- If our active routes exceed our route capacity then color active route number red
@@ -310,7 +298,7 @@ function ViewMyRoutes()
   else
     routesActiveText = tostring(routesActive);
   end
-  Controls.ActiveRoutesLabel:SetText(L_Lookup("LOC_TRADE_OVERVIEW_ACTIVE_ROUTES", routesActiveText, routesCapacity));
+  Controls.ActiveRoutesLabel:SetText(Locale.Lookup("LOC_TRADE_OVERVIEW_ACTIVE_ROUTES", routesActiveText, routesCapacity));
 
   local localPlayerRunningRoutes:table = GetLocalPlayerRunningRoutes();
 
@@ -323,7 +311,7 @@ function ViewMyRoutes()
         routesSortedByPlayer[route.DestinationCityPlayer] = {};
       end
 
-      tinsert(routesSortedByPlayer[route.DestinationCityPlayer], route);
+      table.insert(routesSortedByPlayer[route.DestinationCityPlayer], route);
     end
   end
 
@@ -378,7 +366,7 @@ function ViewMyRoutes()
       if #idleTradeUnits > 0 then
         -- Add button to choose a route for this trader
         AddChooseRouteButtonInstance(idleTradeUnits[1]);
-        tremove(idleTradeUnits, 1);
+        table.remove(idleTradeUnits, 1);
       else
         -- Add button to produce new trade unit
         AddProduceTradeUnitButtonInstance();
@@ -396,7 +384,7 @@ function ViewRoutesToCities()
   SetAvailableRoutesTabSelected(false);
 
   -- Update Header
-  Controls.HeaderLabel:SetText(L_Upper("LOC_TRADE_OVERVIEW_ROUTES_TO_MY_CITIES"));
+  Controls.HeaderLabel:SetText(Locale.ToUpper("LOC_TRADE_OVERVIEW_ROUTES_TO_MY_CITIES"));
   Controls.ActiveRoutesLabel:SetHide(true);
 
   -- Gather data
@@ -416,7 +404,7 @@ function ViewRoutesToCities()
                 routesSortedByPlayer[route.OriginCityPlayer] = {};
               end
 
-              tinsert(routesSortedByPlayer[route.OriginCityPlayer], route);
+              table.insert(routesSortedByPlayer[route.OriginCityPlayer], route);
             end
           end
         end
@@ -439,7 +427,6 @@ end
 
 -- Show Available Routes Tab
 -- Note: There is a lot OPT prints and time information calculated
--- This is just for logging purposes and don't affect the logic in any way
 function ViewAvailableRoutes()
 
   -- Update Tabs
@@ -455,7 +442,7 @@ function ViewAvailableRoutes()
   local time1, time2;
 
   -- Update Header
-  Controls.HeaderLabel:SetText(L_Upper("LOC_TRADE_OVERVIEW_AVAILABLE_ROUTES"));
+  Controls.HeaderLabel:SetText(Locale.ToUpper("LOC_TRADE_OVERVIEW_AVAILABLE_ROUTES"));
   Controls.ActiveRoutesLabel:SetHide(true);
 
   -- Dont rebuild if the turn has not advanced
@@ -463,14 +450,18 @@ function ViewAvailableRoutes()
     time1 = Automation.GetTime()
     RebuildAvailableTradeRoutesTable();
     time2 = Automation.GetTime()
-    print_debug(string.format("Time taken to build routes: %.4f sec(s)", time2-time1))
+    if dbug_print then
+      print(string.format("Time taken to build routes: %.4f sec(s)", time2-time1))
+    end
 
     -- Cache routes info.
     time1 = Automation.GetTime()
     CacheEmpty();
     if CacheRoutesInfo(m_AvailableTradeRoutes) then
       time2 = Automation.GetTime()
-      print_debug(string.format("Time taken to cache: %.4f sec(s)", time2-time1))
+      if dbug_print then
+        print(string.format("Time taken to cache: %.4f sec(s)", time2-time1))
+      end
     end
 
     -- Just rebuilt base routes table. need to do everything again
@@ -478,8 +469,12 @@ function ViewAvailableRoutes()
     m_FilterSettingsChanged = true;
     m_GroupSettingsChanged = true;
   else
-    print_debug("Trade Route table last built on: " .. m_LastTurnBuiltTradeRouteTable .. ". Current game turn: " .. Game.GetCurrentGameTurn());
-    print_debug("OPT: Not Rebuilding or recaching routes table")
+    if dbug_print then
+      print("Trade Route table last built on: " .. m_LastTurnBuiltTradeRouteTable .. ". Current game turn: " .. Game.GetCurrentGameTurn());
+    end
+    if opt_print then
+      print("OPT: Not Rebuilding or recaching routes table")
+    end
   end
 
   -- Filter the routes here. This allows for max improvement in speed if a filter is selected
@@ -487,12 +482,16 @@ function ViewAvailableRoutes()
     time1 = Automation.GetTime()
     m_FinalTradeRoutes = FilterTradeRoutes(m_AvailableTradeRoutes);
     time2 = Automation.GetTime()
-    print_debug(string.format("Time taken to filter: %.4f sec(s)", time2-time1))
+    if dbug_print then
+      print(string.format("Time taken to filter: %.4f sec(s)", time2-time1))
+    end
 
     -- Need to regroup routes (some groups could dissapear because of filter)
     m_GroupSettingsChanged = true
   else
-    print_debug("OPT: Not refiltering routes")
+    if opt_print then
+      print("OPT: Not refiltering routes")
+    end
   end
 
   -- Sort and display the routes
@@ -502,12 +501,16 @@ function ViewAvailableRoutes()
       time1 = Automation.GetTime()
       m_AvailableGroupedRoutes = GroupRoutes(m_FinalTradeRoutes, m_groupByList[m_groupBySelected].groupByID)
       time2 = Automation.GetTime()
-      print_debug(string.format("Time taken to group: %.4f sec(s)", time2-time1))
+      if dbug_print then
+        print(string.format("Time taken to group: %.4f sec(s)", time2-time1))
+      end
 
       -- Need to resort to show correct order
       m_SortSettingsChanged = true
     else
-      print_debug("OPT: Not regrouping routes")
+      if opt_print then
+        print("OPT: Not regrouping routes")
+      end
     end
 
     -- Sort within each group, and then sort groups
@@ -518,15 +521,21 @@ function ViewAvailableRoutes()
         m_AvailableGroupedRoutes[i] = SortTradeRoutes(m_AvailableGroupedRoutes[i], m_InGroupSortBySettings)
       end
       time2 = Automation.GetTime()
-      print_debug(string.format("Time taken to within group sort: %.4f sec(s)", time2-time1))
+      if dbug_print then
+        print(string.format("Time taken to within group sort: %.4f sec(s)", time2-time1))
+      end
 
       -- Sort the order of groups. You need to do this AFTER each group has been sorted
       time1 = Automation.GetTime()
       m_AvailableGroupedRoutes = SortGroupedRoutes(m_AvailableGroupedRoutes, m_GroupSortBySettings);
       time2 = Automation.GetTime()
-      print_debug(string.format("Time taken to group sort: %.4f sec(s)", time2-time1))
+      if dbug_print then
+        print(string.format("Time taken to group sort: %.4f sec(s)", time2-time1))
+      end
     else
-      print_debug("OPT: Not resorting within and of groups")
+      if opt_print then
+        print("OPT: Not resorting within and of groups")
+      end
     end
 
     -- Show the groups
@@ -549,9 +558,13 @@ function ViewAvailableRoutes()
         time1 = Automation.GetTime()
         m_FinalTradeRoutes = SortTradeRoutes(m_FinalTradeRoutes, m_GroupSortBySettings);
         time2 = Automation.GetTime()
-        print_debug(string.format("Time taken to sort: %.4f sec(s)", time2-time1))
+        if dbug_print then
+          print(string.format("Time taken to sort: %.4f sec(s)", time2-time1))
+        end
       else
-        print_debug("OPT: Not resorting routes")
+        if opt_print then
+          print("OPT: Not resorting routes")
+        end
       end
       AddRouteInstancesFromTable(m_FinalTradeRoutes);
     end
@@ -577,7 +590,9 @@ function DisplayGroup(routesTable:table, city:table)
     local groupExpandIndex = findIndex(m_GroupsFullyExpanded, cityEntry, CompareCityEntries);
     local groupCollapseIndex = findIndex(m_GroupsFullyCollapsed, cityEntry, CompareCityEntries);
 
-    -- print(L_Lookup(city:GetName()) .. ": " .. groupExpandIndex .. " " .. groupCollapseIndex )
+    if dbug_print then
+      -- print(Locale.Lookup(city:GetName()) .. ": " .. groupExpandIndex .. " " .. groupCollapseIndex )
+    end
     if (groupExpandIndex > 0) then
       CreateCityHeader(city, routeCount, routeCount, "");
       AddRouteInstancesFromTable(routesTable);
@@ -587,12 +602,12 @@ function DisplayGroup(routesTable:table, city:table)
     else
       if m_GroupExpandAll then
         -- If showing all, add city to expand list, and display all
-        tinsert(m_GroupsFullyExpanded, cityEntry);
+        table.insert(m_GroupsFullyExpanded, cityEntry);
         CreateCityHeader(city, routeCount, routeCount, "");
         AddRouteInstancesFromTable(routesTable);
       elseif m_GroupCollapseAll then
         -- If hiding all, add city to collapse list, and hide it
-        tinsert(m_GroupsFullyCollapsed, cityEntry);
+        table.insert(m_GroupsFullyCollapsed, cityEntry);
         CreateCityHeader(city, 0, routeCount, GetCityHeaderTooltipString(routesTable[1]));
         AddRouteInstancesFromTable(routesTable, 0);
       else
@@ -631,8 +646,8 @@ function SetAvailableRoutesTabSelected( isSelected:boolean )
 end
 
 function GetCityHeaderTooltipString( routeInfo:table )
-  return "Top Route: " .. GetTradeRouteString(routeInfo) .. "[NEWLINE]" .. L_Lookup("LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER")
-         .. "[NEWLINE]" .. GetTradeRouteYieldString(routeInfo);
+  return "Top Route: " .. GetTradeRouteString(routeInfo) .. "[NEWLINE]" .. Locale.Lookup("LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER")
+  .. "[NEWLINE]" .. GetTradeRouteYieldString(routeInfo);
 end
 
 -- ===========================================================================
@@ -641,18 +656,18 @@ end
 
 function AddChooseRouteButtonInstance( tradeUnit:table )
   local simpleButtonInstance:table = m_SimpleButtonInstanceIM:GetInstance();
-  simpleButtonInstance.GridButton:SetText(L_Lookup("LOC_TRADE_OVERVIEW_CHOOSE_ROUTE"));
+  simpleButtonInstance.GridButton:SetText(Locale.Lookup("LOC_TRADE_OVERVIEW_CHOOSE_ROUTE"));
   simpleButtonInstance.GridButton:SetDisabled(false);
-  simpleButtonInstance.GridButton:RegisterCallback( M_LCick,
-    function()
-      SelectUnit( tradeUnit );
-    end
+  simpleButtonInstance.GridButton:RegisterCallback( Mouse.eLClick,
+  function()
+    SelectUnit( tradeUnit );
+  end
   );
 end
 
 function AddProduceTradeUnitButtonInstance()
   local simpleButtonInstance:table = m_SimpleButtonInstanceIM:GetInstance();
-  simpleButtonInstance.GridButton:SetText(L_Lookup("LOC_TRADE_OVERVIEW_PRODUCE_TRADE_UNIT"));
+  simpleButtonInstance.GridButton:SetText(Locale.Lookup("LOC_TRADE_OVERVIEW_PRODUCE_TRADE_UNIT"));
   simpleButtonInstance.GridButton:SetDisabled(true);
 end
 
@@ -685,7 +700,7 @@ function AddRouteInstanceFromRouteInfo( routeInfo:table )
 
   local destinationBackColor, destinationFrontColor, darkerBackColor, brighterBackColor = GetPlayerColorInfo(routeInfo.DestinationCityPlayer, true);
   local originBackColor, originFrontColor = GetPlayerColorInfo(routeInfo.OriginCityPlayer, true);
-  local tintBackColor = DarkenLightenColor(destinationBackColor, tintColorOffset, tintColorOpacity);
+  local tintBackColor = UI.DarkenLightenColor(destinationBackColor, tintColorOffset, tintColorOpacity);
 
   -- Update colors
   if tintRouteEntry then
@@ -699,7 +714,7 @@ function AddRouteInstanceFromRouteInfo( routeInfo:table )
   routeInstance.RouteLabel:SetColor(destinationFrontColor);
 
   -- Update Route Label
-  routeInstance.RouteLabel:SetText(L_Upper(originCity:GetName()) .. " " .. L_Upper("LOC_TRADE_OVERVIEW_TO") .. " " .. L_Upper(destinationCity:GetName()));
+  routeInstance.RouteLabel:SetText(Locale.ToUpper(originCity:GetName()) .. " " .. Locale.ToUpper("LOC_TRADE_OVERVIEW_TO") .. " " .. Locale.ToUpper(destinationCity:GetName()));
 
   -- Update yield directional arrows
   routeInstance.OriginCivArrow:SetColor(originFrontColor);
@@ -717,7 +732,7 @@ function AddRouteInstanceFromRouteInfo( routeInfo:table )
 
   -- Update City State Quest Icon
   routeInstance.CityStateQuestIcon:SetHide(true);
-  local questTooltip  : string = L_Lookup("LOC_CITY_STATES_QUESTS");
+  local questTooltip  : string = Locale.Lookup("LOC_CITY_STATES_QUESTS");
   local tradeRouteQuestInfo:table = GameInfo.Quests["QUEST_SEND_TRADE_ROUTE"];
   local questsManager:table = Game.GetQuestsManager();
 
@@ -734,7 +749,7 @@ function AddRouteInstanceFromRouteInfo( routeInfo:table )
   -- TODO - Can we make this simpler?
   -- Do we display the tourism or visibilty bonus? Hide them if we are showing them somewhere else, or it is a city state, or it is domestic route
   if IsCityState(destinationPlayer) or routeInfo.OriginCityPlayer == routeInfo.DestinationCityPlayer
-    or m_groupByList[m_groupBySelected].groupByID == GROUP_BY_SETTINGS.DESTINATION or m_currentTab ~= TRADE_TABS.AVAILABLE_ROUTES then
+  or m_groupByList[m_groupBySelected].groupByID == GROUP_BY_SETTINGS.DESTINATION or m_currentTab ~= TRADE_TABS.AVAILABLE_ROUTES then
 
     routeInstance.VisibilityBonusGrid:SetHide(true);
     routeInstance.TourismBonusGrid:SetHide(true);
@@ -797,25 +812,24 @@ function AddRouteInstanceFromRouteInfo( routeInfo:table )
   local tradePathLength, tripsToDestination, turnsToCompleteRoute = GetRouteInfo(routeInfo, true);
   if routeInfo.TurnsRemaining ~= nil then
     routeInstance.TurnsToComplete:SetText(routeInfo.TurnsRemaining);
-    tooltipString = (   L_Lookup("LOC_TRADE_TURNS_REMAINING_ALT_HELP_TOOLTIP", routeInfo.TurnsRemaining) .. "[NEWLINE]" ..
-              L_Lookup("LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER") .. "[NEWLINE]" ..
-              L_Lookup("LOC_TRADE_TURNS_REMAINING_ROUTE_LENGTH_TOOLTIP", tradePathLength) .. "[NEWLINE]" ..
-              L_Lookup("LOC_TRADE_TURNS_REMAINING_TRIPS_COUNT_TOOLTIP", tripsToDestination) .. "[NEWLINE]" ..
-              L_Lookup("LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_TOOLTIP", (Game.GetCurrentGameTurn() + routeInfo.TurnsRemaining)) );
-
+    tooltipString = (   Locale.Lookup("LOC_TRADE_TURNS_REMAINING_ALT_HELP_TOOLTIP", routeInfo.TurnsRemaining) .. "[NEWLINE]" ..
+    Locale.Lookup("LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER") .. "[NEWLINE]" ..
+    Locale.Lookup("LOC_TRADE_TURNS_REMAINING_ROUTE_LENGTH_TOOLTIP", tradePathLength) .. "[NEWLINE]" ..
+    Locale.Lookup("LOC_TRADE_TURNS_REMAINING_TRIPS_COUNT_TOOLTIP", tripsToDestination) .. "[NEWLINE]" ..
+    Locale.Lookup("LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_TOOLTIP", (Game.GetCurrentGameTurn() + routeInfo.TurnsRemaining)) );
   elseif m_currentTab == TRADE_TABS.ROUTES_TO_CITIES then
     routeInstance.TurnsToComplete:SetText(turnsToCompleteRoute);
-    tooltipString = (   L_Lookup("LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP") .. "[NEWLINE]" ..
-              L_Lookup("LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER") .. "[NEWLINE]" ..
-              L_Lookup("LOC_TRADE_TURNS_REMAINING_ROUTE_LENGTH_TOOLTIP", tradePathLength) .. "[NEWLINE]" ..
-              L_Lookup("LOC_TRADE_TURNS_REMAINING_TRIPS_COUNT_TOOLTIP", tripsToDestination) );
+    tooltipString = (   Locale.Lookup("LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP") .. "[NEWLINE]" ..
+    Locale.Lookup("LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER") .. "[NEWLINE]" ..
+    Locale.Lookup("LOC_TRADE_TURNS_REMAINING_ROUTE_LENGTH_TOOLTIP", tradePathLength) .. "[NEWLINE]" ..
+    Locale.Lookup("LOC_TRADE_TURNS_REMAINING_TRIPS_COUNT_TOOLTIP", tripsToDestination) );
   else
     routeInstance.TurnsToComplete:SetText(turnsToCompleteRoute);
-    tooltipString = (   L_Lookup("LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP") .. "[NEWLINE]" ..
-              L_Lookup("LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER") .. "[NEWLINE]" ..
-              L_Lookup("LOC_TRADE_TURNS_REMAINING_ROUTE_LENGTH_TOOLTIP", tradePathLength) .. "[NEWLINE]" ..
-              L_Lookup("LOC_TRADE_TURNS_REMAINING_TRIPS_COUNT_TOOLTIP", tripsToDestination) .. "[NEWLINE]" ..
-              L_Lookup("LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_ALT_TOOLTIP", turnsToCompleteRoute, (Game.GetCurrentGameTurn() + turnsToCompleteRoute)) );
+    tooltipString = (   Locale.Lookup("LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP") .. "[NEWLINE]" ..
+    Locale.Lookup("LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER") .. "[NEWLINE]" ..
+    Locale.Lookup("LOC_TRADE_TURNS_REMAINING_ROUTE_LENGTH_TOOLTIP", tradePathLength) .. "[NEWLINE]" ..
+    Locale.Lookup("LOC_TRADE_TURNS_REMAINING_TRIPS_COUNT_TOOLTIP", tripsToDestination) .. "[NEWLINE]" ..
+    Locale.Lookup("LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_ALT_TOOLTIP", turnsToCompleteRoute, (Game.GetCurrentGameTurn() + turnsToCompleteRoute)) );
   end
 
   routeInstance.TurnsToComplete:SetToolTipString( tooltipString );
@@ -844,61 +858,65 @@ function AddRouteInstanceFromRouteInfo( routeInfo:table )
       -- Unhide the cancel automation
       routeInstance.CancelAutomation:SetHide(false);
       -- Add button callback
-      routeInstance.CancelAutomation:RegisterCallback( M_LCick,
-        function()
-          CancelAutomatedTrader(routeInfo.TraderUnitID);
-          Refresh();
-        end
+      routeInstance.CancelAutomation:RegisterCallback( Mouse.eLClick,
+      function()
+        CancelAutomatedTrader(routeInfo.TraderUnitID);
+        Refresh();
+      end
       );
     end
   end
 
   if routeInfo.TraderUnitID then
     local tradeUnit:table = originPlayer:GetUnits():FindID(routeInfo.TraderUnitID);
-    routeInstance.GridButton:RegisterCallback( M_LCick,
-      function()
-        SelectUnit(tradeUnit);
-      end
+    routeInstance.GridButton:RegisterCallback( Mouse.eLClick,
+    function()
+      SelectUnit(tradeUnit);
+    end
     );
-  -- Add button hookups for only this tab
-  elseif m_currentTab == TRADE_TABS.AVAILABLE_ROUTES and m_AvailableTraders ~= nil and tcount(m_AvailableTraders) > 0 then
+    -- Add button hookups for only this tab
+  elseif m_currentTab == TRADE_TABS.AVAILABLE_ROUTES and m_AvailableTraders ~= nil and table.count(m_AvailableTraders) > 0 then
     -- Check if we have free trader in that city
-    if m_AvailableTraders[routeInfo.OriginCityID] ~= nil and tcount(m_AvailableTraders[routeInfo.OriginCityID]) > 0 then
+    if m_AvailableTraders[routeInfo.OriginCityID] ~= nil and table.count(m_AvailableTraders[routeInfo.OriginCityID]) > 0 then
       -- Get first trader
       local traderID = m_AvailableTraders[routeInfo.OriginCityID][1]
       local tradeUnit:table = originPlayer:GetUnits():FindID(traderID);
-      routeInstance.GridButton:RegisterCallback( M_LCick,
-        function()
-          SelectFreeTrader(tradeUnit, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID);
-        end
+      routeInstance.GridButton:RegisterCallback( Mouse.eLClick,
+      function()
+        SelectFreeTrader(tradeUnit, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID);
+      end
       );
     else -- Cycle through all free traders and open transfer-to screen for them
       local co = coroutine.create(
-        function()
-          while true do -- Infinitely cycle
-            -- Do we have traders to cycle between?
-            if CountTraders(m_AvailableTraders) > 0 then
-              for cityID in pairs(m_AvailableTraders) do
-                for i in pairs(m_AvailableTraders[cityID]) do
-                  local traderID = m_AvailableTraders[cityID][i]
-                  local tradeUnit:table = originPlayer:GetUnits():FindID(traderID);
-                  print_debug("Calling transfer from " .. cityID)
-                  TransferTraderTo(tradeUnit, originCity)
-                  coroutine.yield()
+      function()
+        while true do -- Infinitely cycle
+          -- Do we have traders to cycle between?
+          if CountTraders(m_AvailableTraders) > 0 then
+            for cityID in pairs(m_AvailableTraders) do
+              for i in pairs(m_AvailableTraders[cityID]) do
+                local traderID = m_AvailableTraders[cityID][i]
+                local tradeUnit:table = originPlayer:GetUnits():FindID(traderID);
+                if dbug_print then
+                  print("Calling transfer from " .. cityID)
                 end
+                TransferTraderTo(tradeUnit, originCity)
+                coroutine.yield()
               end
-            else
-              print_debug("Backup 2 yield")
-              coroutine.yield() -- gauranteed yield to prevent infinite cycle bug
             end
+          else
+            if dbug_print then
+              print("Backup 2 yield")
+            end
+            coroutine.yield() -- gauranteed yield to prevent infinite cycle bug
           end
         end
+      end
       );
 
-      routeInstance.GridButton:RegisterCallback( M_LCick,
-        function()
-          CycleTraders(co)
-        end
+      routeInstance.GridButton:RegisterCallback( Mouse.eLClick,
+      function()
+        CycleTraders(co)
+      end
       );
     end
   end
@@ -912,6 +930,7 @@ function SetOriginRouteInstanceYields(routeInstance, routeInfo)
   local yieldTexts = {}
   for yieldIndex = START_INDEX, END_INDEX do
     local yieldAmount = GetYieldForOriginCity(yieldIndex, routeInfo, true)
+    yieldAmount = Round(yieldAmount, 1)
     local iconString, text = FormatYieldText(yieldIndex, yieldAmount)
     yieldTexts[yieldIndex] = text .. iconString
   end
@@ -927,6 +946,7 @@ function SetDestinationRouteInstanceYields(routeInstance, routeInfo)
   local yieldTexts = {}
   for yieldIndex = START_INDEX, END_INDEX do
     local yieldAmount = GetYieldForDestinationCity(yieldIndex, routeInfo, true)
+    yieldAmount = Round(yieldAmount, 1)
     local iconString, text = FormatYieldText(yieldIndex, yieldAmount)
     yieldTexts[yieldIndex] = text .. iconString
   end
@@ -959,7 +979,7 @@ function CreatePlayerHeader( player:table )
   local headerInstance:table = m_HeaderInstanceIM:GetInstance();
   local playerID = player:GetID()
   local pPlayerConfig:table = PlayerConfigurations[playerID];
-  headerInstance.HeaderLabel:SetText(L_Upper(pPlayerConfig:GetPlayerName()));
+  headerInstance.HeaderLabel:SetText(Locale.ToUpper(pPlayerConfig:GetPlayerName()));
 
   -- If the current tab is not available routes, hide the collapse button, and trading post
   if m_currentTab ~= TRADE_TABS.AVAILABLE_ROUTES then
@@ -971,9 +991,9 @@ function CreatePlayerHeader( player:table )
   if colorCityPlayerHeader then
     headerInstance.CityBannerFill:SetHide(false);
     local backColor, frontColor = GetPlayerColorInfo(playerID, true);
-    headerBackColor = DarkenLightenColor(backColor, backdropColorOffset, backdropColorOpacity);
-    headerFrontColor = DarkenLightenColor(frontColor, labelColorOffset, labelColorOpacity);
-    gridBackColor = DarkenLightenColor(backColor, backdropGridColorOffset, backdropGridColorOpacity);
+    headerBackColor = UI.DarkenLightenColor(backColor, backdropColorOffset, backdropColorOpacity);
+    headerFrontColor = UI.DarkenLightenColor(frontColor, labelColorOffset, labelColorOpacity);
+    gridBackColor = UI.DarkenLightenColor(backColor, backdropGridColorOffset, backdropGridColorOpacity);
 
     headerInstance.CityBannerFill:SetColor( headerBackColor );
 
@@ -1016,8 +1036,13 @@ function CreatePlayerHeader( player:table )
       headerInstance.VisibilityBonusIcon:SetVisState(math.min(math.max(visibilityIndex, 0), 3));
       headerInstance.VisibilityBonusGrid:LocalizeAndSetToolTip("LOC_TRADE_OVERVIEW_TOOLTIP_NO_DIPLOMATIC_VIS_BONUS");
     end
+
+    headerInstance.TourismBonusGrid:SetHide(false);
+    headerInstance.VisibilityBonusGrid:SetHide(false);
   else
-    -- print("Not displaying vis bonuses")
+    if dbug_print then
+      -- print("Not displaying vis bonuses")
+    end
     headerInstance.TourismBonusGrid:SetHide(true);
     headerInstance.VisibilityBonusGrid:SetHide(true);
   end
@@ -1036,11 +1061,11 @@ function CreateCityStateHeader()
   end
 
   -- Reset Color for city states
-  headerInstance.HeaderGrid:SetColor(0xFF666666);
+  headerInstance.HeaderGrid:SetColor(UI.GetColorValueFromHexLiteral(0xFF666666));
   headerInstance.CityBannerFill:SetHide(true);
 
   headerInstance.HeaderLabel:SetColorByName("Beige");
-  headerInstance.HeaderLabel:SetText(L_Upper("LOC_TRADE_OVERVIEW_CITY_STATES"));
+  headerInstance.HeaderLabel:SetText(Locale.ToUpper("LOC_TRADE_OVERVIEW_CITY_STATES"));
 
   headerInstance.VisibilityBonusGrid:SetHide(true);
   headerInstance.TourismBonusGrid:SetHide(true);
@@ -1051,10 +1076,10 @@ function CreateUnusedRoutesHeader()
 
   local headerInstance:table = m_HeaderInstanceIM:GetInstance();
 
-  headerInstance.HeaderLabel:SetText(L_Upper("LOC_TRADE_OVERVIEW_UNUSED_ROUTES"));
+  headerInstance.HeaderLabel:SetText(Locale.ToUpper("LOC_TRADE_OVERVIEW_UNUSED_ROUTES"));
 
   -- Reset Color for city states
-  headerInstance.HeaderGrid:SetColor(0xFF666666);
+  headerInstance.HeaderGrid:SetColor(UI.GetColorValueFromHexLiteral(0xFF666666));
   headerInstance.CityBannerFill:SetHide(true);
 
   headerInstance.HeaderLabel:SetColorByName("Beige");
@@ -1073,7 +1098,7 @@ function CreateCityHeader( city:table , currentRouteShowCount:number, totalRoute
   local playerID:number = city:GetOwner();
   local pPlayer = Players[playerID];
 
-  headerInstance.HeaderLabel:SetText(L_Upper(city:GetName()));
+  headerInstance.HeaderLabel:SetText(Locale.ToUpper(city:GetName()));
 
   if tooltipString ~= nil then
     headerInstance.HeaderGrid:SetToolTipString(tooltipString);
@@ -1161,18 +1186,18 @@ function CreateCityHeader( city:table , currentRouteShowCount:number, totalRoute
   end
 
 
-  headerInstance.RoutesExpand:RegisterCallback( M_LCick, function() OnExpandRoutes(headerInstance.RoutesExpand, city:GetOwner(), city:GetID()); end );
-  headerInstance.RoutesExpand:RegisterCallback( M_Enter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  headerInstance.RoutesExpand:RegisterCallback( M_RClick, function() OnCollapseRoutes(headerInstance.RoutesExpand, city:GetOwner(), city:GetID()); end );
-  headerInstance.RoutesExpand:RegisterCallback( M_Enter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+  headerInstance.RoutesExpand:RegisterCallback( Mouse.eLClick, function() OnExpandRoutes(headerInstance.RoutesExpand, city:GetOwner(), city:GetID()); end );
+  headerInstance.RoutesExpand:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+  headerInstance.RoutesExpand:RegisterCallback( Mouse.eRClick, function() OnCollapseRoutes(headerInstance.RoutesExpand, city:GetOwner(), city:GetID()); end );
+  headerInstance.RoutesExpand:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
 
   if colorCityPlayerHeader then
     headerInstance.CityBannerFill:SetHide(false);
     local backColor, frontColor = GetPlayerColorInfo(playerID, true);
 
-    headerBackColor = DarkenLightenColor(backColor, backdropColorOffset, backdropColorOpacity);
-    headerFrontColor = DarkenLightenColor(frontColor, labelColorOffset, labelColorOpacity);
-    gridBackColor = DarkenLightenColor(backColor, backdropGridColorOffset, backdropGridColorOpacity);
+    headerBackColor = UI.DarkenLightenColor(backColor, backdropColorOffset, backdropColorOpacity);
+    headerFrontColor = UI.DarkenLightenColor(frontColor, labelColorOffset, labelColorOpacity);
+    gridBackColor = UI.DarkenLightenColor(backColor, backdropGridColorOffset, backdropGridColorOpacity);
 
     headerInstance.HeaderLabel:SetColor(headerFrontColor);
     headerInstance.CityBannerFill:SetColor(headerBackColor);
@@ -1202,7 +1227,7 @@ function OnExpandRoutes( checkbox, cityOwnerID:number, cityID:number )
     -- Only add entry if it isn't already in the list
     if findIndex(m_GroupsFullyExpanded, cityEntry, CompareCityEntries) == -1 then
       print_debug("Adding " .. GetCityEntryString(cityEntry) .. " to the exclusion list");
-      tinsert(m_GroupsFullyExpanded, cityEntry);
+      table.insert(m_GroupsFullyExpanded, cityEntry);
     else
       print_debug("City already exists in exclusion list");
     end
@@ -1223,7 +1248,7 @@ function OnExpandRoutes( checkbox, cityOwnerID:number, cityID:number )
 
     if findIndex(m_GroupsFullyExpanded, cityEntry, CompareCityEntries) > 0 then
       print_debug("Removing " .. GetCityEntryString(cityEntry) .. " to the exclusion list");
-      tremove(m_GroupsFullyExpanded, cityIndex);
+      table.remove(m_GroupsFullyExpanded, cityIndex);
     else
       print_debug("City does not exist in exclusion list");
     end
@@ -1243,21 +1268,21 @@ function OnCollapseRoutes( checkbox, cityOwnerID:number, cityID:number )
 
   -- Check if city is in Groups expanded list
   local cityEntry = {
-      OwnerID = cityOwnerID,
-      CityID = cityID
-    };
+    OwnerID = cityOwnerID,
+    CityID = cityID
+  };
 
   local cityIndex = findIndex(m_GroupsFullyExpanded, cityEntry, CompareCityEntries)
 
   -- Remove from fully expanded
   if cityIndex > 0 then
-    tremove(m_GroupsFullyExpanded, cityIndex);
+    table.remove(m_GroupsFullyExpanded, cityIndex);
   end
 
   -- Add city to Groups collapsed list, if it does not exist
   cityIndex = findIndex(m_GroupsFullyCollapsed, cityEntry, CompareCityEntries)
   if cityIndex == -1 then
-    tinsert(m_GroupsFullyCollapsed, cityEntry);
+    table.insert(m_GroupsFullyCollapsed, cityEntry);
   end
 
   Refresh();
@@ -1277,7 +1302,7 @@ function GetCityEntryString( cityEntry:table )
   local pPlayer:table = Players[cityEntry.OwnerID];
   local pCity:table = pPlayer:GetCities():FindID(cityEntry.CityID);
 
-  return L_Lookup(pCity:GetName());
+  return Locale.Lookup(pCity:GetName());
 end
 
 -- ===========================================================================
@@ -1306,13 +1331,13 @@ function RefreshGroupByPulldown()
   m_groupByList = {};
 
   -- Build entries
-  AddGroupByEntry(L_Lookup("LOC_CITY_STATES_NONE"), GROUP_BY_SETTINGS.NONE);
-  AddGroupByEntry(L_Lookup("LOC_TRADE_OVERVIEW_ORIGIN"), GROUP_BY_SETTINGS.ORIGIN);
-  AddGroupByEntry(L_Lookup("LOC_TRADE_OVERVIEW_DESTINATION"), GROUP_BY_SETTINGS.DESTINATION);
-  AddGroupByEntry(L_Lookup("LOC_TRADE_OVERVIEW_ORIGIN_AZ"), GROUP_BY_SETTINGS.ORIGIN_AZ);
-  AddGroupByEntry(L_Lookup("LOC_TRADE_OVERVIEW_ORIGIN_ZA"), GROUP_BY_SETTINGS.ORIGIN_ZA);
-  AddGroupByEntry(L_Lookup("LOC_TRADE_OVERVIEW_DESTINATION_AZ"), GROUP_BY_SETTINGS.DESTINATION_AZ);
-  AddGroupByEntry(L_Lookup("LOC_TRADE_OVERVIEW_DESTINATION_ZA"), GROUP_BY_SETTINGS.DESTINATION_ZA);
+  AddGroupByEntry(Locale.Lookup("LOC_CITY_STATES_NONE"), GROUP_BY_SETTINGS.NONE);
+  AddGroupByEntry(Locale.Lookup("LOC_TRADE_OVERVIEW_ORIGIN"), GROUP_BY_SETTINGS.ORIGIN);
+  AddGroupByEntry(Locale.Lookup("LOC_TRADE_OVERVIEW_DESTINATION"), GROUP_BY_SETTINGS.DESTINATION);
+  AddGroupByEntry(Locale.Lookup("LOC_TRADE_OVERVIEW_ORIGIN_AZ"), GROUP_BY_SETTINGS.ORIGIN_AZ);
+  AddGroupByEntry(Locale.Lookup("LOC_TRADE_OVERVIEW_ORIGIN_ZA"), GROUP_BY_SETTINGS.ORIGIN_ZA);
+  AddGroupByEntry(Locale.Lookup("LOC_TRADE_OVERVIEW_DESTINATION_AZ"), GROUP_BY_SETTINGS.DESTINATION_AZ);
+  AddGroupByEntry(Locale.Lookup("LOC_TRADE_OVERVIEW_DESTINATION_ZA"), GROUP_BY_SETTINGS.DESTINATION_ZA);
 
   -- Calculate Internals
   Controls.OverviewGroupByPulldown:CalculateInternals();
@@ -1354,10 +1379,10 @@ end
 -- Helper method to check if the group setting selected is none
 function GroupSettingIsNone(groupSetting)
   if groupSetting == GROUP_BY_SETTINGS.NONE
-      or groupSetting == GROUP_BY_SETTINGS.ORIGIN_AZ
-      or groupSetting == GROUP_BY_SETTINGS.ORIGIN_ZA
-      or groupSetting == GROUP_BY_SETTINGS.DESTINATION_AZ
-      or groupSetting == GROUP_BY_SETTINGS.DESTINATION_ZA then
+  or groupSetting == GROUP_BY_SETTINGS.ORIGIN_AZ
+  or groupSetting == GROUP_BY_SETTINGS.ORIGIN_ZA
+  or groupSetting == GROUP_BY_SETTINGS.DESTINATION_AZ
+  or groupSetting == GROUP_BY_SETTINGS.DESTINATION_ZA then
     return true
   end
   return false
@@ -1368,7 +1393,9 @@ end
 -- ===========================================================================
 
 function FilterTradeRoutes ( tradeRoutes:table )
-  -- print("Current filter: " .. m_filterList[m_filterSelected].FilterText);
+  if dbug_print then
+    -- print("Current filter: " .. m_filterList[m_filterSelected].FilterText);
+  end
   if m_filterSelected == 1 then
     return tradeRoutes;
   end
@@ -1379,7 +1406,7 @@ function FilterTradeRoutes ( tradeRoutes:table )
   for _, tradeRoute in ipairs(tradeRoutes) do
     local pPlayer = Players[tradeRoute.DestinationCityPlayer];
     if m_filterList[m_filterSelected].FilterFunction and m_filterList[m_filterSelected].FilterFunction(pPlayer) then
-      tinsert(filtertedRoutes, tradeRoute);
+      table.insert(filtertedRoutes, tradeRoute);
       hasEntry = true
     end
   end
@@ -1402,17 +1429,17 @@ function RefreshFilters()
   m_filterCount = 0;
 
   -- Add "All" Filter
-  AddFilter(L_Lookup("LOC_ROUTECHOOSER_FILTER_ALL"), function(a) return true; end);
+  AddFilter(Locale.Lookup("LOC_ROUTECHOOSER_FILTER_ALL"), function(a) return true; end);
 
   -- Add "International Routes" Filter
-  AddFilter(L_Lookup("LOC_TRADE_FILTER_INTERNATIONAL_ROUTES_TEXT") , IsOtherCiv);
+  AddFilter(Locale.Lookup("LOC_TRADE_FILTER_INTERNATIONAL_ROUTES_TEXT") , IsOtherCiv);
 
   -- Add "City States with Trade Quest" Filter
-  AddFilter(L_Lookup("LOC_TRADE_FILTER_CS_WITH_QUEST_TOOLTIP"), IsCityStateWithTradeQuest);
+  AddFilter(Locale.Lookup("LOC_TRADE_FILTER_CS_WITH_QUEST_TOOLTIP"), IsCityStateWithTradeQuest);
 
   -- Add Local Player Filter
   local localPlayerConfig:table = PlayerConfigurations[Game.GetLocalPlayer()];
-  local localPlayerName = L_Lookup(GameInfo.Civilizations[localPlayerConfig:GetCivilizationTypeID()].Name);
+  local localPlayerName = Locale.Lookup(GameInfo.Civilizations[localPlayerConfig:GetCivilizationTypeID()].Name);
   AddFilter(localPlayerName, function(a) return a:GetID() == Game.GetLocalPlayer(); end);
 
   -- Add Filters by Civ
@@ -1423,14 +1450,14 @@ function RefreshFilters()
       -- Has the local player met the civ?
       if pPlayer:GetDiplomacy():HasMet(Game.GetLocalPlayer()) then
         local playerConfig:table = PlayerConfigurations[pPlayer:GetID()];
-        local name = L_Lookup(GameInfo.Civilizations[playerConfig:GetCivilizationTypeID()].Name);
+        local name = Locale.Lookup(GameInfo.Civilizations[playerConfig:GetCivilizationTypeID()].Name);
         AddFilter(name, function(a) return a:GetID() == pPlayer:GetID() end);
       end
     end
   end
 
   -- Add "City States" Filter
-  AddFilter(L_Lookup("LOC_HUD_REPORTS_CITY_STATE"), IsCityState);
+  AddFilter(Locale.Lookup("LOC_HUD_REPORTS_CITY_STATE"), IsCityState);
 
   -- Add filters to pulldown
   for filter in pairs(m_filterList) do
@@ -1498,7 +1525,9 @@ function GroupRoutes( routesTable, groupSetting )
     elseif groupSetting == GROUP_BY_SETTINGS.DESTINATION then
       key = tostring(routesTable[i].DestinationCityPlayer) .. "_" .. tostring(routesTable[i].DestinationCityID)
     else
-      print("Error: Unknown group setting.")
+      if dbug_print then
+        print("Error: Unknown group setting.")
+      end
       return routesTable;
     end
 
@@ -1514,7 +1543,9 @@ function GroupRoutes( routesTable, groupSetting )
       returnRoutesTable[index] = {}
     end
 
-    -- print("Inserting " .. GetTradeRouteString(route) .. " in " .. index)
+    if dbug_print then
+      -- print("Inserting " .. GetTradeRouteString(route) .. " in " .. index)
+    end
     returnRoutesTable[index][#(returnRoutesTable[index]) + 1] = routesTable[i]
   end
   return returnRoutesTable;
@@ -1576,8 +1607,10 @@ function RefreshSortBar()
     RefreshSortButtons( m_GroupSortBySettings );
   end
 
-  HideSortOrderLabels();
   if showSortOrdersPermanently or m_shiftDown then
+    -- Hide the order texts
+    HideSortOrderLabels();
+    -- Show them based on current settings
     ShowSortOrderLabels();
   end
 end
@@ -1794,12 +1827,12 @@ function RemoveTrader( traderID )
       -- Remove trader
       if m_AvailableTraders[cityID][i] == traderID then
         print_debug("Removing trader " .. traderID .. " from available traders.")
-        tremove(m_AvailableTraders[cityID], i)
+        table.remove(m_AvailableTraders[cityID], i)
 
         -- Check if for that city has no traders. Remove the city entry if it does
         if table_nnill_count(m_AvailableTraders[cityID]) <= 0 then
           print_debug("Removing city " .. cityID)
-          tremove(m_AvailableTraders, cityID)
+          table.remove(m_AvailableTraders, cityID)
         end
 
         return -- return here since nothing else is left to do
@@ -1807,7 +1840,7 @@ function RemoveTrader( traderID )
     end
   end
 
-  print("ERROR : Could not find trader " .. traderID)
+  print_debug("ERROR : Could not find trader " .. traderID)
 end
 
 -- ===========================================================================
@@ -2107,7 +2140,7 @@ function OnUnitOperationStarted( ownerID:number, unitID:number, operationID:numb
       end
 
       if not foundRoute then
-        print("ERROR : Route not found!!")
+        print_debug("Route not found!!")
         return
       end
 
@@ -2233,15 +2266,17 @@ end
 -- ===========================================================================
 
 function InitButton(control, callbackLClick, callbackRClick)
-  control:RegisterCallback(M_LCick, callbackLClick)
+  control:RegisterCallback(Mouse.eLClick, callbackLClick)
   if callbackRClick ~= nil then
-    control:RegisterCallback(M_RClick, callbackRClick)
+    control:RegisterCallback(Mouse.eRClick, callbackRClick)
   end
-  control:RegisterCallback( M_Enter, function() UI.PlaySound("Main_Menu_Mouse_Over") end)
+  control:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over") end)
 end
 
 function Initialize()
-  print("Initializing BTS Trade Overview");
+  if dbug_print then
+    print("Initializing BTS Trade Overview");
+  end
 
   -- Initialize tracker
   TradeSupportTracker_Initialize();
@@ -2268,11 +2303,11 @@ function Initialize()
   InitButton(Controls.TurnsToCompleteSortButton, OnSortByTurnsToComplete, OnNotSortByTurnsToComplete)
 
   --Filter Pulldown
-  Controls.OverviewFilterButton:RegisterCallback( eLClick, UpdateFilterArrow );
+  Controls.OverviewFilterButton:RegisterCallback( Mouse.eLClick, UpdateFilterArrow );
   Controls.OverviewDestinationFilterPulldown:RegisterSelectionCallback( OnFilterSelected );
 
   -- Group By Pulldown
-  Controls.OverviewGroupByButton:RegisterCallback( eLClick, UpdateGroupByArrow );
+  Controls.OverviewGroupByButton:RegisterCallback( Mouse.eLClick, UpdateGroupByArrow );
   Controls.OverviewGroupByPulldown:RegisterSelectionCallback( OnGroupBySelected );
 
   InitButton(Controls.GroupExpandAllCheckBox, OnGroupExpandAll)
@@ -2289,7 +2324,7 @@ function Initialize()
   -- Rundown / Screen Events
   Events.SystemUpdateUI.Add(m_AnimSupport.OnUpdateUI);
 
-  Controls.Title:SetText(L_Lookup("LOC_TRADE_OVERVIEW_TITLE"));
+  Controls.Title:SetText(Locale.Lookup("LOC_TRADE_OVERVIEW_TITLE"));
 
   -- Game Engine Events
   Events.CitySelectionChanged.Add( OnCitySelectionChanged );

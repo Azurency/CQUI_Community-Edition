@@ -182,11 +182,11 @@ function OnPromoteUnitPopup()
               line4:SetTexture("Controls_TreePathES");
             end
 
-            line1:SetColor(0xFF71A2BF);
-            line2:SetColor(0xFF71A2BF);
-            line3:SetColor(0xFF71A2BF);
-            line4:SetColor(0xFF71A2BF);
-            line5:SetColor(0xFF71A2BF);
+            line1:SetColor(UI.GetColorValueFromHexLiteral(0xFF71A2BF));
+            line2:SetColor(UI.GetColorValueFromHexLiteral(0xFF71A2BF));
+            line3:SetColor(UI.GetColorValueFromHexLiteral(0xFF71A2BF));
+            line4:SetColor(UI.GetColorValueFromHexLiteral(0xFF71A2BF));
+            line5:SetColor(UI.GetColorValueFromHexLiteral(0xFF71A2BF));
           else
             line1:SetTexture("Controls_TreePathDashNS");
             line3:SetTexture("Controls_TreePathDashEW");
@@ -218,7 +218,7 @@ function OnPromoteUnitPopup()
             line:SetSizeVal( endX - startX, SIZE_PATH);
             if hasPromotion then
               line:SetTexture("Controls_TreePathEW");
-              line:SetColor(0xFF71A2BF);
+              line:SetColor(UI.GetColorValueFromHexLiteral(0xFF71A2BF));
             else
               line:SetTexture("Controls_TreePathDashEW");
               --line:SetColor(63,83,100,255);
@@ -232,7 +232,7 @@ function OnPromoteUnitPopup()
             line:SetSizeVal(SIZE_PATH,  endY - startY);
             if hasPromotion then
               line:SetTexture("Controls_TreePathNS");
-              line:SetColor(0xFF71A2BF);
+              line:SetColor(UI.GetColorValueFromHexLiteral(0xFF71A2BF));
             else
               line:SetTexture("Controls_TreePathDashNS");
               --line:SetColor(63,83,100,255);
@@ -428,11 +428,11 @@ function OnPromoteUnitPopupReport( unit )
               line4:SetTexture("Controls_TreePathES");
             end
 
-            line1:SetColor(0xFF71A2BF);
-            line2:SetColor(0xFF71A2BF);
-            line3:SetColor(0xFF71A2BF);
-            line4:SetColor(0xFF71A2BF);
-            line5:SetColor(0xFF71A2BF);
+            line1:SetColor(UI.GetColorValueFromHexLiteral(0xFF71A2BF));
+            line2:SetColor(UI.GetColorValueFromHexLiteral(0xFF71A2BF));
+            line3:SetColor(UI.GetColorValueFromHexLiteral(0xFF71A2BF));
+            line4:SetColor(UI.GetColorValueFromHexLiteral(0xFF71A2BF));
+            line5:SetColor(UI.GetColorValueFromHexLiteral(0xFF71A2BF));
           else
             line1:SetTexture("Controls_TreePathDashNS");
             line3:SetTexture("Controls_TreePathDashEW");
@@ -464,7 +464,7 @@ function OnPromoteUnitPopupReport( unit )
             line:SetSizeVal( endX - startX, SIZE_PATH);
             if hasPromotion then
               line:SetTexture("Controls_TreePathEW");
-              line:SetColor(0xFF71A2BF);
+              line:SetColor(UI.GetColorValueFromHexLiteral(0xFF71A2BF));
             else
               line:SetTexture("Controls_TreePathDashEW");
               --line:SetColor(63,83,100,255);
@@ -478,7 +478,7 @@ function OnPromoteUnitPopupReport( unit )
             line:SetSizeVal(SIZE_PATH,  endY - startY);
             if hasPromotion then
               line:SetTexture("Controls_TreePathNS");
-              line:SetColor(0xFF71A2BF);
+              line:SetColor(UI.GetColorValueFromHexLiteral(0xFF71A2BF));
             else
               line:SetTexture("Controls_TreePathDashNS");
               --line:SetColor(63,83,100,255);
@@ -547,7 +547,7 @@ end
 function Initialize()
 	ContextPtr:SetInputHandler( OnInputHandler, true );
   -- Controls Events
-  Controls.CloseButton:RegisterCallback( eLClick, OnClose );
+  Controls.CloseButton:RegisterCallback( Mouse.eLClick, OnClose );
   ContextPtr:SetInitHandler( OnInit );
 
 	Events.CitySelectionChanged.Add( OnCitySelectionChanged );

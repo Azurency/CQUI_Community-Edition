@@ -147,11 +147,22 @@ end
 
 
 -- ===========================================================================
+--	No culture? No government for you!
+-- ===========================================================================
+function CanPlayerCivicAnything( playerID:number )
+  local pPlayer :table  = Players[playerID];
+  local pPlayerCulture :table	= pPlayer:GetCulture();
+  local currentCultureYield :number = pPlayerCulture:GetCultureYield();
+  return currentCultureYield <= 0;
+end
+
+
+-- ===========================================================================
 --
 -- ===========================================================================
 function AddAvailableCivic( playerID:number, kData:table )
   local numUnlockables	:number;
-  local isDisabled:boolean = (kData.TurnsLeft < 1);	-- No cities, turns will be -1
+  local isDisabled:boolean = CanPlayerCivicAnything(playerID);
 
   -- Create main instance and the Instance Manager for any unlocks.
   local kItemInstance	:table = m_civicsIM:GetInstance();

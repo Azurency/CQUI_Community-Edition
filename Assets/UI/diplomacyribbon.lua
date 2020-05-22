@@ -1,39 +1,35 @@
--- ===========================================================================
---	Leader container list on top of the HUD
--- ===========================================================================
-include("DiplomacyRibbonSupport");
+-- Copyright 2017-2018, Firaxis Games.
+-- Leader container list on top of the HUD
+
 include("InstanceManager");
-include("TeamSupport");
 include("LeaderIcon");
+include("PlayerSupport");
 include("ExtendedRelationship"); -- Separate Extended Relationship file (code shared)
 
 -- ===========================================================================
 --	CONSTANTS
 -- ===========================================================================
 local SCROLL_SPEED			:number = 3;
-local SIZE_LEADER			:number = 52;
-local PADDING_LEADER		:number = 3;
-local BG_PADDING_EDGE		:number = 20;
-local RIGHT_HOOKS_INITIAL	:number	= 163;
-local MIN_LEFT_HOOKS		:number	= 260;
-local MINIMUM_BG_SIZE		:number = 100;
-local WORLD_TRACKER_OFFSET	:number	= 40;
 
 -- ===========================================================================
---	VARIABLES
+--	GLOBALS
 -- ===========================================================================
-local m_leadersMet			:number = 0; -- Number of leaders in the ribbon
-local m_scrollIndex			:number = 0; -- Index of leader that is supposed to be on the far right
-local m_scrollPercent		:number = 0; -- Necessary for scroll lerp
-local m_maxNumLeaders		:number = 0; -- Number of leaders that can fit in the ribbon
-local m_isScrolling			:boolean = false;
+g_maxNumLeaders	= 0; -- Number of leaders that can fit in the ribbon
+
+
+-- ===========================================================================
+--	MEMBERS
+-- ===========================================================================
+local m_leadersMet		     :number = 0; -- Number of leaders in the ribbon
+local m_scrollIndex		     :number = 0; -- Index of leader that is supposed to be on the far right
+local m_scrollPercent		   :number = 0; -- Necessary for scroll lerp
+local m_isScrolling			   :boolean = false;
 local CQUI_IsDiploBannerOn = GameConfiguration.GetValue("CQUI_ShowDiploBanner"); --ARISTOS: controls the display of Diplo Banner
-local m_uiLeadersByID		:table = {};
-local m_uiChatIconsVisible	:table = {};
-local m_kLeaderIM			:table = CQUI_IsDiploBannerOn and InstanceManager:new("LeaderInstance", "LeaderContainer", Controls.LeaderStack) 
-										or InstanceManager:new("LeaderInstanceNormal", "LeaderContainer", Controls.LeaderStack); --ARISTOS: to make Diplo Banner optional
-local m_PartialScreenHookBar: table;	-- = ContextPtr:LookUpControl( "/InGame/PartialScreenHooks/LaunchBacking" );
-local m_LaunchBar			: table;	-- = ContextPtr:LookUpControl( "/InGame/LaunchBar/LaunchBacking" );
+local m_uiLeadersByID		   :table = {};
+local m_uiChatIconsVisible :table = {};
+local m_kLeaderIM			     :table = CQUI_IsDiploBannerOn and InstanceManager:new("LeaderInstance", "LeaderContainer", Controls.LeaderStack)
+                                    or InstanceManager:new("LeaderInstanceNormal", "LeaderContainer", Controls.LeaderStack); --ARISTOS: to make Diplo Banner optional
+
 
 --CQUI Members
 -- ARISTOS: Mouse over leader icon to show relations
@@ -47,14 +43,17 @@ function ResetLeaders()
   m_leadersMet = 0;
   m_uiLeadersByID = {};
   m_kLeaderIM:ResetInstances();
+  m_scrollPercent = 0;
+  m_scrollIndex = 0;
+  RealizeScroll();
 end
 
 --ARISTOS: Update Diplo Banner display status
 function CQUI_OnSettingsUpdate()
   CQUI_IsDiploBannerOn = GameConfiguration.GetValue("CQUI_ShowDiploBanner");
   ResetLeaders();
-  m_kLeaderIM = CQUI_IsDiploBannerOn and InstanceManager:new("LeaderInstance", "LeaderContainer", Controls.LeaderStack) 
-										or InstanceManager:new("LeaderInstanceNormal", "LeaderContainer", Controls.LeaderStack); --ARISTOS: to make Diplo Banner optional
+  m_kLeaderIM = CQUI_IsDiploBannerOn and InstanceManager:new("LeaderInstance", "LeaderContainer", Controls.LeaderStack)
+                    or InstanceManager:new("LeaderInstanceNormal", "LeaderContainer", Controls.LeaderStack); --ARISTOS: to make Diplo Banner optional
   UpdateLeaders();
 end
 LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
@@ -124,7 +123,7 @@ function OnLeaderMouseOver(playerID : number )
       if relationshipStateID ~= -1 then
         local relationshipState:table = GameInfo.DiplomaticStates[relationshipStateID];
         -- Always show relationship icon for AIs, only show player triggered states for humans
-        if not isHuman or IsValidRelationship(relationshipState.StateType) then
+        if not isHuman or Relationship.IsValidWithAI(relationshipState.StateType) then
           --!! ARISTOS: to extend relationship tooltip to include diplo modifiers!
           local relationshipTooltip:string = Locale.Lookup(relationshipState.Name)
           --!! Extend it only of the selected player is the local player!
@@ -165,7 +164,7 @@ end
 function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean)
   m_leadersMet = m_leadersMet + 1;
 
-  local pPlayer:table = Players[playerID];	  
+  local pPlayer:table = Players[playerID];
   local pPlayerConfig:table = PlayerConfigurations[playerID];
   local isHuman:boolean = pPlayerConfig:IsHuman();
 
@@ -192,7 +191,7 @@ function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean
     if relationshipStateID ~= -1 then
       local relationshipState:table = GameInfo.DiplomaticStates[relationshipStateID];
       -- Always show relationship icon for AIs, only show player triggered states for humans
-      if not isHuman or IsValidRelationship(relationshipState.StateType) then
+      if not isHuman or Relationship.IsValidWithAI(relationshipState.StateType) then
         --!! ARISTOS: to extend relationship tooltip to include diplo modifiers!
         local extendedRelationshipTooltip:string = Locale.Lookup(relationshipState.Name)
         .. "[NEWLINE][NEWLINE]" .. RelationshipGet(playerID);
@@ -208,9 +207,9 @@ function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean
   -- CQUI: Set score values for DRS display
   --ARISTOS: only if Diplo Banner ON
   if CQUI_IsDiploBannerOn then
-	  instance.CQUI_ScoreOverall:SetText("[ICON_Capital]"..Players[playerID]:GetScore());
-	  instance.CQUI_ScienceRate:SetText("[ICON_Science]"..Round(Players[playerID]:GetTechs():GetScienceYield(),0));
-	  instance.CQUI_MilitaryStrength:SetText("[ICON_Strength]"..Players[playerID]:GetStats():GetMilitaryStrength());
+    instance.CQUI_ScoreOverall:SetText("[ICON_Capital]"..Players[playerID]:GetScore());
+    instance.CQUI_ScienceRate:SetText("[ICON_Science]"..Round(Players[playerID]:GetTechs():GetScienceYield(),0));
+    instance.CQUI_MilitaryStrength:SetText("[ICON_Strength]"..Players[playerID]:GetStats():GetMilitaryStrength());
   end
 
   instance.Relationship:SetHide(not bShowRelationshipIcon);
@@ -228,7 +227,7 @@ function AddLeader(iconName : string, playerID : number, isUniqueLeader: boolean
   end
 
   -- Returning these so mods can override them and modify the icons
-	return leaderIcon, instance;
+  return leaderIcon, instance;
 end
 
 --ARISTOS: To display key information in leader tooltip inside Diplo Ribbon
@@ -249,11 +248,11 @@ function GetExtendedTooltip(playerID:number)
   local playerTreasury:table	= Players[playerID]:GetTreasury();
   local goldBalance	:number = math.floor(playerTreasury:GetGoldBalance());
   local goldYield	:number = math.floor((playerTreasury:GetGoldYield() - playerTreasury:GetTotalMaintenance()));
-  
+
   local civData:string = "[NEWLINE]"..Locale.Lookup("LOC_DIPLOMACY_INTEL_GOVERNMENT").." "..govType
     .."[NEWLINE]"..Locale.Lookup("LOC_PEDIA_CONCEPTS_PAGEGROUP_CITIES_NAME").. ": "..numCities
     .."[NEWLINE][ICON_Capital] "..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_DOMINATION_SCORE", Players[playerID]:GetScore())
-	.."[NEWLINE][ICON_Gold] "..goldBalance.." / " .. (goldYield>0 and "+" or "") .. (goldYield>0 and goldYield or "?")
+    .."[NEWLINE][ICON_Gold] "..goldBalance.." / " .. (goldYield>0 and "+" or "") .. (goldYield>0 and goldYield or "?")
     .."[NEWLINE]"..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_SCIENCE_SCIENCE_RATE", Round(Players[playerID]:GetTechs():GetScienceYield(),1))
     .."[NEWLINE][ICON_Science] "..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_SCIENCE_NUM_TECHS", Players[playerID]:GetStats():GetNumTechsResearched())
     .."[NEWLINE]"..Locale.Lookup("LOC_WORLD_RANKINGS_OVERVIEW_CULTURE_CULTURE_RATE", Round(Players[playerID]:GetCulture():GetCultureYield(),1))
@@ -269,54 +268,40 @@ end
 --	Clears leaders and re-adds them to the stack
 -- ===========================================================================
 function UpdateLeaders()
-  -- Clear previous list items
+  local localPlayerID:number = Game.GetLocalPlayer();
+  if localPlayerID == -1 then
+    Controls.LeaderStack:CalculateSize();
+    RealizeSize();
+    return;
+  end;
+
   ResetLeaders();
 
   -- Add entries for everyone we know (Majors only)
   local aPlayers:table = PlayerManager.GetAliveMajors();
-  local localPlayerID:number = Game.GetLocalPlayer();
-  if (localPlayerID ~= -1) then		-- It is possible to not have a local player!
-    local localPlayer:table = Players[localPlayerID];
-    local localDiplomacy:table = localPlayer:GetDiplomacy();
+  local localPlayer:table = Players[localPlayerID];
+  local localDiplomacy:table = localPlayer:GetDiplomacy();
 
-    table.sort(aPlayers, function(a:table,b:table) return localDiplomacy:GetMetTurn(a:GetID()) < localDiplomacy:GetMetTurn(b:GetID()) end);
+  table.sort(aPlayers, function(a:table,b:table) return localDiplomacy:GetMetTurn(a:GetID()) < localDiplomacy:GetMetTurn(b:GetID()) end);
 
-    --First, add me!
-    AddLeader("ICON_"..PlayerConfigurations[localPlayerID]:GetLeaderTypeName(), localPlayerID);
+  --First, add me!
+  AddLeader("ICON_"..PlayerConfigurations[localPlayerID]:GetLeaderTypeName(), localPlayerID);
 
-    --Then, let's do a check to see if any of these players are duplicate leaders and track it.
-    --		Must go through entire list to detect duplicates (would be lovely if we had an IsUnique from PlayerConfigurations)
-    local metPlayers:table = {};
-    local isUniqueLeader:table = {};
-    for _, pPlayer in ipairs(aPlayers) do
-      local playerID:number = pPlayer:GetID();
-      if(playerID ~= localPlayerID) then
-        local playerMet:boolean = localDiplomacy:HasMet(playerID);
-        if (playerMet) then
-          local leaderName:string = PlayerConfigurations[playerID]:GetLeaderTypeName();
-          if (isUniqueLeader[leaderName] == nil) then
-            isUniqueLeader[leaderName] = true;
-          else
-            isUniqueLeader[leaderName] = false;
-          end
-        end
-        metPlayers[playerID] = playerMet;
-      end
-    end
+  local kMetPlayers, kUniqueLeaders = GetMetPlayersAndUniqueLeaders();
 
-    --Then, add the leader icons.
-    for _, pPlayer in ipairs(aPlayers) do
-      local playerID:number = pPlayer:GetID();
-      if(playerID ~= localPlayerID) then
-        local playerMet:boolean = metPlayers[playerID];
-        local pPlayerConfig:table = PlayerConfigurations[playerID];
-        if (playerMet or (GameConfiguration.IsAnyMultiplayer() and pPlayerConfig:IsHuman())) then
-          if playerMet then
-            local leaderName:string = pPlayerConfig:GetLeaderTypeName();
-            AddLeader("ICON_"..leaderName, playerID, isUniqueLeader[leaderName]);
-          else
-            AddLeader("ICON_LEADER_DEFAULT", playerID);
-          end
+  --Then, add the leader icons.
+  for _, pPlayer in ipairs(aPlayers) do
+    local playerID:number = pPlayer:GetID();
+    if(playerID ~= localPlayerID) then
+      local isMet			:boolean = kMetPlayers[playerID];
+      local pPlayerConfig	:table = PlayerConfigurations[playerID];
+      if (isMet or (GameConfiguration.IsAnyMultiplayer() and pPlayerConfig:IsHuman())) then
+        local leaderName:string = pPlayerConfig:GetLeaderTypeName();
+        -- If in an MP game and a player leaves the name returned will be NIL.
+        if isMet and (leaderName ~= nil) then	
+          AddLeader("ICON_"..leaderName, playerID, kUniqueLeaders[leaderName]);
+        else
+          AddLeader("ICON_LEADER_DEFAULT", playerID);
         end
       end
     end
@@ -324,57 +309,70 @@ function UpdateLeaders()
 
   Controls.LeaderStack:CalculateSize();
   RealizeSize();
+
+  if localPlayer:IsTurnActive() then
+    OnLocalTurnBegin();
+  end
 end
 
 -- ===========================================================================
 --	Updates size and location of BG and Scroll controls
+--	additionalElementsWidth, from MODS that add additional content.
 -- ===========================================================================
--- Optional size argument being passed in through an event.
-local BG_TILE_PADDING: number	= 0;
-function RealizeSize( barWidth:number )
-  local launchBarWidth = MIN_LEFT_HOOKS;
-  local partialScreenBarWidth = RIGHT_HOOKS_INITIAL;
-
-  -- TODO this should somehow be done relative to the other controls
-  m_PartialScreenHookBar	= ContextPtr:LookUpControl( "/InGame/PartialScreenHooks/ButtonStack" );
-  m_LaunchBar				= ContextPtr:LookUpControl( "/InGame/LaunchBar/ButtonStack" );
-
-  if (m_LaunchBar ~= nil) then
-    launchBarWidth = math.max(m_LaunchBar:GetSizeX() + WORLD_TRACKER_OFFSET + BG_TILE_PADDING, MIN_LEFT_HOOKS);
+function RealizeSize(additionalElementsWidth:number)
+  if additionalElementsWidth == nil then
+    additionalElementsWidth = 0;
   end
 
-  if (m_PartialScreenHookBar~=nil) then
-    partialScreenBarWidth = m_PartialScreenHookBar:GetSizeX() + BG_TILE_PADDING;
+  local MIN_LEFT_HOOKS		:number	= 260;
+  local RIGHT_HOOKS_INITIAL	:number	= 163;
+  local WORLD_TRACKER_OFFSET	:number	= 40;
+  local launchBarWidth		:number = MIN_LEFT_HOOKS;
+  local partialScreenBarWidth :number = RIGHT_HOOKS_INITIAL;
+
+  -- Obtain controls
+  local uiPartialScreenHookBar :table	= ContextPtr:LookUpControl( "/InGame/PartialScreenHooks/ButtonStack" );
+  local uiLaunchBar			 :table	= ContextPtr:LookUpControl( "/InGame/LaunchBar/ButtonStack" );
+
+  if (uiLaunchBar ~= nil) then
+    launchBarWidth = math.max(uiLaunchBar:GetSizeX() + WORLD_TRACKER_OFFSET, MIN_LEFT_HOOKS);
+  end
+  if (uiPartialScreenHookBar~=nil) then
+    partialScreenBarWidth = uiPartialScreenHookBar:GetSizeX();
   end
 
   local screenWidth:number, screenHeight:number = UIManager:GetScreenSizeVal(); -- Cache screen dimensions
 
-  local maxSize:number = screenWidth - launchBarWidth - partialScreenBarWidth;
-  m_maxNumLeaders = math.floor(maxSize / (SIZE_LEADER + PADDING_LEADER));
+  local SIZE_LEADER		:number = 51;	-- Size of leader icon and border.
+  local PADDING_LEADER	:number = 3;	-- Padding used in stack control.
+  local maxSize			:number = screenWidth - launchBarWidth - partialScreenBarWidth;
+  local size				:number = maxSize;
 
-  local size:number = maxSize;
-  if(m_leadersMet == 0) then
-    Controls.LeaderBG:SetHide(true);
-  else
-    Controls.LeaderBG:SetHide(false);
-    size = m_maxNumLeaders * (SIZE_LEADER + PADDING_LEADER) - 8;
-    local bgSize;
-    if (m_leadersMet > m_maxNumLeaders) then
-      bgSize = m_maxNumLeaders * (SIZE_LEADER + PADDING_LEADER)+ BG_PADDING_EDGE;
+  g_maxNumLeaders = math.floor(maxSize / (SIZE_LEADER + PADDING_LEADER));
+
+  Controls.LeaderBG:SetHide( m_leadersMet==0 )
+  if m_leadersMet > 0 then
+    -- Compute size of the background shadow
+    local BG_PADDING_EDGE	:number = 50;		-- Account for the (tons of) alpha on edges of shadow graphic.
+    local MINIMUM_BG_SIZE	:number = 100;
+    local bgSize			:number = 0;
+    if (m_leadersMet > g_maxNumLeaders) then
+      bgSize = g_maxNumLeaders * (SIZE_LEADER + PADDING_LEADER) + additionalElementsWidth + BG_PADDING_EDGE;
     else
-      bgSize = m_leadersMet * (SIZE_LEADER + PADDING_LEADER)+ BG_PADDING_EDGE;
+      bgSize = m_leadersMet * (SIZE_LEADER + PADDING_LEADER) + additionalElementsWidth + BG_PADDING_EDGE;
     end
-    Controls.LeaderBG:SetSizeX(math.max(bgSize, MINIMUM_BG_SIZE));
-    Controls.LeaderBGClip:SetSizeX(math.max(bgSize, MINIMUM_BG_SIZE));
-    Controls.RibbonContainer:SetSizeX(math.max(bgSize, MINIMUM_BG_SIZE));
+    bgSize = math.max(bgSize, MINIMUM_BG_SIZE);
+    Controls.LeaderBG:SetSizeX( bgSize );
+    Controls.RibbonContainer:SetSizeX( bgSize );
+
+    -- Compute actual size of the container
+    local PADDING_EDGE		:number = 8;		-- Ensure scroll bar is wide enough
+    size = g_maxNumLeaders * (SIZE_LEADER + PADDING_LEADER) + PADDING_EDGE + additionalElementsWidth;
   end
+  Controls.ScrollContainer:SetSizeX(size);
   Controls.LeaderScroll:SetSizeX(size);
-  Controls.RibbonContainer:ReprocessAnchoring();
   Controls.RibbonContainer:SetOffsetX(partialScreenBarWidth);
-  Controls.LeaderBGClip:CalculateSize();
-  Controls.LeaderBGClip:ReprocessAnchoring();
   Controls.LeaderScroll:CalculateSize();
-  Controls.LeaderScroll:ReprocessAnchoring();
   RealizeScroll();
 end
 
@@ -382,19 +380,18 @@ end
 --	Updates visibility of previous and next buttons
 -- ===========================================================================
 function RealizeScroll()
-  Controls.NextButtonContainer:SetHide(not CanScroll(-1));
-  Controls.PreviousButtonContainer:SetHide(not CanScroll(1));
+  Controls.NextButtonContainer:SetHide(not CanScrollLeft());
+  Controls.PreviousButtonContainer:SetHide(not CanScrollRight());
 end
 
 -- ===========================================================================
---	Determines visibility of previous and next buttons
+function CanScrollLeft()
+  return m_scrollIndex > 0;
+end
+
 -- ===========================================================================
-function CanScroll(direction : number)
-  if(direction < 0) then
-    return m_scrollIndex > 0;
-  else
-    return m_leadersMet - m_scrollIndex > m_maxNumLeaders;
-  end
+function CanScrollRight()
+  return m_leadersMet - m_scrollIndex > g_maxNumLeaders;
 end
 
 -- ===========================================================================
@@ -405,7 +402,9 @@ function Scroll(direction : number)
   m_scrollPercent = 0;
   m_scrollIndex = m_scrollIndex + direction;
 
-  if(m_scrollIndex < 0) then m_scrollIndex = 0; end
+  if(m_scrollIndex < 0) then
+    m_scrollIndex = 0;
+  end
 
   if(not m_isScrolling) then
     ContextPtr:SetUpdate( UpdateScroll );
@@ -421,7 +420,7 @@ end
 function UpdateScroll(deltaTime : number)
 
   local start:number = Controls.LeaderScroll:GetScrollValue();
-  local destination:number = 1.0 - (m_scrollIndex / (m_leadersMet - m_maxNumLeaders));
+  local destination:number = 1.0 - (m_scrollIndex / (m_leadersMet - g_maxNumLeaders));
 
   m_scrollPercent = m_scrollPercent + (SCROLL_SPEED * deltaTime);
   if(m_scrollPercent >= 1) then
@@ -451,6 +450,7 @@ function OnUpdateUI(type:number, tag:string, iData1:number, iData2:number, strDa
 end
 
 -- ===========================================================================
+--	EVENT
 --	Diplomacy Callback
 -- ===========================================================================
 function OnDiplomacyMeet(player1ID:number, player2ID:number)
@@ -494,11 +494,10 @@ function OnDiplomacySessionClosed(sessionID:number)
       UpdateLeaders();
     end
   end
-
 end
 
 -- ===========================================================================
---	Game Engine Event
+--	EVENT
 -- ===========================================================================
 function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
   if eNewMode == InterfaceModeTypes.VIEW_MODAL_LENS then
@@ -510,38 +509,60 @@ function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
 end
 
 -- ===========================================================================
---	LocalPlayerTurnBegin / RemotePlayerTurnBegin Callback
+--	EVENT
 -- ===========================================================================
-function OnTurnBegin(playerID:number)
-  local leader:table = m_uiLeadersByID[playerID];
-  if(leader ~= nil) then
-    leader.LeaderContainer:SetToBeginning();
-    leader.LeaderContainer:Play();
+function OnTurnBegin( playerID:number )
+  local uiLeader	:table = m_uiLeadersByID[playerID];
+  if(uiLeader ~= nil) then
+    uiLeader.LeaderContainer:SetToBeginning();
+    uiLeader.LeaderContainer:Play();
   end
 end
 
-function OnTurnEnd(playerID:number)
-  if(playerID ~= -1) then
-    local leader = m_uiLeadersByID[playerID];
-    if(leader ~= nil) then
-      leader.LeaderContainer:Reverse();
-    end
-    UpdateLeaders();
+-- ===========================================================================
+--	EVENT
+-- ===========================================================================
+function OnTurnEnd( playerID:number )
+  local uiLeader :table = m_uiLeadersByID[playerID];
+  if(uiLeader ~= nil) then
+    uiLeader.LeaderContainer:Reverse();
   end
+  UpdateLeaders();
+end
+
+-- ===========================================================================
+--	EVENT
+-- ===========================================================================
+function OnLocalTurnBegin()
+  local playerID	:number = Game.GetLocalPlayer();
+  if playerID == -1 then return; end;
+  OnTurnBegin( playerID );
+end
+
+-- ===========================================================================
+--	EVENT
+-- ===========================================================================
+function OnLocalTurnEnd()
+  local playerID	:number = Game.GetLocalPlayer();
+  if playerID == -1 then return; end;
+  OnTurnEnd( playerID );
+end
+
+
+-- ===========================================================================
+--	LUAEvent
+-- ===========================================================================
+function OnLaunchBarResized( width:number )
+  RealizeSize();
 end
 
 -- ===========================================================================
 --	UI Callback
 -- ===========================================================================
 function OnScrollLeft()
-  if CanScroll(-1) then Scroll(-1); end
-end
-
--- ===========================================================================
---	UI Callback
--- ===========================================================================
-function OnScrollRight()
-  if CanScroll(1) then Scroll(1); end
+  if CanScrollLeft() then
+    Scroll(-1);
+  end
 end
 
 -- ===========================================================================
@@ -555,20 +576,15 @@ end
 
 
 -- ===========================================================================
---	Debug Helper
+--	UI Callback
 -- ===========================================================================
-function DebugWorstCase()
-  -- Clear previous list items
-  ResetLeaders();
-
-  for i=1, 50 do
-    AddLeader("ICON_LEADER_DEFAULT", i);
+function OnScrollRight()
+  if CanScrollRight() then
+    Scroll(1);
   end
-
-  Controls.LeaderStack:CalculateSize();
-  RealizeSize();
 end
 
+-- ===========================================================================
 function OnChatReceived(fromPlayer:number, stayOnScreen:boolean)
   local instance:table= m_uiLeadersByID[fromPlayer];
   if instance == nil then return; end
@@ -591,12 +607,25 @@ function OnChatReceived(fromPlayer:number, stayOnScreen:boolean)
   instance.ChatIndicatorFade:Play();
 end
 
+-- ===========================================================================
 function OnChatPanelShown(fromPlayer:number, stayOnScreen:boolean)
   for _, chatIndicatorFade in ipairs(m_uiChatIconsVisible) do
     chatIndicatorFade:RegisterEndCallback(function() chatIndicatorFade:SetToBeginning(); end);
     chatIndicatorFade:Reverse();
   end
   chatIndicatorFade = {};
+end
+
+-- ===========================================================================
+function OnLoadGameViewStateDone()
+  if(GameConfiguration.IsAnyMultiplayer()) then
+    for leaderID, uiLeader in pairs(m_uiLeadersByID) do
+      if Players[leaderID]:IsTurnActive() then
+        uiLeader.LeaderContainer:SetToBeginning();
+        uiLeader.LeaderContainer:Play();
+      end
+    end
+  end
 end
 
 --ARISTOS: to manage mouse over leader icons to show relations
@@ -639,11 +668,9 @@ ContextPtr:SetInputHandler( OnInputHandler, true );
 --ARISTOS: End
 
 -- ===========================================================================
---	INIT
--- ===========================================================================
-function Initialize()
-  --DebugWorstCase();
-  UpdateLeaders();
+function LateInitialize()
+  Controls.NextButton:RegisterCallback( Mouse.eLClick, OnScrollLeft );
+  Controls.PreviousButton:RegisterCallback( Mouse.eLClick, OnScrollRight );
   Controls.LeaderScroll:SetScrollValue(1);
 
   Events.SystemUpdateUI.Add( OnUpdateUI );
@@ -655,22 +682,37 @@ function Initialize()
   Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );
   Events.RemotePlayerTurnBegin.Add( OnTurnBegin );
   Events.RemotePlayerTurnEnd.Add( OnTurnEnd );
-  Events.LocalPlayerTurnBegin.Add( function() OnTurnBegin(Game.GetLocalPlayer()); end );
-  Events.LocalPlayerTurnEnd.Add( function() OnTurnEnd(Game.GetLocalPlayer()); end );
+  Events.LocalPlayerTurnBegin.Add( OnLocalTurnBegin );
+	Events.LocalPlayerTurnEnd.Add( OnLocalTurnEnd );
   Events.MultiplayerPlayerConnected.Add(UpdateLeaders);
   Events.MultiplayerPostPlayerDisconnected.Add(UpdateLeaders);
   Events.LocalPlayerChanged.Add(UpdateLeaders);
   Events.PlayerInfoChanged.Add(UpdateLeaders);
   Events.PlayerDefeat.Add(UpdateLeaders);
   Events.PlayerRestored.Add(UpdateLeaders);
+  Events.LoadGameViewStateDone.Add( OnLoadGameViewStateDone );
 
   LuaEvents.ChatPanel_OnChatReceived.Add(OnChatReceived);
   LuaEvents.WorldTracker_OnChatShown.Add(OnChatPanelShown);
-  LuaEvents.LaunchBar_Resize.Add(RealizeSize);
-  LuaEvents.PartialScreenHooks_Resize.Add(RealizeSize);
+  LuaEvents.LaunchBar_Resize.Add(OnLaunchBarResized);
+  LuaEvents.PartialScreenHooks_Realize.Add(RealizeSize);
   LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
 
-  Controls.NextButton:RegisterCallback( Mouse.eLClick, OnScrollLeft );
-  Controls.PreviousButton:RegisterCallback( Mouse.eLClick, OnScrollRight );
+  if not BASE_LateInitialize then	-- Only update leaders if this is the last in the call chain.
+    UpdateLeaders();
+  end
+end
+
+-- ===========================================================================
+function OnInit(isReload:boolean)
+  LateInitialize();
+end
+
+-- ===========================================================================
+--	Main Initialize
+-- ===========================================================================
+function Initialize()
+  -- UI Events
+  ContextPtr:SetInitHandler(OnInit);
 end
 Initialize();

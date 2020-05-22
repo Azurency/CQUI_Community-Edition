@@ -2,17 +2,21 @@
 
 -- Builder lens
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
-VALUES                  (   'COLOR_RESOURCE_BUILDER_LENS',      '0.56',     '0.0',      '0.98',     '0.5');
+VALUES                  (   'COLOR_RESOURCE_BUILDER_LENS',      '1',        '0',        '1',        '0.5');
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
-VALUES                  (   'COLOR_HILL_BUILDER_LENS',          '0',        '0.75',     '0',        '0.5');
+VALUES                  (   'COLOR_DAMAGED_BUILDER_LENS',       '0.56',     '0.0',      '0.98',     '0.5');
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
-VALUES                  (   'COLOR_FEATURE_BUILDER_LENS',       '0.5',      '1',        '0.5',      '0.5');
+VALUES                  (   'COLOR_HILL_BUILDER_LENS',          '0',        '1',        '0',        '0.5');
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
-VALUES                  (   'COLOR_RECOMFEATURE_BUILDER_LENS',  '0.0',      '0.98',     '0.93',     '0.5');
+VALUES                  (   'COLOR_FEATURE_BUILDER_LENS',       '0',        '0',        '1',        '0.5');
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
-VALUES                  (   'COLOR_GENERIC_BUILDER_LENS',       '0.75',     '0.75',     '0.75',     '0.5');
+VALUES                  (   'COLOR_RECOMMENDED_BUILDER_LENS',   '0',        '1',        '1',        '0.5');
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
-VALUES                  (   'COLOR_NOTHING_BUILDER_LENS',       '1',        '0',        '0',        '0.5');
+VALUES                  (   'COLOR_GENERIC_BUILDER_LENS',       '0.67',     '0.67',     '0.67',     '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_NOTHING_BUILDER_LENS',       '0.33',     '0.33',     '0.33',     '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_OUTSIDE_BUILDER_LENS',       '0',        '0',        '0',        '0.5');
 
 -- Archeologist lens
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
@@ -46,7 +50,7 @@ VALUES                  (   'COLOR_BARBARIAN_BARB_LENS',        '1',        '0',
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
 VALUES                  (   'COLOR_LUXCONNECTED_RES_LENS',      '0.82',     '0.65',     '0.96',     '0.5');
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
-VALUES                  (   'COLOR_LUXNCONNECTED_RES_LENS',     '0.37',     '0',        '0.72',     '0.5');
+VALUES                  (   'COLOR_LUXNCONNECTED_RES_LENS',     '1',        '0',        '1',        '0.5');
 
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
 VALUES                  (   'COLOR_STRATCONNECTED_RES_LENS',    '0.96',     '0.54',     '0.54',     '0.5');
@@ -60,12 +64,12 @@ VALUES                  (   'COLOR_BONUSNCONNECTED_RES_LENS',   '0',        '1',
 
 -- Wonder Lens
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
-VALUES                  (   'COLOR_NATURAL_WONDER_LENS',        '0.56',     '0.0',      '0.98',     '0.5');
+VALUES                  (   'COLOR_NATURAL_WONDER_LENS',        '0',        '1',        '0',        '0.5');
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
-VALUES                  (   'COLOR_PLAYER_WONDER_LENS',         '0.98',     '0.0',      '0.81',     '0.5');
+VALUES                  (   'COLOR_PLAYER_WONDER_LENS',         '1',        '0',        '1',        '0.5');
 
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
-VALUES                  (   'COLOR_GHUT_SCOUT_LENS',            '0.56',     '0.0',      '0.98',     '0.5');
+VALUES                  (   'COLOR_GHUT_SCOUT_LENS',            '1',        '0',        '1',        '0.5');
 
 -- Naturalist Lens
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
@@ -78,18 +82,52 @@ VALUES                  (   'COLOR_FIXABLE_NATURALIST_LENS',    '0.56',     '0.0
 
 -- City Manager Colors
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
-VALUES                  (   'COLOR_CITY_PLOT_WORKING',          '0.9',      '0.0',      '0.05',     '0.5');
+VALUES                  (   'COLOR_CITY_PLOT_WORKING',          '1',        '0.5',      '0',        '0.2');
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
 VALUES                  (   'COLOR_CITY_PLOT_LOCKED',           '0',        '1',        '0',        '0.2');
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
-VALUES                  (   'COLOR_CITY_PLOT_CULTURE',          '0.56',     '0.0',      '0.98',     '0.5');
+VALUES                  (   'COLOR_AREA_LENS_NEUTRAL',          '0',        '0',        '0',        '0.0');
 
 -- Alternate Settler Colors
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
-VALUES                  (   'COLOR_ALT_SETTLER_RESOURCE',       '0.37',     '0',        '0.72',     '0.5');
+VALUES                  (   'COLOR_ALT_SETTLER_RESOURCE',       '1',        '0',        '1',        '0.5');
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
 VALUES                  (   'COLOR_ALT_SETTLER_UNUSABLE',       '1',        '0',        '0',        '0.5');
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
-VALUES                  (   'COLOR_ALT_SETTLER_OVERLAP',        '0.75',     '0.75',     '0.75',     '0.5');
+VALUES                  (   'COLOR_ALT_SETTLER_OVERLAP',        '0.5',      '0',        '0',        '0.5');
 INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
 VALUES                  (   'COLOR_ALT_SETTLER_REGULAR',        '0',        '0.75',     '0',        '0.5');
+
+-- Test Colors
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_MORELENSES_BLACK',           '0',        '0',        '0',        '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_MORELENSES_MAROON',          '0.5',      '0',        '0',        '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_MORELENSES_GREEN',           '0',        '0.5',      '0',        '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_MORELENSES_OLIVE',           '0.5',      '0.5',      '0',        '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_MORELENSES_NAVY',            '0',        '0',        '0.5',      '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_MORELENSES_PURPLE',          '0.5',      '0',        '0.5',      '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_MORELENSES_TEAL',            '0',        '0.5',      '0.5',      '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_MORELENSES_SILVER',          '0.75',     '0.75',     '0.75',     '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_MORELENSES_GREY',            '0.5',      '0.5',      '0.5',      '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_MORELENSES_RED',             '1',        '0',        '0',        '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_MORELENSES_LIME',            '0',        '1',        '0',        '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_MORELENSES_YELLOW',          '1',        '1',        '0',        '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_MORELENSES_BLUE',            '0',        '0',        '1',        '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_MORELENSES_MAGENTA',         '1',        '0',        '1',        '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_MORELENSES_AQUA',            '0',        '1',        '1',        '0.5');
+INSERT INTO Colors      (   Type,                               Red,        Green,      Blue,       Alpha)
+VALUES                  (   'COLOR_MORELENSES_WHITE',           '1',        '1',        '1',        '0.5');

@@ -199,6 +199,10 @@ end
 -- ===========================================================================
 function UpdateCivicsPanel(hideCivics:boolean)
 
+  local ePlayer:number = Game.GetLocalPlayer();
+  if ePlayer == -1 then return; end  -- Autoplayer
+
+
   if not HasCapability("CAPABILITY_CIVICS_CHOOSER") then
     hideCivics = true;
     Controls.CivicsCheck:SetHide(true);
@@ -219,7 +223,6 @@ function UpdateCivicsPanel(hideCivics:boolean)
   if iCivic == -1 then
     iCivic = m_lastCivicCompletedID;
   end
-  local ePlayer    :number = Game.GetLocalPlayer();
   local pPlayer    :table  = Players[ePlayer];
   local pPlayerCulture:table  = pPlayer:GetCulture();
   local kCivic    :table  = (iCivic ~= -1) and GameInfo.Civics[ iCivic ] or nil;
@@ -272,7 +275,9 @@ end
 
 -- ===========================================================================
 function UpdateUnreadChatMsgs()
-  if(m_unreadChatMsgs > 0) then
+  if(GameConfiguration.IsPlayByCloud()) then
+    Controls.ChatCheck:GetTextButton():SetText(Locale.Lookup("LOC_PLAY_BY_CLOUD_PANEL"));
+  elseif(m_unreadChatMsgs > 0) then
     Controls.ChatCheck:GetTextButton():SetText(Locale.Lookup("LOC_HIDE_CHAT_PANEL_UNREAD_MESSAGES", m_unreadChatMsgs));
   else
     Controls.ChatCheck:GetTextButton():SetText(Locale.Lookup("LOC_HIDE_CHAT_PANEL"));
@@ -339,7 +344,7 @@ function OnCityInitialized( playerID:number, cityID:number )
 end
 
 -- ===========================================================================
-function OnBuildingChanged( plotX:number, plotY:number, buildingIndex:number, playerID:number, iPercentComplete:number )
+function OnBuildingChanged( plotX:number, plotY:number, buildingIndex:number, playerID:number, cityID:number, iPercentComplete:number )
   if playerID == Game.GetLocalPlayer() then
     m_needsRefresh = true; -- Buildings can change culture/science yield which can effect "turns to complete" values
   end
@@ -360,8 +365,8 @@ end
 -- ===========================================================================
 function OnCivicChanged( ePlayer:number, eCivic:number )
   local localPlayer = Game.GetLocalPlayer();
-  ResetOverflowArrow( m_civicsInstance );
   if localPlayer ~= -1 and localPlayer == ePlayer then
+    ResetOverflowArrow( m_civicsInstance );
     local pPlayerCulture:table = Players[localPlayer]:GetCulture();
     m_currentCivicID = pPlayerCulture:GetProgressingCivic();
     m_lastCivicCompletedID = -1;
@@ -407,9 +412,8 @@ end
 --  but an item deeper in the tree that was just boosted by a player action.
 -- ===========================================================================
 function OnResearchChanged( ePlayer:number, eTech:number )
-  ResetOverflowArrow( m_researchInstance );
-
   if ShouldUpdateResearchPanel(ePlayer, eTech) then
+    ResetOverflowArrow( m_researchInstance );
     UpdateResearchPanel();
   end
 end
@@ -507,7 +511,7 @@ end
 
 -- ===========================================================================
 function Tutorial_ShowFullTracker()
-  Controls.ToggleAllButton:SetHide(true);
+  --Controls.ToggleAllButton:SetHide(true);
   Controls.ToggleDropdownButton:SetHide(true);
   UpdateCivicsPanel(false);
   UpdateResearchPanel(false);
@@ -516,8 +520,21 @@ end
 
 -- ===========================================================================
 function Tutorial_ShowTrackerOptions()
-  Controls.ToggleAllButton:SetHide(false);
+  --Controls.ToggleAllButton:SetHide(false);
   Controls.ToggleDropdownButton:SetHide(false);
+end
+
+-- ===========================================================================
+-- Handling chat panel expansion
+-- ===========================================================================
+function OnChatPanel_OpenExpandedPanels()
+  Controls.ChatPanel:SetSizeY(199);
+  RealizeStack();
+end
+
+function OnChatPanel_CloseExpandedPanels()
+  Controls.ChatPanel:SetSizeY(99);
+  RealizeStack();
 end
 
 -- ===========================================================================
@@ -613,9 +630,12 @@ function Initialize()
   LuaEvents.Tutorial_EndTutorialRestrictions.Add(    Tutorial_ShowTrackerOptions);
   LuaEvents.TutorialGoals_Showing.Add(        OnTutorialGoalsShowing );
   LuaEvents.TutorialGoals_Hiding.Add(          OnTutorialGoalsHiding );
+  LuaEvents.ChatPanel_OpenExpandedPanels.Add(      OnChatPanel_OpenExpandedPanels);
+  LuaEvents.ChatPanel_CloseExpandedPanels.Add(    OnChatPanel_CloseExpandedPanels);
 
     -- InitChatPanel
-  if(GameConfiguration.IsNetworkMultiplayer() and UI.HasFeature("Chat")) then
+  if(UI.HasFeature("Chat")
+    and (GameConfiguration.IsNetworkMultiplayer() or GameConfiguration.IsPlayByCloud()) ) then
     UpdateChatPanel(false);
   else
     UpdateChatPanel(true);

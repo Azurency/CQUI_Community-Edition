@@ -1,21 +1,21 @@
-include("civ6common")
+include( "Colors" );
+include("civ6common");
+
+-- ===========================================================================
+--  Local Constants
+-- ===========================================================================
 
 local BACKDROP_DARKER_OFFSET = -85
 local BACKDROP_DARKER_OPACITY = 238
 local BACKDROP_BRIGHTER_OFFSET = 90
 local BACKDROP_BRIGHTER_OPACITY = 250
 
-local Game = Game
-local Players = Players
-local Events = Events
-
-local ipairs = ipairs
-local pairs = pairs
-
-local L_Lookup = Locale.Lookup
+-- set to true for faster time for UI to load, but the trader time trade route to complete will be incorrect
+-- speeds it upto 40% speedup depending upon how many long, winding routes you have
+local USE_EUCLEDIAN_DISTANCE:boolean = false
 
 -- ===========================================================================
---  Local Constants
+--  Global Constants
 -- ===========================================================================
 
 SORT_BY_ID = {
@@ -102,9 +102,9 @@ function GetLastRouteForTrader( traderID:number )
 
   -- Make sure the entries are valid. Return nil if not
   if pTrader ~= nil and prevOriginComponentID.player ~= nil and prevOriginComponentID.player ~= -1 and
-      prevOriginComponentID.id ~= nil and prevOriginComponentID.id ~= -1 and
-      prevDestComponentID.player ~= nil and prevDestComponentID.player ~= -1 and
-      prevDestComponentID.id ~= nil and prevDestComponentID.id ~= -1 then
+  prevOriginComponentID.id ~= nil and prevOriginComponentID.id ~= -1 and
+  prevDestComponentID.player ~= nil and prevDestComponentID.player ~= -1 and
+  prevDestComponentID.id ~= nil and prevDestComponentID.id ~= -1 then
 
     local routeInfo = {
       OriginCityPlayer = prevOriginComponentID.player,
@@ -139,7 +139,7 @@ function AddRouteWithTurnsRemaining( routeInfo:table, routesTable:table)
     table.insert(routesTable, routeEntry);
     SaveRunningRoutesInfo();
   else
-    print_debug("AddRouteWithTurnsRemaining: Route already exists in table.");
+    --print("AddRouteWithTurnsRemaining: Route already exists in table.");
   end
 end
 
@@ -148,7 +148,7 @@ function UpdateRoutesWithTurnsRemaining( routesTable:table )
   for i=1, #routesTable do
     if routesTable[i].TurnsRemaining ~= nil then
       routesTable[i].TurnsRemaining = routesTable[i].TurnsRemaining - 1;
-      print_debug("Updated route " .. GetTradeRouteString(routesTable[i]) .. " with turns remaining " .. routesTable[i].TurnsRemaining)
+      --print("Updated route " .. GetTradeRouteString(routesTable[i]) .. " with turns remaining " .. routesTable[i].TurnsRemaining)
     end
   end
 
@@ -174,7 +174,7 @@ function CheckConsistencyWithMyRunningRoutes( routesTable:table )
     -- Is the route not present?
     if routeIndex == -1 then
       -- Add it to the list
-      print_debug(GetTradeRouteString(route) .. " was not present. Adding it to the table.");
+      --print(GetTradeRouteString(route) .. " was not present. Adding it to the table.");
       AddRouteWithTurnsRemaining(route, routesTable, true);
     end
   end
@@ -187,7 +187,7 @@ function CheckConsistencyWithMyRunningRoutes( routesTable:table )
 
     -- Is the route not present?
     if routeIndex == -1 then
-      print_debug("Route " .. GetTradeRouteString(routesTable[i]) .. " is no longer running. Removing it.");
+      --print("Route " .. GetTradeRouteString(routesTable[i]) .. " is no longer running. Removing it.");
       table.remove(routesTable, i)
     else
       i = i + 1
@@ -214,7 +214,7 @@ function LoadRunningRoutesInfo()
     loadstring(dataDump)();
     m_LocalPlayerRunningRoutes = localPlayerRunningRoutes;
   else
-    print_debug("No running route data was found, on load.")
+    --print("No running route data was found, on load.")
   end
 
   -- Check for consistency
@@ -234,7 +234,7 @@ local function TradeSupportTracker_OnUnitOperationStarted(ownerID:number, unitID
       for _, route in ipairs(outgoingRoutes) do
         if route.TraderUnitID == unitID then
           -- Add it to the local players runnning routes
-          print_debug("Route just started. Adding Route: " .. GetTradeRouteString(route));
+          --print("Route just started. Adding Route: " .. GetTradeRouteString(route));
           AddRouteWithTurnsRemaining( route, m_LocalPlayerRunningRoutes );
           return
         end
@@ -258,7 +258,7 @@ local function TradeSupportTracker_OnUnitOperationsCleared(ownerID:number, unitI
         for _, route in ipairs(m_LocalPlayerRunningRoutes) do
           if route.TraderUnitID == unitID then
             if m_TradersAutomatedSettings[unitID] == nil then
-              print_debug("Couldn't find trader automated info. Creating one.")
+              --print("Couldn't find trader automated info. Creating one.")
               m_TradersAutomatedSettings[unitID] = { IsAutomated=false };
             end
 
@@ -267,7 +267,7 @@ local function TradeSupportTracker_OnUnitOperationsCleared(ownerID:number, unitI
             -- m_TradersAutomatedSettings[unitID].LastRouteInfo = route;
             -- SaveTraderAutomatedInfo();
 
-            print_debug("Removing route " .. GetTradeRouteString(route) .. " from currently running, since it completed.");
+            --print("Removing route " .. GetTradeRouteString(route) .. " from currently running, since it completed.");
 
             -- Remove route from currrently running routes
             RemoveRouteFromTable(route, m_LocalPlayerRunningRoutes, false);
@@ -300,17 +300,17 @@ function AutomateTrader(traderID:number, isAutomated:boolean, sortSettings:table
   m_TradersAutomatedSettings[traderID].IsAutomated = isAutomated
 
   if sortSettings ~= nil and table.count(sortSettings) > 0 then
-    print_debug("Automate trader " .. traderID .. " with top route.")
+    --print("Automate trader " .. traderID .. " with top route.")
     m_TradersAutomatedSettings[traderID].SortSettings = sortSettings
   else
-    print_debug("Automate trader " .. traderID)
+    --print("Automate trader " .. traderID)
   end
 
   SaveTraderAutomatedInfo();
 end
 
 function CancelAutomatedTrader(traderID:number)
-  print_debug("Cancelling automation for trader " .. traderID);
+  --print("Cancelling automation for trader " .. traderID);
 
   LoadTraderAutomatedInfo();
 
@@ -377,14 +377,14 @@ function RenewTradeRoutes()
         local destinationCityID:number;
 
         if m_TradersAutomatedSettings[unitID].SortSettings ~= nil and table.count(m_TradersAutomatedSettings[unitID].SortSettings) > 0 then
-          print_debug("Picking from top sort entry");
+          --print("Picking from top sort entry");
 
           -- Get destination based on the top entry
           local topRoute = FindTopRoute(originPlayerID, originCityID, m_TradersAutomatedSettings[unitID].SortSettings)
           destinationPlayerID = topRoute.DestinationCityPlayer
           destinationCityID = topRoute.DestinationCityID
         else
-          print_debug("Picking last route");
+          --print("Picking last route");
 
           local lastRouteInfo = GetLastRouteForTrader(unitID)
           if lastRouteInfo ~= nil then
@@ -404,15 +404,15 @@ function RenewTradeRoutes()
           operationParams[UnitOperationTypes.PARAM_Y1] = originCity:GetY();
 
           if (UnitManager.CanStartOperation(pUnit, UnitOperationTypes.MAKE_TRADE_ROUTE, nil, operationParams)) then
-            print_debug("Trader " .. unitID .. " renewed its trade route to " .. L_Lookup(destinationCity:GetName()));
+            --print("Trader " .. unitID .. " renewed its trade route to " .. Locale.Lookup(destinationCity:GetName()));
             -- TODO: Send notification for renewing routes
             UnitManager.RequestOperation(pUnit, UnitOperationTypes.MAKE_TRADE_ROUTE, operationParams);
             renewedRoute = true
           else
-            print("ERROR : Could not start a route");
+            --print("Could not start a route");
           end
         else
-          print("ERROR : Could not renew a route. Missing route info, or the destination is no longer a valid trade route destination.");
+          --print("Could not renew a route. Missing route info, or the destination is no longer a valid trade route destination.");
         end
       end
     end
@@ -454,7 +454,7 @@ function LoadTraderAutomatedInfo()
     loadstring(dataDump)();
     m_TradersAutomatedSettings = traderAutomatedSettings;
   else
-    print("ERROR : No running route data was found, on load.")
+    --print("No running route data was found, on load.")
   end
 end
 
@@ -473,10 +473,10 @@ end
 -- ===========================================================================
 function CacheRoutesInfo(tRoutes)
   if m_Cache.TurnBuilt ~= nil and m_Cache.TurnBuilt >= Game.GetCurrentGameTurn() then
-    print_debug("OPT: Cache table already upto date")
+    --print("OPT: Cache table already upto date")
     return false
   else
-    print_debug("Caching routes")
+    --print("Caching routes")
     -- for i, routeInfo in ipairs(tRoutes) do
     for i=1, #tRoutes do
       CacheRoute(tRoutes[i])
@@ -499,9 +499,13 @@ function CacheRoute(routeInfo)
   m_Cache[key].Yields = {}
   local netOriginYield:number = 0
   local netDestinationYield:number = 0
+
+  local originRouteYields = GetYieldForOriginCity(nil, routeInfo, false)
+  local destinationRouteYields = GetYieldForDestinationCity(nil, routeInfo, false)
+
   for yieldIndex = START_INDEX, END_INDEX do
-    local originYield = GetYieldForOriginCity(yieldIndex, routeInfo)
-    local destinationYield = GetYieldForDestinationCity(yieldIndex, routeInfo)
+    local originYield = originRouteYields[yieldIndex + 1]
+    local destinationYield = destinationRouteYields[yieldIndex + 1]
 
     m_Cache[key].Yields[yieldIndex] = {
       Origin = originYield,
@@ -575,14 +579,14 @@ end
 function CacheEmpty()
   -- If cache has entry TurnBuilt then the cache is built
   if m_Cache.TurnBuilt ~= nil then
-    print_debug("CACHE Emptying")
+    --print("CACHE Emptying")
     m_Cache = {}
   end
 end
 
 function GetRouteKey(routeInfo)
   return routeInfo.OriginCityPlayer .. "_" .. routeInfo.OriginCityID .. "_" ..
-        routeInfo.DestinationCityPlayer .. "_" .. routeInfo.DestinationCityID;
+  routeInfo.DestinationCityPlayer .. "_" .. routeInfo.DestinationCityID;
 end
 
 function CacheKeyToRouteInfo(cacheKey)
@@ -609,7 +613,7 @@ function Cached_GetYieldForOriginCity(yieldIndex:number, routeCacheKey:string)
     -- print("CACHE HIT for " .. routeCacheKey)
     return cacheEntry.Yields[yieldIndex].Origin
   else
-    print_debug("CACHE MISS for " .. routeCacheKey)
+    --print("CACHE MISS for " .. routeCacheKey)
     CacheRoute(CacheKeyToRouteInfo(routeCacheKey));
     return m_Cache[routeCacheKey].Yields[yieldIndex].Origin
   end
@@ -621,7 +625,7 @@ function Cached_GetYieldForDestinationCity(yieldIndex:number, routeCacheKey:stri
     -- print("CACHE HIT for " .. routeCacheKey)
     return cacheEntry.Yields[yieldIndex].Destination
   else
-    print_debug("CACHE MISS for " .. routeCacheKey)
+    --print("CACHE MISS for " .. routeCacheKey)
     CacheRoute(CacheKeyToRouteInfo(routeCacheKey));
     return m_Cache[routeCacheKey].Yields[yieldIndex].Destination
   end
@@ -632,7 +636,7 @@ function Cached_GetTurnsToComplete(routeCacheKey:string)
     -- print("CACHE HIT for " .. routeCacheKey)
     return m_Cache[routeCacheKey].TurnsToCompleteRoute
   else
-    print_debug("CACHE MISS for " .. routeCacheKey)
+    --print("CACHE MISS for " .. routeCacheKey)
     CacheRoute(CacheKeyToRouteInfo(routeCacheKey));
     return m_Cache[routeCacheKey].TurnsToCompleteRoute
   end
@@ -717,7 +721,7 @@ function ScoreComp( scoreInfo1, scoreInfo2, sortSettings )
   local score1 = scoreInfo1.score
   local score2 = scoreInfo2.score
   if #score1 ~= #score2 then
-    print("ERROR : scores unequal in length")
+    --print("ERROR = scores unequal in length")
     return false
   end
 
@@ -824,24 +828,24 @@ function GetTradeRouteString( routeInfo:table )
   if originPlayer ~= nil then
     local originCity:table = originPlayer:GetCities():FindID(routeInfo.OriginCityID);
     if originCity ~= nil then
-      originCityName = L_Lookup(originCity:GetName());
+      originCityName = Locale.Lookup(originCity:GetName());
     else
-      print("Error : CITY", routeInfo.OriginCityID, "NOT FOUND")
+      --print("CITY", routeInfo.OriginCityID, "NOT FOUND")
     end
   else
-    print("Error : PLAYER", routeInfo.OriginCityPlayer, "NOT FOUND")
+    --print("PLAYER", routeInfo.OriginCityPlayer, "NOT FOUND")
   end
 
   local destinationPlayer:table = Players[routeInfo.DestinationCityPlayer];
   if destinationPlayer ~= nil then
     local destinationCity:table = destinationPlayer:GetCities():FindID(routeInfo.DestinationCityID);
     if destinationCity ~= nil then
-      destinationCityName = L_Lookup(destinationCity:GetName());
+      destinationCityName = Locale.Lookup(destinationCity:GetName());
     else
-      print("Error : CITY", routeInfo.DestinationCityID, "NOT FOUND")
+      --print("CITY", routeInfo.DestinationCityID, "NOT FOUND")
     end
   else
-    print("Error : PLAYER", routeInfo.DestinationCityPlayer, "NOT FOUND")
+    --print("PLAYER", routeInfo.DestinationCityPlayer, "NOT FOUND")
   end
 
   return originCityName .. "-" .. destinationCityName;
@@ -883,33 +887,36 @@ end
 
 -- Returns length of trade path, number of trips to destination, turns to complete route
 function GetAdvancedRouteInfo(routeInfo)
+  local iSpeedCostMultiplier = GameInfo.GameSpeeds[1].CostMultiplier;
   local eSpeed = GameConfiguration.GetGameSpeedType();
-
   if GameInfo.GameSpeeds[eSpeed] ~= nil then
-    local iSpeedCostMultiplier = GameInfo.GameSpeeds[eSpeed].CostMultiplier;
-    local tradeManager = Game.GetTradeManager();
-    local pathPlots = tradeManager:GetTradeRoutePath(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID);
-    local tradePathLength:number = table.count(pathPlots) - 1;
-    local multiplierConstant:number = 0.1;
-
-    local tripsToDestination = 1 + math.floor(iSpeedCostMultiplier/tradePathLength * multiplierConstant);
-
-    --print("Error: Playing on an unrecognized speed. Defaulting to standard for route turns calculation");
-    local turnsToCompleteRoute = (tradePathLength * 2 * tripsToDestination);
-    return tradePathLength, tripsToDestination, turnsToCompleteRoute;
+    iSpeedCostMultiplier = GameInfo.GameSpeeds[eSpeed].CostMultiplier;
   else
-    print_debug("Speed type index " .. eSpeed);
-    print("Error: Could not find game speed type. Defaulting to first entry in table");
-    local iSpeedCostMultiplier =  GameInfo.GameSpeeds[1].CostMultiplier;
+    --print("Speed type index " .. eSpeed);
+    --print("Error: Could not find game speed type. Defaulting to first entry in table");
+  end
+
+  local tradePathLength:number = 0;
+  if USE_EUCLEDIAN_DISTANCE then
+    local pOriginPlayer = Players[routeInfo.OriginCityPlayer]
+    local pOriginCity = pOriginPlayer:GetCities():FindID(routeInfo.OriginCityID)
+    local pDestinationPlayer = Players[routeInfo.DestinationCityPlayer]
+    local pDestinationCity = pDestinationPlayer:GetCities():FindID(routeInfo.DestinationCityID)
+
+    -- Estimate path to city using Euclidean distance
+    tradePathLength = Map.GetPlotDistance(pOriginCity:GetX(), pOriginCity:GetY(), pDestinationCity:GetX(), pDestinationCity:GetY());
+  else
+    -- Get exact path the trader will take
     local tradeManager = Game.GetTradeManager();
     local pathPlots = tradeManager:GetTradeRoutePath(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID);
-    local tradePathLength:number = table.count(pathPlots) - 1;
-    local multiplierConstant:number = 0.1;
-
-    local tripsToDestination = 1 + math.floor(iSpeedCostMultiplier/tradePathLength * multiplierConstant);
-    local turnsToCompleteRoute = (tradePathLength * 2 * tripsToDestination);
-    return tradePathLength, tripsToDestination, turnsToCompleteRoute;
+    tradePathLength = table.count(pathPlots) - 1;
   end
+
+  local multiplierConstant:number = 0.1;
+  local tripsToDestination = 1 + math.floor(iSpeedCostMultiplier/tradePathLength * multiplierConstant);
+  local turnsToCompleteRoute = (tradePathLength * 2 * tripsToDestination);
+
+  return tradePathLength, tripsToDestination, turnsToCompleteRoute;
 end
 
 -- ---------------------------------------------------------------------------
@@ -920,57 +927,88 @@ function GetOriginCityName( routeInfo:table )
   -- TODO - Maybe implement cache for this?
   local pPlayer = Players[routeInfo.OriginCityPlayer]
   local pCity = pPlayer:GetCities():FindID(routeInfo.OriginCityID)
-  return L_Lookup(pCity:GetName()) -- How does lua compare localized text?
+  return Locale.Lookup(pCity:GetName()) -- How does lua compare localized text?
 end
 
 function GetDestinationCityName( routeInfo:table )
   -- TODO - Maybe implement cache for this?
   local pPlayer = Players[routeInfo.DestinationCityPlayer]
   local pCity = pPlayer:GetCities():FindID(routeInfo.DestinationCityID)
-  return L_Lookup(pCity:GetName()) -- How does lua compare localized text?
+  return Locale.Lookup(pCity:GetName()) -- How does lua compare localized text?
 end
 
 -- Returns yield for the origin city
-function GetYieldForOriginCity( yieldIndex:number, routeInfo:table, checkCache)
+function GetYieldForOriginCity( yieldIndex:number, routeInfo:table, checkCache:boolean )
   if checkCache then
     local key:string = GetRouteKey(routeInfo)
     return Cached_GetYieldForOriginCity(yieldIndex, key)
   else
     local tradeManager = Game.GetTradeManager();
 
-    -- From route
-    local yieldValue = tradeManager:CalculateOriginYieldFromPotentialRoute(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID, yieldIndex);
+    -- Want all the yields in a table
+    if yieldIndex == nil then
+      local routeYields = tradeManager:CalculateOriginYieldsFromPotentialRoute(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID);
+      local pathYields = tradeManager:CalculateOriginYieldsFromPath(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID);
+      local modifierYields = tradeManager:CalculateOriginYieldsFromModifiers(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID);
 
-    -- From path only if yield is gold. Trading posts add only gold.
-    if yieldIndex == GameInfo.Yields["YIELD_GOLD"].Index then
-      yieldValue = yieldValue + tradeManager:CalculateOriginYieldFromPath(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID, yieldIndex);
+      -- Add the yields together and return the result
+      local i;
+      local yieldCount = #routeYields;
+
+      for i=1, yieldCount, 1 do
+        routeYields[i] = routeYields[i] + pathYields[i] + modifierYields[i];
+      end
+      return routeYields
+    else
+      -- From route
+      local yieldValue = tradeManager:CalculateOriginYieldFromPotentialRoute(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID, yieldIndex);
+
+      -- From path only if yield is gold. Trading posts add only gold.
+      if yieldIndex == GameInfo.Yields["YIELD_GOLD"].Index then
+        yieldValue = yieldValue + tradeManager:CalculateOriginYieldFromPath(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID, yieldIndex);
+      end
+
+      -- From modifiers
+      local resourceID = -1;
+      yieldValue = yieldValue + tradeManager:CalculateOriginYieldFromModifiers(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID, yieldIndex, resourceID);
+
+      return yieldValue;
     end
-
-    -- From modifiers
-    local resourceID = -1;
-    yieldValue = yieldValue + tradeManager:CalculateOriginYieldFromModifiers(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID, yieldIndex, resourceID);
-
-    return yieldValue;
   end
 end
 
 -- Returns yield for the destination city
-function GetYieldForDestinationCity( yieldIndex:number, routeInfo:table, checkCache )
+function GetYieldForDestinationCity( yieldIndex:number, routeInfo:table, checkCache:boolean )
   if checkCache then
     local key:string = GetRouteKey(routeInfo)
     return Cached_GetYieldForDestinationCity(yieldIndex, key)
   else
     local tradeManager = Game.GetTradeManager();
 
-    -- From route
-    local yieldValue = tradeManager:CalculateDestinationYieldFromPotentialRoute(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID, yieldIndex);
-    -- From path
-    yieldValue = yieldValue + tradeManager:CalculateDestinationYieldFromPath(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID, yieldIndex);
-    -- From modifiers
-    local resourceID = -1;
-    yieldValue = yieldValue + tradeManager:CalculateDestinationYieldFromModifiers(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID, yieldIndex, resourceID);
+    if yieldIndex == nil then
+      local routeYields = tradeManager:CalculateDestinationYieldsFromPotentialRoute(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID);
+      local pathYields = tradeManager:CalculateDestinationYieldsFromPath(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID);
+      local modifierYields = tradeManager:CalculateDestinationYieldsFromModifiers(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID);
 
-    return yieldValue;
+      -- Add the yields together and return the result
+      local i;
+      local yieldCount = #routeYields;
+
+      for i=1, yieldCount, 1 do
+        routeYields[i] = routeYields[i] + pathYields[i] + modifierYields[i];
+      end
+      return routeYields
+    else
+      -- From route
+      local yieldValue = tradeManager:CalculateDestinationYieldFromPotentialRoute(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID, yieldIndex);
+      -- From path
+      yieldValue = yieldValue + tradeManager:CalculateDestinationYieldFromPath(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID, yieldIndex);
+      -- From modifiers
+      local resourceID = -1;
+      yieldValue = yieldValue + tradeManager:CalculateDestinationYieldFromModifiers(routeInfo.OriginCityPlayer, routeInfo.OriginCityID, routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID, yieldIndex, resourceID);
+
+      return yieldValue;
+    end
   end
 end
 
@@ -981,7 +1019,7 @@ function GetNetYieldForOriginCity( routeInfo, checkCache )
       -- print("CACHE HIT for " .. GetTradeRouteString(routeInfo))
       return m_Cache[key].NetOriginYield
     else
-      print_debug("CACHE MISS for " .. GetTradeRouteString(routeInfo))
+      --print("CACHE MISS for " .. GetTradeRouteString(routeInfo))
       CacheRoute(routeInfo);
       return m_Cache[key].NetOriginYield
     end
@@ -1002,7 +1040,7 @@ function GetNetYieldForDestinationCity( routeInfo, checkCache )
       -- print("CACHE HIT for " .. GetTradeRouteString(routeInfo))
       return m_Cache[key].NetDestinationYield
     else
-      print_debug("CACHE MISS for " .. GetTradeRouteString(routeInfo))
+      --print("CACHE MISS for " .. GetTradeRouteString(routeInfo))
       CacheRoute(routeInfo);
       return m_Cache[key].NetDestinationYield
     end
@@ -1023,7 +1061,7 @@ function GetTurnsToComplete(routeInfo, checkCache)
       -- print("CACHE HIT for " .. GetTradeRouteString(routeInfo))
       return m_Cache[key].TurnsToCompleteRoute
     else
-      print_debug("CACHE MISS for " .. GetTradeRouteString(routeInfo))
+      --print("CACHE MISS for " .. GetTradeRouteString(routeInfo))
       CacheRoute(routeInfo);
       return m_Cache[key].TurnsToCompleteRoute
     end
@@ -1040,7 +1078,7 @@ function GetRouteInfo(routeInfo, checkCache)
       -- print("CACHE HIT for " .. GetTradeRouteString(routeInfo))
       return m_Cache[key].TradePathLength, m_Cache[key].TripsToDestination, m_Cache[key].TurnsToCompleteRoute
     else
-      print_debug("CACHE MISS for " .. GetTradeRouteString(routeInfo))
+      --print("CACHE MISS for " .. GetTradeRouteString(routeInfo))
       CacheRoute(routeInfo)
       return m_Cache[key].TradePathLength, m_Cache[key].TripsToDestination, m_Cache[key].TurnsToCompleteRoute
     end
@@ -1056,7 +1094,7 @@ function GetRouteHasTradingPost(routeInfo, checkCache)
       -- print("CACHE HIT for " .. GetTradeRouteString(routeInfo))
       return m_Cache[key].HasTradingPost
     else
-      print_debug("CACHE MISS for " .. GetTradeRouteString(routeInfo))
+      --print("CACHE MISS for " .. GetTradeRouteString(routeInfo))
       CacheRoute(routeInfo)
       return m_Cache[key].HasTradingPost
     end
@@ -1074,7 +1112,7 @@ function GetHasActiveRoute(playerID, checkCache)
       -- print("CACHE HIT for player " .. playerID)
       return m_Cache.Players[playerID].HasActiveRoute
     else
-      print_debug("CACHE MISS for player " .. playerID)
+      --print("CACHE MISS for player " .. playerID)
       CachePlayer(playerID)
       return m_Cache.Players[playerID].HasActiveRoute
     end
@@ -1082,7 +1120,7 @@ function GetHasActiveRoute(playerID, checkCache)
     local pPlayer:table = Players[playerID];
     local playerCities:table = pPlayer:GetCities();
     for _, city in playerCities:Members() do
-      if city:GetTrade():HasActiveTradingPost(Game.GetLocalPlayer()) then
+      if city:GetTrade():HasTradeRouteFrom(localPlayer) then
         return true
       end
     end
@@ -1096,7 +1134,7 @@ function GetVisibilityIndex(playerID, checkCache)
       -- print("CACHE HIT for player " .. playerID)
       return m_Cache.Players[playerID].VisibilityIndex
     else
-      print_debug("CACHE MISS for player " .. playerID)
+      --print("CACHE MISS for player " .. playerID)
       CachePlayer(playerID)
       return m_Cache.Players[playerID].VisibilityIndex
     end
@@ -1111,24 +1149,26 @@ function GetPlayerIconInfo(playerID, checkCache)
       -- print("CACHE HIT for player " .. playerID)
       return unpack(m_Cache.Players[playerID].Icon)
     else
-      print_debug("CACHE MISS for player " .. playerID)
+      --print("CACHE MISS for player " .. playerID)
       CachePlayer(playerID)
       return unpack(m_Cache.Players[playerID].Icon)
     end
   else
     local pPlayer = Players[playerID];
     local playerConfig:table = PlayerConfigurations[playerID];
-    local playerInfluence:table = pPlayer:GetInfluence();
-    local playerIconString:string;
     if playerConfig ~= nil then
-      if not playerInfluence:CanReceiveInfluence() then
+      local civType:string = playerConfig:GetCivilizationTypeName();
+      local playerIconString:string = "ICON_" .. civType
+
+      --[[
+      if pPlayer:IsMajor() then
         -- Civilizations
         playerIconString = "ICON_" .. playerConfig:GetCivilizationTypeName();
       else
         -- City States
         local leader:string = playerConfig:GetLeaderTypeName();
-        local leaderInfo:table  = GameInfo.Leaders[leader];
 
+        local leaderInfo:table  = GameInfo.Leaders[leader];
         if (leader == "LEADER_MINOR_CIV_SCIENTIFIC" or leaderInfo.InheritFrom == "LEADER_MINOR_CIV_SCIENTIFIC") then
           playerIconString = "ICON_CITYSTATE_SCIENCE";
         elseif (leader == "LEADER_MINOR_CIV_RELIGIOUS" or leaderInfo.InheritFrom == "LEADER_MINOR_CIV_RELIGIOUS") then
@@ -1143,6 +1183,7 @@ function GetPlayerIconInfo(playerID, checkCache)
           playerIconString = "ICON_CITYSTATE_INDUSTRIAL";
         end
       end
+      ]]
 
       local playerDescription:string = playerConfig:GetCivilizationDescription();
       local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(playerIconString, 30)
@@ -1158,14 +1199,14 @@ function GetPlayerColorInfo(playerID, checkCache)
       -- print("CACHE HIT for player " .. playerID)
       return unpack(m_Cache.Players[playerID].Colors)
     else
-      print_debug("CACHE MISS for player " .. playerID)
+      --print("CACHE MISS for player " .. playerID)
       CachePlayer(playerID)
       return unpack(m_Cache.Players[playerID].Colors)
     end
   else
     local backColor, frontColor = UI.GetPlayerColors(playerID)
-    local darkerBackColor = DarkenLightenColor(backColor, BACKDROP_DARKER_OFFSET, BACKDROP_DARKER_OPACITY);
-    local brighterBackColor = DarkenLightenColor(backColor, BACKDROP_BRIGHTER_OFFSET, BACKDROP_BRIGHTER_OPACITY);
+    local darkerBackColor = UI.DarkenLightenColor(backColor, BACKDROP_DARKER_OFFSET, BACKDROP_DARKER_OPACITY);
+    local brighterBackColor = UI.DarkenLightenColor(backColor, BACKDROP_BRIGHTER_OFFSET, BACKDROP_BRIGHTER_OPACITY);
 
     return backColor, frontColor, darkerBackColor, brighterBackColor
   end
@@ -1211,7 +1252,7 @@ function FormatYieldText(yieldIndex, yieldAmount)
   else
     text = "-";
   end
-  text = text .. yieldAmount;
+  text = text .. Round(yieldAmount, 1);
 
   return iconString, text;
 end
@@ -1220,7 +1261,7 @@ end
 function RemoveRouteFromTable( routeToDelete:table , routeTable:table, isGrouped:boolean )
   -- If grouping by something, go one level deeper
   if isGrouped then
-    print_debug("Routes grouped")
+    --print("Routes grouped")
     local targetIndex:number = -1;
     local targetGroupIndex:number = -1;
 
@@ -1236,7 +1277,7 @@ function RemoveRouteFromTable( routeToDelete:table , routeTable:table, isGrouped
 
     -- Remove route
     if targetIndex ~= -1 and targetGroupIndex ~= -1 then
-      print_debug("REMOVING ROUTE")
+      --print("REMOVING ROUTE")
       table.remove(routeTable[targetGroupIndex], targetIndex);
 
       -- If that group is empty, remove that group
@@ -1244,18 +1285,18 @@ function RemoveRouteFromTable( routeToDelete:table , routeTable:table, isGrouped
         table.remove(routeTable, targetGroupIndex);
       end
     else
-      print("Error : COULD NOT FIND ROUTE")
+      --print("COULD NOT FIND ROUTE")
     end
   else
-    print_debug("Routes not grouped")
+    --print("Routes not grouped")
 
     -- Find and remove route
     local targetIndex:number = findIndex(routeTable, routeToDelete, CheckRouteEquality)
     if targetIndex ~= -1 then
-      print_debug("REMOVING ROUTE")
+      --print("REMOVING ROUTE")
       table.remove(routeTable, targetIndex);
     else
-      print("Error : COULD NOT FIND ROUTE")
+      --print("COULD NOT FIND ROUTE")
     end
   end
 end
@@ -1263,9 +1304,9 @@ end
 -- Checks if the two routes are the same (does not compare traderUnit)
 function CheckRouteEquality ( tradeRoute1:table, tradeRoute2:table )
   if (    tradeRoute1.OriginCityPlayer == tradeRoute2.OriginCityPlayer and
-      tradeRoute1.OriginCityID == tradeRoute2.OriginCityID and
-      tradeRoute1.DestinationCityPlayer == tradeRoute2.DestinationCityPlayer and
-      tradeRoute1.DestinationCityID == tradeRoute2.DestinationCityID ) then
+  tradeRoute1.OriginCityID == tradeRoute2.OriginCityID and
+  tradeRoute1.DestinationCityPlayer == tradeRoute2.DestinationCityPlayer and
+  tradeRoute1.DestinationCityID == tradeRoute2.DestinationCityID ) then
     return true;
   end
 
@@ -1313,12 +1354,12 @@ end
 -- Converts 'A' -> 'Z' || 'Z' -> 'A'
 function invert_string(s:string)
   s = s:upper()
-  print_debug("org: " .. s)
+  print("org: " .. s)
   local newS:string = ""
   for i=1, s:len() do
     newS = newS .. string.char(invert_char_code(s:byte(i)))
   end
-  print_debug("inv: " .. newS)
+  print("inv: " .. newS)
   return newS
 end
 
@@ -1384,57 +1425,57 @@ end
   ]]
 
   function dump(...)
-  print(DataDumper(...), "\n---")
+    print(DataDumper(...), "\n---")
   end
 
   local dumplua_closure = [[
   local closures = {}
   local function closure(t)
-  closures[#closures+1] = t
-  t[1] = assert(loadstring(t[1]))
-  return t[1]
+    closures[#closures+1] = t
+    t[1] = assert(loadstring(t[1]))
+    return t[1]
   end
 
   for _,t in pairs(closures) do
-  for i = 2,#t do
-    debug.setupvalue(t[1], i-1, t[i])
-  end
+    for i = 2,#t do
+      debug.setupvalue(t[1], i-1, t[i])
+    end
   end
   ]]
 
   local lua_reserved_keywords = {
-  'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for',
-  'function', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat',
-  'return', 'then', 'true', 'until', 'while' }
+    'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for',
+    'function', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat',
+    'return', 'then', 'true', 'until', 'while' }
 
   local function keys(t)
-  local res = {}
-  local oktypes = { stringstring = true, numbernumber = true }
-  local function cmpfct(a,b)
-    if oktypes[type(a)..type(b)] then
-    return a < b
-    else
-    return type(a) < type(b)
+    local res = {}
+    local oktypes = { stringstring = true, numbernumber = true }
+    local function cmpfct(a,b)
+      if oktypes[type(a)..type(b)] then
+        return a < b
+      else
+        return type(a) < type(b)
+      end
     end
-  end
-  for k in pairs(t) do
-    res[#res+1] = k
-  end
-  table.sort(res, cmpfct)
-  return res
+    for k in pairs(t) do
+      res[#res+1] = k
+    end
+    table.sort(res, cmpfct)
+    return res
   end
 
   local c_functions = {}
   for _,lib in pairs{'_G', 'string', 'table', 'math',
-    'io', 'os', 'coroutine', 'package', 'debug'} do
-  local t = {}
-  lib = lib .. "."
-  if lib == "_G." then lib = "" end
-  for k,v in pairs(t) do
-    if type(v) == 'function' and not pcall(string.dump, v) then
-    c_functions[v] = lib..k
+      'io', 'os', 'coroutine', 'package', 'debug'} do
+    local t = {}
+    lib = lib .. "."
+    if lib == "_G." then lib = "" end
+    for k,v in pairs(t) do
+      if type(v) == 'function' and not pcall(string.dump, v) then
+        c_functions[v] = lib..k
+      end
     end
-  end
   end
 
   function DataDumper(value, varname, fastmode, ident)
@@ -1463,21 +1504,21 @@ end
   }
   local function test_defined(value, path)
     if defined[value] then
-    if path:match("^getmetatable.*%)$") then
-      out[#out+1] = string_format("s%s, %s)\n", path:sub(2,-2), defined[value])
-    else
-      out[#out+1] = path .. " = " .. defined[value] .. "\n"
-    end
-    return true
+      if path:match("^getmetatable.*%)$") then
+        out[#out+1] = string_format("s%s, %s)\n", path:sub(2,-2), defined[value])
+      else
+        out[#out+1] = path .. " = " .. defined[value] .. "\n"
+      end
+      return true
     end
     defined[value] = path
   end
   local function make_key(t, key)
     local s
     if type(key) == 'string' and key:match('^[_%a][_%w]*$') then
-    s = key .. "="
+      s = key .. "="
     else
-    s = "[" .. dumplua(key, 0) .. "]="
+      s = "[" .. dumplua(key, 0) .. "]="
     end
     t[key] = s
     return s
@@ -1487,76 +1528,76 @@ end
   end
   if fastmode then
     fcts.table = function (value)
-    -- Table value
-    local numidx = 1
-    out[#out+1] = "{"
-    for key,val in pairs(value) do
-      if key == numidx then
-      numidx = numidx + 1
-      else
-      out[#out+1] = keycache[key]
+      -- Table value
+      local numidx = 1
+      out[#out+1] = "{"
+      for key,val in pairs(value) do
+        if key == numidx then
+          numidx = numidx + 1
+        else
+          out[#out+1] = keycache[key]
+        end
+        local str = dumplua(val)
+        out[#out+1] = str..","
       end
-      local str = dumplua(val)
-      out[#out+1] = str..","
-    end
-    if string.sub(out[#out], -1) == "," then
-      out[#out] = string.sub(out[#out], 1, -2);
-    end
-    out[#out+1] = "}"
-    return ""
+      if string.sub(out[#out], -1) == "," then
+        out[#out] = string.sub(out[#out], 1, -2);
+      end
+      out[#out+1] = "}"
+      return ""
     end
   else
     fcts.table = function (value, ident, path)
-    if test_defined(value, path) then return "nil" end
-    -- Table value
-    local sep, str, numidx, totallen = " ", {}, 1, 0
-    local meta, metastr = getmetatable(value)
-    if meta then
-      ident = ident + 1
-      metastr = dumplua(meta, ident, "getmetatable("..path..")")
-      totallen = totallen + #metastr + 16
-    end
-    for _,key in pairs(keys(value)) do
-      local val = value[key]
-      local s = ""
-      local subpath = path or ""
-      if key == numidx then
-      subpath = subpath .. "[" .. numidx .. "]"
-      numidx = numidx + 1
-      else
-      s = keycache[key]
-      if not s:match "^%[" then subpath = subpath .. "." end
-      subpath = subpath .. s:gsub("%s*=%s*$","")
+      if test_defined(value, path) then return "nil" end
+      -- Table value
+      local sep, str, numidx, totallen = " ", {}, 1, 0
+      local meta, metastr = getmetatable(value)
+      if meta then
+        ident = ident + 1
+        metastr = dumplua(meta, ident, "getmetatable("..path..")")
+        totallen = totallen + #metastr + 16
       end
-      s = s .. dumplua(val, ident+1, subpath)
-      str[#str+1] = s
-      totallen = totallen + #s + 2
-    end
-    if totallen > 80 then
-      sep = "\n" .. string_rep("  ", ident+1)
-    end
-    str = "{"..sep..table_concat(str, ","..sep).." "..sep:sub(1,-3).."}"
-    if meta then
-      sep = sep:sub(1,-3)
-      return "setmetatable("..sep..str..","..sep..metastr..sep:sub(1,-3)..")"
-    end
-    return str
+      for _,key in pairs(keys(value)) do
+        local val = value[key]
+        local s = ""
+        local subpath = path or ""
+        if key == numidx then
+          subpath = subpath .. "[" .. numidx .. "]"
+          numidx = numidx + 1
+        else
+          s = keycache[key]
+          if not s:match "^%[" then subpath = subpath .. "." end
+          subpath = subpath .. s:gsub("%s*=%s*$","")
+        end
+        s = s .. dumplua(val, ident+1, subpath)
+        str[#str+1] = s
+        totallen = totallen + #s + 2
+      end
+      if totallen > 80 then
+        sep = "\n" .. string_rep("  ", ident+1)
+      end
+      str = "{"..sep..table_concat(str, ","..sep).." "..sep:sub(1,-3).."}"
+      if meta then
+        sep = sep:sub(1,-3)
+        return "setmetatable("..sep..str..","..sep..metastr..sep:sub(1,-3)..")"
+      end
+      return str
     end
     fcts['function'] = function (value, ident, path)
-    if test_defined(value, path) then return "nil" end
-    if c_functions[value] then
-      return c_functions[value]
-    elseif debug == nil or debug.getupvalue(value, 1) == nil then
-      return string_format("loadstring(%q)", string_dump(value))
-    end
-    closure_cnt = closure_cnt + 1
-    local res = {string.dump(value)}
-    for i = 1,math.huge do
-      local name, v = debug.getupvalue(value,i)
-      if name == nil then break end
-      res[i+1] = v
-    end
-    return "closure " .. dumplua(res, ident, "closures["..closure_cnt.."]")
+      if test_defined(value, path) then return "nil" end
+      if c_functions[value] then
+        return c_functions[value]
+      elseif debug == nil or debug.getupvalue(value, 1) == nil then
+        return string_format("loadstring(%q)", string_dump(value))
+      end
+      closure_cnt = closure_cnt + 1
+      local res = {string.dump(value)}
+      for i = 1,math.huge do
+        local name, v = debug.getupvalue(value,i)
+        if name == nil then break end
+        res[i+1] = v
+      end
+      return "closure " .. dumplua(res, ident, "closures["..closure_cnt.."]")
     end
   end
   function dumplua(value, ident, path)
@@ -1578,18 +1619,18 @@ end
     for i=1,10 do items[i] = '' end
     items[3] = dumplua(value, ident or 0, "t")
     if closure_cnt > 0 then
-    items[1], items[6] = dumplua_closure:match("(.*\n)\n(.*)")
-    out[#out+1] = ""
+      items[1], items[6] = dumplua_closure:match("(.*\n)\n(.*)")
+      out[#out+1] = ""
     end
     if #out > 0 then
-    items[2], items[4] = "local t = ", "\n"
-    items[5] = table.concat(out)
-    items[7] = varname .. "t"
+      items[2], items[4] = "local t = ", "\n"
+      items[5] = table.concat(out)
+      items[7] = varname .. "t"
     else
-    items[2] = varname
+      items[2] = varname
     end
     return table.concat(items)
-  end
+  end 
   end
 -- ========== END OF DataDumper.lua =================
 

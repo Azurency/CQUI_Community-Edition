@@ -5,7 +5,8 @@
 
 -- ===========================================================================
 
-include("Civ6Common");
+include("PortraitSupport");
+include("ToolTipHelper");
 
 -- ===========================================================================
 -- CONSTANTS
@@ -44,6 +45,257 @@ function GetCurrentProductionInfoOfCity( pCity:table, iconSize:number )
   local hash :number = pBuildQueue:GetCurrentProductionTypeHash();
   local data :table = GetProductionInfoOfCity(pCity, hash);
   return data;
+end
+
+-- ===========================================================================
+function GetFilteredUnitStatString( statData:table )
+  if statData == nil then
+    UI.DataError("Invalid stat data passed to GetFilteredUnitStatString");
+    return "";
+  end
+
+  local statString = "";
+  local statStringTooltip = "";
+  local newlineCounter = 0;
+  for _,statTable in pairs(statData) do
+    statString = statString.. statTable.FontIcon.. " ".. statTable.Value.. " ";
+    if (newlineCounter == 2) then
+      statString = statString.. "[NEWLINE]";
+      newlineCounter = 0;
+    end
+    newlineCounter = newlineCounter + 1;
+
+    statStringTooltip = statStringTooltip.. Locale.Lookup(statTable.Label).. " ".. statTable.Value.. "[NEWLINE]";
+  end
+  --return statString, statStringTooltip;
+  return statString;
+end
+
+-- ===========================================================================
+function FilterUnitStats( hashOrType:number, ignoreStatType:number )
+  local unitInfo = GameInfo.Units[hashOrType];
+
+  if(unitInfo == nil) then
+    UI.DataError("Invalid unit hash passed to FilterUnitStats");
+    return {};
+  end
+
+
+  local data:table = {};
+
+  -- Strength
+  if ( unitInfo.Combat > 0 and (ignoreStatType == nil or ignoreStatType ~= CombatTypes.MELEE)) then
+    table.insert(data, {Value = unitInfo.Combat, Type = "Combat", Label = "LOC_HUD_UNIT_PANEL_STRENGTH",				FontIcon="[ICON_Strength_Large]",		IconName="ICON_STRENGTH"});
+  end
+  if ( unitInfo.RangedCombat > 0 and (ignoreStatType == nil or ignoreStatType ~= CombatTypes.RANGED)) then
+    table.insert(data, {Value = unitInfo.RangedCombat,		Label = "LOC_HUD_UNIT_PANEL_RANGED_STRENGTH",		FontIcon="[ICON_RangedStrength_Large]",	IconName="ICON_RANGED_STRENGTH"});
+  end
+  if (unitInfo.Bombard > 0 and (ignoreStatType == nil or ignoreStatType ~= CombatTypes.BOMBARD)) then
+    table.insert(data, {Value = unitInfo.Bombard,	Label = "LOC_HUD_UNIT_PANEL_BOMBARD_STRENGTH",		FontIcon="[ICON_Bombard_Large]",		IconName="ICON_BOMBARD"});
+  end
+  if (unitInfo.ReligiousStrength > 0 and (ignoreStatType == nil or ignoreStatType ~= CombatTypes.RELIGIOUS)) then
+    table.insert(data, {Value = unitInfo.ReligiousStrength,	Label = "LOC_HUD_UNIT_PANEL_RELIGIOUS_STRENGTH",	FontIcon="[ICON_ReligionStat_Large]",	IconName="ICON_RELIGION"});
+  end
+  if (unitInfo.AntiAirCombat > 0 and (ignoreStatType == nil or ignoreStatType ~= CombatTypes.AIR)) then
+    table.insert(data, {Value = unitInfo.AntiAirCombat,	Label = "LOC_HUD_UNIT_PANEL_ANTI_AIR_STRENGTH",		FontIcon="[ICON_AntiAir_Large]",		IconName="ICON_STATS_ANTIAIR"});
+  end
+
+  -- Movement
+  if(unitInfo.BaseMoves > 0) then
+    table.insert(data, {Value = unitInfo.BaseMoves, Type = "BaseMoves",		Label = "LOC_HUD_UNIT_PANEL_MOVEMENT",				FontIcon="[ICON_Movement_Large]",		IconName="ICON_MOVES"});
+  end
+
+  -- Range
+  if (unitInfo.Range > 0) then
+    table.insert(data, {Value = unitInfo.Range;			Label = "LOC_HUD_UNIT_PANEL_ATTACK_RANGE",			FontIcon="[ICON_Range_Large]",			IconName="ICON_RANGE"});
+  end
+
+  -- Charges
+  if (unitInfo.SpreadCharges > 0) then
+    table.insert(data, {Value = unitInfo.SpreadCharges,	Type = "SpreadCharges", Label = "LOC_HUD_UNIT_PANEL_SPREADS",				FontIcon="[ICON_ReligionStat_Large]",	IconName="ICON_RELIGION"});
+  end
+  if (unitInfo.BuildCharges > 0) then
+    table.insert(data, {Value = unitInfo.BuildCharges, Type = "BuildCharges",		Label = "LOC_HUD_UNIT_PANEL_BUILDS",				FontIcon="[ICON_Charges_Large]",		IconName="ICON_BUILD_CHARGES"});
+  end
+  if (unitInfo.ReligiousHealCharges > 0) then
+    table.insert(data, {Value = unitInfo.ReligiousHealCharges, Type = "ReligiousHealCharges",		Label = "LOC_HUD_UNIT_PANEL_HEALS",				FontIcon="[ICON_Charges_Large]",		IconName="ICON_RELIGION"});
+  end
+
+  -- If we have more than 4 stats then try to remove melee strength
+  if (table.count(data) > 4) then
+    for i,stat in ipairs(data) do
+      if stat.Type == "Combat" then
+        table.remove(data, i);
+      end
+    end
+  end
+
+  -- If we still have more than 4 stats through a data error
+  if (table.count(data) > 4) then
+    UI.DataError("More than four stats were picked to display for unit ".. unitInfo.UnitType);
+  end
+
+  return data;
+end
+
+-- ===========================================================================
+--	Obtains the texture for a city's current production.
+--	pCity				The city
+--	productionHash		the production hash (present or past) that you want the info for
+--
+--	RETURNS	NIL if error, otherwise a table containing:
+--			name of production item
+--			description
+--			icon texture of the produced item
+--			u offset of the icon texture
+--			v offset of the icon texture
+--			(0-1) percent complete
+--			(0-1) percent complete after next turn
+-- ===========================================================================
+function GetProductionInfoOfCity( pCity:table, productionHash:number )
+  local pBuildQueue	:table = pCity:GetBuildQueue();
+  if pBuildQueue == nil then
+    UI.DataError("No production queue in city!");
+    return nil;
+  end
+  
+  local hash						= productionHash;
+  local progress					:number = 0;
+  local cost						:number = 0;
+  local percentComplete			:number = 0;
+  local percentCompleteNextTurn	:number = 0;
+  local productionName			:string;
+  local description				:string;
+  local tooltip					:string;
+  local statString				:string;		-- stats for unit to display
+  local kIcons					:table = {};	-- icon(s) to use, best first
+  local texture					:string;		-- texture of icon
+  local u							:number = 0;	-- texture horiztonal offset
+  local v							:number = 0;	-- texture vertical offset
+
+  -- Nothing being produced.
+  if hash == 0 then
+    return {
+      Name					= Locale.Lookup("LOC_HUD_CITY_NOTHING_PRODUCED"),
+      Description				= "", 
+      Texture					= "CityPanel_CitizenIcon",	-- Default texture
+      u						= 0,
+      v						= 0,
+      PercentComplete			= 0, 
+      PercentCompleteNextTurn	= 0,
+      Turns					= 0,
+      Progress				= 0,
+      Cost					= 0
+    };
+  end
+
+  -- Find the information
+  local buildingDef	:table = GameInfo.Buildings[hash];
+  local districtDef	:table = GameInfo.Districts[hash];
+  local unitDef		:table = GameInfo.Units[hash];
+  local projectDef	:table = GameInfo.Projects[hash];
+  local type			:string= "";
+
+  if( buildingDef ~= nil ) then
+    prodTurnsLeft = pBuildQueue:GetTurnsLeft(buildingDef.BuildingType);
+    productionName	= Locale.Lookup(buildingDef.Name);
+    description		= buildingDef.Description;
+    tooltip			= ToolTipHelper.GetBuildingToolTip(hash, Game.GetLocalPlayer(), pCity )
+    progress		= pBuildQueue:GetBuildingProgress(buildingDef.Index);
+    percentComplete	= progress / pBuildQueue:GetBuildingCost(buildingDef.Index);
+    cost			= pBuildQueue:GetBuildingCost(buildingDef.Index);
+    kIcons			= {"ICON_"..buildingDef.BuildingType};
+    type			= ProductionType.BUILDING;
+
+  elseif( districtDef ~= nil ) then
+    prodTurnsLeft = pBuildQueue:GetTurnsLeft(districtDef.DistrictType);
+    productionName	= Locale.Lookup(districtDef.Name);
+    description		= districtDef.Description;
+    tooltip			= ToolTipHelper.GetDistrictToolTip(hash);
+    progress		= pBuildQueue:GetDistrictProgress(districtDef.Index);
+    percentComplete	= progress / pBuildQueue:GetDistrictCost(districtDef.Index);
+    cost			= pBuildQueue:GetDistrictCost(districtDef.Index);
+    kIcons			= {"ICON_"..districtDef.DistrictType};
+    type			= ProductionType.DISTRICT;
+
+  elseif( unitDef ~= nil ) then
+
+    local owner	:number = pCity:GetOwner();
+    local iconName, prefixOnlyIconName, eraOnlyIconName, fallbackIconName = GetUnitPortraitIconNamesFromDefinition( owner, unitDef );		
+
+    prodTurnsLeft = pBuildQueue:GetTurnsLeft(unitDef.UnitType);
+    local eMilitaryFormationType :number = pBuildQueue:GetCurrentProductionTypeModifier();
+    productionName	= Locale.Lookup(unitDef.Name);
+    description		= unitDef.Description;
+    tooltip			= ToolTipHelper.GetUnitToolTip(hash);
+    progress		= pBuildQueue:GetUnitProgress(unitDef.Index);
+    prodTurnsLeft	= pBuildQueue:GetTurnsLeft(unitDef.UnitType, eMilitaryFormationType);		
+    kIcons			= { iconName, prefixOnlyIconName, eraOnlyIconName, fallbackIconName, "ICON_"..unitDef.UnitType.."_PORTRAIT"}
+    statString		= GetFilteredUnitStatString(FilterUnitStats(hash));
+    type			= ProductionType.UNIT;
+
+    --Units need some additional information to represent the Standard, Corps, and Army versions. This is determined by the MilitaryFormationType
+    if (eMilitaryFormationType == MilitaryFormationTypes.STANDARD_FORMATION) then
+      percentComplete = progress / pBuildQueue:GetUnitCost(unitDef.Index);	
+      cost			= pBuildQueue:GetUnitCost(unitDef.Index);
+    elseif (eMilitaryFormationType == MilitaryFormationTypes.CORPS_FORMATION) then
+      percentComplete = progress / pBuildQueue:GetUnitCorpsCost(unitDef.Index);
+      cost			= pBuildQueue:GetUnitCorpsCost(unitDef.Index);
+      if (unitDef.Domain == "DOMAIN_SEA") then
+        productionName = productionName .. " " .. Locale.Lookup("LOC_UNITFLAG_FLEET_SUFFIX");
+      else
+        productionName = productionName .. " " .. Locale.Lookup("LOC_UNITFLAG_CORPS_SUFFIX");
+      end
+    elseif (eMilitaryFormationType == MilitaryFormationTypes.ARMY_FORMATION) then
+      percentComplete = progress / pBuildQueue:GetUnitArmyCost(unitDef.Index);
+      cost			= pBuildQueue:GetUnitArmyCost(unitDef.Index);
+      if (unitDef.Domain == "DOMAIN_SEA") then
+        productionName = productionName .. " " .. Locale.Lookup("LOC_UNITFLAG_ARMADA_SUFFIX");
+      else
+        productionName = productionName .. " " .. Locale.Lookup("LOC_UNITFLAG_ARMY_SUFFIX");
+      end
+    end
+
+  elseif (projectDef ~= nil) then
+    prodTurnsLeft = pBuildQueue:GetTurnsLeft(projectDef.ProjectType);
+    productionName	= Locale.Lookup(projectDef.Name);
+    description		= projectDef.Description;
+    tooltip			= ToolTipHelper.GetProjectToolTip(hash);
+    progress		= pBuildQueue:GetProjectProgress(projectDef.Index);
+    cost			= pBuildQueue:GetProjectCost(projectDef.Index);
+    percentComplete	= progress / pBuildQueue:GetProjectCost(projectDef.Index);
+    kIcons			= {"ICON_"..projectDef.ProjectType};
+    type			= ProductionType.PROJECT;
+  else
+    for row in GameInfo.Types() do
+      if row.Hash == hash then
+        UI.DataError("Unknown kind of item being produced in city \""..tostring(row.Kind).."\"");
+        return nil;
+      end
+    end
+    UI.DataError("Game database does not contain information that matches what the city "..Locale.Lookup(data.CityName).." is producing!");
+    return nil;
+  end
+  if percentComplete > 1 then
+    percentComplete = 1;
+  end
+
+  percentCompleteNextTurn = (1-percentComplete)/prodTurnsLeft;
+  percentCompleteNextTurn = percentComplete + percentCompleteNextTurn;
+
+  return {
+    Name					= productionName,
+    Description				= description,
+    Tooltip					= tooltip,
+    Type					= type;
+    Icons					= kIcons,
+    PercentComplete			= percentComplete, 
+    PercentCompleteNextTurn	= percentCompleteNextTurn,
+    Turns					= prodTurnsLeft,
+    StatString				= statString;
+    Progress				= progress;
+    Cost					= cost;		
+  };
 end
 
 -- ===========================================================================
@@ -121,7 +373,7 @@ function GetCityData( pCity:table )
     AmenitiesFromReligion = 0,
     AmenitiesFromNationalParks = 0,
     AmenitiesFromStartingEra = 0,
-	AmenitiesFromImprovements = 0,
+    AmenitiesFromImprovements = 0,
     AmenitiesRequiredNum = 0,
     AmenitiesFromGovernors = 0,
     BeliefsOfDominantReligion = {},
@@ -282,6 +534,8 @@ function GetCityData( pCity:table )
   data.AmenitiesLostFromBankruptcy = pCityGrowth:GetAmenitiesLostFromBankruptcy();
   data.AmenitiesRequiredNum = pCityGrowth:GetAmenitiesNeeded();
   data.AmenitiesFromGovernors = pCityGrowth:GetAmenitiesFromGovernors();
+  data.AmenitiesFromDistricts = pCityGrowth:GetAmenitiesFromDistricts();
+  data.AmenitiesFromNaturalWonders = pCityGrowth:GetAmenitiesFromNaturalWonders();
   data.AmenityAdvice = pCity:GetAmenityAdvice();
   data.CityWallHPPercent = (wallHitpoints-currentWallDamage) / wallHitpoints;
   data.CityWallCurrentHP = wallHitpoints-currentWallDamage;
@@ -290,7 +544,7 @@ function GetCityData( pCity:table )
   data.CurrentProductionName = Locale.Lookup( currentProduction );
   data.CurrentProdPercent = pct;
   data.CurrentProductionDescription = Locale.Lookup( currentProductionDescription );
-  data.CurrentProductionIcon = productionInfo and productionInfo.Icon;
+  data.CurrentProductionIcons = productionInfo and productionInfo.Icons;
   data.CurrentProductionStats = productionInfo.StatString;
   data.CurrentTurnsLeft = prodTurnsLeft;
   data.FoodPercentNextTurn = foodpctNextTurn;
@@ -385,15 +639,15 @@ function GetCityData( pCity:table )
       return 0;
     end
 
-	--I do not know why we make local functions, but I am keeping standard
-	function GetDistrictBonus( district:table, yieldType:string )
-		for i,yield in ipairs( kTempDistrictYields ) do
-			if yield.YieldType == yieldType then
-				return district:GetAdjacencyYield(i);
-			end
-		end
-		return 0;
-	end
+    --I do not know why we make local functions, but I am keeping standard
+    function GetDistrictBonus( district:table, yieldType:string )
+      for i,yield in ipairs( kTempDistrictYields ) do
+        if yield.YieldType == yieldType then
+          return district:GetAdjacencyYield(i);
+        end
+      end
+      return 0;
+    end
 
 
     local districtInfo :table = GameInfo.Districts[district:GetType()];
@@ -406,7 +660,7 @@ function GetCityData( pCity:table )
       Name = Locale.Lookup(districtInfo.Name),
       Type		= districtType,
       YieldBonus = GetDistrictYieldText( district ),
-      isPillaged = pCityDistricts:IsPillaged(district:GetType());
+      isPillaged = pCityDistricts:IsPillaged(district:GetType(), plotID);
       isBuilt = pCityDistricts:HasDistrict(districtInfo.Index, true);
       Icon = "ICON_"..districtType,
       Buildings = {},
@@ -416,16 +670,16 @@ function GetCityData( pCity:table )
       Gold = GetDistrictYield(district, "YIELD_GOLD" ),
       Production = GetDistrictYield(district, "YIELD_PRODUCTION" ),
       Science = GetDistrictYield(district, "YIELD_SCIENCE" ),
-		Tourism		= 0,
-		Maintenance = districtInfo.Maintenance,
-		AdjacencyBonus = {
-			Culture		= GetDistrictBonus(district, "YIELD_CULTURE"),
-			Faith		= GetDistrictBonus(district, "YIELD_FAITH"),
-			Food		= GetDistrictBonus(district, "YIELD_FOOD"),
-			Gold		= GetDistrictBonus(district, "YIELD_GOLD"),
-			Production	= GetDistrictBonus(district, "YIELD_PRODUCTION"),
-			Science		= GetDistrictBonus(district, "YIELD_SCIENCE")
-		}
+      Tourism		= 0,
+      Maintenance = districtInfo.Maintenance,
+      AdjacencyBonus = {
+        Culture		= GetDistrictBonus(district, "YIELD_CULTURE"),
+        Faith		= GetDistrictBonus(district, "YIELD_FAITH"),
+        Food		= GetDistrictBonus(district, "YIELD_FOOD"),
+        Gold		= GetDistrictBonus(district, "YIELD_GOLD"),
+        Production	= GetDistrictBonus(district, "YIELD_PRODUCTION"),
+        Science		= GetDistrictBonus(district, "YIELD_SCIENCE")
+      }
     };
 
     local buildingTypes = pCityBuildings:GetBuildingsAtLocation(plotID);
@@ -466,7 +720,7 @@ function GetCityData( pCity:table )
         table.insert( data.Wonders, {
             Name = Locale.Lookup(building.Name),
             Yields = kYields,
-			Type = building.BuildingType,
+            Type = building.BuildingType,
             Icon = "ICON_"..building.BuildingType,
             isPillaged = pCityBuildings:IsPillaged(building.BuildingType),
             isBuilt = pCityBuildings:HasBuilding(building.Index),
@@ -481,7 +735,7 @@ function GetCityData( pCity:table )
         data.BuildingsNum = data.BuildingsNum + 1;
         table.insert( districtTable.Buildings, {
             Name = Locale.Lookup(building.Name),
-			Type = building.BuildingType,
+            Type = building.BuildingType,
             Yields = kYields,
             Icon = "ICON_"..building.BuildingType,
             Citizens = kPlot:GetWorkerCount(),

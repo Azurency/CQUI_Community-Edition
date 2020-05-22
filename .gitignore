@@ -7,3 +7,5 @@ cqui_settings_local.sql
 .bak
 *.bak
 .DS_Store
+/.settings/
+/.buildpath

@@ -4,7 +4,8 @@
 include( "InstanceManager" );
 include( "CitySupport" );
 include( "Civ6Common" ); -- AutoSizeGridButton
-include( "SupportFunctions" ); -- DarkenLightenColor
+include( "Colors" );
+include( "SupportFunctions" );
 include( "PopupDialog" );
 include( "ToolTipHelper_PlayerYields" );
 include( "GreatWorksSupport" );
@@ -42,7 +43,7 @@ local ms_OtherPlayerIsHuman = false;
 
 local ms_InitiatedByPlayerID = -1;
 
-local ms_bIsDemand = false;
+ms_bIsDemand = false;
 local ms_bExiting = false;
 
 local ms_LastIncomingDealProposalAction = DealProposalAction.PENDING;
@@ -87,6 +88,8 @@ local ms_DefaultMultiTurnGoldAmount = 10;
 local ms_DefaultMultiTurnGoldDuration = 30;
 
 local ms_bForceUpdateOnCommit = false;
+
+local ms_bDontUpdateOnBack = false;
 
 --CQUI Addition
 -- local YIELD_FONT_ICONS:table = {
@@ -229,9 +232,9 @@ function PopulateSignatureArea(player:table)
   -- Set colors for the Civ icon
   if (player ~= nil) then
     m_primaryColor, m_secondaryColor  = UI.GetPlayerColors( player:GetID() );
-    local darkerBackColor = DarkenLightenColor(m_primaryColor,(-85),100);
-    local brighterBackColor = DarkenLightenColor(m_primaryColor,90,255);
-    local panelBannerBackColor = DarkenLightenColor(m_primaryColor,0,245);
+    local darkerBackColor = UI.DarkenLightenColor(m_primaryColor,(-85),100);
+    local brighterBackColor = UI.DarkenLightenColor(m_primaryColor,90,255);
+    local panelBannerBackColor = UI.DarkenLightenColor(m_primaryColor,0,245);
 
     if(player == ms_LocalPlayer) then
       Controls.PlayerCivBacking_Base:SetColor(m_primaryColor);
@@ -1534,12 +1537,23 @@ function OnClickAvailableAgreement(player, agreementType, agreementTurns)
 
     -- Already there?
     local pDealItem = pDeal:FindItemByType(DealItemTypes.AGREEMENTS, agreementType, player:GetID());
+    if (pDealItem ~= nil) then
+      -- deal manager doesn't update properly unless we delete the deal item
+      -- and add a new one.
+			if (not pDealItem:IsLocked()) then
+        local itemID = pDealItem:GetID();
+        DetachValueEdit(itemID);
+        pDeal:RemoveItemByID(itemID);
+        pDealItem = nil; -- CQUI (Azurency) : set back to nil to go in the next if
+      end
+    end
+
     if (pDealItem == nil) then
       -- No
       -- AZURENCY : Joint War and Research Agreements need special treatment (can be only modified on the player side)
       if (agreementType == DealAgreementTypes.JOINT_WAR or agreementType == DealAgreementTypes.RESEARCH_AGREEMENT) then
         pDealItem = pDeal:AddItemOfType(DealItemTypes.AGREEMENTS, ms_LocalPlayer:GetID());
-        
+
         -- AZURENCY : Fix, select the first possibily by default
         local toPlayerId = ms_LocalPlayer:GetID();
         if (toPlayerId == player:GetID() ) then
@@ -2326,7 +2340,6 @@ function PopulatePlayerAvailablePanel(rootControl : table, player : table)
       end
     else
       ms_AvailableGroups[AvailableDealItemGroupTypes.GOLD][playerType].GetTopControl():SetHide(false);
-
       iAvailableItemCount = iAvailableItemCount + PopulateAvailableGold(player, ms_AvailableGroups[AvailableDealItemGroupTypes.GOLD][playerType]);
       iAvailableItemCount = iAvailableItemCount + PopulateAvailableLuxuryResources(player, ms_AvailableGroups[AvailableDealItemGroupTypes.LUXURY_RESOURCES][playerType]);
       iAvailableItemCount = iAvailableItemCount + PopulateAvailableStrategicResources(player, ms_AvailableGroups[AvailableDealItemGroupTypes.STRATEGIC_RESOURCES][playerType]);
@@ -2347,12 +2360,10 @@ function PopulatePlayerAvailablePanel(rootControl : table, player : table)
 
       iAvailableItemCount = iAvailableItemCount + PopulateAvailableGreatWorks(player, ms_AvailableGroups[AvailableDealItemGroupTypes.GREAT_WORKS][playerType]);
       iAvailableItemCount = iAvailableItemCount + PopulateAvailableCaptives(player, ms_AvailableGroups[AvailableDealItemGroupTypes.CAPTIVES][playerType]);
-
     end
 
     rootControl:CalculateSize();
     rootControl:ReprocessAnchoring();
-
   end
 
   return iAvailableItemCount;
@@ -2548,9 +2559,25 @@ function PopulateDealAgreements(player : table, iconList : table)
           end
 
           icon.AmountText:SetHide(true);
-          local subTypeDisplayName = pDealItem:GetSubTypeNameID();
-          if (subTypeDisplayName ~= nil) then
-            icon.IconText:LocalizeAndSetText(subTypeDisplayName);
+          local pWarItem = pDeal:FindItemByType(DealItemTypes.AGREEMENTS, DealAgreementTypes.JOINT_WAR);
+
+					if pWarItem == nil then
+						pWarItem = pDeal:FindItemByType(DealItemTypes.AGREEMENTS, DealAgreementTypes.THIRD_PARTY_WAR);
+					end
+
+					local iWarType = nil;
+					if pWarItem ~= nil then
+						iWarType = pDealItem:GetParameterValue("WarType");
+					end
+
+					if iWarType ~= nil then
+						local warDef = GameInfo.Wars[iWarType]
+						icon.IconText:LocalizeAndSetText(warDef.Name);
+					else
+            local subTypeDisplayName = pDealItem:GetSubTypeNameID();
+            if (subTypeDisplayName ~= nil) then
+              icon.IconText:LocalizeAndSetText(subTypeDisplayName);
+            end
           end
           icon.SelectButton:SetToolTipString(nil);		-- We recycle the entries, so make sure this is clear.
 
@@ -2688,7 +2715,6 @@ end
 
 -- ===========================================================================
 function PopulatePlayerDealPanel(rootControl : table, player : table)
-
   if (player ~= nil) then
     local playerType = GetPlayerType(player);
     PopulateDealGold(player, ms_DealGroups[DealItemGroupTypes.GOLD][playerType]);

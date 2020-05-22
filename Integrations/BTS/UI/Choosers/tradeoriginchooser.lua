@@ -6,7 +6,8 @@
 include("InstanceManager");
 include("SupportFunctions");
 include("AnimSidePanelSupport");
-include("civ6common")
+include("civ6common");
+include("Colors")
 
 -- ===========================================================================
 --  CONSTANTS
@@ -70,8 +71,7 @@ function Refresh()
 
   -- Calculate Control Size
   Controls.CityStack:CalculateSize();
-  Controls.CityStack:ReprocessAnchoring();
-  Controls.CityScrollPanel:CalculateInternalSize();
+  Controls.CityScrollPanel:CalculateSize();
 end
 
 -- ===========================================================================
@@ -84,8 +84,8 @@ function RefreshHeader()
 
     -- Update City Banner
     local backColor:number, frontColor:number  = UI.GetPlayerColors( m_newOriginCity:GetOwner() );
-    local darkerBackColor:number = DarkenLightenColor(backColor,(-85),238);
-    local brighterBackColor:number = DarkenLightenColor(backColor,90,255);
+    local darkerBackColor:number = UI.DarkenLightenColor(backColor,(-85),238);
+    local brighterBackColor:number = UI.DarkenLightenColor(backColor,90,255);
 
     Controls.BannerBase:SetColor( backColor );
     Controls.BannerDarker:SetColor( darkerBackColor );
@@ -97,7 +97,7 @@ function RefreshHeader()
     local originPlayerIconString:string = "ICON_" .. originPlayerConfig:GetCivilizationTypeName();
     local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(originPlayerIconString, 22);
     local secondaryColor, primaryColor = UI.GetPlayerColors( m_newOriginCity:GetOwner() );
-    local brighterIconColor:number = DarkenLightenColor(primaryColor,90,255);
+    local brighterIconColor:number = UI.DarkenLightenColor(primaryColor,90,255);
 
     Controls.OriginCivIcon:SetTexture(textureOffsetX, textureOffsetY, textureSheet);
     Controls.OriginCivIcon:LocalizeAndSetToolTip( originPlayerConfig:GetCivilizationDescription() );
@@ -114,7 +114,7 @@ end
 -- ===========================================================================
 function AddCity(cityID:number)
   local city = Players[Game.GetLocalPlayer()]:GetCities():FindID(cityID)
-  print_debug("Adding city " .. Locale.Lookup(city:GetName()))
+  --print("Adding city " .. Locale.Lookup(city:GetName()))
   local cityInstance:table = m_cityIM:GetInstance();
   cityInstance.CityButton:SetHide(false);
   cityInstance.CityButton:SetText(Locale.ToUpper(city:GetName()));
@@ -141,7 +141,7 @@ function OnChangeOriginCityButton()
       -- print (" cant teleport to the same city")
     end
   else
-    print_debug("cities are nil")
+    --print("cities are nil")
   end
 end
 
@@ -195,7 +195,6 @@ function OnChangeOriginCityFromOverview( city:table )
     if (m_AnimSupport:IsVisible()) then
       Refresh();
     else
-      print_debug("open sesame...")
       OnOpen();
     end
   end

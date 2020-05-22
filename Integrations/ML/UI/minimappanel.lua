@@ -1,21 +1,24 @@
--- ===========================================================================
---  MINIMAP PANEL
--- ===========================================================================
+-- Copyright 2016-2018, Firaxis Games
 include( "InstanceManager" );
-include( "Civ6Common" );
 
 -- ===========================================================================
---  MODDED LENS
+--  MODDED LENS (by Astog)
 -- ===========================================================================
 
 g_ModLenses = {} -- Populated by ModLens_*.lua scripts
-include( "modlens_", true )
+include( "ModLens_", true )
 
 local m_LensButtonIM:table = InstanceManager:new("LensButtonInstance", "LensButton", Controls.LensToggleStack)
-local m_CurrentModdedLensOn:string = "NONE"
+local m_CurrentModdedLensOn:string = nil
 
 -- Settler Lens Variables
-local m_SetterLensAlternateInverse:boolean = false;
+local m_AltSettlerLensOn:boolean = false;
+
+-- Non-standard lenses
+local m_AttackRange : number = UILens.CreateLensLayerHash("Attack_Range");
+local m_MovementZoneOfControl : number = UILens.CreateLensLayerHash("Movement_Zone_Of_Control");
+local m_HexColoringGreatPeople : number = UILens.CreateLensLayerHash("Hex_Coloring_Great_People");
+local m_MapHexMask : number = UILens.CreateLensLayerHash("Map_Hex_Mask");
 
 -- ===========================================================================
 --  CONSTANTS
@@ -23,33 +26,30 @@ local m_SetterLensAlternateInverse:boolean = false;
 local MINIMAP_COLLAPSED_OFFSETY     :number = -180;
 local LENS_PANEL_OFFSET             :number = 50;
 local MINIMAP_BACKING_PADDING_SIZEY :number = 54;
+local MAP_OPTIONS_PADDING           :number = 80;
 
 -- ===========================================================================
 --  GLOBALS
 -- ===========================================================================
-m_shouldCloseLensMenu = true;    -- Controls when the Lens menu should be closed.
+g_shouldCloseLensMenu = true;    -- Controls when the Lens menu should be closed.
+g_ContinentsCache = {};
+
+g_HexColoringContinent = UILens.CreateLensLayerHash("Hex_Coloring_Continent");
+
 
 -- ===========================================================================
 --  MEMBERS
 -- ===========================================================================
 --local m_OptionsButtonManager= InstanceManager:new( "MiniMapOptionButtonInstance", "Top",      Controls.OptionsStack );
+local m_LensButtonIM            :table = InstanceManager:new("LensButtonInstance", "LensButton", Controls.LensToggleStack);
+local m_MapOptionIM             :table = InstanceManager:new("MapOptionInstance", "ToggleButton", Controls.MapOptionsStack);
+
 local m_OptionButtons           :table = {};    -- option buttons indexed by buttonName.
 local iZoomIncrement            :number = 2;
 local m_isCollapsed             :boolean= false;
-local bGridOn                   :boolean= true;
 local m_ContinentsCreated       :boolean=false;
 local m_MiniMap_xmloffsety      :number = 0;
-local m_ContinentsCache         :table = {};
-local m_kFlyoutControlIds       :table = { "MapOptions", "Lens", "MapPinList"}; -- Name of controls that are the backing for "flyout" menus.
-
-local m_LensLayers:table = {
-  LensLayers.HEX_COLORING_RELIGION,
-  LensLayers.HEX_COLORING_CONTINENT,
-  LensLayers.HEX_COLORING_APPEAL_LEVEL,
-  LensLayers.HEX_COLORING_GOVERNMENT,
-  LensLayers.HEX_COLORING_OWING_CIV,
-  LensLayers.HEX_COLORING_WATER_AVAILABLITY
-};
+local m_kFlyoutControlIds       :table = { "MapOptions", "Lens", "MapPinList", "MapSearch" };   -- Name of controls that are the backing for "flyout" menus.
 
 local m_ToggleReligionLensId    = Input.GetActionId("LensReligion");
 local m_ToggleContinentLensId   = Input.GetActionId("LensContinent");
@@ -58,41 +58,36 @@ local m_ToggleSettlerLensId     = Input.GetActionId("LensSettler");
 local m_ToggleGovernmentLensId  = Input.GetActionId("LensGovernment");
 local m_TogglePoliticalLensId   = Input.GetActionId("LensPolitical");
 local m_ToggleTourismLensId     = Input.GetActionId("LensTourism");
+local m_ToggleEmpireLensId      = Input.GetActionId("LensEmpire");
 local m_Toggle2DViewId          = Input.GetActionId("Toggle2DView");
+
+local m_OpenMapSearchId         = Input.GetActionId("OpenMapSearch");
 
 local m_isMouseDragEnabled      :boolean = true; -- Can the camera be moved by dragging on the minimap?
 local m_isMouseDragging         :boolean = false; -- Was LMB clicked inside the minimap, and has not been released yet?
 local m_hasMouseDragged         :boolean = false; -- Has there been any movements since m_isMouseDragging became true?
 local m_wasMouseInMinimap       :boolean = false; -- Was the mouse over the minimap the last time we checked?
 
+local m_HexColoringReligion : number = UILens.CreateLensLayerHash("Hex_Coloring_Religion");
+local m_HexColoringAppeal : number = UILens.CreateLensLayerHash("Hex_Coloring_Appeal_Level");
+local m_HexColoringGovernment : number = UILens.CreateLensLayerHash("Hex_Coloring_Government");
+local m_HexColoringOwningCiv : number = UILens.CreateLensLayerHash("Hex_Coloring_Owning_Civ");
+local m_HexColoringWaterAvail : number = UILens.CreateLensLayerHash("Hex_Coloring_Water_Availablity");
+local m_TouristTokens : number = UILens.CreateLensLayerHash("Tourist_Tokens");
+
 -- ===========================================================================
 --  FUNCTIONS
 -- ===========================================================================
 
--- CQUI Options Panel logic
-function CQUI_OnToggleBindings(mode: number)
-  Controls.CQUI_ToggleBindings0:SetCheck(false);
-  Controls.CQUI_ToggleBindings1:SetCheck(false);
-  Controls.CQUI_ToggleBindings2:SetCheck(false);
-  if(mode == 0) then
-  Controls.CQUI_ToggleBindings0:SetCheck(true);
-  elseif(mode == 1) then
-  Controls.CQUI_ToggleBindings1:SetCheck(true);
-  elseif(mode == 2) then
-  Controls.CQUI_ToggleBindings2:SetCheck(true);
-  end
+function CQUI_ToggleYieldIcons()
+  UserConfiguration.ShowMapYield(GameConfiguration.GetValue("CQUI_ToggleYieldsOnLoad"));
+  RestoreYieldIcons();
 end
 
-function CQUI_ToggleYieldIcons()
-  -- CQUI: Toggle yield icons if option is enabled
-  if(GameConfiguration.GetValue("CQUI_ToggleYieldsOnLoad")) then
-  ToggleYieldIcons();
-  end
-end
 -- ===========================================================================
 function GetContinentsCache()
-  if m_ContinentsCache == nil then
-    m_ContinentsCache = Map.GetContinentsInUse();
+  if g_ContinentsCache == nil then
+    g_ContinentsCache = Map.GetContinentsInUse();
   end
 end
 
@@ -121,6 +116,8 @@ function CloseAllFlyouts()
     else
       UI.DataError("Minimap's CloseAllFlyouts() attempted to unselect'"..buttonId.."' but the control doesn't exist in the XML.");
     end
+
+
   end
 end
 
@@ -154,10 +151,45 @@ function RealizeFlyouts( pControl:table )
 end
 
 -- ===========================================================================
+function CreateLensToggleButton(szText, szToolTip, pCallback, bChecked)
+  local szLocalizedText = Locale.Lookup(szText);
+  local szLocalizedToolTip = Locale.Lookup(szToolTip);
+
+  local pInstance = m_LensButtonIM:GetInstance();
+  pInstance.LensButton:GetTextButton():SetText(szLocalizedText);
+  pInstance.LensButton:SetToolTipString(szLocalizedToolTip);
+  pInstance.LensButton:RegisterCallback(Mouse.eLClick, pCallback);
+  pInstance.LensButton:SetCheck(bChecked);
+  return pInstance;
+end
+
+-- ===========================================================================
+function CreateMapOptionButton(szText, szToolTip, pCallback, bChecked)
+  local szLocalizedText = Locale.Lookup(szText);
+  local szLocalizedToolTip = Locale.Lookup(szToolTip);
+
+  local pInstance = m_MapOptionIM:GetInstance();
+  pInstance.ToggleButton:GetTextButton():SetText(szLocalizedText);
+  pInstance.ToggleButton:SetToolTipString(szLocalizedToolTip);
+  pInstance.ToggleButton:RegisterCallback(Mouse.eLClick, pCallback);
+  pInstance.ToggleButton:SetCheck(bChecked);
+  return pInstance;
+end
+
+-- ===========================================================================
 function RefreshMinimapOptions()
-  Controls.ToggleYieldsButton:SetCheck(UserConfiguration.ShowMapYield());
-  Controls.ToggleGridButton:SetCheck(bGridOn);
-  Controls.ToggleResourcesButton:SetCheck(UserConfiguration.ShowMapResources());
+  if GameCapabilities.HasCapability("CAPABILITY_DISPLAY_MINIMAP_YIELDS") then
+    Controls.ToggleYieldsButton:SetCheck(UserConfiguration.ShowMapYield());
+  else
+    Controls.ToggleYieldsButton:SetHide(true);
+  end
+
+  if GameCapabilities.HasCapability("CAPABILITY_DISPLAY_MINIMAP_RESOURCES") then
+    Controls.ToggleResourcesButton:SetCheck(UserConfiguration.ShowMapResources());
+  else
+    Controls.ToggleResourcesButton:SetHide(true);
+  end
+  Controls.ToggleGridButton:SetCheck(UserConfiguration.ShowMapGrid());
 end
 
 -- ===========================================================================
@@ -166,6 +198,7 @@ function ToggleMapOptionsList()
     RefreshMinimapOptions();
   end
   Controls.MapOptionsPanel:SetHide( not Controls.MapOptionsPanel:IsHidden() );
+  Controls.MapOptionsPanel:SetSizeY(Controls.MapOptionsStack:GetSizeY() + MAP_OPTIONS_PADDING);
   RealizeFlyouts(Controls.MapOptionsPanel);
   Controls.MapOptionsButton:SetSelected( not Controls.MapOptionsPanel:IsHidden() );
 end
@@ -183,13 +216,17 @@ function OnToggleLensList()
     Controls.GovernmentLensButton:SetHide(not GameCapabilities.HasCapability("CAPABILITY_LENS_GOVERNMENT"));
     Controls.WaterLensButton:SetHide(not GameCapabilities.HasCapability("CAPABILITY_LENS_SETTLER"));
     Controls.TourismLensButton:SetHide(not GameCapabilities.HasCapability("CAPABILITY_LENS_TOURISM"));
+    Controls.ContinentLensButton:SetHide(not GameCapabilities.HasCapability("CAPABILITY_LENS_CONTINENT"));
+    Controls.EmpireLensButton:SetHide(not GameCapabilities.HasCapability("CAPABILITY_LENS_EMPIRE"));
     Controls.LensToggleStack:CalculateSize();
+
+    -- Astog: Disable increasing size of panel, since now we have a scrollbar
     -- Controls.LensPanel:SetSizeY(Controls.LensToggleStack:GetSizeY() + LENS_PANEL_OFFSET);
   end
 end
 
 function CloseLensList()
-  m_shouldCloseLensMenu = true;
+  g_shouldCloseLensMenu = true;
   Controls.ReligionLensButton:SetCheck(false);
   Controls.ContinentLensButton:SetCheck(false);
   Controls.AppealLensButton:SetCheck(false);
@@ -197,7 +234,10 @@ function CloseLensList()
   Controls.WaterLensButton:SetCheck(false);
   Controls.OwnerLensButton:SetCheck(false);
   Controls.TourismLensButton:SetCheck(false);
+  Controls.EmpireLensButton:SetCheck(false);
 
+  -- Astog
+  --------------------------------------------------------------------------------------------------
   -- Turn off each mod lens
   local i = 1
   local lensButtonInstance = m_LensButtonIM:GetAllocatedInstance(i)
@@ -209,13 +249,15 @@ function CloseLensList()
 
   -- Hide each panel that exist for lens
   LuaEvents.ML_CloseLensPanels()
+  --------------------------------------------------------------------------------------------------
 
-  if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
+  local uiCurrInterfaceMode:number = UI.GetInterfaceMode();
+  if uiCurrInterfaceMode == InterfaceModeTypes.VIEW_MODAL_LENS then
     UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
   end
 end
 
--- ===========================================================================
+------------------------------------------------------------------------------
 function ToggleMapPinMode()
   Controls.MapPinListPanel:SetHide( not Controls.MapPinListPanel:IsHidden() );
   RealizeFlyouts(Controls.MapPinListPanel);
@@ -223,19 +265,45 @@ function ToggleMapPinMode()
 end
 
 -- ===========================================================================
+function ToggleMapSearchPanel()
+  Controls.MapSearchPanel:SetHide( not Controls.MapSearchPanel:IsHidden() );
+  RealizeFlyouts(Controls.MapSearchPanel);
+  Controls.MapSearchButton:SetSelected( not Controls.MapSearchPanel:IsHidden() );
+end
+
+-- ===========================================================================
+function OnMapSearchPanelVisibilityChanged()
+  if (Controls.MapSearchPanel:IsHidden()) then
+    LuaEvents.MapSearch_PanelClosed();
+  else
+    LuaEvents.MapSearch_PanelOpened();
+  end
+end
+
+-- ===========================================================================
 function ToggleResourceIcons()
-  UserConfiguration.ShowMapResources( not UserConfiguration.ShowMapResources() );
+  local bOldValue :boolean = UserConfiguration.ShowMapResources();
+  UserConfiguration.ShowMapResources( not bOldValue );
+
+  local bOther = UserConfiguration.ShowMapGrid();
+end
+
+-- ===========================================================================
+function RestoreYieldIcons()
+  if UserConfiguration.ShowMapYield() then
+  -- M4A FIX: This should be PlotInfo ShowYieldIcons
+    LuaEvents.PlotInfo_ShowYieldIcons();
+  else
+    LuaEvents.PlotInfo_HideYieldIcons();
+  end
 end
 
 -- ===========================================================================
 function ToggleYieldIcons()
   local showMapYield:boolean = not UserConfiguration.ShowMapYield();
   UserConfiguration.ShowMapYield( showMapYield );
-  if showMapYield then
-    LuaEvents.MinimapPanel_ShowYieldIcons();
-  else
-    LuaEvents.MinimapPanel_HideYieldIcons();
-  end
+
+  RestoreYieldIcons();
 end
 
 -- ===========================================================================
@@ -244,7 +312,7 @@ function ToggleReligionLens()
     UILens.SetActive("Religion");
     RefreshInterfaceMode();
   else
-    m_shouldCloseLensMenu = false; --When toggling the lens off, shouldn't close the menu.
+    g_shouldCloseLensMenu = false; --When toggling the lens off, shouldn't close the menu.
     if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
       UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
     end
@@ -257,7 +325,7 @@ function ToggleContinentLens()
     UILens.SetActive("Continent");
     RefreshInterfaceMode();
   else
-    m_shouldCloseLensMenu = false;
+    g_shouldCloseLensMenu = false;
     if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
       UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
     end
@@ -267,22 +335,25 @@ end
 -- ===========================================================================
 function ToggleAppealLens()
   if Controls.AppealLensButton:IsChecked() then
+
+    -- Astog
+    --------------------------------------------------------------------------------------------------
     SetActiveModdedLens("VANILLA_APPEAL");
 
     -- Check if the appeal lens is already active. Needed to clear any modded lens
-    if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
+    if UILens.IsLayerOn(m_HexColoringAppeal) then
       -- Unapply the appeal lens, so it can be cleared from the screen
       UILens.SetActive("Default");
     end
+    --------------------------------------------------------------------------------------------------
 
     UILens.SetActive("Appeal");
     RefreshInterfaceMode();
   else
-    m_shouldCloseLensMenu = false;
+    g_shouldCloseLensMenu = false;
     if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
       UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
     end
-    SetActiveModdedLens("NONE");
   end
 end
 
@@ -292,7 +363,7 @@ function ToggleWaterLens()
     UILens.SetActive("WaterAvailability");
     RefreshInterfaceMode();
   else
-    m_shouldCloseLensMenu = false;
+    g_shouldCloseLensMenu = false;
     if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
       UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
     end
@@ -305,7 +376,7 @@ function ToggleGovernmentLens()
     UILens.SetActive("Government");
     RefreshInterfaceMode();
   else
-    m_shouldCloseLensMenu = false;
+    g_shouldCloseLensMenu = false;
     if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
       UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
     end
@@ -318,7 +389,7 @@ function ToggleOwnerLens()
     UILens.SetActive("OwningCiv");
     RefreshInterfaceMode();
   else
-    m_shouldCloseLensMenu = false;
+    g_shouldCloseLensMenu = false;
     if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
       UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
     end
@@ -331,7 +402,20 @@ function ToggleTourismLens()
     UILens.SetActive("Tourism");
     RefreshInterfaceMode();
   else
-    m_shouldCloseLensMenu = false;
+    g_shouldCloseLensMenu = false;
+    if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
+      UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+    end
+  end
+end
+
+-- ===========================================================================
+function ToggleEmpireLens()
+  if Controls.EmpireLensButton:IsChecked() then
+    UILens.SetActive("EmpireDetails");
+    RefreshInterfaceMode();
+  else
+    g_shouldCloseLensMenu = false;
     if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
       UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
     end
@@ -340,8 +424,10 @@ end
 
 -- ===========================================================================
 function ToggleGrid()
-  bGridOn = not bGridOn;
-  UI.ToggleGrid( bGridOn );
+  local bOldState :boolean = UserConfiguration.ShowMapGrid();
+  UserConfiguration.ShowMapGrid( not bOldState  );
+  local bNewState :boolean = UserConfiguration.ShowMapGrid();
+  UI.ToggleGrid( not bOldState );
 end
 
 -- ===========================================================================
@@ -358,6 +444,13 @@ function Toggle2DView()
     end
     UI.PlaySound("Stop_Unit_Movement_Master");
   end
+
+end
+
+-- ===========================================================================
+function ShowFullscreenMap()
+  UI.PlaySound("Play_UI_Click");
+  UI.SetInterfaceMode(InterfaceModeTypes.FULLSCREEN_MAP);
 end
 
 -- ===========================================================================
@@ -384,13 +477,12 @@ function OnCollapseToggle()
     Controls.CompassArm:SetPercent(.5);
   end
   m_isCollapsed = not m_isCollapsed;
-  LuaEvents.ModLens_ReoffsetPanels( OnReoffsetPanel );
 end
 
 -- ===========================================================================
 function OnMinimapImageSizeChanged()
   ResizeBacking();
-  LuaEvents.ModLens_ReoffsetPanels( OnReoffsetPanel );
+  LuaEvents.ML_ReoffsetPanels()
 end
 
 -- ===========================================================================
@@ -414,61 +506,96 @@ end
 
 -- ===========================================================================
 function OnLensLayerOn( layerNum:number )
-  -- print("On: " .. layerNum)
-  if layerNum == LensLayers.HEX_COLORING_RELIGION then
+
+  -- Astog
+  --------------------------------------------------------------------------------------------------
+  -- clear unit non-standard layers
+  -- do this if no unit is selected, since these lenses are applied on unit selection, so control should be in SelectedUnit.lua
+  if UI.GetHeadSelectedUnit() == nil then
+    -- CQUI (Azurency) : Fix clearing of m_AttackRange lenses while in this STIKE mode
+    if (UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK and UI.GetInterfaceMode() ~= InterfaceModeTypes.DISTRICT_RANGE_ATTACK) then
+      UILens.ClearLayerHexes(m_AttackRange);
+    end
+    UILens.ClearLayerHexes(m_AttackRange);
+    UILens.ClearLayerHexes(m_HexColoringGreatPeople);
+    UILens.ClearLayerHexes(m_MovementZoneOfControl);
+  end
+  --------------------------------------------------------------------------------------------------
+
+  if layerNum == m_HexColoringReligion then
     UI.PlaySound("UI_Lens_Overlay_On");
     UILens.SetDesaturation(1.0);
-  elseif layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL then
+
+    -- Astog
+    --------------------------------------------------------------------------------------------------
+  elseif layerNum == m_HexColoringAppeal then
     if m_CurrentModdedLensOn == "VANILLA_APPEAL" then
       SetAppealHexes();
-      UI.PlaySound("UI_Lens_Overlay_On");
-    elseif m_CurrentModdedLensOn ~= "ML_CUSTOM" and m_CurrentModdedLensOn ~= "NONE" then
+    else
       SetModLens();
-      UI.PlaySound("UI_Lens_Overlay_On");
     end
-  elseif layerNum == LensLayers.HEX_COLORING_GOVERNMENT then
+    UI.PlaySound("UI_Lens_Overlay_On");
+    --------------------------------------------------------------------------------------------------
+
+  elseif layerNum == m_HexColoringGovernment then
     SetGovernmentHexes();
     UI.PlaySound("UI_Lens_Overlay_On");
-  elseif layerNum == LensLayers.HEX_COLORING_OWING_CIV then
-    SetOwingCivHexes();
+  elseif layerNum == m_HexColoringOwningCiv then
+    SetOwningCivHexes();
     UI.PlaySound("UI_Lens_Overlay_On");
-  elseif layerNum == LensLayers.HEX_COLORING_CONTINENT then
+  elseif layerNum == g_HexColoringContinent then
     SetContinentHexes();
     UI.PlaySound("UI_Lens_Overlay_On");
-  elseif layerNum == LensLayers.HEX_COLORING_WATER_AVAILABLITY then
+  elseif layerNum == m_HexColoringWaterAvail then
     SetWaterHexes();
     UI.PlaySound("UI_Lens_Overlay_On");
-  elseif layerNum == LensLayers.TOURIST_TOKENS then
+  elseif layerNum == m_TouristTokens then
     UI.PlaySound("UI_Lens_Overlay_On");
   end
 end
 
 -- ===========================================================================
 function OnLensLayerOff( layerNum:number )
-  -- print("Off: " .. layerNum)
-  if (layerNum == LensLayers.HEX_COLORING_RELIGION or
-      layerNum == LensLayers.HEX_COLORING_CONTINENT or
-      layerNum == LensLayers.HEX_COLORING_GOVERNMENT or
-      layerNum == LensLayers.HEX_COLORING_OWING_CIV) then
+
+  -- Astog
+  --------------------------------------------------------------------------------------------------
+  -- clear unit non-standard layers
+  -- do this if no unit is selected, since these lenses are applied on unit selection, so control should be in SelectedUnit.lua
+  if UI.GetHeadSelectedUnit() == nil then
+    -- CQUI (Azurency) : Fix clearing of m_AttackRange lenses while in this STIKE mode
+    if (UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK and UI.GetInterfaceMode() ~= InterfaceModeTypes.DISTRICT_RANGE_ATTACK) then
+      UILens.ClearLayerHexes(m_AttackRange);
+    end
+    UILens.ClearLayerHexes(m_AttackRange);
+    UILens.ClearLayerHexes(m_HexColoringGreatPeople);
+    UILens.ClearLayerHexes(m_MovementZoneOfControl);
+  end
+
+  -- print("OnLensLayerOff", layerNum)
+  if (layerNum == m_HexColoringReligion       or
+    layerNum == g_HexColoringContinent      or
+    layerNum == m_HexColoringGovernment     or
+    layerNum == m_HexColoringOwningCiv)     then
     UI.PlaySound("UI_Lens_Overlay_Off");
 
-  -- Clear Modded Lens (Appeal lens included)
-  elseif layerNum == LensLayers.HEX_COLORING_APPEAL_LEVEL then
-    -- UILens.ClearLayerHexes( LensLayers.MAP_HEX_MASK );
+    -- Clear Modded Lens (Appeal lens included)
+  elseif layerNum == m_HexColoringAppeal then
+    UILens.ClearLayerHexes( m_MapHexMask );
     if UI.GetInterfaceMode() ~= InterfaceModeTypes.VIEW_MODAL_LENS or (UI.GetHeadSelectedUnit() == nil) then
-      UILens.ClearLayerHexes(LensLayers.HEX_COLORING_APPEAL_LEVEL);
+      UILens.ClearLayerHexes(m_HexColoringAppeal);
     end
     UI.PlaySound("UI_Lens_Overlay_Off");
+    --------------------------------------------------------------------------------------------------
 
-  elseif layerNum == LensLayers.HEX_COLORING_WATER_AVAILABLITY then
+  elseif layerNum == m_HexColoringWaterAvail then
     -- Only clear the water lens if we're turning off lenses altogether, but not if switching to another modal lens (Turning on another modal lens clears it already).
     if UI.GetInterfaceMode() ~= InterfaceModeTypes.VIEW_MODAL_LENS or (UI.GetHeadSelectedUnit() == nil) then
-      UILens.ClearLayerHexes(LensLayers.HEX_COLORING_WATER_AVAILABLITY);
+      UILens.ClearLayerHexes(m_HexColoringWaterAvail);
     end
     UI.PlaySound("UI_Lens_Overlay_Off");
   end
 
-  if (layerNum == LensLayers.HEX_COLORING_RELIGION) then
+  if (layerNum == m_HexColoringReligion) then
     UILens.SetDesaturation(0.0);
   end
 end
@@ -499,7 +626,14 @@ function OnLocalPlayerChanged( eLocalPlayer:number , ePrevLocalPlayer:number )
 end
 
 -- ===========================================================================
-function SetOwingCivHexes()
+function OnUserOptionsActivated()
+
+  RestoreYieldIcons();
+
+end
+
+-- ===========================================================================
+function SetOwningCivHexes()
   local localPlayer : number = Game.GetLocalPlayer();
   local localPlayerVis:table = PlayersVisibility[localPlayer];
   if (localPlayerVis ~= nil) then
@@ -512,7 +646,7 @@ function SetOwingCivHexes()
         local plots :table = Map.GetCityPlots():GetPurchasedPlots(pCity);
 
         if(table.count(plots) > 0) then
-          UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_OWING_CIV, localPlayer, plots, primaryColor );
+          UILens.SetLayerHexesColoredArea( m_HexColoringOwningCiv, localPlayer, plots, primaryColor );
         end
       end
     end
@@ -520,41 +654,45 @@ function SetOwingCivHexes()
 end
 
 -- ===========================================================================
-function SetWaterHexes()
-  local ctrlDown = m_CtrlDown
-  if m_SetterLensAlternateInverse then
-    ctrlDown = not ctrlDown
+
+function SetDefaultWaterHexes()
+  local FullWaterPlots:table = {};
+  local CoastalWaterPlots:table = {};
+  local NoWaterPlots:table = {};
+  local NoSettlePlots:table = {};
+
+  UILens.ClearLayerHexes(m_HexColoringWaterAvail);
+  FullWaterPlots, CoastalWaterPlots, NoWaterPlots, NoSettlePlots = Map.GetContinentPlotsWaterAvailability();
+
+  local BreathtakingColor :number = UI.GetColorValue("COLOR_BREATHTAKING_APPEAL");
+  local CharmingColor     :number = UI.GetColorValue("COLOR_CHARMING_APPEAL");
+  local AverageColor      :number = UI.GetColorValue("COLOR_AVERAGE_APPEAL");
+  local DisgustingColor   :number = UI.GetColorValue("COLOR_DISGUSTING_APPEAL");
+  local localPlayer       :number = Game.GetLocalPlayer();
+
+  if(table.count(FullWaterPlots) > 0) then
+    UILens.SetLayerHexesColoredArea( m_HexColoringWaterAvail, localPlayer, FullWaterPlots, BreathtakingColor );
   end
+  if(table.count(CoastalWaterPlots) > 0) then
+    UILens.SetLayerHexesColoredArea( m_HexColoringWaterAvail, localPlayer, CoastalWaterPlots, CharmingColor );
+  end
+  if(table.count(NoWaterPlots) > 0) then
+    UILens.SetLayerHexesColoredArea( m_HexColoringWaterAvail, localPlayer, NoWaterPlots, AverageColor );
+  end
+  if(table.count(NoSettlePlots) > 0) then
+    UILens.SetLayerHexesColoredArea( m_HexColoringWaterAvail, localPlayer, NoSettlePlots, DisgustingColor );
+  end
+end
 
-  if (not ctrlDown) or UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
-    local FullWaterPlots:table = {};
-    local CoastalWaterPlots:table = {};
-    local NoWaterPlots:table = {};
-    local NoSettlePlots:table = {};
 
-    UILens.ClearLayerHexes(LensLayers.HEX_COLORING_WATER_AVAILABLITY);
-    FullWaterPlots, CoastalWaterPlots, NoWaterPlots, NoSettlePlots = Map.GetContinentPlotsWaterAvailability();
-
-    local BreathtakingColor :number = UI.GetColorValue("COLOR_BREATHTAKING_APPEAL");
-    local CharmingColor     :number = UI.GetColorValue("COLOR_CHARMING_APPEAL");
-    local AverageColor      :number = UI.GetColorValue("COLOR_AVERAGE_APPEAL");
-    local DisgustingColor   :number = UI.GetColorValue("COLOR_DISGUSTING_APPEAL");
-    local localPlayer       :number = Game.GetLocalPlayer();
-
-    if(table.count(FullWaterPlots) > 0) then
-      UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_WATER_AVAILABLITY, localPlayer, FullWaterPlots, BreathtakingColor );
-    end
-    if(table.count(CoastalWaterPlots) > 0) then
-      UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_WATER_AVAILABLITY, localPlayer, CoastalWaterPlots, CharmingColor );
-    end
-    if(table.count(NoWaterPlots) > 0) then
-      UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_WATER_AVAILABLITY, localPlayer, NoWaterPlots, AverageColor );
-    end
-    if(table.count(NoSettlePlots) > 0) then
-      UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_WATER_AVAILABLITY, localPlayer, NoSettlePlots, DisgustingColor );
-    end
-
-  else -- A settler is selected, show alternate highlighting
+-- Astog
+--------------------------------------------------------------------------------------------------
+function SetWaterHexes()
+  if (not m_CtrlDown) then
+    --print("default")
+    SetDefaultWaterHexes()
+  else
+    --print("alt")
     SetSettlerLens()
   end
 end
@@ -568,8 +706,9 @@ function SetSettlerLens()
     return
   end
 
-  local pPlot = Map.GetPlotByIndex(plotId)
+  local pPlot:table = Map.GetPlotByIndex(plotId)
   local localPlayer:number = Game.GetLocalPlayer();
+  local pPlayer:table = Players[localPlayer]
   local localPlayerVis:table = PlayersVisibility[localPlayer];
   local localPlayerCities = Players[localPlayer]:GetCities()
 
@@ -585,7 +724,7 @@ function SetSettlerLens()
   local iRegularColor:number = UI.GetColorValue("COLOR_ALT_SETTLER_REGULAR");
 
   for pRangePlot in PlotAreaSpiralIterator(pPlot, CITY_WORK_RANGE,
-      SECTOR_NONE, DIRECTION_CLOCKWISE, DIRECTION_OUTWARDS, CENTRE_INCLUDE) do
+    SECTOR_NONE, DIRECTION_CLOCKWISE, DIRECTION_OUTWARDS, CENTRE_INCLUDE) do
 
     local plotX = pRangePlot:GetX()
     local plotY = pRangePlot:GetY()
@@ -593,7 +732,7 @@ function SetSettlerLens()
     if localPlayerVis:IsRevealed(plotX, plotY) then
 
       table.insert(tNonDimPlots, plotID)
-      if plotWithinWorkingRange(localPlayer, plotID) then
+      if plotWithinWorkingRange(pPlayer, pRangePlot) then
         table.insert(tOverlapPlots, plotID)
 
       elseif pRangePlot:IsImpassable() then
@@ -603,7 +742,7 @@ function SetSettlerLens()
         table.insert(tUnusablePlots, plotID)
 
       elseif plotHasResource(pRangePlot) and
-          playerHasDiscoveredResource(localPlayer, plotID) then
+        playerHasDiscoveredResource(pPlayer, pRangePlot) then
 
         table.insert(tResourcePlots, plotID)
       else
@@ -612,51 +751,44 @@ function SetSettlerLens()
     end
   end
 
-  -- Alt_HighlightPlots(tNonDimPlots)
-
   if #tOverlapPlots > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_WATER_AVAILABLITY, localPlayer, tOverlapPlots, iOverlapColor );
+    UILens.SetLayerHexesColoredArea( m_HexColoringWaterAvail, localPlayer, tOverlapPlots, iOverlapColor );
   end
 
   if #tUnusablePlots > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_WATER_AVAILABLITY, localPlayer, tUnusablePlots, iUnusableColor );
+    UILens.SetLayerHexesColoredArea( m_HexColoringWaterAvail, localPlayer, tUnusablePlots, iUnusableColor );
   end
 
   if #tResourcePlots > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_WATER_AVAILABLITY, localPlayer, tResourcePlots, iResourceColor );
+    UILens.SetLayerHexesColoredArea( m_HexColoringWaterAvail, localPlayer, tResourcePlots, iResourceColor );
   end
 
   if #tRegularPlots  > 0 then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_WATER_AVAILABLITY, localPlayer, tRegularPlots, iRegularColor );
+    UILens.SetLayerHexesColoredArea( m_HexColoringWaterAvail, localPlayer, tRegularPlots, iRegularColor );
   end
 end
 
 function RefreshSettlerLens()
-  ClearSettlerLens()
-  UILens.ToggleLayerOn( LensLayers.HEX_COLORING_WATER_AVAILABLITY );
-end
-
-function ClearSettlerLens()
-  -- Alt_ClearHighlightedPlots()
-
-  if UILens.IsLayerOn( LensLayers.HEX_COLORING_WATER_AVAILABLITY ) then
-    UILens.ToggleLayerOff( LensLayers.HEX_COLORING_WATER_AVAILABLITY );
-  end
+  UILens.ClearLayerHexes(m_HexColoringWaterAvail)
+  SetWaterHexes()
 end
 
 -- Checks to see if settler lens should be reapplied
 function RecheckSettlerLens()
   local selectedUnit = UI.GetHeadSelectedUnit()
   if (selectedUnit ~= nil) then
-    local unitType = GetUnitType(selectedUnit:GetOwner(), selectedUnit:GetID());
+    local unitType = getUnitType(selectedUnit);
     if (unitType == "UNIT_SETTLER") then
       RefreshSettlerLens()
       return
     end
   end
 
-  ClearSettlerLens()
+  if UILens.IsLayerOn( m_HexColoringWaterAvail ) then
+    UILens.ToggleLayerOff( m_HexColoringWaterAvail );
+  end
 end
+--------------------------------------------------------------------------------------------------
 
 -- ===========================================================================
 function SetGovernmentHexes()
@@ -665,26 +797,27 @@ function SetGovernmentHexes()
   if (localPlayerVis ~= nil) then
     local players = Game.GetPlayers();
     for i, player in ipairs(players) do
-      local cities = players[i]:GetCities();
-      local culture = player:GetCulture();
-      local governmentId :number = culture:GetCurrentGovernment();
-      local GovernmentColor;
+      local pCities           :table = players[i]:GetCities();
+      local pCulture          :table = player:GetCulture();
+      local governmentId      :number = pCulture:GetCurrentGovernment();
+      local governmentColor   :number;
 
-      if culture:IsInAnarchy() then
-        GovernmentColor = UI.GetColorValue("COLOR_CLEAR");
+      if pCulture:IsInAnarchy() then
+        governmentColor = UI.GetColorValue("COLOR_CLEAR");
       else
         if(governmentId < 0) then
-          GovernmentColor = UI.GetColorValue("COLOR_GOVERNMENT_CITYSTATE");
+          governmentColor = UI.GetColorValue("COLOR_GOVERNMENT_CITYSTATE");
         else
-          GovernmentColor = UI.GetColorValue("COLOR_" ..  GameInfo.Governments[governmentId].GovernmentType);
+          local GovType:string = GameInfo.Governments[governmentId].GovernmentType;
+          governmentColor = UI.GetColorValue("COLOR_"..GovType);
         end
       end
 
-      for _, pCity in cities:Members() do
+      for _, pCity in pCities:Members() do
         local plots:table = Map.GetCityPlots():GetPurchasedPlots(pCity);
 
         if(table.count(plots) > 0) then
-          UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_GOVERNMENT, localPlayer, plots, GovernmentColor );
+          UILens.SetLayerHexesColoredArea( m_HexColoringGovernment, localPlayer, plots, governmentColor );
         end
       end
     end
@@ -709,35 +842,36 @@ function SetAppealHexes()
   local localPlayer       :number = Game.GetLocalPlayer();
 
   if(table.count(BreathtakingPlots) > 0) then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, BreathtakingPlots, BreathtakingColor );
+    UILens.SetLayerHexesColoredArea( m_HexColoringAppeal, localPlayer, BreathtakingPlots, BreathtakingColor );
   end
   if(table.count(CharmingPlots) > 0) then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, CharmingPlots, CharmingColor );
+    UILens.SetLayerHexesColoredArea( m_HexColoringAppeal, localPlayer, CharmingPlots, CharmingColor );
   end
   if(table.count(AveragePlots) > 0) then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, AveragePlots, AverageColor );
+    UILens.SetLayerHexesColoredArea( m_HexColoringAppeal, localPlayer, AveragePlots, AverageColor );
   end
   if(table.count(UninvitingPlots) > 0) then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, UninvitingPlots, UninvitingColor );
+    UILens.SetLayerHexesColoredArea( m_HexColoringAppeal, localPlayer, UninvitingPlots, UninvitingColor );
   end
   if(table.count(DisgustingPlots) > 0) then
-    UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, DisgustingPlots, DisgustingColor );
+    UILens.SetLayerHexesColoredArea( m_HexColoringAppeal, localPlayer, DisgustingPlots, DisgustingColor );
   end
+
 end
 
 -- ===========================================================================
 function SetContinentHexes()
-  local ContinentColor:number = 0x02000000;
+  local ContinentColor:number = UI.GetColorValueFromHexLiteral(0x02000000);
   GetContinentsCache();
   local localPlayerVis:table = PlayersVisibility[Game.GetLocalPlayer()];
   if (localPlayerVis ~= nil) then
 
     local kContinentColors:table = {};
-    for loopNum, ContinentID in ipairs(m_ContinentsCache) do
+    for loopNum, ContinentID in ipairs(g_ContinentsCache) do
       local visibleContinentPlots:table = Map.GetVisibleContinentPlots(ContinentID);
       ContinentColor = UI.GetColorValue("COLOR_" .. GameInfo.Continents[ loopNum-1 ].ContinentType);
       if(table.count(visibleContinentPlots) > 0) then
-        UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_CONTINENT, loopNum-1, visibleContinentPlots, ContinentColor );
+        UILens.SetLayerHexesColoredArea( g_HexColoringContinent, loopNum-1, visibleContinentPlots, ContinentColor );
         kContinentColors[ContinentID] = ContinentColor;
       end
     end
@@ -773,27 +907,27 @@ function OnInputActionTriggered( actionId )
     return;
   end
 
-  if m_ToggleReligionLensId ~= nil and (actionId == m_ToggleReligionLensId) then
+  if m_ToggleReligionLensId ~= nil and (actionId == m_ToggleReligionLensId) and GameCapabilities.HasCapability("CAPABILITY_LENS_RELIGION") then
     LensPanelHotkeyControl( Controls.ReligionLensButton );
     ToggleReligionLens();
     UI.PlaySound("Play_UI_Click");
   end
-  if m_ToggleContinentLensId ~= nil and (actionId == m_ToggleContinentLensId) then
+  if m_ToggleContinentLensId ~= nil and (actionId == m_ToggleContinentLensId) and GameCapabilities.HasCapability("CAPABILITY_LENS_CONTINENT") then
     LensPanelHotkeyControl( Controls.ContinentLensButton );
     ToggleContinentLens();
     UI.PlaySound("Play_UI_Click");
   end
-  if m_ToggleAppealLensId ~= nil and (actionId == m_ToggleAppealLensId) then
+  if m_ToggleAppealLensId ~= nil and (actionId == m_ToggleAppealLensId) and GameCapabilities.HasCapability("CAPABILITY_LENS_APPEAL") then
     LensPanelHotkeyControl( Controls.AppealLensButton );
     ToggleAppealLens();
     UI.PlaySound("Play_UI_Click");
   end
-  if m_ToggleSettlerLensId ~= nil and (actionId == m_ToggleSettlerLensId) then
+  if m_ToggleSettlerLensId ~= nil and (actionId == m_ToggleSettlerLensId) and GameCapabilities.HasCapability("CAPABILITY_LENS_SETTLER") then
     LensPanelHotkeyControl( Controls.WaterLensButton );
     ToggleWaterLens();
     UI.PlaySound("Play_UI_Click");
   end
-  if m_ToggleGovernmentLensId ~= nil and (actionId == m_ToggleGovernmentLensId) then
+  if m_ToggleGovernmentLensId ~= nil and (actionId == m_ToggleGovernmentLensId) and GameCapabilities.HasCapability("CAPABILITY_LENS_GOVERNMENT") then
     LensPanelHotkeyControl( Controls.GovernmentLensButton );
     ToggleGovernmentLens();
     UI.PlaySound("Play_UI_Click");
@@ -803,14 +937,30 @@ function OnInputActionTriggered( actionId )
     ToggleOwnerLens();
     UI.PlaySound("Play_UI_Click");
   end
-  if m_ToggleTourismLensId ~= nil and (actionId == m_ToggleTourismLensId) then
+  if m_ToggleTourismLensId ~= nil and (actionId == m_ToggleTourismLensId) and GameCapabilities.HasCapability("CAPABILITY_LENS_TOURISM") then
     LensPanelHotkeyControl( Controls.TourismLensButton );
     ToggleTourismLens();
+    UI.PlaySound("Play_UI_Click");
+  end
+  if m_ToggleEmpireLensId ~= nil and (actionId == m_ToggleEmpireLensId) and GameCapabilities.HasCapability("CAPABILITY_LENS_EMPIRE") then
+    LensPanelHotkeyControl( Controls.EmpireLensButton );
+    ToggleEmpireLens();
     UI.PlaySound("Play_UI_Click");
   end
   if m_Toggle2DViewId ~= nil and (actionId == m_Toggle2DViewId) then
     UI.PlaySound("Play_UI_Click");
     Toggle2DView();
+  end
+  if m_OpenMapSearchId ~= nil and (actionId == m_OpenMapSearchId) then
+    UI.PlaySound("Play_UI_Click");
+
+    if Controls.MapSearchPanel:IsHidden() then
+      Controls.MapSearchPanel:SetHide(false);
+      RealizeFlyouts(Controls.MapSearchPanel);
+    end
+
+    -- Take focus
+    LuaEvents.MapSearch_PanelOpened();
   end
 end
 
@@ -821,12 +971,12 @@ function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
   --and eNewMode ~= InterfaceModeTypes.VIEW_MODAL_LENS
   if eOldMode == InterfaceModeTypes.VIEW_MODAL_LENS then
     if not Controls.LensPanel:IsHidden() then
-      if m_shouldCloseLensMenu then --If player turns off the lens from the menu, do not close the menu
+      if g_shouldCloseLensMenu then --If player turns off the lens from the menu, do not close the menu
         Controls.LensPanel:SetHide( true );
         RealizeFlyouts(Controls.LensPanel);
         Controls.LensButton:SetSelected( false );
       end
-      m_shouldCloseLensMenu = true; --Reset variable so the menu can be closed by selecting a unit/city
+      g_shouldCloseLensMenu = true; --Reset variable so the menu can be closed by selecting a unit/city
       Controls.ReligionLensButton:SetCheck(false);
       Controls.ContinentLensButton:SetCheck(false);
       Controls.AppealLensButton:SetCheck(false);
@@ -834,6 +984,7 @@ function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
       Controls.WaterLensButton:SetCheck(false);
       Controls.OwnerLensButton:SetCheck(false);
       Controls.TourismLensButton:SetCheck(false);
+      Controls.EmpireLensButton:SetCheck(false);
 
       -- Toggle each mod lens
       local i = 1
@@ -846,15 +997,21 @@ function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
 
       -- If any modded lens is active clear it
       if m_CurrentModdedLensOn ~= "NONE" then
-        if UILens.IsLayerOn( LensLayers.HEX_COLORING_APPEAL_LEVEL ) then
-          UILens.ToggleLayerOff( LensLayers.HEX_COLORING_APPEAL_LEVEL );
+        if UILens.IsLayerOn( m_HexColoringAppeal ) then
+          UILens.ToggleLayerOff( m_HexColoringAppeal );
         end
         SetActiveModdedLens("NONE")
       end
 
+      -- clear any non-standard layers
+      UILens.ClearLayerHexes(m_AttackRange);
+      UILens.ClearLayerHexes(m_HexColoringGreatPeople);
+      UILens.ClearLayerHexes(m_MovementZoneOfControl);
+
       LuaEvents.ML_CloseLensPanels()
     end
   end
+
 end
 
 function GetMinimapMouseCoords( mousex:number, mousey:number )
@@ -889,27 +1046,43 @@ end
 
 function OnInputHandler( pInputStruct:table )
   local msg = pInputStruct:GetMessageType();
+
+  -- Astog
+  --------------------------------------------------------------------------------------------------
   if pInputStruct:GetKey() == Keys.VK_CONTROL then
     if msg == KeyEvents.KeyDown then
-      m_CtrlDown = true
-
-      -- Reset cursor plot to recalculate HandleMouseForModdedLens
-      m_CurrentCursorPlotID = -1;
-      RecheckSettlerLens()
+      if not m_AltSettlerLensOn and UILens.IsLayerOn(m_HexColoringWaterAvail) then
+        --print("ctrl down")
+        m_CurrentCursorPlotID = -1;
+        m_CtrlDown = true
+        m_AltSettlerLensOn = true
+      end
     elseif msg == KeyEvents.KeyUp then
+      m_CurrentCursorPlotID = -1;
       m_CtrlDown = false
-      RecheckSettlerLens()
     end
   end
 
-  HandleMouseForModdedLens(pInputStruct:GetX(), pInputStruct:GetY())
+  HandleMouseForModdedLens()
+  --------------------------------------------------------------------------------------------------
+
+  -- Catch ctrl+f
+  if pInputStruct:GetKey() == Keys.F and pInputStruct:IsControlDown() then
+    -- Open the search panel if it is not already open
+    if Controls.MapSearchPanel:IsHidden() then
+      Controls.MapSearchPanel:SetHide(false);
+      RealizeFlyouts(Controls.MapSearchPanel);
+    end
+
+    -- Take focus
+    LuaEvents.MapSearch_PanelOpened();
+    return true;
+  end
 
   -- Skip all handling when dragging is disabled or the minimap is collapsed
   if m_isMouseDragEnabled and not m_isCollapsed then
-    local msg = pInputStruct:GetMessageType( );
-
     -- Enable drag on LMB down
-    if msg == MouseEvents.LButtonDown then
+    if (msg == MouseEvents.LButtonDown or msg == MouseEvents.PointerDown) then
       local minix, miniy = GetMinimapMouseCoords( pInputStruct:GetX(), pInputStruct:GetY() );
       if IsMouseInMinimap( minix, miniy ) then
         m_isMouseDragging = true; -- Potential drag is in process
@@ -918,8 +1091,8 @@ function OnInputHandler( pInputStruct:table )
         return true; -- Consume event
       end
 
-    -- Disable drag on LMB up (but only if mouse was previously dragging)
-    elseif msg == MouseEvents.LButtonUp and m_isMouseDragging then
+      -- Disable drag on LMB up (but only if mouse was previously dragging)
+    elseif m_isMouseDragging and (msg == MouseEvents.LButtonUp or msg == MouseEvents.PointerUp) then
       m_isMouseDragging = false;
       -- In case of no actual drag occurring, perform camera jump.
       if not m_hasMouseDragged then
@@ -931,8 +1104,8 @@ function OnInputHandler( pInputStruct:table )
       LuaEvents.WorldInput_DragMapEnd(); -- Alert luathings that the drag has stopped
       return true;
 
-    -- Move camera if dragging, mouse moves, and mouse is over minimap.
-    elseif msg == MouseEvents.MouseMove and m_isMouseDragging then
+      -- Move camera if dragging, mouse moves, and mouse is over minimap.
+    elseif m_isMouseDragging and (msg == MouseEvents.MouseMove or msg == MouseEvents.PointerUpdate) then
       local minix, miniy = GetMinimapMouseCoords( pInputStruct:GetX(), pInputStruct:GetY() );
       local isMouseInMinimap = IsMouseInMinimap( minix, miniy );
 
@@ -946,12 +1119,59 @@ function OnInputHandler( pInputStruct:table )
       m_wasMouseInMinimap = isMouseInMinimap
       return isMouseInMinimap; -- Only consume event if it's inside the minimap.
 
+      -- Update tooltip as the mouse is moved over the minimap
+    elseif (msg == MouseEvents.MouseMove or msg == MouseEvents.PointerUpdate) and not UI.IsFullscreenMapEnabled() then
+      local ePlayer : number = Game.GetLocalPlayer();
+      local pPlayerVis:table = PlayersVisibility[ePlayer];
+
+      local minix, miniy = GetMinimapMouseCoords( pInputStruct:GetX(), pInputStruct:GetY() );
+      if (pPlayerVis ~= nil and IsMouseInMinimap(minix, miniy)) then
+        local wx, wy = TranslateMinimapToWorld(minix, miniy);
+        local plotX, plotY = UI.GetPlotCoordFromWorld(wx, wy);
+        local pPlot = Map.GetPlot(plotX, plotY);
+        if (pPlot ~= nil) then
+          local plotID = Map.GetPlotIndex(plotX, plotY);
+          if pPlayerVis:IsRevealed(plotID) then
+            local eOwner = pPlot:GetOwner();
+            local pPlayerConfig = PlayerConfigurations[eOwner];
+            if (pPlayerConfig ~= nil) then
+              local szOwnerString = Locale.Lookup(pPlayerConfig:GetCivilizationShortDescription());
+
+              if (szOwnerString == nil or string.len(szOwnerString) == 0) then
+                szOwnerString = Locale.Lookup("LOC_TOOLTIP_PLAYER_ID", eOwner);
+              end
+
+              local pPlayer = Players[eOwner];
+              if(GameConfiguration:IsAnyMultiplayer() and pPlayer:IsHuman()) then
+                szOwnerString = szOwnerString .. " (" .. Locale.Lookup(pPlayerConfig:GetPlayerName()) .. ")";
+              end
+
+              local szOwner = Locale.Lookup("LOC_HUD_MINIMAP_OWNER_TOOLTIP", szOwnerString);
+              Controls.MinimapImage:SetToolTipString(szOwner);
+            else
+              local pTooltipString = Locale.Lookup("LOC_MINIMAP_UNCLAIMED_TOOLTIP");
+              Controls.MinimapImage:SetToolTipString(pTooltipString);
+            end
+          else
+            local pTooltipString = Locale.Lookup("LOC_MINIMAP_FOG_OF_WAR_TOOLTIP");
+            Controls.MinimapImage:SetToolTipString(pTooltipString);
+          end
+        end
+      end
     end
 
     -- TODO the letterbox background should block mouse input
   end
+
+  local uiMsg = pInputStruct:GetMessageType();
+  if uiMsg == KeyEvents.KeyUp and pInputStruct:GetKey() == Keys.VK_ESCAPE and not Controls.LensPanel:IsHidden() then
+    OnToggleLensList();
+    return true;
+  end
+
   return false;
 end
+
 
 function OnTutorial_DisableMapDrag( isDisabled:boolean )
   m_isMouseDragEnabled = not isDisabled;
@@ -970,59 +1190,59 @@ function OnShutdown()
   LuaEvents.Tutorial_SwitchToWorldView.Remove( OnTutorial_SwitchToWorldView );
   LuaEvents.Tutorial_DisableMapDrag.Remove( OnTutorial_DisableMapDrag );
   LuaEvents.NotificationPanel_ShowContinentLens.Remove(OnToggleContinentLensExternal);
+
+  m_LensButtonIM:ResetInstances();
+  m_MapOptionIM:ResetInstances();
+end
+
+-- force the settler lens off when a city is added (this shouldn't happen, but it's a failsafe)
+function OnCityAddedToMap(playerID, cityID, x, y)
+  if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
+    UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+  end
+
+  UILens.ClearLayerHexes(m_HexColoringWaterAvail);
 end
 
 -- ===========================================================================
---  Modded Lens Support
+--  Modded Lens Support (by Astog)
 -- ===========================================================================
 function SetModLens()
   if m_CurrentModdedLensOn ~= nil and m_CurrentModdedLensOn ~= "NONE" and
-      g_ModLenses[m_CurrentModdedLensOn] ~= nil then
-    print_debug("Highlighting " .. m_CurrentModdedLensOn .. " hexes")
+    g_ModLenses[m_CurrentModdedLensOn] ~= nil then
+    -- print("Highlighting " .. m_CurrentModdedLensOn .. " hexes")
     local getPlotColorFn = g_ModLenses[m_CurrentModdedLensOn].GetColorPlotTable
+    local funNonStandard = g_ModLenses[m_CurrentModdedLensOn].NonStandardFunction
     if getPlotColorFn ~= nil then
       SetModLensHexes(getPlotColorFn())
+    elseif funNonStandard ~= nil then
+      funNonStandard()
     else
-      print_debug("ERROR: No Plot Color Function")
+      print("ERROR: No Plot Color Function")
     end
   else
-    print_debug("ERROR: Given lens has no entry")
+    print("ERROR: Given lens has no entry")
   end
 end
 
 function SetModLensHexes(colorPlot:table)
-  -- UILens.ClearLayerHexes(LensLayers.HEX_COLORING_APPEAL_LEVEL);
-  local localPlayer = Game.GetLocalPlayer()
-  for color, plots in pairs(colorPlot) do
-    if table.count(plots) > 0 then
-      print_debug("Showing " .. table.count(plots) .. " plots with color " .. color)
-      UILens.SetLayerHexesColoredArea( LensLayers.HEX_COLORING_APPEAL_LEVEL, localPlayer, plots, color);
+  if colorPlot ~= nil and table.count(colorPlot) > 0 then
+    -- UILens.ClearLayerHexes(m_HexColoringAppeal);
+    local localPlayer = Game.GetLocalPlayer()
+    for color, plots in pairs(colorPlot) do
+      if table.count(plots) > 0 then
+        -- print("Showing " .. table.count(plots) .. " plots with color " .. color)
+        UILens.SetLayerHexesColoredArea( m_HexColoringAppeal, localPlayer, plots, color);
+      end
     end
-  end
-end
-
-function OnApplyCustomLens(colorPlot:table)
-  if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
-    UILens.ClearLayerHexes(LensLayers.HEX_COLORING_APPEAL_LEVEL)
   else
-    SetActiveModdedLens("ML_CUSTOM")
-    UILens.ToggleLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL)
+    print("ERROR: Invalid colorPlot table")
   end
-  -- print("Toggling on")
-  SetModLensHexes(colorPlot)
-end
-
-function OnClearCustomLens()
-  if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
-    -- print("Toggling off")
-    UILens.ToggleLayerOff(LensLayers.HEX_COLORING_APPEAL_LEVEL)
-  end
-  SetActiveModdedLens("NONE")
 end
 
 function SetActiveModdedLens(lensName:string)
   m_CurrentModdedLensOn = lensName
-  -- LuaEvents.MinimapPanel_ModdedLensOn(lensName)
+  LuaEvents.MinimapPanel_ModdedLensOn(lensName)
 end
 
 function GetActiveModdedLens(returnLens:table)
@@ -1043,7 +1263,7 @@ function ToggleModLens(buttonControl:table, lensName:string)
     SetActiveModdedLens(lensName);
 
     -- Check if the appeal lens is already active. Needed to clear any modded lens
-    if UILens.IsLayerOn(LensLayers.HEX_COLORING_APPEAL_LEVEL) then
+    if UILens.IsLayerOn(m_HexColoringAppeal) then
       -- Unapply the appeal lens, so it can be cleared from the screen
       UILens.SetActive("Default");
     end
@@ -1056,7 +1276,7 @@ function ToggleModLens(buttonControl:table, lensName:string)
     UILens.SetActive("Appeal");
     RefreshInterfaceMode();
   else
-    m_shouldCloseLensMenu = false;
+    g_shouldCloseLensMenu = false;
     if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
       UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
     end
@@ -1078,9 +1298,9 @@ function InitLens(lensName, modLens)
   pLensButton:LocalizeAndSetText(modLens.LensButtonText)
   modLensToggle.LensButton:SetToolTipString(pToolTip)
   modLensToggle.LensButton:RegisterCallback(Mouse.eLClick,
-    function()
-      ToggleModLens(modLensToggle.LensButton, lensName);
-    end
+  function()
+    ToggleModLens(modLensToggle.LensButton, lensName);
+  end
   )
 end
 
@@ -1091,73 +1311,74 @@ end
 
 function InitializeModLens()
   print("Initializing " .. table.count(g_ModLenses) .. " lenses")
+  -- sort here
+  local sortedModLenses:table = {}
   for lensName, modLens in pairs(g_ModLenses) do
-    InitLens(lensName, modLens)
+    table.insert(sortedModLenses, { SortOrder = modLens.SortOrder, Name = lensName, Lens = modLens } )
+  end
+  table.sort(sortedModLenses, function(a,b) return (a.SortOrder and a.SortOrder or 999) < (b.SortOrder and b.SortOrder or 999) end)
+  -- initilize sorted
+  for _,modLens in ipairs(sortedModLenses) do
+    InitLens(modLens.Name, modLens.Lens)
   end
 end
 
-function HandleMouseForModdedLens( mousex:number, mousey:number )
-  -- Don't do anything if mouse is dragging
+function HandleMouseForModdedLens()
   if not m_isMouseDragging then
-    -- Get plot under cursor
-    local plotId = UI.GetCursorPlotID();
-    if (not Map.IsPlot(plotId)) then
-      return;
-    end
+    LuaEvents.ML_HandleMouse()
 
-    -- If the cursor plot has not changed don't refresh
-    if (m_CurrentCursorPlotID == plotId) then
-      return
-    end
+    -- If the alternate settler lens is on, check for plot change, or clear it
+    if m_AltSettlerLensOn then
+      -- Get plot under cursor
+      local plotId = UI.GetCursorPlotID();
+      if (not Map.IsPlot(plotId)) then
+        return;
+      end
 
-    m_CurrentCursorPlotID = plotId
+      -- If the cursor plot has not changed don't refresh
+      if (m_CurrentCursorPlotID == plotId) then
+        return
+      end
 
-    local pPlot = Map.GetPlotByIndex(m_CurrentCursorPlotID)
-    local selectedCity = UI.GetHeadSelectedCity()
-    local selectedUnit = UI.GetHeadSelectedUnit()
+      m_CurrentCursorPlotID = plotId
 
-    -- Handler for alternate settler lens
-    local ctrlDown = m_CtrlDown
-    if m_SetterLensAlternateInverse then
-      ctrlDown = not ctrlDown
-    end
+      local pPlot = Map.GetPlotByIndex(m_CurrentCursorPlotID)
+      local selectedUnit = UI.GetHeadSelectedUnit()
 
-    if ctrlDown then
-      if selectedUnit ~= nil then
-        local unitType = GetUnitType(selectedUnit:GetOwner(), selectedUnit:GetID());
-        if unitType == "UNIT_SETTLER" then
-          RefreshSettlerLens();
-        -- else
-        --     print(unitType)
-        end
-
-      -- Clear Settler lens, if not in modal screen
-      elseif UI.GetInterfaceMode() ~= InterfaceModeTypes.VIEW_MODAL_LENS then
-
-        ClearSettlerLens();
+      if m_CtrlDown then
+        RefreshSettlerLens()
+      elseif UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
+        RefreshSettlerLens()
+        m_AltSettlerLensOn = false
+      else
+        RecheckSettlerLens()
+        m_AltSettlerLensOn = false
       end
     end
   end
 end
 
 -- ===========================================================================
--- INITIALIZATION
--- ===========================================================================
-
-function Initialize()
+function LateInitialize()
   m_MiniMap_xmloffsety = Controls.MiniMap:GetOffsetY();
-  m_ContinentsCache = Map.GetContinentsInUse();
+  g_ContinentsCache = Map.GetContinentsInUse();
+
+  m_HexColoringReligion = UILens.CreateLensLayerHash("Hex_Coloring_Religion");
+  m_HexColoringAppeal = UILens.CreateLensLayerHash("Hex_Coloring_Appeal_Level");
+  m_HexColoringGovernment = UILens.CreateLensLayerHash("Hex_Coloring_Government");
+  m_HexColoringOwningCiv = UILens.CreateLensLayerHash("Hex_Coloring_Owning_Civ");
+  g_HexColoringContinent = UILens.CreateLensLayerHash("Hex_Coloring_Continent");
+  m_HexColoringWaterAvail = UILens.CreateLensLayerHash("Hex_Coloring_Water_Availablity");
+  m_TouristTokens = UILens.CreateLensLayerHash("Tourist_Tokens");
 
   Controls.MinimapImage:RegisterSizeChanged( OnMinimapImageSizeChanged );
   UI.SetMinimapImageControl( Controls.MinimapImage );
 
-  ContextPtr:SetInputHandler( OnInputHandler, true );
+  -- Context / Control callbacks
   ContextPtr:SetShutdown( OnShutdown );
 
-  Controls.LensPanel:ChangeParent(Controls.LensButton);
-  Controls.MapOptionsPanel:ChangeParent(Controls.MapOptionsButton);
-  Controls.ToggleResourcesButton:SetCheck( UserConfiguration.ShowMapResources() );
-  Controls.ToggleYieldsButton:SetCheck( UserConfiguration.ShowMapYield() );
+  Controls.MapSearchPanel:RegisterWhenHidden( OnMapSearchPanelVisibilityChanged );
+  Controls.MapSearchPanel:RegisterWhenShown( OnMapSearchPanelVisibilityChanged );
 
   Controls.AppealLensButton:RegisterCallback( Mouse.eLClick, ToggleAppealLens );
   Controls.ContinentLensButton:RegisterCallback( Mouse.eLClick, ToggleContinentLens );
@@ -1166,14 +1387,41 @@ function Initialize()
   Controls.ExpandButton:RegisterCallback( Mouse.eLClick, OnCollapseToggle );
   Controls.ExpandButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.GovernmentLensButton:RegisterCallback( Mouse.eLClick, ToggleGovernmentLens );
-  Controls.LensButton:RegisterCallback( Mouse.eLClick, OnToggleLensList );
-  Controls.LensButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+  if GameConfiguration.IsWorldBuilderEditor() then
+    Controls.MapPinListButton:SetDisabled(true);
+    Controls.MapPinListButton:SetHide(true);
+    Controls.FullscreenMapButton:SetDisabled(false);
+    Controls.FullscreenMapButton:SetHide(false);
+    Controls.FullscreenMapButton:RegisterCallback( Mouse.eLClick, ShowFullscreenMap );
+    Controls.FullscreenMapButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+    Controls.MapSearchButton:SetDisabled(true);
+    Controls.MapSearchButton:SetHide(true);
+    Controls.ToggleResourcesButton:SetHide(true);
+    Controls.ToggleYieldsButton:SetHide(true);
+  else
+    Controls.MapPinListButton:SetDisabled(false);
+    Controls.MapPinListButton:SetHide(false);
+    Controls.FullscreenMapButton:SetDisabled(false);
+    Controls.FullscreenMapButton:SetHide(false);
+    Controls.MapSearchButton:SetDisabled(false);
+    Controls.MapSearchButton:SetHide(false);
+    Controls.MapPinListButton:RegisterCallback( Mouse.eLClick, ToggleMapPinMode );
+    Controls.MapPinListButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+    Controls.FullscreenMapButton:RegisterCallback( Mouse.eLClick, ShowFullscreenMap );
+    Controls.FullscreenMapButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+    Controls.MapSearchButton:RegisterCallback( Mouse.eLClick, ToggleMapSearchPanel );
+    Controls.MapSearchButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+    Controls.ToggleResourcesButton:SetHide(false);
+    Controls.ToggleYieldsButton:SetHide(false);
+  end
   Controls.MapOptionsButton:RegisterCallback( Mouse.eLClick, ToggleMapOptionsList );
   Controls.MapOptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-  Controls.MapPinListButton:RegisterCallback( Mouse.eLClick, ToggleMapPinMode );
-  Controls.MapPinListButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+  Controls.MapOptionsButton:SetHide(false);
+  Controls.LensButton:RegisterCallback( Mouse.eLClick, OnToggleLensList );
+  Controls.LensButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.OwnerLensButton:RegisterCallback( Mouse.eLClick, ToggleOwnerLens );
   Controls.TourismLensButton:RegisterCallback( Mouse.eLClick, ToggleTourismLens );
+  Controls.EmpireLensButton:RegisterCallback( Mouse.eLClick, ToggleEmpireLens );
   Controls.Pause:RegisterEndCallback( OnPauseEnd );
   Controls.ReligionLensButton:RegisterCallback( Mouse.eLClick, ToggleReligionLens );
   Controls.StrategicSwitcherButton:RegisterCallback( Mouse.eLClick, Toggle2DView );
@@ -1183,6 +1431,41 @@ function Initialize()
   Controls.ToggleYieldsButton:RegisterCallback( Mouse.eLClick, ToggleYieldIcons );
   Controls.WaterLensButton:RegisterCallback( Mouse.eLClick, ToggleWaterLens );
 
+  -- Game Events
+  Events.InputActionTriggered.Add( OnInputActionTriggered );
+  Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );
+  Events.LensLayerOn.Add( OnLensLayerOn );
+  Events.LensLayerOff.Add( OnLensLayerOff );
+  Events.LocalPlayerChanged.Add( OnLocalPlayerChanged );
+  Events.UserOptionsActivated.Add( OnUserOptionsActivated );
+
+  Events.CityAddedToMap.Add( OnCityAddedToMap );
+
+end
+
+-- ===========================================================================
+function OnInit( isReload:boolean )
+  LateInitialize();
+end
+
+function CloseAllLenses()
+  if not Controls.LensPanel:IsHidden() then
+    OnToggleLensList();
+  end
+end
+
+-- ===========================================================================
+-- INITIALIZATION
+-- ===========================================================================
+function Initialize()
+  ContextPtr:SetInitHandler( OnInit );
+  ContextPtr:SetInputHandler( OnInputHandler, true );
+
+  Controls.LensPanel:ChangeParent(Controls.LensButton);
+  Controls.MapOptionsPanel:ChangeParent(Controls.MapOptionsButton);
+  Controls.ToggleResourcesButton:SetCheck( UserConfiguration.ShowMapResources() );
+  Controls.ToggleYieldsButton:SetCheck( UserConfiguration.ShowMapYield() );
+
   -- Hide buttons not needed for the world builder
   if GameConfiguration.IsWorldBuilderEditor() then
     Controls.LensButton:SetHide(true);
@@ -1191,45 +1474,44 @@ function Initialize()
     Controls.OptionsStack:ReprocessAnchoring();
   end
 
-  --CQUI Options Button
+  -- CQUI Options Button
   Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_ToggleSettings() end);
   Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
+
+  -- CQUI Handlers
+  print("- CQUI_Option_ToggleYields.Add call");
+  LuaEvents.CQUI_Option_ToggleYields.Add( ToggleYieldIcons );
+  LuaEvents.CQUI_SettingsInitialized.Add( CQUI_ToggleYieldIcons );
+
 
   -- Make sure the StrategicSwitcherButton has the correct image when the game starts in StrategicView
   if UI.GetWorldRenderView() == WorldRenderView.VIEW_2D then
     Controls.SwitcherImage:SetTextureOffsetVal(0,24);
   end
 
-  Events.InputActionTriggered.Add( OnInputActionTriggered );
-  Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );
-  Events.LensLayerOn.Add( OnLensLayerOn );
-  Events.LensLayerOff.Add( OnLensLayerOff );
-  Events.LocalPlayerChanged.Add( OnLocalPlayerChanged );
-  Events.LoadScreenClose.Add(
-    function()
-      -- AZURENCY : already done in LoadScreen.lua OnActivateButtonClicked()
-      --UILens.SetActive("Default");
-    end
-  )
-
   LuaEvents.NotificationPanel_ShowContinentLens.Add(OnToggleContinentLensExternal);
   LuaEvents.Tutorial_DisableMapDrag.Add( OnTutorial_DisableMapDrag );
   LuaEvents.Tutorial_SwitchToWorldView.Add( OnTutorial_SwitchToWorldView );
   LuaEvents.MinimapPanel_ToggleGrid.Add( ToggleGrid );
   LuaEvents.MinimapPanel_RefreshMinimapOptions.Add( RefreshMinimapOptions );
+  LuaEvents.MinimapPanel_CloseAllLenses.Add( CloseAllLenses );
+  LuaEvents.CityPanelOverview_Opened.Add( 
+    function()
+        if not Controls.LensPanel:IsHidden() then
+            OnToggleLensList();
+        end
+    end );
 
-  -- CQUI Handlers
-  LuaEvents.CQUI_Option_ToggleBindings.Add( CQUI_OnToggleBindings );
-  LuaEvents.CQUI_Option_ToggleYields.Add( ToggleYieldIcons );
-  LuaEvents.CQUI_SettingsInitialized.Add( CQUI_ToggleYieldIcons );
+  -- Astog
+  --------------------------------------------------------------------------------------------------
 
   -- Mod Lens Support
   LuaEvents.MinimapPanel_SetActiveModLens.Add( SetActiveModdedLens );
   LuaEvents.MinimapPanel_GetActiveModLens.Add( GetActiveModdedLens );
   LuaEvents.MinimapPanel_GetLensPanelOffsets.Add( GetLensPanelOffsets );
-  LuaEvents.MinimapPanel_ApplyCustomLens.Add( OnApplyCustomLens );
-  LuaEvents.MinimapPanel_ClearCustomLens.Add( OnClearCustomLens );
   LuaEvents.MinimapPanel_AddLensEntry.Add( AddLensEntry );
   InitializeModLens()
+
+  --------------------------------------------------------------------------------------------------
 end
 Initialize();

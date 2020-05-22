@@ -7,30 +7,13 @@ local RoutePanelBaseOffsetX = 8;
 local RoutePanelScrollPanelExtraOffset = 9;
 
 -- ===========================================================================
---  INCLUDES and Local Functions
+--  INCLUDES
 -- ===========================================================================
 
 include("InstanceManager");
 include("SupportFunctions");
 include("TradeSupport");
 include("civ6common");
-
-local Game = Game
-local Players = Players
-local ContextPtr = ContextPtr
-local Events = Events
-
-local ipairs = ipairs
-local pairs = pairs
-local tinsert = table.insert
-local tcount = table.count
-
-local L_Lookup = Locale.Lookup
-local L_Upper = Locale.ToUpper
-
-local M_LCick = Mouse.eLClick
-local M_Enter = Mouse.eMouseEnter
-local M_RClick = Mouse.eRClick
 
 -- ===========================================================================
 --  VARIABLES
@@ -39,6 +22,8 @@ local M_RClick = Mouse.eRClick
 local m_RouteChoiceIM           : table = InstanceManager:new("RouteChoiceInstance", "Top", Controls.RouteChoiceStack);
 local m_originCity              : table = nil;  -- City where the trade route will begin
 local m_destinationCity         : table = nil;  -- City where the trade route will end, nil if none selected
+
+local m_TradeRouteLens:number = UILens.CreateLensLayerHash("TradeRoutes");
 
 -- These can be set by other contexts to have a route selected automatically after the chooser opens
 local m_postOpenSelectPlayerID:number = -1;
@@ -70,6 +55,8 @@ m_SortBySettings[1] = {
   SortByID = SORT_BY_ID.TURNS_TO_COMPLETE,
   SortOrder = SORT_ASCENDING
 };
+
+local opt_print = false
 
 -- ===========================================================================
 --  CQUI
@@ -108,7 +95,7 @@ function Refresh()
 
   -- Handle post open (ie TradeOverview) calls
   if m_postOpenSelectPlayerID ~= -1 and m_postOpenSelectCityID ~= -1 then
-    print_debug("Selecting", m_postOpenSelectCityID)
+    print("Selecting", m_postOpenSelectCityID)
     local pPlayer = Players[m_postOpenSelectPlayerID]
     m_destinationCity = pPlayer:GetCities():FindID(m_postOpenSelectCityID)
     RealizeLookAtDestinationCity();
@@ -126,7 +113,7 @@ end
 
 function RefreshHeader()
   if m_originCity then
-    Controls.Header_OriginText:SetText(L_Lookup("LOC_ROUTECHOOSER_TO_DESTINATION", L_Upper(m_originCity:GetName())));
+    Controls.Header_OriginText:SetText(Locale.Lookup("LOC_ROUTECHOOSER_TO_DESTINATION", Locale.ToUpper(m_originCity:GetName())));
   end
 end
 
@@ -140,7 +127,7 @@ function RefreshTopPanel()
     };
 
     -- Update City Banner
-    Controls.CityName:SetText(L_Upper(m_destinationCity:GetName()));
+    Controls.CityName:SetText(Locale.ToUpper(m_destinationCity:GetName()));
 
     local backColor, frontColor, darkerBackColor, brighterBackColor = GetPlayerColorInfo(m_destinationCity:GetOwner(), true);
 
@@ -159,7 +146,7 @@ function RefreshTopPanel()
     -- Update City-State Quest Icon
     Controls.CityStateQuestIcon:SetHide(true);
     local questsManager : table = Game.GetQuestsManager();
-    local questTooltip  : string = L_Lookup("LOC_CITY_STATES_QUESTS");
+    local questTooltip  : string = Locale.Lookup("LOC_CITY_STATES_QUESTS");
     if (questsManager ~= nil and Game.GetLocalPlayer() ~= nil) then
       local tradeRouteQuestInfo:table = GameInfo.Quests["QUEST_SEND_TRADE_ROUTE"];
       if (tradeRouteQuestInfo ~= nil) then
@@ -203,8 +190,8 @@ function RefreshTopPanel()
       end
     end
 
-    Controls.OriginResourceHeader:SetText(L_Lookup("LOC_ROUTECHOOSER_RECEIVES_RESOURCE", L_Lookup(m_originCity:GetName())));
-    Controls.DestinationResourceHeader:SetText(L_Lookup("LOC_ROUTECHOOSER_RECEIVES_RESOURCE", L_Lookup(m_destinationCity:GetName())));
+    Controls.OriginResourceHeader:SetText(Locale.Lookup("LOC_ROUTECHOOSER_RECEIVES_RESOURCE", Locale.Lookup(m_originCity:GetName())));
+    Controls.DestinationResourceHeader:SetText(Locale.Lookup("LOC_ROUTECHOOSER_RECEIVES_RESOURCE", Locale.Lookup(m_destinationCity:GetName())));
     local originTooltipText = ""
     local destinationTooltipText:string = "";
 
@@ -297,7 +284,7 @@ function RefreshChooserPanel()
             DestinationCityID       = destinationCityID
           };
 
-          tinsert(m_AvailableTradeRoutes, tradeRoute);
+          table.insert(m_AvailableTradeRoutes, tradeRoute);
         end
       end
     end
@@ -313,7 +300,9 @@ function RefreshChooserPanel()
     m_TurnBuiltRouteTable = Game.GetCurrentGameTurn()
     m_RebuildAvailableRoutes = false -- done building routes
   else
-    print_debug("OPT: Not rebuilding routes")
+    if opt_print then
+      print("OPT: Not rebuilding routes")
+    end
   end
 
   -- Update Filters
@@ -323,10 +312,10 @@ function RefreshChooserPanel()
   RefreshStack();
 
   -- Send Trade Route Paths to Engine
-  UILens.ClearLayerHexes( LensLayers.TRADE_ROUTE );
+  UILens.ClearLayerHexes( m_TradeRouteLens );
 
-  local DEFAULT_TINT = RGBAValuesToABGRHex(1, 1, 1, 1);
-  local FADED_TINT = RGBAValuesToABGRHex(0.3, 0.3, 0.3, 1);
+  local DEFAULT_TINT = UI.GetColorValue(1, 1, 1, 1);
+  local FADED_TINT = UI.GetColorValue(0.3, 0.3, 0.3, 1);
 
   -- If a city is selected, fade the other routes
   local kUnselectedColor = DEFAULT_TINT;
@@ -343,7 +332,7 @@ function RefreshChooserPanel()
     local lastElement:number = table.count(pathPlots);
     table.insert(kVariations, {"TradeRoute_Destination", pathPlots[lastElement]} );
     if (destinationCity ~= m_destinationCity) then
-      UILens.SetLayerHexesPath( LensLayers.TRADE_ROUTE, Game.GetLocalPlayer(), pathPlots, kVariations, kUnselectedColor );
+      UILens.SetLayerHexesPath( m_TradeRouteLens, Game.GetLocalPlayer(), pathPlots, kVariations, kUnselectedColor );
     end
   end
 
@@ -353,7 +342,7 @@ function RefreshChooserPanel()
     local kVariations:table = {};
     local lastElement : number = table.count(pathPlots);
     table.insert(kVariations, {"TradeRoute_Destination", pathPlots[lastElement]} );
-    UILens.SetLayerHexesPath( LensLayers.TRADE_ROUTE, Game.GetLocalPlayer(), pathPlots, kVariations, DEFAULT_TINT );
+    UILens.SetLayerHexesPath( m_TradeRouteLens, Game.GetLocalPlayer(), pathPlots, kVariations, DEFAULT_TINT );
   end
 end
 
@@ -375,14 +364,18 @@ function RefreshStack()
     -- Filter changed, need to re-sort
     m_SortSettingsChanged = true
   else
-    print_debug("OPT: Not refiltering.")
+    if opt_print then
+      print("OPT: Not refiltering.")
+    end
   end
 
   if m_SortSettingsChanged then
     m_TradeRoutes = SortTradeRoutes(m_TradeRoutes, m_SortBySettings);
     m_SortSettingsChanged = false -- done sorting
   else
-    print_debug("OPT: Not resorting.")
+    if opt_print then
+      print("OPT: Not resorting.")
+    end
   end
 
   -- for i, tradeRoute in ipairs(tradeRoutes) do
@@ -402,9 +395,9 @@ function RefreshStack()
 
   -- Show No Available Trade Routes message if nothing to select
   if #m_TradeRoutes > 0 then
-    Controls.StatusMessage:SetText(L_Lookup("LOC_ROUTECHOOSER_SELECT_DESTINATION"));
+    Controls.StatusMessage:SetText(Locale.Lookup("LOC_ROUTECHOOSER_SELECT_DESTINATION"));
   else
-    Controls.StatusMessage:SetText(L_Lookup("LOC_ROUTECHOOSER_NO_TRADE_ROUTES"));
+    Controls.StatusMessage:SetText(Locale.Lookup("LOC_ROUTECHOOSER_NO_TRADE_ROUTES"));
   end
 end
 
@@ -426,7 +419,7 @@ function AddRouteToDestinationStack(routeInfo:table)
   end
 
   -- Setup city banner
-  cityEntry.CityName:SetText(L_Upper(destinationCity:GetName()));
+  cityEntry.CityName:SetText(Locale.ToUpper(destinationCity:GetName()));
 
   local backColor, frontColor, darkerBackColor, brighterBackColor = GetPlayerColorInfo(routeInfo.DestinationCityPlayer, true);
 
@@ -445,7 +438,7 @@ function AddRouteToDestinationStack(routeInfo:table)
   -- Update City-State Quest Icon
   cityEntry.CityStateQuestIcon:SetHide(true);
   local questsManager : table = Game.GetQuestsManager();
-  local questTooltip  : string = L_Lookup("LOC_CITY_STATES_QUESTS");
+  local questTooltip  : string = Locale.Lookup("LOC_CITY_STATES_QUESTS");
   if (questsManager ~= nil and Game.GetLocalPlayer() ~= nil) then
     local tradeRouteQuestInfo:table = GameInfo.Quests["QUEST_SEND_TRADE_ROUTE"];
     if (tradeRouteQuestInfo ~= nil) then
@@ -458,11 +451,11 @@ function AddRouteToDestinationStack(routeInfo:table)
   end
 
   local tradePathLength, tripsToDestination, turnsToCompleteRoute = GetRouteInfo(routeInfo, true);
-  tooltipString = (   L_Lookup("LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP") .. "[NEWLINE]" ..
-            L_Lookup("LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER") .. "[NEWLINE]" ..
-            L_Lookup("LOC_TRADE_TURNS_REMAINING_ROUTE_LENGTH_TOOLTIP", tradePathLength) .. "[NEWLINE]" ..
-            L_Lookup("LOC_TRADE_TURNS_REMAINING_TRIPS_COUNT_TOOLTIP", tripsToDestination) .. "[NEWLINE]" ..
-            L_Lookup("LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_ALT_TOOLTIP", turnsToCompleteRoute, (Game.GetCurrentGameTurn() + turnsToCompleteRoute)) );
+  tooltipString = (   Locale.Lookup("LOC_TRADE_TURNS_REMAINING_HELP_TOOLTIP") .. "[NEWLINE]" ..
+  Locale.Lookup("LOC_TRADE_TURNS_REMAINING_TOOLTIP_BREAKER") .. "[NEWLINE]" ..
+  Locale.Lookup("LOC_TRADE_TURNS_REMAINING_ROUTE_LENGTH_TOOLTIP", tradePathLength) .. "[NEWLINE]" ..
+  Locale.Lookup("LOC_TRADE_TURNS_REMAINING_TRIPS_COUNT_TOOLTIP", tripsToDestination) .. "[NEWLINE]" ..
+  Locale.Lookup("LOC_TRADE_TURNS_REMAINING_TURN_COMPLETION_ALT_TOOLTIP", turnsToCompleteRoute, (Game.GetCurrentGameTurn() + turnsToCompleteRoute)) );
 
   cityEntry.TurnsToComplete:SetText(turnsToCompleteRoute);
   cityEntry.TurnsToComplete:SetToolTipString( tooltipString );
@@ -526,7 +519,7 @@ function AddRouteToDestinationStack(routeInfo:table)
 
   -- Setup callback
   cityEntry.Button:SetVoids(routeInfo.DestinationCityPlayer, routeInfo.DestinationCityID);
-  cityEntry.Button:RegisterCallback( M_LCick, OnTradeRouteSelected );
+  cityEntry.Button:RegisterCallback( Mouse.eLClick, OnTradeRouteSelected );
 end
 
 -- ---------------------------------------------------------------------------
@@ -631,7 +624,7 @@ function FilterTradeRoutes ( tradeRoutes:table )
   for index, tradeRoute in ipairs(tradeRoutes) do
     local pPlayer = Players[tradeRoute.DestinationCityPlayer];
     if m_filterList[m_filterSelected].FilterFunction and m_filterList[m_filterSelected].FilterFunction(pPlayer) then
-      tinsert(filtertedRoutes, tradeRoute);
+      table.insert(filtertedRoutes, tradeRoute);
     end
   end
 
@@ -648,17 +641,17 @@ function RefreshFilters()
   m_filterCount = 0;
 
   -- Add "All" Filter
-  AddFilter(L_Lookup("LOC_ROUTECHOOSER_FILTER_ALL"), function(a) return true; end);
+  AddFilter(Locale.Lookup("LOC_ROUTECHOOSER_FILTER_ALL"), function(a) return true; end);
 
   -- Add "International Routes" Filter
-  AddFilter(L_Lookup("LOC_TRADE_FILTER_INTERNATIONAL_ROUTES_TEXT") , IsOtherCiv);
+  AddFilter(Locale.Lookup("LOC_TRADE_FILTER_INTERNATIONAL_ROUTES_TEXT") , IsOtherCiv);
 
   -- Add "City States with Trade Quest" Filter
-  AddFilter(L_Lookup("LOC_TRADE_FILTER_CS_WITH_QUEST_TOOLTIP"), IsCityStateWithTradeQuest);
+  AddFilter(Locale.Lookup("LOC_TRADE_FILTER_CS_WITH_QUEST_TOOLTIP"), IsCityStateWithTradeQuest);
 
   -- Add Local Player Filter
   local localPlayerConfig:table = PlayerConfigurations[Game.GetLocalPlayer()];
-  local localPlayerName = L_Lookup(GameInfo.Civilizations[localPlayerConfig:GetCivilizationTypeID()].Name);
+  local localPlayerName = Locale.Lookup(GameInfo.Civilizations[localPlayerConfig:GetCivilizationTypeID()].Name);
   AddFilter(localPlayerName, function(a) return a:GetID() == Game.GetLocalPlayer(); end);
 
   -- Add Filters by Civ
@@ -669,14 +662,14 @@ function RefreshFilters()
       -- Has the local player met the civ?
       if pPlayer:GetDiplomacy():HasMet(Game.GetLocalPlayer()) then
         local playerConfig:table = PlayerConfigurations[pPlayer:GetID()];
-        local name = L_Lookup(GameInfo.Civilizations[playerConfig:GetCivilizationTypeID()].Name);
+        local name = Locale.Lookup(GameInfo.Civilizations[playerConfig:GetCivilizationTypeID()].Name);
         AddFilter(name, function(a) return a:GetID() == pPlayer:GetID() end);
       end
     end
   end
 
   -- Add "City States" Filter
-  AddFilter(L_Lookup("LOC_HUD_REPORTS_CITY_STATE"), IsCityState);
+  AddFilter(Locale.Lookup("LOC_HUD_REPORTS_CITY_STATE"), IsCityState);
 
   -- Add filters to pulldown
   for index, filter in ipairs(m_filterList) do
@@ -902,7 +895,7 @@ function GetYieldForCity(yieldIndex:number, city:table, originCity:boolean)
     if (sourceText ~= "") then
       sourceText = sourceText .. "[NEWLINE]";
     end
-    sourceText = sourceText .. L_Lookup("LOC_ROUTECHOOSER_YIELD_SOURCE_DISTRICTS", partialValue, yieldInfo.IconString, yieldInfo.Name, city:GetName());
+    sourceText = sourceText .. Locale.Lookup("LOC_ROUTECHOOSER_YIELD_SOURCE_DISTRICTS", partialValue, yieldInfo.IconString, yieldInfo.Name, city:GetName());
   end
   -- From path
   if (originCity) then
@@ -915,7 +908,7 @@ function GetYieldForCity(yieldIndex:number, city:table, originCity:boolean)
     if (sourceText ~= "") then
       sourceText = sourceText .. "[NEWLINE]";
     end
-    sourceText = sourceText .. L_Lookup("LOC_ROUTECHOOSER_YIELD_SOURCE_TRADING_POSTS", partialValue, yieldInfo.IconString, yieldInfo.Name);
+    sourceText = sourceText .. Locale.Lookup("LOC_ROUTECHOOSER_YIELD_SOURCE_TRADING_POSTS", partialValue, yieldInfo.IconString, yieldInfo.Name);
   end
   -- From modifiers
   local resourceID = -1;
@@ -929,7 +922,7 @@ function GetYieldForCity(yieldIndex:number, city:table, originCity:boolean)
     if (sourceText ~= "") then
       sourceText = sourceText .. "[NEWLINE]";
     end
-    sourceText = sourceText .. L_Lookup("LOC_ROUTECHOOSER_YIELD_SOURCE_BONUSES", partialValue, yieldInfo.IconString, yieldInfo.Name);
+    sourceText = sourceText .. Locale.Lookup("LOC_ROUTECHOOSER_YIELD_SOURCE_BONUSES", partialValue, yieldInfo.IconString, yieldInfo.Name);
   end
 
   return totalValue, sourceText;
@@ -1073,7 +1066,7 @@ function OnGeneralNotSortBy(sortByID)
 end
 
 function OnNotSortByFood()
-   OnGeneralNotSortBy(SORT_BY_ID.FOOD)
+  OnGeneralNotSortBy(SORT_BY_ID.FOOD)
 end
 
 function OnNotSortByProduction()
@@ -1124,7 +1117,7 @@ function Close()
   LuaEvents.TradeRouteChooser_SetTradeUnitStatus("");
   ContextPtr:SetHide(true);
 
-  if UILens.IsLensActive("TradeRoute") then
+  if UILens.IsLensActive(m_TradeRouteLens) then
     -- Make sure to switch back to default lens
     UILens.SetActive("Default");
   end
@@ -1143,7 +1136,7 @@ function Open()
   Controls.RouteChooserSlideAnim:Play();
 
   -- Switch to TradeRoute Lens
-  UILens.SetActive("TradeRoute");
+  UILens.SetActive(m_TradeRouteLens);
 
   LuaEvents.TradeRouteChooser_Open();
 
@@ -1362,11 +1355,11 @@ end
 -- ===========================================================================
 
 function InitButton(control, callbackLClick, callbackRClick)
-  control:RegisterCallback(M_LCick, callbackLClick)
+  control:RegisterCallback(Mouse.eLClick, callbackLClick)
   if callbackRClick ~= nil then
-    control:RegisterCallback(M_RClick, callbackRClick)
+    control:RegisterCallback(Mouse.eRClick, callbackRClick)
   end
-  control:RegisterCallback( M_Enter, function() UI.PlaySound("Main_Menu_Mouse_Over") end)
+  control:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over") end)
 end
 
 function Initialize()
@@ -1404,7 +1397,7 @@ function Initialize()
   InitButton(Controls.Header_CloseButton, OnClose )
 
   -- Filter
-  Controls.FilterButton:RegisterCallback( eLClick, UpdateFilterArrow );
+  Controls.FilterButton:RegisterCallback( Mouse.eLClick, UpdateFilterArrow );
   Controls.DestinationFilterPulldown:RegisterSelectionCallback( OnFilterSelected );
 
   -- Control events - checkboxes
