@@ -450,6 +450,9 @@ function GetOffset( count:number )
 end
 -- ===========================================================================
 function CQUI_BuildBubbleInstance(icon, amount, labelLOC, instanceManager)
+  -- FIX: M4A
+  -- Observed an error where amount was a string value rather than a number... this will force it to be a number
+  amount = tonumber(amount);
   local kInstance :table = instanceManager:GetInstance();
   kInstance.BubbleContainer:SetTextureOffsetVal(0, GetOffset(amount));
   kInstance.BubbleIcon:SetIcon( icon );
@@ -532,7 +535,8 @@ function ViewPanelAmenities( data:table )
   end
 
   -- CQUI (AZURENCY) TODO : find the best icons for theses bubble
-  data.AmenitiesFromDistricts = data.AmenitiesFromDistricts or 0;
+  -- M4A Fix: data.AmenitiesFromDistricts was not always a number?
+  data.AmenitiesFromDistricts = tonumber(data.AmenitiesFromDistricts) or 0;
   if(data.AmenitiesFromDistricts > 0) then
     CQUI_BuildAmenityBubbleInstance("ICON_NOTIFICATION_TREASURY_BANKRUPT", Locale.ToNumber(data.AmenitiesFromDistricts), "LOC_HUD_CITY_AMENITIES_FROM_DISTRICTS");
   end

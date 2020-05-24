@@ -300,6 +300,7 @@ function CQUI_renderCityButton(pCity : table, player : table, targetContainer : 
     button.ProductionLabel:SetText("");
     button.ScienceLabel:SetText("");
   end
+
   button.SelectButton:SetToolTipString( CQUI_MakeCityToolTip(pCity) );
   button.UnacceptableIcon:SetHide(true); -- AZURENCY : Sometime the icon is shown so always hide it
   button.ValueText:SetHide(true);
@@ -312,6 +313,7 @@ end
 function CQUI_MakeCityToolTip(pCity : table)
   local cityData = GetCityData(pCity);
   local isLocalPlayerCity = pCity:GetOwner() == Game.GetLocalPlayer();
+
   if (pCity ~= nil) then
     local szToolTip = Locale.ToUpper( Locale.Lookup(cityData.CityName)) .. "[NEWLINE]";
     szToolTip = szToolTip .. Locale.Lookup("LOC_DEAL_CITY_POPULATION_TOOLTIP", pCity:GetPopulation());
@@ -375,11 +377,10 @@ function CQUI_MakeCityToolTip(pCity : table)
     end
 
     return szToolTip;
-  end
+  end -- if (pCity ~= nil)
 
   return "";
 end
-
 
 -- ===========================================================================
 --  CQUI modified UpdateOtherPlayerText functiton
@@ -399,7 +400,6 @@ end
 
 
 function PopulateDealResources(player : table, iconList : table)
-
   local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, g_LocalPlayer:GetID(), g_OtherPlayer:GetID());
   local playerType = GetPlayerType(player);
   if (pDeal ~= nil) then
@@ -416,7 +416,6 @@ end
 --  Resources are sorted by quantity
 -- ===========================================================================
 function PopulateAvailableResources(player : table, iconList : table, className : string)
-
   local iAvailableItemCount = 0;
   local pForDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, g_LocalPlayer:GetID(), g_OtherPlayer:GetID());
   local possibleResources = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.RESOURCES, pForDeal);
@@ -428,22 +427,20 @@ function PopulateAvailableResources(player : table, iconList : table, className 
   local otherPlayerImportedResources = getImportedResources(GetOtherPlayer(player):GetID());
 
   if (possibleResources ~= nil) then
-
     -- CQUI :Sort the resources
     local sort_func = function( a,b ) return tonumber(a.MaxAmount) > tonumber(b.MaxAmount) end;
     table.sort( possibleResources, sort_func );
 
     for i, entry in ipairs(possibleResources) do
-  
       local resourceDesc = GameInfo.Resources[entry.ForType];
       local resourceType = entry.ForType;
       if (resourceDesc ~= nil and resourceDesc.ResourceClassType == className) then  -- correct resource class
-
         if (entry.MaxAmount == 0) then
-          -- If all copies have been traded away
+          -- All copies have been traded away
           table.insert(playerUntradeableResources, possibleResources[i]);
-        elseif (MatchesPartnerResource(otherPlayerResources, resourceDesc.ResourceType) > -1 or MatchesPartnerResource(otherPlayerImportedResources, resourceDesc.ResourceType) > -1) then
-          -- If other player already have the resource
+        elseif (MatchesPartnerResource(otherPlayerResources, resourceDesc.ResourceType) > -1
+               or MatchesPartnerResource(otherPlayerImportedResources, resourceDesc.ResourceType) > -1) then
+          -- Other player already has the resource
           table.insert(playerDuplicateResources, possibleResources[i]);
         else
           -- It's a tradeable resource
@@ -455,6 +452,7 @@ function PopulateAvailableResources(player : table, iconList : table, className 
           end
 
           icon = CQUI_RenderResourceButton(entry, tradeableType, iconList);
+
           -- What to do when double clicked/tapped.
           icon.SelectButton:RegisterCallback( Mouse.eLClick, function() OnClickAvailableResource(player, resourceType); end );
 
@@ -507,20 +505,21 @@ end
 --  
 -- ===========================================================================
 function PopulateAvailableCities(player : table, iconList : table)
-
   local iAvailableItemCount = 0;
   local pForDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, g_LocalPlayer:GetID(), g_OtherPlayer:GetID());
+  -- Note: damanged cities do not appear in this list
   local possibleItems = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.CITIES, pForDeal);
 
+  -- Todo: Possible to show the untradable (damaged) cities?
   if (possibleItems ~= nil) then
-    -- CQUI : Sort the cities
-    local sort_func = function( a,b ) return a.ForTypeName < b.ForTypeName end;
-    table.sort(possibleItems, sort_func);
-
-    -- CQUI : Separate the occupied cities that will be shown first
-    local occupiedCities = {};
     local otherPlayer = GetOtherPlayer(player);
 
+    -- CQUI : Sort the cities
+    -- the-m4a CHANGE: Previous logic here (from Azurency) would remove occupied cities from the list and put nil at that spot in the table
+    --                 With Expansion2 (Gathering Storm) a nil entry in this array causes the UI to stop displaying anything from that list
+    --                 Instead of removing items from the list, we will instead just prefix the names of each with many spaces before sorting
+    --                 so those occupied and cede cities are listed before the others.
+    --                 The altered name is not passed to the CQUI_renderCityButton method, so this will not affect what is displayed on the screen
     for i, entry in ipairs(possibleItems) do
       local type = entry.ForType;
       local pCity = player:GetCities():FindID( type );
@@ -529,42 +528,49 @@ function PopulateAvailableCities(player : table, iconList : table)
       end
 
       if player:GetDiplomacy():IsAtWarWith(otherPlayer) or otherPlayer:GetDiplomacy():IsAtWarWith(player) then
-        if pCity:IsOccupied() then
-          table.insert(occupiedCities, possibleItems[i]);
-          possibleItems[i] = nil; -- CQUI (Azurency) : set to nil instead of removing, avoid shifting the table
-          ---table.remove(possibleItems, i);
+        -- "Cede" cities do not show as occupied (IsOccupied is false), but do take the form of "CITYNAME, cede"
+        -- TODO: Always contain the string ", cede" even for non-english?
+        local isCedeCity = (string.match(entry.ForTypeName, ", cede") ~= nil);
+        if pCity:IsOccupied() or isCedeCity then
+          -- Add a series of spaces so that it sorts first, we do not pass this altered name to renderCityButton
+          -- so this change is just for sorting only, ensuring the occupied or "cede" cities are listed first
+          local tempName = "       " .. entry.ForTypeName;
+          entry.ForTypeName = tempName;
         end
       end
     end
 
-    -- CQUI : Add back the occupied cities on the first position
-    if occupiedCities ~= nil then
-      for i = #occupiedCities, 1, -1 do
-        table.insert(possibleItems, 1, occupiedCities[i]);
-      end
-    end
+    local sort_func = function( a,b ) return a.ForTypeName < b.ForTypeName end;
+    table.sort(possibleItems, sort_func);
 
+    -- Cycle through the possibleItems again in order to render the city buttons for the diplomacy UI
     for i, entry in ipairs(possibleItems) do
-
-
       local type = entry.ForType;
       local subType = entry.SubType;
-
       local pCity = player:GetCities():FindID( type );
+
       -- Handle occupied cities
-      if pCity == nil or (entry.ForTypeName ~= GetCityData(pCity).CityName and not pCity:IsOccupied()) then --ARISTOS
-        pCity = otherPlayer:GetCities():FindID( type );
-        -- AZURENCY : fix for persia not having occupation penalties
-        if pCity == nil then
-          pCity = player:GetCities():FindID(valueType);
-        end
+      -- Aristos from CivFanatics originally fixed this for Expansion1, changes with Expansion2 made part of that fix logic no longer functional
+      -- If at war and occupying one of their cities, it will show as "CityName, return" or "CityName, cede"
+      -- The ", cede" is a special case -- it exists only for civs that have occupancy penalties (basically all except Persia)
+      -- TODO: Does ", cede" apply to non-english?  Is there a better way to do this?
+      local isCedeCity = (string.match(entry.ForTypeName, ", cede") ~= nil);
+
+      if pCity == nil or (isCedeCity and not pCity:IsOccupied()) then
+        -- shows Occupied as false for the cedeing party
+        -- pull the data for this city from the otherPlayer data, as otherPlayer owns it
+        pCity = otherPlayer:GetCities():FindID( type ); 
       end
 
-      local icon = CQUI_renderCityButton(pCity, player, iconList.ListStack)
-      -- What to do when double clicked/tapped.
-      icon.SelectButton:RegisterCallback( Mouse.eLClick, function() OnClickAvailableCity(player, type, subType); end );
-
-      iAvailableItemCount = iAvailableItemCount + 1;
+      -- pCity should never be nil here, if it is print a warning so the scenario can be reproduced
+      if pCity ~= nil then
+        local icon = CQUI_renderCityButton(pCity, player, iconList.ListStack)
+        -- What to do when double clicked/tapped.
+        icon.SelectButton:RegisterCallback( Mouse.eLClick, function() OnClickAvailableCity(player, type, subType); end );
+        iAvailableItemCount = iAvailableItemCount + 1;
+      else
+        print("ERROR: diplomacydealview_CQUI.lua / PopulateAvailableCities: pCity is nil, could not find match in either player data!");
+      end
     end
 
     iconList.ListStack:CalculateSize();
@@ -596,6 +602,7 @@ function PopulateAvailableGreatWorks(player : table, iconList : table)
       if (greatWorkDesc ~= nil) then
         local type = entry.ForType;
         local icon = CQUI_IconAndTextForGreatWorkIM:GetInstance(iconList.ListStack);
+        
         SetIconToSize(icon.Icon, "ICON_" .. greatWorkDesc.GreatWorkType, 45);
         icon.AmountText:SetHide(true);
         icon.IconText:LocalizeAndSetText(entry.ForTypeName);
@@ -642,5 +649,4 @@ function PopulateAvailableGreatWorks(player : table, iconList : table)
   iconList.GetTopControl():SetHide( iconList.ListStack:GetSizeX()==0 );
 
   return iAvailableItemCount;
-
 end

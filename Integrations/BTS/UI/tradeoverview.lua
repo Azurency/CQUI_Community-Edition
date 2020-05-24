@@ -700,7 +700,7 @@ function AddRouteInstanceFromRouteInfo( routeInfo:table )
 
   local destinationBackColor, destinationFrontColor, darkerBackColor, brighterBackColor = GetPlayerColorInfo(routeInfo.DestinationCityPlayer, true);
   local originBackColor, originFrontColor = GetPlayerColorInfo(routeInfo.OriginCityPlayer, true);
-  local tintBackColor = DarkenLightenColor(destinationBackColor, tintColorOffset, tintColorOpacity);
+  local tintBackColor = UI.DarkenLightenColor(destinationBackColor, tintColorOffset, tintColorOpacity);
 
   -- Update colors
   if tintRouteEntry then
@@ -991,9 +991,9 @@ function CreatePlayerHeader( player:table )
   if colorCityPlayerHeader then
     headerInstance.CityBannerFill:SetHide(false);
     local backColor, frontColor = GetPlayerColorInfo(playerID, true);
-    headerBackColor = DarkenLightenColor(backColor, backdropColorOffset, backdropColorOpacity);
-    headerFrontColor = DarkenLightenColor(frontColor, labelColorOffset, labelColorOpacity);
-    gridBackColor = DarkenLightenColor(backColor, backdropGridColorOffset, backdropGridColorOpacity);
+    headerBackColor = UI.DarkenLightenColor(backColor, backdropColorOffset, backdropColorOpacity);
+    headerFrontColor = UI.DarkenLightenColor(frontColor, labelColorOffset, labelColorOpacity);
+    gridBackColor = UI.DarkenLightenColor(backColor, backdropGridColorOffset, backdropGridColorOpacity);
 
     headerInstance.CityBannerFill:SetColor( headerBackColor );
 
@@ -1195,9 +1195,9 @@ function CreateCityHeader( city:table , currentRouteShowCount:number, totalRoute
     headerInstance.CityBannerFill:SetHide(false);
     local backColor, frontColor = GetPlayerColorInfo(playerID, true);
 
-    headerBackColor = DarkenLightenColor(backColor, backdropColorOffset, backdropColorOpacity);
-    headerFrontColor = DarkenLightenColor(frontColor, labelColorOffset, labelColorOpacity);
-    gridBackColor = DarkenLightenColor(backColor, backdropGridColorOffset, backdropGridColorOpacity);
+    headerBackColor = UI.DarkenLightenColor(backColor, backdropColorOffset, backdropColorOpacity);
+    headerFrontColor = UI.DarkenLightenColor(frontColor, labelColorOffset, labelColorOpacity);
+    gridBackColor = UI.DarkenLightenColor(backColor, backdropGridColorOffset, backdropGridColorOpacity);
 
     headerInstance.HeaderLabel:SetColor(headerFrontColor);
     headerInstance.CityBannerFill:SetColor(headerBackColor);

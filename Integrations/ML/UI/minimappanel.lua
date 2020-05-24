@@ -287,9 +287,10 @@ end
 -- ===========================================================================
 function RestoreYieldIcons()
   if UserConfiguration.ShowMapYield() then
-    LuaEvents.MinimapPanel_ShowYieldIcons();
+  -- M4A FIX: This should be PlotInfo ShowYieldIcons
+    LuaEvents.PlotInfo_ShowYieldIcons();
   else
-    LuaEvents.MinimapPanel_HideYieldIcons();
+    LuaEvents.PlotInfo_HideYieldIcons();
   end
 end
 
@@ -674,10 +675,10 @@ end
 -- Begin Astog --------------------------------------------------------------------------------------------------
 function SetWaterHexes()
   if (not m_CtrlDown) then
-    print("default")
+    --print("default")
     SetDefaultWaterHexes()
   else
-    print("alt")
+    --print("alt")
     SetSettlerLens()
   end
 end
@@ -1039,7 +1040,7 @@ function OnInputHandler( pInputStruct:table )
   if pInputStruct:GetKey() == Keys.VK_CONTROL then
     if msg == KeyEvents.KeyDown then
       if not m_AltSettlerLensOn and UILens.IsLayerOn(m_HexColoringWaterAvail) then
-        print("ctrl down")
+        --print("ctrl down")
         m_CurrentCursorPlotID = -1;
         m_CtrlDown = true
         m_AltSettlerLensOn = true
@@ -1502,11 +1503,12 @@ function Initialize()
   LuaEvents.MinimapPanel_ToggleGrid.Add( ToggleGrid );
   LuaEvents.MinimapPanel_RefreshMinimapOptions.Add( RefreshMinimapOptions );
   LuaEvents.MinimapPanel_CloseAllLenses.Add( CloseAllLenses );
-  LuaEvents.CityPanelOverview_Opened.Add( function()
-    if not Controls.LensPanel:IsHidden() then
-      OnToggleLensList();
-    end
-  end );
+  LuaEvents.CityPanelOverview_Opened.Add( 
+    function()
+        if not Controls.LensPanel:IsHidden() then
+            OnToggleLensList();
+        end
+    end );
 
   -- Begin Astog Mod --------------------------------------------------------------------------------------------------
 

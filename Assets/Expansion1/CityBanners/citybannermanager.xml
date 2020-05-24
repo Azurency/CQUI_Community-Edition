@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Context>
-
   <!-- Instances that make up City Banners -->
   <Include File="CityBannerInstances"/>
 
@@ -9,5 +8,4 @@
   <Container ID="CityDistrictIcons"/>
 
   <Container ID="CQUI_WorkedPlotContainer" />
-
 </Context>

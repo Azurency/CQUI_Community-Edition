@@ -9,6 +9,7 @@ include("plottooltip_CQUI.lua");
 --  CQUI modified GetDetails functiton
 --  Re-arrrange the tooltip informations (https://github.com/CQUI-Org/cqui/issues/232)
 --  Complete override for Expansion2 to integrate new landscape feature and climate related changes
+--  This builds the tool-tip using table.insert as the mechanism for each line
 -- ===========================================================================
 function GetDetails(data)
   local details = {};
@@ -38,12 +39,15 @@ function GetDetails(data)
       local cutoff1, cutoff2 = string.find(szOwnerString2,"(",1,true);
       szOwnerString2 = string.sub(szOwnerString2,1,cutoff1-1);
     end
+
     table.insert(details,szOwnerString2);
   end
 
+  -- Next line: the terrain (with feature if it has one)
   local szTerrainString;
+
   if (data.IsLake) then
-    szTerrainString=Locale.Lookup("LOC_TOOLTIP_LAKE");
+    szTerrainString = Locale.Lookup("LOC_TOOLTIP_LAKE");
   else
     szTerrainString = Locale.Lookup(data.TerrainTypeName);
   end
@@ -52,6 +56,7 @@ function GetDetails(data)
     local szFeatureString = Locale.Lookup(GameInfo.Features[data.FeatureType].Name);
     local localPlayer = Players[Game.GetLocalPlayer()];
     local addCivicName = GameInfo.Features[data.FeatureType].AddCivic;
+    
     if (localPlayer ~= nil and addCivicName ~= nil) then
       local civicIndex = GameInfo.Civics[addCivicName].Index;
       if (localPlayer:GetCulture():HasCivic(civicIndex)) then
@@ -61,18 +66,23 @@ function GetDetails(data)
         else
           szAdditionalString = Locale.Lookup("LOC_TOOLTIP_PLOT_WOODS_SECONDARY");
         end
+
         szFeatureString = szFeatureString .. " " .. szAdditionalString;
       end
     end
+
     szTerrainString = szTerrainString.."/ ".. szFeatureString;
-    --table.insert(details, szFeatureString);
   end
 
-  if (data.IsRiver == true) then
+  -- If there's a river on this plot, add that info as well
+  if (data.IsRiver and data.RiverNames) then
     szTerrainString = szTerrainString.."/ "..Locale.Lookup("LOC_RIVER_TOOLTIP_STRING", data.RiverNames);
   end
+
+  -- Insert the line about the terrain
   table.insert(details, szTerrainString);
 
+  -- Next sets of data are short checks, should be obvious what's happening
   if (data.IsVolcano == true) then
     local szVolcanoString = Locale.Lookup("LOC_VOLCANO_TOOLTIP_STRING", data.VolcanoName);
     if (data.Erupting) then
@@ -80,6 +90,7 @@ function GetDetails(data)
     elseif (data.Active) then
       szVolcanoString = szVolcanoString .. " " .. Locale.Lookup("LOC_VOLCANO_ACTIVE_STRING");
     end
+
     table.insert(details, szVolcanoString);
   end
 
@@ -95,17 +106,18 @@ function GetDetails(data)
     table.insert(details, Locale.Lookup("LOC_DROUGHT_TOOLTIP_STRING", GameInfo.RandomEvents[data.Drought].Name, data.DroughtTurns));
   end
 
-
   if(data.NationalPark ~= "") then
     table.insert(details, data.NationalPark);
   end
 
+  -- Add Resource Information if there exists one
   if(data.ResourceType ~= nil) then
     --if it's a resource that requires a tech to improve, let the player know that in the tooltip
     local resourceType = data.ResourceType;
     local resource = GameInfo.Resources[resourceType];
     local resourceHash = GameInfo.Resources[resourceType].Hash;
     local resourceColor;
+
     if (resource.ResourceClassType ~= nil) then
       if (resource.ResourceClassType == "RESOURCECLASS_BONUS") then
         resourceColor = "GoldDark";
@@ -115,6 +127,7 @@ function GetDetails(data)
         resourceColor = "Civ6Red";
       end
     end
+
     --Color code the resource text if they have a color. For example, antiquity sites don't have a color
     local resourceString;
     if (resourceColor ~= nil) then
@@ -126,14 +139,13 @@ function GetDetails(data)
     local resourceTechType;
     local terrainType = data.TerrainType;
     local featureType = data.FeatureType;
-    
     local valid_feature = false;
     local valid_terrain = false;
 
     -- Are there any improvements that specifically require this resource?
     for row in GameInfo.Improvement_ValidResources() do
       if (row.ResourceType == resourceType) then
-        -- Found one!  Now.  Can it be constructed on this terrain/feature
+        -- Found one!  Now...can it be constructed on this terrain/feature
         local improvementType = row.ImprovementType;
         local has_feature = false;
         for inner_row in GameInfo.Improvement_ValidFeatures() do
@@ -144,8 +156,8 @@ function GetDetails(data)
             end
           end
         end
-        valid_feature = not has_feature or valid_feature;
 
+        valid_feature = not has_feature or valid_feature;
         local has_terrain = false;
         for inner_row in GameInfo.Improvement_ValidTerrains() do
           if(inner_row.ImprovementType == improvementType) then
@@ -155,8 +167,10 @@ function GetDetails(data)
             end
           end
         end
+
         valid_terrain = not has_terrain or valid_terrain;
-        
+
+        -- If terrain is coast, then only sea-things are valid... otherwise only land
         if( GameInfo.Terrains[terrainType].TerrainType  == "TERRAIN_COAST") then
           if ("DOMAIN_SEA" == GameInfo.Improvements[improvementType].Domain) then
             valid_terrain = true;
@@ -173,10 +187,12 @@ function GetDetails(data)
 
         if(valid_feature == true and valid_terrain == true) then
           resourceTechType = GameInfo.Improvements[improvementType].PrereqTech;
-          break;
+          break; -- for loop
         end
       end
-    end
+    end -- for loop
+
+    -- Only show the resource if the player has the acquired the tech to make it visible
     local localPlayer = Players[Game.GetLocalPlayer()];
     if (localPlayer ~= nil) then
       local playerResources = localPlayer:GetResources();
@@ -192,19 +208,12 @@ function GetDetails(data)
         table.insert(details, resourceString);
       end
     end
-  end
+  end -- if ResourceType is not nil
 
   table.insert(details, "------------------");
 
-  --[[
-  -- Movement cost
-  if (not data.Impassable and data.MovementCost > 0) then
-    table.insert(details, Locale.Lookup("LOC_TOOLTIP_MOVEMENT_COST", data.MovementCost));
-  end
-  ]]
-
   -- ROUTE TILE - CQUI Modified Doesn't display movement cost if route movement exists
-  local szMoveString: string;
+  local szMoveString;
   if (data.IsRoute and not data.Impassable) then
     local routeInfo = GameInfo.Routes[data.RouteType];
     if (routeInfo ~= nil and routeInfo.MovementCost ~= nil and routeInfo.Name ~= nil) then
@@ -213,13 +222,14 @@ function GetDetails(data)
       else
         szMoveString = Locale.Lookup("LOC_TOOLTIP_ROUTE_MOVEMENT", routeInfo.MovementCost, routeInfo.Name);
       end
+
       szMoveString = szMoveString.. "[ICON_Movement]";
     end
   elseif (not data.Impassable and data.MovementCost > 0) then
     szMoveString = Locale.Lookup("LOC_TOOLTIP_MOVEMENT_COST", data.MovementCost).. "[ICON_Movement]";
   end
+
   if (szMoveString ~=nil) then
-    --szMoveString = szMoveString:gsub("%d+%s",": [ICON_Movement]",1);
     table.insert(details,szMoveString);
   end
 
@@ -244,6 +254,7 @@ function GetDetails(data)
         break;
       end
     end
+
     if(strAppealDescriptor) then
       table.insert(details, Locale.Lookup("LOC_TOOLTIP_APPEAL", strAppealDescriptor, data.Appeal));
     end
@@ -258,14 +269,10 @@ function GetDetails(data)
 
   -- WONDER TILE
   if(data.WonderType ~= nil) then
-
     table.insert(details, "------------------");
-
     if (data.WonderComplete == true) then
       table.insert(details, Locale.Lookup(GameInfo.Buildings[data.WonderType].Name));
-
     else
-
       table.insert(details, Locale.Lookup(GameInfo.Buildings[data.WonderType].Name) .. " " .. Locale.Lookup("LOC_TOOLTIP_PLOT_CONSTRUCTION_TEXT"));
     end
   end
@@ -273,11 +280,10 @@ function GetDetails(data)
   --CQUI Use this table to set up a better order of listing the yields... ie Food before Production
   local CQUIYields = {};
 
+  -- Fill in the next set of info based on whether it's a city, district, or other tile
   -- CITY TILE
   if(data.IsCity == true and data.DistrictType ~= nil) then
-
     table.insert(details, "------------------");
-
     table.insert(details, Locale.Lookup(GameInfo.Districts[data.DistrictType].Name))
 
     for yieldType, v in pairs(data.Yields) do
@@ -285,8 +291,8 @@ function GetDetails(data)
       local yieldicon = GameInfo.Yields[yieldType].IconString;
       local str = tostring(v) .. Locale.Lookup(yieldicon) .. Locale.Lookup(yield);
       table.insert(CQUIYields,1,str);
-      --table.insert(details, str);
     end
+
     for i, v in ipairs(CQUIYields) do
       table.insert(details,v);
     end
@@ -298,10 +304,10 @@ function GetDetails(data)
         if(playerResources:IsResourceVisible(resourceHash)) then
           local resourceTechType = GameInfo.Resources[data.ResourceType].PrereqTech;
           if (resourceTechType ~= nil) then
-            local playerTechs	= localPlayer:GetTechs();
+            local playerTechs   = localPlayer:GetTechs();
             local techType = GameInfo.Technologies[resourceTechType];
             if (techType ~= nil and playerTechs:HasTech(techType.Index)) then
-              local kConsumption:table = GameInfo.Resource_Consumption[data.ResourceType];	
+              local kConsumption:table = GameInfo.Resource_Consumption[data.ResourceType];  
               if (kConsumption ~= nil) then
                 if (kConsumption.Accumulate) then
                   local iExtraction = kConsumption.ImprovedExtractionRate;
@@ -311,30 +317,14 @@ function GetDetails(data)
                     table.insert(details, Locale.Lookup("LOC_RESOURCE_ACCUMULATION_EXISTING_IMPROVEMENT", iExtraction, resourceIcon, resourceName));
                   end
                 end
-              end				
+              end
             end
-          end
+          end -- resourceTechType ~= nil
 
           table.insert(details, resourceString);
-        end
-      end
-    end
-    
-    --if(data.Buildings ~= nil and table.count(data.Buildings) > 0) then
-    --  table.insert(details, "Buildings: ");
-
-    --  for i, v in ipairs(data.Buildings) do
-    --    table.insert(details, "  " .. Locale.Lookup(v));
-    --  end
-    --end
-
-    --if(data.Constructions ~= nil and table.count(data.Constructions) > 0) then
-    --  table.insert(details, "UnderConstruction: ");
-    --
-    --  for i, v in ipairs(data.Constructions) do
-    --    table.insert(details, "  " .. Locale.Lookup(v));
-    --  end
-    --end
+        end -- isResourceVisible
+      end -- localPlayer ~= nil
+    end -- data.ResourceType and data.DistrictType are not nil
 
   -- DISTRICT TILE
   elseif(data.DistrictID ~= -1 and data.DistrictType ~= nil) then
@@ -345,6 +335,7 @@ function GetDetails(data)
           table.insert(details, "------------------");
           table.insert(details, Locale.Lookup("LOC_PEDIA_CONCEPTS_PAGE_CITIES_9_CHAPTER_CONTENT_TITLE")); -- "Specialists", text lock :'()
         end
+
         for yieldType, v in pairs(data.Yields) do
           local yield = GameInfo.Yields[yieldType].Name;
           local yieldicon = GameInfo.Yields[yieldType].IconString;
@@ -360,8 +351,11 @@ function GetDetails(data)
       elseif (not data.DistrictComplete) then
         sDistrictName = sDistrictName .. " " .. Locale.Lookup("LOC_TOOLTIP_PLOT_CONSTRUCTION_TEXT");
       end
+
       table.insert(details, "------------------");
       table.insert(details, sDistrictName);
+
+      -- List the yields from this district tile
       if (data.DistrictYields ~= nil) then
         for yieldType, v in pairs(data.DistrictYields) do
           local yield = GameInfo.Yields[yieldType].Name;
@@ -371,6 +365,7 @@ function GetDetails(data)
         end
       end
 
+      -- If there exists a resource under this district tile then show its info (if the player has that tech)
       if(data.ResourceType ~= nil and data.DistrictType ~= nil) then
         local localPlayer = Players[Game.GetLocalPlayer()];
         if (localPlayer ~= nil) then
@@ -378,10 +373,10 @@ function GetDetails(data)
           if(playerResources:IsResourceVisible(resourceHash)) then
             local resourceTechType = GameInfo.Resources[data.ResourceType].PrereqTech;
             if (resourceTechType ~= nil) then
-              local playerTechs	= localPlayer:GetTechs();
+              local playerTechs = localPlayer:GetTechs();
               local techType = GameInfo.Technologies[resourceTechType];
               if (techType ~= nil and playerTechs:HasTech(techType.Index)) then
-                local kConsumption:table = GameInfo.Resource_Consumption[data.ResourceType];	
+                local kConsumption:table = GameInfo.Resource_Consumption[data.ResourceType];    
                 if (kConsumption ~= nil) then
                   if (kConsumption.Accumulate) then
                     local iExtraction = kConsumption.ImprovedExtractionRate;
@@ -391,14 +386,15 @@ function GetDetails(data)
                       table.insert(details, Locale.Lookup("LOC_RESOURCE_ACCUMULATION_EXISTING_IMPROVEMENT", iExtraction, resourceIcon, resourceName));
                     end
                   end
-                end				
+                end
               end
             end
           end
         end
       end
     end
-  -- OTHER TILE
+
+  -- OTHER TILE (Not city, not district)
   else
     table.insert(details, "------------------");
     if(data.ImprovementType ~= nil) then
@@ -417,33 +413,35 @@ function GetDetails(data)
         table.insert(CQUIYields,1,str);
       else
         table.insert(CQUIYields,str);
-      --table.insert(details, str);
       end
     end
+
+    -- list the tile yields
     for i, v in ipairs(CQUIYields) do
       table.insert(details,v);
     end
+
+    -- if there's a strategic resource and there's an improvement over it show the per-turn accumulation
     if(data.ResourceType ~= nil and data.ImprovementType ~= nil) then
       local localPlayer = Players[Game.GetLocalPlayer()];
+
       if (localPlayer ~= nil) then
         local playerResources = localPlayer:GetResources();
         if(playerResources:IsResourceVisible(resourceHash)) then
           local resourceTechType = GameInfo.Resources[data.ResourceType].PrereqTech;
           if (resourceTechType ~= nil) then
-            local playerTechs	= localPlayer:GetTechs();
+            local playerTechs   = localPlayer:GetTechs();
             local techType = GameInfo.Technologies[resourceTechType];
             if (techType ~= nil and playerTechs:HasTech(techType.Index)) then
-              local kConsumption:table = GameInfo.Resource_Consumption[data.ResourceType];	
-              if (kConsumption ~= nil) then
-                if (kConsumption.Accumulate) then
-                  local iExtraction = kConsumption.ImprovedExtractionRate;
-                  if (iExtraction > 0) then
-                    local resourceName:string = GameInfo.Resources[data.ResourceType].Name;
-                    local resourceIcon:string = "[ICON_" .. data.ResourceType .. "]";
-                    table.insert(details, Locale.Lookup("LOC_RESOURCE_ACCUMULATION_EXISTING_IMPROVEMENT", iExtraction, resourceIcon, resourceName));
-                  end
+              local kConsumption:table = GameInfo.Resource_Consumption[data.ResourceType];  
+              if (kConsumption ~= nil and kConsumption.Accumulate) then
+                local iExtraction = kConsumption.ImprovedExtractionRate;
+                if (iExtraction > 0) then
+                  local resourceName:string = GameInfo.Resources[data.ResourceType].Name;
+                  local resourceIcon:string = "[ICON_" .. data.ResourceType .. "]";
+                  table.insert(details, Locale.Lookup("LOC_RESOURCE_ACCUMULATION_EXISTING_IMPROVEMENT", iExtraction, resourceIcon, resourceName));
                 end
-              end				
+              end
             end
           end
         end
@@ -451,6 +449,7 @@ function GetDetails(data)
     end
   end
 
+  -- if tile is impassable, add that line
   if(data.Impassable == true) then
     table.insert(details, Locale.Lookup("LOC_TOOLTIP_PLOT_IMPASSABLE_TEXT"));
   end
@@ -471,6 +470,7 @@ function GetDetails(data)
       if (data.WonderType == nil) then
         table.insert(details, Locale.Lookup("LOC_TOOLTIP_PLOT_BUILDINGS_TEXT"));
       end
+
       local greatWorksSection: table = {};
       for i, v in ipairs(data.BuildingNames) do
         if (data.WonderType == nil) then
@@ -480,6 +480,7 @@ function GetDetails(data)
             table.insert(details, "- " .. Locale.Lookup(v));
           end
         end
+
         local iSlots = cityBuildings:GetNumGreatWorkSlots(data.BuildingTypes[i]);
         for j = 0, iSlots - 1, 1 do
           local greatWorkIndex:number = cityBuildings:GetGreatWorkInSlot(data.BuildingTypes[i], j);
@@ -489,6 +490,7 @@ function GetDetails(data)
           end
         end
       end
+
       if #greatWorksSection > 0 then
         for i, v in ipairs(greatWorksSection) do
           table.insert(details, v);
@@ -515,11 +517,13 @@ function GetDetails(data)
     elseif (data.CoastalLowland == 2) then
       szDetailsText = Locale.Lookup("LOC_COASTAL_LOWLAND_3M_NAME");
     end
+
     if (data.Submerged) then
       szDetailsText = szDetailsText .. " " .. Locale.Lookup ("LOC_COASTAL_LOWLAND_SUBMERGED");
     elseif (data.Flooded) then
       szDetailsText = szDetailsText .. " " .. Locale.Lookup ("LOC_COASTAL_LOWLAND_FLOODED");
     end
+
     table.insert(details, szDetailsText);
   end
 

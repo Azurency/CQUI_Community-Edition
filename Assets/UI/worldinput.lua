@@ -3764,7 +3764,6 @@ function LateInitialize()
 
 
   -- ===== EVENTS =====
-
   -- Game Engine Events
   Events.CityMadePurchase.Add( OnCityMadePurchase_StrategicView_MapPlacement );
   Events.CycleUnitSelectionRequest.Add( OnCycleUnitSelectionRequest );
@@ -3839,10 +3838,10 @@ function OnInputActionTriggered( actionId )
 
   elseif actionId == m_actionHotkeyToggleYield then
     if UserConfiguration.ShowMapYield() then    -- yield already visible, hide
-      LuaEvents.MinimapPanel_HideYieldIcons();
+      LuaEvents.PlotInfo_HideYieldIcons();
       UserConfiguration.ShowMapYield( false );
     else
-      LuaEvents.MinimapPanel_ShowYieldIcons();
+      LuaEvents.PlotInfo_ShowYieldIcons();
       UserConfiguration.ShowMapYield( true );
     end
 
