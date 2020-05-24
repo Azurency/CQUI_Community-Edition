@@ -4,7 +4,6 @@ include( "InstanceManager" );
 -- ===========================================================================
 --  MODDED LENS (by Astog)
 -- ===========================================================================
-
 g_ModLenses = {} -- Populated by ModLens_*.lua scripts
 include( "ModLens_", true )
 
@@ -35,7 +34,6 @@ g_shouldCloseLensMenu = true;    -- Controls when the Lens menu should be closed
 g_ContinentsCache = {};
 
 g_HexColoringContinent = UILens.CreateLensLayerHash("Hex_Coloring_Continent");
-
 
 -- ===========================================================================
 --  MEMBERS
@@ -116,8 +114,6 @@ function CloseAllFlyouts()
     else
       UI.DataError("Minimap's CloseAllFlyouts() attempted to unselect'"..buttonId.."' but the control doesn't exist in the XML.");
     end
-
-
   end
 end
 
@@ -225,6 +221,7 @@ function OnToggleLensList()
   end
 end
 
+-- ===========================================================
 function CloseLensList()
   g_shouldCloseLensMenu = true;
   Controls.ReligionLensButton:SetCheck(false);
@@ -236,8 +233,7 @@ function CloseLensList()
   Controls.TourismLensButton:SetCheck(false);
   Controls.EmpireLensButton:SetCheck(false);
 
-  -- Astog
-  --------------------------------------------------------------------------------------------------
+  -- Begin Astog Mod --------------------------------------------------------------------------------------------------
   -- Turn off each mod lens
   local i = 1
   local lensButtonInstance = m_LensButtonIM:GetAllocatedInstance(i)
@@ -249,7 +245,7 @@ function CloseLensList()
 
   -- Hide each panel that exist for lens
   LuaEvents.ML_CloseLensPanels()
-  --------------------------------------------------------------------------------------------------
+  -- End Astog Mod ------------------------------------------------------------------------------------------------
 
   local uiCurrInterfaceMode:number = UI.GetInterfaceMode();
   if uiCurrInterfaceMode == InterfaceModeTypes.VIEW_MODAL_LENS then
@@ -335,8 +331,7 @@ end
 function ToggleAppealLens()
   if Controls.AppealLensButton:IsChecked() then
 
-    -- Astog
-    --------------------------------------------------------------------------------------------------
+    -- Begin Astog Mod --------------------------------------------------------------------------------------------------
     SetActiveModdedLens("VANILLA_APPEAL");
 
     -- Check if the appeal lens is already active. Needed to clear any modded lens
@@ -344,7 +339,7 @@ function ToggleAppealLens()
       -- Unapply the appeal lens, so it can be cleared from the screen
       UILens.SetActive("Default");
     end
-    --------------------------------------------------------------------------------------------------
+    -- End Astog Mod ------------------------------------------------------------------------------------------------
 
     UILens.SetActive("Appeal");
     RefreshInterfaceMode();
@@ -506,8 +501,7 @@ end
 -- ===========================================================================
 function OnLensLayerOn( layerNum:number )
 
-  -- Astog
-  --------------------------------------------------------------------------------------------------
+  -- Begin Astog Mod --------------------------------------------------------------------------------------------------
   -- clear unit non-standard layers
   -- do this if no unit is selected, since these lenses are applied on unit selection, so control should be in SelectedUnit.lua
   if UI.GetHeadSelectedUnit() == nil then
@@ -519,14 +513,13 @@ function OnLensLayerOn( layerNum:number )
     UILens.ClearLayerHexes(m_HexColoringGreatPeople);
     UILens.ClearLayerHexes(m_MovementZoneOfControl);
   end
-  --------------------------------------------------------------------------------------------------
+  -- End Astog Mod ------------------------------------------------------------------------------------------------
 
   if layerNum == m_HexColoringReligion then
     UI.PlaySound("UI_Lens_Overlay_On");
     UILens.SetDesaturation(1.0);
 
-    -- Astog
-    --------------------------------------------------------------------------------------------------
+  -- Begin Astog Mod --------------------------------------------------------------------------------------------------
   elseif layerNum == m_HexColoringAppeal then
     if m_CurrentModdedLensOn == "VANILLA_APPEAL" then
       SetAppealHexes();
@@ -534,7 +527,7 @@ function OnLensLayerOn( layerNum:number )
       SetModLens();
     end
     UI.PlaySound("UI_Lens_Overlay_On");
-    --------------------------------------------------------------------------------------------------
+  -- End Astog Mod ------------------------------------------------------------------------------------------------
 
   elseif layerNum == m_HexColoringGovernment then
     SetGovernmentHexes();
@@ -555,9 +548,7 @@ end
 
 -- ===========================================================================
 function OnLensLayerOff( layerNum:number )
-
-  -- Astog
-  --------------------------------------------------------------------------------------------------
+  -- Begin Astog Modification  --------------------------------------------------------------------------------------------------
   -- clear unit non-standard layers
   -- do this if no unit is selected, since these lenses are applied on unit selection, so control should be in SelectedUnit.lua
   if UI.GetHeadSelectedUnit() == nil then
@@ -584,7 +575,7 @@ function OnLensLayerOff( layerNum:number )
       UILens.ClearLayerHexes(m_HexColoringAppeal);
     end
     UI.PlaySound("UI_Lens_Overlay_Off");
-    --------------------------------------------------------------------------------------------------
+    -- End Astog Modification ------------------------------------------------------------------------------------------------
 
   elseif layerNum == m_HexColoringWaterAvail then
     -- Only clear the water lens if we're turning off lenses altogether, but not if switching to another modal lens (Turning on another modal lens clears it already).
@@ -626,9 +617,7 @@ end
 
 -- ===========================================================================
 function OnUserOptionsActivated()
-
   RestoreYieldIcons();
-
 end
 
 -- ===========================================================================
@@ -653,7 +642,6 @@ function SetOwningCivHexes()
 end
 
 -- ===========================================================================
-
 function SetDefaultWaterHexes()
   local FullWaterPlots:table = {};
   local CoastalWaterPlots:table = {};
@@ -683,9 +671,7 @@ function SetDefaultWaterHexes()
   end
 end
 
-
--- Astog
---------------------------------------------------------------------------------------------------
+-- Begin Astog --------------------------------------------------------------------------------------------------
 function SetWaterHexes()
   if (not m_CtrlDown) then
     print("default")
@@ -767,6 +753,7 @@ function SetSettlerLens()
   end
 end
 
+-- ===========================================================
 function RefreshSettlerLens()
   UILens.ClearLayerHexes(m_HexColoringWaterAvail)
   SetWaterHexes()
@@ -787,7 +774,7 @@ function RecheckSettlerLens()
     UILens.ToggleLayerOff( m_HexColoringWaterAvail );
   end
 end
---------------------------------------------------------------------------------------------------
+-- End Astog Update ------------------------------------------------------------------------------------------------
 
 -- ===========================================================================
 function SetGovernmentHexes()
@@ -1010,9 +997,9 @@ function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
       LuaEvents.ML_CloseLensPanels()
     end
   end
-
 end
 
+-- ===========================================================
 function GetMinimapMouseCoords( mousex:number, mousey:number )
   local topLeftX, topLeftY = Controls.MinimapImage:GetScreenOffset();
 
@@ -1029,6 +1016,7 @@ function IsMouseInMinimap( minix:number, miniy:number )
   return minix >= 0 and minix <= 1 and miniy >= 0 and miniy <= 1;
 end
 
+-- ===========================================================
 function TranslateMinimapToWorld( minix:number, miniy:number )
   local mapMinX, mapMinY, mapMaxX, mapMaxY = UI.GetMinimapWorldRect();
 
@@ -1043,11 +1031,11 @@ function TranslateMinimapToWorld( minix:number, miniy:number )
   return wx, wy;
 end
 
+-- ===========================================================
 function OnInputHandler( pInputStruct:table )
   local msg = pInputStruct:GetMessageType();
 
-  -- Astog
-  --------------------------------------------------------------------------------------------------
+  -- Astog Modification Begin -------------------------------------------------
   if pInputStruct:GetKey() == Keys.VK_CONTROL then
     if msg == KeyEvents.KeyDown then
       if not m_AltSettlerLensOn and UILens.IsLayerOn(m_HexColoringWaterAvail) then
@@ -1063,7 +1051,7 @@ function OnInputHandler( pInputStruct:table )
   end
 
   HandleMouseForModdedLens()
-  --------------------------------------------------------------------------------------------------
+  -- Astog Modification End ---------------------------------------------------
 
   -- Catch ctrl+f
   if pInputStruct:GetKey() == Keys.F and pInputStruct:IsControlDown() then
@@ -1115,6 +1103,7 @@ function OnInputHandler( pInputStruct:table )
         local wx, wy = TranslateMinimapToWorld( minix, miniy );
         UI.FocusMap( wx, wy );
       end
+
       m_wasMouseInMinimap = isMouseInMinimap
       return isMouseInMinimap; -- Only consume event if it's inside the minimap.
 
@@ -1171,7 +1160,7 @@ function OnInputHandler( pInputStruct:table )
   return false;
 end
 
-
+-- ===========================================================
 function OnTutorial_DisableMapDrag( isDisabled:boolean )
   m_isMouseDragEnabled = not isDisabled;
   if isDisabled then
@@ -1181,10 +1170,12 @@ function OnTutorial_DisableMapDrag( isDisabled:boolean )
   end
 end
 
+-- ===========================================================
 function OnTutorial_SwitchToWorldView()
   Controls.SwitcherImage:SetTextureOffsetVal(0,0);
 end
 
+-- ===========================================================
 function OnShutdown()
   LuaEvents.Tutorial_SwitchToWorldView.Remove( OnTutorial_SwitchToWorldView );
   LuaEvents.Tutorial_DisableMapDrag.Remove( OnTutorial_DisableMapDrag );
@@ -1217,13 +1208,14 @@ function SetModLens()
     elseif funNonStandard ~= nil then
       funNonStandard()
     else
-      print("ERROR: No Plot Color Function")
+      print("ERROR: SetModLens - No Plot Color Function")
     end
   else
-    print("ERROR: Given lens has no entry")
+    print("ERROR: SetModLens - Given lens has no entry")
   end
 end
 
+-- ===========================================================================
 function SetModLensHexes(colorPlot:table)
   if colorPlot ~= nil and table.count(colorPlot) > 0 then
     -- UILens.ClearLayerHexes(m_HexColoringAppeal);
@@ -1235,28 +1227,33 @@ function SetModLensHexes(colorPlot:table)
       end
     end
   else
-    print("ERROR: Invalid colorPlot table")
+    print("ERROR: SetModLensHexes - Invalid colorPlot table")
   end
 end
 
+-- ===========================================================================
 function SetActiveModdedLens(lensName:string)
   m_CurrentModdedLensOn = lensName
   LuaEvents.MinimapPanel_ModdedLensOn(lensName)
 end
 
+-- ===========================================================================
 function GetActiveModdedLens(returnLens:table)
   returnLens[1] = m_CurrentModdedLensOn
 end
 
+-- ===========================================================================
 function GetLensPanelOffsets(offsets:table)
   local y = Controls.MinimapContainer:GetSizeY() + Controls.MinimapContainer:GetOffsetY()
   if m_isCollapsed then
     y = y - Controls.MinimapContainer:GetSizeY()
   end
+
   offsets.Y = y
   offsets.X = Controls.LensPanel:GetSizeX() + Controls.LensPanel:GetOffsetX()
 end
 
+-- ===========================================================================
 function ToggleModLens(buttonControl:table, lensName:string)
   if buttonControl:IsChecked() then
     SetActiveModdedLens(lensName);
@@ -1272,6 +1269,7 @@ function ToggleModLens(buttonControl:table, lensName:string)
       -- print("Toggling....")
       g_ModLenses[lensName].OnToggle()
     end
+
     UILens.SetActive("Appeal");
     RefreshInterfaceMode();
   else
@@ -1279,13 +1277,15 @@ function ToggleModLens(buttonControl:table, lensName:string)
     if UI.GetInterfaceMode() == InterfaceModeTypes.VIEW_MODAL_LENS then
       UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
     end
+
     LuaEvents.ML_CloseLensPanels()
     SetActiveModdedLens("NONE");
   end
 end
 
+-- ===========================================================================
 function InitLens(lensName, modLens)
-  print("Adding ModLens: " .. lensName)
+  print("InitLens - Adding ModLens: " .. lensName)
   if modLens.Initialize ~= nil then
     modLens.Initialize()
   end
@@ -1297,17 +1297,19 @@ function InitLens(lensName, modLens)
   pLensButton:LocalizeAndSetText(modLens.LensButtonText)
   modLensToggle.LensButton:SetToolTipString(pToolTip)
   modLensToggle.LensButton:RegisterCallback(Mouse.eLClick,
-  function()
-    ToggleModLens(modLensToggle.LensButton, lensName);
-  end
-  )
+    function()
+      ToggleModLens(modLensToggle.LensButton, lensName);
+    end
+    )
 end
 
+-- ===========================================================================
 function AddLensEntry(lensKey:string, lensEntry:table)
   g_ModLenses[lensKey] = lensEntry
   InitLens(lensKey, lensEntry)
 end
 
+-- ===========================================================================
 function InitializeModLens()
   print("Initializing " .. table.count(g_ModLenses) .. " lenses")
   -- sort here
@@ -1315,6 +1317,7 @@ function InitializeModLens()
   for lensName, modLens in pairs(g_ModLenses) do
     table.insert(sortedModLenses, { SortOrder = modLens.SortOrder, Name = lensName, Lens = modLens } )
   end
+
   table.sort(sortedModLenses, function(a,b) return (a.SortOrder and a.SortOrder or 999) < (b.SortOrder and b.SortOrder or 999) end)
   -- initilize sorted
   for _,modLens in ipairs(sortedModLenses) do
@@ -1322,6 +1325,7 @@ function InitializeModLens()
   end
 end
 
+-- ===========================================================================
 function HandleMouseForModdedLens()
   if not m_isMouseDragging then
     LuaEvents.ML_HandleMouse()
@@ -1359,6 +1363,7 @@ end
 
 -- ===========================================================================
 function LateInitialize()
+  print_debug("ENTRY: Replacement MinimapPanel - LateInitialize");
   m_MiniMap_xmloffsety = Controls.MiniMap:GetOffsetY();
   g_ContinentsCache = Map.GetContinentsInUse();
 
@@ -1386,6 +1391,7 @@ function LateInitialize()
   Controls.ExpandButton:RegisterCallback( Mouse.eLClick, OnCollapseToggle );
   Controls.ExpandButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.GovernmentLensButton:RegisterCallback( Mouse.eLClick, ToggleGovernmentLens );
+
   if GameConfiguration.IsWorldBuilderEditor() then
     Controls.MapPinListButton:SetDisabled(true);
     Controls.MapPinListButton:SetHide(true);
@@ -1413,6 +1419,7 @@ function LateInitialize()
     Controls.ToggleResourcesButton:SetHide(false);
     Controls.ToggleYieldsButton:SetHide(false);
   end
+
   Controls.MapOptionsButton:RegisterCallback( Mouse.eLClick, ToggleMapOptionsList );
   Controls.MapOptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
   Controls.MapOptionsButton:SetHide(false);
@@ -1430,6 +1437,16 @@ function LateInitialize()
   Controls.ToggleYieldsButton:RegisterCallback( Mouse.eLClick, ToggleYieldIcons );
   Controls.WaterLensButton:RegisterCallback( Mouse.eLClick, ToggleWaterLens );
 
+  -- Begin CQUI Mod ------------------------------------------------------------------------------------
+  -- Requires the CQUI Database and CQUICommon files have been loaded before this (<LoadOrder>)
+  -- CQUI Options Button
+  Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_ToggleSettings() end);
+  Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end)  
+  -- CQUI Handlers
+  LuaEvents.CQUI_Option_ToggleYields.Add( ToggleYieldIcons );
+  LuaEvents.CQUI_SettingsInitialized.Add( CQUI_ToggleYieldIcons );
+  -- End CQUI Mod ------------------------------------------------------------------------------------
+
   -- Game Events
   Events.InputActionTriggered.Add( OnInputActionTriggered );
   Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );
@@ -1439,7 +1456,6 @@ function LateInitialize()
   Events.UserOptionsActivated.Add( OnUserOptionsActivated );
 
   Events.CityAddedToMap.Add( OnCityAddedToMap );
-
 end
 
 -- ===========================================================================
@@ -1447,6 +1463,7 @@ function OnInit( isReload:boolean )
   LateInitialize();
 end
 
+-- ===========================================================
 function CloseAllLenses()
   if not Controls.LensPanel:IsHidden() then
     OnToggleLensList();
@@ -1457,7 +1474,7 @@ end
 -- INITIALIZATION
 -- ===========================================================================
 function Initialize()
-
+  print_debug("ENTRY: Replacement MinimapPanel - Initialize");
   ContextPtr:SetInitHandler( OnInit );
   ContextPtr:SetInputHandler( OnInputHandler, true );
 
@@ -1473,15 +1490,6 @@ function Initialize()
     Controls.StrategicSwitcherButton:SetHide(true);
     Controls.OptionsStack:ReprocessAnchoring();
   end
-
-  -- CQUI Options Button
-  Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eLClick, function() LuaEvents.CQUI_ToggleSettings() end);
-  Controls.CQUI_OptionsButton:RegisterCallback( Mouse.eMouseEnter, function() UI.PlaySound("Main_Menu_Mouse_Over"); end);
-
-  -- CQUI Handlers
-  LuaEvents.CQUI_Option_ToggleYields.Add( ToggleYieldIcons );
-  LuaEvents.CQUI_SettingsInitialized.Add( CQUI_ToggleYieldIcons );
-
 
   -- Make sure the StrategicSwitcherButton has the correct image when the game starts in StrategicView
   if UI.GetWorldRenderView() == WorldRenderView.VIEW_2D then
@@ -1500,8 +1508,7 @@ function Initialize()
     end
   end );
 
-  -- Astog
-  --------------------------------------------------------------------------------------------------
+  -- Begin Astog Mod --------------------------------------------------------------------------------------------------
 
   -- Mod Lens Support
   LuaEvents.MinimapPanel_SetActiveModLens.Add( SetActiveModdedLens );
@@ -1510,6 +1517,6 @@ function Initialize()
   LuaEvents.MinimapPanel_AddLensEntry.Add( AddLensEntry );
   InitializeModLens()
 
-  --------------------------------------------------------------------------------------------------
+  -- End Astog Mod ------------------------------------------------------------------------------------------------
 end
 Initialize();

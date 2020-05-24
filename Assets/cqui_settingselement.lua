@@ -1,40 +1,111 @@
---Custom localizations are temporarily disabled due to reloads breaking them at the moment. Localizations are complete, so remember to enable them once Firaxis fixes this!
-
+-- TODO (2020-05): Custom localizations are temporarily disabled due to reloads breaking them at the moment. Localizations are complete, so remember to enable them once Firaxis fixes this!
 include("Civ6Common");
 
--- Members
-local m_tabs; --Add new options tabs to this in Initialize function
+-- ============================================================================
+-- VARIABLE DECLARATIONS
+-- ============================================================================
+--Add new options tabs to this in Initialize function
+local m_tabs;
+
 local bindings_options = {
   {"LOC_CQUI_BINDINGS_STANDARD", 0},
-  {"LOC_CQUI_BINDINGS_CLASSIC", 1},
+  {"LOC_CQUI_BINDINGS_CLASSIC" , 1},
   {"LOC_CQUI_BINDINGS_ENHANCED", 2}
 };
 
-local resource_icon_style_options =
-{
-  {"LOC_CQUI_GENERAL_SOLID", 0},
+local resource_icon_style_options = {
+  {"LOC_CQUI_GENERAL_SOLID"      , 0},
   {"LOC_CQUI_GENERAL_TRANSPARENT", 1},
-  {"LOC_CQUI_GENERAL_HIDDEN", 2}
+  {"LOC_CQUI_GENERAL_HIDDEN"     , 2}
 };
 
 local boolean_options = {
-		{"LOC_OPTIONS_ENABLED", 1},
-		{"LOC_OPTIONS_DISABLED", 0},
-	};
+    {"LOC_OPTIONS_ENABLED" , 1},
+    {"LOC_OPTIONS_DISABLED", 0},
+};
 
+--Used to convert between slider steps and production item height
+--Minimum value is 24, maximum is 128. This translates to the 0th step and the 104th
+local ProductionItemHeightConverter = {
+  ToSteps = function(value)
+      local out = value - 24;
+      if(out < 0) then
+        out = 0;
+      elseif(out > 104) then
+        out = 104;
+      end
+      return out;
+    end,
+  ToValue = function(steps)
+      local out = steps + 24;
+      if(out > 128) then
+        out = 128;
+      end
+      return out;
+    end
+};
+
+--Minimum value is 48, maximum is 128, but only multiples of 8 are allowed. This translates to 10 steps, or 0th step to the 9th
+local WorkIconSizeConverter = {
+  ToSteps = function(value)
+      local out = math.floor((value - 48) / 8);
+      if(out < 0) then
+        out = 0;
+      end
+      return out;
+    end,
+  ToValue = function(steps)
+      local out = (steps) * 8 + 48;
+      if(out > 128) then
+        out = 128;
+      end
+      return out;
+    end
+};
+
+--Minimum value is 0, maximum is 100. This translates to 101 steps, or 0th step to 100th
+local WorkIconAlphaConverter = {
+    ToSteps = function(value)
+      local out = value;
+      if(out < 0) then
+        out = 0;
+      end
+      return out;
+    end,
+  ToValue = function(steps)
+      local out = steps;
+      if(out > 100) then
+        out = 100;
+      end
+      return out;
+    end,
+  ToString = function(value)
+      local out = tostring(value) .. "%"
+      return out;
+    end
+};
+
+
+-- ============================================================================
+-- FUNCTIONS
+-- ============================================================================
 --Used to switch active panels/tabs in the settings panel
 function ShowTab(button, panel)
+  print_debug("CQUI_SettingsElement: ShowTab Function Entry");
   -- Unfocus all tabs and hide panels
   for i, v in ipairs(m_tabs) do
     v[2]:SetHide(true);
     v[1]:SetSelected(false);
   end
+
   button:SetSelected(true);
   panel:SetHide(false);
-  --Controls.WindowTitle:SetText(Locale.Lookup("LOC_CQUI_NAME") .. ": " .. Locale.ToUpper(button:GetText()));
+  -- TODO: Investigate Locale problem
+  -- Controls.WindowTitle:SetText(Locale.Lookup("LOC_CQUI_NAME") .. ": " .. Locale.ToUpper(button:GetText()));
   Controls.WindowTitle:SetText("CQUI: " .. Locale.ToUpper(button:GetText()));
 end
 
+-- ===========================================================================
 --Populates the status message panel checkboxes with appropriate strings
 function InitializeGossipCheckboxes()
   Controls.LOC_GOSSIP_AGENDA_KUDOSCheckbox:SetText(Locale.Lookup("LOC_GOSSIP_AGENDA_KUDOS", "X", "Y", "Z", "1", "2", "3"));
@@ -166,6 +237,7 @@ function InitializeGossipCheckboxes()
   PopulateCheckBox(Controls.LOC_GOSSIP_WONDER_STARTEDCheckbox, "CQUI_LOC_GOSSIP_WONDER_STARTED");
 end
 
+-- ===========================================================================
 function InitializeTraderScreenCheckboxes()
   PopulateCheckBox(Controls.TraderAddDividerCheckbox, "CQUI_TraderAddDivider", Locale.Lookup("LOC_CQUI_TRADER_ADD_DIVIDER_TOOLTIP"));
   PopulateCheckBox(Controls.TraderShowSortOrderCheckbox, "CQUI_TraderShowSortOrder", Locale.Lookup("LOC_CQUI_TRADER_SHOW_SORT_ORDER_TOOLTIP"));
@@ -180,81 +252,50 @@ function KeyDownHandler( key:number )
     m_shiftDown = true;
     -- let it fall through
   end
+
   return false;
 end
+
+-- ===========================================================================
 function KeyUpHandler( key:number )
   if key == Keys.VK_SHIFT then
     m_shiftDown = false;
     -- let it fall through
   end
+
   if key == Keys.VK_ESCAPE then
     Close();
     return true;
   end
+
   if key == Keys.VK_RETURN then
     return true; -- Don't let enter propigate or it will hit action panel which will raise a screen (potentially this one again) tied to the action.
   end
+
   return false;
 end
+
+-- ===========================================================================
 function OnInputHandler( pInputStruct:table )
   local uiMsg = pInputStruct:GetMessageType();
-  if uiMsg == KeyEvents.KeyDown then return KeyDownHandler( pInputStruct:GetKey() ); end
-  if uiMsg == KeyEvents.KeyUp then return KeyUpHandler( pInputStruct:GetKey() ); end
+  if uiMsg == KeyEvents.KeyDown then
+    return KeyDownHandler( pInputStruct:GetKey() );
+  end
+  
+  if uiMsg == KeyEvents.KeyUp then
+    return KeyUpHandler( pInputStruct:GetKey() );
+  end
+
   return false;
 end
+
+-- ===========================================================================
 function Close()
   UI.PlaySound("UI_Pause_Menu_On");
   ContextPtr:SetHide(true);
 end
 
---Used to convert between slider steps and production item height
---Minimum value is 24, maximum is 128. This translates to the 0th step and the 104th
-local ProductionItemHeightConverter = {
-  ToSteps = function(value)
-    local out = value - 24;
-    if(out < 0) then out = 0;
-    elseif(out > 104) then out = 104; end
-    return out;
-  end,
-  ToValue = function(steps)
-    local out = steps + 24;
-    if(out > 128) then out = 128; end
-    return out;
-  end
-};
-
---Minimum value is 48, maximum is 128, but only multiples of 8 are allowed. This translates to 10 steps, or 0th step to the 9th
-local WorkIconSizeConverter = {
-  ToSteps = function(value)
-    local out = math.floor((value - 48) / 8);
-    if(out < 0) then out = 0; end
-    return out;
-  end,
-  ToValue = function(steps)
-    local out = (steps) * 8 + 48;
-    if(out > 128) then out = 128; end
-    return out;
-  end
-};
-
---Minimum value is 0, maximum is 100. This translates to 101 steps, or 0th step to 100th
-local WorkIconAlphaConverter = {
-  ToSteps = function(value)
-    local out = value;
-    if(out < 0) then out = 0; end
-    return out;
-  end,
-  ToValue = function(steps)
-    local out = steps;
-    if(out > 100) then out = 100; end
-    return out;
-  end,
-  ToString = function(value)
-    local out = tostring(value) .. "%"
-    return out;
-  end
-};
-
+-- ===========================================================================
 function OnShow()
   UI.PlaySound("UI_Pause_Menu_On");
   -- From Civ6_styles: FullScreenVignetteConsumer
@@ -262,7 +303,9 @@ function OnShow()
   Controls.ScreenAnimIn:Play();
 end
 
+-- ===========================================================================
 function Initialize()
+  print_debug("ENTRY: CQUI_SettingsElement Initialize")
   ContextPtr:SetHide(true);
   --Adding/binding tabs...
   m_tabs = {
@@ -277,10 +320,14 @@ function Initialize()
     {Controls.RecommendationsTab, Controls.RecommendationsOptions},
     {Controls.HiddenTab, Controls.HiddenOptions}
   };
+
   for i, tab in ipairs(m_tabs) do
     local button = tab[1];
     local panel = tab[2];
-    button:RegisterCallback(Mouse.eLClick, function() ShowTab(button, panel); end);
+    button:RegisterCallback(Mouse.eLClick,
+      function()
+        ShowTab(button, panel);
+      end);
   end
 
   -- Close callback
@@ -318,8 +365,9 @@ function Initialize()
   PopulateCheckBox(Controls.AutoapplyArchaeologistLensCheckbox, "CQUI_AutoapplyArchaeologistLens");
   PopulateCheckBox(Controls.AutoapplyBuilderLensCheckbox, "CQUI_AutoapplyBuilderLens");
   PopulateCheckBox(Controls.AutoapplyScoutLensCheckbox, "CQUI_AutoapplyScoutLens");
-  --PopulateCheckBox(Controls.ShowNothingToDoInBuilderLens, "CQUI_ShowNothingToDoBuilderLens", Locale.Lookup("LOC_CQUI_LENSES_SHOWNOTHINGTODO_BUILDER_TOOLTIP"));
-  --PopulateCheckBox(Controls.ShowGenericInBuilderLens, "CQUI_ShowGenericBuilderLens", Locale.Lookup("LOC_CQUI_LENSES_SHOWGENERIC_BUILDER_TOOLTIP"));
+  -- TODO (2020-05): These items were commented prior to May 2020 patch
+  -- PopulateCheckBox(Controls.ShowNothingToDoInBuilderLens, "CQUI_ShowNothingToDoBuilderLens", Locale.Lookup("LOC_CQUI_LENSES_SHOWNOTHINGTODO_BUILDER_TOOLTIP"));
+  -- PopulateCheckBox(Controls.ShowGenericInBuilderLens, "CQUI_ShowGenericBuilderLens", Locale.Lookup("LOC_CQUI_LENSES_SHOWGENERIC_BUILDER_TOOLTIP"));
 
   PopulateCheckBox(Controls.ShowYieldsOnCityHoverCheckbox, "CQUI_ShowYieldsOnCityHover", Locale.Lookup("LOC_CQUI_CITYVIEW_SHOWYIELDSONCITYHOVER_TOOLTIP"));
   PopulateCheckBox(Controls.ShowCitizenIconsOnHoverCheckbox, "CQUI_ShowCitizenIconsOnCityHover", Locale.Lookup("LOC_CQUI_CITYVIEW_SHOWCITIZENICONSONHOVER_TOOLTIP"));
@@ -346,18 +394,25 @@ function Initialize()
   ContextPtr:SetInputHandler( OnInputHandler, true );
 
   --Bind CQUI events
-  LuaEvents.CQUI_ToggleSettings.Add(function() ContextPtr:SetHide(not ContextPtr:IsHidden()); end);
+  LuaEvents.CQUI_ToggleSettings.Add(
+    function()
+      ContextPtr:SetHide(not ContextPtr:IsHidden());
+    end
+  );
   LuaEvents.CQUI_SettingsUpdate.Add(ToggleSmartbannerCheckboxes);
   LuaEvents.CQUI_SettingsUpdate.Add(ToggleSmartWorkIconSettings);
 
   LuaEvents.CQUI_SettingsInitialized(); --Tell other elements that the settings have been initialized and it's safe to try accessing settings now
 end
 
+-- ===========================================================================
 function ToggleSmartbannerCheckboxes()
   local selected = Controls.SmartbannerCheckbox:IsSelected();
   Controls.SmartbannerCheckboxes:SetHide(not selected);
   Controls.CityViewStack:ReprocessAnchoring();
 end
+
+-- ===========================================================================
 function ToggleSmartWorkIconSettings()
   local selected = Controls.SmartWorkIconCheckbox:IsSelected();
   Controls.SmartWorkIconSettings:SetHide(not selected);
