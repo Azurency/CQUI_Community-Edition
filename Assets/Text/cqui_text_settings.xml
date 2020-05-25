@@ -126,9 +126,6 @@
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="en_US">
       <Text>Show luxuries in top panel</Text>
     </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SHOWDIPLOBANNER" Language="en_US">
-      <Text>Show the Diplomacy Ribbon</Text>
-    </Row>
     <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="en_US">
       <Text>Solid</Text>
     </Row>
