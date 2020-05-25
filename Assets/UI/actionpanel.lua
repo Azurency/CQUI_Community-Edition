@@ -1,3 +1,6 @@
+-- CQUI ActionPanel.lua Replacement
+-- CQUI-Specific Changes marked in-line below
+
 -- ===========================================================================
 --  Action Panel
 --  Main area of game to advance turns and show what is currently blocking.
@@ -6,117 +9,119 @@
 
 include( "InstanceManager" );
 include( "SupportFunctions" );
-include("Civ6Common"); -- IsTutorialRunning()
-include("PopupDialog");
+include( "Civ6Common" ); -- IsTutorialRunning()
+include( "PopupDialog" );
 include( "GameCapabilities" );
 
 -- ===========================================================================
 --  CONSTANTS
 -- ===========================================================================
-local NO_FLASHING         :number = 0;
-local FLASHING_END_TURN       :number = 1;
-local FLASHING_SCIENCE        :number = 2;
-local FLASHING_PRODUCTION     :number = 3;
-local FLASHING_FREE_TECH      :number = 4;
-local FLASHING_NEEDS_ORDERS     :number = 5;
+local NO_FLASHING           :number = 0;
+local FLASHING_END_TURN     :number = 1;
+local FLASHING_SCIENCE      :number = 2;
+local FLASHING_PRODUCTION   :number = 3;
+local FLASHING_FREE_TECH    :number = 4;
+local FLASHING_NEEDS_ORDERS :number = 5;
 
 local TURN_TIMER_BAR_ACTIVE_COLOR   :number = UI.GetColorValue("COLOR_WHITE");
 local TURN_TIMER_BAR_INACTIVE_COLOR :number = UI.GetColorValue(1,0,0,1);
 
-local MAX_BLOCKER_BUTTONS     :number = 4;  -- Number of buttons around big action button
-local autoEndTurnOptionHash     :number = DB.MakeHash("AutoEndTurn");
-local cityRangeAttackTurnOptionHash	:number = DB.MakeHash("CityRangeAttackTurnBlocking");
+local MAX_BLOCKER_BUTTONS           :number = 4;  -- Number of buttons around big action button
+local autoEndTurnOptionHash         :number = DB.MakeHash("AutoEndTurn");
+local cityRangeAttackTurnOptionHash    :number = DB.MakeHash("CityRangeAttackTurnBlocking");
 
 local MAX_BEFORE_TRUNC_TURN_STRING  :number = 150;
 
-local START_TURN_TIMER_TICK_SOUND :number = 7;  -- Start making turn timer ticking sounds when the turn timer is lower than this seconds.
+local START_TURN_TIMER_TICK_SOUND   :number = 7;  -- Start making turn timer ticking sounds when the turn timer is lower than this seconds.
 
-local NO_PLAYER                   :number = -1;
+local NO_PLAYER                     :number = -1;
 
 local CloudTurnStates = {
   CLOUDTURN_NONE      = 0,
   CLOUDTURN_UPLOADING = 1,
   CLOUDTURN_UPLOADED  = 2,
 };
-
--- End Turn Button Strings
-local pleaseWaitString        :string = Locale.Lookup("LOC_ACTION_PANEL_PLEASE_WAIT");
-local pleaseWaitTip         :string = Locale.Lookup("LOC_ACTION_PANEL_PLEASE_WAIT_TOOLTIP");
-local skipTurnString        :string = Locale.Lookup("LOC_ACTION_PANEL_SKIP_TURN");
-local skipTurnTip           :string = Locale.Lookup("LOC_ACTION_PANEL_SKIP_TURN_TOOLTIP");
-local moveStackedUnitString     :string = Locale.Lookup("LOC_ACTION_PANEL_STACKED_UNIT");
-local moveStackedUnitTip      :string = Locale.Lookup("LOC_ACTION_PANEL_STACKED_UNIT_TOOLTIP");
-local unitNeedsOrdersString     :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_ORDERS");
-local unitNeedsOrdersTip      :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_ORDERS_TOOLTIP");
-local waitForPlayersString      :string = Locale.Lookup("LOC_ACTION_PANEL_WAITING_FOR_PLAYERS");
-local waitForPlayersTip       :string = Locale.Lookup("LOC_ACTION_PANEL_WAITING_FOR_PLAYERS_TOOLTIP");
-local waitForPlayerTurnString   :string = "LOC_ACTION_PANEL_WAITING_FOR_PLAYER_TURN";
-local nextTurnString        :string = Locale.Lookup("LOC_ACTION_PANEL_NEXT_TURN");
-local nextTurnTip         :string = Locale.Lookup("LOC_ACTION_PANEL_NEXT_TURN_TOOLTIP");
-local needResearchString      :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_RESEARCH");
-local needResearchTip       :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_RESEARCH_TOOLTIP");
-local needCivicString       :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_CIVIC");
-local needCivicTip          :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_CIVIC_TOOLTIP");
-local fillCivicString       :string = Locale.Lookup("LOC_ACTION_PANEL_FILL_CIVIC_SLOT");
-local fillCivicTip          :string = Locale.Lookup("LOC_ACTION_PANEL_FILL_CIVIC_SLOT_TOOLTIP");
-local considerGovernmentString    :string = Locale.Lookup("LOC_ACTION_PANEL_CONSIDER_GOVERNMENT_CHANGE");
-local considerGovernmentTip     :string = Locale.Lookup("LOC_ACTION_PANEL_CONSIDER_GOVERNMENT_CHANGE_TOOLTIP");
-local considerRazeCityString    :string = Locale.Lookup("LOC_ACTION_PANEL_CONSIDER_RAZE_CITY");
-local considerRazeCityTip     :string = Locale.Lookup("LOC_ACTION_PANEL_CONSIDER_RAZE_CITY_TOOLTIP");
-local needProductionString      :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_PRODUCTION");
-local needProductionTip       :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_PRODUCTION_TOOLTIP");
-local needPantheonString      :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_PANTHEON");
-local needPantheonTip       :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_PANTHEON_TOOLTIP");
-local needReligionString      :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_RELIGION");
-local needReligionTip       :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_RELIGION_TOOLTIP");
-local needBeliefString        :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_BELIEF");
-local needBeliefTip         :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_BELIEF_TOOLTIP");
-local giveInfluenceTokenString    :string = Locale.Lookup("LOC_ACTION_PANEL_GIVE_INFLUENCE_TOKEN");
-local giveInfluenceTokenTip     :string = Locale.Lookup("LOC_ACTION_PANEL_GIVE_INFLUENCE_TOKEN_TOOLTIP");
-local claimGreatPersonString    :string = Locale.Lookup("LOC_ACTION_PANEL_CLAIM_GREAT_PERSON");
-local claimGreatPersonTip     :string = Locale.Lookup("LOC_ACTION_PANEL_CLAIM_GREAT_PERSON_TOOLTIP");
-local unitsHaveMovesString      :string = Locale.Lookup("LOC_ACTION_PANEL_UNIT_MOVES_REMAINING");
-local unitsHaveMovesTip       :string = Locale.Lookup("LOC_ACTION_PANEL_UNIT_MOVES_REMAINING_TOOLTIP");
-local chooseEscapeRouteString   :string = Locale.Lookup("LOC_ACTION_PANEL_CHOOSE_ESCAPE_ROUTE");
-local chooseEscapeRouteTip      :string = Locale.Lookup("LOC_ACTION_PANEL_CHOOSE_ESCAPE_ROUTE_TOOLTIP");
-local chooseDragnetPriorityString :string = Locale.Lookup("LOC_ACTION_PANEL_CHOOSE_DRAGNET_PRIORITY");
-local chooseDragnetPriorityTip    :string = Locale.Lookup("LOC_ACTION_PANEL_CHOOSE_DRAGNET_PRIORITY_TOOLTIP");
-local needArtifactPlayerString    :string = Locale.Lookup("LOC_ACTION_PANEL_CHOOSE_ARTIFACT_PLAYER");
-local needArtifactPlayerTip     :string = Locale.Lookup("LOC_ACTION_PANEL_CHOOSE_ARTIFACT_PLAYER_TOOLTIP");
-local cityRangedAttackString    :string = Locale.Lookup("LOC_ACTION_PANEL_CITY_RANGED_ATTACK");
-local cityRangedAttackTip     :string = Locale.Lookup("LOC_ACTION_PANEL_CITY_RANGED_ATTACK_TOOLTIP");
-local cloudTurnUploadingString  :string = Locale.Lookup("LOC_ACTION_PANEL_CLOUD_TURN_UPLOADING");
-local cloudTurnUploadingTip     :string = Locale.Lookup("LOC_ACTION_PANEL_CLOUD_TURN_UPLOADING_TOOLTIP");
-local cloudTurnUploadedString   :string = Locale.Lookup("LOC_ACTION_PANEL_CLOUD_TURN_UPLOADED");
-local cloudTurnUploadedTip      :string = Locale.Lookup("LOC_ACTION_PANEL_CLOUD_TURN_UPLOADED_TOOLTIP");
-local encampmentRangedAttackString    :string = Locale.Lookup("LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK");
-local encampmentRangedAttackTip     :string = Locale.Lookup("LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK_TOOLTIP");
-local yourTurnToolStr       :string = Locale.Lookup("LOC_KEY_YOUR_TURN_TIME_TOOLTIP");
-local estTilTurnToolStr       :string = Locale.Lookup("LOC_KEY_ESTIMATED_TIME_TIL_YOUR_TURN_TIME_TOOLTIP");
-local estTimeElapsedToolStr     :string = Locale.Lookup("LOC_KEY_ESTIMATED_TIME_ELAPSED_TOOLTIP");
-local canUnreadyTurnTip       :string = Locale.Lookup("LOC_ACTION_PANEL_CAN_UNREADY_TOOLTIP");
+    
+-- End Turn Button Strings    
+local pleaseWaitString                :string = Locale.Lookup("LOC_ACTION_PANEL_PLEASE_WAIT");
+local pleaseWaitTip                   :string = Locale.Lookup("LOC_ACTION_PANEL_PLEASE_WAIT_TOOLTIP");
+local skipTurnString                  :string = Locale.Lookup("LOC_ACTION_PANEL_SKIP_TURN");
+local skipTurnTip                     :string = Locale.Lookup("LOC_ACTION_PANEL_SKIP_TURN_TOOLTIP");
+local moveStackedUnitString           :string = Locale.Lookup("LOC_ACTION_PANEL_STACKED_UNIT");
+local moveStackedUnitTip              :string = Locale.Lookup("LOC_ACTION_PANEL_STACKED_UNIT_TOOLTIP");
+local unitNeedsOrdersString           :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_ORDERS");
+local unitNeedsOrdersTip              :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_ORDERS_TOOLTIP");
+local waitForPlayersString            :string = Locale.Lookup("LOC_ACTION_PANEL_WAITING_FOR_PLAYERS");
+local waitForPlayersTip               :string = Locale.Lookup("LOC_ACTION_PANEL_WAITING_FOR_PLAYERS_TOOLTIP");
+local waitForPlayerTurnString         :string = "LOC_ACTION_PANEL_WAITING_FOR_PLAYER_TURN";
+local nextTurnString                  :string = Locale.Lookup("LOC_ACTION_PANEL_NEXT_TURN");
+local nextTurnTip                     :string = Locale.Lookup("LOC_ACTION_PANEL_NEXT_TURN_TOOLTIP");
+local needResearchString              :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_RESEARCH");
+local needResearchTip                 :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_RESEARCH_TOOLTIP");
+local needCivicString                 :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_CIVIC");
+local needCivicTip                    :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_CIVIC_TOOLTIP");
+local fillCivicString                 :string = Locale.Lookup("LOC_ACTION_PANEL_FILL_CIVIC_SLOT");
+local fillCivicTip                    :string = Locale.Lookup("LOC_ACTION_PANEL_FILL_CIVIC_SLOT_TOOLTIP");
+local considerGovernmentString        :string = Locale.Lookup("LOC_ACTION_PANEL_CONSIDER_GOVERNMENT_CHANGE");
+local considerGovernmentTip           :string = Locale.Lookup("LOC_ACTION_PANEL_CONSIDER_GOVERNMENT_CHANGE_TOOLTIP");
+local considerRazeCityString          :string = Locale.Lookup("LOC_ACTION_PANEL_CONSIDER_RAZE_CITY");
+local considerRazeCityTip             :string = Locale.Lookup("LOC_ACTION_PANEL_CONSIDER_RAZE_CITY_TOOLTIP");
+local needProductionString            :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_PRODUCTION");
+local needProductionTip               :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_PRODUCTION_TOOLTIP");
+local needPantheonString              :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_PANTHEON");
+local needPantheonTip                 :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_PANTHEON_TOOLTIP");
+local needReligionString              :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_RELIGION");
+local needReligionTip                 :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_RELIGION_TOOLTIP");
+local needBeliefString                :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_BELIEF");
+local needBeliefTip                   :string = Locale.Lookup("LOC_ACTION_PANEL_NEEDS_BELIEF_TOOLTIP");
+local giveInfluenceTokenString        :string = Locale.Lookup("LOC_ACTION_PANEL_GIVE_INFLUENCE_TOKEN");
+local giveInfluenceTokenTip           :string = Locale.Lookup("LOC_ACTION_PANEL_GIVE_INFLUENCE_TOKEN_TOOLTIP");
+local claimGreatPersonString          :string = Locale.Lookup("LOC_ACTION_PANEL_CLAIM_GREAT_PERSON");
+local claimGreatPersonTip             :string = Locale.Lookup("LOC_ACTION_PANEL_CLAIM_GREAT_PERSON_TOOLTIP");
+local unitsHaveMovesString            :string = Locale.Lookup("LOC_ACTION_PANEL_UNIT_MOVES_REMAINING");
+local unitsHaveMovesTip               :string = Locale.Lookup("LOC_ACTION_PANEL_UNIT_MOVES_REMAINING_TOOLTIP");
+local chooseEscapeRouteString         :string = Locale.Lookup("LOC_ACTION_PANEL_CHOOSE_ESCAPE_ROUTE");
+local chooseEscapeRouteTip            :string = Locale.Lookup("LOC_ACTION_PANEL_CHOOSE_ESCAPE_ROUTE_TOOLTIP");
+local chooseDragnetPriorityString     :string = Locale.Lookup("LOC_ACTION_PANEL_CHOOSE_DRAGNET_PRIORITY");
+local chooseDragnetPriorityTip        :string = Locale.Lookup("LOC_ACTION_PANEL_CHOOSE_DRAGNET_PRIORITY_TOOLTIP");
+local needArtifactPlayerString        :string = Locale.Lookup("LOC_ACTION_PANEL_CHOOSE_ARTIFACT_PLAYER");
+local needArtifactPlayerTip           :string = Locale.Lookup("LOC_ACTION_PANEL_CHOOSE_ARTIFACT_PLAYER_TOOLTIP");
+local cityRangedAttackString          :string = Locale.Lookup("LOC_ACTION_PANEL_CITY_RANGED_ATTACK");
+local cityRangedAttackTip             :string = Locale.Lookup("LOC_ACTION_PANEL_CITY_RANGED_ATTACK_TOOLTIP");
+local cloudTurnUploadingString        :string = Locale.Lookup("LOC_ACTION_PANEL_CLOUD_TURN_UPLOADING");
+local cloudTurnUploadingTip           :string = Locale.Lookup("LOC_ACTION_PANEL_CLOUD_TURN_UPLOADING_TOOLTIP");
+local cloudTurnUploadedString         :string = Locale.Lookup("LOC_ACTION_PANEL_CLOUD_TURN_UPLOADED");
+local cloudTurnUploadedTip            :string = Locale.Lookup("LOC_ACTION_PANEL_CLOUD_TURN_UPLOADED_TOOLTIP");
+local yourTurnToolStr                 :string = Locale.Lookup("LOC_KEY_YOUR_TURN_TIME_TOOLTIP");
+local estTilTurnToolStr               :string = Locale.Lookup("LOC_KEY_ESTIMATED_TIME_TIL_YOUR_TURN_TIME_TOOLTIP");
+local estTimeElapsedToolStr           :string = Locale.Lookup("LOC_KEY_ESTIMATED_TIME_ELAPSED_TOOLTIP");
+local canUnreadyTurnTip               :string = Locale.Lookup("LOC_ACTION_PANEL_CAN_UNREADY_TOOLTIP");
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+local cqui_encampmentRangedAttackString    :string = Locale.Lookup("LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK");
+local cqui_encampmentRangedAttackTip       :string = Locale.Lookup("LOC_CQUI_ACTION_PANEL_ENCAMPMENT_RANGED_ATTACK_TOOLTIP");
+-- ==== CQUI CUSTOMIZATION END ======================================================================================= --
 
 -- ===========================================================================
 g_kMessageInfo = {};
-g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_UNITS]						= {Message = unitNeedsOrdersString,			ToolTip = unitNeedsOrdersTip	, Icon="ICON_NOTIFICATION_COMMAND_UNITS"		}
-g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_STACKED_UNITS]				= {Message = moveStackedUnitString,			ToolTip = moveStackedUnitTip	, Icon="ICON_NOTIFICATION_COMMAND_UNITS"		}
-g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_UNIT_NEEDS_ORDERS]			= {Message = unitNeedsOrdersString,			ToolTip = unitNeedsOrdersTip	, Icon="ICON_NOTIFICATION_COMMAND_UNITS"		}
-g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_RESEARCH]					= {Message = needResearchString,			ToolTip = needResearchTip		, Icon="ICON_NOTIFICATION_CHOOSE_TECH"		}
-g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_CIVIC]						= {Message = needCivicString,				ToolTip = needCivicTip			, Icon="ICON_NOTIFICATION_CHOOSE_CIVIC",	Sound="Notification_New_Civic" }
-g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_FILL_CIVIC_SLOT]			= {Message = fillCivicString ,				ToolTip = fillCivicTip			, Icon="ICON_NOTIFICATION_CHOOSE_CIVIC"		}
-g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_CONSIDER_GOVERNMENT_CHANGE]= {Message = considerGovernmentString,		ToolTip = considerGovernmentTip	, Icon="ICON_NOTIFICATION_CONSIDER_GOVERNMENT_CHANGE"	}
-g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_CONSIDER_RAZE_CITY]		= {Message = considerRazeCityString,		ToolTip = considerRazeCityTip	, Icon="ICON_NOTIFICATION_CONSIDER_RAZE_CITY"	}
-g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_PRODUCTION]				= {Message = needProductionString,			ToolTip = needProductionTip		, Icon="ICON_NOTIFICATION_CHOOSE_CITY_PRODUCTION"	}
-g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_PANTHEON]					= {Message = needPantheonString,			ToolTip = needPantheonTip		, Icon="ICON_NOTIFICATION_CHOOSE_PANTHEON",	Sound="Notification_New_Religion" }
-g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_RELIGION]					= {Message = needReligionString,			ToolTip = needReligionTip		, Icon="ICON_NOTIFICATION_CHOOSE_RELIGION",	Sound="Notification_New_Religion" }
-g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_BELIEF]					= {Message = needBeliefString,				ToolTip = needBeliefTip			, Icon="ICON_NOTIFICATION_CHOOSE_RELIGION",	Sound="Notification_New_Religion" }
-g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_GIVE_INFLUENCE_TOKEN]		= {Message = giveInfluenceTokenString,		ToolTip = giveInfluenceTokenTip	, Icon="ICON_NOTIFICATION_GIVE_INFLUENCE_TOKEN"	}
-g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_CLAIM_GREAT_PERSON]		= {Message = claimGreatPersonString,		ToolTip = claimGreatPersonTip	, Icon="ICON_NOTIFICATION_CLAIM_GREAT_PERSON",	Sound="Notification_Great_Person_Available" }
-g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_SPY_CHOOSE_ESCAPE_ROUTE]	= {Message = chooseEscapeRouteString,		ToolTip = chooseEscapeRouteTip	, Icon="ICON_NOTIFICATION_SPY_CHOOSE_ESCAPE_ROUTE"	}
-g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_SPY_CHOOSE_DRAGNET_PRIORITY]={Message = chooseDragnetPriorityString,	ToolTip = chooseDragnetPriorityTip	, Icon="ICON_NOTIFICATION_SPY_CHOOSE_DRAGNET_PRIORITY"}
-g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_ARTIFACT]                   ={Message = needArtifactPlayerString,		ToolTip = needArtifactPlayerTip	, Icon="ICON_NOTIFICATION_DISCOVER_ARTIFACT"}
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_UNITS]                       = {Message = unitNeedsOrdersString,      ToolTip = unitNeedsOrdersTip,       Icon="ICON_NOTIFICATION_COMMAND_UNITS"              }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_STACKED_UNITS]               = {Message = moveStackedUnitString,      ToolTip = moveStackedUnitTip,       Icon="ICON_NOTIFICATION_COMMAND_UNITS"              }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_UNIT_NEEDS_ORDERS]           = {Message = unitNeedsOrdersString,      ToolTip = unitNeedsOrdersTip,       Icon="ICON_NOTIFICATION_COMMAND_UNITS"              }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_RESEARCH]                    = {Message = needResearchString,         ToolTip = needResearchTip,          Icon="ICON_NOTIFICATION_CHOOSE_TECH"                }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_CIVIC]                       = {Message = needCivicString,            ToolTip = needCivicTip,             Icon="ICON_NOTIFICATION_CHOOSE_CIVIC",       Sound="Notification_New_Civic"              }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_FILL_CIVIC_SLOT]             = {Message = fillCivicString ,           ToolTip = fillCivicTip,             Icon="ICON_NOTIFICATION_CHOOSE_CIVIC"               }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_CONSIDER_GOVERNMENT_CHANGE]  = {Message = considerGovernmentString,   ToolTip = considerGovernmentTip,    Icon="ICON_NOTIFICATION_CONSIDER_GOVERNMENT_CHANGE" }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_CONSIDER_RAZE_CITY]          = {Message = considerRazeCityString,     ToolTip = considerRazeCityTip,      Icon="ICON_NOTIFICATION_CONSIDER_RAZE_CITY"         }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_PRODUCTION]                  = {Message = needProductionString,       ToolTip = needProductionTip,        Icon="ICON_NOTIFICATION_CHOOSE_CITY_PRODUCTION"     }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_PANTHEON]                    = {Message = needPantheonString,         ToolTip = needPantheonTip,          Icon="ICON_NOTIFICATION_CHOOSE_PANTHEON",    Sound="Notification_New_Religion"           }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_RELIGION]                    = {Message = needReligionString,         ToolTip = needReligionTip,          Icon="ICON_NOTIFICATION_CHOOSE_RELIGION",    Sound="Notification_New_Religion"           }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_BELIEF]                      = {Message = needBeliefString,           ToolTip = needBeliefTip,            Icon="ICON_NOTIFICATION_CHOOSE_RELIGION",    Sound="Notification_New_Religion"           }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_GIVE_INFLUENCE_TOKEN]        = {Message = giveInfluenceTokenString,   ToolTip = giveInfluenceTokenTip,    Icon="ICON_NOTIFICATION_GIVE_INFLUENCE_TOKEN"       }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_CLAIM_GREAT_PERSON]          = {Message = claimGreatPersonString,     ToolTip = claimGreatPersonTip,      Icon="ICON_NOTIFICATION_CLAIM_GREAT_PERSON", Sound="Notification_Great_Person_Available" }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_SPY_CHOOSE_ESCAPE_ROUTE]     = {Message = chooseEscapeRouteString,    ToolTip = chooseEscapeRouteTip,     Icon="ICON_NOTIFICATION_SPY_CHOOSE_ESCAPE_ROUTE"    }
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_SPY_CHOOSE_DRAGNET_PRIORITY] ={Message = chooseDragnetPriorityString, ToolTip = chooseDragnetPriorityTip, Icon="ICON_NOTIFICATION_SPY_CHOOSE_DRAGNET_PRIORITY"}
+g_kMessageInfo[EndTurnBlockingTypes.ENDTURN_BLOCKING_ARTIFACT]                    ={Message = needArtifactPlayerString,    ToolTip = needArtifactPlayerTip,    Icon="ICON_NOTIFICATION_DISCOVER_ARTIFACT"          }
 
-g_kEras	= {};
+g_kEras    = {};
 
 -- ===========================================================================
 --  MEMBERS
@@ -129,13 +134,13 @@ local m_lastTurnTickTime  : number  = 0;                    -- When did we last 
 local m_numberVisibleBlockers :number = 0;
 local m_visibleBlockerTypes : table   = {};
 local m_isSlowTurnEnable  : boolean = false;                  -- Tutorial: when active slow to allow clicks when turn raises.
-local m_unreadiedTurn       : boolean = false;									-- Did the local player unready their turn during the current game turn?
+local m_unreadiedTurn       : boolean = false;                                    -- Did the local player unready their turn during the current game turn?
 local m_cloudTurnState      : number  = CloudTurnStates.CLOUDTURN_NONE; -- State of PlayByCloud turn upload process.
 local m_kPopupDialog        : table   = {};
 local m_rememberCloudChoice : boolean = false;
 local m_isProdQueueOpen     : boolean = false;
 
--- CQUI Members
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
 local CQUI_PolicyReminderClosed = false;
 local CQUI_ShowPolicyReminder = true;
 function CQUI_OnSettingsUpdate()
@@ -144,6 +149,7 @@ end
 
 LuaEvents.CQUI_SettingsUpdate.Add(CQUI_OnSettingsUpdate);
 LuaEvents.CQUI_SettingsInitialized.Add(CQUI_OnSettingsUpdate);
+-- ==== CQUI CUSTOMIZATION END ======================================================================================= --
 
 -- ===========================================================================
 --  UI Event
@@ -222,18 +228,20 @@ function OnRefresh()
     icon            = "ICON_NOTIFICATION_CITY_RANGE_ATTACK";
     toolTipString = cityRangedAttackTip;
     iFlashingState  = FLASHING_END_TURN;
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
   elseif (CQUI_CheckEncampmentRangeAttackState()) then
     -- Special "Encampment Ranged Attack" state for when there are no end turn blockers but
     -- there is a Encampment can that perform a ranged attack.
-    message     = encampmentRangedAttackString;
+    message     = cqui_encampmentRangedAttackString;
     icon            = "ICON_NOTIFICATION_CITY_RANGE_ATTACK";
-    toolTipString = encampmentRangedAttackTip;
+    toolTipString = cqui_encampmentRangedAttackTip;
     iFlashingState  = FLASHING_END_TURN;
   elseif(CQUI_CheckPolicyCanBeChanged()) then
     message = Locale.Lookup("LOC_POLICY_REMINDER_ACTION_BUTTON")
     icon = "ICON_NOTIFICATION_CHOOSE_CIVIC"
     toolTipString = Locale.Lookup("LOC_POLICY_REMINDER_ACTION_BUTTON_TOOLTIP")
     iFlashingState  = FLASHING_END_TURN;
+-- ==== CQUI CUSTOMIZATION END == ==================================================================================== --
   else
     message     = nextTurnString;
     icon      = "ICON_NOTIFICATION_NEXT_TURN";
@@ -263,7 +271,7 @@ function OnRefresh()
       end
       if g_kMessageInfo[endTurnBlockingId] then
         local tooltip:string = g_kMessageInfo[endTurnBlockingId].ToolTip;
-        local icon:string	= g_kMessageInfo[endTurnBlockingId].Icon;
+        local icon:string    = g_kMessageInfo[endTurnBlockingId].Icon;
         if(icon ~= nil) then
           local textureOffsetX, textureOffsetY, textureSheet = IconManager:FindIconAtlas(icon,40);
           kButtonControl:SetTexture( textureOffsetX, textureOffsetY, textureSheet );
@@ -448,7 +456,7 @@ end
 -- ===========================================================================
 function HaveCityRangeAttackStateEnabled()
   -- When is the "City Ranged Attack" end turn button enabled?
-  return 	(UserConfiguration.IsCityRangeAttackTurnBlocking()) and Game.IsAllowTacticalCommands(Game.GetLocalPlayer());
+  return     (UserConfiguration.IsCityRangeAttackTurnBlocking()) and Game.IsAllowTacticalCommands(Game.GetLocalPlayer());
 end
 
 -- ===========================================================================
@@ -483,6 +491,7 @@ function CheckCityRangeAttackState()
       return true;
 end
 
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
 -- ===========================================================================
 function CQUI_CheckEncampmentRangeAttackState()
   local pPlayer = Players[Game.GetLocalPlayer()];
@@ -499,6 +508,7 @@ function CQUI_CheckEncampmentRangeAttackState()
       return true;
     end
   end
+
   return false;
 end
 
@@ -516,7 +526,7 @@ function CQUI_CheckPolicyCanBeChanged()
   -- AURENCY : get the Index of the future tech
   local futureCivicIndex = GameInfo["Civics"]["CIVIC_FUTURE_CIVIC"].Index
 
-  local PRD:table	= pPlayer:GetCulture()
+  local PRD:table    = pPlayer:GetCulture()
   if(PRD:CivicCompletedThisTurn() and PRD:GetCivicCompletedThisTurn() ~= futureCivicIndex and not PRD:PolicyChangeMade()) then
     return true
   end
@@ -537,6 +547,7 @@ function CQUI_GetFirstRangedAttackEncampment()
   end
   return nil;
 end
+-- ==== CQUI CUSTOMIZATION END ====================================================================================== --
 
 -- ===========================================================================
 --  Get the number notifications that are the same type as the currently active blocker
@@ -580,7 +591,10 @@ function CheckAutoEndTurn( eCurrentEndTurnBlockingType:number )
       and eCurrentEndTurnBlockingType == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING
       and (UserConfiguration.IsAutoEndTurn() and not UI.SkipNextAutoEndTurn())
       -- In tactical phases, all units must have orders or used up their movement points.
-      and (not CheckUnitsHaveMovesState() and not CheckCityRangeAttackState() and not CQUI_CheckEncampmentRangeAttackState())
+      and (not CheckUnitsHaveMovesState() and not CheckCityRangeAttackState()
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+           and not CQUI_CheckEncampmentRangeAttackState())
+-- ==== CQUI CUSTOMIZATION END  ====================================================================================== --
       -- Not already send turn complete for this turn.
       and not UI.HasSentTurnComplete()
       -- Expansion content is ok with auto ending the turn.
@@ -610,7 +624,7 @@ function DoEndTurn( optionalNewBlocker:number )
   end
 
   -- If the player can unready their turn, request that.
-  -- CanUnreadyTurn() is only true when the player should unready their turn instead of turn completing.
+  	-- CanUnreadyTurn() only checks the gamecore state. IsTurnTimerElapsed() is also required to ensure the local player still has turn time remaining.
   if pPlayer:CanUnreadyTurn()
     and not UI.IsTurnTimerElapsed(Game.GetLocalPlayer()) then
     UI.RequestAction(ActionTypes.ACTION_UNREADYTURN);
@@ -622,6 +636,14 @@ function DoEndTurn( optionalNewBlocker:number )
     return;
   end
 
+  -- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+  -- CQUI: This check is moved after the optionalNewBlocker if/else below
+  -- -- If not in selection mode; reset mode before performing the action.
+  -- if UI.GetInterfaceMode() ~= InterfaceModeTypes.SELECTION then
+  --   UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
+  -- end
+  -- ==== CQUI CUSTOMIZATION END ====================================================================================== --
+
   -- Make sure if an active blocker is not set, to do one more check from the engine/authority.
   if optionalNewBlocker ~= nil then
     m_activeBlockerId = optionalNewBlocker;
@@ -629,11 +651,14 @@ function DoEndTurn( optionalNewBlocker:number )
     m_activeBlockerId = NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
   end
 
+  -- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+  -- CQUI: This is an updated version of the logic commented out just above
   -- If not in selection mode; reset mode before performing the action.
   -- AZURENCY : and if in CITY_MANAGEMENT and the EndTurnBlockingTypes is Production don't change the mode.
   if UI.GetInterfaceMode() ~= InterfaceModeTypes.SELECTION and UI.GetInterfaceMode() ~= InterfaceModeTypes.CITY_RANGE_ATTACK and not (UI.GetInterfaceMode() == InterfaceModeTypes.CITY_MANAGEMENT and m_activeBlockerId == EndTurnBlockingTypes.ENDTURN_BLOCKING_PRODUCTION) then
     UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
   end
+  -- ==== CQUI CUSTOMIZATION END ======================================================================================= --
 
   if m_activeBlockerId == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING then
     if (CheckUnitsHaveMovesState()) then
@@ -641,11 +666,17 @@ function DoEndTurn( optionalNewBlocker:number )
     elseif(CheckCityRangeAttackState()) then
       local attackCity = pPlayer:GetCities():GetFirstRangedAttackCity();
       if(attackCity ~= nil) then
-          LuaEvents.CQUI_Strike_Enter();
-          LuaEvents.CQUI_CityRangeStrike(Game.GetLocalPlayer(), attackCity:GetID());
+  -- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+  -- CQUI: Commented lines are the unmodified code
+        -- UI.SelectCity(attackCity);
+        -- UI.SetInterfaceMode(InterfaceModeTypes.CITY_RANGE_ATTACK);
+        LuaEvents.CQUI_Strike_Enter();
+        LuaEvents.CQUI_CityRangeStrike(Game.GetLocalPlayer(), attackCity:GetID());
+  -- ==== CQUI CUSTOMIZATION END ======================================================================================= --
       else
         UI.DataError( "Unable to find selectable attack city while in CheckCityRangeAttackState()" );
       end
+  -- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
     elseif(CQUI_CheckEncampmentRangeAttackState()) then
       local attackEncampment = CQUI_GetFirstRangedAttackEncampment();
       if(attackEncampment ~= nil) then
@@ -656,28 +687,26 @@ function DoEndTurn( optionalNewBlocker:number )
       end
     elseif(CQUI_CheckPolicyCanBeChanged()) then
       LuaEvents.CQUI_ShowPolicyReminderPopup(Game.GetLocalPlayer(), pPlayer:GetCulture():GetCivicCompletedThisTurn(), false)
+  -- ==== CQUI CUSTOMIZATION END ======================================================================================= --
     else
       UI.RequestAction(ActionTypes.ACTION_ENDTURN);
       UI.PlaySound("Stop_Unit_Movement_Master");
     end
 
-  elseif (   m_activeBlockerId == EndTurnBlockingTypes.ENDTURN_BLOCKING_STACKED_UNITS
-      or m_activeBlockerId == EndTurnBlockingTypes.ENDTURN_BLOCKING_UNIT_NEEDS_ORDERS
-      or m_activeBlockerId == EndTurnBlockingTypes.ENDTURN_BLOCKING_UNITS)  then
-
+  elseif (m_activeBlockerId == EndTurnBlockingTypes.ENDTURN_BLOCKING_STACKED_UNITS
+          or m_activeBlockerId == EndTurnBlockingTypes.ENDTURN_BLOCKING_UNIT_NEEDS_ORDERS
+          or m_activeBlockerId == EndTurnBlockingTypes.ENDTURN_BLOCKING_UNITS) then
     UI.SelectNextReadyUnit();
-
   else
-
     -- generic turn blocker, trigger the notification associated with the turn blocker.
     local pNotification :table = NotificationManager.FindEndTurnBlocking(m_activeBlockerId, Game.GetLocalPlayer());
-
     if pNotification == nil then
       -- Notification is missing.  Use fallback behavior.
       if not UI.CanEndTurn() then
         UI.DataError("The UI thinks that we can't end turn, but the notification system disagrees.");
         return;
       end
+
       UI.RequestAction(ActionTypes.ACTION_ENDTURN);
       return;
     end
@@ -685,7 +714,6 @@ function DoEndTurn( optionalNewBlocker:number )
     -- Raise the event across the UI which may be listening for this particular notification.
     LuaEvents.ActionPanel_ActivateNotification( pNotification );
   end
-
 end
 
 -- ===========================================================================
@@ -734,14 +762,15 @@ function OnEndTurnBlockingChanged( ePrevEndTurnBlockingType:number, eNewEndTurnB
     if pUnit ~= nil then
       UI.DeselectAllUnits();
       UI.DeselectAllCities();
-      UI.SelectClosestReadyUnit();	-- This will select the closest ready unit to the last selected unit, or, if none, the first ready unit
+      UI.SelectClosestReadyUnit();    -- This will select the closest ready unit to the last selected unit, or, if none, the first ready unit
 
+  -- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
       -- Azurency : also look at the unit when selecting it.
       UI.LookAtPlot(unit:GetX(), unit:GetY());
+  -- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
     end
   end
 end
-
 
 -- ===========================================================================
 function ShouldUnitAutoSelect()
@@ -783,31 +812,40 @@ function OnEndTurnRightClicked()
     return;
   end
 
+  -- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+  -- The lines above the 'if(CheckCityRangeAttackState'
   -- local activeBlockerId = NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
   -- if activeBlockerId == EndTurnBlockingTypes.NO_ENDTURN_BLOCKING then
-  -- 	if (CheckUnitsHaveMovesState()) then
-  -- 		-- Do Nothing
-  -- 	elseif(CheckCityRangeAttackState()) then
-  -- 		-- Remove the city range attack notification so the turn can proceed.
-  -- 		local pNotification :table = NotificationManager.FindType(NotificationTypes.CITY_RANGE_ATTACK, Game.GetLocalPlayer());
-  -- 		if pNotification ~= nil and not pNotification:IsDismissed() then
-  -- 			NotificationManager.Dismiss( pNotification:GetPlayerID(), pNotification:GetID() );
-  -- 		end
-  -- 	else
-  -- 		-- Do Nothing
-  -- 	end
+  --     if (CheckUnitsHaveMovesState()) then
+  --         -- Do Nothing
+  --     elseif(CheckCityRangeAttackState()) then
+  --         -- Remove the city range attack notification so the turn can proceed.
+  --         local pNotification :table = NotificationManager.FindType(NotificationTypes.CITY_RANGE_ATTACK, Game.GetLocalPlayer());
+  --         if pNotification ~= nil and not pNotification:IsDismissed() then
+  --             NotificationManager.Dismiss( pNotification:GetPlayerID(), pNotification:GetID() );
+  --         end
+  --     else
+  --         -- Do Nothing
+  --     end
   -- end
 
+  -- CQUI: This elseif line is the original, the if line below is CQUI replacement
+  -- elseif(CheckCityRangeAttackState()) then
   -- AZURENCY : Added the original behavior to skip turn on right click (and kept the notification removal)
   if(CheckCityRangeAttackState()) then
+  -- ==== CQUI CUSTOMIZATION END  ====================================================================================== --
+
     -- Remove the city range attack notification so the turn can proceed.
     local pNotification :table = NotificationManager.FindType(NotificationTypes.CITY_RANGE_ATTACK, Game.GetLocalPlayer());
     if pNotification ~= nil and not pNotification:IsDismissed() then
       NotificationManager.Dismiss( pNotification:GetPlayerID(), pNotification:GetID() );
     end
   else
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --    
+    -- CQUI: Original script had comment "Do Nothing" here
     UI.RequestAction(ActionTypes.ACTION_ENDTURN);
     UI.PlaySound("Stop_Unit_Movement_Master");
+-- ==== CQUI CUSTOMIZATION END  ====================================================================================== --    
   end
 end
 
@@ -988,7 +1026,7 @@ function OnUploadCloudEndTurnComplete()
           return;
         end
 
-        local pLocalPlayer		:table = Players[Game.GetLocalPlayer()];
+        local pLocalPlayer        :table = Players[Game.GetLocalPlayer()];
         if(pLocalPlayer == nil) then
           return;
         end
@@ -1053,8 +1091,10 @@ function OnLocalPlayerTurnBegin()
   -- if auto-cycle is OFF, play this sound to indicate "start of turn"
   if (not UserConfiguration.IsAutoUnitCycle()) then
       UI.PlaySound("SP_Turn_Start");
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
       -- AZURENCY : also reset the policy reminder shown status
       CQUI_PolicyReminderClosed = false
+-- ==== CQUI CUSTOMIZATION END  ====================================================================================== -- 
   end
 end
 
@@ -1112,7 +1152,7 @@ function OnNotificationAdded( playerID:number, notificationID:number )
     local pNotification:table = NotificationManager.Find( playerID, notificationID );
     if pNotification == nil then
       -- It is possible, that by the time we get this event, the notification was 'expired' by some other action in the game.
-      -- error( "Unable to find player ("..tostring(playerID).." notification ("..tostring(notificationID)..")" );
+      -- UI.DataError( "Unable to find player ("..tostring(playerID).." notification ("..tostring(notificationID)..")" );
     end
   end
 end
@@ -1136,8 +1176,8 @@ function OnNotificationDismissed( playerID:number, notificationID:number )
     end
 
     if (wasCityRangeNotification and HaveCityRangeAttackStateEnabled()) then
-      local pPlayer		:table = Players[Game.GetLocalPlayer()];
-      local blockingType	:number= NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
+      local pPlayer        :table = Players[Game.GetLocalPlayer()];
+      local blockingType    :number= NotificationManager.GetFirstEndTurnBlocking(Game.GetLocalPlayer());
       CheckAutoEndTurn( blockingType );
     end
   end
@@ -1166,8 +1206,8 @@ function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
 end
 
 -- ===========================================================================
---	Game Event
---	Game Turn Began
+--    Game Event
+--    Game Turn Began
 -- ===========================================================================
 function OnTurnBegin()
   m_unreadiedTurn = false;
@@ -1264,11 +1304,11 @@ function PopulateEraData()
     }
   end
 
-  local degreeStart	:number = 14;
-  local degreeEnd		:number = 115;
+  local degreeStart    :number = 14;
+  local degreeEnd        :number = 115;
 
   -- Draw PIPs for the number of eras.
-  local max	:number = table.count(g_kEras);
+  local max    :number = table.count(g_kEras);
 
   for _,kEra in pairs(g_kEras) do
     local uiControl :table = {};
@@ -1278,9 +1318,9 @@ function PopulateEraData()
     elseif kEra.Index == max then
       uiControl.PipImage:SetTexture("ActionPanel_EraPipEnd");
     end
-    local halfWidth	:number = uiControl.PipImage:GetSizeX()/2;
+    local halfWidth    :number = uiControl.PipImage:GetSizeX()/2;
     local halfHeight:number = uiControl.PipImage:GetSizeY()/2;
-    local degree	:number = degreeStart + ((kEra.Index/max)*(degreeEnd-degreeStart));
+    local degree    :number = degreeStart + ((kEra.Index/max)*(degreeEnd-degreeStart));
     degree = degree - 90;
 
     local x,y = PolarToCartesian(79, degree);
@@ -1320,6 +1360,7 @@ function OnTurnTimerUpdated(elapsedTime :number, maxTurnTime :number)
     if (localPlayerID == -1) then
       return;
     end
+
     local pPlayer = Players[localPlayerID];
 
     Controls.TurnTimerContainer:SetHide(false);
@@ -1359,47 +1400,7 @@ function OnTurnTimerUpdated(elapsedTime :number, maxTurnTime :number)
         end
       end
 
-      -- Format the time remaining string based on how much time we have left.
-      -- We manually floor our values using floor and % operations to prevent the localization system
-      -- from rounding the values up.
-      local secs = timeRemaining % 60;
-      local mins = timeRemaining / 60;
-      local hours = timeRemaining / 3600;
-      local days = timeRemaining / 86400;
-      if(days >= 1) then
-        -- Days remaining
-        days = math.floor(days);
-        hours = hours % 24; -- cap hours
-        if(pPlayer:IsTurnActive()) then
-          Controls.TurnTimerLabel:LocalizeAndSetText("LOC_KEY_TIME_DAYS_HOURS", days, hours);
-        else
-          Controls.TurnTimerLabel:LocalizeAndSetText("LOC_KEY_EST_TIME_DAYS_HOURS", days, hours);
-        end
-      elseif(hours >= 1) then
-        -- hours left
-        hours = math.floor(hours);
-        mins = mins % 60; -- cap mins
-        if(pPlayer:IsTurnActive()) then
-          Controls.TurnTimerLabel:LocalizeAndSetText("LOC_KEY_TIME_HOURS_MINUTES", hours, mins);
-        else
-          Controls.TurnTimerLabel:LocalizeAndSetText("LOC_KEY_EST_TIME_HOURS_MINUTES", hours, mins);
-        end
-      elseif(mins >= 1) then
-        -- mins left
-        mins = math.floor(mins);
-        if(pPlayer:IsTurnActive()) then
-          Controls.TurnTimerLabel:LocalizeAndSetText("LOC_KEY_TIME_MINS_SECONDS", mins, secs);
-        else
-          Controls.TurnTimerLabel:LocalizeAndSetText("LOC_KEY_EST_TIME_MINS_SECONDS", mins, secs);
-        end
-      else
-        -- secs left
-        if(pPlayer:IsTurnActive()) then
-          Controls.TurnTimerLabel:LocalizeAndSetText("LOC_KEY_TIME_SECONDS", secs);
-        else
-          Controls.TurnTimerLabel:LocalizeAndSetText("LOC_KEY_EST_TIME_SECONDS", secs);
-        end
-      end
+    Controls.TurnTimerLabel:SetText(FormatTimeRemaining(timeRemaining, pPlayer:IsTurnActive()));
     else
       Controls.TurnTimerLabel:LocalizeAndSetText("-");
     end
@@ -1424,7 +1425,11 @@ end
 -- ===========================================================================
 function LateInitialize()
   AllocateUI();
-  PopulateEraData();
+
+  	-- Only init the rotating era pointer if this game mode supports eras.
+  if HasCapability("CAPABILITY_ERAS") then
+    PopulateEraData();
+  end
 
   -- It is possible to start with automation already active, test for that
   if Automation.IsActive() then
@@ -1458,23 +1463,25 @@ function LateInitialize()
   Events.UnitOperationSegmentComplete.Add(OnUnitOperationSegmentComplete);
   Events.UnitOperationsCleared.Add(   OnUnitOperationsCleared);
   Events.UserOptionChanged.Add(     OnUserOptionChanged);
-  Events.UploadCloudEndTurnStart.Add(		OnUploadCloudEndTurnStart);
-  Events.UploadCloudEndTurnComplete.Add(		OnUploadCloudEndTurnComplete);
+  Events.UploadCloudEndTurnStart.Add(        OnUploadCloudEndTurnStart);
+  Events.UploadCloudEndTurnComplete.Add(        OnUploadCloudEndTurnComplete);
 
   -- LUA Events
   LuaEvents.AutoPlayStart.Add(        OnAutoPlayStart );    -- Raised by engine AutoPlay_Manager!
   LuaEvents.AutoPlayEnd.Add(          OnAutoPlayEnd );    -- Raised by engine AutoPlay_Manager!
   LuaEvents.Tutorial_SlowNextTurnEnable.Add(  OnTutorialSlowTurnEnable );
-  LuaEvents.ProductionPanel_IsQueueOpen.Add(	OnIsProdQueueOpen );
+  LuaEvents.ProductionPanel_IsQueueOpen.Add(    OnIsProdQueueOpen );
 
+  -- ==== CQUI CUSTOMIZATION BEGIN ====================================================================================== --
   LuaEvents.OnCQUIPolicyReminderClose.Add(function() CQUI_PolicyReminderClosed = true; ContextPtr:RequestRefresh(); end)
   LuaEvents.OnCQUIPolicyReminderOpenedChangePolicy.Add(function() CQUI_PolicyReminderClosed = true; ContextPtr:RequestRefresh(); end)
+  -- ==== CQUI CUSTOMIZATION END ====================================================================================== --
 
   m_kPopupDialog = PopupDialog:new( "ActionPanelPopupDialog" );
 end
 
 -- ===========================================================================
---	Initialize
+--    Initialize
 -- ===========================================================================
 function Initialize()
   ContextPtr:SetInitHandler( OnInit );
