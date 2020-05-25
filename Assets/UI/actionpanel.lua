@@ -946,7 +946,8 @@ function SetEndTurnWaiting()
   else
     -- Waiting on human players.
     if(turnActiveHumanName ~= nil) then
-      Controls.EndTurnText:LocalizeAndSetText(waitForPlayerTurnString, string.upper(turnActiveHumanName));
+      local textToSet : string = Locale.Lookup(waitForPlayerTurnString, string.upper(turnActiveHumanName));
+      TruncateStringWithTooltip(Controls.EndTurnText, MAX_BEFORE_TRUNC_TURN_STRING, textToSet);
     else
       -- couldn't find the name of the player we're waiting on, use generic message
       Controls.EndTurnText:LocalizeAndSetText(waitForPlayersString);
@@ -1410,6 +1411,11 @@ end
 -- ===========================================================================
 function OnIsProdQueueOpen( isQueueOpen:boolean )
   m_isProdQueueOpen = isQueueOpen;
+end
+
+-- ===========================================================================
+function ChangePleaseWaitTooltip(newTooltip:string)
+  pleaseWaitTip = Locale.Lookup(newTooltip);
 end
 
 -- ===========================================================================
