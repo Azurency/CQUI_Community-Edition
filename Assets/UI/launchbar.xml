@@ -1,14 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Context FontStyle="Stroke">
-
+  <!-- ==== CQUI DiplomacyActionView.xml Replacement ==================================================================================== -->
+  <!-- ==== CQUI-Specific sections marked            ==================================================================================== -->
   <Container ID="LaunchContainer" Offset="-65,-5" ConsumeMouseOver="1">
     <Grid ID="LaunchBarDropShadow" Offset="0,35" Size="310,60" Texture="Controls_Glow2" SliceCorner="25,25" SliceTextureSize="50,50" Color="0,0,0,200"/>
     <Image ID="LaunchBackingTile" Offset="65,34" Size="200,41" Texture="LaunchBar_Backing_Tile" StretchMode="Tile"/>
     <Grid ID="LaunchBacking" Size="350,77" Texture="LaunchBar_BackingLeft_Backing" SliceCorner="114,32" SliceSize="1,1" SliceTextureSize="226,77"/>
 
+<!-- ==== BEGIN CQUI CUSTOMIZATION  ==================================================================================== -->
+<!-- CQUI: Add additional Stack layer here, to handle the Toggle Show/Hide button below -->
     <Stack StackGrowth="Right">
+<!-- ==== END CQUI CUSTOMIZATION ==================================================================================== -->
+
       <Stack ID="ButtonStack" Offset="63,32" Padding="-2" StackGrowth="Right">
         <Image Anchor="L,C" Offset="0,-2" Size="7,7" Texture="LaunchBar_TrackPip" Color="255,255,255,200"/>
+
         <Button ID="ScienceButton" Anchor="L,C" Offset="0,2" Size="51,51" Texture="LaunchBar_Hook_ScienceButton" Style="ButtonNormalText" TextureOffset="4,9" StateOffsetIncrement="0,60" ToolTip="LOC_HUD_TECHTREE_TOOLTIP">
           <Image ID="ResearchIcon" Anchor="C,T" Offset="0,4" Size="38,38" Texture="LaunchBar_Hook_TechTree"/>
           <Image ID="ScienceHookWithMeter" Anchor="C,C" Offset="0,-5" Size="57,57" Hidden="1" Texture="LaunchBar_Hook_ScienceMeter_Backing.dds">
@@ -47,6 +53,8 @@
           <Image Texture="LaunchBar_Hook_GreatWorks" Size="35,35" Anchor="C,T" Offset="0,4"/>
         </Button>
         <Image  ID="GreatWorksBolt"     Anchor="L,C" Offset="0,-2"  Size="7,7"      Texture="LaunchBar_TrackPip"     Color="255,255,255,200" />
+<!-- ==== BEGIN CQUI CUSTOMIZATION  ==================================================================================== -->
+<!-- CQUI: Added additional Stack layer, for LaunchExtra items below -->
       </Stack>
 
       <!-- Toggle Show/Hide Button -->
@@ -76,6 +84,7 @@
         </SlideAnim>
       </AlphaAnim>
     </Container>
+<!-- ==== END CQUI CUSTOMIZATION  ==================================================================================== -->
 
     <Tutorial ID="TutOpenGovernment" Style="TutorialContainer" Anchor="L,B" AnchorSide="O,O" Offset="-220, 120" TriggerBy="TutorialOpenGovernment">
       <Grid Style="TutorialCalloutGrid">
@@ -103,7 +112,7 @@
         <Label Style="TutorialBodyText" String="LOC_META_129b_BODY"/>
       </Grid>
       <SlideAnim Anchor="C,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad">
-        <Image Texture="Tutorial_ArrowV" Offset="5,-15" Size="44,58" FlipY="true"/>
+        <Image Texture="Tutorial_ArrowV" Offset="10,-15" Size="44,58" FlipY="true"/>
       </SlideAnim>
     </Tutorial>
 
@@ -123,11 +132,12 @@
         <Label Style="TutorialBodyText" String="LOC_META_136b_BODY"/>
       </Grid>
       <SlideAnim Anchor="C,T" Start="0,-30" EndOffset="0,10" Cycle="Bounce" Function="OutQuad">
-        <Image Texture="Tutorial_ArrowV" Offset="-148,-15" Size="44,58" FlipY="true"/>
+        <Image Texture="Tutorial_ArrowV" Offset="-92,-15" Size="44,58" FlipY="true"/>
       </SlideAnim>
     </Tutorial>
 
   </Container>
+
 
   <!-- INSTANCES -->
 
@@ -141,7 +151,7 @@
   <Instance Name="LaunchBarPinInstance">
     <Image ID="Pin" Anchor="L,C" Offset="0,-2" Size="7,7" Texture="LaunchBar_TrackPip" Color="255,255,255,200" />
   </Instance>
-
+<!-- ==== BEGIN CQUI CUSTOMIZATION  ==================================================================================== -->
   <Instance Name="LaunchExtraEntry">
     <GridButton ID="Button" Style="ButtonControlBrown" Size="parent,24"/>
   </Instance>
@@ -155,4 +165,5 @@
       <Image ID="Dolt" Anchor="L,C" Offset="0,-2" Size="7,7" Texture="LaunchBar_TrackPip" Color="255,255,255,200"/>
     </Stack>
   </Instance>
+<!-- ==== END CQUI CUSTOMIZATION ==================================================================================== -->
 </Context>

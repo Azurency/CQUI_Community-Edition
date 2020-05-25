@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Context xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="..\..\..\..\..\CivTech\Libs\ForgeUI\ForgeUI_Assets\Controls.xsd" Style="FontNormal16" FontStyle="Shadow">
 
-  <!-- CQUI DiplomacyActionView.xml Replacement                                              -->
-  <!-- CQUI-Specific sections marked                                                         -->
+  <!-- ==== CQUI DiplomacyActionView.xml Replacement ==================================================================================== -->
+  <!-- ==== CQUI-Specific sections marked            ==================================================================================== -->
 
   <Include File="CivilizationIcon" />
   <Include File="LeaderIcon"/>
@@ -240,12 +240,12 @@
   <!-- When an instance is passed into a function, it incorrectly evaluates the parent width as the full width of the screen, instead of its current parent.  -->
   <!-- Until this is addressed, I am going to hard-code the width of the gossip entry as (295) so that I can continue.-->
   <Instance	Name="IntelGossipHistoryPanelEntry">
-<!-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== -->
-<!-- CQUI: Commented line is the unmodified code -->
+<!-- ==== BEGIN CQUI CUSTOMIZATION  ==================================================================================== -->
+  <!-- CQUI: Commented line is the unmodified code -->
   <!-- <Grid     ID="Background" Texture="Controls_GossipBubble" Size="450,37" Anchor="C,T" SliceCorner="18,18" SliceTextureSize="36,37"> -->
   <!-- AZURENCY : changed size back to parent, seems to work. If it doesn't, just revert it back -->
   <Grid     ID="Background" Texture="Controls_GossipBubble" Size="parent-100,37" Anchor="C,T" SliceCorner="18,18" SliceTextureSize="36,37">
-<!-- ==== CQUI CUSTOMIZATION END ==================================================================================== -->
+<!-- ==== END CQUI CUSTOMIZATION ==================================================================================== -->
       <Label  ID="GossipText" WrapWidth="parent-30" Offset="17,0" Style="TextButtonStyle" Anchor="L,C"/>
       <Label  ID="NewIndicator" String="[ICON_New]" Anchor="R,T" Hidden="1"/>
     </Grid>
@@ -279,11 +279,11 @@
           <Label ID="AccessContributionText" Style="FontNormal14" Anchor="L,T" WrapWidth="274" Offset="4,0" />
         </Grid>
 
-<!-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== -->
+<!-- ==== BEGIN CQUI CUSTOMIZATION  ==================================================================================== -->
 <!-- CQUI: Commented line is the unmodifed code -->
       <!-- <Grid Style="SubContainer3" Size="parent,auto" Color="DiplomacyPanelFrameColor"> -->
       <Grid Style="SubContainer3" Size="parent, 0" AutoSize="V" Color="DiplomacyPanelFrameColor">
-<!-- ==== CQUI CUSTOMIZATION END  ==================================================================================== -->
+<!-- ==== END CQUI CUSTOMIZATION  ==================================================================================== -->
 
           <Stack StackGrowth="Left" Anchor="R,C">
             <Button ID="AccessLevelIcon" Size="44,44" Anchor="C,C" Style="DiplomacyVisibilityIconLarge" Disabled="1"/>
@@ -294,20 +294,20 @@
           </Stack>
         </Grid>
 
-<!-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== -->
+<!-- ==== BEGIN CQUI CUSTOMIZATION  ==================================================================================== -->
 <!-- CQUI: Commented line is the unmodifed code -->
         <!-- <Stack Size="parent-8,auto" Offset="4,0"> -->
         <Stack Size="parent-8,0" Offset="4,auto">
-<!-- ==== CQUI CUSTOMIZATION END  ==================================================================================== -->
+<!-- ==== END CQUI CUSTOMIZATION  ==================================================================================== -->
 
           <Label Style="FontNormal14" String="LOC_DIPLOMACY_INTEL_INFORMATION_SHARED_HEADER" Anchor="L,T" Color0="150,150,150,255" Align="Center" WrapWidth="parent"/>
           <Label ID="InformationSharedText" Style="FontNormal14" WrapWidth="parent"/>
         </Stack>
-<!-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== -->
+<!-- ==== BEGIN CQUI CUSTOMIZATION  ==================================================================================== -->
 <!-- CQUI: Commented line is the unmodifed code -->
         <!-- <Stack ID="NextAccessLevelStack" Size="parent-8,auto" Offset="4,0" Hidden="1"> -->
         <Stack ID="NextAccessLevelStack" Size="parent-8,0" Offset="4,auto" Hidden="1">
-<!-- ==== CQUI CUSTOMIZATION END  ==================================================================================== -->
+<!-- ==== END CQUI CUSTOMIZATION  ==================================================================================== -->
           <Label Style="FontNormal14" String="LOC_DIPLOMACY_INTEL_NEXT_ACCESS_LEVEL_HEADER" Color0="150,150,150,255"/>
           <Label ID="NextAccessLevelText" Style="FontNormal14" Color0="150,150,150,255" WrapWidth="parent"/>
         </Stack>
@@ -315,11 +315,11 @@
         <Container ID="Advisor" Size="parent,auto" Hidden="1">
           <Grid Style="AdvisorWordBubble" Offset="0,4" Size="parent-32,auto" Color="41,51,59,200">
             <Stack StackGrowth="Down" Padding="0" Offset="10,10">
-<!-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== -->
+<!-- ==== BEGIN CQUI CUSTOMIZATION  ==================================================================================== -->
 <!-- CQUI: Commented line is the unmodifed code -->
               <!-- <Label Style="FontNormal12" WrapWidth="parent-60" String="LOC_DIPLOMACY_INTEL_GAIN_ACCESS_LEVEL_HEADER" Color0="150,150,150,255"/> -->
               <Label Style="FontNormal12" WrapWidth="200" String="LOC_DIPLOMACY_INTEL_GAIN_ACCESS_LEVEL_HEADER" Color0="150,150,150,255"/>
-<!-- ==== CQUI CUSTOMIZATION END  ==================================================================================== -->
+<!-- ==== END CQUI CUSTOMIZATION  ==================================================================================== -->
               <Label ID="AdvisorText" Offset="20,0" Style="FontNormal12" WrapWidth="parent-60" Color0="150,150,150,255"/>
             </Stack>
           </Grid>
@@ -330,11 +330,11 @@
   </Instance>
 
   <Instance	Name="IntelRelationshipPanel">
-<!-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== -->
+<!-- ==== BEGIN CQUI CUSTOMIZATION  ==================================================================================== -->
 <!-- CQUI: Commented line is the unmodifed code -->
     <!-- <Container ID="Top" Anchor="C,T" Size="460,auto"> -->
     <Container ID="Top" Anchor="C,T" Size="460,parent">
-<!-- ==== CQUI CUSTOMIZATION END  ==================================================================================== -->
+<!-- ==== END CQUI CUSTOMIZATION  ==================================================================================== -->
       <Stack StackGrowth="Bottom" Size="parent,0" InnerPadding="8,8" Offset="0,10" Anchor="C,T" Padding="5">
         <Container Size="parent,15">
           <Grid Size="292,8" Anchor="C,T" Texture="Controls_RoundedRectH" SliceTextureSize="12,8" SliceCorner="6,4" Color="DiplomacyPanelFrameColor">
@@ -347,14 +347,14 @@
           </Grid>
         </Container>
         <Grid Style="SubContainer3" Size="parent,auto" Color="DiplomacyPanelFrameColor">
-<!-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== -->
+<!-- ==== BEGIN CQUI CUSTOMIZATION  ==================================================================================== -->
 <!-- CQUI: Commented line is the unmodifed code -->
           <!-- <Stack StackGrowth="Bottom" Size="parent,0" Padding="5"> -->
           <Stack StackGrowth="Bottom" Size="parent,auto" Padding="5">
-<!-- ==== CQUI CUSTOMIZATION END  ==================================================================================== -->
+<!-- ==== END CQUI CUSTOMIZATION  ==================================================================================== -->
 
             <Label Style="HeaderSmallCaps" String="{LOC_DIPLOMACY_INTEL_RELATIONSHIP:upper}" Anchor="R,T" Color0="150,150,150,255"/>
-<!-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== -->
+<!-- ==== BEGIN CQUI CUSTOMIZATION  ==================================================================================== -->
 <!-- CQUI: Commented line is the unmodifed code -->
             <!-- <Label ID="RelationshipText" Style="HeaderLargeCaps" Anchor="R,T"/> -->
             <Stack StackGrowth="Right" Size="0,0" Anchor="R,T">
@@ -363,12 +363,12 @@
               <Label ID="RelationshipScore"/>
               <Label String=")"/>
             </Stack>
-<!-- ==== CQUI CUSTOMIZATION END  ==================================================================================== -->
+<!-- ==== END CQUI CUSTOMIZATION  ==================================================================================== -->
           </Stack>
         </Grid>
         <Label ID="RelationshipReasonsText" Style="HeaderSmallCaps" String="LOC_DIPLOMACY_INTEL_RELATIONSHIP_REASONS" Anchor="C,T" Color0="150,150,150,255" Align="Center" WrapWidth="350"/>
         <Stack ID="RelationshipReasonStack" StackGrowth="Down"/>
-<!-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== -->
+<!-- ==== BEGIN CQUI CUSTOMIZATION  ==================================================================================== -->
         <Stack ID="RelationshipReasonsTotal" Hidden="1" Size="parent,auto" Offset="0,10">
           <Container Size="parent, auto">
             <Container Size="120,auto">
@@ -379,15 +379,15 @@
             </Container>
           </Container>
         </Stack>
-<!-- ==== CQUI CUSTOMIZATION END  ==================================================================================== -->
+<!-- ==== END CQUI CUSTOMIZATION  ==================================================================================== -->
         <Grid ID="NoReasons" Style="DecoGrid" Size="parent,auto" Hidden="1" Color="DiplomacyPanelFrameColor">
           <Label Style="FontNormal14" Anchor="C,C" String="LOC_DIPLOMACY_INTEL_RELATIONSHIP_NOTHING_ABJECT" WrapWidth="220" Align="Center" Color0="DiplomacyPanelFrameColor"/>
         </Grid>
-<!-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== -->
+<!-- ==== BEGIN CQUI CUSTOMIZATION  ==================================================================================== -->
 <!-- CQUI: Commented line is the unmodifed code -->
         <!-- <Container ID="Advisor" Size="parent,auto" Hidden="1"> -->
         <Container ID="Advisor" Size="parent,auto">
-<!-- ==== CQUI CUSTOMIZATION END  ==================================================================================== -->
+<!-- ==== END CQUI CUSTOMIZATION  ==================================================================================== -->
           <Grid Style="AdvisorWordBubble" Offset="0,4" Size="parent-32,auto" Color="41,51,59,200">
             <Stack StackGrowth="Down" Padding="0" Offset="10,10">
               <Label Style="FontNormal12" WrapWidth="340" String="LOC_DIPLOMACY_INTEL_TO_RAISE_RELATIONSHIP" Color0="150,150,150,255"/>
@@ -506,13 +506,13 @@
       </SlideAnim>
     </AlphaAnim>
 
-<!-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== -->
+<!-- ==== BEGIN CQUI CUSTOMIZATION  ==================================================================================== -->
 <!-- CQUI: Commented lines are the unmodifed code -->
     <!-- <AlphaAnim			ID="ConversationSelection_Alpha"				AlphaBegin="0"	AlphaEnd="1"		Speed="2" Function="Root" Cycle="Once" Pause="0.6" Size="parent,parent" > -->
       <!-- <SlideAnim		ID="ConversationSelection_Slide"				Begin="10,0"		End="0,0"				Speed="2" Function="Root" Cycle="Once" Pause="0.6" Size="parent,parent" > -->
     <AlphaAnim			ID="ConversationSelection_Alpha"				AlphaBegin="0"	AlphaEnd="1"		Speed="0.5" Function="Root" Cycle="Once" Pause="0.5" Size="parent,parent" >
       <SlideAnim		ID="ConversationSelection_Slide"				Begin="10,0"		End="0,0"				Speed="0.5" Function="Root" Cycle="Once" Pause="0.3" Size="parent,parent" >
-<!-- ==== CQUI CUSTOMIZATION END  ==================================================================================== -->
+<!-- ==== END CQUI CUSTOMIZATION  ==================================================================================== -->
         <Grid			ID="ConversationSelectionGrid" Anchor="L,B" Offset="50,50" Size="450,auto" Style="DiplomacyWordBubble" Color="255,255,255,200">
           <Stack		ID="ConversationSelectionStack"	StackGrowth="Bottom" Padding="2" Anchor="C,C"/>
         </Grid>
@@ -532,19 +532,19 @@
 
   <!--The fade-to-black stuff -->
   <Container ID="BlackFade" Hidden="1">
-<!-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== -->
+<!-- ==== BEGIN CQUI CUSTOMIZATION  ==================================================================================== -->
 <!-- CQUI: Commented line is the unmodifed code -->
     <!-- <AlphaAnim ID="BlackFadeAnim" Begin="0" End="1" Cycle="Once" Stopped="1" Speed="4"> -->
     <AlphaAnim ID="BlackFadeAnim" Begin="0" End="1" Speed="3" Cycle="Once" Stopped="1" Speed="4">
-<!-- ==== CQUI CUSTOMIZATION END  ==================================================================================== -->
+<!-- ==== END CQUI CUSTOMIZATION  ==================================================================================== -->
       <Box Color="0,0,0,255" Size="parent,parent" ConsumeMouse="0"/>
     </AlphaAnim>
   </Container>
-<!-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== -->
+<!-- ==== BEGIN CQUI CUSTOMIZATION  ==================================================================================== -->
   <!-- CQUI: Commented line is the unmodifed code -->
   <!-- <AlphaAnim ID="FadeTimerAnim" Begin="0" End="1" Cycle="Once" Stopped="1" Speed="4"/> -->
   <AlphaAnim ID="FadeTimerAnim" Begin="0" End="1" Speed="3" Cycle="Once" Stopped="1" Speed="4"/>
-<!-- ==== CQUI CUSTOMIZATION END ==================================================================================== -->
+<!-- ==== END CQUI CUSTOMIZATION ==================================================================================== -->
 
 
 
