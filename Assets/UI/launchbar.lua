@@ -1,3 +1,7 @@
+-- CQUI InGame.lua Replacement
+-- CQUI-Specific Changes marked in-line below
+-- Unmodified Version of LaunchBar.lua will be cheked into the repo for file comparison
+
 -- ===========================================================================
 --	HUD's "Launch Bar"
 --	Copyright (c) 2017-2019 Firaxis Games
@@ -32,8 +36,10 @@ local m_isGreatWorksAvailable  :boolean = false;
 
 local isDebug:boolean = false;     -- Set to true to force all hook buttons to show on game start
 
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
 -- Launchbar Extras. Contains the callback and the button text
 local m_LaunchbarExtras:table = {};
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
 
 -- ===========================================================================
 --  Callbacks
@@ -205,6 +211,7 @@ function SetGovernmentClosed()
   OnClose();
 end
 
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
 -- ===========================================================================
 function BuildExtraEntries()
   -- Clear previous entries
@@ -320,6 +327,7 @@ function OnAddLaunchbarIcon(buttonInfo:table)
 
   RefreshView();
 end
+-- ==== CQUI CUSTOMIZATION END  ==================================================================================== --
 
 -- ===========================================================================
 --  Lua Event
@@ -467,7 +475,6 @@ function RefreshGreatWorks()
       if m_isGreatWorksUnlocked then
         break;
       end
-
     end
   end
   RealizeHookVisibility();
@@ -529,9 +536,8 @@ function RefreshGovernment()
     Controls.GovernmentButton:SetHide(false);
     Controls.GovernmentBolt:SetHide(false);
     if ( kCulture:IsInAnarchy() ) then
-      Controls.GovernmentButton:SetDisabled(true);
       local iAnarchyTurns = kCulture:GetAnarchyEndTurn() - Game.GetCurrentGameTurn();
-      Controls.GovernmentButton.SetDisabled(true);
+      Controls.GovernmentButton:SetDisabled(true);
       Controls.GovernmentIcon:SetColorByName("Civ6Red");
       Controls.GovernmentButton:SetToolTipString("[COLOR_RED]".. Locale.Lookup("LOC_GOVERNMENT_ANARCHY_TURNS", iAnarchyTurns) .. "[ENDCOLOR]");
       ShowFreePolicyFlag(false);
@@ -549,6 +555,7 @@ end
 --	Update the background and size of the launchbar itself.
 -- ===========================================================================
 function RealizeBacking()
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
   -- The Launch Bar width should accomodate how many hooks are currently in the stack.
   Controls.ButtonStack:CalculateSize();
   Controls.LaunchBacking:SetSizeX(Controls.ButtonStack:GetSizeX()+116);
@@ -557,6 +564,7 @@ function RealizeBacking()
 
   -- When we change size of the LaunchBar, we send this LuaEvent to the Diplomacy Ribbon, so that it can change scroll width to accommodate it
   LuaEvents.LaunchBar_Resize(Controls.ButtonStack:GetSizeX());
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
 end
 
 -- ===========================================================================
@@ -594,8 +602,11 @@ function UpdateCivicMeter( localPlayer:table)
     local currentCivicID  :number = pPlayerCulture:GetProgressingCivic();
 
     if(currentCivicID >= 0) then
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+-- CQUI: Unmodifed uses pPlayerCulture here, not playerCivics; playerCivics is a CQUI entity, perhaps?     
       local civicProgress :number = playerCivics:GetCulturalProgress(currentCivicID);
       local civicCost     :number = playerCivics:GetCultureCost(currentCivicID);
+-- ==== CQUI CUSTOMIZATION END  ==================================================================================== --
 
       Controls.CultureMeter:SetPercent(civicProgress/civicCost);
     else
@@ -637,7 +648,7 @@ function RefreshView()
   RefreshGreatPeople();
   RefreshReligion();
 
-  if BASE_RefreshView == nil then		-- No MODs, then wrap this up.
+  if BASE_RefreshView == nil then		-- No MODs/Expansions defining this function so its safe to call Realize now.
     RealizeBacking();
   end
 end
@@ -667,15 +678,25 @@ function OnResearchChanged()
 end
 
 -- ===========================================================================
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+-- Function from unmodifed version, not defined in CQUI
+-- EVENT
+-- function OnGovernmentRefresh()
+--   RefreshGovernment();
+-- end
+-- ==== CQUI CUSTOMIZATION END  ==================================================================================== --
+        
 function OnOpen()
   m_numOpen = m_numOpen+1;
   local screenX, screenY:number = UIManager:GetScreenSizeVal();
   if screenY <= 850 then
     Controls.LaunchContainer:SetOffsetY(-35);
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
     Controls.ScienceHookWithMeter:SetOffsetY(-5);
     Controls.CultureHookWithMeter:SetOffsetY(-5);
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
   end
-  LuaEvents.Launchbar_CloseChoosers();
+  LuaEvents.LaunchBar_CloseChoosers();
 end
 
 -- ===========================================================================
@@ -686,8 +707,11 @@ function OnClose()
   end
   if m_numOpen == 0 then
     Controls.LaunchContainer:SetOffsetY(-5);
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+-- CQUI: These were commented out before the May2020 Patch work
     -- Controls.ScienceHookWithMeter:SetOffsetY(25);
     -- Controls.CultureHookWithMeter:SetOffsetY(25);
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
   end
 end
 
@@ -762,8 +786,22 @@ function PlayMouseoverSound()
   UI.PlaySound("Main_Menu_Mouse_Over");
 end
 
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+-- CQUI: Unmodified file contains an Unsubscribe and Subscribe functions that are not present in CQUI Files
+-- ===========================================================================
+-- function Unsubscribe()
+  -- See unmodified file
+-- ===========================================================================
+-- function Subscribe()
+  -- See unmodified file
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
+                                                                       
 -- ===========================================================================
 function LateInitialize()
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+-- CQUI: Unmodified version calls Subscribe() function here, which is not defined in CQUI version
+-- Subscribe();
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
   RefreshView();
 end
 
@@ -792,6 +830,7 @@ function Initialize()
   Controls.ScienceButton:RegisterCallback(Mouse.eLClick, OnOpenResearch);
   Controls.ScienceButton:RegisterCallback( Mouse.eMouseEnter, PlayMouseoverSound);
 
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
   -- CQUI --
   Controls.LaunchExtraShow:RegisterCallback( Mouse.eLClick, OnToggleExtras );
 
@@ -799,27 +838,30 @@ function Initialize()
   LuaEvents.LaunchBar_AddExtra.Add( OnAddExtraEntry );
   LuaEvents.LaunchBar_AddIcon.Add( OnAddLaunchbarIcon );
   -- CQUI --
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
 
-  Events.LocalPlayerTurnBegin.Add( OnLocalPlayerTurnBegin );
-  Events.VisualStateRestored.Add( OnVisualStateRestored );
-  Events.CivicCompleted.Add( OnCivicCompleted );        -- To capture when we complete Code of Laws
-  Events.CivicChanged.Add( OnCivicChanged );
-  Events.ResearchChanged.Add(OnResearchChanged);
-  Events.TreasuryChanged.Add( RefreshGovernment );
-  Events.GovernmentPolicyChanged.Add( RefreshGovernment );
-  Events.GovernmentPolicyObsoleted.Add( RefreshGovernment );
-  Events.GovernmentChanged.Add( RefreshGovernment );
   Events.AnarchyBegins.Add( RefreshGovernment );
   Events.AnarchyEnds.Add( RefreshGovernment );
-  Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );
-  Events.GreatWorkCreated.Add( OnGreatWorkCreated );
-  Events.FaithChanged.Add( OnFaithChanged );
-  Events.LocalPlayerChanged.Add( OnLocalPlayerChanged );
-  Events.DiplomacyDealEnacted.Add( OnDiplomacyDealEnacted );
   Events.CityOccupationChanged.Add( OnCityCaptured ); -- kinda bootleg, but effective
-
+  Events.CivicCompleted.Add( OnCivicCompleted );        -- To capture when we complete Code of Laws
+  Events.CivicChanged.Add( OnCivicChanged );
+  Events.DiplomacyDealEnacted.Add( OnDiplomacyDealEnacted );
+  Events.FaithChanged.Add( OnFaithChanged );
+  Events.GovernmentChanged.Add( RefreshGovernment );
+  Events.GovernmentPolicyChanged.Add( RefreshGovernment );
+  Events.GovernmentPolicyObsoleted.Add( RefreshGovernment );
+  Events.GreatWorkCreated.Add( OnGreatWorkCreated );
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
   -- Wrapped in an anonymous function, because OnInputActionTriggered may be overriden elsewhere (like XP1)
   Events.InputActionTriggered.Add( function(actionId) OnInputActionTriggered(actionId) end );
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
+                                                       
+  Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );
+  Events.LocalPlayerChanged.Add( OnLocalPlayerChanged );
+  Events.LocalPlayerTurnBegin.Add( OnLocalPlayerTurnBegin );
+  Events.ResearchChanged.Add(OnResearchChanged);
+  Events.TreasuryChanged.Add( RefreshGovernment );
+  Events.VisualStateRestored.Add( OnVisualStateRestored );
 
   LuaEvents.CivicsTree_CloseCivicsTree.Add( SetCivicsTreeClosed );
   LuaEvents.CivicsTree_OpenCivicsTree.Add( SetCivicsTreeOpen );
@@ -835,13 +877,17 @@ function Initialize()
   LuaEvents.TechTree_OpenTechTree.Add( SetTechTreeOpen );
   LuaEvents.Tutorial_CloseAllLaunchBarScreens.Add( OnTutorialCloseAll );
 
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
   if HasCapability("CAPABILITY_TECH_TREE") then
     LuaEvents.WorldTracker_ToggleResearchPanel.Add(OnToggleResearchPanel);
   end
   if HasCapability("CAPABILITY_CIVICS_TREE") then
     LuaEvents.WorldTracker_ToggleCivicPanel.Add(OnToggleCivicPanel);
   end
+-- ==== CQUI CUSTOMIZATION END  ==================================================================================== --
 
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+-- TODO (2020-05): Locate these tests in a different file
   -- TESTS
   --------------------------------
   --[[
@@ -902,5 +948,6 @@ function Initialize()
 
   LuaEvents.LaunchBar_AddIcon(button2Info);
   ]]
+  -- ==== CQUI CUSTOMIZATION END  ==================================================================================== --
 end
 Initialize();
