@@ -126,9 +126,7 @@
     <Row Tag="LOC_CQUI_GENERAL_SHOWLUXURY" Language="de_DE">
       <Text>Zeige Luxusgüter im Top-Panel.</Text>
     </Row>
-    <Row Tag="LOC_CQUI_GENERAL_SHOWDIPLOBANNER" Language="de_DE">
-      <Text>Zeige die Nationen-Infos bei Portraits</Text>
-    </Row>
+
     <Row Tag="LOC_CQUI_GENERAL_SOLID" Language="de_DE">
       <Text>Opak</Text>
     </Row>

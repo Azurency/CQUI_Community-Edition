@@ -1,3 +1,6 @@
+-- CQUI InGame.lua Replacement
+-- CQUI-Specific Changes marked in-line below
+
 -- Copyright 2015-2018, Firaxis Games
 -- Root context for ingame (aka: All-the-things)
 -- MODs / Expansions cannot use partial replacement as this context is 
@@ -5,7 +8,9 @@
 
 include( "LocalPlayerActionSupport" );
 include( "InputSupport" );
-include( "civ6common" )
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+include( "Civ6Common" )
+-- ==== CQUI CUSTOMIZATION END ======================================================================================= --
 
 
 -- ===========================================================================
@@ -23,21 +28,19 @@ local m_bulkHideTracker :number = 0;
 local m_lastBulkHider:string = "first call";
 g_uiAddins = {};
 
-local m_PauseId;
-local m_PauseId		:number = Input.GetActionId("PauseMenu");
-local m_QuicksaveId;
+local m_PauseId     :number = Input.GetActionId("PauseMenu");
 local m_QuicksaveId :number = Input.GetActionId("QuickSave");
 
 local m_HexColoringReligion : number = UILens.CreateLensLayerHash("Hex_Coloring_Religion");
 local m_CulturalIdentityLens: number = UILens.CreateLensLayerHash("Cultural_Identity_Lens");
-local m_TouristTokens		: number = UILens.CreateLensLayerHash("Tourist_Tokens");
-local m_activeLocalPlayer	: number = -1;
-local m_timeUntilPopupCheck	: number = 0;
+local m_TouristTokens       : number = UILens.CreateLensLayerHash("Tourist_Tokens");
+local m_activeLocalPlayer   : number = -1;
+local m_timeUntilPopupCheck : number = 0;
 
 -- ===========================================================================
 --	FUNCTIONS
 -- ===========================================================================
-
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
 --CQUI Functions
 function CQUI_RequestUIAddin( request: string ) --Returns the first context to match the request string. Returns nil if a matching context can't be found
   for _,v in ipairs(g_uiAddins) do
@@ -46,6 +49,7 @@ function CQUI_RequestUIAddin( request: string ) --Returns the first context to m
     end
   end
 end
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
 
 -- ===========================================================================
 --	Open up the TopOptionsMenu with the utmost priority.
@@ -72,6 +76,7 @@ DefaultMessageHandler[KeyEvents.KeyUp] =
     local uiKey = pInputStruct:GetKey();
 
     if( uiKey == Keys.VK_ESCAPE ) then
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
       -- AZURENCY : if a unit or a city is selected, deselect and reset interface mode
       -- instead of showing the option menu immediatly
       if (UI.GetHeadSelectedCity() or UI.GetHeadSelectedUnit()) then
@@ -79,10 +84,12 @@ DefaultMessageHandler[KeyEvents.KeyUp] =
         UI.SetInterfaceMode(InterfaceModeTypes.SELECTION);
         return true;
       end
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
       if( Controls.TopOptionsMenu:IsHidden() ) then
         OpenInGameOptionsMenu();
         return true;
       end
+
       return false;	-- Already open, let it handle it.
     elseif( uiKey == Keys.B and pInputStruct:IsShiftDown() and pInputStruct:IsAltDown() and (not UI.IsFinalRelease()) ) then
       -- DEBUG: Force unhiding
@@ -90,6 +97,7 @@ DefaultMessageHandler[KeyEvents.KeyUp] =
       UI.DataError(msg);
       m_bulkHideTracker = 1;
       BulkHide(false, msg);
+
     elseif( uiKey == Keys.J and pInputStruct:IsShiftDown() and pInputStruct:IsAltDown() and (not UI.IsFinalRelease()) ) then
       if m_bulkHideTracker < 1 then
         BulkHide(true,  "Forced" );
@@ -143,8 +151,21 @@ function OnShow()
       pFriends:SetRichPresence("civPresence", "LOC_PRESENCE_IN_GAME_SP");
     end
   end
+
+  RealizeTooltipBehavior();
 end
 
+-- ===========================================================================
+function RealizeTooltipBehavior()
+  local toolTipBehavior:number = Options.GetAppOption("UI", "TooltipBehavior");
+  if toolTipBehavior == TooltipBehavior.AlwaysShowing then		
+    TTManager:SetToolTipDelay( 0.0 );
+  elseif toolTipBehavior == TooltipBehavior.ShowAfterDelay then	
+    TTManager:SetToolTipDelay( 2.0 );	-- seconds to delay before showing
+  elseif toolTipBehavior == TooltipBehavior.ShowOnButton then
+    TTManager:SetToolTipDelay( 0.0 );	-- no delay (but require button.)
+  end
+end
 
 -- ===========================================================================
 --	Hide (or Show) all the contexts part of the BULK group.
@@ -153,7 +174,10 @@ function BulkHide( isHide:boolean, debugWho:string )
 
   -- Tracking for debugging:
   m_bulkHideTracker = m_bulkHideTracker + (isHide and 1 or -1);
+  -- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+  -- CQUI: Unmodifed file just uses print here (rather than print_debug), rest of line is the same
   print_debug("Request to BulkHide( "..tostring(isHide)..", "..debugWho.." ), Show on 0 = "..tostring(m_bulkHideTracker));
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
 
   if m_bulkHideTracker < 0 then
     UI.DataError("Request to bulk show past limit by "..debugWho..". Last bulk shown by "..m_lastBulkHider);
@@ -277,6 +301,15 @@ end
 -- ===========================================================================
 --	Event
 -- ===========================================================================
+function OnUpdateUI( type, tag, iData1, iData2, strData1 )
+  if (type == SystemUpdateUI.TouchTipBehaviorChanged) then
+    RealizeTooltipBehavior();
+  end
+end
+
+-- ===========================================================================
+--	Event
+-- ===========================================================================
 function OnUIIdle()
   -- If a countdown to check hasn't started, kick one off.
   if m_timeUntilPopupCheck <= 0 then
@@ -337,7 +370,10 @@ function Initialize()
 
   -- Support for Modded Add-in UI's
   for i, addin in ipairs(Modding.GetUserInterfaces("InGame")) do
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+    -- CQUI: Unmodifed version just uses print here rather than print_debug
     print_debug("Loading InGame UI - " .. addin.ContextPath);
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
     local id        :string = addin.ContextPath:sub(-(string.find(string.reverse(addin.ContextPath), '/') - 1));         -- grab id from end of path
     local isHidden  :boolean = true;
     local newContext:table = ContextPtr:LoadNewContext(addin.ContextPath, Controls.AdditionalUserInterfaces, id, isHidden); -- Content, ID, hidden
@@ -357,6 +393,7 @@ function Initialize()
   Events.LoadGameViewStateDone.Add(OnLoadGameViewStateDone);
   Events.LocalPlayerTurnBegin.Add(OnTurnBegin);
   Events.LocalPlayerTurnEnd.Add(OnTurnEnd);
+  Events.SystemUpdateUI.Add( OnUpdateUI );
   Events.UIIdle.Add(OnUIIdle);
 
   -- NOTE: Using UI open/closed pairs in the case of end game; where
@@ -377,7 +414,10 @@ function Initialize()
   LuaEvents.WonderBuiltPopup_Shown.Add( OnWonderBuiltPopupShown );
   LuaEvents.WonderBuiltPopup_Closed.Add(	OnWonderBuiltPopupClosed );
 
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
   --CQUI event handling
   LuaEvents.CQUI_RequestUIAddin.Add(function(request: string, requester: string) LuaEvents.CQUI_PushUIAddIn(CQUI_RequestUIAddin(request), recipient); end); --Responds to an addin request with a PushUIAddIn event containing the requested context. Can return nil
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
+
 end
 Initialize();

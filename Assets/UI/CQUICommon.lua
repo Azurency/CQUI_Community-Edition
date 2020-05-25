@@ -7,13 +7,12 @@
 -- ===========================================================================
 --  VARIABLES
 -- ===========================================================================
-local CQUI_ShowDebugPrint = false;
+local CQUI_ShowDebugPrint = true;
 
 -- ===========================================================================
 --CQUI setting control support functions
 -- ===========================================================================
 function print_debug(str)
-  print("ENTRY: CQUICommon - print_debug");
   if CQUI_ShowDebugPrint then
     print(str);
   end
