@@ -3,7 +3,7 @@
   <!-- ==============================  Basic Mod Information ============================== -->
   <Properties>
     <AffectsSavedGames>1</AffectsSavedGames>
-    <Name>Community Quick User Interface</Name>
+    <Name>Community Quick User Interface (May2020 Patch)</Name>
     <Teaser>CQUI</Teaser>
     <Description>Community Quick User Interface MOD was Formally CQUI Mod [NEWLINE]and is now being updated and improved by its community</Description>
     <CompatibleVersions>2.0</CompatibleVersions>
@@ -107,13 +107,12 @@
         <File>Assets/UI/actionpanel.lua</File>
         <File>Assets/UI/civ6common.lua</File>
         <File>Assets/UI/citysupport.lua</File>
-<!-- May2020: Temporarily Disabling DiplomacyActionView and DiplomacyDealView until more investigation can be completed -->
-        <!-- <File>Assets/UI/diplomacyactionview_CQUI_basegame.lua</File>
+        <File>Assets/UI/diplomacyactionview_CQUI_basegame.lua</File>
         <File>Assets/UI/diplomacyactionview_CQUI.lua</File>
         <File>Assets/UI/diplomacyactionview.xml</File>
         <File>Assets/UI/diplomacydealview_CQUI_basegame.lua</File>
         <File>Assets/UI/diplomacydealview_CQUI.lua</File>
-        <File>Assets/UI/diplomacydealview.xml</File> -->
+        <File>Assets/UI/diplomacydealview.xml</File>
         <File>Assets/UI/diplomacyribbon_CQUI_basegame.lua</File>
         <File>Assets/UI/diplomacyribbon_CQUI.lua</File>
         <File>Assets/UI/ingame.lua</File>
@@ -182,8 +181,7 @@
         <File>Assets/Expansion1/Replacements/citypaneloverview_expansion1_CQUI.lua</File>
         <File>Assets/Expansion1/Replacements/citystates.xml</File>
         <File>Assets/Expansion1/Replacements/citysupport.lua</File>
-<!-- May2020: Temporarily Disabling DiplomacyActionView and DiplomacyDealView until more investigation can be completed -->
-        <!-- <File>Assets/Expansion1/Replacements/diplomacyactionview_CQUI_expansion1.lua</File> -->
+        <File>Assets/Expansion1/Replacements/diplomacyactionview_CQUI_expansion1.lua</File>
         <File>Assets/Expansion1/Replacements/diplomacyribbon_CQUI_expansion1.lua</File>
         <File>Assets/Expansion1/Replacements/governmentscreen_CQUI_expansion1.lua</File>
         <File>Assets/Expansion1/Replacements/notificationpanel_CQUI_expansion1.lua</File>
@@ -219,10 +217,9 @@
         <File>Assets/Expansion2/Replacements/citystates.xml</File>
         <File>Assets/Expansion2/Replacements/citysupport.lua</File>
         <File>Assets/Expansion2/Replacements/civicstree_CQUI_expansion2.lua</File>
-<!-- May2020: Temporarily Disabling DiplomacyActionView and DiplomacyDealView until more investigation can be completed -->
-        <!-- <File>Assets/Expansion2/Replacements/diplomacyactionview_CQUI_expansion2.lua</File> -->
-        <!-- <File>Assets/Expansion2/Replacements/diplomacyactionview.xml</File> -->
-        <!-- <File>Assets/Expansion2/Replacements/diplomacydealview_CQUI_expansion2.lua</File> -->
+        <File>Assets/Expansion2/Replacements/diplomacyactionview_CQUI_expansion2.lua</File>
+        <File>Assets/Expansion2/Replacements/diplomacyactionview.xml</File>
+        <File>Assets/Expansion2/Replacements/diplomacydealview_CQUI_expansion2.lua</File>
         <File>Assets/Expansion2/Replacements/diplomacyribbon_CQUI_expansion2.lua</File>
         <File>Assets/Expansion2/Replacements/governmentscreen_CQUI_expansion2.lua</File>
         <File>Assets/Expansion2/Replacements/ingame.lua</File>
@@ -304,8 +301,7 @@
     </ModArt>
 
     <!-- ============================== ReplaceUIScript Declarations ============================== -->
-<!-- May2020: Temporarily Disabling DiplomacyActionView and DiplomacyDealView until more investigation can be completed -->
-    <!-- <ReplaceUIScript id="CQUI_DiplomacyActionView">
+    <ReplaceUIScript id="CQUI_DiplomacyActionView">
       <Properties>
         <LuaContext>DiplomacyActionView</LuaContext>
         <LuaReplace>Assets/UI/diplomacyactionview_CQUI_basegame.lua</LuaReplace>
@@ -326,7 +322,7 @@
         <LuaContext>DiplomacyActionView</LuaContext>
         <LuaReplace>Assets/Expansion2/Replacements/diplomacyactionview_CQUI_expansion2.lua</LuaReplace>
       </Properties>
-    </ReplaceUIScript> -->
+    </ReplaceUIScript>
 
     <ReplaceUIScript id="CQUI_DiplomacyRibbon">
       <Properties>
@@ -578,8 +574,7 @@
       </Properties>
     </ReplaceUIScript>
 
-<!-- May2020: Temporarily Disabling DiplomacyActionView and DiplomacyDealView until more investigation can be completed -->
-    <!-- <ReplaceUIScript id="CQUI_DiplomacyDealView">
+    <ReplaceUIScript id="CQUI_DiplomacyDealView">
       <Properties>
         <LuaContext>DiplomacyDealView</LuaContext>
         <LuaReplace>Assets/UI/diplomacydealview_CQUI_basegame.lua</LuaReplace>
@@ -592,7 +587,7 @@
         <LuaContext>DiplomacyDealView</LuaContext>
         <LuaReplace>Assets/Expansion2/Replacements/diplomacydealview_CQUI_expansion2.lua</LuaReplace>
       </Properties>
-    </ReplaceUIScript> -->
+    </ReplaceUIScript>
 
     <ReplaceUIScript id="CQUI_DistrictPlotIconManager">
       <Properties>
@@ -839,8 +834,7 @@
     <File>Assets/Expansion1/Replacements/citypaneloverview_expansion1_CQUI.lua</File>
     <File>Assets/Expansion1/Replacements/citystates.xml</File>
     <File>Assets/Expansion1/Replacements/citysupport.lua</File>
-<!-- May2020: Temporarily Disabling DiplomacyActionView and DiplomacyDealView until more investigation can be completed -->
-    <!-- <File>Assets/Expansion1/Replacements/diplomacyactionview_CQUI_expansion1.lua</File> -->
+    <File>Assets/Expansion1/Replacements/diplomacyactionview_CQUI_expansion1.lua</File>
     <File>Assets/Expansion1/Replacements/diplomacyribbon_CQUI_expansion1.lua</File>
     <File>Assets/Expansion1/Replacements/governmentscreen_CQUI_expansion1.lua</File>
     <File>Assets/Expansion1/Replacements/leadericon.lua</File>
@@ -857,10 +851,9 @@
     <File>Assets/Expansion2/Replacements/citystates.xml</File>
     <File>Assets/Expansion2/Replacements/citysupport.lua</File>
     <File>Assets/Expansion2/Replacements/civicstree_CQUI_expansion2.lua</File>
-<!-- May2020: Temporarily Disabling DiplomacyActionView and DiplomacyDealView until more investigation can be completed -->
-    <!-- <File>Assets/Expansion2/Replacements/diplomacyactionview_CQUI_expansion2.lua</File> -->
-    <!-- <File>Assets/Expansion2/Replacements/diplomacyactionview.xml</File> -->
-    <!-- <File>Assets/Expansion2/Replacements/diplomacydealview_CQUI_expansion2.lua</File> -->
+    <File>Assets/Expansion2/Replacements/diplomacyactionview_CQUI_expansion2.lua</File>
+    <File>Assets/Expansion2/Replacements/diplomacyactionview.xml</File>
+    <File>Assets/Expansion2/Replacements/diplomacydealview_CQUI_expansion2.lua</File>
     <File>Assets/Expansion2/Replacements/diplomacyribbon_CQUI_expansion2.lua</File>
     <File>Assets/Expansion2/Replacements/governmentscreen_CQUI_expansion2.lua</File>
     <File>Assets/Expansion2/Replacements/ingame.lua</File>
@@ -913,13 +906,12 @@
     <File>Assets/UI/actionpanel.lua</File>
     <File>Assets/UI/citysupport.lua</File>
     <File>Assets/UI/civ6common.lua</File>
-<!-- May2020: Temporarily Disabling DiplomacyActionView and DiplomacyDealView until more investigation can be completed -->
-    <!-- <File>Assets/UI/diplomacyactionview_CQUI_basegame.lua</File>
+    <File>Assets/UI/diplomacyactionview_CQUI_basegame.lua</File>
     <File>Assets/UI/diplomacyactionview_CQUI.lua</File>
     <File>Assets/UI/diplomacyactionview.xml</File>
     <File>Assets/UI/diplomacydealview_CQUI_basegame.lua</File>
     <File>Assets/UI/diplomacydealview_CQUI.lua</File>
-    <File>Assets/UI/diplomacydealview.xml</File> -->
+    <File>Assets/UI/diplomacydealview.xml</File>
     <File>Assets/UI/diplomacyribbon_CQUI_basegame.lua</File>
     <File>Assets/UI/diplomacyribbon_CQUI.lua</File>
     <File>Assets/UI/ingame.lua</File>
