@@ -41,10 +41,11 @@ local AUTO_APPLY_BUILDER_LENS:boolean = true
 -- Disables the nothing color being highlted by the builder
 local DISABLE_NOTHING_PLOT_COLOR:boolean = false
 
--- CQUI
+-- ==== BEGIN CQUI: Integration Modification =================================
 local function CQUI_OnSettingsUpdate()
   AUTO_APPLY_BUILDER_LENS = GameConfiguration.GetValue("CQUI_AutoapplyBuilderLens");
 end
+-- ==== END CQUI: Integration Modification ===================================
 
 -- ===========================================================================
 -- Exported functions
@@ -171,9 +172,11 @@ local function OnInitialize()
   Events.UnitChargesChanged.Add( OnUnitChargesChanged );
   Events.UnitRemovedFromMap.Add( OnUnitRemovedFromMap );
 
+-- ==== BEGIN CQUI: Integration Modification =================================
   -- CQUI Handlers
   LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
   Events.LoadScreenClose.Add( CQUI_OnSettingsUpdate ); -- Astog: Update settings when load screen close
+-- ==== END CQUI: Integration Modification ===================================
 end
 
 local BuilderLensEntry = {

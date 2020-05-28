@@ -20,7 +20,7 @@
     <Image Texture="Controls_ButtonExtendSmall" TextureOffset="0,60" Size="20,20" Anchor="L,B" Offset="22,10"/>
   </Grid>
 
-  <Grid           ID="MapOptionsPanel"  Anchor="L,T" AnchorSide="I,O"     Size="220,119"  Offset="-10,-5" Texture="Tracker_OptionsBacking.dds" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" Hidden="1">
+  <Grid           ID="MapOptionsPanel"  Anchor="L,T" AnchorSide="I,O" Size="220,119" MinSize="121,119"  Offset="-10,-5" Texture="Tracker_OptionsBacking.dds" SliceCorner="55,61" SliceSize="1,1" SliceTextureSize="121,119" ConsumeAllMouse="1" Hidden="1">
     <Label        ID="MapOptionsLabel" Anchor="C,T" String="{LOC_HUD_MAP_OPTIONS:upper}" Offset="-6,10" Style="FontFlair16" Color0="106,93,69,255" Color1="0,0,0,150" Color2="146,133,109,255" FontStyle="Glow" SmallCaps="20" SmallCapsLeading="0" SmallCapsType="EveryWord" KerningAdjustment="0"/>
     <ScrollPanel  ID="MapOptionsList"   Anchor="C,B" Offset="10,30" Size="parent,parent-60" AutoScrollBar="1" Vertical="1">
       <Stack      ID="MapOptionsStack"  Anchor="R,C" StackGrowth="Bottom" Offset="25,0" StackPadding="1" >
@@ -65,9 +65,12 @@
                 <LuaContext FileName="MapSearchPanel"/>
               </Container>
             </CheckBox>
+            <!-- ==== BEGIN CQUI Customization ======================================================== -->
+            <!-- ==== Add CQUI Options button -->
             <CheckBox ID="CQUI_OptionsButton" UseSelectedTextures="1" Anchor="L,C" ButtonSize="40,40"  ButtonTexture="LaunchBar_Hook_ButtonSmall" Style="ButtonNormalText" ToolTip="LOC_CQUI_NAME" CheckTexture="Controls_Bolt" CheckColor="0,0,0,0">
               <Image Texture="Stats30" Icon="ICON_RESOURCE_TOBACCO" Size="35,35" Anchor="C,C"/>
             </CheckBox>
+            <!-- ==== END CQUI Customization ========================================================== -->
             <Button ID="StrategicSwitcherButton" Anchor="L,C" Size="40,40"  Texture="LaunchBar_Hook_ButtonMinimap" Style="ButtonNormalText" ToolTip="LOC_HUD_TOGGLE_STRATEGY_VIEW">
               <Image ID="SwitcherImage" Texture="MiniMap_StrategicSwitcher" Size="24,24" Anchor="C,C"/>
             </Button>
@@ -85,7 +88,10 @@
   </Container>
 
   <Instance Name="LensButtonInstance">
+    <!-- ==== BEGIN CQUI Customization ======================================================== -->
+    <!-- ==== CQUI: Adjust CheckTextureOffset -->
     <RadioButton ID="LensButton" RadioGroup="ActiveLens" TextOffset="-5,0" String="$LensName$" AllowClickOff="1" Style="WhiteSemiBold14" Offset="10,4"  ButtonTexture="Controls_RadioButtonLarge.dds" ButtonSize="35,35" CheckTexture="Controls_RadioButtonLarge.dds" CheckSize="35,35" CheckTextureOffset="0,140" Anchor="L,T" BoxOnLeft="1"/>
+    <!-- ==== END CQUI Customization ========================================================== -->
   </Instance>
 
   <Instance Name="MapOptionInstance">

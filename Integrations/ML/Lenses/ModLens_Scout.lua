@@ -4,10 +4,12 @@ local ML_LENS_LAYER = UILens.CreateLensLayerHash("Hex_Coloring_Appeal_Level")
 -- Should the scout lens auto apply, when a scout/ranger is selected.
 local AUTO_APPLY_SCOUT_LENS:boolean = true
 
+-- ==== BEGIN CQUI: Integration Modification =================================
 -- CQUI
 local function CQUI_OnSettingsUpdate()
   AUTO_APPLY_SCOUT_LENS = GameConfiguration.GetValue("CQUI_AutoapplyScoutLens");
 end
+-- ==== END CQUI: Integration Modification ===================================
 
 -- ===========================================================================
 -- Scout Lens Support
@@ -87,9 +89,8 @@ local function OnUnitSelectionChanged( playerID:number, unitID:number, hexI:numb
 end
 
 local function OnUnitRemovedFromMap( playerID: number, unitID : number )
-  local localPlayer = Game.GetLocalPlayer()
   local lens = {}
-  if playerID == localPlayer then
+  if playerID == Game.GetLocalPlayer() then
     LuaEvents.MinimapPanel_GetActiveModLens(lens)
     if lens[1] == LENS_NAME and AUTO_APPLY_SCOUT_LENS then
       ClearScoutLens()
@@ -99,13 +100,16 @@ end
 
 local function OnUnitMoveComplete( playerID:number, unitID:number )
   if playerID == Game.GetLocalPlayer() then
-    local unitType = GetUnitTypeFromIDs(playerID, unitID)
-    local promotionClass = GameInfo.Units[unitType].PromotionClass
-    if unitType then
-      if promotionClass == "PROMOTION_CLASS_RECON" and AUTO_APPLY_SCOUT_LENS then
-        RefreshScoutLens()
+      local pPlayer = Players[playerID]
+      local pUnit = pPlayer:GetUnits():FindID(unitID)
+      -- Ensure the unit is selected. Scout could be exploring automated
+      if UI.IsUnitSelected(pUnit) then
+          local unitType = getUnitType(pUnit)
+          local promotionClass = GameInfo.Units[unitType].PromotionClass
+          if unitType and promotionClass == "PROMOTION_CLASS_RECON" and AUTO_APPLY_SCOUT_LENS then
+              RefreshScoutLens()
+          end
       end
-    end
   end
 end
 
@@ -125,9 +129,11 @@ local function OnInitialize()
   Events.UnitMoveComplete.Add( OnUnitMoveComplete )
   Events.GoodyHutReward.Add( OnGoodyHutReward )
 
+-- ==== BEGIN CQUI: Integration Modification =================================
   -- CQUI Handlers
   LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
   Events.LoadScreenClose.Add( CQUI_OnSettingsUpdate ); -- Astog: Update settings when load screen close
+-- ==== END CQUI: Integration Modification ===================================
 end
 
 local ScoutLensEntry = {
