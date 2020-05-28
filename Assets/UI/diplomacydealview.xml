@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
+  <!-- ==== CQUI DiplomacyActionView.xml Replacement ================================================================================ -->
+  <!-- ==== There is significant customization in this file, the unmodified found in the CivFanatics Civ6-UIFiles Repo on GitHub ==== -->
+  <!-- ==== Repo link: https://github.com/civfanatics/Civ6-UIFiles ================================================================== -->
 <Context Style="FontNormal16" ColorSet="BodyTextCool" FontStyle="Shadow" Size="parent,parent" ConsumeMouse="1">
-  <!-- ==== CQUI DiplomacyActionView.xml Replacement ============================================================================================ -->
-  <!-- ==== There is significant customization in this file, the unmodified original has been checked into this repo for comparison purposes ==== -->
   <Include File="CivilizationIcon"/>
   <Include File="PopupDialog"/>
 
