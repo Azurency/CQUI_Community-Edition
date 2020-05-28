@@ -4,11 +4,11 @@ local ML_LENS_LAYER = UILens.CreateLensLayerHash("Hex_Coloring_Appeal_Level")
 -- Should the archaeologist lens auto apply, when a archaeologist is selected.
 local AUTO_APPLY_ARCHEOLOGIST_LENS:boolean = false
 
--- CQUI
+-- ==== BEGIN CQUI: Integration Modification =================================
 local function CQUI_OnSettingsUpdate()
   AUTO_APPLY_ARCHEOLOGIST_LENS = GameConfiguration.GetValue("CQUI_AutoapplyArchaeologistLens");
 end
-
+-- ==== END CQUI: Integration Modification ===================================
 -- ===========================================================================
 -- Archaeologist Lens Support
 -- ===========================================================================
@@ -126,9 +126,11 @@ local function OnInitialize()
   Events.UnitRemovedFromMap.Add( OnUnitRemovedFromMap )
   Events.UnitCaptured.Add( OnUnitCaptured )
 
+-- ==== BEGIN CQUI: Integration Modification =================================
   -- CQUI Handlers
   LuaEvents.CQUI_SettingsUpdate.Add( CQUI_OnSettingsUpdate );
   Events.LoadScreenClose.Add( CQUI_OnSettingsUpdate ); -- Astog: Update settings when load screen close
+-- ==== END CQUI: Integration Modification ===================================
 end
 
 local ArchaeologistLensEntry = {
