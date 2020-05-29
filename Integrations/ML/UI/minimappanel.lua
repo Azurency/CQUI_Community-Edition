@@ -1060,6 +1060,12 @@ function InitLens(lensName, modLens)
     modLens.Initialize()
   end
 
+  if lensName == 'CQUI_CITIZEN_MANAGEMENT' then
+    -- Skip over this one, it is the lens showing when clicking on a city.
+    -- This lens should not be included in the list of lenses off the Minimap panel
+    return
+  end
+
   -- Add this lens to button stack
   local modLensToggle = m_LensButtonIM:GetInstance();
   local pLensButton = modLensToggle.LensButton:GetTextButton()
