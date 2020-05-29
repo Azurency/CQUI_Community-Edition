@@ -14,9 +14,6 @@
     ║ copy of this file named "cqui_settings_local.sql" and make your changes there.             ║
     ║ The "cqui_settings_local.sql" file does not need to be a perfect copy and will work as     ║
     ║ long as it's valid SQL.                                                                    ║
-    ║                                                                                            ║
-    ║ If you discover a broken setting, please report it at the below URL:                       ║
-    ║                     https://github.com/CQUI-Org/cqui/issues                                ║
     ╚════════════════════════════════════════════════════════════════════════════════════════════╝
 */
 
@@ -42,7 +39,7 @@ INSERT OR REPLACE INTO CQUI_Settings -- Don't touch this line!
       ("CQUI_ProductionQueue", 1), -- A production queue appears next to the production panel, allowing multiple constructions to be queued at once
       ("CQUI_ShowCultureGrowth", 1), -- Shows cultural growth overlay in cityview
       ("CQUI_ShowPolicyReminder", 1),
-      ("CQUI_ShowLuxuries", 1), -- Luxury resources will show in the top-bar next to strategic resources
+	    ("CQUI_ShowLuxuries", 1), -- Luxury resources will show in the top-bar next to strategic resources
       ("CQUI_ShowUnitPaths", 1), -- Shows unit paths on hover and selection
       ("CQUI_ShowYieldsOnCityHover", 1), -- Shows city management info like citizens, tile yields, and tile growth on hover
       ("CQUI_Smartbanner", 1), -- Additional informations such as districts will show in the city banner
@@ -65,7 +62,6 @@ INSERT OR REPLACE INTO CQUI_Settings -- Don't touch this line!
       ('CQUI_ShowTechCivicRecommendations', 1), -- Shows the advisor recommendation in the techs/civics tree/panel
       ('CQUI_ShowImprovementsRecommendations', 0), -- Shows the advisor recommendation for the builder improvements
       ('CQUI_ShowCityDetailAdvisor', 0), -- Shows the advisor recommendation in the city detail panel
-      ('CQUI_ShowDiploBanner', 1), -- Shows the Diplomacy Banner
       ('CQUI_ShowDebugPrint', 0); -- Shows print in the console
 /*
     ┌────────────────────────────────────────────────────────────────────────────────────────────┐

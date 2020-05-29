@@ -1,22 +1,29 @@
+-- CQUI LaunchBar.lua Replacement
+-- CQUI-Specific Changes marked in-line below
+
 -- ===========================================================================
---	HUD's "Launch Bar"
---	Copyright (c) 2017-2019 Firaxis Games
+--  HUD's "Launch Bar"
+--  Copyright (c) 2017-2019 Firaxis Games
 --
---	Controls raising full-screen and "choosers" found in upper-left of HUD.
+--  Controls raising full-screen and "choosers" found in upper-left of HUD.
 -- ===========================================================================
 include( "GameCapabilities" );
 
 -- ===========================================================================
---	MEMBERS
+--  MEMBERS
 -- ===========================================================================
 local m_numOpen               :number = 0;
+
+local m_isAutoUnitCycle       :boolean = false;
 
 local isTechTreeOpen          :boolean = false;
 local isCivicsTreeOpen        :boolean = false;
 local isGreatPeopleOpen       :boolean = false;
 local isGreatWorksOpen        :boolean = false;
+local isHistoricMomentsOpen     :boolean = false;
 local isReligionOpen          :boolean = false;
 local isGovernmentOpen        :boolean = false;
+local isGovernorPanelOpen     :boolean = false;
 
 local m_isGreatPeopleUnlocked :boolean = false;
 local m_isGreatWorksUnlocked  :boolean = false;
@@ -32,12 +39,15 @@ local m_isGreatWorksAvailable  :boolean = false;
 
 local isDebug:boolean = false;     -- Set to true to force all hook buttons to show on game start
 
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
 -- Launchbar Extras. Contains the callback and the button text
 local m_LaunchbarExtras:table = {};
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
 
 -- ===========================================================================
 --  Callbacks
 -- ===========================================================================
+
 function OnOpenGovernment()
   local ePlayer:number = Game.GetLocalPlayer();
   if ePlayer == -1 then
@@ -84,6 +94,25 @@ function CloseAllPopups()
 end
 
 -- ===========================================================================
+function OnGetPopupsOpen()
+    if isGovernmentOpen or isTechTreeOpen or isCivicsTreeOpen or isGreatPeopleOpen or isGreatWorksOpen or isReligionOpen or isHistoricMomentsOpen or isGovernorPanelOpen then
+        LuaEvents.TradeRouteChooser_CloseIfPopups();
+        m_isAutoUnitCycle = false;
+        if UserConfiguration.IsAutoUnitCycle() then
+            m_isAutoUnitCycle = true; -- set to true so we know we need to open it after the currently open popup is closed.
+        end
+    end
+end
+
+-- ===========================================================================
+function OnOpenTradeRouteDueToAutoCycle()
+    --if another popup was open, trade route needs to open after it has been closed (when auto unit cycle is enabled)
+    if m_isAutoUnitCycle then
+        LuaEvents.TradeRouteChooser_ReOpen();       
+    end
+end
+
+-- ===========================================================================                          
 function OnOpenGreatPeople()
   if isGreatPeopleOpen then
     LuaEvents.LaunchBar_CloseGreatPeoplePopup();
@@ -105,13 +134,21 @@ end
 
 -- ===========================================================================
 function OnOpenReligion()
-  if isReligionOpen then
-    LuaEvents.LaunchBar_CloseReligionPanel();
-  else
-    CloseAllPopups();
-    LuaEvents.LaunchBar_OpenReligionPanel();
-  end
+    if isReligionOpen then
+        LuaEvents.LaunchBar_CloseReligionPanel();
+        LuaEvents.LaunchBar_ClosePantheonChooser();
+    else
+        -- If we're able to but have yet to found a pantheon then open the pantheon chooser instead
+        local pLocalPlayerReligion:table = Players[Game.GetLocalPlayer()]:GetReligion();
+        if pLocalPlayerReligion and pLocalPlayerReligion:GetPantheon() < 0 and pLocalPlayerReligion:CanCreatePantheon() then
+            LuaEvents.LaunchBar_OpenPantheonChooser();
+        else
+            CloseAllPopups();
+            LuaEvents.LaunchBar_OpenReligionPanel();
+        end 
+    end
 end
+   
 
 -- ===========================================================================
 function OnOpenResearch()
@@ -130,6 +167,16 @@ function OnOpenCulture()
   else
     CloseAllPopups();
     LuaEvents.LaunchBar_RaiseCivicsTree();
+  end
+end
+
+-- ===========================================================================
+function OnOpenGovernors()
+  if isGovernorPanelOpen then
+    LuaEvents.GovernorPanel_Close();
+  else
+    CloseAllPopups();
+    LuaEvents.GovernorPanel_Open();
   end
 end
 
@@ -170,6 +217,18 @@ function SetGovernmentOpen()
 end
 
 -- ===========================================================================
+function SetGovernorPanelOpen()
+    isGovernorPanelOpen = true;
+    OnOpen();
+end
+
+-- ===========================================================================
+function SetHistoricMomentsOpened()
+    isHistoricMomentsOpen = true;
+    OnOpen();
+end
+
+-- ===========================================================================
 function SetCivicsTreeClosed()
   isCivicsTreeOpen = false;
   OnClose();
@@ -205,6 +264,19 @@ function SetGovernmentClosed()
   OnClose();
 end
 
+-- ===========================================================================
+function SetGovernorPanelClosed()
+    isGovernorPanelOpen = false;
+    OnClose();
+end
+
+-- ===========================================================================
+function SetHistoricMomentsClosed()
+    isHistoricMomentsOpen = false;
+    OnClose();
+end
+
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
 -- ===========================================================================
 function BuildExtraEntries()
   -- Clear previous entries
@@ -320,6 +392,7 @@ function OnAddLaunchbarIcon(buttonInfo:table)
 
   RefreshView();
 end
+-- ==== CQUI CUSTOMIZATION END  ==================================================================================== --
 
 -- ===========================================================================
 --  Lua Event
@@ -329,6 +402,7 @@ function OnTutorialCloseAll()
   CloseAllPopups();
 end
 
+
 -- ===========================================================================
 --  Game Engine Event
 -- ===========================================================================
@@ -337,7 +411,7 @@ function OnInterfaceModeChanged(eOldMode:number, eNewMode:number)
     ContextPtr:SetHide(true);
   end
   if eNewMode == InterfaceModeTypes.CINEMATIC then
-    CloseAllPopups();	--	TODO: Remove this and instead change Popup behavior via new parameter. (TTP 43933)
+    CloseAllPopups();   --  TODO: Remove this and instead change Popup behavior via new parameter. (TTP 43933)
   end
   
   if eOldMode == InterfaceModeTypes.VIEW_MODAL_LENS then
@@ -398,9 +472,8 @@ function RefreshReligion()
   end
   local localPlayer   :table = Players[ePlayer];
   local playerReligion:table = localPlayer:GetReligion();
-
-  local hasFaithYield			:boolean = playerReligion:GetFaithYield() > 0;
-  local hasFaithBalance		:boolean = playerReligion:GetFaithBalance() > 0;
+  local hasFaithYield   :boolean = playerReligion:GetFaithYield() > 0;
+  local hasFaithBalance :boolean = playerReligion:GetFaithBalance() > 0;
   if (hasFaithYield or hasFaithBalance) then
     m_isReligionUnlocked = true;
   end
@@ -424,7 +497,7 @@ function OnDiplomacyDealEnacted()
 end
 
 -- ===========================================================================
---	Capturing a city can also net us pretty great works
+--  Capturing a city can also net us pretty great works
 function OnCityCaptured()
   if (not m_isGreatWorksUnlocked) then
     RefreshGreatWorks();
@@ -467,7 +540,6 @@ function RefreshGreatWorks()
       if m_isGreatWorksUnlocked then
         break;
       end
-
     end
   end
   RealizeHookVisibility();
@@ -499,7 +571,7 @@ function ShowFreePolicyFlag( isFree:boolean )
 end
 
 -- ===========================================================================
---	Game Event
+--  Game Event
 -- ===========================================================================
 function OnCivicCompleted(player:number, civic:number, isCanceled:boolean)
   local ePlayer:number = Game.GetLocalPlayer();
@@ -529,9 +601,8 @@ function RefreshGovernment()
     Controls.GovernmentButton:SetHide(false);
     Controls.GovernmentBolt:SetHide(false);
     if ( kCulture:IsInAnarchy() ) then
-      Controls.GovernmentButton:SetDisabled(true);
       local iAnarchyTurns = kCulture:GetAnarchyEndTurn() - Game.GetCurrentGameTurn();
-      Controls.GovernmentButton.SetDisabled(true);
+      Controls.GovernmentButton:SetDisabled(true);
       Controls.GovernmentIcon:SetColorByName("Civ6Red");
       Controls.GovernmentButton:SetToolTipString("[COLOR_RED]".. Locale.Lookup("LOC_GOVERNMENT_ANARCHY_TURNS", iAnarchyTurns) .. "[ENDCOLOR]");
       ShowFreePolicyFlag(false);
@@ -546,17 +617,29 @@ function RefreshGovernment()
 end
 
 -- ===========================================================================
---	Update the background and size of the launchbar itself.
+--  Update the background and size of the launchbar itself.
 -- ===========================================================================
 function RealizeBacking()
-  -- The Launch Bar width should accomodate how many hooks are currently in the stack.
   Controls.ButtonStack:CalculateSize();
-  Controls.LaunchBacking:SetSizeX(Controls.ButtonStack:GetSizeX()+116);
-  Controls.LaunchBackingTile:SetSizeX(Controls.ButtonStack:GetSizeX()-20);
-  Controls.LaunchBarDropShadow:SetSizeX(Controls.ButtonStack:GetSizeX());
+  local stackWidth:number = Controls.ButtonStack:GetSizeX();
 
-  -- When we change size of the LaunchBar, we send this LuaEvent to the Diplomacy Ribbon, so that it can change scroll width to accommodate it
-  LuaEvents.LaunchBar_Resize(Controls.ButtonStack:GetSizeX());
+  Controls.LaunchBacking:SetSizeX(stackWidth+116);
+  Controls.LaunchBackingTile:SetSizeX(stackWidth-20);
+  Controls.LaunchBarDropShadow:SetSizeX(stackWidth);
+
+  -- If the stack is less than a pip (at this writing 7) then there is nothing in it... hide the launchbar
+  if stackWidth < 10 then
+      stackWidth = 0;
+      ContextPtr:SetHide(true);
+      Unsubscribe();
+  else
+      if ContextPtr:IsHidden() then
+          ContextPtr:SetHide(false);
+      end
+  end
+  
+  -- Signal to other contexts (e.g., DiploRibbon)  when size has changed.
+  LuaEvents.LaunchBar_Resize( stackWidth );
 end
 
 -- ===========================================================================
@@ -564,6 +647,7 @@ function UpdateTechMeter( localPlayer:table )
   if ( localPlayer ~= nil and Controls.ScienceHookWithMeter:IsVisible() ) then
     local playerTechs:table    = localPlayer:GetTechs();
     local currentTechID:number = playerTechs:GetResearchingTech();
+
     if(currentTechID >= 0) then
       local progress:number = playerTechs:GetResearchProgress(currentTechID);
       local cost:number = playerTechs:GetResearchCost(currentTechID);
@@ -572,7 +656,6 @@ function UpdateTechMeter( localPlayer:table )
     else
       Controls.ScienceMeter:SetPercent(0);
     end
-
 
     local techInfo:table = GameInfo.Technologies[currentTechID];
     if (techInfo ~= nil) then
@@ -590,12 +673,15 @@ end
 -- ===========================================================================
 function UpdateCivicMeter( localPlayer:table)
   if ( localPlayer ~= nil and Controls.CultureHookWithMeter:IsVisible() ) then
-    local pPlayerCulture  :table	= localPlayer:GetCulture();
+    local pPlayerCulture  :table    = localPlayer:GetCulture();
     local currentCivicID  :number = pPlayerCulture:GetProgressingCivic();
 
     if(currentCivicID >= 0) then
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+-- CQUI: Unmodifed uses pPlayerCulture here, not playerCivics; playerCivics is a CQUI entity, perhaps?     
       local civicProgress :number = playerCivics:GetCulturalProgress(currentCivicID);
       local civicCost     :number = playerCivics:GetCultureCost(currentCivicID);
+-- ==== CQUI CUSTOMIZATION END  ==================================================================================== --
 
       Controls.CultureMeter:SetPercent(civicProgress/civicCost);
     else
@@ -615,9 +701,8 @@ function UpdateCivicMeter( localPlayer:table)
   end
 end
 
-
 -- ===========================================================================
---	Main Refresh
+--  Main Refresh
 -- ===========================================================================
 function RefreshView()
   local localPlayerID :number = Game.GetLocalPlayer();
@@ -637,45 +722,56 @@ function RefreshView()
   RefreshGreatPeople();
   RefreshReligion();
 
-  if BASE_RefreshView == nil then		-- No MODs, then wrap this up.
+  if BASE_RefreshView == nil then       -- No MODs/Expansions defining this function so its safe to call Realize now.
     RealizeBacking();
   end
 end
 
 -- ===========================================================================
---	EVENT
+--  EVENT
 function OnLocalPlayerTurnBegin()
   RefreshView();
 end
 
 -- ===========================================================================
---	EVENT
+--  EVENT
 function OnVisualStateRestored()
   RefreshView();
 end
 
 -- ===========================================================================
---	EVENT
+--  EVENT
 function OnCivicChanged()
   RefreshView();
 end
 
 -- ===========================================================================
---	EVENT
+--  EVENT
 function OnResearchChanged()
   RefreshView();
 end
 
 -- ===========================================================================
+-- EVENT
+function OnGovernmentRefresh()
+   RefreshGovernment();
+end
+        
+-- ===========================================================================
 function OnOpen()
+  m_isAutoUnitCycle = false;
   m_numOpen = m_numOpen+1;
   local screenX, screenY:number = UIManager:GetScreenSizeVal();
   if screenY <= 850 then
     Controls.LaunchContainer:SetOffsetY(-35);
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
     Controls.ScienceHookWithMeter:SetOffsetY(-5);
     Controls.CultureHookWithMeter:SetOffsetY(-5);
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
   end
-  LuaEvents.Launchbar_CloseChoosers();
+
+  LuaEvents.TradeRouteChooser_CloseIfPopups();                                             
+  LuaEvents.LaunchBar_CloseChoosers();
 end
 
 -- ===========================================================================
@@ -686,9 +782,14 @@ function OnClose()
   end
   if m_numOpen == 0 then
     Controls.LaunchContainer:SetOffsetY(-5);
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+-- CQUI: These were commented out before the May2020 Patch work
     -- Controls.ScienceHookWithMeter:SetOffsetY(25);
     -- Controls.CultureHookWithMeter:SetOffsetY(25);
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
   end
+
+  OnOpenTradeRouteDueToAutoCycle(); --open if this popup blocked traderoute from opening                                                                                       
 end
 
 -- ===========================================================================
@@ -719,6 +820,11 @@ end
 -- ===========================================================================
 --  Input Hotkey Event (Extended in XP1 to hook extra panels)
 -- ===========================================================================
+function OnInputActionTriggeredVanilla( actionId )
+  -- Vanilla-only function, because OnInputActionTriggered may be overriden elsewhere (like XP1)
+  OnInputActionTriggered( actionId )
+end
+
 function OnInputActionTriggered( actionId )
   if ( m_isTechTreeAvailable ) then
     if ( actionId == Input.GetActionId("ToggleTechTree") ) then
@@ -763,12 +869,120 @@ function PlayMouseoverSound()
 end
 
 -- ===========================================================================
+function Unsubscribe()
+
+  Events.AnarchyBegins.Remove( OnGovernmentRefresh );
+  Events.AnarchyEnds.Remove( OnGovernmentRefresh );
+  Events.CityOccupationChanged.Remove( OnCityCaptured );      -- HACK: Detect GreatWorks acquired via city capture, by hooking this event
+  Events.CivicCompleted.Remove( OnCivicCompleted );           -- To capture when we complete Code of Laws
+  Events.CivicChanged.Remove( OnCivicChanged );
+  Events.DiplomacyDealEnacted.Remove( OnDiplomacyDealEnacted );
+  Events.FaithChanged.Remove( OnFaithChanged );
+  Events.GovernmentChanged.Remove( OnGovernmentRefresh );
+  Events.GovernmentPolicyChanged.Remove( OnGovernmentRefresh );
+  Events.GovernmentPolicyObsoleted.Remove( OnGovernmentRefresh );
+  Events.GreatWorkCreated.Remove( OnGreatWorkCreated );
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+  -- Vaniila-only function, because OnInputActionTriggered may be overriden elsewhere (like XP1)
+  Events.InputActionTriggered.Remove( OnInputActionTriggeredVanilla );
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
+  Events.InterfaceModeChanged.Remove( OnInterfaceModeChanged );
+  Events.LocalPlayerChanged.Remove( OnLocalPlayerChanged );
+  Events.LocalPlayerTurnBegin.Remove( OnLocalPlayerTurnBegin );
+  Events.ResearchChanged.Remove(OnResearchChanged);
+  Events.TreasuryChanged.Remove( OnGovernmentRefresh );
+  Events.VisualStateRestored.Remove( OnVisualStateRestored );
+
+  LuaEvents.CivicsTree_CloseCivicsTree.Remove( SetCivicsTreeClosed );
+  LuaEvents.CivicsTree_OpenCivicsTree.Remove( SetCivicsTreeOpen );    
+  LuaEvents.Government_CloseGovernment.Remove( SetGovernmentClosed );
+  LuaEvents.Government_OpenGovernment.Remove( SetGovernmentOpen );
+  LuaEvents.GovernorPanel_Closed.Remove( SetGovernorPanelClosed );
+  LuaEvents.GovernorPanel_Opened.Remove( SetGovernorPanelOpen );  
+  LuaEvents.GreatPeople_CloseGreatPeople.Remove( SetGreatPeopleClosed );
+  LuaEvents.GreatPeople_OpenGreatPeople.Remove( SetGreatPeopleOpen );
+  LuaEvents.GreatWorks_CloseGreatWorks.Remove( SetGreatWorksClosed );
+  LuaEvents.GreatWorks_OpenGreatWorks.Remove( SetGreatWorksOpen );
+  LuaEvents.HistoricMoments_Closed.Remove( SetHistoricMomentsClosed );
+  LuaEvents.HistoricMoments_Opened.Remove( SetHistoricMomentsOpened );
+  LuaEvents.LaunchBar_CheckPopupsOpen.Remove( OnGetPopupsOpen );
+  LuaEvents.Religion_CloseReligion.Remove( SetReligionClosed );
+  LuaEvents.Religion_OpenReligion.Remove( SetReligionOpen );  
+  LuaEvents.PantheonChooser_CloseReligion.Remove( SetReligionClosed );
+  LuaEvents.PantheonChooser_OpenReligion.Remove( SetReligionOpen );   
+  LuaEvents.TechTree_CloseTechTree.Remove(SetTechTreeClosed);
+  LuaEvents.TechTree_OpenTechTree.Remove( SetTechTreeOpen );
+  LuaEvents.Tutorial_CloseAllLaunchBarScreens.Remove( OnTutorialCloseAll );
+
+  if HasCapability("CAPABILITY_TECH_TREE") then
+      LuaEvents.WorldTracker_ToggleResearchPanel.Remove( OnToggleResearchPanel );
+  end
+  if HasCapability("CAPABILITY_CIVICS_TREE") then
+      LuaEvents.WorldTracker_ToggleCivicPanel.Remove( OnToggleCivicPanel );
+  end
+end
+
+-- ===========================================================================
+function Subscribe()
+  Events.AnarchyBegins.Add( OnGovernmentRefresh );
+  Events.AnarchyEnds.Add( OnGovernmentRefresh );
+  Events.CityOccupationChanged.Add( OnCityCaptured );     -- HACK: Detect GreatWorks acquired via city capture, by hooking this event
+  Events.CivicCompleted.Add( OnCivicCompleted );          -- To capture when we complete Code of Laws
+  Events.CivicChanged.Add( OnCivicChanged );
+  Events.DiplomacyDealEnacted.Add( OnDiplomacyDealEnacted );
+  Events.FaithChanged.Add( OnFaithChanged );
+  Events.GovernmentChanged.Add( OnGovernmentRefresh );
+  Events.GovernmentPolicyChanged.Add( OnGovernmentRefresh );
+  Events.GovernmentPolicyObsoleted.Add( OnGovernmentRefresh );
+  Events.GreatWorkCreated.Add( OnGreatWorkCreated );
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+  -- Vaniila-only function, because OnInputActionTriggered may be overriden elsewhere (like XP1)
+  Events.InputActionTriggered.Add( OnInputActionTriggeredVanilla );
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
+  Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );
+  Events.LocalPlayerChanged.Add( OnLocalPlayerChanged );
+  Events.LocalPlayerTurnBegin.Add( OnLocalPlayerTurnBegin );
+  Events.ResearchChanged.Add(OnResearchChanged);
+  Events.TreasuryChanged.Add( OnGovernmentRefresh );
+  Events.VisualStateRestored.Add( OnVisualStateRestored );
+  
+  LuaEvents.CivicsTree_CloseCivicsTree.Add( SetCivicsTreeClosed );
+  LuaEvents.CivicsTree_OpenCivicsTree.Add( SetCivicsTreeOpen );   
+  LuaEvents.Government_CloseGovernment.Add( SetGovernmentClosed );
+  LuaEvents.Government_OpenGovernment.Add( SetGovernmentOpen );
+  LuaEvents.GovernorPanel_Closed.Add( SetGovernorPanelClosed );
+  LuaEvents.GovernorPanel_Opened.Add( SetGovernorPanelOpen ); 
+  LuaEvents.GreatPeople_CloseGreatPeople.Add( SetGreatPeopleClosed );
+  LuaEvents.GreatPeople_OpenGreatPeople.Add( SetGreatPeopleOpen );
+  LuaEvents.GreatWorks_CloseGreatWorks.Add( SetGreatWorksClosed );
+  LuaEvents.GreatWorks_OpenGreatWorks.Add( SetGreatWorksOpen );
+  LuaEvents.HistoricMoments_Closed.Add( SetHistoricMomentsClosed );
+  LuaEvents.HistoricMoments_Opened.Add( SetHistoricMomentsOpened );
+  LuaEvents.LaunchBar_CheckPopupsOpen.Add( OnGetPopupsOpen );
+  LuaEvents.Religion_CloseReligion.Add( SetReligionClosed );
+  LuaEvents.Religion_OpenReligion.Add( SetReligionOpen ); 
+  LuaEvents.PantheonChooser_CloseReligion.Add( SetReligionClosed );
+  LuaEvents.PantheonChooser_OpenReligion.Add( SetReligionOpen );  
+  LuaEvents.TechTree_CloseTechTree.Add(SetTechTreeClosed);
+  LuaEvents.TechTree_OpenTechTree.Add( SetTechTreeOpen );
+  LuaEvents.Tutorial_CloseAllLaunchBarScreens.Add( OnTutorialCloseAll );
+  
+  if HasCapability("CAPABILITY_TECH_TREE") then
+      LuaEvents.WorldTracker_ToggleResearchPanel.Add( OnToggleResearchPanel );
+  end
+  if HasCapability("CAPABILITY_CIVICS_TREE") then
+      LuaEvents.WorldTracker_ToggleCivicPanel.Add( OnToggleCivicPanel );
+  end
+end
+
+-- ===========================================================================
 function LateInitialize()
+  Subscribe();
   RefreshView();
 end
 
 -- ===========================================================================
---	Called after all contexts (this and replacement contexts) are loaded.
+--  Called after all contexts (this and replacement contexts) are loaded.
 -- ===========================================================================
 function OnInit(isReload:boolean)
   LateInitialize();
@@ -792,6 +1006,7 @@ function Initialize()
   Controls.ScienceButton:RegisterCallback(Mouse.eLClick, OnOpenResearch);
   Controls.ScienceButton:RegisterCallback( Mouse.eMouseEnter, PlayMouseoverSound);
 
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
   -- CQUI --
   Controls.LaunchExtraShow:RegisterCallback( Mouse.eLClick, OnToggleExtras );
 
@@ -799,49 +1014,10 @@ function Initialize()
   LuaEvents.LaunchBar_AddExtra.Add( OnAddExtraEntry );
   LuaEvents.LaunchBar_AddIcon.Add( OnAddLaunchbarIcon );
   -- CQUI --
+-- ==== CQUI CUSTOMIZATION END ==================================================================================== --
 
-  Events.LocalPlayerTurnBegin.Add( OnLocalPlayerTurnBegin );
-  Events.VisualStateRestored.Add( OnVisualStateRestored );
-  Events.CivicCompleted.Add( OnCivicCompleted );        -- To capture when we complete Code of Laws
-  Events.CivicChanged.Add( OnCivicChanged );
-  Events.ResearchChanged.Add(OnResearchChanged);
-  Events.TreasuryChanged.Add( RefreshGovernment );
-  Events.GovernmentPolicyChanged.Add( RefreshGovernment );
-  Events.GovernmentPolicyObsoleted.Add( RefreshGovernment );
-  Events.GovernmentChanged.Add( RefreshGovernment );
-  Events.AnarchyBegins.Add( RefreshGovernment );
-  Events.AnarchyEnds.Add( RefreshGovernment );
-  Events.InterfaceModeChanged.Add( OnInterfaceModeChanged );
-  Events.GreatWorkCreated.Add( OnGreatWorkCreated );
-  Events.FaithChanged.Add( OnFaithChanged );
-  Events.LocalPlayerChanged.Add( OnLocalPlayerChanged );
-  Events.DiplomacyDealEnacted.Add( OnDiplomacyDealEnacted );
-  Events.CityOccupationChanged.Add( OnCityCaptured ); -- kinda bootleg, but effective
-
-  -- Wrapped in an anonymous function, because OnInputActionTriggered may be overriden elsewhere (like XP1)
-  Events.InputActionTriggered.Add( function(actionId) OnInputActionTriggered(actionId) end );
-
-  LuaEvents.CivicsTree_CloseCivicsTree.Add( SetCivicsTreeClosed );
-  LuaEvents.CivicsTree_OpenCivicsTree.Add( SetCivicsTreeOpen );
-  LuaEvents.Government_CloseGovernment.Add( SetGovernmentClosed );
-  LuaEvents.Government_OpenGovernment.Add( SetGovernmentOpen );
-  LuaEvents.GreatPeople_CloseGreatPeople.Add( SetGreatPeopleClosed );
-  LuaEvents.GreatPeople_OpenGreatPeople.Add( SetGreatPeopleOpen );
-  LuaEvents.GreatWorks_CloseGreatWorks.Add( SetGreatWorksClosed );
-  LuaEvents.GreatWorks_OpenGreatWorks.Add( SetGreatWorksOpen );
-  LuaEvents.Religion_CloseReligion.Add( SetReligionClosed );
-  LuaEvents.Religion_OpenReligion.Add( SetReligionOpen );
-  LuaEvents.TechTree_CloseTechTree.Add(SetTechTreeClosed);
-  LuaEvents.TechTree_OpenTechTree.Add( SetTechTreeOpen );
-  LuaEvents.Tutorial_CloseAllLaunchBarScreens.Add( OnTutorialCloseAll );
-
-  if HasCapability("CAPABILITY_TECH_TREE") then
-    LuaEvents.WorldTracker_ToggleResearchPanel.Add(OnToggleResearchPanel);
-  end
-  if HasCapability("CAPABILITY_CIVICS_TREE") then
-    LuaEvents.WorldTracker_ToggleCivicPanel.Add(OnToggleCivicPanel);
-  end
-
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
+-- TODO (2020-05): Locate these tests in a different file
   -- TESTS
   --------------------------------
   --[[
@@ -902,5 +1078,6 @@ function Initialize()
 
   LuaEvents.LaunchBar_AddIcon(button2Info);
   ]]
+  -- ==== CQUI CUSTOMIZATION END  ==================================================================================== --
 end
 Initialize();

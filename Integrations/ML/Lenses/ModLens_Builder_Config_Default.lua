@@ -397,9 +397,6 @@ end
 -- Add rules for builder lens
 -- ===========================================================================
 
-local localPlayer = Game.GetLocalPlayer()
-local pPlayer:table = Players[localPlayer]
-
 local m_NothingColor:number = UI.GetColorValue("COLOR_NOTHING_BUILDER_LENS")
 local m_ResourceColor:number = UI.GetColorValue("COLOR_RESOURCE_BUILDER_LENS")
 local m_DamagedColor:number = UI.GetColorValue("COLOR_DAMAGED_BUILDER_LENS")
@@ -413,6 +410,7 @@ local m_GenericColor:number = UI.GetColorValue("COLOR_GENERIC_BUILDER_LENS")
 --------------------------------------
 table.insert(g_ModLenses_Builder_Config[m_NothingColor],
     function(pPlot)
+        local localPlayer = Game.GetLocalPlayer()
         if pPlot:GetOwner() == localPlayer then
             if pPlot:IsNationalPark() then
                 return m_NothingColor
@@ -426,6 +424,7 @@ table.insert(g_ModLenses_Builder_Config[m_NothingColor],
 --------------------------------------
 table.insert(g_ModLenses_Builder_Config[m_DamagedColor],
     function(pPlot)
+        local localPlayer = Game.GetLocalPlayer()
         if pPlot:GetOwner() == localPlayer and not plotHasDistrict(pPlot) then
             if plotHasImprovement(pPlot) and pPlot:IsImprovementPillaged() then
                 return m_DamagedColor
@@ -439,6 +438,8 @@ table.insert(g_ModLenses_Builder_Config[m_DamagedColor],
 --------------------------------------
 table.insert(g_ModLenses_Builder_Config[m_ResourceColor],
     function(pPlot)
+        local localPlayer = Game.GetLocalPlayer()
+        local pPlayer:table = Players[localPlayer]
         if pPlot:GetOwner() == localPlayer and not plotHasDistrict(pPlot) then
             if playerHasDiscoveredResource(pPlayer, pPlot) then
                 if plotHasImprovement(pPlot) then
@@ -466,6 +467,7 @@ table.insert(g_ModLenses_Builder_Config[m_ResourceColor],
                 end
             end
         end
+
         return -1
     end)
 
@@ -474,6 +476,8 @@ table.insert(g_ModLenses_Builder_Config[m_ResourceColor],
 --------------------------------------
 table.insert(g_ModLenses_Builder_Config[m_RecommendedColor],
     function(pPlot)
+        local localPlayer = Game.GetLocalPlayer()
+        local pPlayer:table = Players[localPlayer]
         if pPlot:GetOwner() == localPlayer and not plotHasDistrict(pPlot) and not plotHasImprovement(pPlot) then
             if plotHasFeature(pPlot) then
                 local featureInfo = GameInfo.Features[pPlot:GetFeatureType()]
@@ -511,6 +515,7 @@ table.insert(g_ModLenses_Builder_Config[m_RecommendedColor],
                 end
             end
         end
+
         return -1
     end)
 
@@ -519,6 +524,8 @@ table.insert(g_ModLenses_Builder_Config[m_RecommendedColor],
 --------------------------------------
 table.insert(g_ModLenses_Builder_Config[m_RecommendedColor],
     function(pPlot)
+        local localPlayer = Game.GetLocalPlayer()
+        local pPlayer:table = Players[localPlayer]
         if pPlot:GetOwner() == localPlayer and not plotHasDistrict(pPlot) and not plotHasImprovement(pPlot) then
             -- If the plot has a feature, and we cannot extract it then ignore it
             if plotHasFeature(pPlot) and not playerCanRemoveFeature(pPlayer, pPlot) then
@@ -530,6 +537,7 @@ table.insert(g_ModLenses_Builder_Config[m_RecommendedColor],
                 return m_HillColor
             end
         end
+
         return -1
     end)
 
@@ -538,6 +546,8 @@ table.insert(g_ModLenses_Builder_Config[m_RecommendedColor],
 --------------------------------------
 table.insert(g_ModLenses_Builder_Config[m_FeatureColor],
     function(pPlot)
+        local localPlayer = Game.GetLocalPlayer()
+        local pPlayer:table = Players[localPlayer]
         if pPlot:GetOwner() == localPlayer and not plotHasDistrict(pPlot) and plotHasFeature(pPlot) and not plotHasImprovement(pPlot) then
             if playerCanRemoveFeature(pPlayer, pPlot) then
                 return m_FeatureColor
@@ -547,6 +557,7 @@ table.insert(g_ModLenses_Builder_Config[m_FeatureColor],
                 return m_NothingColor
             end
         end
+
         return -1
     end)
 
@@ -555,6 +566,8 @@ table.insert(g_ModLenses_Builder_Config[m_FeatureColor],
 --------------------------------------
 table.insert(g_ModLenses_Builder_Config[m_GenericColor],
     function(pPlot)
+        local localPlayer = Game.GetLocalPlayer()
+        local pPlayer:table = Players[localPlayer]
         if pPlot:GetOwner() == localPlayer and not plotHasImprovement(pPlot) then
 
             -- Mountains, natural wonders, etec
@@ -576,5 +589,6 @@ table.insert(g_ModLenses_Builder_Config[m_GenericColor],
                 return m_GenericColor
             end
         end
+
         return -1
     end)

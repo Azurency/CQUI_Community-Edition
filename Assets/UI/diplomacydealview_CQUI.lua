@@ -7,7 +7,6 @@ include("CitySupport");
 -- Cached Base Functions
 -- ===========================================================================
 BASE_CQUI_UpdateOtherPlayerText = UpdateOtherPlayerText;
-BASE_CQUI_PopulateDealResources = PopulateDealResources;
 
 -- ===========================================================================
 -- Members
@@ -399,18 +398,6 @@ function UpdateOtherPlayerText(otherPlayerSays)
 end
 
 
-function PopulateDealResources(player : table, iconList : table)
-  local pDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, g_LocalPlayer:GetID(), g_OtherPlayer:GetID());
-  local playerType = GetPlayerType(player);
-  if (pDeal ~= nil) then
-    CQUI_IconOnlyIM:ReleaseInstanceByParent(iconList);
-    CQUI_IconAndTextForCitiesIM:ReleaseInstanceByParent(iconList);
-    CQUI_IconAndTextForGreatWorkIM:ReleaseInstanceByParent(iconList);
-  end
-
-  BASE_CQUI_PopulateDealResources(player, iconList);
-end
-
 -- ===========================================================================
 --  CQUI modified PopulateAvailableResources functiton
 --  Resources are sorted by quantity
@@ -425,6 +412,10 @@ function PopulateAvailableResources(player : table, iconList : table, className 
   local playerImportedResources = getImportedResources(player:GetID());
   local otherPlayerResources = DealManager.GetPossibleDealItems(GetOtherPlayer(player):GetID(), player:GetID(), DealItemTypes.RESOURCES);
   local otherPlayerImportedResources = getImportedResources(GetOtherPlayer(player):GetID());
+
+  if (pDeal ~= nil) then
+    CQUI_IconOnlyIM:ReleaseInstanceByParent(iconList);
+  end
 
   if (possibleResources ~= nil) then
     -- CQUI :Sort the resources
@@ -510,6 +501,10 @@ function PopulateAvailableCities(player : table, iconList : table)
   -- Note: damanged cities do not appear in this list
   local possibleItems = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.CITIES, pForDeal);
 
+  if (pForDeal ~= nil) then
+    CQUI_IconAndTextForCitiesIM:ReleaseInstanceByParent(iconList.ListStack);
+  end
+
   -- Todo: Possible to show the untradable (damaged) cities?
   if (possibleItems ~= nil) then
     local otherPlayer = GetOtherPlayer(player);
@@ -591,6 +586,10 @@ function PopulateAvailableGreatWorks(player : table, iconList : table)
   local iAvailableItemCount = 0;
   local pForDeal = DealManager.GetWorkingDeal(DealDirection.OUTGOING, g_LocalPlayer:GetID(), g_OtherPlayer:GetID());
   local possibleItems = DealManager.GetPossibleDealItems(player:GetID(), GetOtherPlayer(player):GetID(), DealItemTypes.GREATWORK, pForDeal);
+
+  if (pForDeal ~= nil) then
+    CQUI_IconAndTextForGreatWorkIM:ReleaseInstanceByParent(iconList.ListStack);
+  end
 
   -- CQUI : Sort by great work type
   local sort_func = function( a,b ) return a.ForTypeDescriptionID < b.ForTypeDescriptionID end;

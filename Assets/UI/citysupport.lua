@@ -1,3 +1,6 @@
+-- CQUI CitySupport.lua Replacement
+-- CQUI-Specific Changes marked in-line below
+
 -- ===========================================================================
 --
 -- City Support
@@ -423,12 +426,13 @@ function GetCityData( pCity:table )
     UnitStats = nil,
     Wonders = {}, -- Format per entry: { Name, YieldType, YieldChange }
     YieldFilters = {},
-
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
     ProductionProgress = 0,
     ProductionCost = 0,
     CurrentFood = 0,
     RequiredFood = 0,
     FoodGainNextTurn = 0
+-- ==== CQUI CUSTOMIZATION END  ====================================================================================== --
   };
 
   local pCityGrowth :table = pCity:GetGrowth();
@@ -456,8 +460,10 @@ function GetCityData( pCity:table )
     productionInfo.Index = 1;
     data.ProductionQueue[1] = productionInfo; --Place in front
 
+-- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
     data.ProductionProgress = productionInfo.Progress;
     data.ProductionCost = productionInfo.Cost;
+-- ==== CQUI CUSTOMIZATION END  ====================================================================================== --
 
     -- Some buildings will not have a description.
     if currentProductionDescription == nil then
@@ -573,9 +579,11 @@ function GetCityData( pCity:table )
   data.TurnsUntilGrowth = turnsUntilGrowth;
   data.UnitStats = GetUnitStats( pBuildQueue:GetCurrentProductionTypeHash() ); --NIL if not a unit
 
+  -- ==== CQUI CUSTOMIZATION BEGIN  ==================================================================================== --
   data.CurrentFood = food;
   data.RequiredFood = growthThreshold;
   data.FoodGainNextTurn = foodSurplus * pCityGrowth:GetOverallGrowthModifier();
+  -- ==== CQUI CUSTOMIZATION END  ====================================================================================== --
 
   -- Helper to get an internally used enum based on the state of a certain yield.
   local pCitizens :table = pCity:GetCitizens();
