@@ -188,21 +188,6 @@ This section should not always be up to date, so don't hesitate to check the mil
 - [ ] Finish the beta milestone release _- [here](https://github.com/Azurency/CQUI_Community-Edition/milestone/1)_
 - [ ] Plan the next milestone from the multiple enhancement ideas in the issues
 
-## Contributing
-> This part still need some love
-
-You want to contribute to the mod ? We're always welcoming new contributors and the pull request are open if you wish to tacle an issue. Some issues are labeled "easy" it should be a great entry point if you want to join the team. A comprehensive [contribution guide](https://github.com/CQUI-Org/cqui/wiki/How-to-contribute-to-CQUI) created for the predecessor of this mod is a good starting point.
-
-### Quick coding style
-- Please use 2 spaces for indentation
-- When modifying existing game files, prefix newly added functions, events, and members with "CQUI_"
-- When commenting, it's a good practice to add your username at the beginning of the comment to know who modified this part of the code
-- There should be NO hardcoded strings in CQUI
-
-### Quick git guideline
-- When your commit includes a bugfix or implements a feature that's tracked on the issue tracker, include the phrase "Fixes #X" or "Resolves #X", where X is the tracker number of the issue or feature. This will notify everyone participating in the issue of your change when you push it to your fork, as well as automatically close the issue when the change is merged into the main repo.
-
-
 ## Credits
 @Vans163 for his original QUI mod, @Chaorace for the Chao's QUI, @Sparrow for this reborn as a Community QUI, @astog, Aristos/@ricanuck, @JHCD, Greg Miller, Ace, Divine Yuri, @ZhouYzzz, @deggesim, @e1ectron, @sejbr, @frytom, @maxap, @lctrs, @wbqd, @jacks0nX, @RatchetJ, @Frozen-In-Ice, @zgavin, @olegbl, @Proustldee, @kblease, @bolbass, @SpaceOgre, @OfekA, @zeyangl, @Remolten, @bestekov, @cpinter, @paavohuhtala, @perseghini, @benjaminjackman, @velit, @the-m4a, @MarkusKV, @apskim, @8h42
 
