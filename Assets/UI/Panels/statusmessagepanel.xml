@@ -3,7 +3,9 @@
 <Context Name="StatusMessagePanel" >
 
   <Container Size="parent,parent">
-    <Stack ID="StackOfMessages" Anchor="C,T" StackGrowth="Bottom" Offset="0,120"/>
+  <!-- CQUI: Adjusting Offset to account for expanded Diplomacy Ribbon (Y-size is 163 in Vanilla, 180 in Gathering Storm) -->
+  <!-- CQUI: Original OffsetY value was 120 -->
+    <Stack ID="StackOfMessages" Anchor="C,T" StackGrowth="Bottom" Offset="0,210"/>
   </Container>
 
   <Instance             Name="StatusMessageInstance">
