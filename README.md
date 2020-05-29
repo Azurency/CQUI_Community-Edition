@@ -181,13 +181,6 @@ Mod by FinalFreak16, from the [steam workshop](https://steamcommunity.com/shared
 
 - Each message has its own icon to categorise each entry and make it easier to see what happened at a glance
 
-## What's next
-This section should not always be up to date, so don't hesitate to check the milestones and the issues.
-
-- [ ] Add custom notification on a new (or revamped) notification system _- [here](https://github.com/Azurency/CQUI_Community-Edition/issues/104)_
-- [ ] Finish the beta milestone release _- [here](https://github.com/Azurency/CQUI_Community-Edition/milestone/1)_
-- [ ] Plan the next milestone from the multiple enhancement ideas in the issues
-
 ## Credits
 @Vans163 for his original QUI mod, @Chaorace for the Chao's QUI, @Sparrow for this reborn as a Community QUI, @astog, Aristos/@ricanuck, @JHCD, Greg Miller, Ace, Divine Yuri, @ZhouYzzz, @deggesim, @e1ectron, @sejbr, @frytom, @maxap, @lctrs, @wbqd, @jacks0nX, @RatchetJ, @Frozen-In-Ice, @zgavin, @olegbl, @Proustldee, @kblease, @bolbass, @SpaceOgre, @OfekA, @zeyangl, @Remolten, @bestekov, @cpinter, @paavohuhtala, @perseghini, @benjaminjackman, @velit, @the-m4a, @MarkusKV, @apskim, @8h42
 
