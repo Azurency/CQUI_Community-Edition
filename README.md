@@ -3,14 +3,14 @@
 
 CQUI is a UI mod that replaces parts of the original Civ 6 UI, with the intention of letting you manage your empire with fewer mouse clicks.
 
-This repository is the official repository of the [CQUI steam mod](http://steamcommunity.com/sharedfiles/filedetails/?id=1125169247).
+This repository is the official repository of the [CQUI steam mod](http://steamcommunity.com/sharedfiles/filedetails/?id=2115302648).
 
 ![cquiscreens](https://user-images.githubusercontent.com/8012430/31862026-75c5822e-b737-11e7-9ac3-afe993e26eb6.jpg)
 
 ## Installation
 
 ### Steam Workshop
-If you want to install the latest official version, you can go to the [steam workshop page](http://steamcommunity.com/sharedfiles/filedetails/?id=1125169247) of CQUI and add it to your game.
+If you want to install the latest official version, you can go to the [steam workshop page](http://steamcommunity.com/sharedfiles/filedetails/?id=2115302648) of CQUI and add it to your game.
 
 ### Manually
 If you want to have the cutting edge version (that might be not in steam workshop yet), you can download this repository and place the cqui folder into your mod folder : 
@@ -159,6 +159,28 @@ Mod by FinalFreak16, from the [steam workshop](https://steamcommunity.com/shared
 ![gossip](https://user-images.githubusercontent.com/8012430/31861664-7fe2bf8e-b731-11e7-9eae-2ea138b53007.jpg)
 
 - Each message has its own icon to categorize each entry and make it easier to see what happened at a glance
+
+## Steam Workshop Update Process
+Steam Workshop limits those that can upload an item to the workshop.  This version of the upload was created by @the_m4a.
+
+To upload the mod, use the Steam Workshop Uploader utility.  If you have not previously uploaded this mod, click on the Upload button and navigate to the .modinfo file.
+The Workshop Uploader will then run a series of checks, if you see all green bars, then you can proceed to next page.
+**Note:** If the uploader crashes, ensure your .modinfo file is a valid XML (use an XML validation website, for example)!  The game may successfully load your mod, even if the file is invalid XML.
+
+**Additional Details Page**
+- The Photo description for the Workshop item is contained in the WorkshopArtifacts folder, as TitleGraphic.png.
+- The description text should be kept very simple here, as it does not appear to allow cutting and pasting of lengthy text.
+  - The description can be updated once the upload is completed.
+- Click the "Gameplay", "UI", "Base Game", "Rise and Fall", and "Gathering Storm" checkboxes.
+- Click Upload
+  - The Uploader may appear to get stuck at "Committing Changes".  If this is the case, check and see that the mod uploaded, it may have completed.
+
+**Once the Mod is Uploaded**
+- Update the description text by pasting in the text found in the file checked into this repo, WorkshopArtifacts\DescriptionFormatted.txt.
+  - The text file is formatted in the manner expected by Steam for their description page.
+  - Additional information about formatting of this file can be found at the following (the second link shows additional information not found on the Steam formattinghelp page):
+    - https://steamcommunity.com/comment/Recommendation/formattinghelp
+    - https://steamcommunity.com/sharedfiles/filedetails/?id=1245720477
 
 ## Credits
 @Vans163 for his original QUI mod, @Chaorace for the Chao's QUI, @Sparrow for this reborn as a Community QUI, @alexeyOnGitHub, @alimulhuda, @astog, Aristos/@ricanuck, @JHCD, Greg Miller, Ace, Divine Yuri, @ZhouYzzz, @deggesim, @e1ectron, @sejbr, @frytom, @maxap, @lctrs, @wbqd, @jacks0nX, @RatchetJ, @Frozen-In-Ice, @zgavin, @olegbl, @Proustldee, @kblease, @bolbass, @SpaceOgre, @OfekA, @zeyangl, @Remolten, @bestekov, @cpinter, @paavohuhtala, @perseghini, @benjaminjackman, @velit, @the-m4a, @MarkusKV, @apskim, @8h42
