@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Mod id="1d44b5e7-753e-405b-af24-5ee634ec8a01" version="4.0">
+<Mod id="1d44b5e7-753e-405b-af24-5ee634ec8a01" version="1.0">
   <!-- ==============================  Basic Mod Information ============================== -->
   <Properties>
     <AffectsSavedGames>1</AffectsSavedGames>
-    <Name>Community Quick User Interface (May2020 Patch)</Name>
+    <Name>Community Quick User Interface</Name>
     <Teaser>CQUI</Teaser>
-    <Description>Community Quick User Interface MOD was Formally CQUI Mod [NEWLINE]and is now being updated and improved by its community</Description>
+    <Description>The Community Quick User Interface MOD, CivFanatics Version: Updated May 2020.</Description>
     <CompatibleVersions>2.0</CompatibleVersions>
   </Properties>
 
@@ -14,10 +14,13 @@
     <Mod id="9e9923e5-6842-4e7d-97e7-c9a56a85cf03" title="Simplified Gossip" />
     <Mod id="37b5fdca-2690-96ff-ea23-d8612ae7a757" title="Divine Yuri's Custom City Panel" />
     <Mod id="37b5fdca-2690-96ff-ea23-d8612ae7a758" title="Next City Plot by Ace" />
-    <Mod id="4becac48-4a0c-379a-5dd1-33d0c65a471d" title="Unit Report Screen" />
+    <!-- May 2020: This mod is currently not integrated with CQUI -->
+    <!-- <Mod id="4becac48-4a0c-379a-5dd1-33d0c65a471d" title="Unit Report Screen" /> -->
     <Mod id="2027E5A2-A48D-E606-031F-141E1196975A" title="Production Queue" />
     <Mod id="35f33319-ad93-4d6b-bf27-406fac382d06" title="More Lenses" />
     <Mod id="c9d28cde-61ee-459c-93f5-c734cd392553" title="NQ Enhanced User Interface" />
+    <!-- Better Trade Screen is already integrated -->
+    <Mod id="8d4fa23a-ef43-440c-8422-2bec11f8f5d7" title="Better Trade Screen" />
   </Blocks>
 
   <!-- ==============================  Modinfo Specific LOC ============================== -->
@@ -626,7 +629,7 @@
     </ImportFiles>
 
     <!-- ============================== UNITREPORT ============================== -->
-    <! -- UnitReport was commented out prior to May 2020 patch -->
+    <!-- UnitReport was commented out prior to May 2020 patch -->
     <!--
       <ImportFiles id="UNITREPORT_IMPORT_FILES">
       <Properties>
