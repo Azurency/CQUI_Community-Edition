@@ -1,16 +1,16 @@
 # Community Quick User Interface (CQUI)
-> CQUI is an open source Civilization 6 mod that is maintained by its community
+> CQUI is an open source Civilization 6 mod that is maintained by its community.
 
-CQUI is a UI mod that replaces parts of the original Civ 6 UI, with the intention of letting you manage your emripe with fewer mouse clicks.
+CQUI is a UI mod that replaces parts of the original Civ 6 UI, with the intention of letting you manage your empire with fewer mouse clicks.
 
-This repository is the official repository of the [CQUI steam mod](http://steamcommunity.com/sharedfiles/filedetails/?id=1125169247).
+This repository is the official repository of the [CQUI steam mod](http://steamcommunity.com/sharedfiles/filedetails/?id=2115302648).
 
 ![cquiscreens](https://user-images.githubusercontent.com/8012430/31862026-75c5822e-b737-11e7-9ac3-afe993e26eb6.jpg)
 
 ## Installation
 
 ### Steam Workshop
-If you want to install the latest official version, you can go to the [steam workshop page](http://steamcommunity.com/sharedfiles/filedetails/?id=1125169247) of CQUI and add it to your game.
+If you want to install the latest official version, you can go to the [steam workshop page](http://steamcommunity.com/sharedfiles/filedetails/?id=2115302648) of CQUI and add it to your game.
 
 ### Manually
 If you want to have the cutting edge version (that might be not in steam workshop yet), you can download this repository and place the cqui folder into your mod folder : 
@@ -38,11 +38,11 @@ Linux : ~/.local/share/aspyr-media/Sid Meier's Civilization VI/Mods
   - Long pinlists are now scrollable
   - Right click in pinlist to quickly delete pins
   - Enter key now bound to finalizing a pin in pin creation menu
-- Tech/Civic Tree and Civilopedia now autofocus the searchbar
+- Tech/Civic Tree and Civilopedia now autofocus the search bar
 - Civilopedia remembers the last visited page
 - Dedicated mod settings menu _- [image](https://user-images.githubusercontent.com/8012430/31861832-13bb16d2-b734-11e7-9524-b7292881f7af.png)_
   - Civic/Tech popups can be disabled. Optionally, the voiceover can still be kept even without the popup.
-  - Recommandation UI can be enabled/disabled
+  - Recommendation UI can be enabled/disabled
   - Minimap size can be changed
 - Civic/Tech notifications spawned at 50%/100% research progress
 - Citizen management icons are overhauled to make seeing yield info easier _-[ image](http://i.imgur.com/gbA4z3s.png)_
@@ -99,7 +99,7 @@ Mod by [astog](https://github.com/astog), you can find it [on github](https://gi
 - Trade Routes can be sorted based on yields, and turns remaining. Queue multiple sorts by holding SHIFT and the left clicking on a sort button. Right click on any sort button to remove it from the sort setting
 - When opening Make Trade Route screen, the last destination is automatically picked
 - Set a trader to repeat its last route by selecting the Repeat Route checkbox when initiating a trade route
-- An additional checkbox is provided that sets the trader to repeat the top route from the sort settings when the trade was initiated. This allows the trade route to always be the best one, hence reducing micromanagent of always checking the trade routes
+- An additional checkbox is provided that sets the trader to repeat the top route from the sort settings when the trade was initiated. This allows the trade route to always be the best one, hence reducing micromanagement of always checking the trade routes
 - Cancel the automated trader from the My Routes tab in Trade Overview screen
 
 ### More Lenses
@@ -116,12 +116,12 @@ Mod by [astog](https://github.com/astog), you can find it [on github](https://gi
 - Add an Adjacency Yield Lens to show the various adjacency bonuses in a gradient, allowing you to relish in your pristine city planning skills
 - Add a Scout Lens to highlight goody huts on the map. Automatically applies when a scout/ranger is selected (can be toggled in the settings)
 
-### Better Espionnage Screen
+### Better Espionage Screen
 Mod by [astog](https://github.com/astog), you can find it [on github](https://github.com/astog/BES). The Espionage Screens are overhauled to reduce the number of clicks and find the right information quickly.
 
 ![](https://camo.githubusercontent.com/763167a1fb61481c0e9a60888d30687f51c3e919/687474703a2f2f692e696d6775722e636f6d2f705435617352652e6a7067)
 
-- Disctrict Filter Options
+- District Filter Options
   - Allows you to filter the cities based on their districts
   - You can also filter based on civilizations
 - Mission list is shown as a side screen, rather than replacing the destination list
@@ -131,33 +131,12 @@ Mod by [kblease](https://github.com/kblease), you can find it [on github](https:
 
 ![productionqueue](https://user-images.githubusercontent.com/8012430/31861663-7fbc2400-b731-11e7-9a64-fca8e3ef8cfd.jpg)
 
-- Add a production queue to the cityview (can be toggled in the seetings)
+- Add a production queue to the Cityview (can be toggled in the settings)
 - The production queue can be reordered
 - Units in a city's queue which become obsolete will be automatically switched to the unit that is replacing it
 
-### Unit Report Screen
-Mod by [GMiller7138](https://forums.civfanatics.com/members/gmiller7138.201859/), you can find it [on civfanatics](https://forums.civfanatics.com/resources/unit-report-screen.25396/). This mod enhances the Report Screen.
-
-![reportscreen](https://user-images.githubusercontent.com/8012430/31861662-7f99b9ba-b731-11e7-88de-c24aa4c28b4e.jpg)
-
-- Unit Tab
-  - Breaks down all of your units into groups such as Military (separated by Land/Sea/Air), Civilian and Support, Traders, Spies, and Great People
-  - Unit stats are listed based on which group they are allocated to. For instance, military units will show Health and Movement, while civilian units will show how many charges they have left
-  - You can select and zoom to any unit on the list
-  - Promote/upgrade military units without exiting screen
-  - Sort units by clicking on header of each stat
-- Yields Tab
-  - Added a "Hide City Buildings" checkbox which hides building yields in order to better compare yields between cities
-  - Sorted Yields. Clicking the header in City Income will allow you to sort by descending/ascending order
-  - Building Expenses displays district maintenance costs. These are combined for each city and labeled as "Districts"
-  - Units Expenses added. Units are grouped and will show total cost per type. Policies that reduce unit maintenance costs are taken into account
-- City Status
-  - Sorted Fields
-- Current Deals
-  - Displays current deals you have with other civilizations. Includes duration, what is being traded, etc.
-
 ### Divine Yuri's Custom City Panel
-Mod by [Divine Yuri](https://forums.civfanatics.com/members/divine-yuri.263736/), you can find it [on civfanatics](https://forums.civfanatics.com/resources/divine-yuris-custom-city-panel.25430/). The mod add  additional tooltips to the city panel.
+Mod by [Divine Yuri](https://forums.civfanatics.com/members/divine-yuri.263736/), you can find it [on civfanatics](https://forums.civfanatics.com/resources/divine-yuris-custom-city-panel.25430/). The mod adds additional tooltips to the city panel.
 
 ![Amenities tooltip](http://i.imgur.com/qHjdmUG.png)
 
@@ -172,17 +151,39 @@ Mod by [Divine Yuri](https://forums.civfanatics.com/members/divine-yuri.263736/)
 - Expansion Bar that show total Food and Culture
 - Added tooltips to the Growth Bar
 - Added info to current production in the form of a tooltip in the same way a tooltip would be displayed in the production panel
-- Right clicking the current production icon will links to the civilopedia of what ever's being produced
+- Right clicking the current production icon will links to the civilopedia of what ever is being produced
 
 ### Simplified Gossip
 Mod by FinalFreak16, from the [steam workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=1126451168). This mod simplifies the gossip history log in the leader diplomacy view.
 
 ![gossip](https://user-images.githubusercontent.com/8012430/31861664-7fe2bf8e-b731-11e7-9eae-2ea138b53007.jpg)
 
-- Each message has its own icon to categorise each entry and make it easier to see what happened at a glance
+- Each message has its own icon to categorize each entry and make it easier to see what happened at a glance
+
+## Steam Workshop Update Process
+Steam Workshop limits those that can upload an item to the workshop.  This version of the upload was created by @the_m4a.
+
+To upload the mod, use the Steam Workshop Uploader utility.  If you have not previously uploaded this mod, click on the Upload button and navigate to the .modinfo file.
+The Workshop Uploader will then run a series of checks, if you see all green bars, then you can proceed to next page.
+**Note:** If the uploader crashes, ensure your .modinfo file is a valid XML (use an XML validation website, for example)!  The game may successfully load your mod, even if the file is invalid XML.
+
+**Additional Details Page**
+- The Photo description for the Workshop item is contained in the WorkshopArtifacts folder, as TitleGraphic.png.
+- The description text should be kept very simple here, as it does not appear to allow cutting and pasting of lengthy text.
+  - The description can be updated once the upload is completed.
+- Click the "Gameplay", "UI", "Base Game", "Rise and Fall", and "Gathering Storm" checkboxes.
+- Click Upload
+  - The Uploader may appear to get stuck at "Committing Changes".  If this is the case, check and see that the mod uploaded, it may have completed.
+
+**Once the Mod is Uploaded**
+- Update the description text by pasting in the text found in the file checked into this repo, WorkshopArtifacts\DescriptionFormatted.txt.
+  - The text file is formatted in the manner expected by Steam for their description page.
+  - Additional information about formatting of this file can be found at the following (the second link shows additional information not found on the Steam formattinghelp page):
+    - https://steamcommunity.com/comment/Recommendation/formattinghelp
+    - https://steamcommunity.com/sharedfiles/filedetails/?id=1245720477
 
 ## Credits
-@Vans163 for his original QUI mod, @Chaorace for the Chao's QUI, @Sparrow for this reborn as a Community QUI, @astog, Aristos/@ricanuck, @JHCD, Greg Miller, Ace, Divine Yuri, @ZhouYzzz, @deggesim, @e1ectron, @sejbr, @frytom, @maxap, @lctrs, @wbqd, @jacks0nX, @RatchetJ, @Frozen-In-Ice, @zgavin, @olegbl, @Proustldee, @kblease, @bolbass, @SpaceOgre, @OfekA, @zeyangl, @Remolten, @bestekov, @cpinter, @paavohuhtala, @perseghini, @benjaminjackman, @velit, @the-m4a, @MarkusKV, @apskim, @8h42
+@Vans163 for his original QUI mod, @Chaorace for the Chao's QUI, @Sparrow for this reborn as a Community QUI, @alexeyOnGitHub, @alimulhuda, @astog, Aristos/@ricanuck, @JHCD, Greg Miller, Ace, Divine Yuri, @ZhouYzzz, @deggesim, @e1ectron, @sejbr, @frytom, @maxap, @lctrs, @wbqd, @jacks0nX, @RatchetJ, @Frozen-In-Ice, @zgavin, @olegbl, @Proustldee, @kblease, @bolbass, @SpaceOgre, @OfekA, @zeyangl, @Remolten, @bestekov, @cpinter, @paavohuhtala, @perseghini, @benjaminjackman, @velit, @the-m4a, @MarkusKV, @apskim, @8h42
 
 Firaxis for eventually delivering mod tools and steam workshop. 
 

@@ -1,0 +1,84 @@
+[img]https://i.imgur.com/Df4rNBo.png[/img]
+[h2]Updated Version: Works with Fall 2019 and Spring 2020 Patches from Firaxis.[/h2]
+
+CQUI is an open source Civilization 6 mod that is maintained by it's community that helps you manage your empire faster and easier. It's an enhancement of the original UI that gives you the informations you need with less clicks. It also have a lot of usefull functionality that makes the game even better.
+
+[img]https://i.imgur.com/ywhZtaH.png[/img]
+
+Base Game Version: 1.0.1.501
+
+[h1]Key Features[/h1]
+[quote]
+[list]
+  [*]Civ V Style Cityview
+    [*]Production panel elements compressed and reordered
+  [*]Great Person panel revamped
+    [*]No more side scrolling
+    [*]Adapts to the screen height
+  [*]Policy Reminder Popup
+  [*]Improved amenities city details screen (clean icons)
+  [*]"My Government" tab removed from Government panel
+  [*]Diplomatic banner shows the scores of the civilizations
+  [*]Leaderheads expanded tooltips
+  [*]Map Pinning system enhanced
+    [*]New pins
+    [*]Long pinlists are now scrollable
+    [*]Right click in pinlist to quickly delete pins
+    [*]Enter key now bound to finalizing a pin in pin creation menu
+  [*]Tech/Civic Tree and Civilopedia now Auto-focuses the Search bar
+  [*]Civilopedia remembers the last visited page
+  [*]Dedicated mod settings menu
+  [*]Civic/Tech popups can be disabled. Optionally, the voiceover can still be kept even without the popup.
+  [*]Recommendation UI can be enabled/disabled
+  [*]Minimap size can be changed
+  [*]Civic/Tech notifications spawned at 50%/100% research progress
+  [*]Citizen management icons are overhauled to make seeing yield info easier
+  [*]Growth/Production progress is enumerated in the city panel
+  [*]Improved resource icons are dimmed to emphasize unutilized resources
+  [*]Civ V keybinding options
+  [*]Classic, a faithful recreation of the Civ V binding scheme
+  [*]Enhanced, Civ V binding scheme with WASD assigned to camera control, Q/E assigned to city/unit cycling, and Shift assigned to shifting focus between city and unit selection modes
+  [*]Unit actions are no longer hidden behind an expand button
+  [*]Unit XP bars are twice as tall
+  [*]Growth, Amenities, and Border growth info baked into city banners
+  [*]"Smart Banner" Toggleable option to display a green icon indicating non-locked citizens and district icons indicating built districts
+  [*]Luxury resources are displayed in the top bar alongside strategic resources
+  [*]Right clicking the action panel (bottom right button) instantly ends turn even when things like production/research/unit moves have not been decided
+[/list]
+[/quote]
+
+[img]https://i.imgur.com/ywhZtaH.png[/img]
+
+[h1]Integrations:[/h1]
+[quote]
+[list]
+  [*]Improved Deal Screen - by mironos
+  [*]Better Trade Screen - by astog / 
+  [*]More Lenses - by astog
+  [*]Better Espionage Screen - by astog
+  [*]Production Queue - by kblease
+  [*]Divine Yuri's Custom City Panel - by Divine Yuri
+  [*]Simplified Gossip - by FinalFreak16
+[/list]
+[/quote]
+
+[img]https://i.imgur.com/ywhZtaH.png[/img]
+
+[h1]Contributors are Always Welcome[/h1]
+You want to contribute to the mod? We're always welcoming new contributors and the pull requests are open if you wish to tackle an issue.
+Note that with this updated Workshop entry, we have moved the location of the CQUI Mod source code.  A number of issues found in the [url=https://github.com/Azurency/CQUI_Community-Edition]previous Github location[/url] may not yet be listed in the current Github fork where work is being done.
+
+            [url=https://github.com/civfanatics/CQUI_Community-Edition][img]https://i.imgur.com/JpTn6gu.png[/img][/url]
+            [url=https://github.com/civfanatics/CQUI_Community-Edition/issues][img]https://i.imgur.com/cVXMIyS.png[/img][/url]
+
+[h3]Huge Thank You to Everyone That Has Contributed[/h3]
+This updated version of CQUI in the Steam Workshop is brought to you by a few folks on GitHub (especially alexeyOnGitHub, alimulhuda, and the_m4a) that picked up on the work done previously by [b]Azurency[/b], [b]Sparrow[/b], [b]Aristos[/b] and others.
+
+Huge thanks to the excellent CQUI contributors and translators. With their hard work, unique skills, and vigilance in bug testing make this MOD possible. :-)
+
+
+[img]https://i.imgur.com/ywhZtaH.png[/img]
+
+MIT License set out by chaorace from the original release of CQUI: [img]https://i.imgur.com/QqIzWJM.png[/img]
+
+
