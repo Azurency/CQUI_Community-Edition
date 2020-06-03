@@ -230,7 +230,7 @@ function CQUI_RenderResourceButton(resource, resourceCategory, iconList, howAcqu
     icon.SelectButton:SetTextureOffsetVal(0, 50);
   end
 
-  SetIconToSize(icon.Icon, "ICON_" .. resourceDesc.ResourceType, icon.Icon:GetSizeX());
+  SetIconToSize(icon.Icon, "ICON_" .. resourceDesc.ResourceType);
   icon.AmountText:SetText(tostring(resource.MaxAmount));
   icon.AmountText:SetHide(false);
   icon.SelectButton:SetDisabled( buttonDisabled );
