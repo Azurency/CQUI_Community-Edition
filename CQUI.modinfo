@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Mod id="1d44b5e7-753e-405b-af24-5ee634ec8a01" version="1.0">
+<Mod id="1d44b5e7-753e-405b-af24-5ee634ec8a01" version="2.0">
   <!-- ==============================  Basic Mod Information ============================== -->
   <Properties>
-    <AffectsSavedGames>1</AffectsSavedGames>
+    <AffectsSavedGames>0</AffectsSavedGames>
     <Name>Community Quick User Interface</Name>
     <Teaser>CQUI</Teaser>
     <Description>The Community Quick User Interface MOD, CivFanatics Version: Updated May 2020.</Description>
@@ -54,6 +54,20 @@
     </Criteria>
   </ActionCriteria>
 
+    <!-- ============================== CQUI specific settings ============================== -->
+  <FrontEndActions>
+    <UpdateDatabase id="CQUI_Settings">
+      <Properties>
+        <Name>CQUI Settings</Name>
+        <LoadOrder>-100</LoadOrder>
+      </Properties>
+      <Items>
+        <File>Assets/cqui_databaseschema.sql</File>
+        <File>Assets/cqui_settings.sql</File>
+        <File>Assets/cqui_settings_local.sql</File>
+      </Items>
+    </UpdateDatabase>
+  </FrontEndActions>
   <InGameActions>
    <!-- LoadOrder 0 is default, we need this to load first -->
    <!-- 0 is where most actions are applied.  -100 is for Schema changes, and just ensuring early loads are caught -->
@@ -76,19 +90,6 @@
                      Often applied at the very end of everything else. Called out as its own phase.|
         |125        |Unofficial changes to Scenario updates.|
     -->
-
-    <!-- ============================== CQUI specific settings ============================== -->
-    <UpdateDatabase id="CQUI_Settings">
-       <Properties>
-        <Name>CQUI Settings</Name>
-        <LoadOrder>-100</LoadOrder>
-      </Properties>
-      <Items>
-        <File>Assets/cqui_databaseschema.sql</File>
-        <File>Assets/cqui_settings.sql</File>
-        <File>Assets/cqui_settings_local.sql</File>
-      </Items>
-    </UpdateDatabase>
 
     <!-- The CQUICommon file is referenced by the Civ6Common file replacement.-->
     <!-- The LoadOrder of this file needs to be after the Database Schema changes, but before everything else in the mod -->
