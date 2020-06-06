@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Mod id="1d44b5e7-753e-405b-af24-5ee634ec8a01" version="2.0">
+<Mod id="1d44b5e7-753e-405b-af24-5ee634ec8a01" version="2.01">
   <!-- ==============================  Basic Mod Information ============================== -->
   <Properties>
     <AffectsSavedGames>0</AffectsSavedGames>
@@ -54,8 +54,8 @@
     </Criteria>
   </ActionCriteria>
 
-    <!-- ============================== CQUI specific settings ============================== -->
-  <FrontEndActions>
+<!-- ============================== CQUI specific settings ============================== -->
+  <InGameActions>
     <UpdateDatabase id="CQUI_Settings">
       <Properties>
         <Name>CQUI Settings</Name>
@@ -67,8 +67,6 @@
         <File>Assets/cqui_settings_local.sql</File>
       </Items>
     </UpdateDatabase>
-  </FrontEndActions>
-  <InGameActions>
    <!-- LoadOrder 0 is default, we need this to load first -->
    <!-- 0 is where most actions are applied.  -100 is for Schema changes, and just ensuring early loads are caught -->
    <!-- This table can be found in the Documentation included with the SDK.  It exists as a poorly formatted markdown table. -->
